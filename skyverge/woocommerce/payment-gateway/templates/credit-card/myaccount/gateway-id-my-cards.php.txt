@@ -1,0 +1,93 @@
+<?php
+/**
+ * %%PLUGIN NAME%%
+ *
+ * This source file is subject to the GNU General Public License v3.0
+ * that is bundled with this package in the file license.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-3.0.html
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@skyverge.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade %%PLUGIN NAME%% to newer
+ * versions in the future. If you wish to customize %%PLUGIN NAME%% for your
+ * needs please refer to %%PLUGIN DOCS URL%%
+ *
+ * @package   %%PLUGIN PACKAGE%%/Templates
+ * @author    SkyVerge
+ * @copyright Copyright (c) %%COPYRIGHT YEAR%%, SkyVerge, Inc.
+ * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
+ */
+
+/**
+ * The My Account - My Cards
+ *
+ * @param %%GATEWAY CLASS%% $gateway payment gateway object
+ * @param array $tokens optional array of payment token string to SV_WC_Payment_Gateway_Payment_Token object
+ *
+ * @version 0.1
+ * @since 0.1
+ */
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+global $woocommerce;
+
+?> <h2 id="woocommerce-%%GATEWAY ID DASHERIZED%%-my-payment-methods" style="margin-top:40px;"><?php _e( 'My Saved Cards', %%TEXT DOMAIN%% ); ?></h2><?php
+
+if ( ! empty( $tokens ) ) :
+	?>
+	<a name="woocommerce-%%GATEWAY ID DASHERIZED%%-my-payment-methods"></a>
+	<table class="shop_table my-account-woocommerce-%%GATEWAY ID DASHERIZED%%-payment-methods">
+
+		<thead>
+		<tr>
+			<th class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-type"><span class="nobr"><?php _e( 'Card Type', %%TEXT DOMAIN%% ); ?></span></th>
+			<th class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-account"><span class="nobr"><?php _e( 'Last Four', %%TEXT DOMAIN%% ); ?></span></th>
+			<th class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-exp-date"><span class="nobr"><?php _e( 'Expires', %%TEXT DOMAIN%% ); ?></span></th>
+			<th class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-status"><span class="nobr"><?php _e( 'Status', %%TEXT DOMAIN%% ); ?></span></th>
+			<th class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-actions"><span class="nobr"><?php _e( 'Actions', %%TEXT DOMAIN%% ); ?></span></th>
+		</tr>
+		</thead>
+
+		<tbody>
+			<?php foreach ( $tokens as $token ) :
+				$delete_url      = wp_nonce_url( add_query_arg( array( '%%GATEWAY ID DASHERIZED%%-token' => $token->get_token(), '%%GATEWAY ID DASHERIZED%%-action' => 'delete' ) ), '%%GATEWAY ID DASHERIZED%%-token-action' );
+				$make_default_url = wp_nonce_url( add_query_arg( array( '%%GATEWAY ID DASHERIZED%%-token' => $token->get_token(), '%%GATEWAY ID DASHERIZED%%-action' => 'make-default' ) ), '%%GATEWAY ID DASHERIZED%%-token-action' );
+				$payment_method_image_url  = $gateway->get_payment_method_image_url( $token->get_type() );
+				?>
+				<tr class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-label">
+					<td class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-type">
+						<?php if ( $payment_method_image_url ) : ?>
+							<img src="<?php echo esc_url( $payment_method_image_url ); ?>" alt="<?php esc_attr_e( $token->get_type_full() ); ?>" title="<?php esc_attr_e( $token->get_type() ); ?>" style="vertical-align:middle;" />
+						<?php else: ?>
+							<?php echo esc_html( $token->get_type() ); ?>
+						<?php endif; ?>
+					</td>
+					<td class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-account-number">
+						<?php echo esc_html( $token->get_last_four() ); ?>
+					</td>
+					<td class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-exp-date">
+						<?php echo esc_html( $token->get_exp_month() . '/' . $token->get_exp_year() ); ?>
+					</td>
+					<td class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-status">
+						<?php echo ( $token->is_default() ) ? __( 'Default', %%TEXT DOMAIN%% ) : '<a href="' . esc_url( $make_default_url ) . '">' . __( 'Make Default', %%TEXT DOMAIN%% ) . '</a>'; ?>
+					</td>
+					<td class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-actions" style="width: 1%; text-align: center;">
+						<a href="<?php echo esc_url( $delete_url ); ?>" class="woocommerce-%%GATEWAY ID DASHERIZED%%-delete-payment-method js-woocommerce-%%GATEWAY ID DASHERIZED%%-delete-payment-method"><img src="<?php echo esc_attr( $woocommerce->plugin_url() . '/assets/images/cross.png' ); ?>" alt="[X]" style="box-shadow: none;" /></a>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+		</tbody>
+
+	</table>
+<?php
+
+else :
+
+	?><p><?php _e( 'You do not have any saved payment methods.', %%TEXT DOMAIN%% ); ?></p><?php
+
+endif;

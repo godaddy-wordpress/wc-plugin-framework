@@ -1,0 +1,148 @@
+<?php
+/**
+ * WooCommerce Payment Gateway Framework
+ *
+ * This source file is subject to the GNU General Public License v3.0
+ * that is bundled with this package in the file license.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-3.0.html
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@skyverge.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the plugin to newer
+ * versions in the future. If you wish to customize the plugin for your
+ * needs please refer to http://www.skyverge.com
+ *
+ * @package   SkyVerge/WooCommerce/Payment-Gateway/API
+ * @author    SkyVerge
+ * @copyright Copyright (c) 2013, SkyVerge, Inc.
+ * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
+ */
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+if ( ! interface_exists( 'SV_WC_Payment_Gateway_API' ) ) :
+
+/**
+ * WooCommerce Direct Payment Gateway API
+ *
+ * @version 0.1
+ */
+interface SV_WC_Payment_Gateway_API {
+
+
+	/**
+	 * Perform a credit card authorization for the given order
+	 *
+	 * If the gateway does not support credit card authorizations, this method can be a no-op.
+	 *
+	 * @since 0.1
+	 * @param WC_Order $order the order
+	 * @return SV_WC_Payment_Gateway_API_Response credit card charge response
+	 * @throws Exception network timeouts, etc
+	 */
+	public function credit_card_authorization( $order );
+
+
+	/**
+	 * Perform a credit card charge for the given order
+	 *
+	 * If the gateway does not support credit card charges, this method can be a no-op.
+	 *
+	 * @since 0.1
+	 * @param WC_Order $order the order
+	 * @return SV_WC_Payment_Gateway_API_Response credit card charge response
+	 * @throws Exception network timeouts, etc
+	 */
+	public function credit_card_charge( $order );
+
+
+	/**
+	 * Creates a payment token for the given order
+	 *
+	 * If the gateway does not support tokenization, this method can be a no-op.
+	 *
+	 * @since 0.1
+	 * @param WC_Order $order the order
+	 * @return SV_WC_Payment_Gateway_API_Create_Payment_Token_Response payment method tokenization response
+	 * @throws Exception network timeouts, etc
+	 */
+	public function tokenize_payment_method( $order );
+
+
+	/**
+	 * Removes the tokenized payment method.  This method should not be invoked
+	 * unless supports_remove_tokenized_payment_method() returns true, otherwise
+	 * the results are undefined.
+	 *
+	 * @since 0.1
+	 * @see SV_WC_Payment_Gateway_API::supports_remove_tokenized_payment_method()
+	 * @param string $user_id the user identifier
+	 * @param string $token the payment method token
+	 * @return SV_WC_Payment_Gateway_API_Response remove tokenized payment method response
+	 * @throws Exception network timeouts, etc
+	 */
+	public function remove_tokenized_payment_method( $user_id, $token );
+
+
+	/**
+	 * Returns true if this API supports a "remove tokenized payment method"
+	 * request.  If this method returns true, then remove_tokenized_payment_method()
+	 * is considered safe to call.
+	 *
+	 * @since 0.1
+	 * @see SV_WC_Payment_Gateway_API::remove_tokenized_payment_method()
+	 * @return boolean true if this API supports a "remove tokenized payment method" request, false otherwise
+	 */
+	public function supports_remove_tokenized_payment_method();
+
+
+	/**
+	 * Returns all tokenized payment methods for the customer.  This method
+	 * should not be invoked unless supports_get_tokenized_payment_methods()
+	 * return true, otherwise the results are undefined
+	 *
+	 * @since 0.1
+	 * @see SV_WC_Payment_Gateway_API::supports_get_tokenized_payment_methods()
+	 * @param string $customer_id unique customer id
+	 * @return SV_WC_API_Get_Tokenized_Payment_Methods_Response response containing any payment tokens for the customer
+	 * @throws Exception network timeouts, etc
+	 */
+	public function get_tokenized_payment_methods( $customer_id );
+
+
+	/**
+	 * Returns true if this API supports a "get tokenized payment methods"
+	 * request.  If this method returns true, then get_tokenized_payment_methods()
+	 * is considered safe to call.
+	 *
+	 * @since 0.1
+	 * @see SV_WC_Payment_Gateway_API::get_tokenized_payment_methods()
+	 * @return boolean true if this API supports a "get tokenized payment methods" request, false otherwise
+	 */
+	public function supports_get_tokenized_payment_methods();
+
+
+	/**
+	 * Returns the most recent request object
+	 *
+	 * @since 0.1
+	 * @return SV_WC_Payment_Gateway_API_Request the most recent request object
+	 */
+	public function get_request();
+
+
+	/**
+	 * Returns the most recent response object
+	 *
+	 * @since 0.1
+	 * @return SV_WC_Payment_Gateway_API_Response the most recent response object
+	 */
+	public function get_response();
+
+}
+
+endif;  // interface exists check
