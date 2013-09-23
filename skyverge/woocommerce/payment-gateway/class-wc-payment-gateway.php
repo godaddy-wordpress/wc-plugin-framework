@@ -116,7 +116,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
  * remote endpoint, without you having to litter your code with logging calls,
  * and is about the closest to an Aspect Oriented solution as we can get with WP/PHP
  *
- * ### Cusomer Id
+ * ### Cusomer ID
  *
  * Most gateways use a form of customer identification.  If your gateway does
  * not, or you don't require it, override the following methods to return
@@ -125,6 +125,15 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
  * + `get_customer_id_user_meta_name()`
  * + `get_guest_customer_id()`
  * + `get_customer_id()`
+ *
+ * ### Transaction URL
+ *
+ * Some, not all, gateways support linking directly to a transaction within
+ * the merchant account.  If your gateway support this, you can override the
+ * following method to return the direct transaction URL for the given order.
+ * Don't forget to declare support for this within the gateway plugin class!:
+ *
+ * + `get_transaction_url( $order )`
  *
  * TODO: "Pay Now" button feature.  Not sure whether you'd do this as a "supports" or as a "gateway type".  I'd lean towards "supports", but maxrice is the expert here
  *
@@ -1204,6 +1213,44 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// no leading underscore since this is meant to be visible to the admin
 		return 'wc_' . $this->get_plugin()->get_plugin_id() . '_customer_id' . ( ! $this->is_production_environment( $environment_id ) ? '_' . $environment_id : '' );
+
+	}
+
+
+	/**
+	 * Add a button to the order actions meta box to view the order in the
+	 * merchant account, if supported
+	 *
+	 * @param WC_Order $order the order object
+	 */
+	public function order_meta_box_transaction_link( $order ) {
+
+		if ( $url = $this->get_transaction_url( $order ) ) {
+
+			?>
+			<li class="wide" style="text-align: center;">
+				<a class="button tips" href="<?php echo esc_url( $url ); ?>" target="_blank" data-tip="<?php esc_attr_e( 'View this transaction in your merchant account', $this->text_domain ); ?>" style="cursor: pointer !important;"><?php printf( __( 'View in %s', $this->text_domain ), $this->get_method_title() ); ?></a>
+			</li>
+			<?php
+
+		}
+	}
+
+
+	/**
+	 * Returns the merchant account transaction URL for the given order, if the
+	 * gateway supports transaction direct-links, which not all gateways do.
+	 *
+	 * Override this method to return the transaction URL, if supported
+	 *
+	 * @since 0.1
+	 * @param WC_Order $order the order object
+	 * @return string transaction url or null if not supported
+	 */
+	protected function get_transaction_url( $order ) {
+
+		// method stub
+		return null;
 
 	}
 

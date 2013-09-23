@@ -38,7 +38,8 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
  * in the following instances:
  *
  * + On the My Account page to display / change saved payment methods (if supports tokenization)
- * + On the User/Your Profile Admin page to render/persist the customer ID field(s) (if the gateway uses customer ID's)
+ * + On the Admin User/Your Profile page to render/persist the customer ID field(s) (if supports customer_id)
+ * + On the Admin Order Edit page to render a merchant account transaction direct link (if supports transaction_link)
  *
  * ## Usage
  *
@@ -46,6 +47,12 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
  *
  * + `get_file()` - the implementation should be: <code>return __FILE__;</code>
  * + `get_plugin_name()` - returns the plugin name (implemented this way so it can be localized)
+ *
+ * ## Supports (zero or more):
+ *
+ * + `tokenization`     - adds actions to show/handle the "My Payment Methods" area of the customer's My Account page
+ * + `customer_id`      - adds actions to show/persist the "Customer ID" area of the admin User edit page
+ * + `transaction_link` - adds actions to render the merchant account transaction direct link on the Admin Order Edit page.  (Don't forget to override the SV_WC_Payment_Gateway::get_transaction_url() method!)
  *
  * @version 0.1
  */
@@ -94,6 +101,15 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/** @var bool helper for lazy pre-orders active check */
 	private $pre_orders_active;
 
+	/** Tokenization feature */
+	const FEATURE_TOKENIZATION = 'tokenization';
+
+	/** Customer ID feature */
+	const FEATURE_CUSTOMER_ID = 'customer_id';
+
+	/** Link to transaction feature */
+	const FEATURE_TRANSACTION_LINK = 'transaction_link';
+
 
 	/**
 	 * Initialize the plugin
@@ -104,7 +120,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * + `gateway_id` - string gateway id
 	 * + `dependencies` - array string names of required PHP extensions
 	 * + `require_ssl` - boolean true if this gateway requires SSL for processing transactions, false otherwise. Defaults to false
-	 * + `supports` - array named features that this gateway supports, including 'tokenization'
+	 * + `supports` - array named features that this gateway supports, including 'tokenization', 'transaction_link', 'customer_id'
 	 *
 	 * @since 0.1
 	 * @param string $id plugin id
@@ -129,7 +145,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 		// include library files after woocommerce is loaded
 		add_action( 'woocommerce_loaded', array( $this, 'lib_includes' ) );
 
-		if ( ! is_admin() && $this->supports( 'tokenization' ) ) {
+		if ( ! is_admin() && $this->supports( self::FEATURE_TOKENIZATION ) ) {
 
 			// Handle any actions from the My Payment Methods section
 			add_action( 'wp', array( $this, 'handle_my_payment_methods_actions' ) );
@@ -145,13 +161,23 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 			// render any admin notices
 			add_action( 'admin_notices', array( $this, 'render_admin_notices' ) );
 
-			// show customer id field on edit user pages
-			add_action( 'show_user_profile', array( $this, 'add_customer_id_meta_field' ) );
-			add_action( 'edit_user_profile', array( $this, 'add_customer_id_meta_field' ) );
+			// show/persist customer id field on edit user pages, if supported
+			if ( $this->supports( self::FEATURE_CUSTOMER_ID ) ) {
 
-			// save customer ID field
-			add_action( 'personal_options_update',  array( $this, 'save_customer_id_meta_field' ) );
-			add_action( 'edit_user_profile_update', array( $this, 'save_customer_id_meta_field' ) );
+				// show the customer ID
+				add_action( 'show_user_profile', array( $this, 'add_customer_id_meta_field' ) );
+				add_action( 'edit_user_profile', array( $this, 'add_customer_id_meta_field' ) );
+
+				// save the customer ID
+				add_action( 'personal_options_update',  array( $this, 'save_customer_id_meta_field' ) );
+				add_action( 'edit_user_profile_update', array( $this, 'save_customer_id_meta_field' ) );
+
+			}
+
+			// order admin link to transaction, if supported
+			if ( $this->supports( self::FEATURE_TRANSACTION_LINK ) ) {
+				add_action( 'woocommerce_order_actions_start', array( $this, 'order_meta_box_transaction_link' ) );
+			}
 
 			// add a 'Configure' link to the plugin action links
 			add_filter( 'plugin_action_links_' . plugin_basename( $this->get_file() ), array( $this, 'plugin_configure_link' ) );
@@ -326,6 +352,24 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 		// add the links to the front of the actions list
 		return array_merge( $custom_actions, $actions );
 
+	}
+
+
+	/**
+	 * Add a button to the order actions meta box to view the order in the
+	 * gateway merchant account, if supported
+	 *
+	 * @since 0.1
+	 * @param int $post_id the order identifier
+	 */
+	public function order_meta_box_transaction_link( $post_id ) {
+
+		$order = new WC_Order( $post_id );
+
+		// TODO: multiple gateway support
+		if ( $this->get_gateway_id() == $order->payment_method ) {
+			$this->get_gateway()->order_meta_box_transaction_link( $order );
+		}
 	}
 
 
