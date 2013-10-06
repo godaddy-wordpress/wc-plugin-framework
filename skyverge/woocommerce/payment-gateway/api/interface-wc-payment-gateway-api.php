@@ -44,7 +44,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * @return SV_WC_Payment_Gateway_API_Response credit card charge response
 	 * @throws Exception network timeouts, etc
 	 */
-	public function credit_card_authorization( $order );
+	public function credit_card_authorization( WC_Order $order );
 
 
 	/**
@@ -57,7 +57,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * @return SV_WC_Payment_Gateway_API_Response credit card charge response
 	 * @throws Exception network timeouts, etc
 	 */
-	public function credit_card_charge( $order );
+	public function credit_card_charge( WC_Order $order );
 
 
 	/**
@@ -70,7 +70,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * @return SV_WC_Payment_Gateway_API_Create_Payment_Token_Response payment method tokenization response
 	 * @throws Exception network timeouts, etc
 	 */
-	public function tokenize_payment_method( $order );
+	public function tokenize_payment_method( WC_Order $order );
 
 
 	/**
