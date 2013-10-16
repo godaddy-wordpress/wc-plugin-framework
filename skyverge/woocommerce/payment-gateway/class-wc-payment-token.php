@@ -63,9 +63,15 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	public function __construct( $token, $data ) {
 
+		// get the payment type from the account number if not provided
+		if ( ! isset( $data['type'] ) && isset( $data['account_number'] ) )
+			$data['type'] = $this->type_from_account_number( $data['account_number'] );
+
+		// remove account number so it's not saved to the token
+		unset( $data['account_number'] );
+
 		$this->token = $token;
 		$this->data  = $data;
-
 	}
 
 
@@ -143,7 +149,37 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_type() {
 
 		return $this->data['type'];
+	}
 
+
+	/**
+	 * Determine the credit card type from the full account number
+	 *
+	 * @since 0.1
+	 * @param string $account_number the credit card account number
+	 * @return string the credit card type
+	 */
+	public static function type_from_account_number( $account_number ) {
+
+		// card type regex patterns from https://github.com/stripe/jquery.payment/blob/master/src/jquery.payment.coffee
+		$types = array(
+			'visa'        => '/^4/',
+			'mastercard'  => '/^5[1-5]/',
+			'amex'        => '/^3[47]/',
+			'discover'    => '/^(6011|65|64[4-9]|622)/',
+			'diners_club' => '/^(36|38|30[0-5])/',
+			'jcb'         => '/^35/',
+			'maestro'     => '/^(5018|5020|5038|6304|6759|676[1-3])/',
+			'laser'       => '/^(6706|6771|6709)/',
+		);
+
+		foreach ( $types as $type => $pattern ) {
+
+			if ( 1 === preg_match( $pattern, $account_number ) )
+				return $type;
+		}
+
+		return null;
 	}
 
 
