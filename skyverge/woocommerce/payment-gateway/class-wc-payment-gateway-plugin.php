@@ -474,7 +474,8 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Returns true if the gateway supports the named feature
 	 *
 	 * @since 0.1
-	 * @return boolean true if the named feature is supported
+	 * @param string $feature the feature
+	 * @return bool true if the named feature is supported
 	 */
 	public function supports( $feature ) {
 
