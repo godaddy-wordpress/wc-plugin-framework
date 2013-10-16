@@ -726,6 +726,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @return boolean true if the fields are valid, false otherwise
 	 */
 	protected function validate_credit_card_fields( $is_valid ) {
+		global $woocommerce;
 
 		$card_number      = $this->get_post( $this->get_id_dasherized() . '-account-number' );
 		$expiration_month = $this->get_post( $this->get_id_dasherized() . '-exp-month' );
@@ -860,7 +861,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		} catch ( Exception $e ) {
 
 			$this->mark_order_as_failed( $order, $e->getMessage() );
-
 		}
 	}
 
@@ -2199,6 +2199,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 				}
 			}
 
+			$this->tokens[ $customer_id ] = $tokens;
 		}
 
 		// if the payment gateway API supports retrieving tokens directly, do so as it's easier to stay synchronized
