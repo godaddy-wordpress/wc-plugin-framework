@@ -25,7 +25,6 @@
 /**
  * The My Account - My Cards
  *
- * @param %%GATEWAY CLASS%% $gateway payment gateway object
  * @param array $tokens optional array of payment token string to SV_WC_Payment_Gateway_Payment_Token object
  *
  * @version 0.1
@@ -36,48 +35,47 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 global $woocommerce;
 
-?> <h2 id="woocommerce-%%GATEWAY ID DASHERIZED%%-my-payment-methods" style="margin-top:40px;"><?php _e( 'My Saved Cards', %%TEXT DOMAIN%% ); ?></h2><?php
+?> <h2 id="wc-%%GATEWAY ID DASHERIZED%%-my-payment-methods" style="margin-top:40px;"><?php _e( 'My Saved Cards', %%TEXT DOMAIN%% ); ?></h2><?php
 
 if ( ! empty( $tokens ) ) :
 	?>
-	<a name="woocommerce-%%GATEWAY ID DASHERIZED%%-my-payment-methods"></a>
-	<table class="shop_table my-account-woocommerce-%%GATEWAY ID DASHERIZED%%-payment-methods">
+	<table class="shop_table my-account-wc-%%GATEWAY ID DASHERIZED%%-payment-methods">
 
 		<thead>
 		<tr>
-			<th class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-type"><span class="nobr"><?php _e( 'Card Type', %%TEXT DOMAIN%% ); ?></span></th>
-			<th class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-account"><span class="nobr"><?php _e( 'Last Four', %%TEXT DOMAIN%% ); ?></span></th>
-			<th class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-exp-date"><span class="nobr"><?php _e( 'Expires', %%TEXT DOMAIN%% ); ?></span></th>
-			<th class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-status"><span class="nobr"><?php _e( 'Status', %%TEXT DOMAIN%% ); ?></span></th>
-			<th class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-actions"><span class="nobr"><?php _e( 'Actions', %%TEXT DOMAIN%% ); ?></span></th>
+			<th class="wc-%%GATEWAY ID DASHERIZED%%-payment-method-type"><span class="nobr"><?php _e( 'Card Type', %%TEXT DOMAIN%% ); ?></span></th>
+			<th class="wc-%%GATEWAY ID DASHERIZED%%-payment-method-account"><span class="nobr"><?php _e( 'Last Four', %%TEXT DOMAIN%% ); ?></span></th>
+			<th class="wc-%%GATEWAY ID DASHERIZED%%-payment-method-exp-date"><span class="nobr"><?php _e( 'Expires', %%TEXT DOMAIN%% ); ?></span></th>
+			<th class="wc-%%GATEWAY ID DASHERIZED%%-payment-method-status"><span class="nobr"><?php _e( 'Status', %%TEXT DOMAIN%% ); ?></span></th>
+			<th class="wc-%%GATEWAY ID DASHERIZED%%-payment-method-actions"><span class="nobr"><?php _e( 'Actions', %%TEXT DOMAIN%% ); ?></span></th>
 		</tr>
 		</thead>
 
 		<tbody>
 			<?php foreach ( $tokens as $token ) :
-				$delete_url      = wp_nonce_url( add_query_arg( array( '%%GATEWAY ID DASHERIZED%%-token' => $token->get_token(), '%%GATEWAY ID DASHERIZED%%-action' => 'delete' ) ), '%%GATEWAY ID DASHERIZED%%-token-action' );
-				$make_default_url = wp_nonce_url( add_query_arg( array( '%%GATEWAY ID DASHERIZED%%-token' => $token->get_token(), '%%GATEWAY ID DASHERIZED%%-action' => 'make-default' ) ), '%%GATEWAY ID DASHERIZED%%-token-action' );
-				$payment_method_image_url  = $gateway->get_payment_method_image_url( $token->get_type() );
+				$delete_url       = wp_nonce_url( add_query_arg( array( 'wc-%%GATEWAY ID DASHERIZED%%-token' => $token->get_token(), 'wc-%%GATEWAY ID DASHERIZED%%-action' => 'delete' ) ), 'wc-%%GATEWAY ID DASHERIZED%%-token-action' );
+				$make_default_url = wp_nonce_url( add_query_arg( array( 'wc-%%GATEWAY ID DASHERIZED%%-token' => $token->get_token(), 'wc-%%GATEWAY ID DASHERIZED%%-action' => 'make-default' ) ), 'wc-%%GATEWAY ID DASHERIZED%%-token-action' );
+				$payment_method_image_url  = $token->get_image_url();
 				?>
-				<tr class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-label">
-					<td class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-type">
+				<tr class="wc-%%GATEWAY ID DASHERIZED%%-payment-method-label">
+					<td class="wc-%%GATEWAY ID DASHERIZED%%-payment-method-type">
 						<?php if ( $payment_method_image_url ) : ?>
-							<img src="<?php echo esc_url( $payment_method_image_url ); ?>" alt="<?php esc_attr_e( $token->get_type_full() ); ?>" title="<?php esc_attr_e( $token->get_type() ); ?>" style="vertical-align:middle;" />
+							<img src="<?php echo esc_url( $payment_method_image_url ); ?>" alt="<?php esc_attr_e( $token->get_type_full(), %%TEXT DOMAIN%% ); ?>" title="<?php esc_attr_e( $token->get_type_full(), %%TEXT DOMAIN%% ); ?>" style="vertical-align:middle;" />
 						<?php else: ?>
-							<?php echo esc_html( $token->get_type() ); ?>
+							<?php echo esc_html_e( $token->get_type_full() ); ?>
 						<?php endif; ?>
 					</td>
-					<td class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-account-number">
+					<td class="wc-%%GATEWAY ID DASHERIZED%%-payment-method-account-number">
 						<?php echo esc_html( $token->get_last_four() ); ?>
 					</td>
-					<td class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-exp-date">
+					<td class="wc-%%GATEWAY ID DASHERIZED%%-payment-method-exp-date">
 						<?php echo esc_html( $token->get_exp_month() . '/' . $token->get_exp_year() ); ?>
 					</td>
-					<td class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-status">
+					<td class="wc-%%GATEWAY ID DASHERIZED%%-payment-method-status">
 						<?php echo ( $token->is_default() ) ? __( 'Default', %%TEXT DOMAIN%% ) : '<a href="' . esc_url( $make_default_url ) . '">' . __( 'Make Default', %%TEXT DOMAIN%% ) . '</a>'; ?>
 					</td>
-					<td class="woocommerce-%%GATEWAY ID DASHERIZED%%-payment-method-actions" style="width: 1%; text-align: center;">
-						<a href="<?php echo esc_url( $delete_url ); ?>" class="woocommerce-%%GATEWAY ID DASHERIZED%%-delete-payment-method js-woocommerce-%%GATEWAY ID DASHERIZED%%-delete-payment-method"><img src="<?php echo esc_attr( $woocommerce->plugin_url() . '/assets/images/cross.png' ); ?>" alt="[X]" style="box-shadow: none;" /></a>
+					<td class="wc-%%GATEWAY ID DASHERIZED%%-payment-method-actions" style="width: 1%; text-align: center;">
+						<a href="<?php echo esc_url( $delete_url ); ?>" class="wc-%%GATEWAY ID DASHERIZED%%-delete-payment-method js-wc-%%GATEWAY ID DASHERIZED%%-delete-payment-method"><img src="<?php echo esc_attr( $woocommerce->plugin_url() . '/assets/images/cross.png' ); ?>" alt="[X]" style="box-shadow: none;" /></a>
 					</td>
 				</tr>
 			<?php endforeach; ?>

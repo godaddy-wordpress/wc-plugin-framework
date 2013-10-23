@@ -29,7 +29,7 @@
  * @param boolean $enable_csc true if the Card Security Code (CVV) field should be rendered
 %%IF SUPPORTS TOKENIZATION%%
  * @param array $tokens optional associative array of credit card token string to SV_WC_Payment_Gateway_Payment_Token object
- * @param boolean $tokenization_allowed true if tokenization is allowed (enabled in gateway and customer logged in), false otherwise
+ * @param boolean $tokenization_allowed true if tokenization is allowed (enabled in gateway), false otherwise
  * @param boolean $tokenization_forced true if tokenization is forced (new card must be tokenized, ie for subscriptions/pre-orders)
 %%ENDIF SUPPORTS TOKENIZATION%%
  *
@@ -40,39 +40,39 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 ?>
-<style type="text/css">#payment ul.payment_methods li label[for='payment_method_%%GATEWAY ID%%'] img:nth-child(n+2) { margin-left:1px; }</style>
+<style type="text/css">#payment ul.payment_methods li label[for='payment_method_%%GATEWAY ID%%'] img:nth-child(n+2) { margin-left:1px; } .woocommerce #payment ul.payment_methods li .payment_method_%%GATEWAY ID%% img, .woocommerce-page #payment ul.payment_methods li .payment_method_%%GATEWAY ID%% img { margin-left:0; }</style>
 <fieldset>
 %%IF SUPPORTS TOKENIZATION%%
 	<?php
 	if ( $tokens ) : ?>
 		<p class="form-row form-row-wide">
-			<a class="button" style="float:right;" href="<?php echo get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ); ?>#woocommerce-%%GATEWAY ID DASHERIZED%%-my-payment-methods"><?php echo wp_kses_post( apply_filters( 'wc_gateway_%%GATEWAY ID%%_manage_my_payment_methods', __( "Manage My Cards", %%TEXT DOMAIN%% ) ) ); ?></a>
+			<a class="button" style="float:right;" href="<?php echo get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ); ?>#wc-%%GATEWAY ID DASHERIZED%%-my-payment-methods"><?php echo wp_kses_post( apply_filters( 'wc_gateway_%%GATEWAY ID%%_manage_my_payment_methods', __( "Manage My Cards", %%TEXT DOMAIN%% ) ) ); ?></a>
 			<?php foreach( $tokens as $token ) : ?>
-				<input type="radio" id="%%GATEWAY ID DASHERIZED%%-payment-token-<?php echo esc_attr( $token->get_token() ); ?>" name="%%GATEWAY ID DASHERIZED%%-payment-token" class="js-%%GATEWAY ID DASHERIZED%%-payment-token" style="width:auto;" value="<?php echo esc_attr( $token->get_token() ); ?>" <?php checked( $token->is_default() ); ?>/>
-				<label style="display:inline;" for="%%GATEWAY ID DASHERIZED%%-payment-token-<?php echo esc_attr( $token->get_token() ); ?>"><?php printf( __( '%s ending in %s (expires %s)', %%TEXT DOMAIN%% ), esc_html( $token->get_type_full() ), esc_html( $token->get_last_four() ), esc_html( $token->get_exp_month() . '/' . $token->get_exp_year() ) ); ?></label><br />
+				<input type="radio" id="wc-%%GATEWAY ID DASHERIZED%%-payment-token-<?php echo esc_attr( $token->get_token() ); ?>" name="wc-%%GATEWAY ID DASHERIZED%%-payment-token" class="js-wc-%%GATEWAY ID DASHERIZED%%-payment-token js-wc-payment-gateway-payment-token" style="width:auto;" value="<?php echo esc_attr( $token->get_token() ); ?>" <?php checked( $token->is_default() ); ?>/>
+				<label style="display:inline;" for="wc-%%GATEWAY ID DASHERIZED%%-payment-token-<?php echo esc_attr( $token->get_token() ); ?>"><?php printf( __( '%s ending in %s (expires %s)', %%TEXT DOMAIN%% ), $token->get_image_url() ? '<img src="' . esc_url( $token->get_image_url() ) . '" />' : esc_html( $token->get_type_full() ), esc_html( $token->get_last_four() ), esc_html( $token->get_exp_month() . '/' . $token->get_exp_year() ) ); ?></label><br />
 			<?php endforeach; ?>
-			<input type="radio" id="%%GATEWAY ID DASHERIZED%%-use-new-payment-method" name="%%GATEWAY ID DASHERIZED%%-payment-token" class="js-%%GATEWAY ID DASHERIZED%%-payment-token" style="width:auto;" value="" <?php checked( $default_new_card ); ?> /> <label style="display:inline;" for="%%GATEWAY ID DASHERIZED%%-use-new-payment-method"><?php echo __( 'Use a new credit card', %%TEXT DOMAIN%% ); ?></label>
+			<input type="radio" id="wc-%%GATEWAY ID DASHERIZED%%-use-new-payment-method" name="wc-%%GATEWAY ID DASHERIZED%%-payment-token" class="js-wc-%%GATEWAY ID DASHERIZED%%-payment-token" style="width:auto;" value="" <?php checked( $default_new_card ); ?> /> <label style="display:inline;" for="wc-%%GATEWAY ID DASHERIZED%%-use-new-payment-method"><?php echo __( 'Use a new credit card', %%TEXT DOMAIN%% ); ?></label>
 		</p>
 		<div class="clear"></div>
 	<?php endif; ?>
-	<div class="%%GATEWAY ID DASHERIZED%%-new-payment-method-form js-%%GATEWAY ID DASHERIZED%%-new-payment-method-form" <?php echo ( $tokens ? 'style="display:none;"' : '' ); ?>>
+	<div class="wc-%%GATEWAY ID DASHERIZED%%-new-payment-method-form js-wc-%%GATEWAY ID DASHERIZED%%-new-payment-method-form" <?php echo ( $tokens ? 'style="display:none;"' : '' ); ?>>
 %%ELSEIF%%
-	<div class="%%GATEWAY ID DASHERIZED%%-new-payment-method-form js-%%GATEWAY ID DASHERIZED%%-new-payment-method-form">
+	<div class="wc-%%GATEWAY ID DASHERIZED%%-new-payment-method-form js-wc-%%GATEWAY ID DASHERIZED%%-new-payment-method-form">
 %%ENDIF SUPPORTS TOKENIZATION%%
 		<p class="form-row form-row-first">
-			<label for="%%GATEWAY ID DASHERIZED%%-account-number"><?php _e( "Credit Card Number", %%TEXT DOMAIN%%); ?> <span class="required">*</span></label>
-			<input type="text" class="input-text" id="%%GATEWAY ID DASHERIZED%%-account-number" name="%%GATEWAY ID DASHERIZED%%-account-number" maxlength="19" autocomplete="off" value="<?php echo esc_attr( $payment_method_defaults['account-number'] ); ?>" />
+			<label for="wc-%%GATEWAY ID DASHERIZED%%-account-number"><?php _e( "Credit Card Number", %%TEXT DOMAIN%% ); ?> <span class="required">*</span></label>
+			<input type="text" class="input-text js-wc-payment-gateway-account-number" id="wc-%%GATEWAY ID DASHERIZED%%-account-number" name="wc-%%GATEWAY ID DASHERIZED%%-account-number" maxlength="19" autocomplete="off" value="<?php echo esc_attr( $payment_method_defaults['account-number'] ); ?>" />
 		</p>
 
 		<p class="form-row form-row-last">
-			<label for="%%GATEWAY ID DASHERIZED%%-exp-month"><?php _e( "Expiration Date", %%TEXT DOMAIN%% ); ?> <span class="required">*</span></label>
-			<select name="%%GATEWAY ID DASHERIZED%%-exp-month" id="%%GATEWAY ID DASHERIZED%%-exp-month" style="width:auto;">
+			<label for="wc-%%GATEWAY ID DASHERIZED%%-exp-month"><?php _e( "Expiration Date", %%TEXT DOMAIN%% ); ?> <span class="required">*</span></label>
+			<select name="wc-%%GATEWAY ID DASHERIZED%%-exp-month" id="wc-%%GATEWAY ID DASHERIZED%%-exp-month" class="js-wc-payment-gateway-card-exp-month" style="width:auto;">
 				<option value=""><?php _e( 'Month', %%TEXT DOMAIN%% ) ?></option>
 				<?php foreach ( range( 1, 12 ) as $month ) : ?>
 					<option value="<?php printf( '%02d', $month ) ?>" <?php selected( $payment_method_defaults['exp-month'], $month ); ?>><?php printf( '%02d', $month ) ?></option>
 				<?php endforeach; ?>
 			</select>
-			<select name="%%GATEWAY ID DASHERIZED%%-exp-year" id="%%GATEWAY ID DASHERIZED%%-exp-year" style="width:auto;">
+			<select name="wc-%%GATEWAY ID DASHERIZED%%-exp-year" id="wc-%%GATEWAY ID DASHERIZED%%-exp-year" class="js-wc-payment-gateway-card-exp-year" style="width:auto;">
 				<option value=""><?php _e( 'Year', %%TEXT DOMAIN%% ) ?></option>
 				<?php foreach ( range( date( 'Y' ), date( 'Y' ) + 10 ) as $year ) : ?>
 					<option value="<?php echo $year ?>" <?php selected( $payment_method_defaults['exp-year'], $year ); ?>><?php echo $year ?></option>
@@ -83,8 +83,8 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 		<?php if ( $enable_csc ) : ?>
 			<p class="form-row form-row-wide">
-				<label for="%%GATEWAY ID DASHERIZED%%-csc"><?php _e( "Card Security Code", %%TEXT DOMAIN%% ) ?> <span class="required">*</span></label>
-				<input type="text" class="input-text" id="%%GATEWAY ID DASHERIZED%%-csc" name="%%GATEWAY ID DASHERIZED%%-csc" maxlength="4" style="width:60px" autocomplete="off" value="<?php echo esc_attr( $payment_method_defaults['csc'] ); ?>" />
+				<label for="wc-%%GATEWAY ID DASHERIZED%%-csc"><?php _e( "Card Security Code", %%TEXT DOMAIN%% ) ?> <span class="required">*</span></label>
+				<input type="text" class="input-text js-wc-payment-gateway-csc" id="wc-%%GATEWAY ID DASHERIZED%%-csc" name="wc-%%GATEWAY ID DASHERIZED%%-csc" maxlength="4" style="width:60px" autocomplete="off" value="<?php echo esc_attr( $payment_method_defaults['csc'] ); ?>" />
 			</p>
 			<div class="clear"></div>
 		<?php endif; ?>
@@ -94,13 +94,13 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 		if ( $tokenization_allowed ) :
 			if ( $tokenization_forced ) :
 				?>
-				<input name="%%GATEWAY ID DASHERIZED%%-tokenize-payment-method" id="%%GATEWAY ID DASHERIZED%%-tokenize-payment-method" type="hidden" value="true" />
+				<input name="wc-%%GATEWAY ID DASHERIZED%%-tokenize-payment-method" id="wc-%%GATEWAY ID DASHERIZED%%-tokenize-payment-method" type="hidden" value="true" />
 				<?php
 			else:
 				?>
 				<p class="form-row">
-					<input name="%%GATEWAY ID DASHERIZED%%-tokenize-payment-method" id="%%GATEWAY ID DASHERIZED%%-tokenize-payment-method" type="checkbox" value="true" style="width:auto;" />
-					<label for="%%GATEWAY ID DASHERIZED%%-tokenize-payment-method" style="display:inline;"><?php echo wp_kses_post( apply_filters( 'wc_gateway_%%GATEWAY ID%%_tokenize_payment_method_text', __( "Securely Save Card to Account", %%TEXT DOMAIN%% ) ) ); ?></label>
+					<input name="wc-%%GATEWAY ID DASHERIZED%%-tokenize-payment-method" id="wc-%%GATEWAY ID DASHERIZED%%-tokenize-payment-method" class="js-wc-%%GATEWAY ID DASHERIZED%%-tokenize-payment-method" type="checkbox" value="true" style="width:auto;" />
+					<label for="wc-%%GATEWAY ID DASHERIZED%%-tokenize-payment-method" style="display:inline;"><?php echo wp_kses_post( apply_filters( 'wc_gateway_%%GATEWAY ID%%_tokenize_payment_method_text', __( "Securely Save Card to Account", %%TEXT DOMAIN%% ) ) ); ?></label>
 				</p>
 				<div class="clear"></div>
 				<?php

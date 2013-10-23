@@ -1,0 +1,135 @@
+<?php
+/**
+ * %%PLUGIN NAME%%
+ *
+ * This source file is subject to the GNU General Public License v3.0
+ * that is bundled with this package in the file license.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-3.0.html
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@skyverge.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade %%PLUGIN NAME%% to newer
+ * versions in the future. If you wish to customize %%PLUGIN NAME%% for your
+ * needs please refer to %%PLUGIN DOCS URL%%
+ *
+ * @package   %%PLUGIN PACKAGE%%/Templates
+ * @author    SkyVerge
+ * @copyright Copyright (c) %%COPYRIGHT YEAR%%, SkyVerge, Inc.
+ * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
+ */
+
+/**
+ * The checkout page credit card form
+ *
+ * @param array $payment_method_defaults optional card defaults to pre-populate the form fields
+ * @param string $sample_check_image_url url to the sample check image
+ * @param array $states associative array of state code to name
+%%IF SUPPORTS TOKENIZATION%%
+ * @param array $tokens optional associative array of credit card token string to SV_WC_Payment_Gateway_Payment_Token object
+ * @param boolean $tokenization_allowed true if tokenization is allowed (enabled in gateway), false otherwise
+ * @param boolean $tokenization_forced true if tokenization is forced (new card must be tokenized, ie for subscriptions/pre-orders)
+%%ENDIF SUPPORTS TOKENIZATION%%
+ *
+ * @version 0.1
+ * @since 0.1
+ */
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+?>
+<style type="text/css">#payment ul.payment_methods li label[for='payment_method_%%GATEWAY ID CHECKS%%'] img:nth-child(n+2) { margin-left:1px; } .woocommerce #payment ul.payment_methods li .payment_method_%%GATEWAY ID CHECKS%% img, .woocommerce-page #payment ul.payment_methods li .payment_method_%%GATEWAY ID CHECKS%% img { margin-left:0; }</style>
+<div class="sample-check" style="display:none;">
+	<p><?php _e( 'How to find your ABA routing number and account number', %%TEXT DOMAIN%% ); ?></p>
+	<img width="403" src="<?php echo esc_url( $sample_check_image_url ); ?>" style="box-shadow:none;" />
+</div>
+<fieldset>
+%%IF SUPPORTS TOKENIZATION%%
+	<?php
+	if ( $tokens ) : ?>
+		<p class="form-row form-row-wide">
+			<a class="button" style="float:right;" href="<?php echo get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ); ?>#wc-%%GATEWAY ID DASHERIZED CHECKS%%-my-payment-methods"><?php echo wp_kses_post( apply_filters( 'wc_gateway_%%GATEWAY ID CHECKS%%_manage_my_payment_methods', __( "Manage My Accounts", %%TEXT DOMAIN%% ) ) ); ?></a>
+			<?php foreach( $tokens as $token ) : ?>
+				<input type="radio" id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-payment-token-<?php echo esc_attr( $token->get_token() ); ?>" name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-payment-token" class="js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-payment-token js-wc-payment-gateway-payment-token" style="width:auto;" value="<?php echo esc_attr( $token->get_token() ); ?>" <?php checked( $token->is_default() ); ?>/>
+				<label style="display:inline;" for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-payment-token-<?php echo esc_attr( $token->get_token() ); ?>"><?php printf( __( '%s %s ending in %s', %%TEXT DOMAIN%% ), $token->get_image_url() ? '<img src="' . esc_url( $token->get_image_url() ) . '" />' : esc_html( $token->get_type_full() ), esc_html( $token->get_account_type() ), esc_html( $token->get_last_four() ) ); ?></label><br />
+			<?php endforeach; ?>
+			<input type="radio" id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-use-new-payment-method" name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-payment-token" class="js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-payment-token" style="width:auto;" value="" <?php checked( $default_new_account ); ?> /> <label style="display:inline;" for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-use-new-payment-method"><?php echo __( 'Use a new account', %%TEXT DOMAIN%% ); ?></label>
+		</p>
+		<div class="clear"></div>
+	<?php endif; ?>
+	<div class="wc-%%GATEWAY ID DASHERIZED CHECKS%%-new-payment-method-form js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-new-payment-method-form" <?php echo ( $tokens ? 'style="display:none;"' : '' ); ?>>
+%%ELSEIF%%
+	<div class="wc-%%GATEWAY ID DASHERIZED CHECKS%%-new-payment-method-form js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-new-payment-method-form">
+%%ENDIF SUPPORTS TOKENIZATION%%
+
+		<p class="form-row form-row-first">
+			<label for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-routing-number"><?php _e( 'Routing Number (9 digits)', %%TEXT DOMAIN%% ); ?> <img title="<?php esc_attr_e( 'Where do I find this?', %%TEXT DOMAIN%% ); ?>" class="js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-help" style="margin-bottom:3px;cursor:pointer;box-shadow:none;" src="<?php echo $woocommerce->plugin_url(); ?>/assets/images/help.png" width="16" height="16" /></label>
+			<input id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-routing-number" name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-routing-number" type="text" class="input-text js-wc-payment-gateway-routing-number" autocomplete="off" />
+		</p>
+		<p class="form-row form-row-last">
+			<label for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-number"><?php _e( 'Account Number (3-17 digits)', %%TEXT DOMAIN%% ); ?> <img title="<?php esc_attr_e( 'Where do I find this?', %%TEXT DOMAIN%% ); ?>" class="js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-help" style="margin-bottom:3px;cursor:pointer;box-shadow:none;" class="help_tip" src="<?php echo $woocommerce->plugin_url(); ?>/assets/images/help.png" width="16" height="16" /></label>
+			<input id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-number" name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-number" type="text" class="input-text js-wc-payment-gateway-account-number" autocomplete="off" />
+		</p>
+		<div class="clear"></div>
+
+		<p class="form-row form-row-first">
+			<label for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-drivers-license-number"><?php _e( 'Drivers License Number', %%TEXT DOMAIN%% ); ?> <span class="required">*</span></label>
+			<input id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-drivers-license-number" name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-drivers-license-number" type="text" class="input-text js-wc-payment-gateway-drivers-license-number" autocomplete="off" style="width:33%;" />
+		</p>
+		<p class="form-row form-row-last">
+			<label for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-drivers-license-state"><?php _e( 'Drivers License State', %%TEXT DOMAIN%% ); ?> <span class="required">*</span></label>
+			<select id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-drivers-license-state" name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-drivers-license-state" class=" js-wc-payment-gateway-drivers-license-state" style="width:auto;">
+				<option value=""><?php _e( 'Select your state', %%TEXT DOMAIN%% ); ?></option>
+				<?php foreach ( $states as $code => $name ) : ?>
+					<option value="<?php echo esc_attr( $code ); ?>"><?php echo esc_html( $name ); ?></option>
+				<?php endforeach; ?>
+			</select>
+		</p>
+		<div class="clear"></div>
+
+%%IF SUPPORTS ACCOUNT-TYPE%%
+		<p class="form-row">
+			<label for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-type"><?php _e( 'Account Type', %%TEXT DOMAIN%% ); ?> <span class="required">*</span></label>
+			<select id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-type" name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-type" class=" js-wc-payment-gateway-account-type" style="width:auto;">
+				<option value="checking"><?php _e( 'Checking', %%TEXT DOMAIN%% ); ?></option>
+				<option value="savings"><?php _e( 'Savings', %%TEXT DOMAIN%% ); ?></option>
+			</select>
+		</p>
+		<div class="clear"></div>
+%%ENDIF SUPPORTS ACCOUNT-TYPE%%
+
+%%IF SUPPORTS CHECK-NUMBER%%
+		<p class="form-row">
+			<label for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-check-number"><?php _e( 'Check Number', %%TEXT DOMAIN%% ); ?> <img title="<?php esc_attr_e( 'Where do I find this?', %%TEXT DOMAIN%% ); ?>" class="js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-help" style="margin-bottom:3px;cursor:pointer;box-shadow:none;" class="help_tip" src="<?php echo $woocommerce->plugin_url(); ?>/assets/images/help.png" width="16" height="16" /></label>
+			<input id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-check-number" name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-check-number" type="text" class="input-text js-wc-payment-gateway-check-number" autocomplete="off" />
+		</p>
+		<div class="clear"></div>
+%%ENDIF SUPPORTS CHECK-NUMBER%%
+
+		<p class="form-row" style="width:auto;margin-top:5px;"><?php _e( 'By entering my account number above and clicking Authorize, I authorize my payment to be processed as an electronic funds transfer or draft drawn from my account. If the payment is returned unpaid, I authorize you or your service provider to collect the payment and my state\'s return item fee by electronic funds transfer(s) or draft(s) drawn from my account. <a href="http://www.achex.com/html/NSF_pop.jsp" target="_blank">Click here to view your state\'s returned item fee.</a> If this payment is from a corporate account, I make these authorizations as an authorized corporate representative and agree that the entity will be bound by the NACHA operating rules.', %%TEXT DOMAIN%% ) ?></p>
+		<div class="clear"></div>
+
+%%IF SUPPORTS TOKENIZATION%%
+		<?php
+		if ( $tokenization_allowed ) :
+			if ( $tokenization_forced ) :
+				?>
+				<input name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-tokenize-payment-method" id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-tokenize-payment-method" type="hidden" value="true" />
+				<?php
+			else:
+				?>
+				<p class="form-row">
+					<input name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-tokenize-payment-method" id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-tokenize-payment-method" class="js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-tokenize-payment-method" type="checkbox" value="true" style="width:auto;" />
+					<label for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-tokenize-payment-method" style="display:inline;"><?php echo wp_kses_post( apply_filters( 'wc_gateway_%%GATEWAY ID CHECKS%%_tokenize_payment_method_text', __( "Securely Save eCheck Account", %%TEXT DOMAIN%% ) ) ); ?></label>
+				</p>
+				<div class="clear"></div>
+				<?php
+			endif;
+		endif;
+		?>
+%%ENDIF SUPPORTS TOKENIZATION%%
+	</div>
+</fieldset>

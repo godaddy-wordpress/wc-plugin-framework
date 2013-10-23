@@ -68,14 +68,8 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/** @var string version number */
 	private $version;
 
-	/** @var string optional gateway class name */
-	private $gateway_class_name;
-
-	/** @var string optional gateway id */
-	private $gateway_id;
-
-	/** @var SV_WC_Payment_Gateway the payment gateway */
-	private $gateway;
+	/** @var array optional associative array of gateway id to array( 'gateway_class_name' => string, 'gateway' => SV_WC_Payment_Gateway ) */
+	private $gateways;
 
 	/** @var string plugin path without trailing slash */
 	private $plugin_path;
@@ -116,8 +110,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 *
 	 * Optional args:
 	 *
-	 * + `gateway_class_name` - string gateway class name
-	 * + `gateway_id` - string gateway id
+	 * + `gateways` - array associative array of gateway id to gateway class name.  A single plugin might support more than one gateway, ie credit card, echeck.
 	 * + `dependencies` - array string names of required PHP extensions
 	 * + `require_ssl` - boolean true if this gateway requires SSL for processing transactions, false otherwise. Defaults to false
 	 * + `supports` - array named features that this gateway supports, including 'tokenization', 'transaction_link', 'customer_id'
@@ -135,9 +128,14 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 		$this->version     = $version;
 		$this->text_domain = $text_domain;
 
-		// optional parameters
-		if ( isset( $args['gateway_class_name'] ) ) $this->gateway_class_name = $args['gateway_class_name'];
-		if ( isset( $args['gateway_id'] ) )         $this->gateway_id         = $args['gateway_id'];
+		// optional parameters: the supported gateways
+		if ( isset( $args['gateways'] ) ) {
+
+			foreach ( $args['gateways'] as $gateway_id => $gateway_class_name ) {
+				$this->add_gateway( $gateway_id, $gateway_class_name );
+			}
+
+		}
 		if ( isset( $args['dependencies'] ) )       $this->dependencies       = $args['dependencies'];
 		if ( isset( $args['require_ssl'] ) )        $this->require_ssl        = $args['require_ssl'];
 		if ( isset( $args['supports'] ) )           $this->supports           = $args['supports'];
@@ -180,14 +178,17 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 			}
 
 			// add a 'Configure' link to the plugin action links
-			add_filter( 'plugin_action_links_' . plugin_basename( $this->get_file() ), array( $this, 'plugin_configure_link' ) );
+			add_filter( 'plugin_action_links_' . plugin_basename( $this->get_file() ), array( $this, 'plugin_action_links' ) );
 
 			// run every time
 			$this->do_install();
 		}
 
+		// AJAX handler to dismiss any warning/error notices
+		add_action( 'wp_ajax_wc_payment_gateway_' . $this->get_id() . '_dismiss_message', array( $this, 'handle_dismiss_message' ) );
+
 		// Add classes to WC Payment Methods
-		add_filter( 'woocommerce_payment_gateways', array( $this, 'load_gateway' ) );
+		add_filter( 'woocommerce_payment_gateways', array( $this, 'load_gateways' ) );
 
 		// Load translation files
 		add_action( 'init', array( $this, 'load_translation' ) );
@@ -195,15 +196,15 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 
 
 	/**
-	 * Adds the gateway to the list of available payment gateways
+	 * Adds any gateways supported by this plugin to the list of available payment gateways
 	 *
 	 * @since 0.1
 	 * @param array $gateways
 	 * @return array $gateways
 	 */
-	public function load_gateway( $gateways ) {
+	public function load_gateways( $gateways ) {
 
-		$gateways[] = $this->get_gateway_class_name();
+		$gateways = array_merge( $gateways, $this->get_gateway_class_names() );
 
 		return $gateways;
 
@@ -255,7 +256,9 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 */
 	public function add_my_payment_methods() {
 
-		$this->get_gateway()->show_my_payment_methods();
+		foreach ( $this->get_gateways() as $gateway ) {
+			$gateway->show_my_payment_methods();
+		}
 
 	}
 
@@ -270,7 +273,11 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 
 		if ( is_account_page() ) {
 
-			$this->get_gateway()->handle_my_payment_methods_actions();
+			foreach ( $this->get_gateways() as $gateway ) {
+
+				$gateway->handle_my_payment_methods_actions();
+
+			}
 
 		}
 
@@ -278,6 +285,15 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 
 
 	/** Admin methods ******************************************************/
+
+
+	public function is_gateway_settings() {
+
+		return isset( $_GET['page'] ) && 'woocommerce_settings' == $_GET['page'] &&
+			isset( $_GET['tab'] ) && 'payment_gateways' == $_GET['tab'] &&
+			isset( $_GET['section'] ) && in_array( $_GET['section'], $this->get_gateway_class_names() );
+
+	}
 
 
 	/**
@@ -288,40 +304,94 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 */
 	public function render_admin_notices() {
 
+		global $woocommerce;
+
+		$notice_rendered = false;
+
 		// report any missing extensions
 		$missing_extensions = $this->get_missing_dependencies();
 
-		if ( count( $missing_extensions ) > 0 ) {
+		if ( count( $missing_extensions ) > 0 && ( ! $this->is_message_dismissed( 'missing-extensions' ) || $this->is_gateway_settings() ) ) {
 
 			$message = sprintf(
 				_n(
 					'%s requires the %s PHP extension to function.  Contact your host or server administrator to configure and install the missing extension.',
 					'%s requires the following PHP extensions to function: %s.  Contact your host or server administrator to configure and install the missing extensions.',
 					count( $missing_extensions ),
-					self::TEXT_DOMAIN
+					$this->text_domain
 				),
 				$this->get_plugin_name(),
 				'<strong>' . implode( ', ', $missing_extensions ) . '</strong>'
 			);
 
-			echo '<div class="error"><p>' . $message . '</p></div>';
+			// dismiss link unless we're on the payment gateway settings page, in which case we'll always display the notice
+			$dismiss_link = '<a href="#" class="js-wc-payment-gateway-' . $this->get_id() . '-message-dismiss" data-message-id="missing-extensions">' . __( 'Dismiss', $this->text_domain ) . '</a>';
+			if ( $this->is_gateway_settings() )
+				$dismiss_link = '';
+
+			echo '<div class="error"><p>' . $message . ' ' . $dismiss_link . '</p></div>';
+
+			$notice_rendered = true;
+
 		}
 
 		// check settings:  gateway active and SSL enabled
 		// TODO: does this work when a plugin is first activated, before the settings page has been saved?
-		if ( $this->requires_ssl() ) {
+		if ( $this->requires_ssl() && ( ! $this->is_message_dismissed( 'ssl-required' ) || $this->is_gateway_settings() ) ) {
 
-			$settings = get_option( $this->get_plugin_settings_name() );
+			foreach ( $this->get_gateway_ids() as $gateway_id ) {
 
-			if ( isset( $settings['enabled'] ) && 'yes' == $settings['enabled'] ) {
+				$settings = $this->get_gateway_settings( $gateway_id );
 
-				if ( isset( $settings['environment'] ) && 'production' == $settings['environment'] ) {
+				if ( isset( $settings['enabled'] ) && 'yes' == $settings['enabled'] ) {
 
-					// SSL check if gateway enabled/production mode
-					if ( 'no' === get_option( 'woocommerce_force_ssl_checkout' ) )
-						echo '<div class="error"><p>' . sprintf( __( "%s: WooCommerce is not being forced over SSL; your customer's credit card data is at risk.", $this->text_domain ), '<strong>' . $this->get_plugin_name() . '</strong>' ), '</p></div>';
+					if ( isset( $settings['environment'] ) && 'production' == $settings['environment'] ) {
+
+						// SSL check if gateway enabled/production mode
+						if ( 'no' === get_option( 'woocommerce_force_ssl_checkout' ) ) {
+
+							// dismiss link unless we're on the payment gateway settings page, in which case we'll always display the notice
+							$dismiss_link = '<a href="#" class="js-wc-payment-gateway-' . $this->get_id() . '-message-dismiss" data-message-id="missing-extensions">' . __( 'Dismiss', $this->text_domain ) . '</a>';
+							if ( $this->is_gateway_settings() )
+								$dismiss_link = '';
+
+							echo '<div class="error"><p>' . sprintf( __( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", $this->text_domain ), '<strong>' . $this->get_plugin_name() . '</strong>' ) . ' ' . $dismiss_link . '</p></div>';
+
+							$notice_rendered = true;
+
+							// just show the message once for plugins with multiple gateway support
+							break;
+						}
+
+					}
 				}
 			}
+		}
+
+		// if a notice was rendered, add the javascript code to handle the notice dismiss action
+		if ( $notice_rendered ) {
+
+			ob_start();
+			?>
+			// hide notice
+			$( 'a.js-wc-payment-gateway-<?php echo $this->get_id(); ?>-message-dismiss' ).click( function() {
+
+				$.get(
+					ajaxurl,
+					{
+						action: 'wc_payment_gateway_<?php echo $this->get_id(); ?>_dismiss_message',
+						messageid: $( this ).data( 'message-id' )
+					}
+				);
+
+				$( this ).closest( 'div.error' ).fadeOut();
+
+				return false;
+			} );
+			<?php
+			$javascript = ob_get_clean();
+
+			$woocommerce->add_inline_js( $javascript );
 		}
 	}
 
@@ -334,13 +404,13 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * @param array $actions associative array of action names to anchor tags
 	 * @return array associative array of plugin action links
 	 */
-	public function plugin_configure_link( $actions ) {
+	public function plugin_action_links( $actions ) {
 
 		$custom_actions = array();
 
-		// settings url if any
-		if ( $this->get_settings_url() )
-			$custom_actions['configure'] = sprintf( '<a href="%s">%s</a>', $this->get_settings_url(), __( 'Configure', $this->text_domain ) );
+		// settings url(s)
+		foreach ( $this->get_gateway_ids() as $gateway_id )
+			$custom_actions[ 'configure_' . $gateway_id ] = $this->get_settings_link( $gateway_id );
 
 		// documentation url if any
 		if ( $this->get_documentation_url() )
@@ -348,6 +418,10 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 
 		// support url
 		$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', 'http://support.woothemes.com/', __( 'Support', $this->text_domain ) );
+
+		// optional review link
+		if ( $this->get_product_page_url() )
+			$custom_actions['review'] = sprintf( '<a href="%s">%s</a>', $this->get_product_page_url() . '#review_form', __( 'Write a Review', $this->text_domain ) );
 
 		// add the links to the front of the actions list
 		return array_merge( $custom_actions, $actions );
@@ -360,16 +434,20 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * gateway merchant account, if supported
 	 *
 	 * @since 0.1
+	 * @see SV_WC_Payment_Gateway::get_transaction_url()
+	 * @see SV_WC_Payment_Gateway::order_meta_box_transaction_link()
 	 * @param int $post_id the order identifier
 	 */
 	public function order_meta_box_transaction_link( $post_id ) {
 
 		$order = new WC_Order( $post_id );
 
-		// TODO: multiple gateway support
-		if ( $this->get_gateway_id() == $order->payment_method ) {
-			$this->get_gateway()->order_meta_box_transaction_link( $order );
+		if ( $this->has_gateway( $order->payment_method ) ) {
+
+			$this->get_gateway( $order->payment_method )->order_meta_box_transaction_link( $order );
+
 		}
+
 	}
 
 
@@ -398,6 +476,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 		if ( ! current_user_can( 'manage_woocommerce' ) )
 			return;
 
+		// if this plugin has multiple gateways available, just get the first one
 		$gateway      = $this->get_gateway();
 		$environments = $gateway->get_environments();
 
@@ -414,9 +493,9 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 
 			?>
 				<tr>
-					<th><label for="<?php printf( '_wc_%s_customer_id_%s', $this->get_plugin_id(), $environment_id ); ?>"><?php echo count( $environments ) > 1 ? sprintf( __( 'Customer ID (%s)', $this->text_domain ), $environment_name ) : __( 'Customer ID', $this->text_domain ); ?></label></th>
+					<th><label for="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>"><?php echo count( $environments ) > 1 ? sprintf( __( 'Customer ID (%s)', $this->text_domain ), $environment_name ) : __( 'Customer ID', $this->text_domain ); ?></label></th>
 					<td>
-						<input type="text" name="<?php printf( '_wc_%s_customer_id_%s', $this->get_plugin_id(), $environment_id ); ?>" id="<?php printf( '_wc_%s_customer_id_%s', $this->get_plugin_id(), $environment_id ); ?>" value="<?php echo esc_attr( $gateway->get_customer_id( $user->ID, $environment_id, false ) ); ?>" class="regular-text" /><br/>
+						<input type="text" name="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>" id="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>" value="<?php echo esc_attr( $gateway->get_customer_id( $user->ID, $environment_id, false ) ); ?>" class="regular-text" /><br/>
 						<span class="description"><?php echo count( $environments ) > 1 ? sprintf( __( 'The customer ID for the user in the %s environment. Only edit this if necessary.', $this->text_domain ), $environment_name ) : __( 'The customer ID for the user in the environment. Only edit this if necessary.', $this->text_domain ); ?></span>
 					</td>
 				</tr>
@@ -448,6 +527,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 		if ( ! current_user_can( 'manage_woocommerce' ) )
 			return;
 
+		// if this plugin has multiple gateways available, just get the first one
 		$gateway      = $this->get_gateway();
 		$environments = $gateway->get_environments();
 
@@ -459,11 +539,26 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 		foreach ( array_keys( $environments ) as $environment_id ) {
 
 			// update (or blank out) customer id for the given environment
-			if ( isset( $_POST[ '_wc_' . $this->get_plugin_id() . '_customer_id_' . $environment_id ] ) ) {
-				$gateway->update_customer_id( $user_id, trim( $_POST[ '_wc_' . $this->get_plugin_id() . '_customer_id_' . $environment_id ] ), $environment_id );
+			if ( isset( $_POST[ '_wc_' . $this->get_id() . '_customer_id_' . $environment_id ] ) ) {
+				$gateway->update_customer_id( $user_id, trim( $_POST[ '_wc_' . $this->get_id() . '_customer_id_' . $environment_id ] ), $environment_id );
 			}
 
 		}
+	}
+
+
+	/** AJAX methods ******************************************************/
+
+
+	/**
+	 * Dismiss the identified message
+	 *
+	 * @since 0.1
+	 */
+	public function handle_dismiss_message() {
+
+		$this->dismiss_message( $_REQUEST['messageid'] );
+
 	}
 
 
@@ -475,7 +570,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 *
 	 * @since 0.1
 	 * @param string $feature the feature
-	 * @return bool true if the named feature is supported
+	 * @return boolean true if the named feature is supported
 	 */
 	public function supports( $feature ) {
 
@@ -510,15 +605,64 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 *
 	 * @since 0.1
 	 * @param string $message error or message to save to log
+	 * @param string $gateway_id optional gateway id to segment the files by, defaults to a combined log with plugin id
 	 */
-	public function log( $message ) {
+	public function log( $message, $gateway_id = null ) {
 
 		global $woocommerce;
+
+		if ( is_null( $gateway_id ) )
+			$log_id = $this->get_id();
+		else
+			$log_id = $gateway_id;
 
 		if ( ! is_object( $this->logger ) )
 			$this->logger = $woocommerce->logger();
 
-		$this->logger->add( $this->get_gateway_id(), $message );
+		$this->logger->add( $log_id, $message );
+
+	}
+
+
+	/**
+	 * Marks the identified admin message as dismissed for the given user
+	 *
+	 * @since 0.1
+	 * @param string $message_id the message identifier
+	 * @param int $user_id optional user identifier, defaults to current user
+	 * @return boolean true if the message has been dismissed by the admin user
+	 */
+	protected function dismiss_message( $message_id, $user_id = null ) {
+
+		if ( is_null( $user_id ) )
+			$user_id = get_current_user_id();
+
+		$dismissed_messages = get_user_meta( $user_id, 'wc_payment_gateway_' . $this->get_id() . '_dismissed_messages', true );
+
+		$dismissed_messages[ $message_id ] = true;
+
+		update_user_meta( $user_id, 'wc_payment_gateway_' . $this->get_id() . '_dismissed_messages', $dismissed_messages );
+
+	}
+
+
+	/**
+	 * Returns true if the identified admin message has been dismissed for the
+	 * given user
+	 *
+	 * @since 0.1
+	 * @param string $message_id the message identifier
+	 * @param int $user_id optional user identifier, defaults to current user
+	 * @return boolean true if the message has been dismissed by the admin user
+	 */
+	protected function is_message_dismissed( $message_id, $user_id = null ) {
+
+		if ( is_null( $user_id ) )
+			$user_id = get_current_user_id();
+
+		$dismissed_messages = get_user_meta( $user_id, 'wc_payment_gateway_' . $this->get_id() . '_dismissed_messages', true );
+
+		return isset( $dismissed_messages[ $message_id ] ) && $dismissed_messages[ $message_id ];
 
 	}
 
@@ -543,7 +687,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * @since 0.1
 	 * @return string plugin id
 	 */
-	public function get_plugin_id() {
+	public function get_id() {
 		return $this->id;
 	}
 
@@ -555,8 +699,8 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * @since 0.1
 	 * @return string payment gateway id with dashes in place of underscores
 	 */
-	public function get_plugin_id_dasherized() {
-		return str_replace( '_', '-', $this->get_plugin_id() );
+	public function get_id_dasherized() {
+		return str_replace( '_', '-', $this->get_id() );
 	}
 
 
@@ -577,38 +721,48 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * @return string the plugin version name
 	 */
 	protected function get_plugin_version_name() {
-		return 'wc_' . $this->get_plugin_id() . '_version';
+		return 'wc_' . $this->get_id() . '_version';
 	}
 
 
 	/**
-	 * Returns the gateway object
+	 * Returns the current version of the plugin
 	 *
 	 * @since 0.1
-	 * @return SV_WC_Payment_Gateway the gateway object
+	 * @return string plugin version
 	 */
-	protected function get_gateway() {
+	public function get_version() {
 
-		if ( ! isset( $this->gateway ) ) {
-
-			$gateway_class_name = $this->get_gateway_class_name();
-			$this->gateway = new $gateway_class_name();
-
-		}
-
-		return $this->gateway;
+		return $this->version;
 
 	}
 
 
 	/**
-	 * Returns the plugin settings option name.  Defaults to woocommerce_{gateway id}_settings
+	 * Returns the gateway settings option name for the identified gateway.
+	 * Defaults to woocommerce_{gateway id}_settings
 	 *
 	 * @since 0.1
-	 * @return string the plugin settings option name
+	 * @return string the gateway settings option name
 	 */
-	protected function get_plugin_settings_name() {
-		return 'woocommerce_' . $this->get_gateway_id() . '_settings';
+	protected function get_gateway_settings_name( $gateway_id ) {
+
+		return 'woocommerce_' . $gateway_id . '_settings';
+
+	}
+
+
+	/**
+	 * Returns the settings array for the identified gateway
+	 *
+	 * @since 0.1
+	 * @param string $gateway_id gateway identifier
+	 * @return array settings array
+	 */
+	public function get_gateway_settings( $gateway_id ) {
+
+		return get_option( $this->get_gateway_settings_name( $gateway_id ) );
+
 	}
 
 
@@ -638,18 +792,36 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Gets the plugin configuration URL
 	 *
 	 * @since 0.1
+	 * @param string $gateway_id the gateway identifier
 	 * @return string gateway settings URL
+	 * @see SV_WC_Payment_Gateway_Plugin::get_settings_link()
 	 */
-	protected function get_settings_url() {
+	protected function get_settings_url( $gateway_id ) {
 
 		$manage_url = admin_url( 'admin.php?page=woocommerce_settings&tab=payment_gateways' );
 
 		if ( version_compare( WOOCOMMERCE_VERSION, "2.0.0" ) >= 0 )
-			$manage_url = add_query_arg( array( 'section' => $this->get_gateway_class_name() ), $manage_url ); // WC 2.0+
+			$manage_url = add_query_arg( array( 'section' => $this->get_gateway_class_name( $gateway_id ) ), $manage_url ); // WC 2.0+
 		else
-			$manage_url = add_query_arg( array( 'subtab' => 'gateway-' . $this->get_gateway_id() ), $manage_url ); // WC 1.6.6-
+			$manage_url = add_query_arg( array( 'subtab' => 'gateway-' . $gateway_id ), $manage_url ); // WC 1.6.6-
 
 		return $manage_url;
+	}
+
+
+	/**
+	 * Returns the "Configure" plugin action link to go directly to the gateway
+	 * settings page
+	 *
+	 * @since 0.1
+	 * @param string $gateway_id the gateway identifier
+	 * @return string plugin configure link
+	 * @see SV_WC_Payment_Gateway_Plugin::get_settings_url()
+	 */
+	protected function get_settings_link( $gateway_id ) {
+
+		return sprintf( '<a href="%s">%s</a>', $this->get_settings_url( $gateway_id ), __( 'Configure', $this->text_domain ) );
+
 	}
 
 
@@ -662,38 +834,157 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 */
 	protected function get_documentation_url() {
 
-		return 'http://docs.woothemes.com/document/woocommerce-' . $this->get_plugin_id_dasherized() . '/';
+		return 'http://docs.woothemes.com/document/woocommerce-' . $this->get_id_dasherized() . '/';
 
 	}
 
 
 	/**
-	 * Gets the gateway class name.
+	 * Gets the skyverge.com product page URL, which defaults to:
+	 * http://www.skyverge.com/product/{dasherized plugin id}/
 	 *
 	 * @since 0.1
-	 * @return string the gateway class name
-	 * @throws Exception if a gateway class name is not set
+	 * @return string skyverge.com product page url
 	 */
-	public function get_gateway_class_name() {
+	protected function get_product_page_url() {
 
-		if ( ! isset( $this->gateway_class_name ) ) throw new Exception( __( 'Gateway Class Name Not Set', $this->text_domain ) );
+		return 'http://www.skyverge.com/product/' . $this->get_id_dasherized() . '/';
 
-		return $this->gateway_class_name;
 	}
 
 
 	/**
-	 * Gets the gateway id for the current gateway
+	 * Adds the given gateway id and gateway class name as an available gateway
+	 * supported by this plugin
 	 *
 	 * @since 0.1
-	 * @return string returns the gateway id
-	 * @throws Exception if a gateway id is not set
+	 * @param string $gateway_id the gateway identifier
+	 * @param string $gateway_class_name the corresponding gateway class name
 	 */
-	public function get_gateway_id() {
+	public function add_gateway( $gateway_id, $gateway_class_name ) {
 
-		if ( ! isset( $this->gateway_id ) ) throw new Exception( __( 'Gateway ID Not Set', $this->text_domain ) );
+		$this->gateways[ $gateway_id ] = array( 'gateway_class_name' => $gateway_class_name, 'gateway' => null );
 
-		return $this->gateway_id;
+	}
+
+
+	/**
+	 * Gets all supported gateway class names; typically this will be just one,
+	 * unless the plugin supports credit card and echeck variations
+	 *
+	 * @since 0.1
+	 * @return array of string gateway class names
+	 * @throws Exception if no gateways are available
+	 */
+	public function get_gateway_class_names() {
+
+		if ( empty( $this->gateways ) ) throw new Exception( __( 'Gateways not available', $this->text_domain ) );
+
+		$gateway_class_names = array();
+
+		foreach ( $this->gateways as $gateway ) {
+			$gateway_class_names[] = $gateway['gateway_class_name'];
+		}
+
+		return $gateway_class_names;
+	}
+
+
+	/**
+	 * Gets the gateway class name for the given gateway id
+	 *
+	 * @since 0.1
+	 * @param string $gateway_id the gateway identifier
+	 * @return string gateway class name
+	 * @throws Exception if gateway is not found
+	 */
+	public function get_gateway_class_name( $gateway_id ) {
+
+		if ( ! isset( $this->gateways[ $gateway_id ]['gateway_class_name'] ) ) throw new Exception( sprintf( __( "Gateway '%s' not available", $this->text_domain ), $gateway_id ) );
+
+		return $this->gateways[ $gateway_id ]['gateway_class_name'];
+	}
+
+
+	/**
+	 * Gets all supported gateway objects; typically this will be just one,
+	 * unless the plugin supports credit card and echeck variations
+	 *
+	 * @since 0.1
+	 * @return array of SV_WC_Payment_Gateway gateway objects
+	 * @throws Exception if no gateways are available
+	 */
+	public function get_gateways() {
+
+		if ( empty( $this->gateways ) ) throw new Exception( __( 'Gateways not available', $this->text_domain ) );
+
+		$gateways = array();
+
+		foreach ( $this->get_gateway_ids() as $gateway_id ) {
+
+			$gateways[] = $this->get_gateway( $gateway_id );
+
+		}
+
+		return $gateways;
+
+	}
+
+
+	/**
+	 * Returns the identified gateway object
+	 *
+	 * @since 0.1
+	 * @param string $gateway_id optional gateway identifier, defaults to first gateway
+	 * @return SV_WC_Payment_Gateway the gateway object
+	 */
+	public function get_gateway( $gateway_id = null ) {
+
+		// default to first gateway
+		if ( is_null( $gateway_id ) ) {
+			reset( $this->gateways );
+			$gateway_id = key( $this->gateways );
+		}
+
+		if ( ! isset( $this->gateways[ $gateway_id ]['gateway'] ) ) {
+
+			// instantiate and cache
+			$gateway_class_name = $this->get_gateway_class_name( $gateway_id );
+			$this->gateways[ $gateway_id ]['gateway'] = new $gateway_class_name();
+
+		}
+
+		return $this->gateways[ $gateway_id ]['gateway'];
+
+	}
+
+
+	/**
+	 * Returns true if the plugin supports this gateway
+	 *
+	 * @since 0.1
+	 * @param string $gateway_id the gateway identifier
+	 * @return boolean true if the plugin has this gateway available, false otherwise
+	 */
+	public function has_gateway( $gateway_id ) {
+
+		return isset( $this->gateways[ $gateway_id ] );
+
+	}
+
+
+	/**
+	 * Returns all available gateway ids for the plugin
+	 *
+	 * @since 0.1
+	 * @return array of gateway id strings
+	 */
+	public function get_gateway_ids() {
+
+		if ( empty( $this->gateways ) ) throw new Exception( __( 'Gateways not available', $this->text_domain ) );
+
+		return array_keys( $this->gateways );
+
 	}
 
 
@@ -793,7 +1084,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 		$installed_version = get_option( $this->get_plugin_version_name() );
 
 		// installed version lower than plugin version?
-		if ( -1 === version_compare( $installed_version, $this->version ) ) {
+		if ( -1 === version_compare( $installed_version, $this->get_version() ) ) {
 
 			if ( ! $installed_version )
 				$this->install();
@@ -801,7 +1092,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 				$this->upgrade( $installed_version );
 
 			// new version number
-			update_option( $this->get_plugin_version_name(), $this->version );
+			update_option( $this->get_plugin_version_name(), $this->get_version() );
 		}
 
 	}

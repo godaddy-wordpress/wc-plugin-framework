@@ -44,18 +44,25 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * @var array associated token data
 	 */
-	 protected $data;
+	protected $data;
+
+	/**
+	 * @var string payment type image url
+	 */
+	protected $img_url;
 
 
 	/**
 	 * Initialize a payment token with associated $data which is expected to
 	 * have the following members:
 	 *
-	 * default   - boolean optional indicates this is the default payment token
-	 * type      - string credit card type (visa, mc, amex, disc, diners, jcb) or echeck
-	 * last_four - string last four digits of account number
-	 * exp_month - string optional expiration month (credit card only)
-	 * exp_year  - string optional expiration year (credit card only)
+	 * default      - boolean optional indicates this is the default payment token
+	 * type         - string one of 'credit_card' or 'check'
+	 * last_four    - string last four digits of account number
+	 * card_type    - string credit card type: visa, mc, amex, disc, diners, jcb, etc (credit card only)
+	 * exp_month    - string optional expiration month (credit card only)
+	 * exp_year     - string optional expiration year (credit card only)
+	 * account_type - string one of 'checking' or 'savings' (checking gateway only)
 	 *
 	 * @since 0.1
 	 * @param string $token the payment gateway token
@@ -64,14 +71,15 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function __construct( $token, $data ) {
 
 		// get the payment type from the account number if not provided
-		if ( ! isset( $data['type'] ) && isset( $data['account_number'] ) )
-			$data['type'] = $this->type_from_account_number( $data['account_number'] );
+		if ( isset( $data['type'] ) && 'credit_card' == $data['type'] && ( ! isset( $data['card_type'] ) || ! $data['card_type'] ) && isset( $data['account_number'] ) )
+			$data['card_type'] = $this->type_from_account_number( $data['account_number'] );
 
 		// remove account number so it's not saved to the token
 		unset( $data['account_number'] );
 
 		$this->token = $token;
 		$this->data  = $data;
+
 	}
 
 
@@ -122,7 +130,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	public function is_credit_card() {
 
-		return 'echeck' != $this->data['type'];
+		return 'credit_card' == $this->data['type'];
 
 	}
 
@@ -141,7 +149,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
-	 * Returns the payment type (visa, mc, amex, disc, diners, jcb, echeck, etc)
+	 * Returns the payment type, one of 'credit_card' or 'check'
 	 *
 	 * @since 0.1
 	 * @return string the payment type
@@ -149,6 +157,22 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_type() {
 
 		return $this->data['type'];
+
+	}
+
+
+	/**
+	 * Returns the card type ie visa, mc, amex, disc, diners, jcb, etc
+	 *
+	 * Credit card gateway only
+	 *
+	 * @since 0.1
+	 * @return string the payment type
+	 */
+	public function get_card_type() {
+
+		return isset( $this->data['card_type'] ) ? $this->data['card_type'] : null;
+
 	}
 
 
@@ -163,14 +187,14 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		// card type regex patterns from https://github.com/stripe/jquery.payment/blob/master/src/jquery.payment.coffee
 		$types = array(
-			'visa'        => '/^4/',
-			'mastercard'  => '/^5[1-5]/',
-			'amex'        => '/^3[47]/',
-			'discover'    => '/^(6011|65|64[4-9]|622)/',
-			'diners_club' => '/^(36|38|30[0-5])/',
-			'jcb'         => '/^35/',
-			'maestro'     => '/^(5018|5020|5038|6304|6759|676[1-3])/',
-			'laser'       => '/^(6706|6771|6709)/',
+			'visa'       => '/^4/',
+			'mastercard' => '/^5[1-5]/',
+			'amex'       => '/^3[47]/',
+			'discover'   => '/^(6011|65|64[4-9]|622)/',
+			'diners'     => '/^(36|38|30[0-5])/',
+			'jcb'        => '/^35/',
+			'maestro'    => '/^(5018|5020|5038|6304|6759|676[1-3])/',
+			'laser'      => '/^(6706|6771|6709)/',
 		);
 
 		foreach ( $types as $type => $pattern ) {
@@ -184,21 +208,36 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
-	 * Returns the full payment type (Visa, MasterCard, American Express,
-	 * Discover, Diners, JCB, eCheck, etc)
+	 * Returns the checking account type, one of 'checking' or 'savings'
+	 *
+	 * Checking gateway only
+	 *
+	 * @since 0.1
+	 * @return string the payment type
+	 */
+	public function get_account_type() {
+
+		return isset( $this->data['account_type'] ) ? $this->data['account_type'] : null;
+
+	}
+
+
+	/**
+	 * Returns the full payment type, ie Visa, MasterCard, American Express,
+	 * Discover, Diners, JCB, eCheck, etc
 	 *
 	 * @since 0.1
 	 * @return string the payment type
 	 */
 	public function get_type_full() {
 
-		return self::type_to_name( $this->get_type() );
+		return self::type_to_name( $this->is_credit_card() ? $this->get_card_type() : $this->get_account_type() );
 
 	}
 
 
 	/**
-	 * Translates a card type to a full name, ie 'mc' => 'MasterCard'
+	 * Translates a card type to a full name, ie 'mc' => 'MasterCard' or 'savings' => 'eCheck'
 	 *
 	 * @since 0.1
 	 * @param string $type the card type, ie 'mc', 'amex', etc
@@ -217,7 +256,8 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			case 'jcb':        $name = 'JCB';              break;
 			case 'cartebleue': $name = 'CarteBleue';       break;
 			case 'paypal':     $name = 'PayPal';           break;
-			case 'echeck':     $name = 'eCheck';           break;
+			case 'checking':   $name = 'eCheck';           break;
+			case 'savings':    $name = 'eCheck';           break;
 
 		}
 
@@ -267,6 +307,35 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		return $this->data['exp_year'];
 
+	}
+
+
+	/**
+	 * Set the full image URL based on the token payment type.  Note that this
+	 * is available for convenience during a single request and will not be
+	 * included in persistent storage
+	 *
+	 * @see SV_WC_Payment_Gateway_Payment_Token::get_image_url()
+	 * @since 0.1
+	 * @param string $url the full image URL
+	 */
+	public function set_image_url( $url ) {
+
+		$this->img_url = $url;
+
+	}
+
+
+	/**
+	 * Get the full image URL based on teh token payment type.
+	 *
+	 * @see SV_WC_Payment_Gateway_Payment_Token::set_image_url()
+	 * @since 0.1
+	 * @return string the full image URL
+	 */
+	public function get_image_url() {
+
+		return $this->img_url;
 	}
 
 

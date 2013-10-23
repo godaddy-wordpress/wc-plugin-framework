@@ -32,7 +32,7 @@ the plugin, and performing the following renames/text substitutions:
 * %%PLUGIN DOCS URL%% - plugin documentation url, ie 'http://docs.woothemes.com/document/intuit-qbms/'
 * %%PLUGIN PACKAGE%% - plugin package name, ie 'WC-Intuit-QBMS'
 * %%COPYRIGHT YEAR%% - copyright year, ie '2013'
-* %%GATEWAY CLASS%% - gateway class name, ie 'WC_Gateway_Intuit_QBMS'
+* %%GATEWAY CLASS%% - gateway class name, ie 'WC_Gateway_Intuit_QBMS_Credit_Card'
 * %%GATEWAY ID%% - gateway id, ie 'intuit_qbms'
 * %%GATEWAY ID DASHERIZED%% - gateway id, ie 'intuit-qbms'
 * %%TEXT DOMAIN%% - plugin text domain, ie 'WC_Intuit_QBMS::TEXT_DOMAIN'
