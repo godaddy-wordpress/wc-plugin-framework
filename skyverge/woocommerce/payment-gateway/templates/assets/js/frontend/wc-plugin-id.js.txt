@@ -283,39 +283,6 @@ jQuery( document ).ready( function ( $ ) {
 %%IF SUPPORTS TOKENIZATION%%
 
 
-	// display the 'save payment method' option for guest checkouts if the 'create account' option is checked
-	//  but only hide the input if there is a 'create account' checkbox (some themes just display the password)
-	$( 'input#createaccount' ).change( function() {
-
-		var $parentRow;
-%%IF SUPPORTS CREDIT-CARDS%%
-
-		$parentRow = $( 'input.js-wc-%%GATEWAY ID DASHERIZED%%-tokenize-payment-method' ).closest( 'p.form-row' );
-
-		if ( $( this ).is( ':checked' ) ) {
-			$parentRow.slideDown();
-			$parentRow.next().show();
-		} else {
-			$parentRow.hide();
-			$parentRow.next().hide();
-		}
-%%ENDIF SUPPORTS CREDIT-CARDS%%
-%%IF SUPPORTS CHECKS%%
-
-		$parentRow = $( 'input.js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-tokenize-payment-method' ).closest( 'p.form-row' );
-
-		if ( $( this ).is( ':checked' ) ) {
-			$parentRow.slideDown();
-			$parentRow.next().show();
-		} else {
-			$parentRow.hide();
-			$parentRow.next().hide();
-		}
-%%ENDIF SUPPORTS CHECKS%%
-
-	} ).change();
-
-
 	// show/hide the saved payment methods when a saved payment method is de-selected/selected
 	function handleSavedPaymentMethods() {
 %%IF SUPPORTS CREDIT-CARDS%%
@@ -350,6 +317,38 @@ jQuery( document ).ready( function ( $ ) {
 			}
 		} ).change();
 %%ENDIF SUPPORTS CHECKS%%
+
+		// display the 'save payment method' option for guest checkouts if the 'create account' option is checked
+		//  but only hide the input if there is a 'create account' checkbox (some themes just display the password)
+		$( 'input#createaccount' ).change( function() {
+
+			var $parentRow;
+%%IF SUPPORTS CREDIT-CARDS%%
+
+			$parentRow = $( 'input.js-wc-%%GATEWAY ID DASHERIZED%%-tokenize-payment-method' ).closest( 'p.form-row' );
+
+			if ( $( this ).is( ':checked' ) ) {
+				$parentRow.slideDown();
+				$parentRow.next().show();
+			} else {
+				$parentRow.hide();
+				$parentRow.next().hide();
+			}
+%%ENDIF SUPPORTS CREDIT-CARDS%%
+%%IF SUPPORTS CHECKS%%
+
+			$parentRow = $( 'input.js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-tokenize-payment-method' ).closest( 'p.form-row' );
+
+			if ( $( this ).is( ':checked' ) ) {
+				$parentRow.slideDown();
+				$parentRow.next().show();
+			} else {
+				$parentRow.hide();
+				$parentRow.next().hide();
+			}
+%%ENDIF SUPPORTS CHECKS%%
+
+		} ).change();
 
 	}
 %%ENDIF SUPPORTS TOKENIZATION%%
