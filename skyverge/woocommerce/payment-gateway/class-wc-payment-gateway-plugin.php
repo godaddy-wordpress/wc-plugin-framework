@@ -47,6 +47,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
  *
  * + `get_file()` - the implementation should be: <code>return __FILE__;</code>
  * + `get_plugin_name()` - returns the plugin name (implemented this way so it can be localized)
+ * + `load_translation()` - load the plugin text domain
  *
  * ## Supports (zero or more):
  *
@@ -212,15 +213,17 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 
 
 	/**
-	 * Load plugin text domain
+	 * Load plugin text domain.  This implementation should look simply like:
+	 *
+	 * load_plugin_textdomain( 'text-domain-string', false, dirname( plugin_basename( $this->get_file() ) ) . '/i18n/languages' );
+	 *
+	 * Note that the actual text domain string should be used, and not a
+	 * variable or constant, otherwise localization plugins (Codestyling) will
+	 * not be able to detect the localization directory.
 	 *
 	 * @since 0.1
 	 */
-	public function load_translation() {
-
-		load_plugin_textdomain( $this->text_domain, false, dirname( plugin_basename( $this->get_file() ) ) . '/languages' );
-
-	}
+	abstract public function load_translation();
 
 
 	/**

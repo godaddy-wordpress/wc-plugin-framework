@@ -87,7 +87,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
  * child class constructor, after calling the parent constructor and performing
  * any required validations (ie tokenization enabled, CSC not required, etc).
  *
- * Override the remove_subscription_renewal_order_meta() method to remove any
+ * Override the get_remove_subscription_renewal_order_meta_fragment() method to remove any
  * order meta added by the add_payment_gateway_transaction_data( $order, $response )
  * method
  *
@@ -1916,6 +1916,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Don't copy over gateway-specific order meta when creating a parent renewal order.
 	 *
 	 * @since 0.1
+	 * @see SV_WC_Payment_Gateway::get_remove_subscription_renewal_order_meta_fragment()
 	 * @param array $order_meta_query MySQL query for pulling the metadata
 	 * @param int $original_order_id Post ID of the order being used to purchased the subscription being renewed
 	 * @param int $renewal_order_id Post ID of the order created for renewing the subscription
@@ -1926,18 +1927,36 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// all required and optional
 		if ( 'parent' == $new_order_role ) {
-			$order_meta_query .= " AND `meta_key` NOT IN ("
-				. "'_wc_" . $this->get_id() . "_payment_token', "
-				. "'_wc_" . $this->get_id() . "_account_four', "
-				. "'_wc_" . $this->get_id() . "_card_expiry_date', "
-				. "'_wc_" . $this->get_id() . "_card_type', "
-				. "'_wc_" . $this->get_id() . "_account_type', "
-				. "'_wc_" . $this->get_id() . "_check_number', "
-				. "'_wc_" . $this->get_id() . "_environment', "
-				. "'_wc_" . $this->get_id() . "_customer_id' )";
+			$order_meta_query .= $this->get_remove_subscription_renewal_order_meta(
+				array(
+					'_wc_' . $this->get_id() . '_payment_token',
+					'_wc_' . $this->get_id() . '_account_four',
+					'_wc_' . $this->get_id() . '_card_expiry_date',
+					'_wc_' . $this->get_id() . '_card_type',
+					'_wc_' . $this->get_id() . '_account_type',
+					'_wc_' . $this->get_id() . '_check_number',
+					'_wc_' . $this->get_id() . '_environment',
+					'_wc_' . $this->get_id() . '_customer_id',
+				)
+			);
 		}
 
 		return $order_meta_query;
+
+	}
+
+
+	/**
+	 * Returns the query fragment to remove the given subscription renewal order meta
+	 *
+	 * @since 0.1
+	 * @see SV_WC_Payment_Gateway::remove_subscription_renewal_order_meta()
+	 * @param array $meta_names array of string meta names to remove
+	 * @return string query fragment
+	 */
+	protected function get_remove_subscription_renewal_order_meta_fragment( $meta_names ) {
+
+		return " AND `meta_key` NOT IN ( '" . join( "', '", $meta_names ) . "' )";
 
 	}
 
@@ -2713,16 +2732,16 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 					$this->tokens[ $customer_id ][ $default_token->get_token() ]->set_default( true );
 				}
 
-				// set the payment type image url, if any, for convenience
-				foreach ( $this->tokens[ $customer_id ] as $key => $token ) {
-					$this->tokens[ $customer_id ][ $key ]->set_image_url( $this->get_payment_method_image_url( $token->is_credit_card() ? $token->get_card_type() : 'echeck' ) );
-				}
-
 			} catch( Exception $e ) {
 				// communication or other error, fallback to the locally stored tokens
 				$this->tokens[ $customer_id ] = $tokens;
 			}
 
+		}
+
+		// set the payment type image url, if any, for convenience
+		foreach ( $this->tokens[ $customer_id ] as $key => $token ) {
+			$this->tokens[ $customer_id ][ $key ]->set_image_url( $this->get_payment_method_image_url( $token->is_credit_card() ? $token->get_card_type() : 'echeck' ) );
 		}
 
 		return $this->tokens[ $customer_id ];
