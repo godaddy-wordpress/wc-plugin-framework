@@ -1631,7 +1631,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param WC_Order $order order object
 	 * @return string payment gateway guest customer id
 	 */
-	public function get_guest_customer_id( $order ) {
+	public function get_guest_customer_id( WC_Order $order ) {
 
 		// is there a customer id already tied to this order?
 		$customer_id = get_post_meta( $order->id, '_wc_' . $this->get_id() . '_customer_id', true );
