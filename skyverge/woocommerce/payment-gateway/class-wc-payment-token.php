@@ -79,7 +79,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		$this->token = $token;
 		$this->data  = $data;
-
 	}
 
 
@@ -92,7 +91,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_token() {
 
 		return $this->token;
-
 	}
 
 
@@ -105,7 +103,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function is_default() {
 
 		return isset( $this->data['default'] ) && $this->data['default'];
-
 	}
 
 
@@ -118,7 +115,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function set_default( $default ) {
 
 		$this->data['default'] = $default;
-
 	}
 
 
@@ -131,7 +127,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function is_credit_card() {
 
 		return 'credit_card' == $this->data['type'];
-
 	}
 
 
@@ -144,7 +139,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function is_check() {
 
 		return ! $this->is_credit_card();
-
 	}
 
 
@@ -157,7 +151,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_type() {
 
 		return $this->data['type'];
-
 	}
 
 
@@ -172,7 +165,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_card_type() {
 
 		return isset( $this->data['card_type'] ) ? $this->data['card_type'] : null;
-
 	}
 
 
@@ -218,7 +210,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_account_type() {
 
 		return isset( $this->data['account_type'] ) ? $this->data['account_type'] : null;
-
 	}
 
 
@@ -232,7 +223,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_type_full() {
 
 		return self::type_to_name( $this->is_credit_card() ? $this->get_card_type() : $this->get_account_type() );
-
 	}
 
 
@@ -265,7 +255,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 		if ( ! $name ) $name = ucwords( str_replace( '-', ' ', $type ) );
 
 		return apply_filters( 'wc_payment_gateway_payment_type_to_name', $name, $type );
-
 	}
 
 
@@ -278,7 +267,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_last_four() {
 
 		return $this->data['last_four'];
-
 	}
 
 
@@ -292,7 +280,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_exp_month() {
 
 		return $this->data['exp_month'];
-
 	}
 
 
@@ -306,7 +293,19 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_exp_year() {
 
 		return $this->data['exp_year'];
+	}
 
+
+	/**
+	 * Returns the expiration date in the format MM/YY, suitable for use
+	 * in order notes or other customer-facing areas
+	 *
+	 * @since 0.1
+	 * @return string formatted expiration date
+	 */
+	public function get_exp_date() {
+
+		return $this->get_exp_month() . '/' . substr( $this->get_exp_year(), -2 );
 	}
 
 
@@ -322,7 +321,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function set_image_url( $url ) {
 
 		$this->img_url = $url;
-
 	}
 
 
@@ -349,7 +347,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function to_datastore_format() {
 
 		return $this->data;
-
 	}
 
 

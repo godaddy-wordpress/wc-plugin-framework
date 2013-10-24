@@ -498,7 +498,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 				<tr>
 					<th><label for="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>"><?php echo count( $environments ) > 1 ? sprintf( __( 'Customer ID (%s)', $this->text_domain ), $environment_name ) : __( 'Customer ID', $this->text_domain ); ?></label></th>
 					<td>
-						<input type="text" name="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>" id="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>" value="<?php echo esc_attr( $gateway->get_customer_id( $user->ID, $environment_id, false ) ); ?>" class="regular-text" /><br/>
+						<input type="text" name="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>" id="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>" value="<?php echo esc_attr( $gateway->get_customer_id( $user->ID, array( 'environment_id' => $environment_id, 'autocreate' => false ) ) ); ?>" class="regular-text" /><br/>
 						<span class="description"><?php echo count( $environments ) > 1 ? sprintf( __( 'The customer ID for the user in the %s environment. Only edit this if necessary.', $this->text_domain ), $environment_name ) : __( 'The customer ID for the user in the environment. Only edit this if necessary.', $this->text_domain ); ?></span>
 					</td>
 				</tr>
@@ -640,11 +640,11 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 		if ( is_null( $user_id ) )
 			$user_id = get_current_user_id();
 
-		$dismissed_messages = get_user_meta( $user_id, 'wc_payment_gateway_' . $this->get_id() . '_dismissed_messages', true );
+		$dismissed_messages = get_user_meta( $user_id, '_wc_payment_gateway_' . $this->get_id() . '_dismissed_messages', true );
 
 		$dismissed_messages[ $message_id ] = true;
 
-		update_user_meta( $user_id, 'wc_payment_gateway_' . $this->get_id() . '_dismissed_messages', $dismissed_messages );
+		update_user_meta( $user_id, '_wc_payment_gateway_' . $this->get_id() . '_dismissed_messages', $dismissed_messages );
 
 	}
 
@@ -663,7 +663,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 		if ( is_null( $user_id ) )
 			$user_id = get_current_user_id();
 
-		$dismissed_messages = get_user_meta( $user_id, 'wc_payment_gateway_' . $this->get_id() . '_dismissed_messages', true );
+		$dismissed_messages = get_user_meta( $user_id, '_wc_payment_gateway_' . $this->get_id() . '_dismissed_messages', true );
 
 		return isset( $dismissed_messages[ $message_id ] ) && $dismissed_messages[ $message_id ];
 
