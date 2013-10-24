@@ -74,7 +74,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID%%_payment_fields' ) ) {
 
 		$tokens = array();
 		$default_new_card = true;
-		if ( $tokenization_allowed ) {
+		if ( $tokenization_allowed && is_user_logged_in() ) {
 			$tokens = $gateway->get_payment_tokens( get_current_user_id() );
 
 			foreach ( $tokens as $token ) {
@@ -212,7 +212,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_payment_fields' ) ) {
 
 		$tokens = array();
 		$default_new_account = true;
-		if ( $tokenization_allowed ) {
+		if ( $tokenization_allowed && is_user_logged_in() ) {
 			$tokens = $gateway->get_payment_tokens( get_current_user_id() );
 
 			foreach ( $tokens as $token ) {
