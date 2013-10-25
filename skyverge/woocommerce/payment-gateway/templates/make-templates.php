@@ -30,12 +30,12 @@
 
 // the template templates
 $filenames = array(
-	'assets/js/frontend/wc-plugin-id.js.txt'                 => null,
-	'check/checkout/gateway-id-payment-fields.php.txt'       => null,
-	'check/myaccount/gateway-id-my-accounts.php.txt'         => null,
-	'credit-card/checkout/gateway-id-payment-fields.php.txt' => null,
-	'credit-card/myaccount/gateway-id-my-cards.php.txt'      => null,
-	'wc-gateway-plugin-id-template.php.txt'                  => null,
+	'assets/js/frontend/wc-plugin-id.js.txt'                  => null,
+	'check/checkout/gateway-id-checks-payment-fields.php.txt' => null,
+	'check/myaccount/gateway-id-checks-my-accounts.php.txt'   => null,
+	'credit-card/checkout/gateway-id-payment-fields.php.txt'  => null,
+	'credit-card/myaccount/gateway-id-my-cards.php.txt'       => null,
+	'wc-gateway-plugin-id-template.php.txt'                   => null,
 );
 
 $variables = array();
