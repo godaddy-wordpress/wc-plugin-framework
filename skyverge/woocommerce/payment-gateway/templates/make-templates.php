@@ -71,8 +71,14 @@ if ( count( $argv ) > 1 ) {
 
 	$settings_file_content = parse_settings_file( $settings_file_name );
 
+	$missing_variables = $missing_conditions = array();
+
 	// load up any variables from the settings file
 	foreach ( array_keys( $variables ) as $variable_name ) {
+
+		if ( ! isset( $settings_file_content[ $variable_name ] ) ) {
+			$missing_variables[] = $variable_name;
+		}
 
 		$variables[ $variable_name ] = $settings_file_content[ $variable_name ];
 
@@ -81,8 +87,24 @@ if ( count( $argv ) > 1 ) {
 	// load up any if conditions from the settings file
 	foreach ( array_keys( $ifs ) as $condition ) {
 
+		if ( ! isset( $settings_file_content[ $condition ] ) ) {
+			$missing_conditions[] = $condition;
+		}
+
 		$ifs[ $condition ] = ( 1 == $settings_file_content[ $condition ] || 'y' == strtolower( $settings_file_content[ $condition ] ) || 'yes' == strtolower( $settings_file_content[ $condition ] ) )? true : false;
 
+	}
+
+	if ( count( $missing_variables ) > 0 || count( $missing_conditions ) > 0 ) {
+
+		if ( count( $missing_variables ) > 0 ) {
+			echo "Error: missing variables: " . implode( ', ', $missing_variables );
+		}
+		if ( count( $missing_conditions ) > 0 ) {
+			echo "Error: missing if conditions: " . implode( ', ', $missing_conditions );
+		}
+
+		exit(1);
 	}
 
 } else {

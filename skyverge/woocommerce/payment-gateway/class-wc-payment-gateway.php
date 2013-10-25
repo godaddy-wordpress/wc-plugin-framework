@@ -141,8 +141,6 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
  * + `get_transaction_url( $order )`
  *
  * TODO: "Pay Now" button feature.  Not sure whether you'd do this as a "supports" or as a "gateway type".  I'd lean towards "supports", but maxrice is the expert here
- *
- * @version 0.1
  */
 abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
@@ -279,7 +277,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * + `countries` -  array of two-letter country codes this gateway is allowed for, defaults to all
 	 * + `shared_settings` - array of shared setting names, if any.  This can be used for instance when a single plugin supports both credit card and echeck payments, and the same credentials can be used for both gateways
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $id the gateway id
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the parent plugin class
 	 * @param string $text_domain the plugin text domain
@@ -358,7 +356,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Loads the plugin configuration settings
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 */
 	protected function load_settings() {
 
@@ -403,7 +401,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Enqueues the required gateway.js library and custom checkout javascript.
 	 * Also localizes payment method validation errors
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 */
 	public function enqueue_js() {
 
@@ -424,7 +422,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns an array of javascript script params to localize for the
 	 * checkout/pay page javascript.  Mostly used for i18n purposes
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return array associative array of param name to value
 	 */
 	protected function get_js_localize_script_params() {
@@ -456,7 +454,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds a default simple pay page handler
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 */
 	protected function add_pay_page_handler() {
 
@@ -468,7 +466,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Initialize payment gateway settings fields
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see WC_Settings_API::init_form_fields()
 	 */
 	public function init_form_fields() {
@@ -573,7 +571,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * with 'environment-field production-field' where "production" matches a
 	 * key from the environments member
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return array of form fields
 	 */
 	abstract protected function get_method_form_fields();
@@ -582,7 +580,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds the gateway environment form fields
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param array $form_fields gateway form fields
 	 * @return array $form_fields gateway form fields
 	 */
@@ -605,7 +603,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * optional constructor parameter must have been used in order for shared
 	 * settings to be supported.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway::$shared_settings
 	 * @see SV_WC_Payment_Gateway::$inherit_settings
 	 * @param array $form_fields gateway form fields
@@ -659,7 +657,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds the enable Card Security Code form fields
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param array $form_fields gateway form fields
 	 * @return array $form_fields gateway form fields
 	 */
@@ -679,7 +677,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Display settings page with some additional javascript for hiding conditional fields
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see WC_Settings_API::admin_options()
 	 */
 	public function admin_options() {
@@ -749,7 +747,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * + required currency
 	 * + required country
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see WC_Payment_Gateway::is_available()
 	 * @return true if this gateway is available for checkout, false otherwise
 	 */
@@ -783,7 +781,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if the gateway is properly configured to perform transactions
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway::is_configured()
 	 * @return boolean true if the gateway is properly configured
 	 */
@@ -795,7 +793,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns the gateway icon markup
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see WC_Payment_Gateway::get_icon()
 	 * @return string icon markup
 	 */
@@ -846,7 +844,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * returned.  If $type is 'echeck', a URL to the echeck icon will be
 	 * returned.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $type the payment method cc type or name
 	 * @return string the image URL or null
 	 */
@@ -904,7 +902,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns the relative path to the framework image directory, with a
 	 * trailing slash
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string relative path to framework image directory
 	 */
 	public function get_framework_image_path() {
@@ -918,7 +916,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * NOTE: if we want to bring billing field validation (ie length) into the
 	 * fold, see the Elavon VM Payment Gateway for a sample implementation
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see WC_Payment_Gateway::validate_fields()
 	 * @return bool true if fields are valid, false otherwise
 	 */
@@ -955,7 +953,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if the posted credit card fields are valid, false otherwise
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param boolean $is_valid true if the fields are valid, false otherwise
 	 * @return boolean true if the fields are valid, false otherwise
 	 */
@@ -1023,7 +1021,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Validates the provided Card Security Code, adding user error messages as
 	 * needed
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $csc the customer-provided card security code
 	 * @return boolean true if the card security code is valid, false otherwise
 	 */
@@ -1063,7 +1061,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if the posted echeck fields are valid, false otherwise
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param bool $is_valid true if the fields are valid, false otherwise
 	 * @return bool
 	 */
@@ -1151,7 +1149,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Handles payment processing
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 */
 	public function process_payment( $order_id ) {
 
@@ -1224,7 +1222,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 *
 	 * Note: we could consider adding birthday to the list here, but do any gateways besides NETBilling use this one?
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param int $order_id order ID being processed
 	 * @return WC_Order object with payment and transaction information attached
 	 */
@@ -1310,7 +1308,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Performs a check transaction for the given order and returns the
 	 * result
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $order the order object
 	 * @return SV_WC_Payment_Gateway_API_Response the response
 	 * @throws Exception network timeouts, etc
@@ -1350,7 +1348,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Performs a credit card transaction for the given order and returns the
 	 * result
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $order the order object
 	 * @return SV_WC_Payment_Gateway_API_Response the response
 	 * @throws Exception network timeouts, etc
@@ -1395,7 +1393,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Create a transaction
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $order the order object
 	 * @return bool true if transaction was successful, false otherwise
 	 * @throws Exception network timeouts, etc
@@ -1433,7 +1431,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds the standard transaction data to the order
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response|null $response optional transaction response
 	 */
@@ -1485,7 +1483,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds any gateway-specific transaction data to the order
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
 	 */
@@ -1500,7 +1498,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Mark the given order as 'on-hold', set an order note and display a message
 	 * to the customer
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $order the order
 	 * @param string $message a message to display within the order note
 	 */
@@ -1528,7 +1526,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Mark the given order as failed and set the order note
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $order the order
 	 * @param string $error_message a message to display inside the "Payment Failed" order note
 	 */
@@ -1560,7 +1558,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * If you want to check for the existance of a customer id, pass false for
 	 * the third parameter
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway::get_customer_id_user_meta_name()
 	 * @param int $user_id wordpress user identifier
 	 * @param string $environment_id optional environment id, defaults to current environment
@@ -1603,7 +1601,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Updates the payment gateway customer id for the given $environment, or
 	 * for the plugin current environment
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway::get_customer_id()
 	 * @param int $user_id wordpress user identifier
 	 * @param string payment gateway customer id
@@ -1627,7 +1625,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * use some other value, or made to return false for gateways that don't
 	 * support a customer id
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $order order object
 	 * @return string payment gateway guest customer id
 	 */
@@ -1660,7 +1658,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * plugin having multiple gateways (ie credit card and eCheck) the customer
 	 * id will be the same between them.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $environment_id optional environment id, defaults to plugin current environment
 	 * @return string payment gateway customer id user meta name
 	 */
@@ -1679,7 +1677,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Add a button to the order actions meta box to view the order in the
 	 * merchant account, if supported
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway_Plugin::order_meta_box_transaction_link()
 	 * @see SV_WC_Payment_Gateway::get_transaction_url()
 	 * @param WC_Order $order the order object
@@ -1704,7 +1702,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 *
 	 * Override this method to return the transaction URL, if supported
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway_Plugin::order_meta_box_transaction_link()
 	 * @see SV_WC_Payment_Gateway::order_meta_box_transaction_link()
 	 * @param WC_Order $order the order object
@@ -1724,7 +1722,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if this gateway with its current configuration supports subscriptions
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if the gateway supports subscriptions
 	 */
 	public function supports_subscriptions() {
@@ -1737,7 +1735,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds support for subscriptions by hooking in some necessary actions
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if subscriptions are not supported by this gateway or its current configuration
 	 */
 	public function add_subscriptions_support() {
@@ -1765,7 +1763,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Force tokenization for subscriptions, this can be forced either during checkout
 	 * or when the payment method for a subscription is being changed
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway::tokenization_forced()
 	 * @param bool $force_tokenization whether tokenization should be forced
 	 * @return bool true if tokenization should be forced, false otherwise
@@ -1782,7 +1780,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds subscriptions data to the order object
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway::get_order()
 	 * @param WC_Order $order the order
 	 * @return WC_Order the orders
@@ -1844,7 +1842,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Process subscription renewal
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param float $amount_to_charge subscription amount to charge, could include multiple renewals if they've previously failed and the admin has enabled it
 	 * @param WC_Order $order original order containing the subscription
 	 * @param int $product_id the subscription product id
@@ -1926,7 +1924,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Don't copy over gateway-specific order meta when creating a parent renewal order.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway::get_remove_subscription_renewal_order_meta_fragment()
 	 * @param array $order_meta_query MySQL query for pulling the metadata
 	 * @param int $original_order_id Post ID of the order being used to purchased the subscription being renewed
@@ -1960,7 +1958,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns the query fragment to remove the given subscription renewal order meta
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway::remove_subscription_renewal_order_meta()
 	 * @param array $meta_names array of string meta names to remove
 	 * @return string query fragment
@@ -1975,7 +1973,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds support for subscriptions by hooking in some necessary actions
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if subscriptions or subscription payment method changes are not supported by this gateway or its current configuration
 	 */
 	public function add_subscription_payment_method_change_support() {
@@ -1993,7 +1991,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * uses this gateway to successfully complete the payment for an automatic
 	 * renewal payment which had previously failed.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $original_order the original order in which the subscription was purchased.
 	 * @param WC_Order $renewal_order the order which recorded the successful payment (to make up for the failed automatic payment).
 	 */
@@ -2008,7 +2006,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Render the payment method used for a subscription in the "My Subscriptions" table
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $payment_method_to_display the default payment method text to display
 	 * @param array $subscription_details the subscription details
 	 * @param WC_Order $order the order containing the subscription
@@ -2035,7 +2033,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if this gateway with its current configuration supports pre-orders
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if the gateway supports pre-orders
 	 */
 	public function supports_pre_orders() {
@@ -2048,7 +2046,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds support for pre-orders by hooking in some necessary actions
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if pre-orders are not supported by this gateway or its current configuration
 	 */
 	public function add_pre_orders_support() {
@@ -2072,7 +2070,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Force tokenization for pre-orders
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway::tokenization_forced()
 	 * @param boolean $force_tokenization whether tokenization should be forced
 	 * @return boolean true if tokenization should be forced, false otherwise
@@ -2095,7 +2093,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds pre-orders data to the order object
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway::get_order()
 	 * @param WC_Order $order the order
 	 * @return WC_Order the orders
@@ -2169,7 +2167,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Handle the pre-order initial payment/tokenization, or defer back to the normal payment
 	 * processing flow
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway::process_payment()
 	 * @param boolean $result the result of this pre-order payment process
 	 * @param int $order_id the order identifier
@@ -2205,13 +2203,24 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 				$token = $this->get_payment_token( get_current_user_id(), $order->payment->token );
 
-				$order->add_order_note( sprintf( __( '%s Pre-Order Payment Token Saved: %s ending in %s (expires %s)', $this->text_domain ),
-					$this->get_method_title(),
-					$token->get_type_full(),
-					$token->get_last_four(),
-					$token->get_exp_date()
-				) );
+				// order note based on gateway type
+				if ( $this->is_credit_card_gateway() ) {
+					$message = sprintf( __( '%s Pre-Order Payment Token Saved: %s ending in %s (expires %s)', $this->text_domain ),
+						$this->get_method_title(),
+						$token->get_type_full(),
+						$token->get_last_four(),
+						$token->get_exp_date()
+					);
+				} else {
+					// account type (checking/savings) may or may not be available, which is fine
+					$message = sprintf( __( '%s Pre-Order eCheck Payment Token Saved: %s account ending in %s', $this->text_domain ),
+						$this->get_method_title(),
+						$token->get_account_type(),
+						$token->get_last_four()
+					);
+				}
 
+				$order->add_order_note( $message );
 
 				// mark order as pre-ordered / reduce order stock
 				WC_Pre_Orders_Order::mark_order_as_pre_ordered( $order );
@@ -2240,7 +2249,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Process a pre-order payment when the pre-order is released
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $order original order containing the pre-order
 	 */
 	public function process_pre_order_release_payment( $order ) {
@@ -2346,7 +2355,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns true if this is a credit card gateway which supports
 	 * authorization transactions
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if the gateway supports authorization
 	 */
 	public function supports_credit_card_authorization() {
@@ -2360,7 +2369,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns true if this is a credit card gateway which supports
 	 * charge transactions
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if the gateway supports charges
 	 */
 	public function supports_credit_card_charge() {
@@ -2374,7 +2383,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Adds any credit card authorization/charge admin fields, allowing the
 	 * administrator to choose between performing authorizations or charges
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param array $form_fields gateway form fields
 	 * @return array $form_fields gateway form fields
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if authorization & charge are not supported
@@ -2402,7 +2411,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns true if a credit card charge should be performed, false if an
 	 * authorization should be
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @throws Exception
 	 * @return boolean true if a charge should be performed
 	 */
@@ -2418,7 +2427,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns true if a credit card authorization should be performed, false if aa
 	 * charge should be
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @throws Exception
 	 * @return boolean true if an authorization should be performed
 	 */
@@ -2437,7 +2446,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns true if the gateway supports card_types: allows the admin to
 	 * configure card type icons to display at checkout
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if the gateway supports card_types
 	 */
 	public function supports_card_types() {
@@ -2451,7 +2460,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns the array of accepted card types if this is a credit card gateway
 	 * that supports card types.  Return format is 'VISA', 'MC', 'AMEX', etc
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see get_available_card_types()
 	 * @return array of accepted card types, ie 'VISA', 'MC', 'AMEX', etc
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if card types are not supported
@@ -2468,7 +2477,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Adds any card types form fields, allowing the admin to configure the card
 	 * types icons displayed during checkout
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param array $form_fields gateway form fields
 	 * @return array $form_fields gateway form fields
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if card types are not supported
@@ -2494,7 +2503,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns available card types, ie 'VISA' => 'Visa', 'MC' => 'MasterCard', etc
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return array associative array of card type to display name
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if credit card types is not supported
 	 */
@@ -2527,7 +2536,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if the gateway supports tokenization
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if the gateway supports tokenization
 	 */
 	public function supports_tokenization() {
@@ -2540,7 +2549,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if tokenization is enabled
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if tokenization is enabled
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
@@ -2555,7 +2564,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds any tokenization form fields for the settings page
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param array $form_fields gateway form fields
 	 * @return array $form_fields gateway form fields
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
@@ -2589,7 +2598,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * + `exp_month` - string optional expiration month (credit card only)
 	 * + `exp_year`  - string optional expiration year (credit card only)
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $token payment token
 	 * @param array $data payment token data
 	 * @return SV_WC_Payment_Gateway_Payment_Token payment token
@@ -2608,7 +2617,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Tokenizes the current payment method and adds the standard transaction
 	 * data to the order post record.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $order the order object
 	 * @return WC_Order the order object
 	 * @throws Exception on network error or request error
@@ -2655,7 +2664,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * false otherwise.  This is most useful to force tokenization for a
 	 * subscription or pre-orders initial transaction.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if tokenization should be forced on the checkout page, false otherwise
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
@@ -2673,7 +2682,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * requested by customer or otherwise forced.  This parameter is passed from
 	 * the checkout page/payment form.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if the current payment method should be tokenized
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
@@ -2696,7 +2705,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * plugin having multiple gateways (ie credit card and eCheck) the payment
 	 * tokens will be distinct between them
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $environment_id optional environment id, defaults to plugin current environment
 	 * @return string payment token user meta name
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
@@ -2719,7 +2728,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Get the available payment tokens for a user as an associative array of
 	 * payment token to SV_WC_Payment_Gateway_Payment_Token
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param int $user_id WordPress user identifier, or 0 for guest
 	 * @param string $customer_id optional unique customer identifier, if not provided this will be looked up based on $user_id which cannot be 0 in that case
 	 * @return array associative array of string token to SV_WC_Payment_Gateway_Payment_Token object
@@ -2795,7 +2804,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Updates the given payment tokens for the identified user, in the database.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param int $user_id wordpress user identifier
 	 * @param array $tokens array of tokens
 	 * @return string updated user meta id
@@ -2815,7 +2824,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns the payment token object identified by $token from the user
 	 * identified by $user_id
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param int $user_id WordPress user identifier, or 0 for guest
 	 * @param string $token payment token
 	 * @param string $customer_id optional unique customer identifier, if not provided this will be looked up based on $user_id which cannot be 0
@@ -2837,7 +2846,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if the identified user has the given payment token
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param int $user_id WordPress user identifier, or 0 for guest
 	 * @param string|SV_WC_Payment_Gateway_Payment_Token $token payment token
 	 * @param string $customer_id optional unique customer identifier, if not provided this will be looked up based on $user_id which cannot be 0
@@ -2868,7 +2877,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Add a payment method and token as user meta.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token the token
 	 * @return bool|int false if token not added, user meta ID if added
@@ -2900,7 +2909,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Delete a credit card token from user meta
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token|string $token the payment token to delete
 	 * @return bool|int false if not deleted, updated user meta ID if deleted
@@ -2957,7 +2966,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Set the default token for a user. This is shown as "Default Card" in the
 	 * frontend and will be auto-selected during checkout
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token|string $token the token to make default
 	 * @return string|bool false if not set, updated user meta ID if set
@@ -2997,7 +3006,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns $tokens in a format suitable for data storage
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param int $user_id user identifier
 	 * @param array $tokens array of SV_WC_Payment_Gateway_Payment_Token tokens
 	 * @return array data storage version of $tokens
@@ -3077,7 +3086,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Display the 'My Payment Methods' section on the 'My Account'
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	public function show_my_payment_methods() {
@@ -3099,7 +3108,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * This is a stub method which must be overridden if this gateway supports
 	 * tokenization
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 * @throws SV_WC_Payment_Gateway_Unimplemented_Method_Exception if this gateway supports direct communication but has not provided an implementation for this method
 	 */
@@ -3122,7 +3131,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * This is a stub method which must be overridden if this gateway performs
 	 * direct communication
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return SV_WC_Payment_Gateway_API the payment gateway API instance
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if this gateway does not support direct communication
 	 * @throws SV_WC_Payment_Gateway_Unimplemented_Method_Exception if this gateway supports direct communication but has not provided an implementation for this method
@@ -3143,7 +3152,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Safely get and trim data from $_POST
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $key array key to get from $_POST array
 	 * @return string value from $_POST or blank string if $_POST[ $key ] is not set
 	 */
@@ -3164,7 +3173,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * 3. Subtract the total obtained in step 2 from the next higher number ending in 0.
 	 * 4. This number should be the same as the last digit (the check digit). If the total obtained in step 2 is a number ending in zero (30, 40 etc.), the check digit is 0.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $account_number the credit card number to check
 	 * @return bool true if $account_number passes the check, false otherwise
 	 */
@@ -3184,7 +3193,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds debug messages to the page as a WC message/error, and/or to the WC Error log
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $message message to add
 	 * @param string $type how to add the message, options are:
 	 *     'message' (styled as WC message), 'error' (styled as WC Error)
@@ -3229,7 +3238,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns the payment gateway id
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string payment gateway id
 	 */
 	public function get_id() {
@@ -3241,7 +3250,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns the payment gateway id with dashes in place of underscores, and
 	 * appropriate for use in frontend element names, classes and ids
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string payment gateway id with dashes in place of underscores
 	 */
 	public function get_id_dasherized() {
@@ -3252,7 +3261,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns the parent plugin object
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return SV_WC_Payment_Gateway the parent plugin object
 	 */
 	public function get_plugin() {
@@ -3264,7 +3273,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns the description setting.  This is the description configured by
 	 * the admin and displayed to the customer during checkout.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string the checkout page description
 	 */
 	public function get_description() {
@@ -3276,7 +3285,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns the title setting.  This is the title configured by the admin and
 	 * displayed to the customer during checkout.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string the checkout page title
 	 */
 	public function get_title() {
@@ -3288,7 +3297,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns the admin method title.  This should be the gateway name, ie
 	 * 'Intuit QBMS'
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see WC_Settings_API::$method_title
 	 * @return string method title
 	 */
@@ -3300,7 +3309,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if the Card Security Code (CVV) field should be used on checkout
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if the Card Security Code field should be used on checkout
 	 */
 	public function csc_enabled() {
@@ -3313,7 +3322,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if settings should be inherited for this gateway
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if settings should be inherited for this gateway
 	 */
 	public function inherit_settings() {
@@ -3326,7 +3335,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Add support for the named feature or features
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string|array $feature the feature name or names supported by this gateway
 	 */
 	public function add_support( $feature ) {
@@ -3352,7 +3361,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Set all features supported
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param array $features array of supported feature names
 	 */
 	public function set_supports( $features ) {
@@ -3363,7 +3372,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if this echeck gateway supports
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $field_name check gateway field name, includes 'check_number', 'account_type'
 	 * @return boolean true if this check gateway supports the named field
 	 * @throws Exception if this is called on a non-check gateway
@@ -3381,7 +3390,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Gets the set of environments supported by this gateway.  All gateways
 	 * support at least the production environment
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return array associative array of environment id to name supported by this gateway
 	 */
 	public function get_environments() {
@@ -3399,7 +3408,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns the environment setting, one of the $environments keys, ie
 	 * 'production'
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string the configured environment id
 	 */
 	public function get_environment() {
@@ -3419,7 +3428,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns true if the current gateway environment is configured to
 	 * 'production'.  All gateways have at least the production environment
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $environment_id optional environment id to check, otherwise defaults to the gateway current environment
 	 * @return boolean true if $environment_id (if non-null) or otherwise the current environment is production
 	 */
@@ -3438,7 +3447,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if all debugging is disabled
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean if all debuging is disabled
 	 */
 	public function debug_off() {
@@ -3449,7 +3458,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if debug logging is enabled
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean if debug logging is enabled
 	 */
 	public function debug_log() {
@@ -3461,7 +3470,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns true if checkout debugging is enabled.  This will cause debugging
 	 * statements to be displayed on the checkout/pay pages
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean if checkout debugging is enabled
 	 */
 	public function debug_checkout() {
@@ -3472,7 +3481,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if this is a direct type gateway
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean if this is a direct payment gateway
 	 */
 	public function is_direct_gateway() {
@@ -3483,7 +3492,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if this is a hosted IPN type gateway
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean if this is a hosted IPN payment gateway
 	 */
 	public function is_redirect_hosted_ipn_gateway() {
@@ -3494,7 +3503,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if this is a redirect type gateway
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean if this is a redirect payment gateway
 	 */
 	public function is_redirect_gateway() {
@@ -3505,7 +3514,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if this is a credit card gateway
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if this is a credit card gateway
 	 */
 	public function is_credit_card_gateway() {
@@ -3516,7 +3525,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if this is an echeck gateway
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if this is an echeck gateway
 	 */
 	public function is_check_gateway() {

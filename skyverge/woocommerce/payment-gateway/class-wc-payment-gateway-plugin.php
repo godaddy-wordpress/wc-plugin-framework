@@ -55,9 +55,21 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
  * + `customer_id`      - adds actions to show/persist the "Customer ID" area of the admin User edit page
  * + `transaction_link` - adds actions to render the merchant account transaction direct link on the Admin Order Edit page.  (Don't forget to override the SV_WC_Payment_Gateway::get_transaction_url() method!)
  *
- * @version 0.1
+ * @version 1.0
  */
 abstract class SV_WC_Payment_Gateway_Plugin {
+
+	/** Payment Gateway Framework Version */
+	const VERSION = '1.0';
+
+	/** Tokenization feature */
+	const FEATURE_TOKENIZATION = 'tokenization';
+
+	/** Customer ID feature */
+	const FEATURE_CUSTOMER_ID = 'customer_id';
+
+	/** Link to transaction feature */
+	const FEATURE_TRANSACTION_LINK = 'transaction_link';
 
 
 	/** @var string plugin id */
@@ -96,15 +108,6 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/** @var bool helper for lazy pre-orders active check */
 	private $pre_orders_active;
 
-	/** Tokenization feature */
-	const FEATURE_TOKENIZATION = 'tokenization';
-
-	/** Customer ID feature */
-	const FEATURE_CUSTOMER_ID = 'customer_id';
-
-	/** Link to transaction feature */
-	const FEATURE_TRANSACTION_LINK = 'transaction_link';
-
 
 	/**
 	 * Initialize the plugin
@@ -116,18 +119,37 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * + `require_ssl` - boolean true if this gateway requires SSL for processing transactions, false otherwise. Defaults to false
 	 * + `supports` - array named features that this gateway supports, including 'tokenization', 'transaction_link', 'customer_id'
 	 *
-	 * @since 0.1
+	 * @since 1.0
+	 * @param string $minimum_version the minimum Framework version required by the concrete gateway
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
 	 * @param string $text_domain the plugin text domain
 	 * @param array $args plugin arguments
 	 */
-	public function __construct( $id, $version, $text_domain, $args ) {
+	public function __construct( $minimum_version, $id, $version, $text_domain, $args ) {
 
 		// required params
 		$this->id          = $id;
 		$this->version     = $version;
 		$this->text_domain = $text_domain;
+
+		// check that the current version of the framework meets the minimum
+		//  required by the concrete gateway.
+
+		if ( ! $this->check_version( $minimum_version ) ) {
+
+			if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+
+				// render any admin notices
+				add_action( 'admin_notices', array( $this, 'render_minimum_version_notice' ) );
+
+				// AJAX handler to dismiss any warning/error notices
+				add_action( 'wp_ajax_wc_payment_gateway_' . $this->get_id() . '_dismiss_message', array( $this, 'handle_dismiss_message' ) );
+
+			}
+
+			return;
+		}
 
 		// optional parameters: the supported gateways
 		if ( isset( $args['gateways'] ) ) {
@@ -199,7 +221,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Adds any gateways supported by this plugin to the list of available payment gateways
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param array $gateways
 	 * @return array $gateways
 	 */
@@ -221,7 +243,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * variable or constant, otherwise localization plugins (Codestyling) will
 	 * not be able to detect the localization directory.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 */
 	abstract public function load_translation();
 
@@ -229,7 +251,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Include required library files
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 */
 	public function lib_includes() {
 
@@ -255,7 +277,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Helper to add the 'My Cards' section to the 'My Account' page
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 */
 	public function add_my_payment_methods() {
 
@@ -270,7 +292,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Helper to handle any actions from the 'My Cards' section on the 'My Account'
 	 * page
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 */
 	public function handle_my_payment_methods_actions() {
 
@@ -303,11 +325,9 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Checks if required PHP extensions are loaded and SSL is enabled. Adds an admin notice if either check fails.
 	 * Also gateway settings can be checked as well.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 */
 	public function render_admin_notices() {
-
-		global $woocommerce;
 
 		$notice_rendered = false;
 
@@ -373,29 +393,41 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 
 		// if a notice was rendered, add the javascript code to handle the notice dismiss action
 		if ( $notice_rendered ) {
-
-			ob_start();
-			?>
-			// hide notice
-			$( 'a.js-wc-payment-gateway-<?php echo $this->get_id(); ?>-message-dismiss' ).click( function() {
-
-				$.get(
-					ajaxurl,
-					{
-						action: 'wc_payment_gateway_<?php echo $this->get_id(); ?>_dismiss_message',
-						messageid: $( this ).data( 'message-id' )
-					}
-				);
-
-				$( this ).closest( 'div.error' ).fadeOut();
-
-				return false;
-			} );
-			<?php
-			$javascript = ob_get_clean();
-
-			$woocommerce->add_inline_js( $javascript );
+			$this->render_admin_dismissible_notice_js();
 		}
+	}
+
+
+	/**
+	 * Render the javascript to handle the notice "dismiss" functionality
+	 *
+	 * @since 1.0
+	 */
+	protected function render_admin_dismissible_notice_js() {
+
+		global $woocommerce;
+
+		ob_start();
+		?>
+		// hide notice
+		$( 'a.js-wc-payment-gateway-<?php echo $this->get_id(); ?>-message-dismiss' ).click( function() {
+
+			$.get(
+				ajaxurl,
+				{
+					action: 'wc_payment_gateway_<?php echo $this->get_id(); ?>_dismiss_message',
+					messageid: $( this ).data( 'message-id' )
+				}
+			);
+
+			$( this ).closest( 'div.error' ).fadeOut();
+
+			return false;
+		} );
+		<?php
+		$javascript = ob_get_clean();
+
+		$woocommerce->add_inline_js( $javascript );
 	}
 
 
@@ -403,7 +435,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Return the plugin action links.  This will only be called if the plugin
 	 * is active.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param array $actions associative array of action names to anchor tags
 	 * @return array associative array of plugin action links
 	 */
@@ -436,7 +468,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Add a button to the order actions meta box to view the order in the
 	 * gateway merchant account, if supported
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway::get_transaction_url()
 	 * @see SV_WC_Payment_Gateway::order_meta_box_transaction_link()
 	 * @param int $post_id the order identifier
@@ -468,7 +500,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * assumed that in the case of a plugin having multiple gateways (ie credit
 	 * card and eCheck) the customer id will be the same between them.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway::get_customer_id_user_meta_name()
 	 * @see SV_WC_Payment_Gateway_Plugin::save_customer_id_meta_field()
 	 * @param WP_User $user user object for the current edit page
@@ -520,7 +552,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * assumed that in the case of a plugin having multiple gateways (ie credit
 	 * card and eCheck) the customer id will be the same between them.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway_Plugin::add_customer_id_meta_field()
 	 * @param int $user_id identifies the user to save the settings for
 	 */
@@ -556,7 +588,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Dismiss the identified message
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 */
 	public function handle_dismiss_message() {
 
@@ -571,7 +603,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Returns true if the gateway supports the named feature
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $feature the feature
 	 * @return boolean true if the named feature is supported
 	 */
@@ -585,7 +617,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Gets the string name of any required PHP extensions that are not loaded
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return array of missing dependencies
 	 */
 	public function get_missing_dependencies() {
@@ -606,7 +638,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Saves errors or messages to WooCommerce Log (woocommerce/logs/gateway-id-xxx.txt)
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $message error or message to save to log
 	 * @param string $gateway_id optional gateway id to segment the files by, defaults to a combined log with plugin id
 	 */
@@ -630,7 +662,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Marks the identified admin message as dismissed for the given user
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $message_id the message identifier
 	 * @param int $user_id optional user identifier, defaults to current user
 	 * @return boolean true if the message has been dismissed by the admin user
@@ -653,7 +685,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Returns true if the identified admin message has been dismissed for the
 	 * given user
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $message_id the message identifier
 	 * @param int $user_id optional user identifier, defaults to current user
 	 * @return boolean true if the message has been dismissed by the admin user
@@ -678,7 +710,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 *
 	 * return __FILE__;
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string the full path and filename of the plugin file
 	 */
 	abstract protected function get_file();
@@ -687,7 +719,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Returns the plugin id
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string plugin id
 	 */
 	public function get_id() {
@@ -699,7 +731,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Returns the plugin id with dashes in place of underscores, and
 	 * appropriate for use in frontend element names, classes and ids
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string payment gateway id with dashes in place of underscores
 	 */
 	public function get_id_dasherized() {
@@ -711,7 +743,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Returns the plugin full name including "WooCommerce", ie
 	 * "WooCommerce X Gateway".  This method is defined abstract for localization purposes
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string plugin name
 	 */
 	abstract public function get_plugin_name();
@@ -720,7 +752,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Returns the plugin version name.  Defaults to wc_{plugin id}_version
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string the plugin version name
 	 */
 	protected function get_plugin_version_name() {
@@ -731,7 +763,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Returns the current version of the plugin
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string plugin version
 	 */
 	public function get_version() {
@@ -745,7 +777,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Returns the gateway settings option name for the identified gateway.
 	 * Defaults to woocommerce_{gateway id}_settings
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string the gateway settings option name
 	 */
 	protected function get_gateway_settings_name( $gateway_id ) {
@@ -758,7 +790,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Returns the settings array for the identified gateway
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $gateway_id gateway identifier
 	 * @return array settings array
 	 */
@@ -772,7 +804,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Get the PHP dependencies for extension depending on the gateway being used
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return array of required PHP extension names, based on the gateway in use
 	 */
 	protected function get_dependencies() {
@@ -783,7 +815,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Returns true if this plugin requires SSL to function properly
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if this plugin requires ssl
 	 */
 	protected function requires_ssl() {
@@ -794,7 +826,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Gets the plugin configuration URL
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $gateway_id the gateway identifier
 	 * @return string gateway settings URL
 	 * @see SV_WC_Payment_Gateway_Plugin::get_settings_link()
@@ -816,7 +848,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Returns the "Configure" plugin action link to go directly to the gateway
 	 * settings page
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $gateway_id the gateway identifier
 	 * @return string plugin configure link
 	 * @see SV_WC_Payment_Gateway_Plugin::get_settings_url()
@@ -832,7 +864,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Gets the plugin documentation url, which defaults to:
 	 * http://docs.woothemes.com/document/woocommerce-{dasherized plugin id}/
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string documentation URL
 	 */
 	protected function get_documentation_url() {
@@ -846,7 +878,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Gets the skyverge.com product page URL, which defaults to:
 	 * http://www.skyverge.com/product/{dasherized plugin id}/
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string skyverge.com product page url
 	 */
 	protected function get_product_page_url() {
@@ -860,7 +892,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Adds the given gateway id and gateway class name as an available gateway
 	 * supported by this plugin
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $gateway_id the gateway identifier
 	 * @param string $gateway_class_name the corresponding gateway class name
 	 */
@@ -875,7 +907,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Gets all supported gateway class names; typically this will be just one,
 	 * unless the plugin supports credit card and echeck variations
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return array of string gateway class names
 	 * @throws Exception if no gateways are available
 	 */
@@ -896,7 +928,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Gets the gateway class name for the given gateway id
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $gateway_id the gateway identifier
 	 * @return string gateway class name
 	 * @throws Exception if gateway is not found
@@ -913,7 +945,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Gets all supported gateway objects; typically this will be just one,
 	 * unless the plugin supports credit card and echeck variations
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return array of SV_WC_Payment_Gateway gateway objects
 	 * @throws Exception if no gateways are available
 	 */
@@ -937,7 +969,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Returns the identified gateway object
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $gateway_id optional gateway identifier, defaults to first gateway
 	 * @return SV_WC_Payment_Gateway the gateway object
 	 */
@@ -965,7 +997,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Returns true if the plugin supports this gateway
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $gateway_id the gateway identifier
 	 * @return boolean true if the plugin has this gateway available, false otherwise
 	 */
@@ -979,7 +1011,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Returns all available gateway ids for the plugin
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return array of gateway id strings
 	 */
 	public function get_gateway_ids() {
@@ -995,7 +1027,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Returns the plugin's path without a trailing slash, i.e.
 	 * /path/to/wp-content/plugins/plugin-directory
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string the plugin path
 	 */
 	public function get_plugin_path() {
@@ -1011,7 +1043,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Returns the plugin's url without a trailing slash, i.e.
 	 * http://skyverge.com/wp-content/plugins/plugin-directory
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string the plugin URL
 	 */
 	public function get_plugin_url() {
@@ -1026,7 +1058,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Checks is WooCommerce Subscriptions is active
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return bool true if the WooCommerce Subscriptions plugin is active, false if not active
 	 */
 	public function is_subscriptions_active() {
@@ -1042,7 +1074,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Checks is WooCommerce Pre-Orders is active
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return bool true if WC Pre-Orders is active, false if not active
 	 */
 	public function is_pre_orders_active() {
@@ -1058,7 +1090,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Helper function to determine whether a plugin is active
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $plugin_name the plugin name, as the plugin-dir/plugin-class.php
 	 * @return boolean true if the named plugin is installed and active
 	 */
@@ -1078,9 +1110,73 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 
 
 	/**
+	 * Check that the framework meets the required $minimum_version.
+	 *
+	 * This is done because there is a chance that a shop could have two
+	 * framework plugins installed, with different versions of the framework,
+	 * only one of which will be loaded (probably based on the plugin name,
+	 * alphabetically).  If an older version of the framework happens to be
+	 * loaded in an install with another plugin requiring a higher version, this
+	 * situation could lead to fatal errors that shut the whole site down.  To
+	 * guard against this, every client of the framework must verify that the
+	 * currently loaded framework meets its required minimum version, and if
+	 * not, an admin error message will be displayed and the plugin must not
+	 * operate.
+	 *
+	 * @since 1.0
+	 * @param string $minimum_version the minimum framework version required by the concrete gateway
+	 * @return boolean true if the framework version is greater than or equal to $minimum version
+	 */
+	final protected function check_version( $minimum_version ) {
+
+		// installed version lower than minimum required?
+		if ( -1 === version_compare( self::VERSION, $minimum_version ) )
+			return false;
+
+		return true;
+	}
+
+
+	/**
+	 * Render the minimum version notice
+	 *
+	 * @since 1.0
+	 */
+	final public function render_minimum_version_notice() {
+
+		if ( ! $this->is_message_dismissed( 'minimum-version' ) || $this->is_gateway_settings() ) {
+
+			// a bit hacky, but get the directory name of the plugin which happened to load the framework
+			$framework_plugin = explode( '/', __FILE__ );
+			$framework_plugin = $framework_plugin[ count( $framework_plugin ) - 6 ];
+
+			$message = sprintf(
+				__( '%s requires that you update %s to the latest version, in order to function.  Until then, %s will remain non-functional.', $this->text_domain ),
+				'<strong>' . $this->get_plugin_name() . '</strong>',
+				'<strong>' . $framework_plugin . '</strong>',
+				'<strong>' . $this->get_plugin_name() . '</strong>'
+			);
+
+			// dismiss link unless we're on the payment gateway settings page, in which case we'll always display the notice
+			$dismiss_link = '<a href="#" class="js-wc-payment-gateway-' . $this->get_id() . '-message-dismiss" data-message-id="missing-extensions">' . __( 'Dismiss', $this->text_domain ) . '</a>';
+			if ( $this->is_gateway_settings() )
+				$dismiss_link = '';
+
+			echo '<div class="error"><p>' . $message . ' ' . $dismiss_link . '</p></div>';
+
+			$notice_rendered = true;
+
+			$this->render_admin_dismissible_notice_js();
+
+		}
+
+	}
+
+
+	/**
 	 * Handles version checking
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 */
 	protected function do_install() {
 
@@ -1104,7 +1200,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Plugin install method.  Perform any installation tasks here
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 */
 	protected function install() {
 
@@ -1116,7 +1212,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/**
 	 * Plugin upgrade method.  Perform any required upgrades here
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $installed_version the currently installed version
 	 */
 	protected function upgrade( $installed_version ) {

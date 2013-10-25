@@ -30,8 +30,6 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Payment_Token' ) ) :
  * WooCommerce Payment Gateway Token
  *
  * Represents a credit card or check payment token
- *
- * @version 0.1
  */
 class SV_WC_Payment_Gateway_Payment_Token {
 
@@ -64,7 +62,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * exp_year     - string optional expiration year (credit card only)
 	 * account_type - string one of 'checking' or 'savings' (checking gateway only)
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $token the payment gateway token
 	 * @param array $data associated data
 	 */
@@ -85,7 +83,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Returns the payment token string
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string payment token string
 	 */
 	public function get_token() {
@@ -97,7 +95,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Returns true if this payment token is default
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if this payment token is default
 	 */
 	public function is_default() {
@@ -109,7 +107,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Makes this payment token the default or a non-default one
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param boolean $default true or false
 	 */
 	public function set_default( $default ) {
@@ -121,7 +119,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Returns true if this payment token represents a credit card
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if this payment token represents a credit card
 	 */
 	public function is_credit_card() {
@@ -133,7 +131,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Returns true if this payment token represents a check
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return boolean true if this payment token represents a check
 	 */
 	public function is_check() {
@@ -145,7 +143,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Returns the payment type, one of 'credit_card' or 'check'
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string the payment type
 	 */
 	public function get_type() {
@@ -159,7 +157,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * Credit card gateway only
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string the payment type
 	 */
 	public function get_card_type() {
@@ -171,7 +169,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Determine the credit card type from the full account number
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $account_number the credit card account number
 	 * @return string the credit card type
 	 */
@@ -204,7 +202,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * Checking gateway only
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string the payment type
 	 */
 	public function get_account_type() {
@@ -217,7 +215,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * Returns the full payment type, ie Visa, MasterCard, American Express,
 	 * Discover, Diners, JCB, eCheck, etc
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string the payment type
 	 */
 	public function get_type_full() {
@@ -229,7 +227,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Translates a card type to a full name, ie 'mc' => 'MasterCard' or 'savings' => 'eCheck'
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $type the card type, ie 'mc', 'amex', etc
 	 * @return string the card name, ie 'MasterCard', 'American Express', etc
 	 */
@@ -261,7 +259,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Returns the last four digits of the credit card or check account number
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string last four of account
 	 */
 	public function get_last_four() {
@@ -274,7 +272,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * Returns the expiration month of the credit card.  This should only be
 	 * called for credit card tokens
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string expiration month as a two-digit number
 	 */
 	public function get_exp_month() {
@@ -287,7 +285,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * Returns the expiration year of the credit card.  This should only be
 	 * called for credit card tokens
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string expiration year as a four-digit number
 	 */
 	public function get_exp_year() {
@@ -300,7 +298,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * Returns the expiration date in the format MM/YY, suitable for use
 	 * in order notes or other customer-facing areas
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string formatted expiration date
 	 */
 	public function get_exp_date() {
@@ -315,7 +313,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * included in persistent storage
 	 *
 	 * @see SV_WC_Payment_Gateway_Payment_Token::get_image_url()
-	 * @since 0.1
+	 * @since 1.0
 	 * @param string $url the full image URL
 	 */
 	public function set_image_url( $url ) {
@@ -328,7 +326,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * Get the full image URL based on teh token payment type.
 	 *
 	 * @see SV_WC_Payment_Gateway_Payment_Token::set_image_url()
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string the full image URL
 	 */
 	public function get_image_url() {
@@ -341,7 +339,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * Returns a representation of this token suitable for persisting to a
 	 * datastore
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return mixed datastore representation of token
 	 */
 	public function to_datastore_format() {

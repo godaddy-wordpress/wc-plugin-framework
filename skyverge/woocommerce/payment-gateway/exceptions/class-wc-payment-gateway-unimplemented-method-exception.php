@@ -28,8 +28,6 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Unimplemented_Method_Exception' ) ) 
 
 /**
  * Payment Gateway Unimplemented Method Exception
- *
- * @version 0.1
  */
 class SV_WC_Payment_Gateway_Unimplemented_Method_Exception extends Exception {
 

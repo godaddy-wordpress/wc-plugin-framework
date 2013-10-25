@@ -28,8 +28,6 @@ if ( ! interface_exists( 'SV_WC_Payment_Gateway_API_Response' ) ) :
 
 /**
  * WooCommerce Direct Payment Gateway API Response
- *
- * @version 0.1
  */
 interface SV_WC_Payment_Gateway_API_Response {
 
@@ -37,7 +35,7 @@ interface SV_WC_Payment_Gateway_API_Response {
 	/**
 	 * Checks if the transaction was successful
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return bool true if approved, false otherwise
 	 */
 	public function transaction_approved();
@@ -48,7 +46,7 @@ interface SV_WC_Payment_Gateway_API_Response {
 	 * Fraud Settings.  This indicates that the transaction was successful, but
 	 * did not pass a fraud check and should be reviewed.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return bool true if the transaction was held, false otherwise
 	 */
 	public function transaction_held();
@@ -58,7 +56,7 @@ interface SV_WC_Payment_Gateway_API_Response {
 	 * Gets the response status message, or null if there is no status message
 	 * associated with this transaction.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string status message
 	 */
 	public function get_status_message();
@@ -68,7 +66,7 @@ interface SV_WC_Payment_Gateway_API_Response {
 	 * Gets the response status code, or null if there is no status code
 	 * associated with this transaction.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string status code
 	 */
 	public function get_status_code();
@@ -78,7 +76,7 @@ interface SV_WC_Payment_Gateway_API_Response {
 	 * Gets the response transaction id, or null if there is no transaction id
 	 * associated with this transaction.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string transaction id
 	 */
 	public function get_transaction_id();
@@ -87,7 +85,7 @@ interface SV_WC_Payment_Gateway_API_Response {
 	/**
 	 * Returns the string representation of this response
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string response
 	 */
 	public function to_string();
@@ -97,7 +95,7 @@ interface SV_WC_Payment_Gateway_API_Response {
 	 * Returns the string representation of this response with any and all
 	 * sensitive elements masked or removed
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return string response safe for logging/displaying
 	 */
 	public function to_string_safe();

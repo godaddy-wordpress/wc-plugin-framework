@@ -28,8 +28,6 @@ if ( ! interface_exists( 'SV_WC_Payment_Gateway_API' ) ) :
 
 /**
  * WooCommerce Direct Payment Gateway API
- *
- * @version 0.1
  */
 interface SV_WC_Payment_Gateway_API {
 
@@ -39,7 +37,7 @@ interface SV_WC_Payment_Gateway_API {
 	 *
 	 * If the gateway does not support credit card authorizations, this method can be a no-op.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $order the order
 	 * @return SV_WC_Payment_Gateway_API_Response credit card charge response
 	 * @throws Exception network timeouts, etc
@@ -52,7 +50,7 @@ interface SV_WC_Payment_Gateway_API {
 	 *
 	 * If the gateway does not support credit card charges, this method can be a no-op.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $order the order
 	 * @return SV_WC_Payment_Gateway_API_Response credit card charge response
 	 * @throws Exception network timeouts, etc
@@ -65,7 +63,7 @@ interface SV_WC_Payment_Gateway_API {
 	 *
 	 * If the gateway does not support check debits, this method can be a no-op.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $order the order
 	 * @return SV_WC_Payment_Gateway_API_Response check debit response
 	 * @throws Exception network timeouts, etc
@@ -78,7 +76,7 @@ interface SV_WC_Payment_Gateway_API {
 	 *
 	 * If the gateway does not support tokenization, this method can be a no-op.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param WC_Order $order the order
 	 * @return SV_WC_Payment_Gateway_API_Create_Payment_Token_Response payment method tokenization response
 	 * @throws Exception network timeouts, etc
@@ -91,7 +89,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * unless supports_remove_tokenized_payment_method() returns true, otherwise
 	 * the results are undefined.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway_API::supports_remove_tokenized_payment_method()
 	 * @param string $user_id the user identifier
 	 * @param string $token the payment method token
@@ -106,7 +104,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * request.  If this method returns true, then remove_tokenized_payment_method()
 	 * is considered safe to call.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway_API::remove_tokenized_payment_method()
 	 * @return boolean true if this API supports a "remove tokenized payment method" request, false otherwise
 	 */
@@ -118,7 +116,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * should not be invoked unless supports_get_tokenized_payment_methods()
 	 * return true, otherwise the results are undefined
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway_API::supports_get_tokenized_payment_methods()
 	 * @param string $customer_id unique customer id
 	 * @return SV_WC_API_Get_Tokenized_Payment_Methods_Response response containing any payment tokens for the customer
@@ -132,7 +130,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * request.  If this method returns true, then get_tokenized_payment_methods()
 	 * is considered safe to call.
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway_API::get_tokenized_payment_methods()
 	 * @return boolean true if this API supports a "get tokenized payment methods" request, false otherwise
 	 */
@@ -142,7 +140,7 @@ interface SV_WC_Payment_Gateway_API {
 	/**
 	 * Returns the most recent request object
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return SV_WC_Payment_Gateway_API_Request the most recent request object
 	 */
 	public function get_request();
@@ -151,7 +149,7 @@ interface SV_WC_Payment_Gateway_API {
 	/**
 	 * Returns the most recent response object
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @return SV_WC_Payment_Gateway_API_Response the most recent response object
 	 */
 	public function get_response();

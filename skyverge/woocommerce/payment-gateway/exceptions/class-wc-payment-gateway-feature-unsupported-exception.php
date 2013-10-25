@@ -28,8 +28,6 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Feature_Unsupported_Exception' ) ) :
 
 /**
  * Payment Gateway Feature Unsupported Exception
- *
- * @version 0.1
  */
 class SV_WC_Payment_Gateway_Feature_Unsupported_Exception extends Exception {
 

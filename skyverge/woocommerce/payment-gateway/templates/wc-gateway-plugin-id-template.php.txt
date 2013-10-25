@@ -25,7 +25,8 @@
 /**
  * Template Function Overrides
  *
- * @since 0.1
+ * @version TODO
+ * @since 1.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -37,7 +38,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID%%_payment_fields' ) ) {
 	/**
 	 * Pluggable function to render the checkout page payment fields form
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param %%GATEWAY CLASS%% $gateway gateway object
 	 */
 	function woocommerce_%%GATEWAY ID%%_payment_fields( $gateway ) {
@@ -114,7 +115,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID%%_show_my_payment_methods' ) )
 	 * Pluggable function to render the gateway tokenized credit card payment methods on
 	 * the My Account page
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param %%GATEWAY CLASS%% $gateway gateway class
 	 */
 	function woocommerce_%%GATEWAY ID%%_show_my_payment_methods( $gateway ) {
@@ -161,7 +162,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_payment_fields' ) ) {
 	/**
 	 * Pluggable function to render the checkout page payment fields form
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param %%GATEWAY CLASS%% $gateway gateway object
 	 */
 	function woocommerce_%%GATEWAY ID CHECKS%%_payment_fields( $gateway ) {
@@ -253,7 +254,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_show_my_payment_metho
 	 * Pluggable function to render the gateway tokenized checking account payment methods on
 	 * the My Account page
 	 *
-	 * @since 0.1
+	 * @since 1.0
 	 * @param %%GATEWAY CLASS%% $gateway gateway class
 	 */
 	function woocommerce_%%GATEWAY ID CHECKS%%_show_my_payment_methods( $gateway ) {

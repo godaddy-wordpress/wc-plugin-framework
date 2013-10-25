@@ -34,8 +34,8 @@
  * @param boolean $tokenization_forced true if tokenization is forced (new card must be tokenized, ie for subscriptions/pre-orders)
 %%ENDIF SUPPORTS TOKENIZATION%%
  *
- * @version 0.1
- * @since 0.1
+ * @version TODO
+ * @since 1.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
