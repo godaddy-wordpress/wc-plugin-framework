@@ -557,7 +557,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// add the special 'shared-settings-field' class name to any shared settings fields
 		foreach ( $this->shared_settings as $field_name ) {
 
-			$this->form_fields[ $field_name ]['class'] = trim( $this->form_fields[ $field_name ]['class'] . ' shared-settings-field' );
+			$this->form_fields[ $field_name ]['class'] = trim( isset( $this->form_fields[ $field_name ]['class'] ) ? $this->form_fields[ $field_name ]['class'] : ''   . ' shared-settings-field' );
 
 		}
 
