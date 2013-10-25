@@ -258,13 +258,6 @@ jQuery( document ).ready( function ( $ ) {
 		}
 	}
 
-
-	// Show the sample check image when the help bubble is clicked
-	$( '.js-wc-%%GATEWAY ID DASHERIZED%%-account-help' ).click( function() {
-		if ( ! $( this ).closest( '.payment_method_%%GATEWAY ID%%' ).find( '.sample-check' ).is( ':visible' ) ) {
-			$( this ).closest( '.payment_method_%%GATEWAY ID%%' ).find( '.sample-check' ).slideDown();
-		}
-	} );
 %%ENDIF SUPPORTS CHECKS%%
 
 
@@ -357,6 +350,16 @@ jQuery( document ).ready( function ( $ ) {
 %%ENDIF SUPPORTS CHECKS%%
 
 		} ).change();
+
+
+%%IF SUPPORTS CHECKS%%
+		// Show the sample check image when the help bubble is clicked
+			$( '.js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-help' ).click( function() {
+				if ( ! $( this ).closest( '.payment_method_%%GATEWAY ID CHECKS%%' ).find( '.sample-check' ).is( ':visible' ) ) {
+					$( this ).closest( '.payment_method_%%GATEWAY ID CHECKS%%' ).find( '.sample-check' ).slideDown();
+				}
+		} );
+%%ENDIF SUPPORTS CHECKS%%
 
 	}
 %%ENDIF SUPPORTS TOKENIZATION%%
