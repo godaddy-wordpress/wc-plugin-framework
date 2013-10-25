@@ -374,7 +374,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 						if ( 'no' === get_option( 'woocommerce_force_ssl_checkout' ) ) {
 
 							// dismiss link unless we're on the payment gateway settings page, in which case we'll always display the notice
-							$dismiss_link = '<a href="#" class="js-wc-payment-gateway-' . $this->get_id() . '-message-dismiss" data-message-id="missing-extensions">' . __( 'Dismiss', $this->text_domain ) . '</a>';
+							$dismiss_link = '<a href="#" class="js-wc-payment-gateway-' . $this->get_id() . '-message-dismiss" data-message-id="ssl-required">' . __( 'Dismiss', $this->text_domain ) . '</a>';
 							if ( $this->is_gateway_settings() )
 								$dismiss_link = '';
 
