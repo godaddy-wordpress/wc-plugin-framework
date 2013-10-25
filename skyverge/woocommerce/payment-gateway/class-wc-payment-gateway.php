@@ -405,16 +405,19 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function enqueue_js() {
 
+		// only load javascript once
+		if ( wp_script_is( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', 'enqueued' ) )
+			return;
+
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		// load gateway.js checkout script
 		wp_enqueue_script( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', $this->get_plugin()->get_plugin_url() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . $suffix . '.js', array(), $this->get_plugin()->get_version(), true );
 
 		// localize error messages
-		$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() + '_js_localize_script_params', $this->get_js_localize_script_params() );
+		$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() . '_js_localize_script_params', $this->get_js_localize_script_params() );
 
 		wp_localize_script( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', $this->get_plugin()->get_id() . '_params', $params );
-
 	}
 
 
