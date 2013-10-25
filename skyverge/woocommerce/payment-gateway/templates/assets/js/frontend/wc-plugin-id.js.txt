@@ -171,7 +171,7 @@ jQuery( document ).ready( function ( $ ) {
 		var tokenizedPaymentMethodSelected = $paymentFields.find( '.js-wc-payment-gateway-payment-token:checked' ).val();
 
 		// don't validate fields if a saved payment method is being used
-		if ( 'tokenizedPaymentMethodSelected ) {
+		if ( tokenizedPaymentMethodSelected ) {
 			return true;
 		}
 %%ENDIF SUPPORTS TOKENIZATION%%
@@ -223,7 +223,7 @@ jQuery( document ).ready( function ( $ ) {
 
 			errors.push( %%PLUGIN ID%%_params.drivers_license_number_missing );
 
-		} elseif ( ! /^[a-zA-Z0-9 -]+$/.test( driversLicenseNumber ) ) {
+		} else if ( ! /^[a-zA-Z0-9 -]+$/.test( driversLicenseNumber ) ) {
 
 			errors.push( %%PLUGIN ID%%_params.drivers_license_number_invalid );
 
