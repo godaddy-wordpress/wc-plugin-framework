@@ -282,7 +282,9 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	public function add_my_payment_methods() {
 
 		foreach ( $this->get_gateways() as $gateway ) {
-			$gateway->show_my_payment_methods();
+
+			if ( $gateway->supports_tokenization() )
+				$gateway->show_my_payment_methods();
 		}
 
 	}
@@ -300,7 +302,8 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 
 			foreach ( $this->get_gateways() as $gateway ) {
 
-				$gateway->handle_my_payment_methods_actions();
+				if ( $gateway->supports_tokenization() )
+					$gateway->handle_my_payment_methods_actions();
 
 			}
 
