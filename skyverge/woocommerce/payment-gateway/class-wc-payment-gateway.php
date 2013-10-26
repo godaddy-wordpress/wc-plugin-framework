@@ -338,16 +338,23 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// watch for subscriptions support
 		if ( $this->get_plugin()->is_subscriptions_active() ) {
 
-			add_action( 'wc_payment_gateway_' . $this->get_id() . '_supports_' . self::FEATURE_SUBSCRIPTIONS,                      array( $this, 'add_subscriptions_support' ) );
-			add_action( 'wc_payment_gateway_' . $this->get_id() . '_supports_' . self::FEATURE_SUBSCRIPTION_PAYMENT_METHOD_CHANGE, array( $this, 'add_subscription_payment_method_change_support' ) );
+			$subscription_support_hook               = 'wc_payment_gateway_' . $this->get_id() . '_supports_' . self::FEATURE_SUBSCRIPTIONS;
+			$subscription_payment_method_change_hook = 'wc_payment_gateway_' . $this->get_id() . '_supports_' . self::FEATURE_SUBSCRIPTION_PAYMENT_METHOD_CHANGE;
 
+			if ( ! has_action( $subscription_support_hook ) )
+				add_action( $subscription_support_hook, array( $this, 'add_subscriptions_support' ) );
+
+			if ( ! has_action( $subscription_payment_method_change_hook ) )
+				add_action( $subscription_payment_method_change_hook, array( $this, 'add_subscription_payment_method_change_support' ) );
 		}
 
 		// watch for pre-orders support
 		if ( $this->get_plugin()->is_pre_orders_active() ) {
 
-			add_action( 'wc_payment_gateway_' . $this->get_id() . '_supports_' . str_replace( '-', '_', self::FEATURE_PRE_ORDERS ), array( $this, 'add_pre_orders_support' ) );
+			$pre_orders_support_hook = 'wc_payment_gateway_' . $this->get_id() . '_supports_' . str_replace( '-', '_', self::FEATURE_PRE_ORDERS );
 
+			if ( ! has_action( $pre_orders_support_hook ) )
+				add_action( $pre_orders_support_hook, array( $this, 'add_pre_orders_support' ) );
 		}
 
 	}
