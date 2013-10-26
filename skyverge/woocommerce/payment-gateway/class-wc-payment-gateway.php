@@ -1278,12 +1278,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			} else {
 
 				// echeck specific attributes
-				$order->payment->type                  = 'check';
-				$order->payment->routing_number        = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
-				$order->payment->account_type          = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-type' );
-				$order->payment->check_number          = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-check-number' );
-				$order->payment->driver_license_number = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-driver-license-number' );
-				$order->payment->driver_license_state  = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-driver-license-state' );
+				$order->payment->type                   = 'check';
+				$order->payment->routing_number         = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
+				$order->payment->account_type           = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-type' );
+				$order->payment->check_number           = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-check-number' );
+				$order->payment->drivers_license_number = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
+				$order->payment->drivers_license_state  = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-state' );
 
 			}
 
