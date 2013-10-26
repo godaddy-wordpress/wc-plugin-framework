@@ -1845,7 +1845,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		return $order;
-
 	}
 
 
@@ -1868,8 +1867,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$order->payment_total = number_format( (double) $amount_to_charge, 2, '.', '' );
 
 			// required
-			if ( ! $order->payment->token || ! $order->customer_id )
-				throw new Exception( __( 'Subscription Renewal: Customer ID or Payment Token is missing/invalid.', $this->text_domain ) );
+			if ( ! $order->payment->token || ! $order->user_id )
+				throw new Exception( __( 'Subscription Renewal: Payment Token or User ID is missing/invalid.', $this->text_domain ) );
 
 			// get the token, we've already verified it's good
 			$token = $this->get_payment_token( $order->user_id, $order->payment->token );
