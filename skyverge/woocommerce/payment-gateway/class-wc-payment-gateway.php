@@ -567,7 +567,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// add the special 'shared-settings-field' class name to any shared settings fields
 		foreach ( $this->shared_settings as $field_name ) {
 
-			$this->form_fields[ $field_name ]['class'] = trim( isset( $this->form_fields[ $field_name ]['class'] ) ? $this->form_fields[ $field_name ]['class'] : ''   . ' shared-settings-field' );
+			$this->form_fields[ $field_name ]['class'] = trim( isset( $this->form_fields[ $field_name ]['class'] ) ? $this->form_fields[ $field_name ]['class'] : '' ) . ' shared-settings-field';
 
 		}
 
@@ -704,17 +704,20 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			?>
 				$( '#woocommerce_<?php echo $this->get_id(); ?>_environment' ).change( function() {
 
-					// if the fields are all hidden because we're inheriting settings from the other gateway, then there's nothing to do
-					if ( $( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).is( ':checked' ) )
-						return;
+					// inherit settings from other gateway?
+					var inheritSettings = $( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).is( ':checked' );
 
 					var environment = $( this ).val();
 
 					// hide all environment-dependant fields
 					$( '.environment-field' ).closest( 'tr' ).hide();
 
-					// show the currently configured environment fields
-					$( '.' + environment + '-field' ).closest( 'tr' ).show();
+					// show the currently configured environment fields that are not also being hidden as any shared settings
+					var $environmentFields = $( '.' + environment + '-field' );
+					if ( inheritSettings ) {
+						$environmentFields = $environmentFields.not( '.shared-settings-field' );
+					}
+					$environmentFields.closest( 'tr' ).show();
 
 				} ).change();
 			<?php
@@ -735,6 +738,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 					if ( enabled ) {
 						$( '.shared-settings-field' ).closest( 'tr' ).hide();
 					} else {
+						// show the fields
+						$( '.shared-settings-field' ).closest( 'tr' ).show();
+
+						// hide any that may not be available for the currently selected environment
 						$( '#woocommerce_<?php echo $this->get_id(); ?>_environment' ).change();
 					}
 
