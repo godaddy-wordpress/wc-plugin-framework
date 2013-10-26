@@ -165,7 +165,7 @@ jQuery( document ).ready( function ( $ ) {
 
 		if ( $form.is( '.processing' ) ) return false;
 
-		var $paymentFields = $( '#payment_method_%%GATEWAY ID%%' );
+		var $paymentFields = $( '.payment_method_%%GATEWAY ID CHECK%%' );
 
 %%IF SUPPORTS TOKENIZATION%%
 		var tokenizedPaymentMethodSelected = $paymentFields.find( '.js-wc-payment-gateway-payment-token:checked' ).val();
@@ -212,7 +212,7 @@ jQuery( document ).ready( function ( $ ) {
 				errors.push( %%PLUGIN ID%%_params.account_number_length_invalid );
 			}
 
-			if ( /\D/.test( account_number_invalid ) ) {
+			if ( /\D/.test( accountNumber ) ) {
 				errors.push( %%PLUGIN ID%%_params.account_number_invalid );
 			}
 
