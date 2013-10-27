@@ -327,10 +327,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->add_pay_page_handler();
 
 		// Save settings
-		if ( is_admin() ) {
-			add_action( 'woocommerce_update_options_payment_gateways',                    array( $this, 'process_admin_options' ) ); // WC < 2.0
-			add_action( 'woocommerce_update_options_payment_gateways_' . $this->get_id(), array( $this, 'process_admin_options' ) ); // WC >= 2.0
-		}
+		if ( is_admin() )
+			add_action( 'woocommerce_update_options_payment_gateways_' . $this->get_id(), array( $this, 'process_admin_options' ) );
 
 		// add gateway.js checkout javascript
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_js' ) );

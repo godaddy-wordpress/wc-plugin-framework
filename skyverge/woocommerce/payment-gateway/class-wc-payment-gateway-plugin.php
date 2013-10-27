@@ -838,10 +838,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 
 		$manage_url = admin_url( 'admin.php?page=woocommerce_settings&tab=payment_gateways' );
 
-		if ( version_compare( WOOCOMMERCE_VERSION, "2.0.0" ) >= 0 )
-			$manage_url = add_query_arg( array( 'section' => $this->get_gateway_class_name( $gateway_id ) ), $manage_url ); // WC 2.0+
-		else
-			$manage_url = add_query_arg( array( 'subtab' => 'gateway-' . $gateway_id ), $manage_url ); // WC 1.6.6-
+		$manage_url = add_query_arg( array( 'section' => $this->get_gateway_class_name( $gateway_id ) ), $manage_url ); // WC 2.0+
 
 		return $manage_url;
 	}
