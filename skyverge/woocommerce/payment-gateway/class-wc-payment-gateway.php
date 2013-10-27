@@ -1802,10 +1802,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function subscriptions_get_order( $order ) {
 
+		// bail if the gateway doesn't support subscriptions or the order doesn't contain a subscription
+		if ( ! $this->supports_subscriptions() || ! WC_Subscriptions_Order::order_contains_subscription( $order->id ) )
+			return $order;
+
 		// subscriptions total, ensuring that we have a decimal point, even if it's 1.00
-		if ( $this->supports_subscriptions() && WC_Subscriptions_Order::order_contains_subscription( $order->id ) ) {
-			$order->payment_total = number_format( (double) WC_Subscriptions_Order::get_total_initial_payment( $order ), 2, '.', '' );
-		}
+		$order->payment_total = number_format( (double) WC_Subscriptions_Order::get_total_initial_payment( $order ), 2, '.', '' );
 
 		// load any required members that we might not have
 		if ( ! isset( $order->payment->token ) || ! $order->payment->token )
@@ -2114,13 +2116,15 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function pre_orders_get_order( $order ) {
 
-		if ( WC_Pre_Orders_Order::order_contains_pre_order( $order ) &&
-			WC_Pre_Orders_Order::order_requires_payment_tokenization( $order ) ) {
+		// bail if order doesn't contain a pre-order
+		if ( ! WC_Pre_Orders_Order::order_contains_pre_order( $order ) )
+			return $order;
+
+		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order ) ) {
 
 			// normally a guest user wouldn't be assigned a customer id, but for a pre-order requiring tokenization, it will be
-			if ( 0 == $order->user_id && false !== ( $customer_id = $this->get_guest_customer_id( $order ) ) ) {
+			if ( 0 == $order->user_id && false !== ( $customer_id = $this->get_guest_customer_id( $order ) ) )
 				$order->customer_id = $customer_id;
-			}
 
 		} elseif ( WC_Pre_Orders_Order::order_has_payment_token( $order ) ) {
 

@@ -781,6 +781,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Defaults to woocommerce_{gateway id}_settings
 	 *
 	 * @since 1.0
+	 * @param string $gateway_id
 	 * @return string the gateway settings option name
 	 */
 	protected function get_gateway_settings_name( $gateway_id ) {
@@ -1012,6 +1013,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Returns all available gateway ids for the plugin
 	 *
 	 * @since 1.0
+	 * @throws Exception
 	 * @return array of gateway id strings
 	 */
 	public function get_gateway_ids() {
