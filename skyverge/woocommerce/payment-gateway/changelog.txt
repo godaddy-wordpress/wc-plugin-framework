@@ -1,0 +1,4 @@
+*** SkyVerge WooCommerce Payment Gateway Framework Changelog ***
+
+2013.10.26 - version 1.0
+ * First Release
