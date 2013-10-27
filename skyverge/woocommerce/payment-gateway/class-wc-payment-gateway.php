@@ -1226,8 +1226,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * $order->payment->exp_year       - the credit card expiration year (for credit card gateways)
 	 * $order->payment->csc            - the card security code (for credit card gateways)
 	 * $order->payment->check_number   - optional check number (check transactions only)
-	 * $order->payment->driver_license_number - optional driver license number (check transactions only)
-	 * $order->payment->driver_license_state  - optional driver license state code (check transactions only)
+	 * $order->payment->drivers_license_number - optional driver license number (check transactions only)
+	 * $order->payment->drivers_license_state  - optional driver license state code (check transactions only)
 	 * $order->payment->token          - payment token (for tokenized transactions)
 	 *
 	 * Note that not all gateways will necessarily pass or require all of the
