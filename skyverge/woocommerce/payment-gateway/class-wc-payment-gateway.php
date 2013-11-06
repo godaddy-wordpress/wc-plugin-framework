@@ -1086,11 +1086,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		$account_number         = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' );
 		$routing_number         = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
-		$drivers_license_number = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
-		$drivers_license_state  = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-state' );
 
 		// optional fields (excluding account type for now)
-		$check_number = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-check-number' );
+		$drivers_license_number = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
+		$drivers_license_state  = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-state' );
+		$check_number           = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-check-number' );
 
 		// routing number exists?
 		if ( empty( $routing_number ) ) {
@@ -1135,18 +1135,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			}
 		}
 
-		// drivers license number validation
-		if ( empty( $drivers_license_number ) ) {
-			$woocommerce->add_error( __( 'Drivers license number is missing', $this->text_domain ) );
-			$is_valid = false;
-		} else if ( ! preg_match( '/^[a-zA-Z0-9 -]+$/', $drivers_license_number ) ) {
+		// optional drivers license number validation
+		if ( ! empty( $drivers_license_number ) && ! preg_match( '/^[a-zA-Z0-9 -]+$/', $drivers_license_number ) ) {
 			$woocommerce->add_error( __( 'Drivers license number is invalid', $this->text_domain ) );
-			$is_valid = false;
-		}
-
-		// drivers license state validation
-		if ( empty( $drivers_license_state ) ) {
-			$woocommerce->add_error( __( 'Drivers license state is missing', $this->text_domain ) );
 			$is_valid = false;
 		}
 
