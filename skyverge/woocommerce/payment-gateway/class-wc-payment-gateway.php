@@ -1341,7 +1341,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$message = sprintf( __( '%s Check Transaction Approved: %s account ending in %s', $this->text_domain ), $this->get_method_title(), $order->payment->account_type, $last_four );
 
 			// optional check number
-			if ( $order->payment->check_number ) {
+			if ( ! empty( $order->payment->check_number ) ) {
 				$message .= '. ' . sprintf( __( 'Check number %s', $this->text_domain ), $order->payment->check_number );
 			}
 
