@@ -285,8 +285,9 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 
 		foreach ( $this->get_gateways() as $gateway ) {
 
-			if ( $gateway->supports_tokenization() )
+			if ( $gateway->supports_tokenization() && $gateway->is_available() ) {
 				$gateway->show_my_payment_methods();
+			}
 		}
 
 	}

@@ -366,9 +366,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 1.0
 	 */
 	public function enqueue_js() {
-		// TODO: can we detect the current payment method on the pay page and conditionally load there?
-		// only load javascript once
-		if ( wp_script_is( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', 'enqueued' ) )
+
+		// only load javascript once, if the gateway is available, and if on the page page and i
+		if ( ! $this->is_available() || false === $this->is_pay_page_gateway() || wp_script_is( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', 'enqueued' ) )
 			return;
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
@@ -381,6 +381,30 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() . '_js_localize_script_params', $this->get_js_localize_script_params() );
 
 		wp_localize_script( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', $this->get_plugin()->get_id() . '_params', $params );
+	}
+
+
+	/**
+	 * Returns true if on the pay page and this is the currently selected gateway
+	 *
+	 * @since 1.0
+	 * @return mixed true if on pay page and is currently selected gateways, false if on pay page and not the selected gateway, null otherwise
+	 */
+	protected function is_pay_page_gateway() {
+
+		if ( is_page( woocommerce_get_page_id( 'pay' ) ) ) {
+
+			$order_id  = isset( $_GET['order'] ) ? absint( $_GET['order'] ) : 0;
+
+			if ( $order_id ) {
+				$order = new WC_Order( $order_id );
+
+				return $order->payment_method == $this->get_id();
+			}
+
+		}
+
+		return null;
 	}
 
 
