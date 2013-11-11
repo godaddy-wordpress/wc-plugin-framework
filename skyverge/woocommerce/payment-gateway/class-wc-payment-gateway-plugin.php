@@ -94,13 +94,13 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	private $logger;
 
 	/** @var array string names of required PHP extensions */
-	private $dependencies;
+	private $dependencies = array();
 
 	/** @var boolean true if this gateway requires SSL for processing transactions, false otherwise */
 	private $require_ssl;
 
 	/** @var array named features that this gateway supports which require action from the parent plugin, including 'tokenization' */
-	private $supports;
+	private $supports = array();
 
 	/** @var bool helper for lazy subscriptions active check */
 	private $subscriptions_active;
@@ -266,6 +266,8 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 		require_once( 'exceptions/class-wc-payment-gateway-unimplemented-method-exception.php' );
 
 		require_once( 'class-wc-payment-gateway.php' );
+		require_once( 'class-wc-payment-gateway-direct.php' );
+		require_once( 'class-wc-payment-gateway-hosted.php' );
 		require_once( 'class-wc-payment-token.php' );
 
 	}
