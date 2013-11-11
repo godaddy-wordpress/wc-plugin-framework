@@ -194,7 +194,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	private $plugin;
 
 	/** @var string plugin text domain */
-	private $text_domain;
+	protected $text_domain;
 
 	/** @var string payment type, one of 'credit-card' or 'echeck' */
 	private $payment_type;
