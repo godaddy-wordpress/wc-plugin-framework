@@ -572,10 +572,25 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		} else { // failure
 
-			$this->mark_order_as_failed( $order, sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
+			return $this->do_transaction_failed_result( $order, $response );
 
-			return false;
 		}
+	}
+
+
+	/**
+	 * Called after an unsuccessful transaction attempt
+	 *
+	 * @since 1.0
+	 * @param WC_Order $order the order
+	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
+	 * @return boolean false
+	 */
+	protected function do_transaction_failed_result( WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
+
+		$this->mark_order_as_failed( $order, sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
+
+		return false;
 	}
 
 
@@ -1549,8 +1564,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Payment tokenization not supported by gateway', $this->text_domain ) );
 
-		if ( ! is_string( $token ) )
+		if ( is_object( $token ) ) {
 			$token = $token->get_token();
+		}
 
 		// this is sort of a weird edge case: verifying a token exists for a guest customer
 		//  using an API that doesn't support a tokenized payment method query operation.
@@ -1615,11 +1631,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			return false;
 
 		// get the payment token object as needed
-		if ( is_string( $token ) )
+		if ( ! is_object( $token ) ) {
 			$token = $this->get_payment_token( $user_id, $token );
+		}
 
 		// for direct gateways that allow it, attempt to delete the token from the endpoint
-		if ( $this->is_direct_gateway() && $this->get_api()->supports_remove_tokenized_payment_method() ) {
+		if ( $this->get_api()->supports_remove_tokenized_payment_method() ) {
 
 			try {
 
@@ -1671,8 +1688,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			return false;
 
 		// get the payment token object as needed
-		if ( is_string( $token ) )
+		if ( ! is_object( $token ) ) {
 			$token = $this->get_payment_token( $user_id, $token );
+		}
 
 		// get existing tokens
 		$tokens = $this->get_payment_tokens( $user_id );
@@ -1827,8 +1845,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @throws SV_WC_Payment_Gateway_Unimplemented_Method_Exception if this gateway supports direct communication but has not provided an implementation for this method
 	 */
 	public function get_api() {
-
-		if ( ! $this->is_direct_gateway() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Direct communication not supported by gateway', $this->text_domain ) );
 
 		// concrete stub method
 		throw new SV_WC_Payment_Gateway_Unimplemented_Method_Exception( get_class( $this ) . substr( __METHOD__, strpos( __METHOD__, '::' ) ) . "()" );

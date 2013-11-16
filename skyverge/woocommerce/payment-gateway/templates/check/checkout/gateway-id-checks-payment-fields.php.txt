@@ -90,7 +90,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 		</p>
 		<div class="clear"></div>
 
-%%IF SUPPORTS ACCOUNT-TYPE%%
+%%IF SUPPORTS CHECK-FIELD-ACCOUNT-TYPE%%
 		<p class="form-row">
 			<label for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-type"><?php _e( 'Account Type', %%TEXT DOMAIN%% ); ?> <span class="required">*</span></label>
 			<select id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-type" name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-type" class=" js-wc-payment-gateway-account-type" style="width:auto;">
@@ -99,7 +99,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 			</select>
 		</p>
 		<div class="clear"></div>
-%%ENDIF SUPPORTS ACCOUNT-TYPE%%
+%%ENDIF SUPPORTS CHECK-FIELD-ACCOUNT-TYPE%%
 
 %%IF SUPPORTS CHECK-NUMBER%%
 		<p class="form-row">

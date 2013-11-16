@@ -165,7 +165,7 @@ jQuery( document ).ready( function ( $ ) {
 
 		if ( $form.is( '.processing' ) ) return false;
 
-		var $paymentFields = $( '.payment_method_%%GATEWAY ID CHECK%%' );
+		var $paymentFields = $( '.payment_method_%%GATEWAY ID CHECKS%%' );
 
 %%IF SUPPORTS TOKENIZATION%%
 		var tokenizedPaymentMethodSelected = $paymentFields.find( '.js-wc-payment-gateway-payment-token:checked' ).val();

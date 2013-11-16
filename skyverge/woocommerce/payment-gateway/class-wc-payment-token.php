@@ -58,8 +58,8 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * type         - string one of 'credit_card' or 'check'
 	 * last_four    - string last four digits of account number
 	 * card_type    - string credit card type: visa, mc, amex, disc, diners, jcb, etc (credit card only)
-	 * exp_month    - string optional expiration month (credit card only)
-	 * exp_year     - string optional expiration year (credit card only)
+	 * exp_month    - string optional expiration month MM (credit card only)
+	 * exp_year     - string optional expiration year YYYY (credit card only)
 	 * account_type - string one of 'checking' or 'savings' (checking gateway only)
 	 *
 	 * @since 1.0

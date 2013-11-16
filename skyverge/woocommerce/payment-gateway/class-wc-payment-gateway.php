@@ -43,12 +43,6 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
  * + `credit-card` - supports credit card transactions
  * + `echeck` = supports echeck transactions
  *
- * ## Gateway Types (one and only one):
- *
- * + `direct` - supports direct (XML, REST, SOAP, custom, etc) communication
- * + `redirect-hosted-ipn` - supports redirecting to a gateway server for payment collection, with an IPN notification of the transaction result TODO
- * + `redirect` - supports collecting payment info and posting directly to gateway server with the transaction result included in the response TODO
- *
  * ## Usage
  *
  * Extend this class and implement the following methods:
@@ -697,7 +691,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 					if ( inheritSettings ) {
 						$environmentFields = $environmentFields.not( '.shared-settings-field' );
 					}
-					$environmentFields.closest( 'tr' ).show();
+
+					$environmentFields.not( '.hidden' ).closest( 'tr' ).show();
 
 				} ).change();
 			<?php
