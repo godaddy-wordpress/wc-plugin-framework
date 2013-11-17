@@ -1759,6 +1759,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Payment tokenization not supported by gateway', $this->text_domain ) );
 
+		// pre-conditions
 		if ( ! $this->is_available() || ! $this->tokenization_enabled() )
 			return;
 
@@ -1766,14 +1767,14 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$action = isset( $_GET[ 'wc-' . $this->get_id_dasherized() . '-action' ] ) ? $_GET[ 'wc-' . $this->get_id_dasherized() . '-action' ] : '';
 
 		// process payment method actions
-		if ( $token && $action && ! empty( $_GET['_wpnonce'] ) ) {
+		if ( $token && $action && ! empty( $_GET['_wpnonce'] ) && is_user_logged_in() ) {
 
 			// security check
 			if ( false === wp_verify_nonce( $_GET['_wpnonce'], 'wc-' . $this->get_id_dasherized() . '-token-action' ) ) {
 
 				$woocommerce->add_error( __( "There was an error with your request, please try again.", $this->text_domain ) );
 				$woocommerce->set_messages();
-				wp_redirect( get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ) );
+				wp_redirect( get_permalink( woocommerce_get_page_id( 'myaccount' ) ) );
 				exit;
 
 			}
@@ -1789,6 +1790,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					$woocommerce->add_error( __( "Error removing payment method", $this->text_domain ) );
 					$woocommerce->set_messages();
 
+				} else {
+					$woocommerce->add_message( __( 'Payment method deleted.', $this->text_domain ) );
 				}
 
 			}
@@ -1799,7 +1802,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			}
 
 			// remove the query params
-			wp_redirect( get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ) );
+			wp_redirect( get_permalink( woocommerce_get_page_id( 'myaccount' ) ) );
 			exit;
 		}
 	}

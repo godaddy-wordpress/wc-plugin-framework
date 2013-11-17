@@ -51,7 +51,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 	<?php
 	if ( $tokens ) : ?>
 		<p class="form-row form-row-wide">
-			<a class="button" style="float:right;" href="<?php echo get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ); ?>#wc-%%GATEWAY ID DASHERIZED CHECKS%%-my-payment-methods"><?php echo wp_kses_post( apply_filters( 'wc_gateway_%%GATEWAY ID CHECKS%%_manage_my_payment_methods', __( "Manage My Accounts", %%TEXT DOMAIN%% ) ) ); ?></a>
+			<a class="button" style="float:right;" href="<?php echo get_permalink( woocommerce_get_page_id( 'myaccount' ) ); ?>#wc-%%GATEWAY ID DASHERIZED CHECKS%%-my-payment-methods"><?php echo wp_kses_post( apply_filters( 'wc_gateway_%%GATEWAY ID CHECKS%%_manage_my_payment_methods', __( "Manage My Accounts", %%TEXT DOMAIN%% ) ) ); ?></a>
 			<?php foreach( $tokens as $token ) : ?>
 				<input type="radio" id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-payment-token-<?php echo esc_attr( $token->get_token() ); ?>" name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-payment-token" class="js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-payment-token js-wc-payment-gateway-payment-token" style="width:auto;" value="<?php echo esc_attr( $token->get_token() ); ?>" <?php checked( $token->is_default() ); ?>/>
 				<label style="display:inline;" for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-payment-token-<?php echo esc_attr( $token->get_token() ); ?>"><?php printf( __( '%s %s ending in %s', %%TEXT DOMAIN%% ), $token->get_image_url() ? '<img src="' . esc_url( $token->get_image_url() ) . '" />' : esc_html( $token->get_type_full() ), esc_html( $token->get_account_type() ), esc_html( $token->get_last_four() ) ); ?></label><br />
