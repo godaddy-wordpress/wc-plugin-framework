@@ -304,7 +304,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			add_action( 'woocommerce_update_options_payment_gateways_' . $this->get_id(), array( $this, 'process_admin_options' ) );
 
 		// add gateway.js checkout javascript
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_js' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 	}
 
@@ -358,12 +358,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Also localizes payment method validation errors
 	 *
 	 * @since 1.0
+	 * @return boolean true if the scripts were enqueued, false otherwise
 	 */
-	public function enqueue_js() {
+	public function enqueue_scripts() {
 
 		// only load javascript once, if the gateway is available, and if on the page page and i
-		if ( ! $this->is_available() || false === $this->is_pay_page_gateway() || wp_script_is( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', 'enqueued' ) )
-			return;
+		if ( ! $this->is_available() || false === $this->is_pay_page_gateway() || wp_script_is( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', 'enqueued' ) ) {
+			return false;
+		}
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
@@ -375,6 +377,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() . '_js_localize_script_params', $this->get_js_localize_script_params() );
 
 		wp_localize_script( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', $this->get_plugin()->get_id() . '_params', $params );
+
+		return true;
 	}
 
 

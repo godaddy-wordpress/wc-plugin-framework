@@ -177,14 +177,14 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		// card type regex patterns from https://github.com/stripe/jquery.payment/blob/master/src/jquery.payment.coffee
 		$types = array(
-			'visa'       => '/^4/',
-			'mastercard' => '/^5[1-5]/',
-			'amex'       => '/^3[47]/',
-			'discover'   => '/^(6011|65|64[4-9]|622)/',
-			'diners'     => '/^(36|38|30[0-5])/',
-			'jcb'        => '/^35/',
-			'maestro'    => '/^(5018|5020|5038|6304|6759|676[1-3])/',
-			'laser'      => '/^(6706|6771|6709)/',
+			'visa'     => '/^4/',
+			'mc'       => '/^5[1-5]/',
+			'amex'     => '/^3[47]/',
+			'discover' => '/^(6011|65|64[4-9]|622)/',
+			'diners'   => '/^(36|38|30[0-5])/',
+			'jcb'      => '/^35/',
+			'maestro'  => '/^(5018|5020|5038|6304|6759|676[1-3])/',
+			'laser'    => '/^(6706|6771|6709)/',
 		);
 
 		foreach ( $types as $type => $pattern ) {

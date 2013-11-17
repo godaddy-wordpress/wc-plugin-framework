@@ -89,16 +89,14 @@ interface SV_WC_Payment_Gateway_API {
 	 * unless supports_remove_tokenized_payment_method() returns true, otherwise
 	 * the results are undefined.
 	 *
-	 * TODO: consider re-ordering these parameters since not all gateways support a user id
-	 *
 	 * @since 1.0
 	 * @see SV_WC_Payment_Gateway_API::supports_remove_tokenized_payment_method()
-	 * @param string $user_id the user identifier
 	 * @param string $token the payment method token
+	 * @param string $customer_id optional unique customer id for gateways that support it
 	 * @return SV_WC_Payment_Gateway_API_Response remove tokenized payment method response
 	 * @throws Exception network timeouts, etc
 	 */
-	public function remove_tokenized_payment_method( $user_id, $token );
+	public function remove_tokenized_payment_method( $token, $customer_id );
 
 
 	/**
