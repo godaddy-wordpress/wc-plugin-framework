@@ -409,8 +409,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$order->payment->exp_month      = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
 				$order->payment->exp_year       = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
 
-				if ( $this->csc_enabled() )
+				if ( $this->csc_enabled() ) {
 					$order->payment->csc        = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
+				}
 
 			} else {
 
@@ -437,6 +438,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$order->payment->card_type    = $token->get_card_type();
 				$order->payment->exp_month    = $token->get_exp_month();
 				$order->payment->exp_year     = $token->get_exp_year();
+
+				if ( $this->csc_enabled() ) {
+					$order->payment->csc      = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
+				}
 
 			} else {
 
@@ -588,7 +593,14 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function do_transaction_failed_result( WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
 
-		$this->mark_order_as_failed( $order, sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
+		$order_note = sprintf( '%s: "%s"', $response->get_status_code(), $response->get_status_message() );
+
+		// add transaction id if there is one
+		if ( $response->get_transaction_id() ) {
+			$order_note .= '. ' . sprintf( __( 'Transaction id %s', $this->text_domain ), $response->get_transaction_id() );
+		}
+
+		$this->mark_order_as_failed( $order, $order_note );
 
 		return false;
 	}

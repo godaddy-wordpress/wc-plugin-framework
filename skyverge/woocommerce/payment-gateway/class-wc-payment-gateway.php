@@ -1445,6 +1445,22 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
+	 * Safely get and trim data from $_REQUEST
+	 *
+	 * @since 1.0
+	 * @param string $key array key to get from $_REQUEST array
+	 * @return string value from $_REQUEST or blank string if $_REQUEST[ $key ] is not set
+	 */
+	protected function get_request( $key ) {
+
+		if ( isset( $_REQUEST[ $key ] ) )
+			return trim( $_REQUEST[ $key ] );
+
+		return '';
+	}
+
+
+	/**
 	 * Perform standard luhn check.  Algorithm:
 	 *
 	 * 1. Double the value of every second digit beginning with the second-last right-hand digit.
