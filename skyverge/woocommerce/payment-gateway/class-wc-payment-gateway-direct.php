@@ -569,8 +569,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$this->add_payment_gateway_transaction_data( $order, $response );
 
 			// if the transaction was held (ie fraud validation failure) mark it as such
-			if ( $response->transaction_held() ) {
-				$this->mark_order_as_held( $order, $response->get_status_message() );
+			if ( $response->transaction_held() || ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
+				$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? __( 'Authorization only transaction', $this->text_domain ) : $response->get_status_message() );
 			}
 
 			return true;
@@ -580,6 +580,54 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			return $this->do_transaction_failed_result( $order, $response );
 
 		}
+	}
+
+
+	/**
+	 * Perform a credit card capture for the given order
+	 *
+	 * @since 1.0
+	 * @param $order WC_Order the order
+	 */
+	public function do_credit_card_capture( $order ) {
+
+		$response = $this->get_api()->credit_card_capture( $order );
+
+		if ( $response->transaction_approved() ) {
+
+			$message = sprintf(
+				__( '%s Capture of %s Approved', $this->text_domain ),
+				$this->get_method_title(),
+				get_woocommerce_currency_symbol() . woocommerce_format_total( $order->order_total )
+			);
+
+			// adds the transaction id (if any) to the order note
+			if ( $response->get_transaction_id() ) {
+				$message .= ' ' . sprintf( __( '(Transaction ID %s)', $this->text_domain ), $response->get_transaction_id() );
+			}
+
+			$order->add_order_note( $message );
+
+			// complete the order.  since this results in an update to the post object we need to unhook the save_post action, otherwise we can get boomeranged and change the status back to on-hold
+			remove_action( 'woocommerce_process_shop_order_meta', 'woocommerce_process_shop_order_meta', 10, 2 );
+			$order->payment_complete();
+
+			// mark the order as captured
+			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_charge_captured', 'yes' );
+
+		} else {
+
+			$message = sprintf(
+				__( '%s Capture Failed: %s - %s', $this->text_domain ),
+				$this->get_method_title(),
+				$response->get_status_code(),
+				$response->get_status_message()
+			);
+
+			$order->add_order_note( $message );
+
+		}
+
 	}
 
 
@@ -615,45 +663,69 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function add_transaction_data( $order, $response = null ) {
 
+		// transaction id if available
+		if ( $response && $response->get_transaction_id() ) {
+			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_id', $response->get_transaction_id() );
+		}
+
 		// payment info
-		if ( isset( $order->payment->token ) && $order->payment->token )
+		if ( isset( $order->payment->token ) && $order->payment->token ) {
 			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_payment_token', $order->payment->token );
+		}
 
 		// account number
-		if ( isset( $order->payment->account_number ) && $order->payment->account_number )
+		if ( isset( $order->payment->account_number ) && $order->payment->account_number ) {
 			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_four', substr( $order->payment->account_number, -4 ) );
+		}
 
 		if ( $this->is_credit_card_gateway() ) {
 
 			// credit card gateway data
+			if ( $response && $response->get_authorization_code() ) {
+				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_authorization_code', $response->get_authorization_code() );
+			}
 
-			if ( isset( $order->payment->exp_year ) && $order->payment->exp_year && isset( $order->payment->exp_month ) && $order->payment->exp_month )
+			// mark as captured
+			if ( $this->perform_credit_card_charge() ) {
+				$captured = 'yes';
+			} else {
+				$captured = 'no';
+			}
+			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_charge_captured', $captured );
+
+			if ( isset( $order->payment->exp_year ) && $order->payment->exp_year && isset( $order->payment->exp_month ) && $order->payment->exp_month ) {
 				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_card_expiry_date', $order->payment->exp_year . '-' . $order->payment->exp_month );
+			}
 
-			if ( isset( $order->payment->card_type ) && $order->payment->card_type )
+			if ( isset( $order->payment->card_type ) && $order->payment->card_type ) {
 				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_card_type', $order->payment->card_type );
+			}
 
 		} else {
 
 			// checking gateway data
 
 			// optional account type (checking/savings)
-			if ( isset( $order->payment->account_type ) && $order->payment->account_type )
+			if ( isset( $order->payment->account_type ) && $order->payment->account_type ) {
 				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_type', $order->payment->account_type );
+			}
 
 			// optional check number
-			if ( isset( $order->payment->check_number ) && $order->payment->check_number )
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_check_number', $order->payment->account_type );
+			if ( isset( $order->payment->check_number ) && $order->payment->check_number ) {
+				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_check_number', $order->payment->check_number );
+			}
 
 		}
 
 		// if there's more than one environment
-		if ( count( $this->get_environments() ) > 1 )
+		if ( count( $this->get_environments() ) > 1 ) {
 			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_environment', $this->get_environment() );
+		}
 
 		// if there is a payment gateway customer id, set it to the order (we don't append the environment here like we do for the user meta, because it's available from the 'environment' order meta already)
-		if ( isset( $order->customer_id ) && $order->customer_id )
+		if ( isset( $order->customer_id ) && $order->customer_id ) {
 			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_customer_id', $order->customer_id );
+		}
 
 	}
 
@@ -895,10 +967,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( 'parent' == $new_order_role ) {
 			$order_meta_query .= $this->get_remove_subscription_renewal_order_meta(
 				array(
+					'_wc_' . $this->get_id() . '_trans_id',
 					'_wc_' . $this->get_id() . '_payment_token',
 					'_wc_' . $this->get_id() . '_account_four',
 					'_wc_' . $this->get_id() . '_card_expiry_date',
 					'_wc_' . $this->get_id() . '_card_type',
+					'_wc_' . $this->get_id() . '_authorization_code',
 					'_wc_' . $this->get_id() . '_account_type',
 					'_wc_' . $this->get_id() . '_check_number',
 					'_wc_' . $this->get_id() . '_environment',
@@ -1276,9 +1350,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$this->add_payment_gateway_transaction_data( $order, $response );
 
 				// if the transaction was held (ie fraud validation failure) mark it as such
-				if ( $response->transaction_held() ) {
+				if ( $response->transaction_held() || ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
 
-					$this->mark_order_as_held( $order, $response->get_status_message() );
+					$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? __( 'Authorization only transaction', $this->text_domain ) : $response->get_status_message() );
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
 
 				} else {

@@ -59,6 +59,19 @@ interface SV_WC_Payment_Gateway_API {
 
 
 	/**
+	 * Perform a credit card capture for a given authorized order
+	 *
+	 * If the gateway does not support credit card capture, this method can be a no-op.
+	 *
+	 * @since 1.0
+	 * @param WC_Order $order the order
+	 * @return SV_WC_Payment_Gateway_API_Response credit card capture response
+	 * @throws Exception network timeouts, etc
+	 */
+	public function credit_card_capture( WC_Order $order );
+
+
+	/**
 	 * Perform an eCheck debit (ACH transaction) for the given order
 	 *
 	 * If the gateway does not support check debits, this method can be a no-op.

@@ -71,6 +71,9 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/** Link to transaction feature */
 	const FEATURE_TRANSACTION_LINK = 'transaction_link';
 
+	/** Charge capture feature */
+	const FEATURE_CAPTURE_CHARGE = 'capture_charge';
+
 
 	/** @var string plugin id */
 	private $id;
@@ -114,7 +117,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 *
 	 * Optional args:
 	 *
-	 * + `gateways` - array associative array of gateway id to gateway class name.  A single plugin might support more than one gateway, ie credit card, echeck.
+	 * + `gateways` - array associative array of gateway id to gateway class name.  A single plugin might support more than one gateway, ie credit card, echeck.  Note that the credit card gateway must always be the first one listed.
 	 * + `dependencies` - array string names of required PHP extensions
 	 * + `require_ssl` - boolean true if this gateway requires SSL for processing transactions, false otherwise. Defaults to false
 	 * + `supports` - array named features that this gateway supports, including 'tokenization', 'transaction_link', 'customer_id'
@@ -207,6 +210,17 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 			$this->do_install();
 		}
 
+		if ( $this->supports( self::FEATURE_CAPTURE_CHARGE ) ) {
+
+			add_action( 'woocommerce_order_status_on-hold_to_processing', array( $this, 'maybe_capture_charge' ) );
+			add_action( 'woocommerce_order_status_on-hold_to_completed',  array( $this, 'maybe_capture_charge' ) );
+
+			if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+				add_filter( 'woocommerce_order_actions',                                       array( $this, 'maybe_add_order_action_charge_action' ) );
+				add_action( 'woocommerce_order_action_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
+			}
+		}
+
 		// AJAX handler to dismiss any warning/error notices
 		add_action( 'wp_ajax_wc_payment_gateway_' . $this->get_id() . '_dismiss_message', array( $this, 'handle_dismiss_message' ) );
 
@@ -259,6 +273,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 		require_once( 'api/interface-wc-payment-gateway-api.php' );
 		require_once( 'api/interface-wc-payment-gateway-api-request.php' );
 		require_once( 'api/interface-wc-payment-gateway-api-response.php' );
+		require_once( 'api/interface-wc-payment-gateway-api-authorization-response.php' );
 		require_once( 'api/interface-wc-payment-gateway-api-create-payment-token-response.php' );
 		require_once( 'api/interface-wc-payment-gateway-api-get-tokenized-payment-methods-response.php' );
 
@@ -588,6 +603,82 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	}
 
 
+	/** Capture Charge Feature ******************************************************/
+
+
+	/**
+	 * Capture a credit card charge for a prior authorization if this payment
+	 * method was used for the given order, the charge hasn't already been
+	 * captured, and the gateway supports issuing a capture request
+	 *
+	 * @since 1.0
+	 * @param WC_Order|int $order the order identifier or order object
+	 */
+	public function maybe_capture_charge( $order ) {
+
+		if ( ! is_object( $order ) ) {
+			$order = new WC_Order( $order );
+		}
+
+		// bail if the order wasn't payed for with this gateway
+		if ( ! $this->has_gateway( $order->payment_method ) ) {
+			return;
+		}
+
+		// check whether the charge has already been captured by this gateway
+		$charge_captured = get_post_meta( $order->id, '_wc_' . $order->payment_method . '_charge_captured', true );
+		if ( 'yes' == $charge_captured ) {
+			return;
+		}
+
+		// finally, ensure that it supports captures
+		if ( ! $this->can_capture_charge() ) {
+			return;
+		}
+
+		// remove order status change actions, otherwise we get a whole bunch of capture calls and errors
+		remove_action( 'woocommerce_order_status_on-hold_to_processing', array( $this, 'maybe_capture_charge' ) );
+		remove_action( 'woocommerce_order_status_on-hold_to_completed',  array( $this, 'maybe_capture_charge' ) );
+		remove_action( 'woocommerce_order_action_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
+
+		// perform the capture
+		$this->get_gateway( $order->payment_method )->do_credit_card_capture( $order );
+	}
+
+
+	/**
+	 * Add a "Capture Charge" action to the Admin Order Edit Order
+	 * Actions dropdown
+	 *
+	 * @since 1.0
+	 * @param array $actions available order actionss
+	 */
+	public function maybe_add_order_action_charge_action( $actions ) {
+
+		$order = new WC_Order( $_REQUEST['post'] );
+
+		// bail if the order wasn't payed for with this gateway
+		if ( ! $this->has_gateway( $order->payment_method ) ) {
+			return $actions;
+		}
+
+		// check whether the charge has already been captured by this gateway
+		$charge_captured = get_post_meta( $order->id, '_wc_' . $order->payment_method . '_charge_captured', true );
+		if ( 'yes' == $charge_captured ) {
+			return $actions;
+		}
+
+		// finally, ensure that it supports captures
+		if ( ! $this->can_capture_charge() ) {
+			return $actions;
+		}
+
+		$actions[ $this->get_id() . '_capture_charge' ] = 'Capture Charge';
+
+		return $actions;
+	}
+
+
 	/** AJAX methods ******************************************************/
 
 
@@ -616,7 +707,18 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	public function supports( $feature ) {
 
 		return in_array( $feature, $this->supports );
+	}
 
+
+	/**
+	 * Returns true if the gateway supports the charge capture operation and it
+	 * can be invoked
+	 *
+	 * @since 1.0
+	 * @return boolean true if thes gateway supports the charge capture operation and it can be invoked
+	 */
+	public function can_capture_charge() {
+		return $this->supports( self::FEATURE_CAPTURE_CHARGE ) && $this->get_gateway()->is_available();
 	}
 
 
@@ -637,7 +739,6 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 		}
 
 		return $missing_extensions;
-
 	}
 
 
@@ -966,7 +1067,6 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 		}
 
 		return $gateways;
-
 	}
 
 
@@ -974,7 +1074,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * Returns the identified gateway object
 	 *
 	 * @since 1.0
-	 * @param string $gateway_id optional gateway identifier, defaults to first gateway
+	 * @param string $gateway_id optional gateway identifier, defaults to first gateway, which will be the credit card gateway in plugins with support for both credit cards and echecks
 	 * @return SV_WC_Payment_Gateway the gateway object
 	 */
 	public function get_gateway( $gateway_id = null ) {
@@ -994,7 +1094,6 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 		}
 
 		return $this->gateways[ $gateway_id ]['gateway'];
-
 	}
 
 

@@ -1517,8 +1517,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// set messages for next page load
-		if ( $set_message )
+		if ( $set_message && ( ! is_admin() || defined( 'DOING_AJAX' ) ) ) {
 			$woocommerce->set_messages();
+		}
 
 		// add log message to WC logger if log/both is enabled
 		if ( $this->debug_log() ) {
