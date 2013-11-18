@@ -620,7 +620,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 			$order = new WC_Order( $order );
 		}
 
-		// bail if the order wasn't payed for with this gateway
+		// bail if the order wasn't paid for with this gateway
 		if ( ! $this->has_gateway( $order->payment_method ) ) {
 			return;
 		}
@@ -657,7 +657,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 
 		$order = new WC_Order( $_REQUEST['post'] );
 
-		// bail if the order wasn't payed for with this gateway
+		// bail if the order wasn't paid for with this gateway
 		if ( ! $this->has_gateway( $order->payment_method ) ) {
 			return $actions;
 		}
@@ -673,7 +673,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 			return $actions;
 		}
 
-		$actions[ $this->get_id() . '_capture_charge' ] = 'Capture Charge';
+		$actions[ $this->get_id() . '_capture_charge' ] = __( 'Capture Charge', $this->text_domain );
 
 		return $actions;
 	}
