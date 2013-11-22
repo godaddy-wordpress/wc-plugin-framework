@@ -102,6 +102,9 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	/** @var boolean true if this gateway requires SSL for processing transactions, false otherwise */
 	private $require_ssl;
 
+	/** @var array optional array of currency codes this gateway is allowed for */
+	private $currencies = array();
+
 	/** @var array named features that this gateway supports which require action from the parent plugin, including 'tokenization' */
 	private $supports = array();
 
@@ -120,6 +123,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 	 * + `gateways` - array associative array of gateway id to gateway class name.  A single plugin might support more than one gateway, ie credit card, echeck.  Note that the credit card gateway must always be the first one listed.
 	 * + `dependencies` - array string names of required PHP extensions
 	 * + `require_ssl` - boolean true if this gateway requires SSL for processing transactions, false otherwise. Defaults to false
+	 * + `currencies` -  array of currency codes this gateway is allowed for, defaults to all
 	 * + `supports` - array named features that this gateway supports, including 'tokenization', 'transaction_link', 'customer_id'
 	 *
 	 * @since 1.0
@@ -162,9 +166,10 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 			}
 
 		}
-		if ( isset( $args['dependencies'] ) )       $this->dependencies       = $args['dependencies'];
-		if ( isset( $args['require_ssl'] ) )        $this->require_ssl        = $args['require_ssl'];
-		if ( isset( $args['supports'] ) )           $this->supports           = $args['supports'];
+		if ( isset( $args['dependencies'] ) )       $this->dependencies = $args['dependencies'];
+		if ( isset( $args['require_ssl'] ) )        $this->require_ssl  = $args['require_ssl'];
+		if ( isset( $args['currencies'] ) )         $this->currencies   = $args['currencies'];
+		if ( isset( $args['supports'] ) )           $this->supports     = $args['supports'];
 
 		// include library files after woocommerce is loaded
 		add_action( 'woocommerce_loaded', array( $this, 'lib_includes' ) );
@@ -378,6 +383,36 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 			$notice_rendered = true;
 
 		}
+
+		// report any currency issues
+		if ( $this->currencies && ! in_array( get_woocommerce_currency(), $this->currencies ) )
+
+		if ( count( $this->get_accepted_currencies() ) > 0 && ! in_array( get_woocommerce_currency(), $this->get_accepted_currencies() ) && ( ! $this->is_message_dismissed( 'accepted-currency' ) || $this->is_gateway_settings() ) ) {
+
+			$message = sprintf(
+				_n(
+					'%s accepts payment in %s only.  <a href="%s">Configure</a> WooCommerce to accept %s to enable this gateway for checkout.',
+					'%s accepts payment in one of %s only.  <a href="%s">Configure</a> WooCommerce to accept one of %s to enable this gateway for checkout.',
+					count( $this->get_accepted_currencies() ),
+					$this->text_domain
+				),
+				$this->get_plugin_name(),
+				'<strong>' . implode( ', ', $this->get_accepted_currencies() ) . '</strong>',
+				admin_url( 'admin.php?page=woocommerce_settings&tab=general' ),
+				'<strong>' . implode( ', ', $this->get_accepted_currencies() ) . '</strong>'
+			);
+
+			// dismiss link unless we're on the payment gateway settings page, in which case we'll always display the notice
+			$dismiss_link = '<a href="#" class="js-wc-payment-gateway-' . $this->get_id() . '-message-dismiss" data-message-id="accepted-currency">' . __( 'Dismiss', $this->text_domain ) . '</a>';
+			if ( $this->is_gateway_settings() )
+				$dismiss_link = '';
+
+			echo '<div class="error"><p>' . $message . ' ' . $dismiss_link . '</p></div>';
+
+			$notice_rendered = true;
+
+		}
+
 
 		// check settings:  gateway active and SSL enabled
 		// TODO: does this work when a plugin is first activated, before the settings page has been saved?
@@ -620,7 +655,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 			$order = new WC_Order( $order );
 		}
 
-		// bail if the order wasn't paid for with this gateway
+		// bail if the order wasn't payed for with this gateway
 		if ( ! $this->has_gateway( $order->payment_method ) ) {
 			return;
 		}
@@ -657,7 +692,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 
 		$order = new WC_Order( $_REQUEST['post'] );
 
-		// bail if the order wasn't paid for with this gateway
+		// bail if the order wasn't payed for with this gateway
 		if ( ! $this->has_gateway( $order->payment_method ) ) {
 			return $actions;
 		}
@@ -673,7 +708,7 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 			return $actions;
 		}
 
-		$actions[ $this->get_id() . '_capture_charge' ] = __( 'Capture Charge', $this->text_domain );
+		$actions[ $this->get_id() . '_capture_charge' ] = 'Capture Charge';
 
 		return $actions;
 	}
@@ -1124,6 +1159,18 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 
 		return array_keys( $this->gateways );
 
+	}
+
+
+	/**
+	 * Returns the set of accepted currencies, or empty array if all currencies
+	 * are accepted
+	 *
+	 * @since 1.0
+	 * @return array of accepted currencies
+	 */
+	public function get_accepted_currencies() {
+		return $this->currencies;
 	}
 
 

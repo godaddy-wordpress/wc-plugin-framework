@@ -247,7 +247,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 *   'VISA' => 'Visa', 'MC' => 'MasterCard', 'AMEX' => 'American Express', 'DISC' => 'Discover', 'DINERS' => 'Diners', 'JCB' => 'JCB'
 	 * + `echeck_fields` - array of supported echeck fields, including 'check_number', 'account_type'
 	 * + `environments` - associative array of environment id to display name, merged with default of 'production' => 'Production'
-	 * + `currencies` -  array of currency codes this gateway is allowed for, defaults to all
+	 * + `currencies` -  array of currency codes this gateway is allowed for, defaults to plugin accepted currencies
 	 * + `countries` -  array of two-letter country codes this gateway is allowed for, defaults to all
 	 * + `shared_settings` - array of shared setting names, if any.  This can be used for instance when a single plugin supports both credit card and echeck payments, and the same credentials can be used for both gateways
 	 *
@@ -279,6 +279,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( isset( $args['echeck_fields'] ) )      $this->supported_check_fields       = $args['echeck_fields'];
 		if ( isset( $args['environments'] ) )       $this->environments                 = array_merge( $this->get_environments(), $args['environments'] );
 		if ( isset( $args['currencies'] ) )         $this->currencies                   = $args['currencies'];
+		else                                        $this->currencies                   = $this->get_plugin()->get_accepted_currencies();
 		if ( isset( $args['countries'] ) )          $this->countries                    = $args['countries'];  // @see WC_Payment_Gateway::$countries
 		if ( isset( $args['shared_settings'] ) )    $this->shared_settings              = $args['shared_settings'];
 
