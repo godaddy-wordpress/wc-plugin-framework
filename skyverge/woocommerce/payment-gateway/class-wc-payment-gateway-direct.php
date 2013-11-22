@@ -798,7 +798,21 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function subscriptions_tokenization_forced( $force_tokenization ) {
 
-		if ( WC_Subscriptions_Cart::cart_contains_subscription() || WC_Subscriptions_Change_Payment_Gateway::$is_request_to_change_payment )
+		// pay page with subscription?
+		$pay_page_subscription = false;
+		if ( $this->is_pay_page_gateway() ) {
+
+			$order_id  = isset( $_GET['order'] ) ? absint( $_GET['order'] ) : 0;
+
+			if ( $order_id ) {
+				$pay_page_subscription = WC_Subscriptions_Order::order_contains_subscription( $order_id );
+			}
+
+		}
+
+		if ( WC_Subscriptions_Cart::cart_contains_subscription() ||
+			WC_Subscriptions_Change_Payment_Gateway::$is_request_to_change_payment ||
+			$pay_page_subscription )
 			$force_tokenization = true;
 
 		return $force_tokenization;
@@ -850,8 +864,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				if ( ! isset( $order->payment->exp_month ) || ! $order->payment->exp_month )
 					$order->payment->exp_month = $token->get_exp_month();
 
-				if ( ! isset( $order->payment->exp_month ) || ! $order->payment->exp_month )
-					$order->payment->exp_month = $token->get_exp_month();
+				if ( ! isset( $order->payment->exp_year ) || ! $order->payment->exp_year )
+					$order->payment->exp_year = $token->get_exp_year();
 
 			} else {
 
