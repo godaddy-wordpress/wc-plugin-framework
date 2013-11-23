@@ -73,6 +73,11 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID%%_payment_fields' ) ) {
 		// tokenization is allowed if tokenization is enabled on the gateway
 		$tokenization_allowed = $gateway->tokenization_enabled();
 
+		// on the pay page there is no way of creating an account, so disallow tokenization for guest customers
+		if ( $tokenization_allowed && $gateway->is_pay_page() && ! is_user_logged_in() ) {
+			$tokenization_allowed = false;
+		}
+
 		$tokens = array();
 		$default_new_card = true;
 		if ( $tokenization_allowed && is_user_logged_in() ) {
@@ -210,6 +215,11 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_payment_fields' ) ) {
 %%IF SUPPORTS TOKENIZATION%%
 		// tokenization is allowed if tokenization is enabled on the gateway
 		$tokenization_allowed = $gateway->tokenization_enabled();
+
+		// on the pay page there is no way of creating an account, so disallow tokenization for guest customers
+		if ( $tokenization_allowed && $gateway->is_pay_page() && ! is_user_logged_in() ) {
+			$tokenization_allowed = false;
+		}
 
 		$tokens = array();
 		$default_new_account = true;

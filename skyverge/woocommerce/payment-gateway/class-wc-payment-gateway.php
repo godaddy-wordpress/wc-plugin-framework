@@ -384,14 +384,25 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
+	 * Returns true if on the pay page
+	 *
+	 * @since 1.0
+	 * @return mixed true if on pay page
+	 */
+	public function is_pay_page() {
+		return is_page( woocommerce_get_page_id( 'pay' ) );
+	}
+
+
+	/**
 	 * Returns true if on the pay page and this is the currently selected gateway
 	 *
 	 * @since 1.0
 	 * @return mixed true if on pay page and is currently selected gateways, false if on pay page and not the selected gateway, null otherwise
 	 */
-	protected function is_pay_page_gateway() {
+	public function is_pay_page_gateway() {
 
-		if ( is_page( woocommerce_get_page_id( 'pay' ) ) ) {
+		if ( $this->is_pay_page() ) {
 
 			$order_id  = isset( $_GET['order'] ) ? absint( $_GET['order'] ) : 0;
 

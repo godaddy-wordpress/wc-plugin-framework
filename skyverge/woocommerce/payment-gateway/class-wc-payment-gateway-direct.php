@@ -316,6 +316,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Handles payment processing
 	 *
 	 * @since 1.0
+	 * @see WC_Payment_Gateway::process_payment()
 	 */
 	public function process_payment( $order_id ) {
 
@@ -340,6 +341,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// the order amount will be $0 if a WooCommerce Subscriptions free trial product is being processed
 			// note that customer id & payment token are saved to order when create_payment_token() is called
 			if ( 0 == $order->payment_total || $this->do_transaction( $order ) ) {
+
+				// add transaction data for zero-dollar "orders"
+				if ( 0 == $order->payment_total ) {
+					$this->add_transaction_data( $order );
+				}
 
 				if ( 'on-hold' == $order->status )
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
@@ -598,7 +604,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$message = sprintf(
 				__( '%s Capture of %s Approved', $this->text_domain ),
 				$this->get_method_title(),
-				get_woocommerce_currency_symbol() . woocommerce_format_total( $order->order_total )
+				get_woocommerce_currency_symbol() . woocommerce_format_total( $order->get_total() )
 			);
 
 			// adds the transaction id (if any) to the order note
@@ -681,17 +687,23 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( $this->is_credit_card_gateway() ) {
 
 			// credit card gateway data
-			if ( $response && $response->get_authorization_code() ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_authorization_code', $response->get_authorization_code() );
-			}
+			if ( $response && $response instanceof SV_WC_Payment_Gateway_API_Authorization_Response ) {
 
-			// mark as captured
-			if ( $this->perform_credit_card_charge() ) {
-				$captured = 'yes';
-			} else {
-				$captured = 'no';
+				if ( $response->get_authorization_code() ) {
+					update_post_meta( $order->id, '_wc_' . $this->get_id() . '_authorization_code', $response->get_authorization_code() );
+				}
+
+				if ( $order->payment_total > 0 ) {
+					// mark as captured
+					if ( $this->perform_credit_card_charge() ) {
+						$captured = 'yes';
+					} else {
+						$captured = 'no';
+					}
+					update_post_meta( $order->id, '_wc_' . $this->get_id() . '_charge_captured', $captured );
+				}
+
 			}
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_charge_captured', $captured );
 
 			if ( isset( $order->payment->exp_year ) && $order->payment->exp_year && isset( $order->payment->exp_month ) && $order->payment->exp_month ) {
 				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_card_expiry_date', $order->payment->exp_year . '-' . $order->payment->exp_month );
@@ -812,8 +824,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		if ( WC_Subscriptions_Cart::cart_contains_subscription() ||
 			WC_Subscriptions_Change_Payment_Gateway::$is_request_to_change_payment ||
-			$pay_page_subscription )
+			$pay_page_subscription ) {
 			$force_tokenization = true;
+		}
 
 		return $force_tokenization;
 	}
@@ -1118,8 +1131,20 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function pre_orders_tokenization_forced( $force_tokenization ) {
 
-		if ( class_exists( 'WC_Pre_Orders_Cart' ) && WC_Pre_Orders_Cart::cart_contains_pre_order() &&
-			class_exists( 'WC_Pre_Orders_Product' ) && WC_Pre_Orders_Product::product_is_charged_upon_release( WC_Pre_Orders_Cart::get_pre_order_product() ) ) {
+		// pay page with pre-order?
+		$pay_page_pre_order = false;
+		if ( $this->is_pay_page_gateway() ) {
+
+			$order_id  = isset( $_GET['order'] ) ? absint( $_GET['order'] ) : 0;
+
+			if ( $order_id ) {
+				$pay_page_pre_order = WC_Pre_Orders_Order::order_contains_pre_order( $order_id ) && WC_Pre_Orders_Product::product_is_charged_upon_release( WC_Pre_Orders_Order::get_pre_order_product( $order_id ) );
+			}
+
+		}
+
+		if ( ( WC_Pre_Orders_Cart::cart_contains_pre_order() && WC_Pre_Orders_Product::product_is_charged_upon_release( WC_Pre_Orders_Cart::get_pre_order_product() ) ) ||
+			$pay_page_pre_order ) {
 
 			// always tokenize the card for pre-orders that are charged upon release
 			$force_tokenization = true;
@@ -1147,7 +1172,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order ) ) {
 
-			// normally a guest user wouldn't be assigned a customer id, but for a pre-order requiring tokenization, it will be
+			// normally a guest user wouldn't be assigned a customer id, but for a pre-order requiring tokenization, it might be
 			if ( 0 == $order->user_id && false !== ( $customer_id = $this->get_guest_customer_id( $order ) ) )
 				$order->customer_id = $customer_id;
 
@@ -1158,7 +1183,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// retrieve the payment token
 			$order->payment->token = get_post_meta( $order->id, '_wc_' . $this->get_id() . '_payment_token', true );
 
-			// retrieve the customer id
+			// retrieve the customer id (might not be one)
 			$order->customer_id = get_post_meta( $order->id, '_wc_' . $this->get_id() . '_customer_id', true );
 
 			// verify that this customer still has the token tied to this order.  Pass in customer_id to support tokenized guest orders
@@ -1171,7 +1196,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				//  or from the order object otherwise.  The theory is that the token will have the
 				//  most up-to-date data, while the meta attached to the order is a second best
 
-				// for a guest transaction with a gateway that doesn't support "tokenization get" this will return null
+				// for a guest transaction with a gateway that doesn't support "tokenization get" this will return null and the token data will be pulled from the order meta
 				$token = $this->get_payment_token( $order->user_id, $order->payment->token, $order->customer_id );
 
 				// account last four
@@ -1223,8 +1248,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		if ( ! $this->supports_pre_orders() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Pre-Orders not supported by gateway', $this->text_domain ) );
 
-		if ( $this->get_plugin()->is_pre_orders_active() && class_exists( 'WC_Pre_Orders_Order' ) &&
-			WC_Pre_Orders_Order::order_contains_pre_order( $order_id ) &&
+		if ( WC_Pre_Orders_Order::order_contains_pre_order( $order_id ) &&
 			WC_Pre_Orders_Order::order_requires_payment_tokenization( $order_id ) ) {
 
 			$order = $this->get_order( $order_id );
@@ -1242,27 +1266,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					// otherwise tokenize the payment method
 					$order = $this->create_payment_token( $order );
 				}
-
-				$token = $this->get_payment_token( get_current_user_id(), $order->payment->token );
-
-				// order note based on gateway type
-				if ( $this->is_credit_card_gateway() ) {
-					$message = sprintf( __( '%s Pre-Order Payment Token Saved: %s ending in %s (expires %s)', $this->text_domain ),
-						$this->get_method_title(),
-						$token->get_type_full(),
-						$token->get_last_four(),
-						$token->get_exp_date()
-					);
-				} else {
-					// account type (checking/savings) may or may not be available, which is fine
-					$message = sprintf( __( '%s Pre-Order eCheck Payment Token Saved: %s account ending in %s', $this->text_domain ),
-						$this->get_method_title(),
-						$token->get_account_type(),
-						$token->get_last_four()
-					);
-				}
-
-				$order->add_order_note( $message );
 
 				// mark order as pre-ordered / reduce order stock
 				WC_Pre_Orders_Order::mark_order_as_pre_ordered( $order );
@@ -1455,6 +1458,25 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// set the token to the user account
 			if ( $order->user_id )
 				$this->add_payment_token( $order->user_id, $token );
+
+			// order note based on gateway type
+			if ( $this->is_credit_card_gateway() ) {
+				$message = sprintf( __( '%s Payment Method Saved: %s ending in %s (expires %s)', $this->text_domain ),
+					$this->get_method_title(),
+					$token->get_type_full(),
+					$token->get_last_four(),
+					$token->get_exp_date()
+				);
+			} else {
+				// account type (checking/savings) may or may not be available, which is fine
+				$message = sprintf( __( '%s eCheck Payment Method Saved: %s account ending in %s', $this->text_domain ),
+					$this->get_method_title(),
+					$token->get_account_type(),
+					$token->get_last_four()
+				);
+			}
+
+			$order->add_order_note( $message );
 
 			// add the standard transaction data
 			$this->add_transaction_data( $order, $response );
@@ -1740,7 +1762,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			try {
 
-				$response = $this->get_api()->remove_tokenized_payment_method( $this->get_customer_id( $user_id ), $token->get_token() );
+				$response = $this->get_api()->remove_tokenized_payment_method( $token->get_token(), $this->get_customer_id( $user_id ) );
 
 				if ( ! $response->transaction_approved() ) {
 					return false;

@@ -27,7 +27,11 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 if ( ! interface_exists( 'SV_WC_Payment_Gateway_API_Authorization_Response' ) ) :
 
 /**
- * WooCommerce Direct Payment Gateway API Response
+ * WooCommerce Direct Payment Gateway API Authorization Response
+ *
+ * Represents a Payment Gateway Credit Card Authorization response.  This should
+ * also be used as the parent class for credit card charge (authorization +
+ * capture) responses.
  */
 interface SV_WC_Payment_Gateway_API_Authorization_Response extends SV_WC_Payment_Gateway_API_Response {
 

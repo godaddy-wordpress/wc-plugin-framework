@@ -91,7 +91,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 %%IF SUPPORTS TOKENIZATION%%
 		<?php
-		if ( $tokenization_allowed ) :
+		if ( $tokenization_allowed || $tokenization_forced ) :
 			if ( $tokenization_forced ) :
 				?>
 				<input name="wc-%%GATEWAY ID DASHERIZED%%-tokenize-payment-method" id="wc-%%GATEWAY ID DASHERIZED%%-tokenize-payment-method" type="hidden" value="true" />
