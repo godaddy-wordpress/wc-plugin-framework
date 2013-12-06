@@ -55,12 +55,12 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
  * + `customer_id`      - adds actions to show/persist the "Customer ID" area of the admin User edit page
  * + `transaction_link` - adds actions to render the merchant account transaction direct link on the Admin Order Edit page.  (Don't forget to override the SV_WC_Payment_Gateway::get_transaction_url() method!)
  *
- * @version 1.0
+ * @version 1.0-1
  */
 abstract class SV_WC_Payment_Gateway_Plugin {
 
 	/** Payment Gateway Framework Version */
-	const VERSION = '1.0';
+	const VERSION = '1.0-1';
 
 	/** Tokenization feature */
 	const FEATURE_TOKENIZATION = 'tokenization';
@@ -660,14 +660,13 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 			return;
 		}
 
-		// check whether the charge has already been captured by this gateway
-		$charge_captured = get_post_meta( $order->id, '_wc_' . $order->payment_method . '_charge_captured', true );
-		if ( 'yes' == $charge_captured ) {
+		// ensure that it supports captures
+		if ( ! $this->can_capture_charge() ) {
 			return;
 		}
 
-		// finally, ensure that it supports captures
-		if ( ! $this->can_capture_charge() ) {
+		// ensure the authorization is still valid for capture
+		if ( ! $this->get_gateway( $order->payment_method )->authorization_valid_for_capture( $order ) ) {
 			return;
 		}
 
@@ -697,14 +696,13 @@ abstract class SV_WC_Payment_Gateway_Plugin {
 			return $actions;
 		}
 
-		// check whether the charge has already been captured by this gateway
-		$charge_captured = get_post_meta( $order->id, '_wc_' . $order->payment_method . '_charge_captured', true );
-		if ( 'yes' == $charge_captured ) {
+		// ensure that it supports captures
+		if ( ! $this->can_capture_charge() ) {
 			return $actions;
 		}
 
-		// finally, ensure that it supports captures
-		if ( ! $this->can_capture_charge() ) {
+		// ensure that the authorization is still valid for capture
+		if ( ! $this->get_gateway( $order->payment_method )->authorization_valid_for_capture( $order ) ) {
 			return $actions;
 		}
 

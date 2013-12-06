@@ -1,4 +1,7 @@
 *** SkyVerge WooCommerce Payment Gateway Framework Changelog ***
 
+XXXX.XX.XX - version 1.0-1
+ * Tweak - Improved handling for credit card capture request
+
 2013.11.11 - version 1.0
  * First Release

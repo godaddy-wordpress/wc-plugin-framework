@@ -467,6 +467,26 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 
 	/**
+	 * Add payment and transaction information as class members of WC_Order
+	 * instance for use in credit card capture transactions.  Standard information
+	 * can include:
+	 *
+	 * $order->capture_total - the capture total
+	 *
+	 * @since 1.0-1
+	 * @param int $order_id order ID being processed
+	 * @return WC_Order object with payment and transaction information attached
+	 */
+	protected function get_order_for_capture( $order ) {
+
+		// set capture total here so it can be modified later as needed prior to capture
+		$order->capture_total = $order->get_total();
+
+		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_capture', $order, $this );
+	}
+
+
+	/**
 	 * Performs a check transaction for the given order and returns the
 	 * result
 	 *
@@ -590,12 +610,59 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 
 	/**
+	 * Returns true if the authorization for $order is still valid for capture
+	 *
+	 * @since 1.0-1
+	 * @param $order WC_Order the order
+	 * @return boolean true if the authorization is valid for capture, false otherwise
+	 */
+	public function authorization_valid_for_capture( $order ) {
+
+		// check whether the charge has already been captured by this gateway
+		$charge_captured = get_post_meta( $order->id, '_wc_' . $order->payment_method . '_charge_captured', true );
+
+		if ( 'yes' == $charge_captured ) {
+			return false;
+		}
+
+		// if for any reason the authorization can not be captured
+		$auth_can_be_captured = get_post_meta( $order->id, '_wc_' . $order->payment_method . '_auth_can_be_captured', true );
+
+		if ( 'no' == $auth_can_be_captured ) {
+			return false;
+		}
+
+		// authorization hasn't already been captured, but has it expired?
+		return ! $this->has_authorization_expired( $order );
+	}
+
+
+	/**
+	 * Returns true if the authorization for $order has expired
+	 *
+	 * @since 1.0-1
+	 * @param $order WC_Order the order
+	 * @return boolean true if the authorization has expired, false otherwise
+	 */
+	public function has_authorization_expired( $order ) {
+
+		$transaction_time = strtotime( get_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_date', true ) );
+
+		// use 30 days as a standard authorization window.  Individual gateways can override this as necessary
+		return floor( ( time() - $transaction_time ) / 86400 ) > 30;
+	}
+
+
+	/**
 	 * Perform a credit card capture for the given order
 	 *
 	 * @since 1.0
 	 * @param $order WC_Order the order
+	 * @return SV_WC_Payment_Gateway_API_Response the response of the capture attempt
 	 */
 	public function do_credit_card_capture( $order ) {
+
+		$order = $this->get_order_for_capture( $order );
 
 		$response = $this->get_api()->credit_card_capture( $order );
 
@@ -604,7 +671,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$message = sprintf(
 				__( '%s Capture of %s Approved', $this->text_domain ),
 				$this->get_method_title(),
-				get_woocommerce_currency_symbol() . woocommerce_format_total( $order->get_total() )
+				get_woocommerce_currency_symbol() . woocommerce_format_total( $order->capture_total )
 			);
 
 			// adds the transaction id (if any) to the order note
@@ -618,8 +685,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			remove_action( 'woocommerce_process_shop_order_meta', 'woocommerce_process_shop_order_meta', 10, 2 );
 			$order->payment_complete();
 
-			// mark the order as captured
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_charge_captured', 'yes' );
+			// add the standard capture data to the order
+			$this->add_capture_data( $order, $response );
+
+			// let payment gateway implementations add their own data
+			$this->add_payment_gateway_capture_data( $order, $response );
 
 		} else {
 
@@ -633,6 +703,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$order->add_order_note( $message );
 
 		}
+
+		return $response;
 
 	}
 
@@ -683,6 +755,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( isset( $order->payment->account_number ) && $order->payment->account_number ) {
 			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_four', substr( $order->payment->account_number, -4 ) );
 		}
+
+		// transaction date
+		update_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_date', current_time( 'mysql' ) );
 
 		if ( $this->is_credit_card_gateway() ) {
 
@@ -750,6 +825,34 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
 	 */
 	protected function add_payment_gateway_transaction_data( $order, $response ) {
+
+		// Optional method
+
+	}
+
+
+	/**
+	 * Adds the standard capture data to the order
+	 *
+	 * @since 1.0-1
+	 * @param WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
+	 */
+	protected function add_capture_data( $order, $response ) {
+
+		// mark the order as captured
+		update_post_meta( $order->id, '_wc_' . $this->get_id() . '_charge_captured', 'yes' );
+	}
+
+
+	/**
+	 * Adds any gateway-specific data to the order after a capture is performed
+	 *
+	 * @since 1.0-1
+	 * @param WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
+	 */
+	protected function add_payment_gateway_capture_data( $order, $response ) {
 
 		// Optional method
 
