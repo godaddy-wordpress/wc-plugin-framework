@@ -313,6 +313,23 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 
 	/**
+	 * Returns true if authorization/charge requests also tokenize the payment
+	 * method.  False if this gateway has a separate "tokenize" method which
+	 * is always used.
+	 *
+	 * Defaults to false but can be overridden by child gateway class
+	 *
+	 * @since 1.0-1
+	 * @return boolean true if tokenization is combined with sales, false if
+	 *         there is a special request for tokenization
+	 */
+	public function tokenize_with_sale() {
+		// assume gateways will have a tokenization request by default
+		return false;
+	}
+
+
+	/**
 	 * Handles payment processing
 	 *
 	 * @since 1.0
@@ -333,7 +350,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		try {
 
 			// registered customer checkout (already logged in or creating account at checkout)
-			if ( $this->supports_tokenization() && 0 !== $order->user_id && $this->should_tokenize_payment_method() ) {
+			if ( $this->supports_tokenization() && 0 !== $order->user_id && $this->should_tokenize_payment_method() &&
+				( 0 == $order->payment_total || ! $this->tokenize_with_sale() ) ) {
 				$order = $this->create_payment_token( $order );
 			}
 
@@ -587,6 +605,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// handle the response
 		if ( $response->transaction_approved() || $response->transaction_held() ) {
+
+			if ( $this->supports_tokenization() && 0 !== $order->user_id && $this->should_tokenize_payment_method() &&
+				( $order->payment_total > 0 && $this->tokenize_with_sale() ) ) {
+				$order = $this->create_payment_token( $order, $response );
+			}
 
 			// add the standard transaction data
 			$this->add_transaction_data( $order, $response );
@@ -1533,16 +1556,19 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 1.0
 	 * @param WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response optional create payment token response, or null if the tokenize payment method request should be made
 	 * @return WC_Order the order object
 	 * @throws Exception on network error or request error
 	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
-	protected function create_payment_token( $order ) {
+	protected function create_payment_token( $order, $response = null ) {
 
 		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Payment tokenization not supported by gateway', $this->text_domain ) );
 
-		// perform the API request to tokenize the payment method
-		$response = $this->get_api()->tokenize_payment_method( $order );
+		// perform the API request to tokenize the payment method if needed
+		if ( ! $response ) {
+			$response = $this->get_api()->tokenize_payment_method( $order );
+		}
 
 		if ( $response->transaction_approved() ) {
 

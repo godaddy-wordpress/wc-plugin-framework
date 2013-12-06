@@ -74,6 +74,25 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
  *
  * + `credit-card/myaccount/gateway-id-my-cards.php` - renders the "My Cards" section for credit card gateways
  *
+ * #### Types of Tokenization Requests
+ *
+ * There are two different models used by payment gateways to tokenize payment
+ * methods: tokenize with sale/zero dollar pre-auth, or tokenize first.
+ * Sample gateways of the former include First Data and NETbilling, which
+ * automatically tokenize a payment method as part of a regular authorization/
+ * charge transaction.  While an example of the latter is Intuit QBMS, which
+ * has a dedicated tokenize request that is always used.  This framework
+ * assumes the "tokenize first" protocol.  To implement a gateway that
+ * combines tokenization with sale, simply do the following:
+ *
+ * + Override SV_WC_Payment_Gateway_Direct::tokenize_with_sale() to return true
+ * + Make sure that the API authorization response class also implements the
+ *   SV_WC_Payment_Gateway_API_Create_Payment_Token_Response interface
+ *
+ * The framework assumes that for tokenize with sale gateways there will also be
+ * a separate zero-dollar tokenization request, this should be implemented by
+ * SV_WC_Payment_Gateway_API::tokenize_payment_method()
+ *
  * ### Subscriptions support
  *
  * If the gateway conditionally adds subscriptions support (for instance
