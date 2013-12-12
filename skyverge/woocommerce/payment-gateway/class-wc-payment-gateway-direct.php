@@ -681,53 +681,70 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 1.0
 	 * @param $order WC_Order the order
-	 * @return SV_WC_Payment_Gateway_API_Response the response of the capture attempt
+	 * @return null|SV_WC_Payment_Gateway_API_Response the response of the capture attempt
 	 */
 	public function do_credit_card_capture( $order ) {
 
 		$order = $this->get_order_for_capture( $order );
 
-		$response = $this->get_api()->credit_card_capture( $order );
+		try {
 
-		if ( $response->transaction_approved() ) {
+			$response = $this->get_api()->credit_card_capture( $order );
 
-			$message = sprintf(
-				__( '%s Capture of %s Approved', $this->text_domain ),
-				$this->get_method_title(),
-				get_woocommerce_currency_symbol() . woocommerce_format_total( $order->capture_total )
-			);
+			if ( $response->transaction_approved() ) {
 
-			// adds the transaction id (if any) to the order note
-			if ( $response->get_transaction_id() ) {
-				$message .= ' ' . sprintf( __( '(Transaction ID %s)', $this->text_domain ), $response->get_transaction_id() );
+				$message = sprintf(
+					__( '%s Capture of %s Approved', $this->text_domain ),
+					$this->get_method_title(),
+					get_woocommerce_currency_symbol() . woocommerce_format_total( $order->capture_total )
+				);
+
+				// adds the transaction id (if any) to the order note
+				if ( $response->get_transaction_id() ) {
+					$message .= ' ' . sprintf( __( '(Transaction ID %s)', $this->text_domain ), $response->get_transaction_id() );
+				}
+
+				$order->add_order_note( $message );
+
+				// complete the order.  since this results in an update to the post object we need to unhook the save_post action, otherwise we can get boomeranged and change the status back to on-hold
+				remove_action( 'woocommerce_process_shop_order_meta', 'woocommerce_process_shop_order_meta', 10, 2 );
+				$order->payment_complete();
+
+				// add the standard capture data to the order
+				$this->add_capture_data( $order, $response );
+
+				// let payment gateway implementations add their own data
+				$this->add_payment_gateway_capture_data( $order, $response );
+
+			} else {
+
+				$message = sprintf(
+					__( '%s Capture Failed: %s - %s', $this->text_domain ),
+					$this->get_method_title(),
+					$response->get_status_code(),
+					$response->get_status_message()
+				);
+
+				$order->add_order_note( $message );
+
 			}
 
-			$order->add_order_note( $message );
+			return $response;
 
-			// complete the order.  since this results in an update to the post object we need to unhook the save_post action, otherwise we can get boomeranged and change the status back to on-hold
-			remove_action( 'woocommerce_process_shop_order_meta', 'woocommerce_process_shop_order_meta', 10, 2 );
-			$order->payment_complete();
-
-			// add the standard capture data to the order
-			$this->add_capture_data( $order, $response );
-
-			// let payment gateway implementations add their own data
-			$this->add_payment_gateway_capture_data( $order, $response );
-
-		} else {
+		} catch ( Exception $e ) {
 
 			$message = sprintf(
-				__( '%s Capture Failed: %s - %s', $this->text_domain ),
+				__( '%s Capture Failed: %s', $this->text_domain ),
 				$this->get_method_title(),
-				$response->get_status_code(),
-				$response->get_status_message()
+				$e->getMessage()
 			);
 
 			$order->add_order_note( $message );
 
+			return null;
 		}
 
-		return $response;
+
 
 	}
 
