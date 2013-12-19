@@ -151,7 +151,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID%%_show_my_payment_methods' ) )
 				}
 			} );
 		<?php
-		$woocommerce->add_inline_js( ob_get_clean() );
+		SV_WC_Plugin_Compatibility::wc_enqueue_js( ob_get_clean() );
 	}
 
 }
@@ -295,7 +295,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_show_my_payment_metho
 				}
 			} );
 		<?php
-		$woocommerce->add_inline_js( ob_get_clean() );
+		SV_WC_Plugin_Compatibility::wc_enqueue_js( ob_get_clean() );
 	}
 
 }

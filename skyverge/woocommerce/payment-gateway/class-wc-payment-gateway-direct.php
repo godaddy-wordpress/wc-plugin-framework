@@ -108,7 +108,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				// unknown token?
 				if ( ! $this->has_payment_token( get_current_user_id(), $this->get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) ) {
-					$woocommerce->add_error( __( 'Payment error, please try another payment method or contact us to complete your transaction.', $this->text_domain ) );
+					SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Payment error, please try another payment method or contact us to complete your transaction.', $this->text_domain ), 'error' );
 					$is_valid = false;
 				}
 
@@ -146,23 +146,23 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		if ( empty( $card_number ) ) {
 
-			$woocommerce->add_error( __( 'Card number is missing', $this->text_domain ) );
+			SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Card number is missing', $this->text_domain ), 'error' );
 			$is_valid = false;
 
 		} else {
 
 			if ( strlen( $card_number ) < 12 || strlen( $card_number ) > 19 ) {
-				$woocommerce->add_error( __( 'Card number is invalid (wrong length)', $this->text_domain ) );
+				SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Card number is invalid (wrong length)', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
 			if ( ! ctype_digit( $card_number ) ) {
-				$woocommerce->add_error( __( 'Card number is invalid (only digits allowed)', $this->text_domain ) );
+				SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Card number is invalid (only digits allowed)', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
 			if ( ! $this->luhn_check( $card_number ) ) {
-				$woocommerce->add_error( __( 'Card number is invalid', $this->text_domain ) );
+				SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Card number is invalid', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
@@ -179,7 +179,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			( $expiration_year == $current_year && $expiration_month < $current_month ) ||
 			$expiration_year > $current_year + 20
 		) {
-			$woocommerce->add_error( __( 'Card expiration date is invalid', $this->text_domain ) );
+			SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Card expiration date is invalid', $this->text_domain ), 'error' );
 			$is_valid = false;
 		}
 
@@ -209,20 +209,20 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// validate security code
 		if ( empty( $csc ) ) {
 
-			$woocommerce->add_error( __( 'Card security code is missing', $this->text_domain ) );
+			SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Card security code is missing', $this->text_domain ), 'error' );
 			$is_valid = false;
 
 		} else {
 
 			// digit validation
 			if ( ! ctype_digit( $csc ) ) {
-				$woocommerce->add_error( __( 'Card security code is invalid (only digits are allowed)', $this->text_domain ) );
+				SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Card security code is invalid (only digits are allowed)', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
 			// length validation
 			if ( strlen( $csc ) < 3 || strlen( $csc ) > 4 ) {
-				$woocommerce->add_error( __( 'Card security code is invalid (must be 3 or 4 digits)', $this->text_domain ) );
+				SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Card security code is invalid (must be 3 or 4 digits)', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
@@ -255,20 +255,20 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// routing number exists?
 		if ( empty( $routing_number ) ) {
 
-			$woocommerce->add_error( __( 'Routing Number is missing', $this->text_domain ) );
+			SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Routing Number is missing', $this->text_domain ), 'error' );
 			$is_valid = false;
 
 		} else {
 
 			// routing number digit validation
 			if ( ! ctype_digit( $routing_number ) ) {
-				$woocommerce->add_error( __( 'Routing Number is invalid (only digits are allowed)', $this->text_domain ) );
+				SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Routing Number is invalid (only digits are allowed)', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
 			// routing number length validation
 			if ( 9 != strlen( $routing_number ) ) {
-				$woocommerce->add_error( __( 'Routing number is invalid (must be 9 digits)', $this->text_domain ) );
+				SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Routing number is invalid (must be 9 digits)', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
@@ -277,33 +277,33 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// account number exists?
 		if ( empty( $account_number ) ) {
 
-			$woocommerce->add_error( __( 'Account Number is missing', $this->text_domain ) );
+			SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Account Number is missing', $this->text_domain ), 'error' );
 			$is_valid = false;
 
 		} else {
 
 			// account number digit validation
 			if ( ! ctype_digit( $account_number ) ) {
-				$woocommerce->add_error( __( 'Account Number is invalid (only digits are allowed)', $this->text_domain ) );
+				SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Account Number is invalid (only digits are allowed)', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
 			// account number length validation
 			if ( strlen( $account_number ) < 5 || strlen( $account_number ) > 17 ) {
-				$woocommerce->add_error( __( 'Account number is invalid (must be between 5 and 17 digits)', $this->text_domain ) );
+				SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Account number is invalid (must be between 5 and 17 digits)', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 		}
 
 		// optional drivers license number validation
 		if ( ! empty( $drivers_license_number ) &&  preg_match( '/^[a-zA-Z0-9 -]+$/', $drivers_license_number ) ) {
-			$woocommerce->add_error( __( 'Drivers license number is invalid', $this->text_domain ) );
+			SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Drivers license number is invalid', $this->text_domain ), 'error' );
 			$is_valid = false;
 		}
 
 		// optional check number validation
 		if ( ! empty( $check_number ) && ! ctype_digit( $check_number ) ) {
-			$woocommerce->add_error( __( 'Check Number is invalid (only digits are allowed)', $this->text_domain ) );
+			SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Check Number is invalid (only digits are allowed)', $this->text_domain ), 'error' );
 			$is_valid = false;
 		}
 
@@ -2028,7 +2028,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// security check
 			if ( false === wp_verify_nonce( $_GET['_wpnonce'], 'wc-' . $this->get_id_dasherized() . '-token-action' ) ) {
 
-				$woocommerce->add_error( __( "There was an error with your request, please try again.", $this->text_domain ) );
+				SV_WC_Plugin_Compatibility::wc_add_notice( __( "There was an error with your request, please try again.", $this->text_domain ), 'error' );
 				$woocommerce->set_messages();
 				wp_redirect( get_permalink( woocommerce_get_page_id( 'myaccount' ) ) );
 				exit;
@@ -2043,7 +2043,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				if ( ! $this->remove_payment_token( $user_id, $token ) ) {
 
-					$woocommerce->add_error( __( "Error removing payment method", $this->text_domain ) );
+					SV_WC_Plugin_Compatibility::wc_add_notice( __( "Error removing payment method", $this->text_domain ), 'error' );
 					$woocommerce->set_messages();
 
 				} else {

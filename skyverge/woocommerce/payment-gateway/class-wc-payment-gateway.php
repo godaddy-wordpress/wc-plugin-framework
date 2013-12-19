@@ -732,7 +732,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			$woocommerce->add_inline_js( ob_get_clean() );
+			SV_WC_Plugin_Compatibility::wc_enqueue_js( ob_get_clean() );
 
 		}
 
@@ -758,7 +758,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			$woocommerce->add_inline_js( ob_get_clean() );
+			SV_WC_Plugin_Compatibility::wc_enqueue_js( ob_get_clean() );
 
 		}
 
@@ -1055,7 +1055,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		$this->add_debug_message( $error_message, 'error' );
 
-		$woocommerce->add_error( __( 'An error occurred, please try again or try an alternate form of payment.', $this->text_domain ) );
+		SV_WC_Plugin_Compatibility::wc_add_notice( __( 'An error occurred, please try again or try an alternate form of payment.', $this->text_domain ), 'error' );
 
 	}
 
@@ -1543,7 +1543,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			} else {
 
 				// defaults to error message
-				$woocommerce->add_error( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ) );
+				SV_WC_Plugin_Compatibility::wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'error' );
 			}
 		}
 

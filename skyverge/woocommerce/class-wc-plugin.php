@@ -50,6 +50,7 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  *     return;
  * + `is_plugin_settings()` - if the plugin has an admin settings page you can return true when on it
  * + `get_settings_url()` - return the plugin admin settings URL, if any
+ * + `render_admin_notices()` - override to perform custom admin plugin requirement checks (defaults to checking for php extension depenencies).  Use the is_message_dismissed() and add_dismissible_notice() methods
  *
  * @version 1.0-1
  */
@@ -171,7 +172,7 @@ abstract class SV_WC_Plugin {
 	 * @since 1.0-1
 	 */
 	public function lib_includes() {
-
+		require_once( 'class-wc-plugin-compatibility.php' );
 	}
 
 
@@ -290,7 +291,7 @@ abstract class SV_WC_Plugin {
 		<?php
 		$javascript = ob_get_clean();
 
-		$woocommerce->add_inline_js( $javascript );
+		SV_WC_Plugin_Compatibility::wc_enqueue_js( $javascript );
 	}
 
 
