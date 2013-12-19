@@ -648,17 +648,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Get the PHP dependencies for extension depending on the gateway being used
-	 *
-	 * @since 1.0
-	 * @return array of required PHP extension names, based on the gateway in use
-	 */
-	protected function get_dependencies() {
-		return $this->dependencies;
-	}
-
-
-	/**
 	 * Returns true if this plugin requires SSL to function properly
 	 *
 	 * @since 1.0

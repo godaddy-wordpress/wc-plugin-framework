@@ -98,9 +98,9 @@ abstract class SV_WC_Plugin {
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
 	 * @param string $text_domain the plugin text domain
-	 * @param array $args plugin arguments
+	 * @param array $args optional plugin arguments
 	 */
-	public function __construct( $minimum_version, $id, $version, $text_domain, $args ) {
+	public function __construct( $minimum_version, $id, $version, $text_domain, $args = array() ) {
 
 		// required params
 		$this->id          = $id;
@@ -129,6 +129,9 @@ abstract class SV_WC_Plugin {
 
 		// include library files after woocommerce is loaded
 		add_action( 'woocommerce_loaded', array( $this, 'lib_includes' ) );
+
+		// includes that are required to be available at all times
+		$this->includes();
 
 		// Admin
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
@@ -172,6 +175,16 @@ abstract class SV_WC_Plugin {
 	 * @since 1.0-1
 	 */
 	public function lib_includes() {
+		// stub method
+	}
+
+
+	/**
+	 * Include any critical files which must be available as early as possible
+	 *
+	 * @since 1.0-1
+	 */
+	private function includes() {
 		require_once( 'class-wc-plugin-compatibility.php' );
 	}
 
@@ -501,9 +514,18 @@ abstract class SV_WC_Plugin {
 	 * @return string plugin version
 	 */
 	public function get_version() {
-
 		return $this->version;
+	}
 
+
+	/**
+	 * Get the PHP dependencies for extension depending on the gateway being used
+	 *
+	 * @since 1.0-1
+	 * @return array of required PHP extension names, based on the gateway in use
+	 */
+	protected function get_dependencies() {
+		return $this->dependencies;
 	}
 
 
@@ -605,6 +627,19 @@ abstract class SV_WC_Plugin {
 		}
 
 		return $this->plugin_url = untrailingslashit( plugins_url( '/', $this->get_file() ) );
+	}
+
+
+	/**
+	 * Returns the woocommerce uploads path, sans trailing slash.  Oddly WooCommerce
+	 * core does not provide a way to get this
+	 *
+	 * @since 1.0-1
+	 * @return string upload path for woocommerce
+	 */
+	public static function get_woocommerce_uploads_path() {
+		$upload_dir = wp_upload_dir();
+		return $upload_dir['basedir'] . '/woocommerce_uploads';
 	}
 
 
