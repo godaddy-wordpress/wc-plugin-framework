@@ -25,6 +25,7 @@
 /**
  * The My Account - My Accounts
  *
+ * @param SV_WC_Payment_Gateway $gateway the payment gateway
  * @param array $tokens optional array of payment token string to SV_WC_Payment_Gateway_Payment_Token object
  *
  * @version TODO
@@ -74,7 +75,7 @@ if ( ! empty( $tokens ) ) :
 						<?php echo ( $token->is_default() ) ? __( 'Default', %%TEXT DOMAIN%% ) : '<a href="' . esc_url( $make_default_url ) . '">' . __( 'Make Default', %%TEXT DOMAIN%% ) . '</a>'; ?>
 					</td>
 					<td class="wc-%%GATEWAY ID DASHERIZED CHECKS%%-payment-method-actions" style="width: 1%; text-align: center;">
-						<a href="<?php echo esc_url( $delete_url ); ?>" class="wc-%%GATEWAY ID DASHERIZED CHECKS%%-delete-payment-method js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-delete-payment-method"><img src="<?php echo esc_attr( $woocommerce->plugin_url() . '/assets/images/cross.png' ); ?>" alt="[X]" style="box-shadow: none;" /></a>
+						<a href="<?php echo esc_url( $delete_url ); ?>" class="wc-%%GATEWAY ID DASHERIZED CHECKS%%-delete-payment-method js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-delete-payment-method"><img src="<?php echo esc_url( SV_WC_Plugin_Compatibility::force_https_url( $gateway->get_plugin()->get_plugin_url() ) . '/' . $gateway->get_framework_image_path() . 'cross.png' ); ?>" alt="[X]" style="box-shadow: none;" /></a>
 					</td>
 				</tr>
 			<?php endforeach; ?>

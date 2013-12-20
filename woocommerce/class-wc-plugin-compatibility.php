@@ -53,6 +53,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function wc_attribute_label( $label ) {
 
+		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
 		if ( self::is_wc_version_gt( '2.0.20' ) ) {
 			return wc_attribute_label( $label );
 		} else {
@@ -71,11 +72,17 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function wc_add_notice( $message, $notice_type = 'success' ) {
 
+		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
 		if ( self::is_wc_version_gt( '2.0.20' ) ) {
 			wc_add_notice( $message, $notice_type );
 		} else {
 			global $woocommerce;
-			$woocommerce->add_error( $message );
+
+			if ( 'error' == $notice_type ) {
+				$woocommerce->add_error( $message );
+			} else {
+				$woocommerce->add_message( $message );
+			}
 		}
 	}
 
@@ -95,7 +102,130 @@ class SV_WC_Plugin_Compatibility {
 			global $woocommerce;
 			$woocommerce->add_inline_js( $code );
 		}
+	}
 
+
+	/**
+	 * Forces the provided $content url to https protocol
+	 *
+	 * @since 1.0-1
+	 * @param string $content the url
+	 * @return string the url with https protocol
+	 */
+	public static function force_https_url( $content ) {
+
+		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
+		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+			return WC_HTTPS::force_https_url( $content );
+		} else {
+			global $woocommerce;
+			return $woocommerce->force_ssl( $content );
+		}
+	}
+
+
+	/**
+	 * Returns true if on the pay page, false otherwise
+	 *
+	 * @since 1.0-1
+	 * @return boolean true if on the pay page, false otherwise
+	 */
+	public static function is_checkout_pay_page() {
+
+		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
+		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+			return is_checkout_pay_page();
+		} else {
+			return is_page( woocommerce_get_page_id( 'pay' ) );
+		}
+	}
+
+
+	/**
+	 * Returns the order_id if on the checkout pay page
+	 *
+	 * @since 1.0-1
+	 * @return int order identifier
+	 */
+	public static function get_checkout_pay_page_order_id() {
+
+		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
+		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+			global $wp;
+			return isset( $wp->query_vars['order-pay'] ) ? absint( $wp->query_vars['order-pay'] ) : 0;
+		} else {
+			return isset( $_GET['order'] ) ? absint( $_GET['order'] ) : 0;
+		}
+	}
+
+
+	/**
+	 * Returns the total shipping cost for the given order
+	 *
+	 * @since 1.0-1
+	 * @return float the shipping total
+	 */
+	public static function get_total_shipping( $order ) {
+
+		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
+		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+			return $order->get_total_shipping();
+		} else {
+			return $order->get_shipping();
+		}
+	}
+
+
+	/**
+	 * Returns the value of the custom field named $name, if any.  $name should
+	 * not have a leading underscore
+	 *
+	 * @since 1.0-1
+	 * @return mixed order custom field value for field named $name
+	 */
+	public static function get_order_custom_field( $order, $name ) {
+
+		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
+		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+			return $order->$name;
+		} else {
+			return isset( $order->order_custom_fields[ '_' . $name ][0] ) && $order->order_custom_fields[ '_' . $name ][0] ? $order->order_custom_fields[ '_' . $name ][0] : null;
+		}
+	}
+
+
+	/**
+	 * Sets WooCommerce messages
+	 *
+	 * @since 1.0-1
+	 */
+	public static function set_messages() {
+
+		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
+		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+			// no-op in WC 2.1+
+		} else {
+			global $woocommerce;
+			$woocommerce->set_messages();
+		}
+	}
+
+
+	/**
+	 * Returns a new instance of the woocommerce logger
+	 *
+	 * @since 1.0-1
+	 * @return object logger
+	 */
+	public static function new_wc_logger() {
+
+		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
+		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+			return new WC_Logger();
+		} else {
+			global $woocommerce;
+			return $woocommerce->logger();
+		}
 	}
 
 

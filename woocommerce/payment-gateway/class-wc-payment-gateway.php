@@ -403,17 +403,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
-	 * Returns true if on the pay page
-	 *
-	 * @since 1.0
-	 * @return mixed true if on pay page
-	 */
-	public function is_pay_page() {
-		return is_page( woocommerce_get_page_id( 'pay' ) );
-	}
-
-
-	/**
 	 * Returns true if on the pay page and this is the currently selected gateway
 	 *
 	 * @since 1.0
@@ -421,9 +410,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function is_pay_page_gateway() {
 
-		if ( $this->is_pay_page() ) {
+		if ( SV_WC_Plugin_Compatibility::is_checkout_pay_page() ) {
 
-			$order_id  = isset( $_GET['order'] ) ? absint( $_GET['order'] ) : 0;
+			$order_id  = SV_WC_Plugin_Compatibility::get_checkout_pay_page_order_id();
 
 			if ( $order_id ) {
 				$order = new WC_Order( $order_id );
@@ -834,7 +823,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( $this->icon ) {
 
 			// use icon provided by filter
-			$icon = '<img src="' . esc_url( $woocommerce->force_ssl( $this->icon ) ) . '" alt="' . esc_attr( $this->title ) . '" />';
+			$icon = '<img src="' . esc_url( SV_WC_Plugin_Compatibility::force_https_url( $this->icon ) ) . '" alt="' . esc_attr( $this->title ) . '" />';
 
 		}
 
@@ -913,12 +902,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// first, is the card image available within the plugin?
 		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/assets/images/card-' . $image_type . '.png' ) )
-			return $woocommerce->force_ssl( $this->get_plugin()->get_plugin_url() ) . '/assets/images/card-' . $image_type . '.png';
+			return SV_WC_Plugin_Compatibility::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/assets/images/card-' . $image_type . '.png';
 
 		// default: is the card image available within the framework?
 		// NOTE: I don't particularly like hardcoding this path, but I don't see any real way around it
 		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/' . $this->get_framework_image_path() . 'card-' . $image_type . '.png' ) )
-			return $woocommerce->force_ssl( $this->get_plugin()->get_plugin_url() ) . '/' . $this->get_framework_image_path() . 'card-' . $image_type . '.png';
+			return SV_WC_Plugin_Compatibility::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/' . $this->get_framework_image_path() . 'card-' . $image_type . '.png';
 
 		return null;
 
@@ -981,31 +970,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
-	 * Returns the URL to the payment page
-	 *
-	 * @since 1.0
-	 * @param WC_Order $order the order object
-	 * @param boolean $choose_payment_page
-	 * @return string url to the payment page
-	 */
-	protected function get_payment_page_url( $order, $choose_payment_page = false ) {
-
-		$url = get_permalink( woocommerce_get_page_id( 'pay' ) );
-
-		// make ssl if needed
-		if ( is_ssl() || 'yes' == get_option( 'woocommerce_force_ssl_checkout' ) )
-			$url = set_url_scheme( $url, 'https' );
-
-		// url for the choose payment method page
-		if ( $choose_payment_page )
-			return add_query_arg( array( 'order_id' => $order->id, 'order' => $order->order_key, 'pay_for_order' => true ), $url );
-		else
-		// url for the payment page
-			return add_query_arg( array( 'order' => $order->id, 'key' => $order->order_key ), $url );
-	}
-
-
-	/**
 	 * Mark the given order as 'on-hold', set an order note and display a message
 	 * to the customer
 	 *
@@ -1028,8 +992,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->add_debug_message( $message, 'message', true );
 
 		// we don't have control over the "Thank you. Your order has been received." message shown on the "Thank You" page.  Yet
-		$woocommerce->add_message( __( 'Your order has been received and is being reviewed.  Thank you for your business.', $this->text_domain ) );
-		$woocommerce->set_messages();
+		SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Your order has been received and is being reviewed.  Thank you for your business.', $this->text_domain ) );
+		SV_WC_Plugin_Compatibility::set_messages();
 
 	}
 
@@ -1538,7 +1502,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 			if ( 'message' === $type ) {
 
-				$woocommerce->add_message( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ) );
+				SV_WC_Plugin_Compatibility::wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'notice' );
 
 			} else {
 
@@ -1549,7 +1513,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// set messages for next page load
 		if ( $set_message && ( ! is_admin() || defined( 'DOING_AJAX' ) ) ) {
-			$woocommerce->set_messages();
+			SV_WC_Plugin_Compatibility::set_messages();
 		}
 
 		// add log message to WC logger if log/both is enabled

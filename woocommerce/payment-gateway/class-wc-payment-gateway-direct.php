@@ -957,7 +957,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$pay_page_subscription = false;
 		if ( $this->is_pay_page_gateway() ) {
 
-			$order_id  = isset( $_GET['order'] ) ? absint( $_GET['order'] ) : 0;
+			$order_id = SV_WC_Plugin_Compatibility::get_checkout_pay_page_order_id();
 
 			if ( $order_id ) {
 				$pay_page_subscription = WC_Subscriptions_Order::order_contains_subscription( $order_id );
@@ -1278,7 +1278,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$pay_page_pre_order = false;
 		if ( $this->is_pay_page_gateway() ) {
 
-			$order_id  = isset( $_GET['order'] ) ? absint( $_GET['order'] ) : 0;
+			$order_id  = SV_WC_Plugin_Compatibility::get_checkout_pay_page_order_id();
 
 			if ( $order_id ) {
 				$pay_page_pre_order = WC_Pre_Orders_Order::order_contains_pre_order( $order_id ) && WC_Pre_Orders_Product::product_is_charged_upon_release( WC_Pre_Orders_Order::get_pre_order_product( $order_id ) );
@@ -2029,7 +2029,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( false === wp_verify_nonce( $_GET['_wpnonce'], 'wc-' . $this->get_id_dasherized() . '-token-action' ) ) {
 
 				SV_WC_Plugin_Compatibility::wc_add_notice( __( "There was an error with your request, please try again.", $this->text_domain ), 'error' );
-				$woocommerce->set_messages();
+				SV_WC_Plugin_Compatibility::set_messages();
 				wp_redirect( get_permalink( woocommerce_get_page_id( 'myaccount' ) ) );
 				exit;
 
@@ -2044,10 +2044,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				if ( ! $this->remove_payment_token( $user_id, $token ) ) {
 
 					SV_WC_Plugin_Compatibility::wc_add_notice( __( "Error removing payment method", $this->text_domain ), 'error' );
-					$woocommerce->set_messages();
+					SV_WC_Plugin_Compatibility::set_messages();
 
 				} else {
-					$woocommerce->add_message( __( 'Payment method deleted.', $this->text_domain ) );
+					SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Payment method deleted.', $this->text_domain ) );
 				}
 
 			}

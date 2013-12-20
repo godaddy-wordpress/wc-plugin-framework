@@ -107,7 +107,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		parent::__construct( $minimum_version, $id, $version, $text_domain, $args );
 
 		// ensure the minimum version requirement is met
-		if ( ! $this->check_version( self::MINIMUM_FRAMEWORK_VERSION ) ) {
+		if ( ! $this->check_version( $minimum_version ) ) {
 			return;
 		}
 

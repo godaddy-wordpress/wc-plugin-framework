@@ -398,7 +398,7 @@ abstract class SV_WC_Plugin {
 		}
 
 		if ( ! is_object( $this->logger ) ) {
-			$this->logger = $woocommerce->logger();
+			$this->logger = SV_WC_Plugin_Compatibility::new_wc_logger();
 		}
 
 		$this->logger->add( $log_id, $message );
