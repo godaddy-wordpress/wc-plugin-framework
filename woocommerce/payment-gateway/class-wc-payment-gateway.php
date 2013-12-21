@@ -948,7 +948,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order = new WC_Order( $order_id );
 
 		// set payment total here so it can be modified for later by add-ons like subscriptions which may need to charge an amount different than the get_total()
-		$order->payment_total = $order->get_total();
+		$order->payment_total = number_format( $order->get_total(), 2, '.', '' );
 
 		// logged in customer?
 		if ( 0 !== $order->user_id && false !== ( $customer_id = $this->get_customer_id( $order->user_id, array( 'order' => $order ) ) ) ) {
@@ -1494,11 +1494,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		global $woocommerce;
 
 		// do nothing when debug mode is off or no message
-		if ( 'off' == $this->debug_off() || ! $message )
+		if ( 'off' == $this->debug_off() || ! $message ) {
 			return;
+		}
 
 		// add debug message to woocommerce->errors/messages if checkout or both is enabled
-		if ( $this->debug_checkout() ) {
+		if ( $this->debug_checkout() && ! is_admin() ) {
 
 			if ( 'message' === $type ) {
 

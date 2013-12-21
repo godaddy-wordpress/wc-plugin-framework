@@ -498,7 +498,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	protected function get_order_for_capture( $order ) {
 
 		// set capture total here so it can be modified later as needed prior to capture
-		$order->capture_total = $order->get_total();
+		$order->capture_total = number_format( $order->get_total(), 2, '.', '' );
 
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_capture', $order, $this );
 	}
@@ -696,7 +696,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$message = sprintf(
 					__( '%s Capture of %s Approved', $this->text_domain ),
 					$this->get_method_title(),
-					get_woocommerce_currency_symbol() . woocommerce_format_total( $order->capture_total )
+					get_woocommerce_currency_symbol() . SV_WC_Plugin_Compatibility::wc_format_decimal( $order->capture_total )
 				);
 
 				// adds the transaction id (if any) to the order note

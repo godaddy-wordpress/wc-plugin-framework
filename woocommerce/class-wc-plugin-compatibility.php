@@ -53,8 +53,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function wc_attribute_label( $label ) {
 
-		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
-		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+		if ( self::is_wc_version_gte_2_1() ) {
 			return wc_attribute_label( $label );
 		} else {
 			global $woocommerce;
@@ -72,8 +71,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function wc_add_notice( $message, $notice_type = 'success' ) {
 
-		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
-		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+		if ( self::is_wc_version_gte_2_1() ) {
 			wc_add_notice( $message, $notice_type );
 		} else {
 			global $woocommerce;
@@ -95,8 +93,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function wc_enqueue_js( $code ) {
 
-		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
-		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+		if ( self::is_wc_version_gte_2_1() ) {
 			wc_enqueue_js( $code );
 		} else {
 			global $woocommerce;
@@ -114,8 +111,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function force_https_url( $content ) {
 
-		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
-		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+		if ( self::is_wc_version_gte_2_1() ) {
 			return WC_HTTPS::force_https_url( $content );
 		} else {
 			global $woocommerce;
@@ -132,8 +128,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function is_checkout_pay_page() {
 
-		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
-		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+		if ( self::is_wc_version_gte_2_1() ) {
 			return is_checkout_pay_page();
 		} else {
 			return is_page( woocommerce_get_page_id( 'pay' ) );
@@ -149,8 +144,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function get_checkout_pay_page_order_id() {
 
-		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
-		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+		if ( self::is_wc_version_gte_2_1() ) {
 			global $wp;
 			return isset( $wp->query_vars['order-pay'] ) ? absint( $wp->query_vars['order-pay'] ) : 0;
 		} else {
@@ -167,8 +161,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function get_total_shipping( $order ) {
 
-		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
-		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+		if ( self::is_wc_version_gte_2_1() ) {
 			return $order->get_total_shipping();
 		} else {
 			return $order->get_shipping();
@@ -185,8 +178,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function get_order_custom_field( $order, $name ) {
 
-		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
-		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+		if ( self::is_wc_version_gte_2_1() ) {
 			return $order->$name;
 		} else {
 			return isset( $order->order_custom_fields[ '_' . $name ][0] ) && $order->order_custom_fields[ '_' . $name ][0] ? $order->order_custom_fields[ '_' . $name ][0] : null;
@@ -201,8 +193,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function set_messages() {
 
-		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
-		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+		if ( self::is_wc_version_gte_2_1() ) {
 			// no-op in WC 2.1+
 		} else {
 			global $woocommerce;
@@ -219,12 +210,71 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function new_wc_logger() {
 
-		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
-		if ( self::is_wc_version_gt( '2.0.20' ) ) {
+		if ( self::is_wc_version_gte_2_1() ) {
 			return new WC_Logger();
 		} else {
 			global $woocommerce;
 			return $woocommerce->logger();
+		}
+	}
+
+
+	/**
+	 * Returns the admin configuration url for the gateway with class name
+	 * $gateway_class_name
+	 *
+	 * @since 1.0-1
+	 * @param string $gateway_class_name the gateway class name
+	 * @return string admin configuration url for the gateway
+	 */
+	public static function get_payment_gateway_configuration_url( $gateway_class_name ) {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+			return admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . strtolower( $gateway_class_name ) );
+		} else {
+			return admin_url( 'admin.php?page=woocommerce_settings&tab=payment_gateways&section=' . $gateway_class_name );
+		}
+	}
+
+
+	/**
+	 * Returns true if the current page is the admin configuration page for the
+	 * gateway with class name $gateway_class_name
+	 *
+	 * @since 1.0-1
+	 * @param string $gateway_class_name the gateway class name
+	 * @return boolean true if the current page is the admin configuration page for the gateway
+	 */
+	public static function is_payment_gateway_configuration_page( $gateway_class_name ) {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+			return isset( $_GET['page'] ) && 'wc-settings' == $_GET['page'] &&
+				isset( $_GET['tab'] ) && 'checkout' == $_GET['tab'] &&
+				isset( $_GET['section'] ) && strtolower( $gateway_class_name ) == $_GET['section'];
+		} else {
+			return isset( $_GET['page'] ) && 'woocommerce_settings' == $_GET['page'] &&
+				isset( $_GET['tab'] ) && 'payment_gateways' == $_GET['tab'] &&
+				isset( $_GET['section'] ) && $gateway_class_name == $_GET['section'];
+		}
+	}
+
+
+	/**
+	 * Format decimal numbers ready for DB storage
+	 *
+	 * Sanitize, remove locale formatting, and optionally round + trim off zeros
+	 *
+	 * @param  float|string $number Expects either a float or a string with a decimal separator only (no thousands)
+	 * @param  mixed $dp number of decimal points to use, blank to use woocommerce_price_num_decimals, or false to avoid all rounding.
+	 * @param  boolean $trim_zeros from end of string
+	 * @return string
+	 */
+	public static function wc_format_decimal( $number, $dp = false, $trim_zeros = false ) {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+			return wc_format_decimal( $number, $dp, $trim_zeros );
+		} else {
+			return woocommerce_format_total( $number );
 		}
 	}
 
@@ -242,6 +292,19 @@ class SV_WC_Plugin_Compatibility {
 		if ( defined( 'WOOCOMMERCE_VERSION' ) && WOOCOMMERCE_VERSION ) return WOOCOMMERCE_VERSION;
 
 		return null;
+	}
+
+
+	/**
+	 * Returns true if the installed version of WooCommerce is 2.1 or greater
+	 *
+	 * @since 1.0-1
+	 * @return boolean true if the installed version of WooCommerce is 2.1 or greater
+	 */
+	public static function is_wc_version_gte_2_1() {
+
+		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
+		return self::is_wc_version_gt( '2.0.20' );
 	}
 
 

@@ -270,10 +270,13 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function is_plugin_settings() {
 
-		return isset( $_GET['page'] ) && 'woocommerce_settings' == $_GET['page'] &&
-			isset( $_GET['tab'] ) && 'payment_gateways' == $_GET['tab'] &&
-			isset( $_GET['section'] ) && in_array( $_GET['section'], $this->get_gateway_class_names() );
+		foreach ( $this->get_gateway_class_names() as $gateway_class_name ) {
+			if ( SV_WC_Plugin_Compatibility::is_payment_gateway_configuration_page( $gateway_class_name ) ) {
+				return true;
+			}
+		}
 
+		return false;
 	}
 
 
@@ -501,9 +504,15 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function plugin_action_links( $actions ) {
 
-		$custom_actions = parent::plugin_action_links( $actions );
+		$actions = parent::plugin_action_links( $actions );
+
+		// remove the configure plugin link if it exists, since we'll be adding a link per available gateway
+		if ( isset( $actions['configure'] ) ) {
+			unset( $actions['configure'] );
+		}
 
 		// a configure link per gateway
+		$custom_actions = array();
 		foreach ( $this->get_gateway_ids() as $gateway_id ) {
 			$custom_actions[ 'configure_' . $gateway_id ] = $this->get_settings_link( $gateway_id );
 		}
@@ -549,6 +558,12 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		remove_action( 'woocommerce_order_status_on-hold_to_processing', array( $this, 'maybe_capture_charge' ) );
 		remove_action( 'woocommerce_order_status_on-hold_to_completed',  array( $this, 'maybe_capture_charge' ) );
 		remove_action( 'woocommerce_order_action_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
+
+		// Starting in WC 2.1 we need to remove the meta box order save action, otherwise the wp_update_post() call
+		//  in WC_Order::update_status() to update the post last modified will re-trigger the save action, which
+		//  will update the order status to $_POST['order_status'] which of course will be whatever the order status
+		//  was prior to the auth capture (ie 'on-hold')
+		remove_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Data::save', 10, 2 );
 
 		// perform the capture
 		$this->get_gateway( $order->payment_method )->do_credit_card_capture( $order );
@@ -668,11 +683,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	protected function get_settings_url( $gateway_id ) {
 
-		$manage_url = admin_url( 'admin.php?page=woocommerce_settings&tab=payment_gateways' );
-
-		$manage_url = add_query_arg( array( 'section' => $this->get_gateway_class_name( $gateway_id ) ), $manage_url ); // WC 2.0+
-
-		return $manage_url;
+		return SV_WC_Plugin_Compatibility::get_payment_gateway_configuration_url( $this->get_gateway_class_name( $gateway_id ) );
 	}
 
 
@@ -687,7 +698,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	public function add_gateway( $gateway_id, $gateway_class_name ) {
 
 		$this->gateways[ $gateway_id ] = array( 'gateway_class_name' => $gateway_class_name, 'gateway' => null );
-
 	}
 
 

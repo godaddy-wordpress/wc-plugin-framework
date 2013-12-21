@@ -63,7 +63,7 @@ abstract class SV_WC_Plugin {
 	private $id;
 
 	/** @var string plugin text domain */
-	private $text_domain;
+	protected $text_domain;
 
 	/** @var string version number */
 	private $version;
