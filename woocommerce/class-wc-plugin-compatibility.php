@@ -264,6 +264,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * Sanitize, remove locale formatting, and optionally round + trim off zeros
 	 *
+	 * @since 1.0-1
 	 * @param  float|string $number Expects either a float or a string with a decimal separator only (no thousands)
 	 * @param  mixed $dp number of decimal points to use, blank to use woocommerce_price_num_decimals, or false to avoid all rounding.
 	 * @param  boolean $trim_zeros from end of string
@@ -275,6 +276,30 @@ class SV_WC_Plugin_Compatibility {
 			return wc_format_decimal( $number, $dp, $trim_zeros );
 		} else {
 			return woocommerce_format_total( $number );
+		}
+	}
+
+
+	/**
+	 * Get the count of notices added, either for all notices (default) or for one particular notice type specified
+	 * by $notice_type.
+	 *
+	 * @since 1.0-1
+	 * @param string $notice_type The name of the notice type - either error, success or notice. [optional]
+	 * @return int the notice count
+	 */
+	public static function wc_notice_count( $notice_type = '' ) {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+			return wc_notice_count( $notice_type );
+		} else {
+			global $woocommerce;
+
+			if ( 'error' == $notice_type ) {
+				return $woocommerce->error_count();
+			} else {
+				return $woocommerce->message_count();
+			}
 		}
 	}
 
