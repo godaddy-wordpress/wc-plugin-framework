@@ -65,7 +65,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		return array(
 			'result'   => 'success',
-			'redirect' => $this->get_payment_page_url( $order ),
+			'redirect' => $order->get_checkout_payment_url( true ),
 		);
 	}
 
