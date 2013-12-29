@@ -365,10 +365,10 @@ class SV_WC_Plugin_Compatibility {
 	 * to but not a precise replacement for WC_Order::get_shipping_methods(), just
 	 * because there can't be a direct equivalent for WC 2.0.x
 	 *
-	 * @since 1.0
+	 * @since 1.0-1
 	 * @return array of shipping method ids for $order
 	 */
-	public static function get_shipping_methods_ids( $order ) {
+	public static function get_shipping_method_ids( $order ) {
 
 		if ( self::is_wc_version_gte_2_1() ) {
 
