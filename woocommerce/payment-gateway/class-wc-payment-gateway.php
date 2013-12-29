@@ -690,8 +690,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function admin_options() {
 
-		global $woocommerce;
-
 		parent::admin_options();
 
 		// if there's more than one environment include the environment settings switcher code
@@ -769,8 +767,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function is_available() {
 
-		global $woocommerce;
-
 		// is enabled check
 		$is_available = parent::is_available();
 
@@ -787,7 +783,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$is_available = false;
 
 		// any required countries?
-		if ( $this->countries && $woocommerce->customer && $woocommerce->customer->get_country() && ! in_array( $woocommerce->customer->get_country(), $this->countries ) )
+		if ( $this->countries && SV_WC_Plugin_Compatibility::WC()->customer && SV_WC_Plugin_Compatibility::WC()->customer->get_country() && ! in_array( SV_WC_Plugin_Compatibility::WC()->customer->get_country(), $this->countries ) )
 			$is_available = false;
 
 		return apply_filters( 'wc_gateway_' . $this->get_id() + '_is_available', $is_available );
@@ -814,8 +810,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @return string icon markup
 	 */
 	public function get_icon() {
-
-		global $woocommerce;
 
 		$icon = '';
 
@@ -865,8 +859,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @return string the image URL or null
 	 */
 	public function get_payment_method_image_url( $type ) {
-
-		global $woocommerce;
 
 		$image_type = strtolower( $type );
 
@@ -979,8 +971,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function mark_order_as_held( $order, $message ) {
 
-		global $woocommerce;
-
 		$order_note = sprintf( __( '%s Transaction Held for Review (%s)', $this->text_domain ), $this->get_method_title(), $message );
 
 		// mark order as held
@@ -1006,8 +996,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param string $error_message a message to display inside the "Payment Failed" order note
 	 */
 	protected function mark_order_as_failed( $order, $error_message ) {
-
-		global $woocommerce;
 
 		$order_note = sprintf( __( '%s Payment Failed (%s)', $this->text_domain ), $this->get_method_title(), $error_message );
 
@@ -1490,8 +1478,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param bool $set_message sets any WC messages/errors provided so they appear on the next page load, useful for displaying messages on the thank you page
 	 */
 	protected function add_debug_message( $message, $type = 'message', $set_message = false ) {
-
-		global $woocommerce;
 
 		// do nothing when debug mode is off or no message
 		if ( 'off' == $this->debug_off() || ! $message ) {

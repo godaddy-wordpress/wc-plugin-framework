@@ -97,8 +97,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function validate_fields() {
 
-		global $woocommerce;
-
 		$is_valid = parent::validate_fields();
 
 		if ( $this->supports_tokenization() ) {
@@ -133,8 +131,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @return boolean true if the fields are valid, false otherwise
 	 */
 	protected function validate_credit_card_fields( $is_valid ) {
-
-		global $woocommerce;
 
 		$card_number      = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' );
 		$expiration_month = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
@@ -202,8 +198,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function validate_csc( $csc ) {
 
-		global $woocommerce;
-
 		$is_valid = true;
 
 		// validate security code
@@ -241,8 +235,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @return bool
 	 */
 	protected function validate_check_fields( $is_valid ) {
-
-		global $woocommerce;
 
 		$account_number         = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' );
 		$routing_number         = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
@@ -337,8 +329,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function process_payment( $order_id ) {
 
-		global $woocommerce;
-
 		// give other actors an opportunity to intercept and implement the process_payment() call for this transaction
 		if ( true !== ( $result = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_process_payment', true, $order_id, $this ) ) ) {
 			return $result;
@@ -370,7 +360,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				else
 					$order->payment_complete(); // mark order as having received payment
 
-				$woocommerce->cart->empty_cart();
+				SV_WC_Plugin_Compatibility::WC()->cart->empty_cart();
 
 				return array(
 					'result'   => 'success',
@@ -1387,8 +1377,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function process_pre_order_payment( $result, $order_id ) {
 
-		global $woocommerce;
-
 		if ( ! $this->supports_pre_orders() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Pre-Orders not supported by gateway', $this->text_domain ) );
 
 		if ( WC_Pre_Orders_Order::order_contains_pre_order( $order_id ) &&
@@ -1414,7 +1402,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				WC_Pre_Orders_Order::mark_order_as_pre_ordered( $order );
 
 				// empty cart
-				$woocommerce->cart->empty_cart();
+				SV_WC_Plugin_Compatibility::WC()->cart->empty_cart();
 
 				// redirect to thank you page
 				return array(
@@ -2010,8 +1998,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0
 	 */
 	public function handle_my_payment_methods_actions() {
-
-		global $woocommerce;
 
 		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Payment tokenization not supported by gateway', $this->text_domain ) );
 

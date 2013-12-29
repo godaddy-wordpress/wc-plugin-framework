@@ -277,8 +277,6 @@ abstract class SV_WC_Plugin {
 	 */
 	public function render_admin_dismissible_notice_js() {
 
-		global $woocommerce;
-
 		// if a notice was rendered, add the javascript code to handle the notice dismiss action
 		if ( ! $this->dismissible_notice_rendered ) {
 			return;
@@ -334,8 +332,8 @@ abstract class SV_WC_Plugin {
 		$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', 'http://support.woothemes.com/', __( 'Support', $this->text_domain ) );
 
 		// optional review link
-		if ( $this->get_review_url() ) {
-			$custom_actions['review'] = sprintf( '<a href="%s">%s</a>', $this->get_review_url(), __( 'Write a Review', $this->text_domain ) );
+		if ( $this->get_product_page_url() ) {
+			$custom_actions['review'] = sprintf( '<a href="%s">%s</a>', $this->get_product_page_url() . '#review_form', __( 'Write a Review', $this->text_domain ) );
 		}
 
 		// add the links to the front of the actions list
@@ -390,8 +388,6 @@ abstract class SV_WC_Plugin {
 	 * @param string $log_id optional log id to segment the files by, defaults to plugin id
 	 */
 	public function log( $message, $log_id = null ) {
-
-		global $woocommerce;
 
 		if ( is_null( $log_id ) ) {
 			$log_id = $this->get_id();
@@ -578,19 +574,8 @@ abstract class SV_WC_Plugin {
 	 * @return string documentation URL
 	 */
 	protected function get_documentation_url() {
+
 		return 'http://docs.woothemes.com/document/woocommerce-' . $this->get_id_dasherized() . '/';
-	}
-
-
-	/**
-	 * Gets the standard plugin review url, which defaults to:
-	 * {product page url}#review_form
-	 *
-	 * @since 1.0-1
-	 * @return string review URL, or ''
-	 */
-	protected function get_review_url() {
-		return $this->get_product_page_url() . '#review_form';
 	}
 
 
@@ -602,6 +587,7 @@ abstract class SV_WC_Plugin {
 	 * @return string skyverge.com product page url
 	 */
 	protected function get_product_page_url() {
+
 		return 'http://www.skyverge.com/product/' . $this->get_id_dasherized() . '/';
 	}
 

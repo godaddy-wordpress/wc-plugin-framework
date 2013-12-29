@@ -34,8 +34,6 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-global $woocommerce;
-
 ?> <h2 id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-my-payment-methods" style="margin-top:40px;"><?php _e( 'My Saved Accounts', %%TEXT DOMAIN%% ); ?></h2><?php
 
 if ( ! empty( $tokens ) ) :

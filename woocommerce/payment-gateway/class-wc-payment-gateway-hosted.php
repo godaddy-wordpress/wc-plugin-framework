@@ -56,12 +56,10 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 */
 	public function process_payment( $order_id ) {
 
-		global $woocommerce;
-
 		// setup order
 		$order = new WC_Order( $order_id );
 
-		$woocommerce->cart->empty_cart();
+		SV_WC_Plugin_Compatibility::WC()->cart->empty_cart();
 
 		return array(
 			'result'   => 'success',

@@ -125,8 +125,6 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID%%_show_my_payment_methods' ) )
 	 */
 	function woocommerce_%%GATEWAY ID%%_show_my_payment_methods( $gateway ) {
 
-		global $woocommerce;
-
 		$user_id = get_current_user_id();
 
 		// get available saved payment methods
@@ -172,8 +170,6 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_payment_fields' ) ) {
 	 * @param %%GATEWAY CLASS%% $gateway gateway object
 	 */
 	function woocommerce_%%GATEWAY ID CHECKS%%_payment_fields( $gateway ) {
-
-		global $woocommerce;
 
 		// safely display the description, if there is one
 		if ( $gateway->get_description() )
@@ -242,7 +238,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_payment_fields' ) ) {
 			array(
 				'payment_method_defaults' => $payment_method_defaults,
 				'sample_check_image_url'  => SV_WC_Plugin_Compatibility::force_https_url( $gateway->get_plugin()->get_plugin_url() ) . '/' . $gateway->get_framework_image_path() . 'example-check.png',
-				'states'                  => $woocommerce->countries->get_states( 'US' ),
+				'states'                  => SV_WC_Plugin_Compatibility::WC()->countries->get_states( 'US' ),
 %%IF SUPPORTS TOKENIZATION%%
 				'tokens'                  => $tokens,
 				'tokenization_allowed'    => $tokenization_allowed,
@@ -269,8 +265,6 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_show_my_payment_metho
 	 * @param %%GATEWAY CLASS%% $gateway gateway class
 	 */
 	function woocommerce_%%GATEWAY ID CHECKS%%_show_my_payment_methods( $gateway ) {
-
-		global $woocommerce;
 
 		$user_id = get_current_user_id();
 
