@@ -640,6 +640,18 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Returns the relative path to the framework image directory, with a
+	 * trailing slash
+	 *
+	 * @since 1.0-1
+	 * @return string relative path to framework image directory
+	 */
+	public function get_framework_image_path() {
+		return 'lib/skyverge/woocommerce/assets/images/';
+	}
+
+
+	/**
 	 * Helper function to determine whether a plugin is active
 	 *
 	 * @since 1.0-1

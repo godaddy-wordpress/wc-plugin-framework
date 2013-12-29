@@ -893,28 +893,18 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// first, is the card image available within the plugin?
-		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/assets/images/card-' . $image_type . '.png' ) )
+		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/assets/images/card-' . $image_type . '.png' ) ) {
 			return SV_WC_Plugin_Compatibility::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/assets/images/card-' . $image_type . '.png';
+		}
 
 		// default: is the card image available within the framework?
 		// NOTE: I don't particularly like hardcoding this path, but I don't see any real way around it
-		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/' . $this->get_framework_image_path() . 'card-' . $image_type . '.png' ) )
+		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/' . $this->get_plugin()->get_framework_image_path() . 'card-' . $image_type . '.png' ) ) {
 			return SV_WC_Plugin_Compatibility::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/' . $this->get_framework_image_path() . 'card-' . $image_type . '.png';
+		}
 
 		return null;
 
-	}
-
-
-	/**
-	 * Returns the relative path to the framework image directory, with a
-	 * trailing slash
-	 *
-	 * @since 1.0
-	 * @return string relative path to framework image directory
-	 */
-	public function get_framework_image_path() {
-		return 'lib/skyverge/woocommerce/payment-gateway/assets/images/';
 	}
 
 

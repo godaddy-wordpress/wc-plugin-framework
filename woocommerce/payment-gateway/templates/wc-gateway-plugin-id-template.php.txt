@@ -237,7 +237,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_payment_fields' ) ) {
 			'checkout/%%GATEWAY ID DASHERIZED CHECKS%%-payment-fields.php',
 			array(
 				'payment_method_defaults' => $payment_method_defaults,
-				'sample_check_image_url'  => SV_WC_Plugin_Compatibility::force_https_url( $gateway->get_plugin()->get_plugin_url() ) . '/' . $gateway->get_framework_image_path() . 'example-check.png',
+				'sample_check_image_url'  => SV_WC_Plugin_Compatibility::force_https_url( $gateway->get_plugin()->get_plugin_url() ) . '/' . $gateway->get_plugin()->get_framework_image_path() . 'example-check.png',
 				'states'                  => SV_WC_Plugin_Compatibility::WC()->countries->get_states( 'US' ),
 %%IF SUPPORTS TOKENIZATION%%
 				'tokens'                  => $tokens,
