@@ -361,6 +361,31 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Returns an array of shipping methods used for the order.  This is analogous
+	 * to but not a precise replacement for WC_Order::get_shipping_methods(), just
+	 * because there can't be a direct equivalent for WC 2.0.x
+	 *
+	 * @since 1.0
+	 * @return array of shipping method ids for $order
+	 */
+	public static function get_shipping_methods_ids( $order ) {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+
+			$shipping_method_ids = array();
+
+			foreach ( $order->get_shipping_methods() as $shipping_method ) {
+				$shipping_method_ids[] = $shipping_method['method_id'];
+			}
+
+			return $shipping_method_ids;
+		} else {
+			return array( $order->shipping_method );
+		}
+	}
+
+
+	/**
 	 * Returns true if the order has the given shipping method
 	 *
 	 * @since 1.0-1
