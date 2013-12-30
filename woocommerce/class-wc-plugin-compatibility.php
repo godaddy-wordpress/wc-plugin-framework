@@ -369,7 +369,8 @@ class SV_WC_Plugin_Compatibility {
 	public static function get_chosen_shipping_methods() {
 
 		if ( self::is_wc_version_gte_2_1() ) {
-			return self::WC()->session->get( 'chosen_shipping_methods' );
+			$chosen_shipping_methods = self::WC()->session->get( 'chosen_shipping_methods' );
+			return $chosen_shipping_methods ? $chosen_shipping_methods : array();
 		} else {
 			return array( self::WC()->session->get( 'chosen_shipping_method' ) );
 		}
