@@ -741,7 +741,7 @@ abstract class SV_WC_Plugin {
 		$installed_version = get_option( $this->get_plugin_version_name() );
 
 		// installed version lower than plugin version?
-		if ( -1 === version_compare( $installed_version, $this->get_version() ) ) {
+		if ( version_compare( $installed_version, $this->get_version(), '<' ) ) {
 
 			if ( ! $installed_version ) {
 				$this->install();
