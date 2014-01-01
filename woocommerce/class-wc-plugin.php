@@ -332,8 +332,8 @@ abstract class SV_WC_Plugin {
 		$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', 'http://support.woothemes.com/', __( 'Support', $this->text_domain ) );
 
 		// optional review link
-		if ( $this->get_product_page_url() ) {
-			$custom_actions['review'] = sprintf( '<a href="%s">%s</a>', $this->get_product_page_url() . '#review_form', __( 'Write a Review', $this->text_domain ) );
+		if ( $this->get_review_url() ) {
+			$custom_actions['review'] = sprintf( '<a href="%s">%s</a>', $this->get_review_url(), __( 'Write a Review', $this->text_domain ) );
 		}
 
 		// add the links to the front of the actions list
@@ -576,6 +576,19 @@ abstract class SV_WC_Plugin {
 	protected function get_documentation_url() {
 
 		return 'http://docs.woothemes.com/document/woocommerce-' . $this->get_id_dasherized() . '/';
+	}
+
+
+	/**
+	 * Gets the plugin review URL, which defaults to:
+	 * {product page url}#review_form
+	 *
+	 * @since 1.0-1
+	 * @return string review url
+	 */
+	protected function get_review_url() {
+
+		return $this->get_product_page_url() . '#review_form';
 	}
 
 
