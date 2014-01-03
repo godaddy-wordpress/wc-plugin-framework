@@ -392,7 +392,7 @@ class SV_WC_Plugin_Compatibility {
 			// pre WC 2.1 data
 			return array( self::get_order_custom_field( $order, 'shipping_method' ) );
 
-		} else {
+		} elseif ( self::is_wc_version_gte_2_1() ) {
 
 			$shipping_method_ids = array();
 
@@ -402,6 +402,8 @@ class SV_WC_Plugin_Compatibility {
 
 			return $shipping_method_ids;
 		}
+
+		return array();
 	}
 
 
@@ -416,9 +418,12 @@ class SV_WC_Plugin_Compatibility {
 		if ( self::get_order_custom_field( $order, 'shipping_method' ) ) {
 			// pre WC 2.1 data
 			return $method_id == self::get_order_custom_field( $order, 'shipping_method' );
-		} else {
+		} elseif ( self::is_wc_version_gte_2_1() ) {
 			return $order->has_shipping_method( $method_id );
 		}
+
+		// default
+		return false;
 	}
 
 
