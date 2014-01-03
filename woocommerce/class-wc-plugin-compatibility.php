@@ -419,6 +419,22 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Compatibility function to use the new WC_Admin_Meta_Boxes class for the save_errors() function
+	 *
+	 * @since 1.0-1
+	 * @return old save_errors function or new class
+	 */
+	public static function save_errors( ) {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+				WC_Admin_Meta_Boxes::save_errors();
+		} else {
+				woocommerce_meta_boxes_save_errors();
+		}
+	}
+
+
+	/**
 	 * Compatibility function to get the version of the currently installed WooCommerce
 	 *
 	 * @since 1.0-1
