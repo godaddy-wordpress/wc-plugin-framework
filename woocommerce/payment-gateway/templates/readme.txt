@@ -8,7 +8,7 @@ If you did not receive a copy of the license and are unable to
 obtain it through the world-wide-web, please send an email
 to license@skyverge.com so we can send you a copy immediately.
 
-Copyright (c) 2013, SkyVerge, Inc.
+Copyright (c) 2013-2014, SkyVerge, Inc.
 http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
 
 The templates contained within this directory are not true WordPress templates,
@@ -31,7 +31,7 @@ the plugin, and performing the following renames/text substitutions:
 * %%PLUGIN NAME%% - plugin name, ie 'WooCommerce Intuit QBMS'
 * %%PLUGIN DOCS URL%% - plugin documentation url, ie 'http://docs.woothemes.com/document/intuit-qbms/'
 * %%PLUGIN PACKAGE%% - plugin package name, ie 'WC-Intuit-QBMS'
-* %%COPYRIGHT YEAR%% - copyright year, ie '2013'
+* %%COPYRIGHT YEAR%% - copyright year, ie '2014'
 * %%GATEWAY CLASS%% - gateway class name, ie 'WC_Gateway_Intuit_QBMS_Credit_Card'
 * %%GATEWAY ID%% - gateway id, ie 'intuit_qbms'
 * %%GATEWAY ID DASHERIZED%% - gateway id, ie 'intuit-qbms'
