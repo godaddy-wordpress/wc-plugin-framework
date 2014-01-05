@@ -433,12 +433,29 @@ class SV_WC_Plugin_Compatibility {
 	 * @since 1.0-1
 	 * @return old save_errors function or new class
 	 */
-	public static function save_errors( ) {
+	public static function save_errors() {
 
 		if ( self::is_wc_version_gte_2_1() ) {
 				WC_Admin_Meta_Boxes::save_errors();
 		} else {
 				woocommerce_meta_boxes_save_errors();
+		}
+	}
+
+
+	/**
+	 * Get coupon types.
+	 *
+	 * @since 1.0-1
+	 * @return array of coupon types
+	 */
+	public static function wc_get_coupon_types() {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+			return wc_get_coupon_types();
+		} else {
+			global $woocommerce;
+			return $woocommerce->get_coupon_discount_types();
 		}
 	}
 

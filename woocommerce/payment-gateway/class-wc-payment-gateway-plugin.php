@@ -681,7 +681,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * @param string $gateway_id the gateway identifier
 	 * @return string gateway settings URL
 	 */
-	protected function get_settings_url( $gateway_id ) {
+	public function get_settings_url( $gateway_id = null ) {
 
 		return SV_WC_Plugin_Compatibility::get_payment_gateway_configuration_url( $this->get_gateway_class_name( $gateway_id ) );
 	}

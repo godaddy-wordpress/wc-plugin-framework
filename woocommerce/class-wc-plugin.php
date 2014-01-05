@@ -531,12 +531,12 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 1.0-1
 	 * @see SV_WC_Plugin::get_settings_url()
-	 * @param string $plugin_id the plugin identifier.  Note that this can be a
+	 * @param string $plugin_id optional plugin identifier.  Note that this can be a
 	 *        sub-identifier for plugins with multiple parallel settings pages
 	 *        (ie a gateway that supports both credit cards and echecks)
 	 * @return string plugin configure link
 	 */
-	protected function get_settings_link( $plugin_id ) {
+	public function get_settings_link( $plugin_id = null ) {
 
 		$settings_url = $this->get_settings_url( $plugin_id );
 
@@ -554,12 +554,12 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 1.0-1
 	 * @see SV_WC_Plugin::get_settings_link()
-	 * @param string $plugin_id the plugin identifier.  Note that this can be a
+	 * @param string $plugin_id optional plugin identifier.  Note that this can be a
 	 *        sub-identifier for plugins with multiple parallel settings pages
 	 *        (ie a gateway that supports both credit cards and echecks)
 	 * @return string plugin settings URL
 	 */
-	protected function get_settings_url( $plugin_id ) {
+	public function get_settings_url( $plugin_id = null ) {
 
 		// stub method
 		return '';
@@ -573,7 +573,7 @@ abstract class SV_WC_Plugin {
 	 * @since 1.0-1
 	 * @return string documentation URL
 	 */
-	protected function get_documentation_url() {
+	public function get_documentation_url() {
 
 		return 'http://docs.woothemes.com/document/woocommerce-' . $this->get_id_dasherized() . '/';
 	}
@@ -586,7 +586,7 @@ abstract class SV_WC_Plugin {
 	 * @since 1.0-1
 	 * @return string review url
 	 */
-	protected function get_review_url() {
+	public function get_review_url() {
 
 		return $this->get_product_page_url() . '#review_form';
 	}
@@ -599,7 +599,7 @@ abstract class SV_WC_Plugin {
 	 * @since 1.0-1
 	 * @return string skyverge.com product page url
 	 */
-	protected function get_product_page_url() {
+	public function get_product_page_url() {
 
 		return 'http://www.skyverge.com/product/' . $this->get_id_dasherized() . '/';
 	}
