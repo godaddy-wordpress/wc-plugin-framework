@@ -1,7 +1,0 @@
-{
-  "name": "skyverge-plugin-framework",
-  "version": "1.0-1",
-  "dependencies": {
-    "font-awesome": "~4.0.3",
-  }
-}
