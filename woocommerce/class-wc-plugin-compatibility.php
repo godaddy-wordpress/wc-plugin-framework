@@ -526,6 +526,33 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Compatibility function to load WooCommerec admin functions in the admin,
+	 * primarily needed for woocommerce_admin_fields() and woocommerce_update_options()
+	 *
+	 * Note these functions have been refactored in the WC_Admin_Settings class in 2.1+,
+	 * so plugins targeting those versions can safely use WC_Admin_Settings::output_fields()
+	 * and WC_Admin_Settings::save_fields instead
+	 *
+	 * @since 1.0-1
+	 */
+	public static function load_wc_admin_functions() {
+
+		if ( ! self::is_wc_version_gte_2_1() ) {
+
+			// woocommerce_admin_fields()
+			require_once( self::WC()->plugin_path() . '/admin/woocommerce-admin-settings.php' );
+
+			// woocommerce_update_options()
+			require_once( self::WC()->plugin_path() . '/admin/settings/settings-save.php' );
+
+		} else {
+
+			// in 2.1+, wc-admin-functions.php lazy loads the admin settings functions
+		}
+	}
+
+	
+	/**
 	 * Compatibility function to get the version of the currently installed WooCommerce
 	 *
 	 * @since 1.0-1
