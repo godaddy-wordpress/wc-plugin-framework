@@ -461,6 +461,71 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Gets a product meta field value, regardless of product type
+	 *
+	 * @since 1.0-1
+	 * @param WC_Product $product the product
+	 * @param string $field_name the field name
+	 * @return mixed meta value
+	 */
+	public static function get_product_meta( $product, $field_name ) {
+
+		// even in WC >= 2.0 product variations still use the product_custom_fields array apparently
+		if ( $product->variation_id && isset( $product->product_custom_fields[ '_' . $field_name ][0] ) && '' !== $product->product_custom_fields[ '_' . $field_name ][0] ) {
+			return $product->product_custom_fields[ '_' . $field_name ][0];
+		}
+
+		// use magic __get
+		return $product->$field_name;
+	}
+
+
+	/**
+	 * Format the price with a currency symbol.
+	 *
+	 * @since 1.0-1
+	 * @param float $price the price
+	 * @param array $args (default: array())
+	 * @return string formatted price
+	 */
+	public static function wc_price( $price, $args = array() ) {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+			return wc_price( $price, $args );
+		} else {
+			return woocommerce_price( $price, $args );
+		}
+	}
+
+
+	/**
+	 * WooCommerce Shortcode wrapper
+	 *
+	 * @since 1.0-1
+	 * @param mixed $function shortcode callback
+	 * @param array $atts (default: array())
+	 * @param array $wrapper array of wrapper options (class, before, after)
+	 * @return string
+	 */
+	public static function shortcode_wrapper(
+		$function,
+		$atts = array(),
+		$wrapper = array(
+			'class' => 'woocommerce',
+			'before' => null,
+			'after' => null
+		) ) {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+			return WC_Shortcodes::shortcode_wrapper( $function, $atts, $wrapper );
+		} else {
+			global $woocommerce;
+			return $woocommerce->shortcode_wrapper( $function, $atts, $wrapper );
+		}
+	}
+
+
+	/**
 	 * Compatibility function to get the version of the currently installed WooCommerce
 	 *
 	 * @since 1.0-1
