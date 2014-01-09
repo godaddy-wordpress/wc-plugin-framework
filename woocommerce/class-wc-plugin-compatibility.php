@@ -553,6 +553,40 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Returns true if the current page is the admin general configuration page
+	 *
+	 * @since 1.0-1
+	 * @return boolean true if the current page is the admin general configuration page
+	 */
+	public static function is_general_configuration_page() {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+			return isset( $_GET['page'] ) && 'wc-settings' == $_GET['page'] &&
+				( ! isset( $_GET['tab'] ) || 'general' == $_GET['tab'] );
+		} else {
+			return isset( $_GET['page'] ) && 'woocommerce_settings' == $_GET['page'] &&
+				( ! isset( $_GET['tab'] ) || 'general' == $_GET['tab'] );
+		}
+	}
+
+
+	/**
+	 * Returns the admin configuration url for the admin general configuration page
+	 *
+	 * @since 1.0-1
+	 * @return string admin configuration url for the admin general configuration page
+	 */
+	public static function get_general_configuration_url() {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+			return admin_url( 'admin.php?page=wc-settings&tab=general' );
+		} else {
+			return admin_url( 'admin.php?page=woocommerce_settings&tab=general' );
+		}
+	}
+
+
+	/**
 	 * Compatibility function to get the version of the currently installed WooCommerce
 	 *
 	 * @since 1.0-1
