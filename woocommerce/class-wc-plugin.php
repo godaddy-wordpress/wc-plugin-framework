@@ -77,6 +77,9 @@ abstract class SV_WC_Plugin {
 	/** @var \WC_Logger instance */
 	private $logger;
 
+	/** @var  \SV_WP_Admin_Message_Handler instance */
+	private $message_handler;
+
 	/** @var array string names of required PHP extensions */
 	private $dependencies = array();
 
@@ -135,6 +138,9 @@ abstract class SV_WC_Plugin {
 
 		// Admin
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+
+			// admin message handler
+			require_once( 'class-sv-wp-admin-message-handler.php' );
 
 			// render any admin notices
 			add_action( 'admin_notices', array( $this, 'render_admin_notices'               ), 10 );
@@ -661,6 +667,24 @@ abstract class SV_WC_Plugin {
 	 */
 	public function get_framework_image_path() {
 		return 'lib/skyverge/woocommerce/assets/images/';
+	}
+
+
+	/**
+	 * Returns the WP Admin Message Handler instance for use with
+	 * setting/displaying admin messages & errors
+	 *
+	 * @since 1.0-1
+	 * @return SV_WP_Admin_Message_Handler
+	 */
+	public function get_message_handler() {
+
+		if ( is_object( $this->message_handler ) ) {
+
+			return $this->message_handler;
+		}
+
+		return $this->message_handler = new SV_WP_Admin_Message_Handler( $this->get_id() );
 	}
 
 
