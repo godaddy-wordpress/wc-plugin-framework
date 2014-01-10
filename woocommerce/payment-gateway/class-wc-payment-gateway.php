@@ -900,7 +900,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// default: is the card image available within the framework?
 		// NOTE: I don't particularly like hardcoding this path, but I don't see any real way around it
 		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/' . $this->get_plugin()->get_framework_image_path() . 'card-' . $image_type . '.png' ) ) {
-			return SV_WC_Plugin_Compatibility::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/' . $this->get_framework_image_path() . 'card-' . $image_type . '.png';
+			return SV_WC_Plugin_Compatibility::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/' . $this->get_plugin()->get_framework_image_path() . 'card-' . $image_type . '.png';
 		}
 
 		return null;
