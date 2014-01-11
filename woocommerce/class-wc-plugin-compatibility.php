@@ -587,6 +587,23 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Returns the order_id if on the checkout order received page
+	 *
+	 * @since 1.0-1
+	 * @return int order identifier
+	 */
+	public static function get_checkout_order_received_order_id() {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+			global $wp;
+			return isset( $wp->query_vars['order-received'] ) ? absint( $wp->query_vars['order-received'] ) : 0;
+		} else {
+			return isset( $_GET['order'] ) ? absint( $_GET['order'] ) : 0;
+		}
+	}
+
+
+	/**
 	 * Compatibility function to get the version of the currently installed WooCommerce
 	 *
 	 * @since 1.0-1
