@@ -606,6 +606,22 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Generates a URL for the thanks page (order received)
+	 *
+	 * @since 1.0-1
+	 * @return string url to thanks page
+	 */
+	public static function get_checkout_order_received_url( $order ) {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+			return $order->get_checkout_order_received_url();
+		} else {
+			return get_permalink( woocommerce_get_page_id( 'thanks' ) );
+		}
+	}
+
+
+	/**
 	 * Compatibility function to get the version of the currently installed WooCommerce
 	 *
 	 * @since 1.0-1

@@ -427,6 +427,8 @@ abstract class SV_WC_Plugin {
 		$dismissed_messages[ $message_id ] = true;
 
 		update_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_id() . '_dismissed_messages', $dismissed_messages );
+
+		do_action( 'wc_' . $this->get_id(). '_dismiss_message', $message_id, $user_id );
 	}
 
 
