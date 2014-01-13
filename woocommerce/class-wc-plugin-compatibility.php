@@ -190,14 +190,16 @@ class SV_WC_Plugin_Compatibility {
 	 * not have a leading underscore
 	 *
 	 * @since 1.0-1
-	 * @return mixed order custom field value for field named $name
+	 * @param WC_Order $order WC Order object
+	 * @param string $name meta key name without a leading underscore
+	 * @return string|mixed order custom field value for field named $name
 	 */
 	public static function get_order_custom_field( $order, $name ) {
 
 		if ( self::is_wc_version_gte_2_1() ) {
-			return $order->$name;
+			return isset( $order->$name ) ? $order->$name : '';
 		} else {
-			return isset( $order->order_custom_fields[ '_' . $name ][0] ) && $order->order_custom_fields[ '_' . $name ][0] ? $order->order_custom_fields[ '_' . $name ][0] : null;
+			return isset( $order->order_custom_fields[ '_' . $name ][0] ) && $order->order_custom_fields[ '_' . $name ][0] ? $order->order_custom_fields[ '_' . $name ][0] : '';
 		}
 	}
 
