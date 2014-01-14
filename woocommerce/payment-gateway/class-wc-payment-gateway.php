@@ -947,6 +947,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$order->payment->type = 'check';
 		}
 
+		$order->description = sprintf( __( '%s - Order %s', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+
 		return $order;
 	}
 
