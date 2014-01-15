@@ -528,6 +528,28 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Compatibility for the woocommerce_get_template() function which is soft-deprecated in 2.1+
+	 *
+	 * @since 1.0-1
+	 * @param string $template_name
+	 * @param array $args
+	 * @param string $template_path
+	 * @param string $default_path
+	 */
+	public static function wc_get_template( $template_name, $args, $template_path, $default_path ) {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+
+			wc_get_template( $template_name, $args, $template_path, $default_path );
+
+		} else {
+
+			woocommerce_get_template( $template_name, $args, $template_path, $default_path );
+		}
+	}
+
+
+	/**
 	 * Compatibility function to load WooCommerec admin functions in the admin,
 	 * primarily needed for woocommerce_admin_fields() and woocommerce_update_options()
 	 *
