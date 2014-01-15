@@ -199,7 +199,7 @@ class SV_WC_Plugin_Compatibility {
 		if ( self::is_wc_version_gte_2_1() ) {
 			return isset( $order->$name ) ? $order->$name : '';
 		} else {
-			return isset( $order->order_custom_fields[ '_' . $name ][0] ) && $order->order_custom_fields[ '_' . $name ][0] ? $order->order_custom_fields[ '_' . $name ][0] : '';
+			return isset( $order->order_custom_fields[ '_' . $name ][0] ) ? $order->order_custom_fields[ '_' . $name ][0] : '';
 		}
 	}
 
