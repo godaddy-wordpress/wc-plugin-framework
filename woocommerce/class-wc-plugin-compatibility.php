@@ -718,32 +718,6 @@ class SV_WC_Plugin_Compatibility {
 	}
 
 
-	/**
-	 * Returns filtered body class for WC 2.1+ and pre 2.1
-	 *
-	 * @since 1.0-1
-	 * @param mixed $classes the classes array or string
-	 * @param mixed $class the plugin class WC 2.1+
-	 * @param mixed $preclass the plugin class pre WC 2.1
-	 * @return array of body classes
-	 */
-	public function pre_wc_body_class( $classes, $class, $preclass ) {
-
-		if ( self::is_wc_version_gte_2_1() ) {
-			$pluginclass = $class;
-		} else {
-			$pluginclass = $preclass;
-		}
-
-		if ( is_array( $classes ) )
-			$classes[] = $pluginclass;
-		else
-			$classes .= " $pluginclass ";
-
-		return $classes;
-	}
-
-
 }
 
 
