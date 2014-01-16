@@ -1,0 +1,23 @@
+// Use this mixin to import font-awesome from their CDN
+@mixin import-fontawesome {
+	@import url("//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css");
+}
+
+// Use this mixin to create a font-awesome icon
+// sample usage:
+//
+//	.a-selector a:before {
+//		@include fa-icon( "\f0f6" );
+//	}
+@mixin fa-icon( $icon ) {
+	font-family: FontAwesome;
+	font-weight: normal;
+	font-style: normal;
+	font-variant: normal;
+	text-transform: none;
+	text-decoration: inherit;
+	-webkit-font-smoothing: antialiased;
+	*margin-right: .3em;
+	line-height: 1;
+	content: $icon;
+}
