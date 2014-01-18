@@ -110,9 +110,11 @@ abstract class SV_WC_Plugin {
 		$this->version     = $version;
 		$this->text_domain = $text_domain;
 
-		// check that the current version of the framework meets the minimum
-		//  required by the concrete plugin.
+		// includes that are required to be available at all times
+		$this->includes();
 
+		// check that the current version of the framework meets the minimum
+		// required by the concrete plugin.
 		if ( ! $this->check_version( $minimum_version ) ) {
 
 			if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
@@ -128,13 +130,12 @@ abstract class SV_WC_Plugin {
 			return;
 		}
 
-		if ( isset( $args['dependencies'] ) )       $this->dependencies = $args['dependencies'];
+		if ( isset( $args['dependencies'] ) ) {
+			$this->dependencies = $args['dependencies'];
+		}
 
 		// include library files after woocommerce is loaded
 		add_action( 'woocommerce_loaded', array( $this, 'lib_includes' ) );
-
-		// includes that are required to be available at all times
-		$this->includes();
 
 		// Admin
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
