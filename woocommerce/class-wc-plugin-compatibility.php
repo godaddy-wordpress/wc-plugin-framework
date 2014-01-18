@@ -173,6 +173,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Returns the total shipping cost for the given order
 	 *
 	 * @since 1.0-1
+	 * @param WC_Order $order
 	 * @return float the shipping total
 	 */
 	public static function get_total_shipping( $order ) {
@@ -385,6 +386,7 @@ class SV_WC_Plugin_Compatibility {
 	 * because there can't be a direct equivalent for pre WC 2.1
 	 *
 	 * @since 1.0-1
+	 * @param WC_Order $order
 	 * @return array of shipping method ids for $order
 	 */
 	public static function get_shipping_method_ids( $order ) {
@@ -413,6 +415,8 @@ class SV_WC_Plugin_Compatibility {
 	 * Returns true if the order has the given shipping method
 	 *
 	 * @since 1.0-1
+	 * @param WC_Order $order
+	 * @param string $method_id
 	 * @return boolean true if $order is shipped by $method_id
 	 */
 	public static function has_shipping_method( $order, $method_id ) {
@@ -433,7 +437,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Compatibility function to use the new WC_Admin_Meta_Boxes class for the save_errors() function
 	 *
 	 * @since 1.0-1
-	 * @return old save_errors function or new class
+	 * @return callback old save_errors function or new class
 	 */
 	public static function save_errors() {
 
@@ -689,6 +693,9 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns the order_id if on the checkout order received page
 	 *
+	 * Note this must be used in the `wp` or later action, as earlier
+	 * actions do not yet have access to the query vars
+	 *
 	 * @since 1.0-1
 	 * @return int order identifier
 	 */
@@ -707,6 +714,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Generates a URL for the thanks page (order received)
 	 *
 	 * @since 1.0-1
+	 * @param WC_Order $order
 	 * @return string url to thanks page
 	 */
 	public static function get_checkout_order_received_url( $order ) {
