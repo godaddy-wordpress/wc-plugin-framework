@@ -550,6 +550,82 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Compatibility for the woocommerce_date_format() function which is soft-deprecated in 2.1+
+	 *
+	 * @since 1.0-1
+	 * @return string date format
+	 */
+	public static function wc_date_format() {
+
+		return self::is_wc_version_gte_2_1() ? wc_date_format() : woocommerce_date_format();
+	}
+
+
+	/**
+	 * Compatibility for the woocommerce_time_format() function which is soft-deprecated in 2.1+
+	 *
+	 * @since 1.0-1
+	 * @return string time format
+	 */
+	public static function wc_time_format() {
+
+		return self::is_wc_version_gte_2_1() ? wc_time_format() : woocommerce_time_format();
+	}
+
+
+	/**
+	 * Compatibility for the wc_timezone_string() function, which only
+	 * exists in 2.1+
+	 *
+	 * @since 1.0-1
+	 * @return string a valid PHP timezone string for the site
+	 */
+	public static function wc_timezone_string() {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+
+			return wc_timezone_string();
+
+		} else {
+
+			// if site timezone string exists, return it
+			if ( $timezone = get_option( 'timezone_string' ) ) {
+				return $timezone;
+			}
+
+			// get UTC offset, if it isn't set then return UTC
+			if ( 0 === ( $utc_offset = get_option( 'gmt_offset', 0 ) ) ) {
+				return 'UTC';
+			}
+
+			// adjust UTC offset from hours to seconds
+			$utc_offset *= 3600;
+
+			// attempt to guess the timezone string from the UTC offset
+			$timezone = timezone_name_from_abbr( '', $utc_offset );
+
+			// last try, guess timezone string manually
+			if ( false === $timezone ) {
+
+				$is_dst = date( 'I' );
+
+				foreach ( timezone_abbreviations_list() as $abbr ) {
+					foreach ( $abbr as $city ) {
+
+						if ( $city['dst'] == $is_dst && $city['offset'] == $utc_offset ) {
+							return $city['timezone_id'];
+						}
+					}
+				}
+			}
+
+			// fallback to UTC
+			return 'UTC';
+		}
+	}
+
+
+	/**
 	 * Compatibility function to load WooCommerec admin functions in the admin,
 	 * primarily needed for woocommerce_admin_fields() and woocommerce_update_options()
 	 *
