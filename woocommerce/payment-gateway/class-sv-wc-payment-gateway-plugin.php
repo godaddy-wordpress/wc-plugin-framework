@@ -199,20 +199,20 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		parent::lib_includes();
 
 		// include framework files
-		require_once( 'api/interface-wc-payment-gateway-api.php' );
-		require_once( 'api/interface-wc-payment-gateway-api-request.php' );
-		require_once( 'api/interface-wc-payment-gateway-api-response.php' );
-		require_once( 'api/interface-wc-payment-gateway-api-authorization-response.php' );
-		require_once( 'api/interface-wc-payment-gateway-api-create-payment-token-response.php' );
-		require_once( 'api/interface-wc-payment-gateway-api-get-tokenized-payment-methods-response.php' );
+		require_once( 'api/interface-sv-wc-payment-gateway-api.php' );
+		require_once( 'api/interface-sv-wc-payment-gateway-api-request.php' );
+		require_once( 'api/interface-sv-wc-payment-gateway-api-response.php' );
+		require_once( 'api/interface-sv-wc-payment-gateway-api-authorization-response.php' );
+		require_once( 'api/interface-sv-wc-payment-gateway-api-create-payment-token-response.php' );
+		require_once( 'api/interface-sv-wc-payment-gateway-api-get-tokenized-payment-methods-response.php' );
 
-		require_once( 'exceptions/class-wc-payment-gateway-feature-unsupported-exception.php' );
-		require_once( 'exceptions/class-wc-payment-gateway-unimplemented-method-exception.php' );
+		require_once( 'exceptions/class-sv-wc-payment-gateway-feature-unsupported-exception.php' );
+		require_once( 'exceptions/class-sv-wc-payment-gateway-unimplemented-method-exception.php' );
 
-		require_once( 'class-wc-payment-gateway.php' );
-		require_once( 'class-wc-payment-gateway-direct.php' );
-		require_once( 'class-wc-payment-gateway-hosted.php' );
-		require_once( 'class-wc-payment-token.php' );
+		require_once( 'class-sv-wc-payment-gateway.php' );
+		require_once( 'class-sv-wc-payment-gateway-direct.php' );
+		require_once( 'class-sv-wc-payment-gateway-hosted.php' );
+		require_once( 'class-sv-wc-payment-token.php' );
 	}
 
 

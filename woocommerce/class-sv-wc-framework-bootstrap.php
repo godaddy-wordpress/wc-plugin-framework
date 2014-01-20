@@ -169,7 +169,7 @@ class SV_WC_Framework_Bootstrap {
 
 			// load the first found (highest versioned) plugin framework class
 			if ( ! class_exists( 'SV_WC_Plugin' ) ) {
-				require_once( $this->get_plugin_path( $plugin['path'] ) . '/lib/skyverge/woocommerce/class-wc-plugin.php' );
+				require_once( $this->get_plugin_path( $plugin['path'] ) . '/lib/skyverge/woocommerce/class-sv-wc-plugin.php' );
 				$loaded_framework = $plugin;
 			}
 
@@ -193,7 +193,7 @@ class SV_WC_Framework_Bootstrap {
 
 			// load the first found (highest versioned) payment gateway framework class, as needed
 			if ( isset( $plugin['args']['is_payment_gateway'] ) && ! class_exists( 'SV_WC_Payment_Gateway' ) ) {
-				require_once( $this->get_plugin_path( $plugin['path'] ) . '/lib/skyverge/woocommerce/payment-gateway/class-wc-payment-gateway-plugin.php' );
+				require_once( $this->get_plugin_path( $plugin['path'] ) . '/lib/skyverge/woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php' );
 			}
 
 			// initialize the plugin

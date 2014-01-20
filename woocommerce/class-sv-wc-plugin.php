@@ -168,7 +168,7 @@ abstract class SV_WC_Plugin {
 	 * @since 1.0-1
 	 */
 	private function includes() {
-		require_once( 'class-wc-plugin-compatibility.php' );
+		require_once( 'class-sv-wc-plugin-compatibility.php' );
 	}
 
 
