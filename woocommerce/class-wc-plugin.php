@@ -131,7 +131,7 @@ abstract class SV_WC_Plugin {
 		if ( isset( $args['dependencies'] ) )       $this->dependencies = $args['dependencies'];
 
 		// include library files after woocommerce is loaded
-		add_action( 'woocommerce_loaded', array( $this, 'lib_includes' ) );
+		add_action( 'sv_wc_framework_plugins_loaded', array( $this, 'lib_includes' ) );
 
 		// includes that are required to be available at all times
 		$this->includes();
