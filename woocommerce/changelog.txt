@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-XXXX.XX.XX - version 1.0-1
+2014.01.20 - version 2.0
  * Feature - Generalized Plugin Framework
  * Feature - Support for "tokenize with sale" gateways
  * Tweak - Improved handling for credit card capture request

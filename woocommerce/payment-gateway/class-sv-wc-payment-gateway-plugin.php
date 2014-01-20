@@ -49,7 +49,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Plugin' ) ) :
  * + `customer_id`      - adds actions to show/persist the "Customer ID" area of the admin User edit page
  * + `transaction_link` - adds actions to render the merchant account transaction direct link on the Admin Order Edit page.  (Don't forget to override the SV_WC_Payment_Gateway::get_transaction_url() method!)
  *
- * @version 1.0-1
+ * @version 2.0
  */
 abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
@@ -258,7 +258,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Returns true if on the admin gateway settings page for this gateway
 	 *
-	 * @since 1.0-1
+	 * @since 2.0
 	 * @see SV_WC_Plugin::is_plugin_settings()
 	 * @return boolean true if on the admin gateway settings page
 	 */
@@ -300,7 +300,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * notice if so.  Notice will not be rendered to the admin user once dismissed
 	 * unless on the plugin settings page, if any
 	 *
-	 * @since 1.0-1
+	 * @since 2.0
 	 * @see SV_WC_Payment_Gateway_Plugin::render_admin_notices()
 	 */
 	protected function render_ssl_admin_notices() {
@@ -340,7 +340,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * dismissible admin notice if so.  Notice will not be rendered to the admin
 	 * user once dismissed unless on the plugin settings page, if any
 	 *
-	 * @since 1.0-1
+	 * @since 2.0
 	 * @see SV_WC_Payment_Gateway_Plugin::render_admin_notices()
 	 */
 	protected function render_currency_admin_notices() {

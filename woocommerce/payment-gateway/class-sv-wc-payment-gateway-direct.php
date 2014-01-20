@@ -311,7 +311,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * Defaults to false but can be overridden by child gateway class
 	 *
-	 * @since 1.0-1
+	 * @since 2.0
 	 * @return boolean true if tokenization is combined with sales, false if
 	 *         there is a special request for tokenization
 	 */
@@ -481,7 +481,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * $order->capture_total - the capture total
 	 *
-	 * @since 1.0-1
+	 * @since 2.0
 	 * @param int $order_id order ID being processed
 	 * @return WC_Order object with payment and transaction information attached
 	 */
@@ -625,7 +625,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Returns true if the authorization for $order is still valid for capture
 	 *
-	 * @since 1.0-1
+	 * @since 2.0
 	 * @param $order WC_Order the order
 	 * @return boolean true if the authorization is valid for capture, false otherwise
 	 */
@@ -653,7 +653,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Returns true if the authorization for $order has expired
 	 *
-	 * @since 1.0-1
+	 * @since 2.0
 	 * @param $order WC_Order the order
 	 * @return boolean true if the authorization has expired, false otherwise
 	 */
@@ -864,7 +864,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Adds the standard capture data to the order
 	 *
-	 * @since 1.0-1
+	 * @since 2.0
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
 	 */
@@ -878,7 +878,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Adds any gateway-specific data to the order after a capture is performed
 	 *
-	 * @since 1.0-1
+	 * @since 2.0
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
 	 */
