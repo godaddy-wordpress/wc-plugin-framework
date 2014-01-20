@@ -933,7 +933,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order->payment_total = number_format( $order->get_total(), 2, '.', '' );
 
 		// logged in customer?
-		if ( 0 !== $order->user_id && false !== ( $customer_id = $this->get_customer_id( $order->user_id, array( 'order' => $order ) ) ) ) {
+		if ( 0 != $order->user_id && false !== ( $customer_id = $this->get_customer_id( $order->user_id, array( 'order' => $order ) ) ) ) {
 			$order->customer_id = $customer_id;
 		}
 

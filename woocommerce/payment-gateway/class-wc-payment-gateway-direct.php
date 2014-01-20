@@ -340,7 +340,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		try {
 
 			// registered customer checkout (already logged in or creating account at checkout)
-			if ( $this->supports_tokenization() && 0 !== $order->user_id && $this->should_tokenize_payment_method() &&
+			if ( $this->supports_tokenization() && 0 != $order->user_id && $this->should_tokenize_payment_method() &&
 				( 0 == $order->payment_total || ! $this->tokenize_with_sale() ) ) {
 				$order = $this->create_payment_token( $order );
 			}
@@ -596,7 +596,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// handle the response
 		if ( $response->transaction_approved() || $response->transaction_held() ) {
 
-			if ( $this->supports_tokenization() && 0 !== $order->user_id && $this->should_tokenize_payment_method() &&
+			if ( $this->supports_tokenization() && 0 != $order->user_id && $this->should_tokenize_payment_method() &&
 				( $order->payment_total > 0 && $this->tokenize_with_sale() ) ) {
 				$order = $this->create_payment_token( $order, $response );
 			}
