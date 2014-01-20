@@ -96,20 +96,14 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 1.0
 	 * @see SV_WC_Plugin::__construct()
-	 * @param string $minimum_version the minimum Framework version required by the concrete gateway
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
 	 * @param string $text_domain the plugin text domain
 	 * @param array $args plugin arguments
 	 */
-	public function __construct( $minimum_version, $id, $version, $text_domain, $args ) {
+	public function __construct( $id, $version, $text_domain, $args ) {
 
-		parent::__construct( $minimum_version, $id, $version, $text_domain, $args );
-
-		// ensure the minimum version requirement is met
-		if ( ! $this->check_version( $minimum_version ) ) {
-			return;
-		}
+		parent::__construct( $id, $version, $text_domain, $args );
 
 		// optional parameters: the supported gateways
 		if ( isset( $args['gateways'] ) ) {
