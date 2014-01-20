@@ -44,10 +44,6 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  *
  * Optional Methods to Override:
  *
- * + `__construct()` - If overriding the constructor, you must call the parent constructor, followed by a version check:
- *   // ensure the minimum version requirement is met
- *   if ( ! $this->check_version( self::MINIMUM_FRAMEWORK_VERSION ) )
- *     return;
  * + `is_plugin_settings()` - if the plugin has an admin settings page you can return true when on it
  * + `get_settings_url()` - return the plugin admin settings URL, if any
  * + `render_admin_notices()` - override to perform custom admin plugin requirement checks (defaults to checking for php extension depenencies).  Use the is_message_dismissed() and add_dismissible_notice() methods
@@ -97,36 +93,17 @@ abstract class SV_WC_Plugin {
 	 * Child plugin classes may add their own optional arguments
 	 *
 	 * @since 1.0-1
-	 * @param string $minimum_version the minimum Framework version required by the concrete plugin
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
 	 * @param string $text_domain the plugin text domain
 	 * @param array $args optional plugin arguments
 	 */
-	public function __construct( $minimum_version, $id, $version, $text_domain, $args = array() ) {
+	public function __construct( $id, $version, $text_domain, $args = array() ) {
 
 		// required params
 		$this->id          = $id;
 		$this->version     = $version;
 		$this->text_domain = $text_domain;
-
-		// check that the current version of the framework meets the minimum
-		//  required by the concrete plugin.
-
-		if ( ! $this->check_version( $minimum_version ) ) {
-
-			if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
-
-				// render any admin notices
-				add_action( 'admin_notices', array( $this, 'render_minimum_version_notice' ) );
-
-				// AJAX handler to dismiss any warning/error notices
-				add_action( 'wp_ajax_wc_plugin_framework_' . $this->get_id() . '_dismiss_message', array( $this, 'handle_dismiss_message' ) );
-
-			}
-
-			return;
-		}
 
 		if ( isset( $args['dependencies'] ) )       $this->dependencies = $args['dependencies'];
 
@@ -711,63 +688,6 @@ abstract class SV_WC_Plugin {
 
 
 	/** Lifecycle methods ******************************************************/
-
-
-	/**
-	 * Check that the framework meets the required $minimum_version.
-	 *
-	 * This is done because there is a chance that a shop could have two
-	 * framework plugins installed, with different versions of the framework,
-	 * only one of which will be loaded (probably based on the plugin name,
-	 * alphabetically).  If an older version of the framework happens to be
-	 * loaded in an install with another plugin requiring a higher version, this
-	 * situation could lead to fatal errors that shut the whole site down.  To
-	 * guard against this, every client of the framework must verify that the
-	 * currently loaded framework meets its required minimum version, and if
-	 * not, an admin error message will be displayed and the plugin must not
-	 * operate.
-	 *
-	 * @since 1.0
-	 * @param string $minimum_version the minimum framework version required by the concrete plugin
-	 * @return boolean true if the framework version is greater than or equal to $minimum version
-	 */
-	final protected function check_version( $minimum_version ) {
-
-		// installed version lower than minimum required?
-		if ( -1 === version_compare( self::VERSION, $minimum_version ) )
-			return false;
-
-		return true;
-	}
-
-
-	/**
-	 * Render the minimum version notice
-	 *
-	 * @since 1.0-1
-	 */
-	final public function render_minimum_version_notice() {
-
-		if ( ! $this->is_message_dismissed( 'minimum-version' ) || $this->is_plugin_settings() ) {
-
-			// a bit hacky, but get the directory name of the plugin which happened to load the framework
-			$framework_plugin = explode( '/', __FILE__ );
-			$framework_plugin = $framework_plugin[ count( $framework_plugin ) - 5 ];
-
-			$message = sprintf(
-				__( '%s requires that you update %s to the latest version, in order to function.  Until then, %s will remain non-functional.', $this->text_domain ),
-				'<strong>' . $this->get_plugin_name() . '</strong>',
-				'<strong>' . $framework_plugin . '</strong>',
-				'<strong>' . $this->get_plugin_name() . '</strong>'
-			);
-
-			$this->add_dismissible_notice( $message, 'minimum-version' );
-
-			$this->render_admin_dismissible_notice_js();
-
-		}
-
-	}
 
 
 	/**
