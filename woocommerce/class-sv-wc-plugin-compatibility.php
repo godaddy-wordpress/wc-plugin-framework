@@ -728,6 +728,23 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Trim trailing zeros off prices.
+	 *
+	 * @since 2.0.1
+	 * @param string $price the price
+	 * @return string price with zeroes trimmed
+	 */
+	public static function wc_trim_zeroes( $price ) {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+			return wc_trim_zeroes( $price );
+		} else {
+			return woocommerce_trim_zeroes( $price );
+		}
+	}
+
+
+	/**
 	 * Compatibility function to get the version of the currently installed WooCommerce
 	 *
 	 * @since 2.0

@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2014.01.29 - version 2.0.1
+ * Tweak - Additional WC 2.1 compatibility helpers
+
 2014.01.20 - version 2.0
  * Feature - Generalized Plugin Framework
  * Feature - Support for "tokenize with sale" gateways
