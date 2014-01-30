@@ -739,7 +739,7 @@ class SV_WC_Plugin_Compatibility {
 		if ( self::is_wc_version_gte_2_1() ) {
 			return wc_trim_zeroes( $price );
 		} else {
-			return woocommerce_trim_zeroes( $price );
+			return woocommerce_trim_zeros( $price );
 		}
 	}
 
