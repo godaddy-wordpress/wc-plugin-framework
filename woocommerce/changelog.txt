@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2014.02.03 - version 2.0.2
+ * Fix - Improved WC 2.1 compatibility method to return the order id on the checkout pay page
+
 2014.01.29 - version 2.0.1
  * Tweak - Additional WC 2.1 compatibility helpers
 

@@ -164,7 +164,15 @@ class SV_WC_Plugin_Compatibility {
 			global $wp;
 			return isset( $wp->query_vars['order-pay'] ) ? absint( $wp->query_vars['order-pay'] ) : 0;
 		} else {
-			return isset( $_GET['order'] ) ? absint( $_GET['order'] ) : 0;
+			if ( isset( $_GET['order_id'] ) ) {
+				// on the Pay page gateway selection version, there is an order_id param
+				return absint( $_GET['order_id'] );
+			} elseif ( isset( $_GET['order'] ) ) {
+				// on the Pay page for a single gateway, there is an order param with the order id
+				return absint( $_GET['order'] );
+			} else {
+				return 0;
+			}
 		}
 	}
 
