@@ -21,3 +21,41 @@
 	line-height: 1;
 	content: $icon;
 }
+
+// Use this mixin to create dashicon icon
+// sample usage:
+//
+//	.a-selector a:before {
+//		@include dashicon( "\f460" );
+//	}
+@mixin dashicon( $icon ) {
+	font-family: 'dashicons';
+	speak: none;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	-webkit-font-smoothing: antialiased;
+	margin:0;
+	text-indent: 0;
+	position: absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height: 100%;
+	text-align: center;
+	content: $icon;
+}
+
+// Use this mixin when using a dashicon inside of an existing image, like WC order status icons or order action icons
+// sample usage
+//
+// mark {
+//	@include dashicon-ir;
+// }
+@mixin dashicon-ir() {
+	display: block;
+	text-indent: -9999px;
+	position: relative;
+	height:1em;
+	width:1em;
+}
