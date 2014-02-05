@@ -141,7 +141,9 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Load plugin text domain.  This implementation should look simply like:
 	 *
-	 * load_plugin_textdomain( 'text-domain-string', false, dirname( plugin_basename( $this->get_file() ) ) . '/i18n/languages' );
+	 * *load_plugin_textdomain*( 'text-domain-string', false, dirname( plugin_basename( $this->get_file() ) ) . '/i18n/languages' );
+	 *
+	 * *'s used to avoid errors from stupid Codestyling Localization
 	 *
 	 * Note that the actual text domain string should be used, and not a
 	 * variable or constant, otherwise localization plugins (Codestyling) will
