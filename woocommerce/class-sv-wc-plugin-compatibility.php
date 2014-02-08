@@ -753,6 +753,23 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Get the template path
+	 *
+	 * @since 2.0.2
+	 * @return string template path
+	 */
+	public static function template_path() {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+			return WC()->template_path();
+		} else {
+			global $woocommerce;
+			return $woocommerce->template_url;
+		}
+	}
+
+
+	/**
 	 * Compatibility function to get the version of the currently installed WooCommerce
 	 *
 	 * @since 2.0
