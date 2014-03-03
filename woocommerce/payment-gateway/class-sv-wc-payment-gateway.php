@@ -484,6 +484,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$default_title       = __( 'Credit Card', $this->text_domain );
 			$default_description = __( 'Pay securely using your credit card.', $this->text_domain );
 		} else {
+			// TODO: support additional types
 			// echeck
 			$default_title       = __( 'eCheck', $this->text_domain );
 			$default_description = __( 'Pay securely using your checking account.', $this->text_domain );
@@ -944,6 +945,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( $this->is_credit_card_gateway() ) {
 			$order->payment->type = 'credit_card';
 		} else {
+			// TODO: support additional types
 			$order->payment->type = 'check';
 		}
 

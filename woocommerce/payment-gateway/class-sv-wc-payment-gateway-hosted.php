@@ -51,6 +51,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * Process the payment by redirecting customer to the pay page
 	 *
 	 * @since 0.1
+	 * @see WC_Payment_Gateway::process_payment()
 	 * @param int $order_id the order to process
 	 * @return array with keys 'result' and 'redirect'
 	 */

@@ -677,6 +677,12 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_settings_url( $gateway_id = null ) {
 
+		// default to first gateway
+		if ( is_null( $gateway_id ) ) {
+			reset( $this->gateways );
+			$gateway_id = key( $this->gateways );
+		}
+
 		return SV_WC_Plugin_Compatibility::get_payment_gateway_configuration_url( $this->get_gateway_class_name( $gateway_id ) );
 	}
 
