@@ -320,7 +320,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 						// SSL check if gateway enabled/production mode
 						if ( 'no' === get_option( 'woocommerce_force_ssl_checkout' ) ) {
 
-							$message = sprintf( __( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", $this->text_domain ), '<strong>' . $this->get_plugin_name() . '</strong>' );
+							$message = sprintf( _x( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", 'Requires SSL', $this->text_domain ), '<strong>' . $this->get_plugin_name() . '</strong>' );
 
 							$this->add_dismissible_notice( $message, 'ssl-required' );
 
@@ -425,7 +425,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			return;
 
 		?>
-		<h3><?php printf( __( '%s Customer Details', $this->text_domain ), $this->get_plugin_name() ); ?></h3>
+		<h3><?php printf( _x( '%s Customer Details', 'Supports customer details', $this->text_domain ), $this->get_plugin_name() ); ?></h3>
 		<table class="form-table">
 		<?php
 
@@ -433,10 +433,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 			?>
 				<tr>
-					<th><label for="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>"><?php echo count( $environments ) > 1 ? sprintf( __( 'Customer ID (%s)', $this->text_domain ), $environment_name ) : __( 'Customer ID', $this->text_domain ); ?></label></th>
+					<th><label for="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>"><?php echo count( $environments ) > 1 ? sprintf( _x( 'Customer ID (%s)', 'Supports customer details', $this->text_domain ), $environment_name ) : _x( 'Customer ID', 'Supports customer details', $this->text_domain ); ?></label></th>
 					<td>
 						<input type="text" name="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>" id="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>" value="<?php echo esc_attr( $gateway->get_customer_id( $user->ID, array( 'environment_id' => $environment_id, 'autocreate' => false ) ) ); ?>" class="regular-text" /><br/>
-						<span class="description"><?php echo count( $environments ) > 1 ? sprintf( __( 'The customer ID for the user in the %s environment. Only edit this if necessary.', $this->text_domain ), $environment_name ) : __( 'The customer ID for the user in the environment. Only edit this if necessary.', $this->text_domain ); ?></span>
+						<span class="description"><?php echo count( $environments ) > 1 ? sprintf( _x( 'The customer ID for the user in the %s environment. Only edit this if necessary.', 'Supports customer details', $this->text_domain ), $environment_name ) : _x( 'The customer ID for the user in the environment. Only edit this if necessary.', 'Supports customer details', $this->text_domain ); ?></span>
 					</td>
 				</tr>
 			<?php
@@ -590,7 +590,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			return $actions;
 		}
 
-		$actions[ $this->get_id() . '_capture_charge' ] = __( 'Capture Charge', $this->text_domain );
+		$actions[ $this->get_id() . '_capture_charge' ] = _x( 'Capture Charge', 'Supports capture charge', $this->text_domain );
 
 		return $actions;
 	}
@@ -711,7 +711,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_gateway_class_names() {
 
-		if ( empty( $this->gateways ) ) throw new Exception( __( 'Gateways not available', $this->text_domain ) );
+		if ( empty( $this->gateways ) ) throw new Exception( 'Gateways not available' );
 
 		$gateway_class_names = array();
 
@@ -733,7 +733,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_gateway_class_name( $gateway_id ) {
 
-		if ( ! isset( $this->gateways[ $gateway_id ]['gateway_class_name'] ) ) throw new Exception( sprintf( __( "Gateway '%s' not available", $this->text_domain ), $gateway_id ) );
+		if ( ! isset( $this->gateways[ $gateway_id ]['gateway_class_name'] ) ) throw new Exception( sprintf( "Gateway '%s' not available", $gateway_id ) );
 
 		return $this->gateways[ $gateway_id ]['gateway_class_name'];
 	}
@@ -749,7 +749,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_gateways() {
 
-		if ( empty( $this->gateways ) ) throw new Exception( __( 'Gateways not available', $this->text_domain ) );
+		if ( empty( $this->gateways ) ) throw new Exception( 'Gateways not available' );
 
 		$gateways = array();
 
@@ -813,7 +813,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_gateway_ids() {
 
-		if ( empty( $this->gateways ) ) throw new Exception( __( 'Gateways not available', $this->text_domain ) );
+		if ( empty( $this->gateways ) ) throw new Exception( 'Gateways not available' );
 
 		return array_keys( $this->gateways );
 

@@ -436,24 +436,24 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function get_js_localize_script_params() {
 
 		return array(
-				'card_number_missing'            => __( 'Card number is missing', $this->text_domain ),
-				'card_number_invalid'            => __( 'Card number is invalid', $this->text_domain ),
-				'card_number_digits_invalid'     => __( 'Card number is invalid (only digits allowed)', $this->text_domain ),
-				'card_number_length_invalid'     => __( 'Card number is invalid (wrong length)', $this->text_domain ),
-				'cvv_missing'                    => __( 'Card security code is missing', $this->text_domain ),
-				'cvv_digits_invalid'             => __( 'Card security code is invalid (only digits are allowed)', $this->text_domain ),
-				'cvv_length_invalid'             => __( 'Card security code is invalid (must be 3 or 4 digits)', $this->text_domain ),
-				'card_exp_date_invalid'          => __( 'Card expiration date is invalid', $this->text_domain ),
-				'check_number_digits_invalid'    => __( 'Check Number is invalid (only digits are allowed)', $this->text_domain ),
-				'drivers_license_state_missing'  => __( 'Drivers license state is missing', $this->text_domain ),
-				'drivers_license_number_missing' => __( 'Drivers license number is missing', $this->text_domain ),
-				'drivers_license_number_invalid' => __( 'Drivers license number is invalid', $this->text_domain ),
-				'account_number_missing'         => __( 'Account Number is missing', $this->text_domain ),
-				'account_number_invalid'         => __( 'Account Number is invalid (only digits are allowed)', $this->text_domain ),
-				'account_number_length_invalid'  => __( 'Account number is invalid (must be between 5 and 17 digits)', $this->text_domain ),
-				'routing_number_missing'         => __( 'Routing Number is missing', $this->text_domain ),
-				'routing_number_digits_invalid'  => __( 'Routing Number is invalid (only digits are allowed)', $this->text_domain ),
-				'routing_number_length_invalid'  => __( 'Routing number is invalid (must be 9 digits)', $this->text_domain ),
+				'card_number_missing'            => _x( 'Card number is missing', 'Supports direct credit card', $this->text_domain ),
+				'card_number_invalid'            => _x( 'Card number is invalid', 'Supports direct credit card', $this->text_domain ),
+				'card_number_digits_invalid'     => _x( 'Card number is invalid (only digits allowed)', 'Supports direct credit card', $this->text_domain ),
+				'card_number_length_invalid'     => _x( 'Card number is invalid (wrong length)', 'Supports direct credit card', $this->text_domain ),
+				'cvv_missing'                    => _x( 'Card security code is missing', 'Supports direct credit card', $this->text_domain ),
+				'cvv_digits_invalid'             => _x( 'Card security code is invalid (only digits are allowed)', 'Supports direct credit card', $this->text_domain ),
+				'cvv_length_invalid'             => _x( 'Card security code is invalid (must be 3 or 4 digits)', 'Supports direct credit card', $this->text_domain ),
+				'card_exp_date_invalid'          => _x( 'Card expiration date is invalid', 'Supports direct credit card', $this->text_domain ),
+				'check_number_digits_invalid'    => _x( 'Check Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ),
+				'drivers_license_state_missing'  => _x( 'Drivers license state is missing', 'Supports direct cheque', $this->text_domain ),
+				'drivers_license_number_missing' => _x( 'Drivers license number is missing', 'Supports direct cheque', $this->text_domain ),
+				'drivers_license_number_invalid' => _x( 'Drivers license number is invalid', 'Supports direct cheque', $this->text_domain ),
+				'account_number_missing'         => _x( 'Account Number is missing', 'Supports direct cheque', $this->text_domain ),
+				'account_number_invalid'         => _x( 'Account Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ),
+				'account_number_length_invalid'  => _x( 'Account number is invalid (must be between 5 and 17 digits)', 'Supports direct cheque', $this->text_domain ),
+				'routing_number_missing'         => _x( 'Routing Number is missing', 'Supports direct cheque', $this->text_domain ),
+				'routing_number_digits_invalid'  => _x( 'Routing Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ),
+				'routing_number_length_invalid'  => _x( 'Routing number is invalid (must be 9 digits)', 'Supports direct cheque', $this->text_domain ),
 			);
 
 	}
@@ -481,13 +481,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// default to credit cards
 		if ( $this->is_credit_card_gateway() ) {
-			$default_title       = __( 'Credit Card', $this->text_domain );
-			$default_description = __( 'Pay securely using your credit card.', $this->text_domain );
+			$default_title       = _x( 'Credit Card', 'Supports credit card', $this->text_domain );
+			$default_description = _x( 'Pay securely using your credit card.', 'Supports credit card', $this->text_domain );
 		} else {
 			// TODO: support additional types
 			// echeck
-			$default_title       = __( 'eCheck', $this->text_domain );
-			$default_description = __( 'Pay securely using your checking account.', $this->text_domain );
+			$default_title       = _x( 'eCheck', 'Supports cheque', $this->text_domain );
+			$default_description = _x( 'Pay securely using your checking account.', 'Supports cheque', $this->text_domain );
 		}
 
 		// common top form fields
@@ -650,13 +650,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// disable the field if the sibling gateway is already inheriting settings
+		// TODO: improve this for non-credit card/cheque support?
 		$form_fields['inherit_settings'] = array(
-			'title'   => __( 'Share connection settings', $this->text_domain ),
+			'title'   => _x( 'Share connection settings', 'Supports sibling gateways', $this->text_domain ),
 			'type'    => 'checkbox',
-			'label'   => $this->is_credit_card_gateway() ? __( 'Use connection/authentication settings from echeck gateway', $this->text_domain ) :  __( 'Use connection/authentication settings from credit card gateway', $this->text_domain ),
+			'label'   => $this->is_credit_card_gateway() ? _x( 'Use connection/authentication settings from echeck gateway', 'Supports cheque', $this->text_domain ) :  _x( 'Use connection/authentication settings from credit card gateway', 'Supports credit card', $this->text_domain ),
 			'default' => count( $configured_other_gateway_ids ) > 0 ? 'yes' : 'no',
 			'disabled' => count( $inherit_settings_other_gateway_ids ) > 0 ? true : false,
-			'description' => count( $inherit_settings_other_gateway_ids ) > 0 ? ( $this->is_credit_card_gateway() ? __( 'Disabled because the echeck gateway is using these settings', $this->text_domain ) : __( 'Disabled because the credit card gateway is using these settings', $this->text_domain ) ) : '',
+			'description' => count( $inherit_settings_other_gateway_ids ) > 0 ? ( $this->is_credit_card_gateway() ? _x( 'Disabled because the echeck gateway is using these settings', 'Supports cheque', $this->text_domain ) : _x( 'Disabled because the credit card gateway is using these settings', 'Supports credit card', $this->text_domain ) ) : '',
 		);
 
 		return $form_fields;
@@ -673,8 +674,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function add_csc_form_fields( $form_fields ) {
 
 		$form_fields['enable_csc'] = array(
-			'title'   => __( 'Card Verification (CSC)', $this->text_domain ),
-			'label'   => __( 'Display the Card Security Code (CV2) field on checkout', $this->text_domain ),
+			'title'   => _x( 'Card Verification (CSC)', 'Supports direct credit card', $this->text_domain ),
+			'label'   => _x( 'Display the Card Security Code (CV2) field on checkout', 'Supports direct credit card', $this->text_domain ),
 			'type'    => 'checkbox',
 			'default' => 'yes',
 		);
@@ -1140,7 +1141,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 			?>
 			<li class="wide" style="text-align: center;">
-				<a class="button tips" href="<?php echo esc_url( $url ); ?>" target="_blank" data-tip="<?php esc_attr_e( 'View this transaction in your merchant account', $this->text_domain ); ?>" style="cursor: pointer !important;"><?php printf( __( 'View in %s', $this->text_domain ), $this->get_method_title() ); ?></a>
+				<a class="button tips" href="<?php echo esc_url( $url ); ?>" target="_blank" data-tip="<?php esc_attr_x( 'View this transaction in your merchant account', 'Supports transaction link', $this->text_domain ); ?>" style="cursor: pointer !important;"><?php printf( _x( 'View in %s', 'Supports transaction link', $this->text_domain ), $this->get_method_title() ); ?></a>
 			</li>
 			<?php
 
@@ -1207,16 +1208,16 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function add_authorization_charge_form_fields( $form_fields ) {
 
-		if ( ! ( $this->supports_credit_card_authorization() && $this->supports_credit_card_charge() ) ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Authorization/Charge transactions not supported by gateway', $this->text_domain ) );
+		if ( ! ( $this->supports_credit_card_authorization() && $this->supports_credit_card_charge() ) ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Authorization/Charge transactions not supported by gateway' );
 
 		$form_fields['transaction_type'] = array(
-			'title'    => __( 'Transaction Type', $this->text_domain ),
+			'title'    => _x( 'Transaction Type', 'Supports credit card authorization/charge', $this->text_domain ),
 			'type'     => 'select',
-			'desc_tip' => __( 'Select how transactions should be processed. Charge submits all transactions for settlement, Authorization simply authorizes the order total for capture later.', $this->text_domain ),
+			'desc_tip' => _x( 'Select how transactions should be processed. Charge submits all transactions for settlement, Authorization simply authorizes the order total for capture later.', 'Supports credit card authorization/charge', $this->text_domain ),
 			'default'  => self::TRANSACTION_TYPE_CHARGE,
 			'options'  => array(
-				self::TRANSACTION_TYPE_CHARGE        => __( 'Charge', $this->text_domain ),
-				self::TRANSACTION_TYPE_AUTHORIZATION => __( 'Authorization', $this->text_domain ),
+				self::TRANSACTION_TYPE_CHARGE        => _x( 'Charge', 'Supports credit card authorization/charge', $this->text_domain ),
+				self::TRANSACTION_TYPE_AUTHORIZATION => _x( 'Authorization', 'Supports credit card authorization/charge', $this->text_domain ),
 			),
 		);
 
@@ -1234,7 +1235,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function perform_credit_card_charge() {
 
-		if ( ! $this->supports_credit_card_charge() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Credit Card charge transactions not supported by this gateway', $this->text_domain ) );
+		if ( ! $this->supports_credit_card_charge() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Credit Card charge transactions not supported by this gateway' );
 
 		return  self::TRANSACTION_TYPE_CHARGE == $this->transaction_type;
 	}
@@ -1250,7 +1251,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function perform_credit_card_authorization() {
 
-		if ( ! $this->supports_credit_card_authorization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Credit Card authorization transactions not supported by this gateway', $this->text_domain ) );
+		if ( ! $this->supports_credit_card_authorization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Credit Card authorization transactions not supported by this gateway' );
 
 		return self::TRANSACTION_TYPE_AUTHORIZATION == $this->transaction_type;
 	}
@@ -1284,7 +1285,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function get_card_types() {
 
-		if ( ! $this->supports_card_types() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Card Types not supported by gateway', $this->text_domain ) );
+		if ( ! $this->supports_card_types() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Card Types not supported by gateway' );
 
 		return $this->card_types;
 	}
@@ -1301,12 +1302,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function add_card_types_form_fields( $form_fields ) {
 
-		if ( ! $this->supports_card_types() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Card Types not supported by gateway', $this->text_domain ) );
+		if ( ! $this->supports_card_types() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Card Types not supported by gateway' );
 
 		$form_fields['card_types'] = array(
-			'title'    => __( 'Accepted Card Logos', $this->text_domain ),
+			'title'    => _x( 'Accepted Card Logos', 'Supports card types', $this->text_domain ),
 			'type'     => 'multiselect',
-			'desc_tip' => __( 'Select which card types you accept to display the logos for on your checkout page.', $this->text_domain ),
+			'desc_tip' => _x( 'Select which card types you accept to display the logos for on your checkout page.', 'Supports card types', $this->text_domain ),
 			'default'  => array_keys( $this->get_available_card_types() ),
 			'class'    => 'chosen_select',
 			'css'      => 'width: 350px;',
@@ -1326,7 +1327,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function get_available_card_types() {
 
-		if ( ! $this->supports_card_types() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Card Types not supported by gateway', $this->text_domain ) );
+		if ( ! $this->supports_card_types() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Card Types not supported by gateway' );
 
 		// default available card types
 		if ( ! isset( $this->available_card_types ) ) {
@@ -1372,7 +1373,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function tokenization_enabled() {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Payment tokenization not supported by gateway', $this->text_domain ) );
+		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
 
 		return 'yes' == $this->tokenization;
 	}
@@ -1388,11 +1389,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function add_tokenization_form_fields( $form_fields ) {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( __( 'Payment tokenization not supported by gateway', $this->text_domain ) );
+		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
 
 		$form_fields['tokenization'] = array(
-			'title'   => __( 'Tokenization', $this->text_domain ),
-			'label'   => __( 'Allow customers to securely save their payment details for future checkout.', $this->text_domain ),
+			'title'   => _x( 'Tokenization', 'Supports tokenization', $this->text_domain ),
+			'label'   => _x( 'Allow customers to securely save their payment details for future checkout.', 'Supports tokenization', $this->text_domain ),
 			'type'    => 'checkbox',
 			'default' => 'no',
 		);
@@ -1651,7 +1652,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function supports_check_field( $field_name ) {
 
-		if ( ! $this->is_check_gateway() ) throw new Exception( __( 'Check method called on non-check gateway', $this->text_domain ) );
+		if ( ! $this->is_check_gateway() ) throw new Exception( 'Check method called on non-check gateway' );
 
 		return is_array( $this->supported_check_fields ) && in_array( $field_name, $this->supported_check_fields );
 
@@ -1669,7 +1670,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// default set of environments consists of 'production'
 		if ( ! isset( $this->environments ) ) {
-			$this->environments = array( self::ENVIRONMENT_PRODUCTION => __( 'Production', $this->text_domain ) );
+			$this->environments = array( self::ENVIRONMENT_PRODUCTION => _x( 'Production', 'Supports environments', $this->text_domain ) );
 		}
 
 		return $this->environments;
