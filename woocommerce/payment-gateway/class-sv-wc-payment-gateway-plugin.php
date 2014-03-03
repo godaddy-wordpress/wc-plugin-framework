@@ -359,7 +359,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				),
 				$this->get_plugin_name(),
 				'<strong>' . implode( ', ', $this->get_accepted_currencies() ) . '</strong>',
-				admin_url( 'admin.php?page=woocommerce_settings&tab=general' ),
+				SV_WC_Plugin_Compatibility::get_general_configuration_url(),
 				'<strong>' . implode( ', ', $this->get_accepted_currencies() ) . '</strong>'
 			);
 
