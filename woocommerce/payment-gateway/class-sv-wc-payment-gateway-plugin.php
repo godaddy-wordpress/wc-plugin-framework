@@ -355,6 +355,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					'%s accepts payment in %s only.  <a href="%s">Configure</a> WooCommerce to accept %s to enable this gateway for checkout.',
 					'%s accepts payment in one of %s only.  <a href="%s">Configure</a> WooCommerce to accept one of %s to enable this gateway for checkout.',
 					count( $this->get_accepted_currencies() ),
+					'(Plugin) accepts payments in (currency/currencies) only.',
 					$this->text_domain
 				),
 				$this->get_plugin_name(),

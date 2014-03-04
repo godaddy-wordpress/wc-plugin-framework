@@ -556,10 +556,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			'desc_tip' => __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the log for debugging purposes.', $this->text_domain ),
 			'default'  => self::DEBUG_MODE_OFF,
 			'options'  => array(
-				self::DEBUG_MODE_OFF      => __( 'Off', $this->text_domain ),
+				self::DEBUG_MODE_OFF      => _x( 'Off', 'Debug mode off', $this->text_domain ),
 				self::DEBUG_MODE_CHECKOUT => __( 'Show on Checkout Page', $this->text_domain ),
 				self::DEBUG_MODE_LOG      => __( 'Save to Log', $this->text_domain ),
-				self::DEBUG_MODE_BOTH     => __( 'Both', $this->text_domain )
+				self::DEBUG_MODE_BOTH     => _x( 'Both', 'Debug mode both show on checkout and log', $this->text_domain )
 			),
 		);
 
@@ -950,7 +950,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$order->payment->type = 'check';
 		}
 
-		$order->description = sprintf( __( '%s - Order %s', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+		$order->description = sprintf( _x( '%s - Order %s', 'Order description', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
 
 		return $order;
 	}
@@ -992,7 +992,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function mark_order_as_failed( $order, $error_message ) {
 
-		$order_note = sprintf( __( '%s Payment Failed (%s)', $this->text_domain ), $this->get_method_title(), $error_message );
+		$order_note = sprintf( _x( '%s Payment Failed (%s)', 'Order Note: (Payment method) Payment failed (error)', $this->text_domain ), $this->get_method_title(), $error_message );
 
 		// Mark order as failed if not already set, otherwise, make sure we add the order note so we can detect when someone fails to check out multiple times
 		if ( 'failed' != $order->status )
