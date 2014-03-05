@@ -697,7 +697,19 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$order->add_order_note( $message );
 
 				// complete the order.  since this results in an update to the post object we need to unhook the save_post action, otherwise we can get boomeranged and change the status back to on-hold
-				remove_action( 'woocommerce_process_shop_order_meta', 'woocommerce_process_shop_order_meta', 10, 2 );
+				if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_1() ) {
+
+					// WC 2.1+
+					remove_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Data::save', 40, 2 );
+				} else {
+
+					// WC 2.0
+					remove_action( 'woocommerce_process_shop_order_meta', 'woocommerce_process_shop_order_meta', 10, 2 );
+				}
+
+				// prevent stock from being reduced when payment is completed as this is done when the charge was authorized
+				add_filter( 'woocommerce_payment_complete_reduce_order_stock', '__return_false', 100 );
+
 				$order->payment_complete();
 
 				// add the standard capture data to the order
