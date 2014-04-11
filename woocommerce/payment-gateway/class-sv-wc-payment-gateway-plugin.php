@@ -558,6 +558,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		//  in WC_Order::update_status() to update the post last modified will re-trigger the save action, which
 		//  will update the order status to $_POST['order_status'] which of course will be whatever the order status
 		//  was prior to the auth capture (ie 'on-hold')
+		// TODO: why do we remove this here, and also in the SV_WC_Payment_Gateway::do_credit_card_capture() method?
 		remove_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Data::save', 10, 2 );
 
 		// perform the capture
@@ -567,10 +568,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 	/**
 	 * Add a "Capture Charge" action to the Admin Order Edit Order
-	 * Actions dropdown
+	 * Actions dropdown if there is an authorization awaiting capture
 	 *
 	 * @since 1.0
-	 * @param array $actions available order actionss
+	 * @param array $actions available order actions
 	 */
 	public function maybe_add_order_action_charge_action( $actions ) {
 
@@ -590,6 +591,19 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		if ( ! $this->get_gateway( $order->payment_method )->authorization_valid_for_capture( $order ) ) {
 			return $actions;
 		}
+
+		return $this->add_order_action_charge_action( $actions );
+	}
+
+
+	/**
+	 * Add a "Capture Charge" action to the Admin Order Edit Order
+	 * Actions dropdown
+	 *
+	 * @since 2.0.3-1
+	 * @param array $actions available order actions
+	 */
+	public function add_order_action_charge_action( $actions ) {
 
 		$actions[ $this->get_id() . '_capture_charge' ] = _x( 'Capture Charge', 'Supports capture charge', $this->text_domain );
 

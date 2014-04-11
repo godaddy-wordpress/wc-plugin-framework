@@ -1003,7 +1003,28 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->add_debug_message( $error_message, 'error' );
 
 		SV_WC_Plugin_Compatibility::wc_add_notice( __( 'An error occurred, please try again or try an alternate form of payment.', $this->text_domain ), 'error' );
+	}
 
+
+	/**
+	 * Mark the given order as cancelled and set the order note
+	 *
+	 * @since 2.0.3-1
+	 * @param WC_Order $order the order
+	 * @param string $error_message a message to display inside the "Payment Cancelled" order note
+	 */
+	protected function mark_order_as_cancelled( $order, $message ) {
+
+		$order_note = sprintf( _x( '%s Transaction Cancelled (%s)', 'Cancelled order note', $this->text_domain ), $this->get_method_title(), $message );
+
+		// Mark order as failed if not already set, otherwise, make sure we add the order note so we can detect when someone fails to check out multiple times
+		if ( 'cancelled' != $order->status ) {
+			$order->update_status( 'cancelled', $order_note );
+		} else {
+			$order->add_order_note( $order_note );
+		}
+
+		$this->add_debug_message( $message, 'error' );
 	}
 
 

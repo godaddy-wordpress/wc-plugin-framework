@@ -558,8 +558,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// credit card order note
 			$message = sprintf(
-				_x( '%s %s Approved: %s ending in %s (expires %s)', 'Supports direct credit card', $this->text_domain ),
+				_x( '%s %s%s Approved: %s ending in %s (expires %s)', 'Supports direct credit card', $this->text_domain ),
 				$this->get_method_title(),
+				$this->is_environment( 'test' ) ? _x( 'Test ', 'Supports direct credit card', $this->text_domain ) : '',
 				$this->perform_credit_card_authorization() ? 'Authorization' : 'Charge',
 				isset( $order->payment->card_type ) && $order->payment->card_type ? SV_WC_Payment_Gateway_Payment_Token::type_to_name( $order->payment->card_type ) : 'card',
 				$last_four,
@@ -608,7 +609,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$this->add_payment_gateway_transaction_data( $order, $response );
 
 			// if the transaction was held (ie fraud validation failure) mark it as such
+			// TODO: consider checking whether the response *was* an authorization, rather than blanket-assuming it was because of the settings.  There are times when an auth will be used rather than charge, ie when performing in-plugin AVS handling (moneris)
 			if ( $response->transaction_held() || ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
+				// TODO: need to make this more flexible, and not force the message to 'Authorization only transaction' for auth transactions (re moneris efraud handling)
 				$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? _x( 'Authorization only transaction', 'Supports credit card authorization', $this->text_domain ) : $response->get_status_message() );
 			}
 
@@ -745,9 +748,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			return null;
 		}
-
-
-
 	}
 
 
