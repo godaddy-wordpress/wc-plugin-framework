@@ -359,17 +359,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 					$other_gateway = $this->get_plugin()->get_gateway( $other_gateway_id );
 
 					foreach ( $this->shared_settings as $setting_key ) {
-
 						$this->$setting_key = $other_gateway->$setting_key;
-
 					}
-
 				}
-
 			}
-
 		}
-
 	}
 
 
@@ -547,7 +541,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// add unique method fields added by concrete gateway class
-		$this->form_fields = array_merge( $this->form_fields, $this->get_method_form_fields() );
+		$gateway_form_fields = $this->get_method_form_fields();
+		$this->form_fields = array_merge( $this->form_fields, $gateway_form_fields );
 
 		// add any common bottom fields
 		$this->form_fields['debug_mode'] = array(
@@ -565,11 +560,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// add the special 'shared-settings-field' class name to any shared settings fields
 		foreach ( $this->shared_settings as $field_name ) {
-
 			$this->form_fields[ $field_name ]['class'] = trim( isset( $this->form_fields[ $field_name ]['class'] ) ? $this->form_fields[ $field_name ]['class'] : '' ) . ' shared-settings-field';
-
 		}
-
 	}
 
 

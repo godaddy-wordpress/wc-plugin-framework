@@ -84,9 +84,9 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 		<?php if ( $enable_csc ) : ?>
 			<p class="form-row form-row-wide">
 				<label for="wc-%%GATEWAY ID DASHERIZED%%-csc"><?php _e( "Card Security Code", %%TEXT DOMAIN%% ) ?> <span class="required">*</span></label>
-				<input type="text" class="input-text js-wc-payment-gateway-csc" id="wc-%%GATEWAY ID DASHERIZED%%-csc" name="wc-%%GATEWAY ID DASHERIZED%%-csc" maxlength="4" style="width:60px" autocomplete="off" value="<?php echo esc_attr( $payment_method_defaults['csc'] ); ?>" />
+				<input type="text" class="input-text  js-wc-%%GATEWAY ID DASHERIZED%%-csc js-wc-payment-gateway-csc" id="wc-%%GATEWAY ID DASHERIZED%%-csc" name="wc-%%GATEWAY ID DASHERIZED%%-csc" maxlength="4" style="width:60px" autocomplete="off" value="<?php echo esc_attr( $payment_method_defaults['csc'] ); ?>" />
 			</p>
-			<div class="clear"></div>
+			<div class="clear js-wc-%%GATEWAY ID DASHERIZED%%-csc-clear"></div>
 		<?php endif; ?>
 
 %%IF SUPPORTS TOKENIZATION%%

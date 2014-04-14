@@ -300,7 +300,21 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		return $is_valid;
+	}
 
+
+	/**
+	 * Returns true if tokenization takes place prior authorization/charge
+	 * transaction.
+	 *
+	 * Defaults to false but can be overridden by child gateway class
+	 *
+	 * @since 2.0.3-1
+	 * @return boolean true if there is a tokenization request that is issued
+	 *         before a authorization/charge transaction
+	 */
+	public function tokenize_before_sale() {
+		return false;
 	}
 
 
@@ -316,7 +330,21 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *         there is a special request for tokenization
 	 */
 	public function tokenize_with_sale() {
-		// assume gateways will have a tokenization request by default
+		return false;
+	}
+
+
+	/**
+	 * Returns true if tokenization takes place after an authorization/charge
+	 * transaction.
+	 *
+	 * Defaults to false but can be overridden by child gateway class
+	 *
+	 * @since 2.0.3-1
+	 * @return boolean true if there is a tokenization request that is issued
+	 *         after an authorization/charge transaction
+	 */
+	public function tokenize_after_sale() {
 		return false;
 	}
 
@@ -341,7 +369,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// registered customer checkout (already logged in or creating account at checkout)
 			if ( $this->supports_tokenization() && 0 != $order->user_id && $this->should_tokenize_payment_method() &&
-				( 0 == $order->payment_total || ! $this->tokenize_with_sale() ) ) {
+				( 0 == $order->payment_total || $this->tokenize_before_sale() ) ) {
 				$order = $this->create_payment_token( $order );
 			}
 
@@ -598,7 +626,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( $response->transaction_approved() || $response->transaction_held() ) {
 
 			if ( $this->supports_tokenization() && 0 != $order->user_id && $this->should_tokenize_payment_method() &&
-				( $order->payment_total > 0 && $this->tokenize_with_sale() ) ) {
+				( $order->payment_total > 0 && ( $this->tokenize_with_sale() || $this->tokenize_after_sale() ) ) ) {
 				$order = $this->create_payment_token( $order, $response );
 			}
 
@@ -1583,7 +1611,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
 
 		// perform the API request to tokenize the payment method if needed
-		if ( ! $response ) {
+		if ( ! $response || $this->tokenize_after_sale() ) {
 			$response = $this->get_api()->tokenize_payment_method( $order );
 		}
 
