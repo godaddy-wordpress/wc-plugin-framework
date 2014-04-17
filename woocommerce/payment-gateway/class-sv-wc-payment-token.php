@@ -69,8 +69,9 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function __construct( $token, $data ) {
 
 		// get the payment type from the account number if not provided
-		if ( isset( $data['type'] ) && 'credit_card' == $data['type'] && ( ! isset( $data['card_type'] ) || ! $data['card_type'] ) && isset( $data['account_number'] ) )
+		if ( isset( $data['type'] ) && 'credit_card' == $data['type'] && ( ! isset( $data['card_type'] ) || ! $data['card_type'] ) && isset( $data['account_number'] ) ) {
 			$data['card_type'] = $this->type_from_account_number( $data['account_number'] );
+		}
 
 		// remove account number so it's not saved to the token
 		unset( $data['account_number'] );
@@ -264,7 +265,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	public function get_last_four() {
 
-		return $this->data['last_four'];
+		return isset( $this->data['last_four'] ) ? $this->data['last_four'] : null;
 	}
 
 
@@ -277,7 +278,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	public function get_exp_month() {
 
-		return $this->data['exp_month'];
+		return isset( $this->data['exp_month'] ) ? $this->data['exp_month'] : null;
 	}
 
 
@@ -290,7 +291,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	public function get_exp_year() {
 
-		return $this->data['exp_year'];
+		return isset( $this->data['exp_year'] ) ? $this->data['exp_year'] : null;
 	}
 
 

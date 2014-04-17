@@ -1,7 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 XXXX.XX.XX - version 2.0.3-1
- *
+ * Fix - Fixed Pay Page support
 
 2014.03.05 - version 2.0.3
  * Fix - Fixed WC 2.1 compatibility for payment gateway charge captures

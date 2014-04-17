@@ -345,6 +345,26 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Returns the home url for the server, forcing to https protocol if $ssl
+	 * is true
+	 *
+	 * @since 2.0.3-1
+	 * @param boolean $ssl true to use https protocol, false otherwise
+	 * @return string the URL for the server
+	 */
+	public function get_home_url( $ssl = false ) {
+		$url = home_url( '/' );
+
+		// make ssl?
+		if ( $ssl ) {
+			$url = str_replace( 'http:', 'https:', $url );
+		}
+
+		return $url;
+	}
+
+
+	/**
 	 * Gets the string name of any required PHP extensions that are not loaded
 	 *
 	 * @since 2.0

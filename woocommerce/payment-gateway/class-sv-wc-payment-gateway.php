@@ -325,7 +325,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// add gateway.js checkout javascript
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-
 	}
 
 
@@ -377,7 +376,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	public function enqueue_scripts() {
 
 		// only load javascript once, if the gateway is available, and if on the page page and i
-		if ( ! $this->is_available() || false === $this->is_pay_page_gateway() || wp_script_is( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', 'enqueued' ) ) {
+		if ( ! $this->is_available() || wp_script_is( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', 'enqueued' ) ) {
 			return false;
 		}
 
@@ -686,6 +685,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		parent::admin_options();
 
+		?>
+		<style type="text/css">.nowrap { white-space: nowrap; }</style>
+		<?php
+
 		// if there's more than one environment include the environment settings switcher code
 		if ( count( $this->get_environments() ) > 1 ) {
 
@@ -886,6 +889,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			// default: accept $type as is
 		}
 
+		// use plain card image if type is not known
+		if ( ! $image_type ) {
+			if ( $this->is_credit_card_gateway() ) {
+				$image_type = 'cc-plain';
+			}
+		}
+
 		// first, is the card image available within the plugin?
 		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/assets/images/card-' . $image_type . '.png' ) ) {
 			return SV_WC_Plugin_Compatibility::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/assets/images/card-' . $image_type . '.png';
@@ -987,10 +997,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order_note = sprintf( _x( '%s Payment Failed (%s)', 'Order Note: (Payment method) Payment failed (error)', $this->text_domain ), $this->get_method_title(), $error_message );
 
 		// Mark order as failed if not already set, otherwise, make sure we add the order note so we can detect when someone fails to check out multiple times
-		if ( 'failed' != $order->status )
+		if ( 'failed' != $order->status ) {
 			$order->update_status( 'failed', $order_note );
-		else
+		} else {
 			$order->add_order_note( $order_note );
+		}
 
 		$this->add_debug_message( $error_message, 'error' );
 

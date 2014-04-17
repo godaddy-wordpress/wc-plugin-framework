@@ -66,11 +66,13 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$subscription_support_hook               = 'wc_payment_gateway_' . $this->get_id() . '_supports_' . self::FEATURE_SUBSCRIPTIONS;
 			$subscription_payment_method_change_hook = 'wc_payment_gateway_' . $this->get_id() . '_supports_' . self::FEATURE_SUBSCRIPTION_PAYMENT_METHOD_CHANGE;
 
-			if ( ! has_action( $subscription_support_hook ) )
+			if ( ! has_action( $subscription_support_hook ) ) {
 				add_action( $subscription_support_hook, array( $this, 'add_subscriptions_support' ) );
+			}
 
-			if ( ! has_action( $subscription_payment_method_change_hook ) )
+			if ( ! has_action( $subscription_payment_method_change_hook ) ) {
 				add_action( $subscription_payment_method_change_hook, array( $this, 'add_subscription_payment_method_change_support' ) );
+			}
 		}
 
 		// watch for pre-orders support
@@ -78,8 +80,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			$pre_orders_support_hook = 'wc_payment_gateway_' . $this->get_id() . '_supports_' . str_replace( '-', '_', self::FEATURE_PRE_ORDERS );
 
-			if ( ! has_action( $pre_orders_support_hook ) )
+			if ( ! has_action( $pre_orders_support_hook ) ) {
 				add_action( $pre_orders_support_hook, array( $this, 'add_pre_orders_support' ) );
+			}
 		}
 
 	}
@@ -116,10 +119,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		// validate remaining payment fields
-		if ( $this->is_credit_card_gateway() )
+		if ( $this->is_credit_card_gateway() ) {
 			return $this->validate_credit_card_fields( $is_valid );
-		else
+		} else {
 			return $this->validate_check_fields( $is_valid );
+		}
 	}
 
 
@@ -132,37 +136,35 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function validate_credit_card_fields( $is_valid ) {
 
-		$card_number      = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' );
+		$account_number   = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' );
 		$expiration_month = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
 		$expiration_year  = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
 		$csc              = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
 
-		// validate card number
-		$card_number = str_replace( array( ' ', '-' ), '', $card_number );
+		$is_valid = $this->validate_credit_card_account_number( $account_number ) && $is_valid;
 
-		if ( empty( $card_number ) ) {
+		$is_valid = $this->validate_credit_card_expiration_date( $expiration_month, $expiration_year ) && $is_valid;
 
-			SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card number is missing', 'Supports direct credit card', $this->text_domain ), 'error' );
-			$is_valid = false;
-
-		} else {
-
-			if ( strlen( $card_number ) < 12 || strlen( $card_number ) > 19 ) {
-				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card number is invalid (wrong length)', 'Supports direct credit card', $this->text_domain ), 'error' );
-				$is_valid = false;
-			}
-
-			if ( ! ctype_digit( $card_number ) ) {
-				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card number is invalid (only digits allowed)', 'Supports direct credit card', $this->text_domain ), 'error' );
-				$is_valid = false;
-			}
-
-			if ( ! $this->luhn_check( $card_number ) ) {
-				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card number is invalid', 'Supports direct credit card', $this->text_domain ), 'error' );
-				$is_valid = false;
-			}
-
+		// validate card security code
+		if ( $this->csc_enabled() ) {
+			$is_valid = $this->validate_csc( $csc ) && $is_valid;
 		}
+
+		return $is_valid;
+	}
+
+
+	/**
+	 * Validates the provided credit card expiration date
+	 *
+	 * @since 2.0.3-1
+	 * @param string $expiration_month the credit card expiration month
+	 * @param string $expiration_year the credit card expiration month
+	 * @return boolean true if the card expiration date is valid, false otherwise
+	 */
+	protected function validate_credit_card_expiration_date( $expiration_month, $expiration_year ) {
+
+		$is_valid = true;
 
 		// validate expiration data
 		$current_year  = date( 'Y' );
@@ -179,9 +181,46 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$is_valid = false;
 		}
 
-		// validate card security code
-		if ( $this->csc_enabled() ) {
-			$is_valid = $this->validate_csc( $csc ) && $is_valid;
+		return $is_valid;
+	}
+
+
+	/**
+	 * Validates the provided credit card account number
+	 *
+	 * @since 2.0.3-1
+	 * @param string $account_number the credit card account number
+	 * @return boolean true if the card account number is valid, false otherwise
+	 */
+	protected function validate_credit_card_account_number( $account_number ) {
+
+		$is_valid = true;
+
+		// validate card number
+		$account_number = str_replace( array( ' ', '-' ), '', $account_number );
+
+		if ( empty( $account_number ) ) {
+
+			SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card number is missing', 'Supports direct credit card', $this->text_domain ), 'error' );
+			$is_valid = false;
+
+		} else {
+
+			if ( strlen( $account_number ) < 12 || strlen( $account_number ) > 19 ) {
+				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card number is invalid (wrong length)', 'Supports direct credit card', $this->text_domain ), 'error' );
+				$is_valid = false;
+			}
+
+			if ( ! ctype_digit( $account_number ) ) {
+				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card number is invalid (only digits allowed)', 'Supports direct credit card', $this->text_domain ), 'error' );
+				$is_valid = false;
+			}
+
+			if ( ! $this->luhn_check( $account_number ) ) {
+				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card number is invalid', 'Supports direct credit card', $this->text_domain ), 'error' );
+				$is_valid = false;
+			}
+
 		}
 
 		return $is_valid;
@@ -223,7 +262,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		return $is_valid;
-
 	}
 
 
@@ -498,7 +536,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// allow other actors to modify the order object
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order', $order, $this );
-
 	}
 
 
@@ -939,9 +976,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @return boolean true if the gateway supports subscriptions
 	 */
 	public function supports_subscriptions() {
-
 		return $this->supports( self::FEATURE_SUBSCRIPTIONS ) && $this->supports_tokenization() && $this->tokenization_enabled();
-
 	}
 
 
@@ -949,11 +984,15 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Adds support for subscriptions by hooking in some necessary actions
 	 *
 	 * @since 1.0
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if subscriptions are not supported by this gateway or its current configuration
 	 */
 	public function add_subscriptions_support() {
 
-		if ( ! $this->supports_subscriptions() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Subscriptions not supported by gateway' );
+		// bail if subscriptions are not supported by this gateway or its current configuration
+		if ( ! $this->supports_subscriptions() ) {
+			// note: no longer throwing an exception due to a weird race condition with multiple instances
+			// of this class, with action callbacks getting mixed up, and stale data causing problems
+			return;
+		}
 
 		// force tokenization when needed
 		add_filter( 'wc_payment_gateway_' . $this->get_id() . '_tokenization_forced', array( $this, 'subscriptions_tokenization_forced' ) );
@@ -1121,7 +1160,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 						$token->get_last_four(),
 						$token->get_exp_month() . '/' . $token->get_exp_year()
 					);
-				} elseif( $this->is_check_gateway() ) {
+				} elseif ( $this->is_check_gateway() ) {
 
 					// there may or may not be an account type (checking/savings) available, which is fine
 					$message = sprintf( _x( '%s Check Subscription Renewal Payment Approved: %s account ending in %s', 'Supports direct cheque subscriptions', $this->text_domain ), $this->get_method_title(), $token->get_account_type(), $token->get_last_four() );
@@ -1203,11 +1242,13 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Adds support for subscriptions by hooking in some necessary actions
 	 *
 	 * @since 1.0
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if subscriptions or subscription payment method changes are not supported by this gateway or its current configuration
 	 */
 	public function add_subscription_payment_method_change_support() {
 
-		if ( ! $this->supports_subscriptions() || ! $this->supports( self::FEATURE_SUBSCRIPTION_PAYMENT_METHOD_CHANGE ) ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Subscription payment method change not supported by gateway' );
+		// bail if subscriptions or subscription payment method changes are not supported by this gateway or its current configuration
+		if ( ! $this->supports_subscriptions() || ! $this->supports( self::FEATURE_SUBSCRIPTION_PAYMENT_METHOD_CHANGE ) ) {
+			return;
+		}
 
 		// update the customer/token ID on the original order when making payment for a failed automatic renewal order
 		add_action( 'woocommerce_subscriptions_changed_failing_payment_method_' . $this->get_id(), array( $this, 'update_failing_payment_method' ), 10, 2 );
@@ -1274,11 +1315,13 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Adds support for pre-orders by hooking in some necessary actions
 	 *
 	 * @since 1.0
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if pre-orders are not supported by this gateway or its current configuration
 	 */
 	public function add_pre_orders_support() {
 
-		if ( ! $this->supports_pre_orders() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Pre-Orders not supported by gateway' );
+		// bail
+		if ( ! $this->supports_pre_orders() ) {
+			return;
+		}
 
 		// force tokenization when needed
 		add_filter( 'wc_payment_gateway_' . $this->get_id() . '_tokenization_forced', array( $this, 'pre_orders_tokenization_forced' ) );

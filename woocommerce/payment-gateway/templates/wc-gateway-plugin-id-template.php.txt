@@ -44,8 +44,9 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID%%_payment_fields' ) ) {
 	function woocommerce_%%GATEWAY ID%%_payment_fields( $gateway ) {
 
 		// safely display the description, if there is one
-		if ( $gateway->get_description() )
+		if ( $gateway->get_description() ) {
 			echo '<p>' . wp_kses_post( $gateway->get_description() ) . '</p>';
+		}
 
 		$payment_method_defaults = array(
 			'account-number' => '',
@@ -172,8 +173,9 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_payment_fields' ) ) {
 	function woocommerce_%%GATEWAY ID CHECKS%%_payment_fields( $gateway ) {
 
 		// safely display the description, if there is one
-		if ( $gateway->get_description() )
+		if ( $gateway->get_description() ) {
 			echo '<p>' . wp_kses_post( $gateway->get_description() ) . '</p>';
+		}
 
 		$payment_method_defaults = array(
 			'account-number'         => '',
