@@ -121,8 +121,13 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// validate remaining payment fields
 		if ( $this->is_credit_card_gateway() ) {
 			return $this->validate_credit_card_fields( $is_valid );
-		} else {
+		} elseif ( $this->is_echeck_gateway() ) {
 			return $this->validate_check_fields( $is_valid );
+		} else {
+			$method_name = 'validate_' . str_replace( '-', '_', strtolower( $this->get_payment_type() ) ) . '_fields';
+			if ( method_exists( $this, $method_name ) ) {
+				$this->$method_name( $is_valid );
+			}
 		}
 	}
 
@@ -493,7 +498,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					$order->payment->csc        = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
-			} else {
+			} elseif ( $this->is_echeck_gateway() ) {
 
 				// echeck specific attributes
 				$order->payment->routing_number         = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
@@ -515,15 +520,15 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( $this->is_credit_card_gateway() ) {
 
 				// credit card specific attributes
-				$order->payment->card_type    = $token->get_card_type();
-				$order->payment->exp_month    = $token->get_exp_month();
-				$order->payment->exp_year     = $token->get_exp_year();
+				$order->payment->card_type = $token->get_card_type();
+				$order->payment->exp_month = $token->get_exp_month();
+				$order->payment->exp_year  = $token->get_exp_year();
 
 				if ( $this->csc_enabled() ) {
 					$order->payment->csc      = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
-			} else {
+			} elseif ( $this->is_echeck_gateway() ) {
 
 				// echeck specific attributes
 				$order->payment->account_type = $token->get_account_type();
@@ -657,7 +662,13 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	protected function do_transaction( $order ) {
 
 		// perform the credit card or check transaction
-		$response = $this->is_credit_card_gateway() ? $this->do_credit_card_transaction( $order ) : $this->do_check_transaction( $order );
+		if ( $this->is_credit_card_gateway() ) {
+			$response = $this->do_credit_card_transaction( $order );
+		} elseif ( $this->is_echeck_gateway() ) {
+			$response = $this->do_check_transaction( $order );
+		} else {
+			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'no do_transaction() method for this gateway type' );
+		}
 
 		// handle the response
 		if ( $response->transaction_approved() || $response->transaction_held() ) {
@@ -895,7 +906,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_card_type', $order->payment->card_type );
 			}
 
-		} else {
+		} elseif ( $this->is_echeck_gateway() ) {
 
 			// checking gateway data
 
@@ -1092,7 +1103,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				if ( ! isset( $order->payment->exp_year ) || ! $order->payment->exp_year )
 					$order->payment->exp_year = $token->get_exp_year();
 
-			} else {
+			} elseif ( $this->is_echeck_gateway() ) {
 
 				// check token
 
@@ -1141,7 +1152,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					$response = $this->get_api()->credit_card_authorization( $order );
 				}
 
-			} else {
+			} elseif ( $this->is_echeck_gateway() ) {
 
 				$response = $this->get_api()->check_debit( $order );
 
@@ -1160,11 +1171,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 						$token->get_last_four(),
 						$token->get_exp_month() . '/' . $token->get_exp_year()
 					);
-				} elseif ( $this->is_check_gateway() ) {
+				} elseif ( $this->is_echeck_gateway() ) {
 
 					// there may or may not be an account type (checking/savings) available, which is fine
 					$message = sprintf( _x( '%s Check Subscription Renewal Payment Approved: %s account ending in %s', 'Supports direct cheque subscriptions', $this->text_domain ), $this->get_method_title(), $token->get_account_type(), $token->get_last_four() );
-
 				}
 
 				// add order note
@@ -1431,15 +1441,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 						$order->payment->exp_year   = $exp_year;
 					}
 
-				} else {
+				} elseif ( $this->is_echeck_gateway() ) {
 
 					// set the account type if available (checking/savings)
 					$order->payment->account_type = $token && $token->get_account_type ? $token->get_account_type() : get_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_type', true );
-
 				}
-
 			}
-
 		}
 
 		return $order;
@@ -1534,10 +1541,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					$response = $this->get_api()->credit_card_authorization( $order );
 				}
 
-			} else {
-
+			} elseif ( $this->is_echeck_gateway() ) {
 				$response = $this->get_api()->check_debit( $order );
-
 			}
 
 			// success! update order record
@@ -1557,7 +1562,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 						$order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 )
 					);
 
-				} elseif ( $this->is_check_gateway() ) {
+				} elseif ( $this->is_echeck_gateway() ) {
 
 					// account type (checking/savings) may or may not be available, which is fine
 					$message = sprintf( _x( '%s eCheck Pre-Order Release Payment Approved: %s account ending in %s', 'Supports direct payment method pre-orders', $this->text_domain ), $this->get_method_title(), $order->payment->account_type, $last_four );
@@ -1665,16 +1670,19 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$order->payment->token = $token->get_token();
 
 			// for credit card transactions add the card type, if known (some gateways return the credit card type as part of the response, others may require it as part of the request, and still others it may never be known)
-			if ( $this->is_credit_card_gateway() && $token->get_card_type() )
+			if ( $this->is_credit_card_gateway() && $token->get_card_type() ) {
 				$order->payment->card_type = $token->get_card_type();
+			}
 
 			// checking/savings, if known
-			if ( $this->is_check_gateway() && $token->get_account_type() )
+			if ( $this->is_echeck_gateway() && $token->get_account_type() ) {
 				$order->payment->account_type = $token->get_account_type();
+			}
 
 			// set the token to the user account
-			if ( $order->user_id )
+			if ( $order->user_id ) {
 				$this->add_payment_token( $order->user_id, $token );
+			}
 
 			// order note based on gateway type
 			if ( $this->is_credit_card_gateway() ) {
@@ -1684,7 +1692,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					$token->get_last_four(),
 					$token->get_exp_date()
 				);
-			} else {
+			} elseif ( $this->is_echeck_gateway() ) {
 				// account type (checking/savings) may or may not be available, which is fine
 				$message = sprintf( _x( '%s eCheck Payment Method Saved: %s account ending in %s', 'Supports direct cheque tokenization', $this->text_domain ),
 					$this->get_method_title(),

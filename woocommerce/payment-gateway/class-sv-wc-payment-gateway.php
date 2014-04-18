@@ -190,6 +190,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/** eCheck payment type */
 	const PAYMENT_TYPE_ECHECK = 'echeck';
 
+	/** Gateway with multiple payment options */
+	const PAYMENT_TYPE_MULTIPLE = 'multiple';
+
+	/** Bank transfer gateway */
+	const PAYMENT_TYPE_BANK_TRANSFER = 'bank_transfer';
+
 	/** Credit card types feature */
 	const FEATURE_CARD_TYPES = 'card_types';
 
@@ -282,11 +288,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->payment_type = isset( $args['payment_type'] ) ? $args['payment_type'] : self::PAYMENT_TYPE_CREDIT_CARD;
 
 		// default credit card gateways to supporting 'charge' transaction type, this could be overridden by the 'supports' constructor parameter to include (or only support) authorization
-		if ( $this->is_credit_card_gateway() )
+		if ( $this->is_credit_card_gateway() ) {
 			$this->add_support( self::FEATURE_CREDIT_CARD_CHARGE );
+		}
 
 		// required fields
-		$this->id          = $id;
+		$this->id          = $id;  // @see WC_Payment_Gateway::$id
+
 		$this->plugin      = $plugin;
 		$this->text_domain = $text_domain;
 
@@ -297,10 +305,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( isset( $args['card_types'] ) )         $this->available_card_types         = $args['card_types'];
 		if ( isset( $args['echeck_fields'] ) )      $this->supported_check_fields       = $args['echeck_fields'];
 		if ( isset( $args['environments'] ) )       $this->environments                 = array_merge( $this->get_environments(), $args['environments'] );
-		if ( isset( $args['currencies'] ) )         $this->currencies                   = $args['currencies'];
-		else                                        $this->currencies                   = $this->get_plugin()->get_accepted_currencies();
 		if ( isset( $args['countries'] ) )          $this->countries                    = $args['countries'];  // @see WC_Payment_Gateway::$countries
 		if ( isset( $args['shared_settings'] ) )    $this->shared_settings              = $args['shared_settings'];
+		if ( isset( $args['currencies'] ) ) {
+			$this->currencies = $args['currencies'];
+		} else {
+			$this->currencies = $this->get_plugin()->get_accepted_currencies();
+		}
 
 		// always want to render the field area, even for gateways with no fields, so we can display messages  @see WC_Payment_Gateway::$has_fields
 		$this->has_fields = true;
@@ -320,8 +331,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->add_pay_page_handler();
 
 		// Save settings
-		if ( is_admin() )
+		if ( is_admin() ) {
 			add_action( 'woocommerce_update_options_payment_gateways_' . $this->get_id(), array( $this, 'process_admin_options' ) );
+		}
 
 		// add gateway.js checkout javascript
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -429,25 +441,25 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function get_js_localize_script_params() {
 
 		return array(
-				'card_number_missing'            => _x( 'Card number is missing', 'Supports direct credit card', $this->text_domain ),
-				'card_number_invalid'            => _x( 'Card number is invalid', 'Supports direct credit card', $this->text_domain ),
-				'card_number_digits_invalid'     => _x( 'Card number is invalid (only digits allowed)', 'Supports direct credit card', $this->text_domain ),
-				'card_number_length_invalid'     => _x( 'Card number is invalid (wrong length)', 'Supports direct credit card', $this->text_domain ),
-				'cvv_missing'                    => _x( 'Card security code is missing', 'Supports direct credit card', $this->text_domain ),
-				'cvv_digits_invalid'             => _x( 'Card security code is invalid (only digits are allowed)', 'Supports direct credit card', $this->text_domain ),
-				'cvv_length_invalid'             => _x( 'Card security code is invalid (must be 3 or 4 digits)', 'Supports direct credit card', $this->text_domain ),
-				'card_exp_date_invalid'          => _x( 'Card expiration date is invalid', 'Supports direct credit card', $this->text_domain ),
-				'check_number_digits_invalid'    => _x( 'Check Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ),
-				'drivers_license_state_missing'  => _x( 'Drivers license state is missing', 'Supports direct cheque', $this->text_domain ),
-				'drivers_license_number_missing' => _x( 'Drivers license number is missing', 'Supports direct cheque', $this->text_domain ),
-				'drivers_license_number_invalid' => _x( 'Drivers license number is invalid', 'Supports direct cheque', $this->text_domain ),
-				'account_number_missing'         => _x( 'Account Number is missing', 'Supports direct cheque', $this->text_domain ),
-				'account_number_invalid'         => _x( 'Account Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ),
-				'account_number_length_invalid'  => _x( 'Account number is invalid (must be between 5 and 17 digits)', 'Supports direct cheque', $this->text_domain ),
-				'routing_number_missing'         => _x( 'Routing Number is missing', 'Supports direct cheque', $this->text_domain ),
-				'routing_number_digits_invalid'  => _x( 'Routing Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ),
-				'routing_number_length_invalid'  => _x( 'Routing number is invalid (must be 9 digits)', 'Supports direct cheque', $this->text_domain ),
-			);
+			'card_number_missing'            => _x( 'Card number is missing', 'Supports direct credit card', $this->text_domain ),
+			'card_number_invalid'            => _x( 'Card number is invalid', 'Supports direct credit card', $this->text_domain ),
+			'card_number_digits_invalid'     => _x( 'Card number is invalid (only digits allowed)', 'Supports direct credit card', $this->text_domain ),
+			'card_number_length_invalid'     => _x( 'Card number is invalid (wrong length)', 'Supports direct credit card', $this->text_domain ),
+			'cvv_missing'                    => _x( 'Card security code is missing', 'Supports direct credit card', $this->text_domain ),
+			'cvv_digits_invalid'             => _x( 'Card security code is invalid (only digits are allowed)', 'Supports direct credit card', $this->text_domain ),
+			'cvv_length_invalid'             => _x( 'Card security code is invalid (must be 3 or 4 digits)', 'Supports direct credit card', $this->text_domain ),
+			'card_exp_date_invalid'          => _x( 'Card expiration date is invalid', 'Supports direct credit card', $this->text_domain ),
+			'check_number_digits_invalid'    => _x( 'Check Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ),
+			'drivers_license_state_missing'  => _x( 'Drivers license state is missing', 'Supports direct cheque', $this->text_domain ),
+			'drivers_license_number_missing' => _x( 'Drivers license number is missing', 'Supports direct cheque', $this->text_domain ),
+			'drivers_license_number_invalid' => _x( 'Drivers license number is invalid', 'Supports direct cheque', $this->text_domain ),
+			'account_number_missing'         => _x( 'Account Number is missing', 'Supports direct cheque', $this->text_domain ),
+			'account_number_invalid'         => _x( 'Account Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ),
+			'account_number_length_invalid'  => _x( 'Account number is invalid (must be between 5 and 17 digits)', 'Supports direct cheque', $this->text_domain ),
+			'routing_number_missing'         => _x( 'Routing Number is missing', 'Supports direct cheque', $this->text_domain ),
+			'routing_number_digits_invalid'  => _x( 'Routing Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ),
+			'routing_number_length_invalid'  => _x( 'Routing number is invalid (must be 9 digits)', 'Supports direct cheque', $this->text_domain ),
+		);
 
 	}
 
@@ -458,9 +470,43 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 1.0
 	 */
 	protected function add_pay_page_handler() {
-
 		add_action( 'woocommerce_receipt_' . $this->get_id(), create_function( '$order', 'echo "<p>' . __( "Thank you for your order.", $this->text_domain ) . '</p>";' ) );
+	}
 
+
+	/**
+	 * Get the default payment method title, which is configurable within the
+	 * admin and displayed on checkout
+	 *
+	 * @since 2.0.3-1
+	 * @return string payment method title to show on checkout
+	 */
+	protected function get_default_title() {
+
+		// defaults for credit card and echeck, override for others
+		if ( $this->is_credit_card_gateway() ) {
+			return _x( 'Credit Card', 'Supports credit card', $this->text_domain );
+		} elseif ( $this->is_echeck_gateway() ) {
+			return _x( 'eCheck', 'Supports cheque', $this->text_domain );
+		}
+	}
+
+
+	/**
+	 * Get the default payment method description, which is configurable
+	 * within the admin and displayed on checkout
+	 *
+	 * @since 2.0.3-1
+	 * @return string payment method description to show on checkout
+	 */
+	protected function get_default_description() {
+
+		// defaults for credit card and echeck, override for others
+		if ( $this->is_credit_card_gateway() ) {
+			return _x( 'Pay securely using your credit card.', 'Supports credit card', $this->text_domain );
+		} elseif ( $this->is_echeck_gateway() ) {
+			return _x( 'Pay securely using your checking account.', 'Supports cheque', $this->text_domain );
+		}
 	}
 
 
@@ -471,17 +517,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @see WC_Settings_API::init_form_fields()
 	 */
 	public function init_form_fields() {
-
-		// default to credit cards
-		if ( $this->is_credit_card_gateway() ) {
-			$default_title       = _x( 'Credit Card', 'Supports credit card', $this->text_domain );
-			$default_description = _x( 'Pay securely using your credit card.', 'Supports credit card', $this->text_domain );
-		} else {
-			// TODO: support additional types
-			// echeck
-			$default_title       = _x( 'eCheck', 'Supports cheque', $this->text_domain );
-			$default_description = _x( 'Pay securely using your checking account.', 'Supports cheque', $this->text_domain );
-		}
 
 		// common top form fields
 		$this->form_fields = array(
@@ -497,14 +532,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 				'title'    => __( 'Title', $this->text_domain ),
 				'type'     => 'text',
 				'desc_tip' => __( 'Payment method title that the customer will see during checkout.', $this->text_domain ),
-				'default'  => $default_title,
+				'default'  => $this->get_default_title(),
 			),
 
 			'description' => array(
 				'title'    => __( 'Description', $this->text_domain ),
 				'type'     => 'textarea',
 				'desc_tip' => __( 'Payment method description that the customer will see during checkout.', $this->text_domain ),
-				'default'  => $default_description,
+				'default'  => $this->get_default_description(),
 			),
 
 		);
@@ -545,11 +580,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// add any common bottom fields
 		$this->form_fields['debug_mode'] = array(
-			'title'    => __( 'Debug Mode', $this->text_domain ),
-			'type'     => 'select',
-			'desc_tip' => __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the log for debugging purposes.', $this->text_domain ),
-			'default'  => self::DEBUG_MODE_OFF,
-			'options'  => array(
+			'title'       => __( 'Debug Mode', $this->text_domain ),
+			'type'        => 'select',
+			'description' => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the debug log: %s.', $this->text_domain ), '<strong class="nobr">wp-content/plugins/woocommerce/logs/' . $this->log_file_name() . '</strong>' ),
+			'default'     => self::DEBUG_MODE_OFF,
+			'options'     => array(
 				self::DEBUG_MODE_OFF      => _x( 'Off', 'Debug mode off', $this->text_domain ),
 				self::DEBUG_MODE_CHECKOUT => __( 'Show on Checkout Page', $this->text_domain ),
 				self::DEBUG_MODE_LOG      => __( 'Save to Log', $this->text_domain ),
@@ -633,22 +668,18 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 					$configured_other_gateway_ids[] = $other_gateway_id;
 					break;
-
 				}
-
 			}
-
 		}
 
 		// disable the field if the sibling gateway is already inheriting settings
-		// TODO: improve this for non-credit card/cheque support?
 		$form_fields['inherit_settings'] = array(
-			'title'   => _x( 'Share connection settings', 'Supports sibling gateways', $this->text_domain ),
-			'type'    => 'checkbox',
-			'label'   => $this->is_credit_card_gateway() ? _x( 'Use connection/authentication settings from echeck gateway', 'Supports cheque', $this->text_domain ) :  _x( 'Use connection/authentication settings from credit card gateway', 'Supports credit card', $this->text_domain ),
-			'default' => count( $configured_other_gateway_ids ) > 0 ? 'yes' : 'no',
-			'disabled' => count( $inherit_settings_other_gateway_ids ) > 0 ? true : false,
-			'description' => count( $inherit_settings_other_gateway_ids ) > 0 ? ( $this->is_credit_card_gateway() ? _x( 'Disabled because the echeck gateway is using these settings', 'Supports cheque', $this->text_domain ) : _x( 'Disabled because the credit card gateway is using these settings', 'Supports credit card', $this->text_domain ) ) : '',
+			'title'       => _x( 'Share connection settings', 'Supports sibling gateways', $this->text_domain ),
+			'type'        => 'checkbox',
+			'label'       => _x( 'Use connection/authentication settings from other gateway', $this->text_domain ),
+			'default'     => count( $configured_other_gateway_ids ) > 0 ? 'yes' : 'no',
+			'disabled'    => count( $inherit_settings_other_gateway_ids ) > 0 ? true : false,
+			'description' => count( $inherit_settings_other_gateway_ids ) > 0 ? __( 'Disabled because the other gateway is using these settings', $this->text_domain ) : '',
 		);
 
 		return $form_fields;
@@ -768,20 +799,24 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$is_available = parent::is_available();
 
 		// proper configuration
-		if ( ! $this->is_configured() )
+		if ( ! $this->is_configured() ) {
 			$is_available = false;
+		}
 
 		// all plugin dependencies met
-		if ( count( $this->get_plugin()->get_missing_dependencies() ) > 0 )
+		if ( count( $this->get_plugin()->get_missing_dependencies() ) > 0 ) {
 			$is_available = false;
+		}
 
 		// any required currencies?
-		if ( $this->currencies && ! in_array( get_woocommerce_currency(), $this->currencies ) )
+		if ( $this->currencies && ! in_array( get_woocommerce_currency(), $this->currencies ) ) {
 			$is_available = false;
+		}
 
 		// any required countries?
-		if ( $this->countries && SV_WC_Plugin_Compatibility::WC()->customer && SV_WC_Plugin_Compatibility::WC()->customer->get_country() && ! in_array( SV_WC_Plugin_Compatibility::WC()->customer->get_country(), $this->countries ) )
+		if ( $this->countries && SV_WC_Plugin_Compatibility::WC()->customer && SV_WC_Plugin_Compatibility::WC()->customer->get_country() && ! in_array( SV_WC_Plugin_Compatibility::WC()->customer->get_country(), $this->countries ) ) {
 			$is_available = false;
+		}
 
 		return apply_filters( 'wc_gateway_' . $this->get_id() + '_is_available', $is_available );
 	}
@@ -815,7 +850,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 			// use icon provided by filter
 			$icon = '<img src="' . esc_url( SV_WC_Plugin_Compatibility::force_https_url( $this->icon ) ) . '" alt="' . esc_attr( $this->title ) . '" />';
-
 		}
 
 		// credit card images
@@ -827,18 +861,15 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 				if ( $url = $this->get_payment_method_image_url( $card_type ) ) {
 					$icon .= '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( strtolower( $card_type ) ) . '" />';
 				}
-
 			}
-
 		}
 
 		// echeck image
-		if ( ! $icon && $this->is_check_gateway() ) {
+		if ( ! $icon && $this->is_echeck_gateway() ) {
 
 			if ( $url = $this->get_payment_method_image_url( 'echeck' ) ) {
 				$icon .= '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( 'echeck' ) . '" />';
 			}
-
 		}
 
 		return apply_filters( 'woocommerce_gateway_icon', $icon, $this->get_id() );
@@ -908,7 +939,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		return null;
-
 	}
 
 
@@ -947,9 +977,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// payment type (credit card/check)
 		if ( $this->is_credit_card_gateway() ) {
 			$order->payment->type = 'credit_card';
-		} else {
-			// TODO: support additional types
+		} elseif ( $this->is_echeck_gateway() ) {
 			$order->payment->type = 'check';
+		} else {
+			$order->payment->type = $this->get_payment_type();
 		}
 
 		$order->description = sprintf( _x( '%s - Order %s', 'Order description', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
@@ -971,10 +1002,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order_note = sprintf( __( '%s Transaction Held for Review (%s)', $this->text_domain ), $this->get_method_title(), $message );
 
 		// mark order as held
-		if ( 'on-hold' != $order->status )
+		if ( 'on-hold' != $order->status ) {
 			$order->update_status( 'on-hold', $order_note );
-		else
+		} else {
 			$order->add_order_note( $order_note );
+		}
 
 		$this->add_debug_message( $message, 'message', true );
 
@@ -1062,10 +1094,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			//  if an order is available, on the theory that it will avoid clashing of
 			//  accounts if a customer uses the same merchant account on multiple independent
 			//  shops.  Otherwise, we use 'wc-<user_id>-<random>'
-			if ( $args['order'] && isset( $args['order']->billing_email ) && $args['order']->billing_email )
+			if ( $args['order'] && isset( $args['order']->billing_email ) && $args['order']->billing_email ) {
 				$customer_id = 'wc-' . md5( $args['order']->billing_email );
-			else
+			} else {
 				$customer_id = uniqid( 'wc-' . $user_id . '-' );
+			}
 
 			$this->update_customer_id( $user_id, $customer_id, $args['environment_id'] );
 		}
@@ -1088,11 +1121,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	public function update_customer_id( $user_id, $customer_id, $environment_id = null ) {
 
 		// default to current environment
-		if ( is_null( $environment_id ) )
+		if ( is_null( $environment_id ) ) {
 			$environment_id = $this->get_environment();
+		}
 
 		return update_user_meta( $user_id, $this->get_customer_id_user_meta_name( $environment_id ), $customer_id );
-
 	}
 
 
@@ -1111,12 +1144,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// is there a customer id already tied to this order?
 		$customer_id = get_post_meta( $order->id, '_wc_' . $this->get_id() . '_customer_id', true );
 
-		if ( $customer_id )
+		if ( $customer_id ) {
 			return $customer_id;
+		}
 
 		// default
 		return 'wc-guest-' . $order->id;
-
 	}
 
 
@@ -1203,7 +1236,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @return boolean true if the gateway supports authorization
 	 */
 	public function supports_credit_card_authorization() {
-
 		return $this->is_credit_card_gateway() && $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION );
 	}
 
@@ -1216,7 +1248,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @return boolean true if the gateway supports charges
 	 */
 	public function supports_credit_card_charge() {
-
 		return $this->is_credit_card_gateway() && $this->supports( self::FEATURE_CREDIT_CARD_CHARGE );
 	}
 
@@ -1232,7 +1263,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function add_authorization_charge_form_fields( $form_fields ) {
 
-		if ( ! ( $this->supports_credit_card_authorization() && $this->supports_credit_card_charge() ) ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Authorization/Charge transactions not supported by gateway' );
+		if ( ! ( $this->supports_credit_card_authorization() && $this->supports_credit_card_charge() ) ) {
+			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Authorization/Charge transactions not supported by gateway' );
+		}
 
 		$form_fields['transaction_type'] = array(
 			'title'    => _x( 'Transaction Type', 'Supports credit card authorization/charge', $this->text_domain ),
@@ -1259,7 +1292,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function perform_credit_card_charge() {
 
-		if ( ! $this->supports_credit_card_charge() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Credit Card charge transactions not supported by this gateway' );
+		if ( ! $this->supports_credit_card_charge() ) {
+			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Credit Card charge transactions not supported by this gateway' );
+		}
 
 		return  self::TRANSACTION_TYPE_CHARGE == $this->transaction_type;
 	}
@@ -1275,7 +1310,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function perform_credit_card_authorization() {
 
-		if ( ! $this->supports_credit_card_authorization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Credit Card authorization transactions not supported by this gateway' );
+		if ( ! $this->supports_credit_card_authorization() ) {
+			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Credit Card authorization transactions not supported by this gateway' );
+		}
 
 		return self::TRANSACTION_TYPE_AUTHORIZATION == $this->transaction_type;
 	}
@@ -1292,9 +1329,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @return boolean true if the gateway supports card_types
 	 */
 	public function supports_card_types() {
-
 		return $this->is_credit_card_gateway() && $this->supports( self::FEATURE_CARD_TYPES );
-
 	}
 
 
@@ -1309,7 +1344,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function get_card_types() {
 
-		if ( ! $this->supports_card_types() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Card Types not supported by gateway' );
+		if ( ! $this->supports_card_types() ) {
+			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Card Types not supported by gateway' );
+		}
 
 		return $this->card_types;
 	}
@@ -1326,7 +1363,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function add_card_types_form_fields( $form_fields ) {
 
-		if ( ! $this->supports_card_types() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Card Types not supported by gateway' );
+		if ( ! $this->supports_card_types() ) {
+			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Card Types not supported by gateway' );
+		}
 
 		$form_fields['card_types'] = array(
 			'title'    => _x( 'Accepted Card Logos', 'Supports card types', $this->text_domain ),
@@ -1351,7 +1390,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function get_available_card_types() {
 
-		if ( ! $this->supports_card_types() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Card Types not supported by gateway' );
+		if ( ! $this->supports_card_types() ) {
+			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Card Types not supported by gateway' );
+		}
 
 		// default available card types
 		if ( ! isset( $this->available_card_types ) ) {
@@ -1382,9 +1423,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @return boolean true if the gateway supports tokenization
 	 */
 	public function supports_tokenization() {
-
 		return $this->supports( self::FEATURE_TOKENIZATION );
-
 	}
 
 
@@ -1397,7 +1436,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function tokenization_enabled() {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		if ( ! $this->supports_tokenization() ) {
+			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		}
 
 		return 'yes' == $this->tokenization;
 	}
@@ -1413,7 +1454,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function add_tokenization_form_fields( $form_fields ) {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		if ( ! $this->supports_tokenization() ) {
+			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		}
 
 		$form_fields['tokenization'] = array(
 			'title'   => _x( 'Tokenization', 'Supports tokenization', $this->text_domain ),
@@ -1423,7 +1466,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		);
 
 		return $form_fields;
-
 	}
 
 
@@ -1536,6 +1578,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns the payment gateway id
 	 *
 	 * @since 1.0
+	 * @see WC_Payment_Gateway::$id
 	 * @return string payment gateway id
 	 */
 	public function get_id() {
@@ -1567,30 +1610,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
-	 * Returns the description setting.  This is the description configured by
-	 * the admin and displayed to the customer during checkout.
-	 *
-	 * @since 1.0
-	 * @return string the checkout page description
-	 */
-	public function get_description() {
-		return $this->description;
-	}
-
-
-	/**
-	 * Returns the title setting.  This is the title configured by the admin and
-	 * displayed to the customer during checkout.
-	 *
-	 * @since 1.0
-	 * @return string the checkout page title
-	 */
-	public function get_title() {
-		return $this->title;
-	}
-
-
-	/**
 	 * Returns the admin method title.  This should be the gateway name, ie
 	 * 'Intuit QBMS'
 	 *
@@ -1610,9 +1629,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @return boolean true if the Card Security Code field should be used on checkout
 	 */
 	public function csc_enabled() {
-
 		return 'yes' == $this->enable_csc;
-
 	}
 
 
@@ -1623,9 +1640,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @return boolean true if settings should be inherited for this gateway
 	 */
 	public function inherit_settings() {
-
 		return 'yes' == $this->inherit_settings;
-
 	}
 
 
@@ -1637,8 +1652,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function add_support( $feature ) {
 
-		if ( ! is_array( $feature ) )
+		if ( ! is_array( $feature ) ) {
 			$feature = array( $feature );
+		}
 
 		foreach ( $feature as $name ) {
 
@@ -1676,7 +1692,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function supports_check_field( $field_name ) {
 
-		if ( ! $this->is_check_gateway() ) throw new Exception( 'Check method called on non-check gateway' );
+		if ( ! $this->is_echeck_gateway() ) {
+			throw new Exception( 'Check method called on non-check gateway' );
+		}
 
 		return is_array( $this->supported_check_fields ) && in_array( $field_name, $this->supported_check_fields );
 
@@ -1776,6 +1794,20 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
+	 * Returns the log file name
+	 *
+	 * @param string $handle optional log handle, defaults to plugin id
+	 * @return string the log file name
+	 */
+	protected function log_file_name( $handle = null ) {
+		if ( ! $handle ) {
+			$handle = $this->get_id();
+		}
+		return $handle . '-' . sanitize_file_name( wp_hash( $handle ) );
+	}
+
+
+	/**
 	 * Returns true if this is a direct type gateway
 	 *
 	 * @since 1.0
@@ -1798,13 +1830,24 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
+	 * Returns the payment type for this gateway
+	 *
+	 * @since 2.0.3-1
+	 * @return string the payment type, ie 'credit-card', 'echeck', etc
+	 */
+	public function get_payment_type() {
+		return $this->payment_type;
+	}
+
+
+	/**
 	 * Returns true if this is a credit card gateway
 	 *
 	 * @since 1.0
 	 * @return boolean true if this is a credit card gateway
 	 */
 	public function is_credit_card_gateway() {
-		return self::PAYMENT_TYPE_CREDIT_CARD == $this->payment_type;
+		return self::PAYMENT_TYPE_CREDIT_CARD == $this->get_payment_type();
 	}
 
 
@@ -1814,8 +1857,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 1.0
 	 * @return boolean true if this is an echeck gateway
 	 */
-	public function is_check_gateway() {
-		return self::PAYMENT_TYPE_ECHECK == $this->payment_type;
+	public function is_echeck_gateway() {
+		return self::PAYMENT_TYPE_ECHECK == $this->get_payment_type();
 	}
 
 }
