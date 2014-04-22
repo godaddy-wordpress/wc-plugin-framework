@@ -49,7 +49,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Initialize the gateway
 	 *
+	 * See parent constructor for full method documentation
+	 *
 	 * @since 1.0
+	 * @see SV_WC_Payment_Gateway::__construct()
 	 * @param string $id the gateway id
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the parent plugin class
 	 * @param string $text_domain the plugin text domain
@@ -84,7 +87,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				add_action( $pre_orders_support_hook, array( $this, 'add_pre_orders_support' ) );
 			}
 		}
-
 	}
 
 
@@ -426,10 +428,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					$this->add_transaction_data( $order );
 				}
 
-				if ( 'on-hold' == $order->status )
+				if ( 'on-hold' == $order->status ) {
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
-				else
+				} else {
 					$order->payment_complete(); // mark order as having received payment
+				}
 
 				SV_WC_Plugin_Compatibility::WC()->cart->empty_cart();
 
@@ -628,9 +631,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// credit card order note
 			$message = sprintf(
-				_x( '%s %s%s Approved: %s ending in %s (expires %s)', 'Supports direct credit card', $this->text_domain ),
+				_x( '%s %s %s Approved: %s ending in %s (expires %s)', 'Supports direct credit card', $this->text_domain ),
 				$this->get_method_title(),
-				$this->is_environment( 'test' ) ? _x( 'Test ', 'Supports direct credit card', $this->text_domain ) : '',
+				$this->is_test_environment() ? _x( 'Test', 'Supports direct credit card', $this->text_domain ) : '',
 				$this->perform_credit_card_authorization() ? 'Authorization' : 'Charge',
 				isset( $order->payment->card_type ) && $order->payment->card_type ? SV_WC_Payment_Gateway_Payment_Token::type_to_name( $order->payment->card_type ) : 'card',
 				$last_four,
@@ -828,41 +831,17 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 
 	/**
-	 * Called after an unsuccessful transaction attempt
-	 *
-	 * @since 1.0
-	 * @param WC_Order $order the order
-	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
-	 * @return boolean false
-	 */
-	protected function do_transaction_failed_result( WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
-
-		$order_note = sprintf( '%s: "%s"', $response->get_status_code(), $response->get_status_message() );
-
-		// add transaction id if there is one
-		if ( $response->get_transaction_id() ) {
-			$order_note .= '. ' . sprintf( _x( 'Transaction id %s', 'Supports direct', $this->text_domain ), $response->get_transaction_id() );
-		}
-
-		$this->mark_order_as_failed( $order, $order_note );
-
-		return false;
-	}
-
-
-	/**
 	 * Adds the standard transaction data to the order
 	 *
 	 * @since 1.0
+	 * @see SV_WC_Payment_Gateway::add_transaction_data()
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response|null $response optional transaction response
 	 */
 	protected function add_transaction_data( $order, $response = null ) {
 
-		// transaction id if available
-		if ( $response && $response->get_transaction_id() ) {
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_id', $response->get_transaction_id() );
-		}
+		// add parent transaction data
+		parent::add_transaction_data( $order, $response );
 
 		// payment info
 		if ( isset( $order->payment->token ) && $order->payment->token ) {
@@ -873,9 +852,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( isset( $order->payment->account_number ) && $order->payment->account_number ) {
 			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_four', substr( $order->payment->account_number, -4 ) );
 		}
-
-		// transaction date
-		update_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_date', current_time( 'mysql' ) );
 
 		if ( $this->is_credit_card_gateway() ) {
 
@@ -919,33 +895,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( isset( $order->payment->check_number ) && $order->payment->check_number ) {
 				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_check_number', $order->payment->check_number );
 			}
-
 		}
-
-		// if there's more than one environment
-		if ( count( $this->get_environments() ) > 1 ) {
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_environment', $this->get_environment() );
-		}
-
-		// if there is a payment gateway customer id, set it to the order (we don't append the environment here like we do for the user meta, because it's available from the 'environment' order meta already)
-		if ( isset( $order->customer_id ) && $order->customer_id ) {
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_customer_id', $order->customer_id );
-		}
-
-	}
-
-
-	/**
-	 * Adds any gateway-specific transaction data to the order
-	 *
-	 * @since 1.0
-	 * @param WC_Order $order the order object
-	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
-	 */
-	protected function add_payment_gateway_transaction_data( $order, $response ) {
-
-		// Optional method
-
 	}
 
 
@@ -971,9 +921,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
 	 */
 	protected function add_payment_gateway_capture_data( $order, $response ) {
-
 		// Optional method
-
 	}
 
 

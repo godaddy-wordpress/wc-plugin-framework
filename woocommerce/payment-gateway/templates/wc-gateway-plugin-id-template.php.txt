@@ -57,7 +57,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID%%_payment_fields' ) ) {
 
 %%IF SUPPORTS TEST-PAYMENT-METHOD%%
 		// for the demo environment, display a notice and supply a default test payment method
-		if ( $gateway->is_environment( 'test' ) ) {
+		if ( $gateway->is_test_environment() ) {
 			echo '<p>' . __( 'TEST MODE ENABLED', %%TEXT DOMAIN%% ) . '</p>';
 
 			$payment_method_defaults = array(
@@ -192,7 +192,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_payment_fields' ) ) {
 
 %%IF SUPPORTS TEST-PAYMENT-METHOD%%
 		// for the demo environment, display a notice and supply a default test payment method
-		if ( $gateway->is_environment( 'test' ) ) {
+		if ( $gateway->is_test_environment() ) {
 			echo '<p>' . __( 'TEST MODE ENABLED', %%TEXT DOMAIN%% ) . '</p>';
 
 			$payment_method_defaults = array(

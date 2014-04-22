@@ -166,6 +166,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/** The production environment identifier */
 	const ENVIRONMENT_PRODUCTION = 'production';
 
+	/** The test environment identifier */
+	const ENVIRONMENT_TEST = 'test';
+
 	/** Debug mode log to file */
 	const DEBUG_MODE_LOG = 'log';
 
@@ -470,7 +473,18 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 1.0
 	 */
 	protected function add_pay_page_handler() {
-		add_action( 'woocommerce_receipt_' . $this->get_id(), create_function( '$order', 'echo "<p>' . __( "Thank you for your order.", $this->text_domain ) . '</p>";' ) );
+		add_action( 'woocommerce_receipt_' . $this->get_id(), array( $this, 'payment_page' ) );
+	}
+
+
+	/**
+	 * Render a simple payment page
+	 *
+	 * @since 2.0.3-1
+	 * @param int $order_id identifies the order
+	 */
+	public function payment_page( $order_id ) {
+		echo '<p>' . __( 'Thank you for your order.', $this->text_domain ) . '</p>';
 	}
 
 
@@ -582,7 +596,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->form_fields['debug_mode'] = array(
 			'title'       => __( 'Debug Mode', $this->text_domain ),
 			'type'        => 'select',
-			'description' => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the debug log: %s.', $this->text_domain ), '<strong class="nobr">wp-content/plugins/woocommerce/logs/' . $this->log_file_name() . '</strong>' ),
+			'description' => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the debug log: %s', $this->text_domain ), '<strong class="nobr">wp-content/plugins/woocommerce/logs/' . $this->log_file_name() . '</strong>' ),
 			'default'     => self::DEBUG_MODE_OFF,
 			'options'     => array(
 				self::DEBUG_MODE_OFF      => _x( 'Off', 'Debug mode off', $this->text_domain ),
@@ -809,7 +823,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// any required currencies?
-		if ( $this->currencies && ! in_array( get_woocommerce_currency(), $this->currencies ) ) {
+		if ( ! $this->currency_is_accepted() ) {
 			$is_available = false;
 		}
 
@@ -990,6 +1004,79 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
+	 * Called after an unsuccessful transaction attempt
+	 *
+	 * @since 1.0
+	 * @param WC_Order $order the order
+	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
+	 * @return boolean false
+	 */
+	protected function do_transaction_failed_result( WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
+
+		$order_note = '';
+
+		// build the order note with what data we have
+		if ( $response->get_status_code() && $response->get_status_message() ) {
+			$order_note = sprintf( '%s: "%s"', $response->get_status_code(), $response->get_status_message() );
+		} elseif ( $response->get_status_code() ) {
+			$order_note = sprintf( 'Status code: "%s"', $response->get_status_code() );
+		} elseif ( $response->get_status_message() ) {
+			$order_note = sprintf( 'Status message: "%s"', $response->get_status_message() );
+		}
+
+		// add transaction id if there is one
+		if ( $response->get_transaction_id() ) {
+			$order_note .= sprintf( __( 'Transaction id %s', $this->text_domain ), $response->get_transaction_id() );
+		}
+
+		$this->mark_order_as_failed( $order, $order_note );
+
+		return false;
+	}
+
+
+	/**
+	 * Adds the standard transaction data to the order
+	 *
+	 * @since 1.0
+	 * @param WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response|null $response optional transaction response
+	 */
+	protected function add_transaction_data( $order, $response = null ) {
+
+		// transaction id if available
+		if ( $response && $response->get_transaction_id() ) {
+			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_id', $response->get_transaction_id() );
+		}
+
+		// transaction date
+		update_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_date', current_time( 'mysql' ) );
+
+		// if there's more than one environment
+		if ( count( $this->get_environments() ) > 1 ) {
+			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_environment', $this->get_environment() );
+		}
+
+		// if there is a payment gateway customer id, set it to the order (we don't append the environment here like we do for the user meta, because it's available from the 'environment' order meta already)
+		if ( isset( $order->customer_id ) && $order->customer_id ) {
+			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_customer_id', $order->customer_id );
+		}
+	}
+
+
+	/**
+	 * Adds any gateway-specific transaction data to the order
+	 *
+	 * @since 1.0
+	 * @param WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
+	 */
+	protected function add_payment_gateway_transaction_data( $order, $response ) {
+		// Optional method
+	}
+
+
+	/**
 	 * Mark the given order as 'on-hold', set an order note and display a message
 	 * to the customer
 	 *
@@ -1012,7 +1099,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// we don't have control over the "Thank you. Your order has been received." message shown on the "Thank You" page.  Yet
 		SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Your order has been received and is being reviewed.  Thank you for your business.', $this->text_domain ) );
-		SV_WC_Plugin_Compatibility::set_messages();
+		SV_WC_Plugin_Compatibility::set_messages();  // TODO: do we need this?
 
 	}
 
@@ -1481,8 +1568,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function get_post( $key ) {
 
-		if ( isset( $_POST[ $key ] ) )
+		if ( isset( $_POST[ $key ] ) ) {
 			return trim( $_POST[ $key ] );
+		}
 
 		return '';
 	}
@@ -1497,8 +1585,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function get_request( $key ) {
 
-		if ( isset( $_REQUEST[ $key ] ) )
+		if ( isset( $_REQUEST[ $key ] ) ) {
 			return trim( $_REQUEST[ $key ] );
+		}
 
 		return '';
 	}
@@ -1568,6 +1657,30 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( $this->debug_log() ) {
 			$this->get_plugin()->log( $message, $this->get_id() );
 		}
+	}
+
+
+	/**
+	 * Returns true if $currency is accepted by this gateway
+	 *
+	 * @since 2.0.3-1
+	 * @param string $currency optional three-letter currency code, defaults to
+	 *        currently configured WooCommerce currency
+	 * @return boolean true if $currency is accepted, false otherwise
+	 */
+	public function currency_is_accepted( $currency = null ) {
+
+		// accept all currencies
+		if ( ! $this->currencies ) {
+			return true;
+		}
+
+		// default to currently configured currency
+		if ( is_null( $currency ) ) {
+			$currency = get_woocommerce_currency();
+		}
+
+		return in_array( get_woocommerce_currency(), $this->currencies );
 	}
 
 
@@ -1760,6 +1873,50 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
+	 * Returns true if the current gateway environment is configured to 'test'
+	 *
+	 * @since 2.0.3-1
+	 * @param string $environment_id optional environment id to check, otherwise defaults to the gateway current environment
+	 * @return boolean true if $environment_id (if non-null) or otherwise the current environment is test
+	 */
+	public function is_test_environment( $environment_id = null ) {
+
+		// if an environment was passed in, see whether it's the production environment
+		if ( ! is_null( $environment_id ) ) {
+			return self::ENVIRONMENT_TEST == $environment_id;
+		}
+
+		// default: check the current environment
+		return $this->is_environment( self::ENVIRONMENT_TEST );
+	}
+
+
+	/**
+	 * Returns true if the gateway is enabled.  This has nothing to do with
+	 * whether the gateway is properly configured or functional.
+	 *
+	 * @since 2.0.3-1
+	 * @see WC_Payment_Gateway::$enabled
+	 * @return boolean true if the gateway is enabled
+	 */
+	public function is_enabled() {
+		return $this->enabled;
+	}
+
+
+	/**
+	 * Returns the set of accepted currencies, or empty array if all currencies
+	 * are accepted by this gateway
+	 *
+	 * @since 2.0.3-1
+	 * @return array of currencies accepted by this gateway
+	 */
+	public function get_accepted_currencies() {
+		return $this->currencies;
+	}
+
+
+	/**
 	 * Returns true if all debugging is disabled
 	 *
 	 * @since 1.0
@@ -1803,7 +1960,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( ! $handle ) {
 			$handle = $this->get_id();
 		}
-		return $handle . '-' . sanitize_file_name( wp_hash( $handle ) );
+		return $handle . '-' . sanitize_file_name( wp_hash( $handle ) ) . '.txt';
 	}
 
 
