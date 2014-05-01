@@ -969,13 +969,17 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * of gateways, it's up to the specific gateway implementation to make use
 	 * of, or ignore them, or add custom ones by overridding this method.
 	 *
+	 * The returned order is expected to be used in a transaction request.
+	 *
 	 * @since 1.0
-	 * @param int $order_id order ID being processed
+	 * @param int|WC_Order $order the order or order ID being processed
 	 * @return WC_Order object with payment and transaction information attached
 	 */
-	protected function get_order( $order_id ) {
+	protected function get_order( $order ) {
 
-		$order = new WC_Order( $order_id );
+		if ( is_int( $order ) ) {
+			$order = new WC_Order( $order );
+		}
 
 		// set payment total here so it can be modified for later by add-ons like subscriptions which may need to charge an amount different than the get_total()
 		$order->payment_total = number_format( $order->get_total(), 2, '.', '' );
@@ -1026,7 +1030,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// add transaction id if there is one
 		if ( $response->get_transaction_id() ) {
-			$order_note .= sprintf( __( 'Transaction id %s', $this->text_domain ), $response->get_transaction_id() );
+			$order_note .= ' ' . sprintf( __( 'Transaction id %s', $this->text_domain ), $response->get_transaction_id() );
 		}
 
 		$this->mark_order_as_failed( $order, $order_note );

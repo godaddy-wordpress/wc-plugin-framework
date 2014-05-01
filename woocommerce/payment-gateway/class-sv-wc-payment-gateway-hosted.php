@@ -100,10 +100,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 */
 	public function process_payment( $order_id ) {
 
-		// setup order
-		$order = $this->get_order( $order_id );
-
-		$payment_url = $this->get_payment_url( $order );
+		$payment_url = $this->get_payment_url( $order_id );
 
 		if ( ! $payment_url ) {
 			// be sure to have either set a notice via `wc_add_notice` to be
@@ -124,15 +121,20 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * Gets the payment URL: the checkout pay page
 	 *
 	 * @since 2.0.3-1
-	 * @param WC_Order $order the order
+	 * @param int $order_id the order id
 	 * @return string the payment URL, or false if unavailable
 	 */
-	protected function get_payment_url( $order ) {
+	protected function get_payment_url( $order_id ) {
 
 		if ( $this->use_form_post() ) {
 			// the checkout pay page
+			$order = new WC_Order( $order_id );
 			return $order->get_checkout_payment_url( true );
 		} else {
+
+			// setup the order object
+			$this->get_order( $order_id );
+
 			// direct-redirect, so append the hosted pay page params to the hosted pay page url
 			$pay_page_url = $this->get_hosted_pay_page_url( $order );
 
@@ -178,6 +180,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 */
 	public function generate_pay_form( $order_id ) {
 
+		// setup the order object
 		$order = $this->get_order( $order_id );
 
 		$request_params = $this->get_hosted_pay_page_params( $order );
@@ -313,7 +316,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		} catch ( Exception $e ) {
 			// failure
 
-			if ( $order ) {
+			if ( isset( $order ) && $order ) {
 				$this->mark_order_as_failed( $order, $e->getMessage() );
 			}
 
@@ -379,15 +382,15 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				return wp_redirect( $this->get_return_url( $order ) );
 			} else {
 				// failed response, redirect back to pay page
-				return wp_redirect( $order->get_checkout_payment_url( true ) );
+				return wp_redirect( $order->get_checkout_payment_url( ! $this->use_form_post() ) );
 			}
 
 		} catch( Exception $e ) {
 			// failure
 
-			if ( $order ) {
+			if ( isset( $order ) && $order ) {
 				$this->mark_order_as_failed( $order, $e->getMessage() );
-				return wp_redirect( $order->get_checkout_payment_url( true ) );
+				return wp_redirect( $order->get_checkout_payment_url( ! $this->use_form_post() ) );
 			}
 
 			// otherwise, if no order is available, log the issue and redirect to home
@@ -555,7 +558,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				$message = ( $this->has_ipn() ? 'IPN' : 'Redirect-back' ) . ' Request: %s';
 			}
 
-			$this->get_plugin()->log( sprintf( $message, print_r( $response, true ) ), $this->get_plugin()->get_id() );
+			$this->get_plugin()->log( sprintf( $message, print_r( $response, true ) ), $this->get_id() );
 		}
 	}
 

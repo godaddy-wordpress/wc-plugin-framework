@@ -161,7 +161,7 @@ class SV_WC_Plugin_Compatibility {
 	public static function get_checkout_pay_page_url() {
 
 		if ( self::is_wc_version_gte_2_1() ) {
-			$pay_url = get_permalink( wc_get_page_id( 'checkout' ) ) . '/order-pay/';
+			$pay_url = get_permalink( wc_get_page_id( 'checkout' ) ) . 'order-pay/';
 		} else {
 			$pay_url = get_permalink( woocommerce_get_page_id( 'pay' ) );
 		}
