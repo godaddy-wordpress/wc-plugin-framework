@@ -488,7 +488,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' ) && ! $this->get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 			// common attributes
-			$order->payment->account_number = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' );
+			$order->payment->account_number = str_replace( array( ' ', '-' ), '', $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' ) );
 
 			if ( $this->is_credit_card_gateway() ) {
 
