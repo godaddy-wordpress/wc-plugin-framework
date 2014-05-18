@@ -48,12 +48,12 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * + `get_settings_url()` - return the plugin admin settings URL, if any
  * + `render_admin_notices()` - override to perform custom admin plugin requirement checks (defaults to checking for php extension depenencies).  Use the is_message_dismissed() and add_dismissible_notice() methods
  *
- * @version 2.0.3
+ * @version 2.0.4
  */
 abstract class SV_WC_Plugin {
 
 	/** Plugin Framework Version */
-	const VERSION = '2.0.3';
+	const VERSION = '2.0.4';
 
 	/** @var string plugin id */
 	private $id;
@@ -79,6 +79,9 @@ abstract class SV_WC_Plugin {
 	/** @var array string names of required PHP extensions */
 	private $dependencies = array();
 
+	/** @var array string names of required PHP functions */
+	private $function_dependencies = array();
+
 	/** @var boolean whether a dismissible notice has been rendered */
 	private $dismissible_notice_rendered = false;
 
@@ -89,6 +92,7 @@ abstract class SV_WC_Plugin {
 	 * Optional args:
 	 *
 	 * + `dependencies` - array string names of required PHP extensions
+	 * + `function_dependencies` - array string names of required PHP functions
 	 *
 	 * Child plugin classes may add their own optional arguments
 	 *
@@ -105,7 +109,9 @@ abstract class SV_WC_Plugin {
 		$this->version     = $version;
 		$this->text_domain = $text_domain;
 
-		if ( isset( $args['dependencies'] ) )       $this->dependencies = $args['dependencies'];
+		if ( isset( $args['dependencies'] ) )                $this->dependencies = $args['dependencies'];
+
+		if ( isset( $args['function_dependencies'] ) )       $this->function_dependencies = $args['function_dependencies'];
 
 		// include library files after woocommerce is loaded
 		add_action( 'sv_wc_framework_plugins_loaded', array( $this, 'lib_includes' ) );
@@ -230,6 +236,26 @@ abstract class SV_WC_Plugin {
 			);
 
 			$this->add_dismissible_notice( $message, 'missing-extensions' );
+
+		}
+
+		// report any missing functions
+		$missing_functions = $this->get_missing_function_dependencies();
+
+		if ( count( $missing_functions ) > 0 && ( ! $this->is_message_dismissed( 'missing-functions' ) || $this->is_plugin_settings() ) ) {
+
+			$message = sprintf(
+				_n(
+					'%s requires the %s PHP function to exist.  Contact your host or server administrator to configure and install the missing function.',
+					'%s requires the following PHP functions to exist: %s.  Contact your host or server administrator to configure and install the missing functions.',
+					count( $missing_functions ),
+					$this->text_domain
+				),
+				$this->get_plugin_name(),
+				'<strong>' . implode( ', ', $missing_functions ) . '</strong>'
+			);
+
+			$this->add_dismissible_notice( $message, 'missing-functions' );
 
 		}
 	}
@@ -362,6 +388,27 @@ abstract class SV_WC_Plugin {
 		}
 
 		return $missing_extensions;
+	}
+
+
+	/**
+	 * Gets the string name of any required PHP functions that are not loaded
+	 *
+	 * @since 2.0.4
+	 * @return array of missing functions
+	 */
+	public function get_missing_function_dependencies() {
+
+		$missing_functions = array();
+
+		foreach ( $this->get_function_dependencies() as $fcn ) {
+
+			if ( ! function_exists( $fcn ) ) {
+				$missing_functions[] = $fcn;
+			}
+		}
+
+		return $missing_functions;
 	}
 
 
@@ -509,6 +556,17 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function get_dependencies() {
 		return $this->dependencies;
+	}
+
+
+	/**
+	 * Get the PHP dependencies for functions depending on the gateway being used
+	 *
+	 * @since 2.0.4
+	 * @return array of required PHP function names, based on the gateway in use
+	 */
+	protected function get_function_dependencies() {
+		return $this->function_dependencies;
 	}
 
 
