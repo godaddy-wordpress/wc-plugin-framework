@@ -48,12 +48,12 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * + `get_settings_url()` - return the plugin admin settings URL, if any
  * + `render_admin_notices()` - override to perform custom admin plugin requirement checks (defaults to checking for php extension depenencies).  Use the is_message_dismissed() and add_dismissible_notice() methods
  *
- * @version 2.0.4
+ * @version 2.0.3-1
  */
 abstract class SV_WC_Plugin {
 
 	/** Plugin Framework Version */
-	const VERSION = '2.0.4';
+	const VERSION = '2.0.3-1';
 
 	/** @var string plugin id */
 	private $id;
@@ -394,7 +394,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the string name of any required PHP functions that are not loaded
 	 *
-	 * @since 2.0.4
+	 * @since 2.0.3-1
 	 * @return array of missing functions
 	 */
 	public function get_missing_function_dependencies() {
@@ -562,7 +562,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Get the PHP dependencies for functions depending on the gateway being used
 	 *
-	 * @since 2.0.4
+	 * @since 2.0.3-1
 	 * @return array of required PHP function names, based on the gateway in use
 	 */
 	protected function get_function_dependencies() {
