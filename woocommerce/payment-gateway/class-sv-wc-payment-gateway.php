@@ -393,7 +393,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$script_src = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_javascript_url', $this->get_plugin()->get_plugin_url() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . $suffix . '.js', $suffix );
 
 		// some gateways don't use frontend scripts so don't enqueue if one doesn't exist
-		if ( ! is_readable( $script_src ) ) {
+		if ( ! is_readable( $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . $suffix . '.js' ) ) {
 			return false;
 		}
 
