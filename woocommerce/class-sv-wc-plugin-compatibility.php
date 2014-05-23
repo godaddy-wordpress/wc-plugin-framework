@@ -153,6 +153,28 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Returns the checkout pay page URL
+	 *
+	 * @since 2.0.3-1
+	 * @return string checkout pay page URL
+	 */
+	public static function get_checkout_pay_page_url() {
+
+		if ( self::is_wc_version_gte_2_1() ) {
+			$pay_url = get_permalink( wc_get_page_id( 'checkout' ) ) . 'order-pay/';
+		} else {
+			$pay_url = get_permalink( woocommerce_get_page_id( 'pay' ) );
+		}
+
+		if ( 'yes' == get_option( 'woocommerce_force_ssl_checkout' ) || is_ssl() ) {
+			$pay_url = str_replace( 'http:', 'https:', $pay_url );
+		}
+
+		return $pay_url;
+	}
+
+
+	/**
 	 * Returns the order_id if on the checkout pay page
 	 *
 	 * @since 2.0

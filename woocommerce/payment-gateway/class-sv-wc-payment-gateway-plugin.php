@@ -196,6 +196,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( 'api/interface-sv-wc-payment-gateway-api.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-request.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-response.php' );
+		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-response.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-authorization-response.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-create-payment-token-response.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-get-tokenized-payment-methods-response.php' );
@@ -242,13 +243,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 			foreach ( $this->get_gateways() as $gateway ) {
 
-				if ( $gateway->supports_tokenization() )
+				if ( $gateway->supports_tokenization() ) {
 					$gateway->handle_my_payment_methods_actions();
-
+				}
 			}
-
 		}
-
 	}
 
 
@@ -346,26 +345,51 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	protected function render_currency_admin_notices() {
 
 		// report any currency issues
-		if ( $this->currencies && ! in_array( get_woocommerce_currency(), $this->currencies ) )
+		if ( $this->get_accepted_currencies() && ! in_array( get_woocommerce_currency(), $this->get_accepted_currencies() ) ) {
 
-		if ( count( $this->get_accepted_currencies() ) > 0 && ! in_array( get_woocommerce_currency(), $this->get_accepted_currencies() ) && ( ! $this->is_message_dismissed( 'accepted-currency' ) || $this->is_plugin_settings() ) ) {
+			// we might have a currency issue, go through any gateways provided by this plugin and see which ones (or all) have any unmet currency requirements
+			// (gateway classes will already be instantiated, so it's not like this is a huge deal)
+			$gateways = array();
+			foreach ( $this->get_gateways() as $gateway ) {
+				if ( $gateway->is_enabled() && ! $gateway->currency_is_accepted() ) {
+					$gateways[] = $gateway;
+				}
+			}
 
-			$message = sprintf(
-				_n(
-					'%s accepts payment in %s only.  <a href="%s">Configure</a> WooCommerce to accept %s to enable this gateway for checkout.',
-					'%s accepts payment in one of %s only.  <a href="%s">Configure</a> WooCommerce to accept one of %s to enable this gateway for checkout.',
-					count( $this->get_accepted_currencies() ),
-					'(Plugin) accepts payments in (currency/currencies) only.',
-					$this->text_domain
-				),
-				$this->get_plugin_name(),
-				'<strong>' . implode( ', ', $this->get_accepted_currencies() ) . '</strong>',
-				SV_WC_Plugin_Compatibility::get_general_configuration_url(),
-				'<strong>' . implode( ', ', $this->get_accepted_currencies() ) . '</strong>'
-			);
+			if ( count( $gateways ) == 0 ) {
+				// no active gateways with unmet currency requirements
+				return;
+			} elseif ( count( $gateways ) == 1 && count( $this->get_gateways() ) > 1 ) {
+				// one gateway out of many has a currency issue
+				$suffix              = '-' . $gateway->get_id();
+				$name                = $gateway->get_method_title();
+				$accepted_currencies = $gateway->get_accepted_currencies();
+			} else {
+				// multiple gateways have a currency issue
+				$suffix              = '';
+				$name                = $this->get_plugin_name();
+				$accepted_currencies = $this->get_accepted_currencies();
+			}
 
-			$this->add_dismissible_notice( $message, 'accepted-currency' );
+			if ( ! $this->is_message_dismissed( 'accepted-currency' . $suffix ) || $this->is_plugin_settings() ) {
 
+				$message = sprintf(
+					_n(
+						'%s accepts payment in %s only.  <a href="%s">Configure</a> WooCommerce to accept %s to enable this gateway for checkout.',
+						'%s accepts payment in one of %s only.  <a href="%s">Configure</a> WooCommerce to accept one of %s to enable this gateway for checkout.',
+						count( $accepted_currencies ),
+						'(Plugin) accepts payments in (currency/currencies) only.',
+						$this->text_domain
+					),
+					$name,
+					'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
+					SV_WC_Plugin_Compatibility::get_general_configuration_url(),
+					'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>'
+				);
+
+				$this->add_dismissible_notice( $message, 'accepted-currency' . $suffix );
+
+			}
 		}
 	}
 
@@ -539,13 +563,15 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			return;
 		}
 
+		$gateway = $this->get_gateway( $order->payment_method );
+
 		// ensure that it supports captures
-		if ( ! $this->can_capture_charge() ) {
+		if ( ! $this->can_capture_charge( $gateway ) ) {
 			return;
 		}
 
 		// ensure the authorization is still valid for capture
-		if ( ! $this->get_gateway( $order->payment_method )->authorization_valid_for_capture( $order ) ) {
+		if ( ! $gateway->authorization_valid_for_capture( $order ) ) {
 			return;
 		}
 
@@ -558,19 +584,20 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		//  in WC_Order::update_status() to update the post last modified will re-trigger the save action, which
 		//  will update the order status to $_POST['order_status'] which of course will be whatever the order status
 		//  was prior to the auth capture (ie 'on-hold')
+		// TODO: why do we remove this here, and also in the SV_WC_Payment_Gateway::do_credit_card_capture() method?
 		remove_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Data::save', 10, 2 );
 
 		// perform the capture
-		$this->get_gateway( $order->payment_method )->do_credit_card_capture( $order );
+		$gateway->do_credit_card_capture( $order );
 	}
 
 
 	/**
 	 * Add a "Capture Charge" action to the Admin Order Edit Order
-	 * Actions dropdown
+	 * Actions dropdown if there is an authorization awaiting capture
 	 *
 	 * @since 1.0
-	 * @param array $actions available order actionss
+	 * @param array $actions available order actions
 	 */
 	public function maybe_add_order_action_charge_action( $actions ) {
 
@@ -581,15 +608,30 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			return $actions;
 		}
 
+		$gateway = $this->get_gateway( $order->payment_method );
+
 		// ensure that it supports captures
-		if ( ! $this->can_capture_charge() ) {
+		if ( ! $this->can_capture_charge( $gateway ) ) {
 			return $actions;
 		}
 
 		// ensure that the authorization is still valid for capture
-		if ( ! $this->get_gateway( $order->payment_method )->authorization_valid_for_capture( $order ) ) {
+		if ( ! $gateway->authorization_valid_for_capture( $order ) ) {
 			return $actions;
 		}
+
+		return $this->add_order_action_charge_action( $actions );
+	}
+
+
+	/**
+	 * Add a "Capture Charge" action to the Admin Order Edit Order
+	 * Actions dropdown
+	 *
+	 * @since 2.0.3-1
+	 * @param array $actions available order actions
+	 */
+	public function add_order_action_charge_action( $actions ) {
 
 		$actions[ $this->get_id() . '_capture_charge' ] = _x( 'Capture Charge', 'Supports capture charge', $this->text_domain );
 
@@ -608,7 +650,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * @return boolean true if the named feature is supported
 	 */
 	public function supports( $feature ) {
-
 		return in_array( $feature, $this->supports );
 	}
 
@@ -618,10 +659,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * can be invoked
 	 *
 	 * @since 1.0
-	 * @return boolean true if thes gateway supports the charge capture operation and it can be invoked
+	 * @param SV_WC_Payment_Gateway the payment gateway
+	 * @return boolean true if the gateway supports the charge capture operation and it can be invoked
 	 */
-	public function can_capture_charge() {
-		return $this->supports( self::FEATURE_CAPTURE_CHARGE ) && $this->get_gateway()->is_available();
+	public function can_capture_charge( $gateway ) {
+		return $this->supports( self::FEATURE_CAPTURE_CHARGE ) && $this->get_gateway()->is_available() && $gateway->supports( self::FEATURE_CAPTURE_CHARGE );
 	}
 
 
@@ -644,7 +686,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Returns the settings array for the identified gateway
+	 * Returns the settings array for the identified gateway.  Note that this
+	 * will not include any defaults if the gateway has yet to be saved
 	 *
 	 * @since 1.0
 	 * @param string $gateway_id gateway identifier
@@ -750,14 +793,14 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_gateways() {
 
-		if ( empty( $this->gateways ) ) throw new Exception( 'Gateways not available' );
+		if ( empty( $this->gateways ) ) {
+			throw new Exception( 'Gateways not available' );
+		}
 
 		$gateways = array();
 
 		foreach ( $this->get_gateway_ids() as $gateway_id ) {
-
 			$gateways[] = $this->get_gateway( $gateway_id );
-
 		}
 
 		return $gateways;
@@ -784,7 +827,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			// instantiate and cache
 			$gateway_class_name = $this->get_gateway_class_name( $gateway_id );
 			$this->gateways[ $gateway_id ]['gateway'] = new $gateway_class_name();
-
 		}
 
 		return $this->gateways[ $gateway_id ]['gateway'];
@@ -799,9 +841,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * @return boolean true if the plugin has this gateway available, false otherwise
 	 */
 	public function has_gateway( $gateway_id ) {
-
 		return isset( $this->gateways[ $gateway_id ] );
-
 	}
 
 
@@ -814,16 +854,18 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_gateway_ids() {
 
-		if ( empty( $this->gateways ) ) throw new Exception( 'Gateways not available' );
+		if ( empty( $this->gateways ) ) {
+			throw new Exception( 'Gateways not available' );
+		}
 
 		return array_keys( $this->gateways );
-
 	}
 
 
 	/**
 	 * Returns the set of accepted currencies, or empty array if all currencies
-	 * are accepted
+	 * are accepted.  This is the intersection of all currencies accepted by
+	 * any gateways this plugin supports.
 	 *
 	 * @since 1.0
 	 * @return array of accepted currencies
@@ -841,11 +883,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function is_subscriptions_active() {
 
-		if ( is_bool( $this->subscriptions_active ) )
+		if ( is_bool( $this->subscriptions_active ) ) {
 			return $this->subscriptions_active;
+		}
 
 		return $this->subscriptions_active = $this->is_plugin_active( 'woocommerce-subscriptions/woocommerce-subscriptions.php' );
-
 	}
 
 
@@ -857,13 +899,12 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function is_pre_orders_active() {
 
-		if ( is_bool( $this->pre_orders_active ) )
+		if ( is_bool( $this->pre_orders_active ) ) {
 			return $this->pre_orders_active;
+		}
 
 		return $this->pre_orders_active = $this->is_plugin_active( 'woocommerce-pre-orders/woocommerce-pre-orders.php' );
-
 	}
-
 }
 
 endif;
