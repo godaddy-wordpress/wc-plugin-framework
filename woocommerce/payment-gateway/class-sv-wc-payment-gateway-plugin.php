@@ -628,7 +628,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Add a "Capture Charge" action to the Admin Order Edit Order
 	 * Actions dropdown
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @param array $actions available order actions
 	 */
 	public function add_order_action_charge_action( $actions ) {

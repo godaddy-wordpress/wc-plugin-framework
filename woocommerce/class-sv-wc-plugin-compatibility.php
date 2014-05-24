@@ -155,7 +155,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns the checkout pay page URL
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @return string checkout pay page URL
 	 */
 	public static function get_checkout_pay_page_url() {

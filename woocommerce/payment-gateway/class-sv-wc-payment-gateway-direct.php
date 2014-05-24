@@ -164,7 +164,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Validates the provided credit card expiration date
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @param string $expiration_month the credit card expiration month
 	 * @param string $expiration_year the credit card expiration month
 	 * @return boolean true if the card expiration date is valid, false otherwise
@@ -195,7 +195,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Validates the provided credit card account number
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @param string $account_number the credit card account number
 	 * @return boolean true if the card account number is valid, false otherwise
 	 */
@@ -354,7 +354,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * Defaults to false but can be overridden by child gateway class
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @return boolean true if there is a tokenization request that is issued
 	 *         before a authorization/charge transaction
 	 */
@@ -385,7 +385,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * Defaults to false but can be overridden by child gateway class
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @return boolean true if there is a tokenization request that is issued
 	 *         after an authorization/charge transaction
 	 */

@@ -486,7 +486,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Render a simple payment page
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @param int $order_id identifies the order
 	 */
 	public function payment_page( $order_id ) {
@@ -498,7 +498,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Get the default payment method title, which is configurable within the
 	 * admin and displayed on checkout
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @return string payment method title to show on checkout
 	 */
 	protected function get_default_title() {
@@ -516,7 +516,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Get the default payment method description, which is configurable
 	 * within the admin and displayed on checkout
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @return string payment method description to show on checkout
 	 */
 	protected function get_default_description() {
@@ -1141,7 +1141,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Mark the given order as cancelled and set the order note
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @param WC_Order $order the order
 	 * @param string $error_message a message to display inside the "Payment Cancelled" order note
 	 */
@@ -1673,7 +1673,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if $currency is accepted by this gateway
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @param string $currency optional three-letter currency code, defaults to
 	 *        currently configured WooCommerce currency
 	 * @return boolean true if $currency is accepted, false otherwise
@@ -1885,7 +1885,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if the current gateway environment is configured to 'test'
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @param string $environment_id optional environment id to check, otherwise defaults to the gateway current environment
 	 * @return boolean true if $environment_id (if non-null) or otherwise the current environment is test
 	 */
@@ -1905,7 +1905,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns true if the gateway is enabled.  This has nothing to do with
 	 * whether the gateway is properly configured or functional.
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @see WC_Payment_Gateway::$enabled
 	 * @return boolean true if the gateway is enabled
 	 */
@@ -1918,7 +1918,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns the set of accepted currencies, or empty array if all currencies
 	 * are accepted by this gateway
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @return array of currencies accepted by this gateway
 	 */
 	public function get_accepted_currencies() {
@@ -1999,7 +1999,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns the payment type for this gateway
 	 *
-	 * @since 2.0.3-1
+	 * @since 2.1
 	 * @return string the payment type, ie 'credit-card', 'echeck', etc
 	 */
 	public function get_payment_type() {
