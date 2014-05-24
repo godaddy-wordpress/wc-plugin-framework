@@ -627,6 +627,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// success! update order record
 		if ( $response->transaction_approved() ) {
 
+			// TODO: consider adding a get_order() method to the API response interface, and using the order object returned from there.  This would allow us one last chance to modify the order object, ie for hosted tokenized transactions in Moneris
 			$last_four = substr( $order->payment->account_number, -4 );
 
 			// credit card order note
@@ -1081,12 +1082,25 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// set order defaults
 			$order = $this->get_order( $order->id );
 
+			// zero-dollar subscription renewal.  weird, but apparently it happens
+			if ( 0 == $amount_to_charge ) {
+
+				// add order note
+				$order->add_order_note( sprintf( _x( '%s0 Subscription Renewal Approved', 'Supports direct credit card subscriptions', $this->text_domain ), get_woocommerce_currency_symbol() ) );
+
+				// update subscription
+				WC_Subscriptions_Manager::process_subscription_payments_on_order( $order, $product_id );
+
+				return;
+			}
+
 			// set the amount to charge, ensuring that we have a decimal point, even if it's 1.00
 			$order->payment_total = number_format( (double) $amount_to_charge, 2, '.', '' );
 
 			// required
-			if ( ! $order->payment->token || ! $order->user_id )
+			if ( ! $order->payment->token || ! $order->user_id ) {
 				throw new Exception( 'Subscription Renewal: Payment Token or User ID is missing/invalid.' );
+			}
 
 			// get the token, we've already verified it's good
 			$token = $this->get_payment_token( $order->user_id, $order->payment->token );
@@ -1101,9 +1115,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				}
 
 			} elseif ( $this->is_echeck_gateway() ) {
-
 				$response = $this->get_api()->check_debit( $order );
-
 			}
 
 			// check for success  TODO: handle transaction held
