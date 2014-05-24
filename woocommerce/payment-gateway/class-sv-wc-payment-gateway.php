@@ -390,7 +390,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function enqueue_scripts() {
 
-		// only load javascript once, if the gateway is available, and if on the page page and i
+		// only load javascript once, if the gateway is available
 		if ( ! $this->is_available() || wp_script_is( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', 'enqueued' ) ) {
 			return false;
 		}
@@ -399,6 +399,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// load gateway.js checkout script
 		$script_src = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_javascript_url', $this->get_plugin()->get_plugin_url() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . $suffix . '.js', $suffix );
+
+		// some gateways don't use frontend scripts so don't enqueue if one doesn't exist
+		if ( ! is_readable( $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . $suffix . '.js' ) ) {
+			return false;
+		}
+
 		wp_enqueue_script( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', $script_src, array(), $this->get_plugin()->get_version(), true );
 
 		// localize error messages
