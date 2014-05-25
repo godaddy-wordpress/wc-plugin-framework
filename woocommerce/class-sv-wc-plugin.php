@@ -646,14 +646,14 @@ abstract class SV_WC_Plugin {
 
 	/**
 	 * Gets the plugin review URL, which defaults to:
-	 * {product page url}#review_form
+	 * {product page url}#tab-reviews
 	 *
 	 * @since 2.0
 	 * @return string review url
 	 */
 	public function get_review_url() {
 
-		return $this->get_product_page_url() . '#review_form';
+		return $this->get_product_page_url() . '#tab-reviews';
 	}
 
 
