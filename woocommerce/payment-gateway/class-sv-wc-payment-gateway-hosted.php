@@ -133,7 +133,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		} else {
 
 			// setup the order object
-			$this->get_order( $order_id );
+			$order = $this->get_order( $order_id );
 
 			// direct-redirect, so append the hosted pay page params to the hosted pay page url
 			$pay_page_url = $this->get_hosted_pay_page_url( $order );
