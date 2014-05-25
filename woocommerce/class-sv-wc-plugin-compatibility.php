@@ -847,9 +847,7 @@ class SV_WC_Plugin_Compatibility {
 	 * @return boolean true if the installed version of WooCommerce is 2.1 or greater
 	 */
 	public static function is_wc_version_gte_2_1() {
-
-		// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
-		return self::is_wc_version_gt( '2.0.20' );
+		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.1', '>=' );
 	}
 
 
@@ -861,7 +859,6 @@ class SV_WC_Plugin_Compatibility {
 	 * @return boolean true if the installed version of WooCommerce is > $version
 	 */
 	public static function is_wc_version_gt( $version ) {
-
 		return self::get_wc_version() && version_compare( self::get_wc_version(), $version, '>' );
 	}
 
