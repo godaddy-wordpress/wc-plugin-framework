@@ -156,7 +156,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 				// capture charge order action
 				add_filter( 'woocommerce_order_actions', array( $this, 'maybe_add_capture_charge_order_action' ) );
-				add_action( 'woocommerce_order_action_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
+				add_action( 'woocommerce_order_action_wc_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
 			}
 		}
 
@@ -636,7 +636,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function add_order_action_charge_action( $actions ) {
 
-		$actions[ $this->get_id() . '_capture_charge' ] = _x( 'Capture Charge', 'Supports capture charge', $this->text_domain );
+		$actions[ 'wc_' . $this->get_id() . '_capture_charge' ] = _x( 'Capture Charge', 'Supports capture charge', $this->text_domain );
 
 		return $actions;
 	}
