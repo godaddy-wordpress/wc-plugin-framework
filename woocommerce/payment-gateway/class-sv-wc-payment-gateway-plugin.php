@@ -153,7 +153,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		if ( $this->supports( self::FEATURE_CAPTURE_CHARGE ) ) {
 
 			if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
-				add_filter( 'woocommerce_order_actions',                                       array( $this, 'maybe_add_order_action_charge_action' ) );
+
+				// capture charge order action
+				add_filter( 'woocommerce_order_actions', array( $this, 'maybe_add_capture_charge_order_action' ) );
 				add_action( 'woocommerce_order_action_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
 			}
 		}
@@ -547,7 +549,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * captured, and the gateway supports issuing a capture request
 	 *
 	 * @since 1.0
-	 * @param WC_Order|int $order the order identifier or order object
+	 * @param \WC_Order|int $order the order identifier or order object
 	 */
 	public function maybe_capture_charge( $order ) {
 
@@ -573,16 +575,18 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		}
 
 		// remove order status change actions, otherwise we get a whole bunch of capture calls and errors
-		remove_action( 'woocommerce_order_status_on-hold_to_processing', array( $this, 'maybe_capture_charge' ) );
-		remove_action( 'woocommerce_order_status_on-hold_to_completed',  array( $this, 'maybe_capture_charge' ) );
 		remove_action( 'woocommerce_order_action_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
 
-		// Starting in WC 2.1 we need to remove the meta box order save action, otherwise the wp_update_post() call
-		//  in WC_Order::update_status() to update the post last modified will re-trigger the save action, which
-		//  will update the order status to $_POST['order_status'] which of course will be whatever the order status
-		//  was prior to the auth capture (ie 'on-hold')
-		// TODO: why do we remove this here, and also in the SV_WC_Payment_Gateway::do_credit_card_capture() method?
-		remove_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Data::save', 10, 2 );
+		// since a capture results in an update to the post object (by updating
+		// the paid date) we need to unhook the save_post action, otherwise we
+		// can get boomeranged and change the status back to on-hold
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_1() ) {
+			// WC 2.1+
+			remove_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Data::save', 40, 2 );
+		} else {
+			// WC 2.0
+			remove_action( 'woocommerce_process_shop_order_meta', 'woocommerce_process_shop_order_meta', 10, 2 );
+		}
 
 		// perform the capture
 		$gateway->do_credit_card_capture( $order );
@@ -591,12 +595,13 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 	/**
 	 * Add a "Capture Charge" action to the Admin Order Edit Order
-	 * Actions dropdown if there is an authorization awaiting capture
+	 * Actions select if there is an authorization awaiting capture
 	 *
 	 * @since 1.0
 	 * @param array $actions available order actions
+	 * @return array actions
 	 */
-	public function maybe_add_order_action_charge_action( $actions ) {
+	public function maybe_add_capture_charge_order_action( $actions ) {
 
 		$order = new WC_Order( $_REQUEST['post'] );
 
@@ -627,6 +632,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 2.1
 	 * @param array $actions available order actions
+	 * @return array actions
 	 */
 	public function add_order_action_charge_action( $actions ) {
 
@@ -656,7 +662,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * can be invoked
 	 *
 	 * @since 1.0
-	 * @param SV_WC_Payment_Gateway the payment gateway
+	 * @param \SV_WC_Payment_Gateway $gateway the payment gateway
 	 * @return boolean true if the gateway supports the charge capture operation and it can be invoked
 	 */
 	public function can_capture_charge( $gateway ) {
