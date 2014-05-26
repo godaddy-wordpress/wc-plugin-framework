@@ -152,9 +152,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		if ( $this->supports( self::FEATURE_CAPTURE_CHARGE ) ) {
 
-			add_action( 'woocommerce_order_status_on-hold_to_processing', array( $this, 'maybe_capture_charge' ) );
-			add_action( 'woocommerce_order_status_on-hold_to_completed',  array( $this, 'maybe_capture_charge' ) );
-
 			if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
 				add_filter( 'woocommerce_order_actions',                                       array( $this, 'maybe_add_order_action_charge_action' ) );
 				add_action( 'woocommerce_order_action_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
