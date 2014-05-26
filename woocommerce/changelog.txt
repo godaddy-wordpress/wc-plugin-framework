@@ -1,7 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2014.05.23 - version 2.1
+2014.05.26 - version 2.1
  * Feature - Implemented hosted payment gateway framework
+ * Feature - Capture charge bulk order action for payment gateways
+ * Tweak - Authorized charges are no longer automatically capture when changing order status from on-hold to processing/completed
  * Feature - Added function dependency checks
 
 2014.03.05 - version 2.0.3
