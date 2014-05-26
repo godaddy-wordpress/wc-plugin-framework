@@ -157,6 +157,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				// capture charge order action
 				add_filter( 'woocommerce_order_actions', array( $this, 'maybe_add_capture_charge_order_action' ) );
 				add_action( 'woocommerce_order_action_wc_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
+
+				// bulk capture charge order action
+				add_action( 'admin_footer-edit.php', array( $this, 'add_capture_charge_bulk_order_action' ) );
+				add_action( 'load-edit.php',         array( $this, 'process_capture_charge_bulk_order_action' ) );
 			}
 		}
 
@@ -575,7 +579,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		}
 
 		// remove order status change actions, otherwise we get a whole bunch of capture calls and errors
-		remove_action( 'woocommerce_order_action_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
+		remove_action( 'woocommerce_order_action_wc_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
 
 		// since a capture results in an update to the post object (by updating
 		// the paid date) we need to unhook the save_post action, otherwise we
@@ -623,6 +627,74 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		}
 
 		return $this->add_order_action_charge_action( $actions );
+	}
+
+
+	/**
+	 * Adds 'Capture charge' to the Orders screen bulk action select
+	 *
+	 * @since 2.1
+	 */
+	public function add_capture_charge_bulk_order_action() {
+		global $post_type, $post_status;
+
+		if ( $post_type == 'shop_order' && $post_status != 'trash' ) {
+			?>
+				<script type="text/javascript">
+					jQuery( document ).ready( function ( $ ) {
+						$( 'select[name^=action]' ).append(
+							$( '<option>' ).val( '<?php echo esc_js( 'wc_' . $this->get_id() . '_capture_charge' ); ?>' ).text( '<?php _ex( 'Capture Charge', 'Supports capture charge', $this->text_domain ); ?>' )
+						);
+					});
+				</script>
+			<?php
+		}
+	}
+
+
+	/**
+	 * Process the 'Capture Charge' custom bulk action on the Orders screen
+	 * bulk action select
+	 *
+	 * @since 2.1
+	 */
+	public function process_capture_charge_bulk_order_action() {
+		global $typenow;
+
+		if ( 'shop_order' == $typenow ) {
+
+			// get the action
+			$wp_list_table = _get_list_table( 'WP_Posts_List_Table' );
+			$action        = $wp_list_table->current_action();
+
+			// bail if not processing a capture
+			if ( 'wc_' . $this->get_id() . '_capture_charge' !== $action ) {
+				return;
+			}
+
+			// security check
+			check_admin_referer( 'bulk-posts' );
+
+			// make sure order IDs are submitted
+			if ( isset( $_REQUEST['post'] ) ) {
+				$order_ids = array_map( 'absint', $_REQUEST['post'] );
+			}
+
+			// return if there are no orders to export
+			if ( empty( $order_ids ) ) {
+				return;
+			}
+
+			// give ourselves an unlimited timeout if possible
+			@set_time_limit( 0 );
+
+			foreach ( $order_ids as $order_id ) {
+
+				$order = new WC_Order( $order_id );
+
+				$this->maybe_capture_charge( $order );
+			}
+		}
 	}
 
 
