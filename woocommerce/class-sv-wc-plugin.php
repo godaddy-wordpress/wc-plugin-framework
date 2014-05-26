@@ -269,7 +269,7 @@ abstract class SV_WC_Plugin {
 	public function add_dismissible_notice( $message, $message_id ) {
 
 		// dismiss link unless we're on the plugin settings page, in which case we'll always display the notice
-		$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-%s-message-dismiss" data-message-id="%s">%s</a>', $this->get_id(), $message_id, __( 'Dismiss', $this->text_domain ) );
+		$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-%s-message-dismiss" data-message-id="%s" style="float: right;">%s</a>', $this->get_id(), $message_id, __( 'Dismiss', $this->text_domain ) );
 
 		if ( $this->is_plugin_settings() ) {
 			$dismiss_link = '';
