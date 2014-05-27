@@ -642,9 +642,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			?>
 				<script type="text/javascript">
 					jQuery( document ).ready( function ( $ ) {
-						$( 'select[name^=action]' ).append(
-							$( '<option>' ).val( '<?php echo esc_js( 'wc_' . $this->get_id() . '_capture_charge' ); ?>' ).text( '<?php _ex( 'Capture Charge', 'Supports capture charge', $this->text_domain ); ?>' )
-						);
+						if ( 0 == $( 'select[name^=action] option[value=wc_capture_charge]' ).size() ) {
+							$( 'select[name^=action]' ).append(
+								$( '<option>' ).val( '<?php echo esc_js( 'wc_capture_charge' ); ?>' ).text( '<?php _ex( 'Capture Charge', 'Supports capture charge', $this->text_domain ); ?>' )
+							);
+						}
 					});
 				</script>
 			<?php
@@ -668,7 +670,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			$action        = $wp_list_table->current_action();
 
 			// bail if not processing a capture
-			if ( 'wc_' . $this->get_id() . '_capture_charge' !== $action ) {
+			if ( 'wc_capture_charge' !== $action ) {
 				return;
 			}
 
