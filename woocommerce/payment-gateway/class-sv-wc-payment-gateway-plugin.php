@@ -348,7 +348,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	protected function render_currency_admin_notices() {
 
 		// report any currency issues
-		if ( $this->get_accepted_currencies() && ! in_array( get_woocommerce_currency(), $this->get_accepted_currencies() ) ) {
+		if ( $this->get_accepted_currencies() ) {
 
 			// we might have a currency issue, go through any gateways provided by this plugin and see which ones (or all) have any unmet currency requirements
 			// (gateway classes will already be instantiated, so it's not like this is a huge deal)
