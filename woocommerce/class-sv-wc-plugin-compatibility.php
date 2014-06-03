@@ -570,7 +570,7 @@ class SV_WC_Plugin_Compatibility {
 	 * @param string $template_path
 	 * @param string $default_path
 	 */
-	public static function wc_get_template( $template_name, $args, $template_path, $default_path ) {
+	public static function wc_get_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
 
 		if ( self::is_wc_version_gte_2_1() ) {
 
