@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2014.nn.nn - version 2.1-1
+ * Fix - Fixed product page URLs
+
 2014.05.26 - version 2.1
  * Feature - Implemented hosted payment gateway framework
  * Feature - Capture charge bulk order action for payment gateways
