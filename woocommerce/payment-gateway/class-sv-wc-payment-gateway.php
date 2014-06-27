@@ -838,7 +838,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$is_available = false;
 		}
 
-		return apply_filters( 'wc_gateway_' . $this->get_id() + '_is_available', $is_available );
+		return apply_filters( 'wc_gateway_' . $this->get_id() . '_is_available', $is_available );
 	}
 
 
