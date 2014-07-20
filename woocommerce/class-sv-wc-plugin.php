@@ -653,7 +653,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function get_review_url() {
 
-		return $this->get_product_page_url() . '#tab-reviews';
+		return $this->get_product_page_url() . '#review_form';
 	}
 
 
