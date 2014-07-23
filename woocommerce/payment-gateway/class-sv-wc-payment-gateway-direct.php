@@ -421,7 +421,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// payment failures are handled internally by do_transaction()
 			// the order amount will be $0 if a WooCommerce Subscriptions free trial product is being processed
 			// note that customer id & payment token are saved to order when create_payment_token() is called
-			if ( 0 == $order->payment_total || $this->do_transaction( $order ) ) {
+			if ( ( 0 == $order->payment_total && ! $this->transaction_forced() ) || $this->do_transaction( $order ) ) {
 
 				// add transaction data for zero-dollar "orders"
 				if ( 0 == $order->payment_total ) {
@@ -2160,6 +2160,19 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function is_direct_gateway() {
 		return true;
+	}
+
+
+	/**
+	 * Returns true if a transaction should be forced (meaning payment
+	 * processed even if the order amount is 0).  This is useful mostly for
+	 * testing situations
+	 *
+	 * @since 2.1-1
+	 * @return boolean true if the transaction request should be forced
+	 */
+	public function transaction_forced() {
+		return false;
 	}
 
 }
