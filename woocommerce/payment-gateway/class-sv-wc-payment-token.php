@@ -237,7 +237,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 		$name = '';
 
 		// special cases
-		switch ( $type ) {
+		switch ( strtolower( $type ) ) {
 
 			case 'mc':         $name = 'MasterCard';       break;
 			case 'amex':       $name = 'American Express'; break;

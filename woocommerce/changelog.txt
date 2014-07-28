@@ -2,6 +2,7 @@
 
 2014.nn.nn - version 2.1-1
  * Fix - Fixed product page URLs
+ * Tweak - Updates to support Chase Paymentech certification mode
 
 2014.05.26 - version 2.1
  * Feature - Implemented hosted payment gateway framework
