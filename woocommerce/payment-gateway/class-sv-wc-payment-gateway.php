@@ -969,6 +969,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * $order->payment_total           - the payment total
 	 * $order->customer_id             - optional payment gateway customer id (useful for tokenized payments, etc)
 	 * $order->payment->type           - one of 'credit_card' or 'check'
+	 * $order->description             - an order description based on the order
+	 * $order->unique_transaction_ref  - a combination of order number + retry count, should provide a unique value for each transaction attempt
 	 *
 	 * Note that not all gateways will necessarily pass or require all of the
 	 * above.  These represent the most common attributes used among a variety
@@ -983,7 +985,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function get_order( $order ) {
 
-		if ( is_numeric( $order ) ) {
+		if ( is_int( $order ) ) {
 			$order = new WC_Order( $order );
 		}
 
@@ -998,16 +1000,25 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// add payment info
 		$order->payment = new stdClass();
 
-		// payment type (credit card/check)
-		if ( $this->is_credit_card_gateway() ) {
-			$order->payment->type = 'credit_card';
-		} elseif ( $this->is_echeck_gateway() ) {
-			$order->payment->type = 'check';
-		} else {
-			$order->payment->type = $this->get_payment_type();
-		}
+		// payment type (credit_card/check/etc)
+		$order->payment->type = str_replace( '-', '_', $this->get_payment_type() );
 
 		$order->description = sprintf( _x( '%s - Order %s', 'Order description', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+
+		// generate a unique retry count
+		if ( is_numeric( SV_WC_Plugin_Compatibility::get_order_custom_field( $order, 'wc_' . $this->get_id() . '_retry_count' ) ) ) {
+			$retry_count = SV_WC_Plugin_Compatibility::get_order_custom_field( $order, 'wc_' . $this->get_id() . '_retry_count' );
+
+			$retry_count++;
+		} else {
+			$retry_count = 0;
+		}
+
+		// keep track of the retry count
+		update_post_meta( $order->id, '_wc_' . $this->get_id() . '_retry_count', $retry_count );
+
+		// generate a unique transaction ref based on the order number and retry count, for gateways that require a unique identifier for every transaction request
+		$order->unique_transaction_ref = ltrim( $order->get_order_number(),  _x( '#', 'hash before order number', $this->text_domain ) ) . ( $retry_count > 0 ? '-' . $retry_count : '' );
 
 		return $order;
 	}
@@ -1694,6 +1705,32 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	}
 
 
+	/**
+	 * Returns true if the given order needs shipping, false otherwise.  This
+	 * is based on the WooCommerce core Cart::needs_shipping()
+	 *
+	 * @since 2.1-1
+	 * @return boolean true if $order needs shipping, false otherwise
+	 */
+	protected function order_needs_shipping( $order ) {
+
+		if ( get_option( 'woocommerce_calc_shipping' ) == 'no' ) {
+			return false;
+		}
+
+		foreach ( $order->get_items() as $item ) {
+			$product = $order->get_product_from_item( $item );
+
+			if ( $product->needs_shipping() ) {
+				return true;
+			}
+		}
+
+		// no shipping required
+		return false;
+	}
+
+
 	/** Getters ******************************************************/
 
 
@@ -1910,7 +1947,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @return boolean true if the gateway is enabled
 	 */
 	public function is_enabled() {
-		return $this->enabled;
+		return 'yes' == $this->enabled;
 	}
 
 

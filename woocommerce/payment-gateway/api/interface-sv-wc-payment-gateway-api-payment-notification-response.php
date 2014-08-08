@@ -65,6 +65,16 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 	public function transaction_cancelled();
 
 
+	/**
+	 * Returns the payment type: 'credit-card', 'echeck', etc
+	 * 
+	 * TODO: move to SV_WC_Payment_Gateway_API_Response
+	 * @since 2.1-1
+	 * @return string payment type or null if not available
+	 */
+	public function get_payment_type();
+
+
 }
 
 endif;  // interface exists check

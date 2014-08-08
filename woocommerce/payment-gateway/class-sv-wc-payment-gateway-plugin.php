@@ -48,6 +48,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Plugin' ) ) :
  * + `tokenization`     - adds actions to show/handle the "My Payment Methods" area of the customer's My Account page
  * + `customer_id`      - adds actions to show/persist the "Customer ID" area of the admin User edit page
  * + `transaction_link` - adds actions to render the merchant account transaction direct link on the Admin Order Edit page.  (Don't forget to override the SV_WC_Payment_Gateway::get_transaction_url() method!)
+ * + `capture_charge`   - adds actions to capture charge for authorization-only transactions
  *
  * @version 2.0
  */
@@ -92,7 +93,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * + `require_ssl` - boolean true if this plugin requires SSL for proper functioning, false otherwise. Defaults to false
 	 * + `gateways` - array associative array of gateway id to gateway class name.  A single plugin might support more than one gateway, ie credit card, echeck.  Note that the credit card gateway must always be the first one listed.
 	 * + `currencies` -  array of currency codes this gateway is allowed for, defaults to all
-	 * + `supports` - array named features that this gateway supports, including 'tokenization', 'transaction_link', 'customer_id'
+	 * + `supports` - array named features that this gateway supports, including 'tokenization', 'transaction_link', 'customer_id', 'capture_charge'
 	 *
 	 * @since 1.0
 	 * @see SV_WC_Plugin::__construct()
@@ -199,10 +200,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( 'api/interface-sv-wc-payment-gateway-api.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-request.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-response.php' );
-		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-response.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-authorization-response.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-create-payment-token-response.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-get-tokenized-payment-methods-response.php' );
+		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-response.php' );
+		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-credit-card-response.php' );
 
 		require_once( 'exceptions/class-sv-wc-payment-gateway-feature-unsupported-exception.php' );
 		require_once( 'exceptions/class-sv-wc-payment-gateway-unimplemented-method-exception.php' );
@@ -535,6 +537,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// a configure link per gateway
 		$custom_actions = array();
+
 		foreach ( $this->get_gateway_ids() as $gateway_id ) {
 			$custom_actions[ 'configure_' . $gateway_id ] = $this->get_settings_link( $gateway_id );
 		}
@@ -854,7 +857,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_gateway_class_name( $gateway_id ) {
 
-		if ( ! isset( $this->gateways[ $gateway_id ]['gateway_class_name'] ) ) throw new Exception( sprintf( "Gateway '%s' not available", $gateway_id ) );
+		if ( ! isset( $this->gateways[ $gateway_id ]['gateway_class_name'] ) ) {
+			throw new Exception( sprintf( "Gateway '%s' not available", $gateway_id ) );
+		}
 
 		return $this->gateways[ $gateway_id ]['gateway_class_name'];
 	}

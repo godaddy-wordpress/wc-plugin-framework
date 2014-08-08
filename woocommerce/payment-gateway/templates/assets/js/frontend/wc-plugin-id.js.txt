@@ -6,7 +6,7 @@
  * Licensed under the GNU General Public License v3.0
  * http://www.gnu.org/licenses/gpl-3.0.html
  */
-jQuery( document ).ready( function ( $ ) {
+jQuery( document ).ready( function( $ ) {
 
 	"use strict";
 
@@ -21,17 +21,19 @@ jQuery( document ).ready( function ( $ ) {
 
 		// validate payment data before order is submitted
 %%IF SUPPORTS CREDIT-CARDS%%
-		$( 'form.checkout' ).bind( 'checkout_place_order_%%GATEWAY ID%%', function() { return validateCardData( $( this ) ) } );
+		$( 'form.checkout' ).bind( 'checkout_place_order_%%GATEWAY ID%%', function() { return validateCardData( $( this ) ); } );
 %%ENDIF SUPPORTS CREDIT-CARDS%%
 %%IF SUPPORTS CHECKS%%
-		$( 'form.checkout' ).bind( 'checkout_place_order_%%GATEWAY ID CHECKS%%', function() { return validateAccountData( $( this ) ) } );
+		$( 'form.checkout' ).bind( 'checkout_place_order_%%GATEWAY ID CHECKS%%', function() { return validateAccountData( $( this ) ); } );
 %%ENDIF SUPPORTS CHECKS%%
 
 	// checkout->pay page
 	} else {
 
+%%IF SUPPORTS TOKENIZATION%%
 		// handle payment methods on checkout->pay page
 		handleSavedPaymentMethods();
+%%ENDIF SUPPORTS TOKENIZATION%%
 
 		// validate card data before order is submitted when the payment gateway is selected
 		$( 'form#order_review' ).submit( function () {
@@ -139,7 +141,7 @@ jQuery( document ).ready( function ( $ ) {
 		} else {
 
 			// get rid of any space/dash characters
-			$paymentFields.find( '.js-wc-account-number' ).val( accountNumber );
+			$paymentFields.find( '.js-wc-payment-gateway-account-number' ).val( accountNumber );
 
 			return true;
 		}
@@ -252,7 +254,7 @@ jQuery( document ).ready( function ( $ ) {
 		} else {
 
 			// get rid of any space/dash characters
-			$paymentFields.find( '.js-wc-account-number' ).val( accountNumber );
+			$paymentFields.find( '.js-wc-payment-gateway-account-number' ).val( accountNumber );
 
 			return true;
 		}

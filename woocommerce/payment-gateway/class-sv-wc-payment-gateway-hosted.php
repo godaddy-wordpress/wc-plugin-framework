@@ -162,9 +162,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			// default behavior: pay page is not used, direct-redirect from checkout
 			parent::payment_page( $order_id );
 		} else {
-			echo '<p>' . __( 'Thank you for your order, please click the button below to pay.', $this->text_domain ) . '</p>';
-
-			echo $this->generate_pay_form( $order_id );
+			$this->generate_pay_form( $order_id );
 		}
 	}
 
@@ -176,7 +174,6 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 2.1
 	 * @param int $order_id the order identifier
-	 * @return string payment page POST form
 	 */
 	public function generate_pay_form( $order_id ) {
 
@@ -189,11 +186,47 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		$request = array(
 			'method' => 'POST',
 			'uri'    => $this->get_hosted_pay_page_url( $order ),
-			'body'   => json_encode( $request_params ),
+			'body'   => print_r( $request_params, true ),
 		);
 
 		// log the request
 		$this->log_hosted_pay_page_request( $request );
+
+		// render the appropriate content
+		if ( $this->use_auto_form_post() ) {
+			$this->render_auto_post_form( $order, $request_params );
+		} else {
+			$this->render_pay_page_form( $order, $request_params );
+		}
+	}
+
+
+	/**
+	 * Renders the gateway pay page direct post form.  This is used by gateways
+	 * that collect some or all payment information on-site, and POST the
+	 * entered information to a remote server for processing
+	 *
+	 * @since 2.1-1
+	 * @see SV_WC_Payment_Gateway_Hosted::use_auto_form_post()
+	 * @param WC_Order $order the order object
+	 * @param array $request_params associative array of request parameters
+	 */
+	public function render_pay_page_form( $order, $request_params ) {
+		// implemented by concrete class
+	}
+
+
+	/**
+	 * Renders the gateway auto post form.  This is used for gateways that
+	 * collect no payment information on-site, but must POST parameters to a
+	 * hosted payment page where payment information is entered.
+	 *
+	 * @since 2.1-1
+	 * @see SV_WC_Payment_Gateway_Hosted::use_auto_form_post()
+	 * @param WC_Order $order the order object
+	 * @param array $request_params associative array of request parameters
+	 */
+	public function render_auto_post_form( $order, $request_params ) {
 
 		// attempt to automatically submit the form and bring them to the payza paymen site
 		SV_WC_Plugin_Compatibility::wc_enqueue_js('
@@ -223,7 +256,8 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			$request_arg_fields[] = '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" />';
 		}
 
-		return '<form action="' . esc_url( $this->get_hosted_pay_page_url( $order ) ) . '" method="post">' .
+		echo '<p>' . __( 'Thank you for your order, please click the button below to pay.', $this->text_domain ) . '</p>' .
+			'<form action="' . esc_url( $this->get_hosted_pay_page_url( $order ) ) . '" method="post">' .
 				implode( '', $request_arg_fields ) .
 				'<input type="submit" class="button-alt" id="submit_' . $this->get_id() . '_payment_form" value="' . __( 'Pay Now', $this->text_domain ) . '" />' .
 				'<a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . __( 'Cancel Order', $this->text_domain ) . '</a>' .
@@ -256,7 +290,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @return string hosted pay page url, or false if it could not be determined
 	 */
 	public function get_hosted_pay_page_url( $order ) {
-		// TODO: make me abstract with the next breaking compatiblity framework update
+		// TODO: make me abstract with the next breaking compatiblity framework update, also make $order optional
 	}
 
 
@@ -382,7 +416,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				return wp_redirect( $this->get_return_url( $order ) );
 			} else {
 				// failed response, redirect back to pay page
-				return wp_redirect( $order->get_checkout_payment_url( ! $this->use_form_post() ) );
+				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() ) );
 			}
 
 		} catch( Exception $e ) {
@@ -390,7 +424,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			if ( isset( $order ) && $order ) {
 				$this->mark_order_as_failed( $order, $e->getMessage() );
-				return wp_redirect( $order->get_checkout_payment_url( ! $this->use_form_post() ) );
+				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() ) );
 			}
 
 			// otherwise, if no order is available, log the issue and redirect to home
@@ -414,7 +448,15 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		if ( $response->transaction_approved() || $response->transaction_held() ) {
 
 			if ( $response->transaction_approved() ) {
-				$this->do_transaction_approved( $order, $response );
+
+				if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
+					$this->do_credit_card_transaction_approved( $order, $response );
+				} elseif ( self::PAYMENT_TYPE_ECHECK == $response->get_payment_type() ) {
+					$this->do_check_transaction_approved( $order, $response );
+				} else {
+					// generic transaction approved message (likely to be overridden by the concrete gateway implementation)
+					$this->do_transaction_approved( $order, $response );
+				}
 			}
 
 			$this->add_transaction_data( $order, $response );
@@ -442,8 +484,119 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 
 	/**
+	 * Adds the standard transaction data to the order
+	 *
+	 * @since 2.1-1
+	 * @see SV_WC_Payment_Gateway::add_transaction_data()
+	 * @param WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response|null $response optional transaction response
+	 */
+	protected function add_transaction_data( $order, $response = null ) {
+
+		// add parent transaction data
+		parent::add_transaction_data( $order, $response );
+
+		if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
+
+			// account number
+			if ( $response->get_account_number() ) {
+				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_four', substr( $response->get_account_number(), -4 ) );
+			}
+
+			if ( $response->get_authorization_code() ) {
+				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_authorization_code', $response->get_authorization_code() );
+			}
+
+			if ( $order->get_order_total() > 0 ) {
+				// mark as captured
+				if ( $response->is_charge() ) {
+					$captured = 'yes';
+				} else {
+					$captured = 'no';
+				}
+				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_charge_captured', $captured );
+			}
+
+			if ( $response->get_exp_month() && $response->get_exp_year() ) {
+				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_card_expiry_date', $response->get_exp_year() . '-' . $response->get_exp_month() );
+			}
+
+			if ( $response->get_card_type() ) {
+				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_card_type', $response->get_card_type() );
+			}
+
+		} elseif ( self::PAYMENT_TYPE_ECHECK == $response->get_payment_type() ) {
+
+			// checking gateway data  TODO
+
+			// optional account type (checking/savings)
+			if ( isset( $order->payment->account_type ) && $order->payment->account_type ) {
+				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_type', $order->payment->account_type );
+			}
+
+			// optional check number
+			if ( isset( $order->payment->check_number ) && $order->payment->check_number ) {
+				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_check_number', $order->payment->check_number );
+			}
+		}
+	}
+
+
+	/**
 	 * Adds an order note, along with anything else required after an approved
-	 * transaction
+	 * credit card transaction
+	 *
+	 * @since 2.1-1
+	 * @param WC_Order $order the order
+	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response transaction response
+	 */
+	protected function do_credit_card_transaction_approved( $order, $response ) {
+
+		$last_four = substr( $response->get_account_number(), -4 );
+
+		$transaction_type = '';
+		if ( $response->is_authorization() ) {
+			$transaction_type = 'Authorization';
+		} elseif ( $response->is_charge() ) {
+			$transaction_type = 'Charge';
+		}
+
+		// credit card order note
+		$message = sprintf(
+			__( '%s %s %s Approved: %s ending in %s (expires %s)', $this->text_domain ),
+			$this->get_method_title(),
+			$this->is_test_environment() ? 'Test' : '',
+			$transaction_type,
+			$response->get_card_type() ? SV_WC_Payment_Gateway_Payment_Token::type_to_name( $response->get_card_type() ) : 'card',
+			$last_four,
+			$response->get_exp_month() . '/' . substr( $response->get_exp_year(), -2 )
+		);
+
+		// adds the transaction id (if any) to the order note
+		if ( $response->get_transaction_id() ) {
+			$message .= ' ' . sprintf( __( '(Transaction ID %s)', $this->text_domain ), $response->get_transaction_id() );
+		}
+
+		$order->add_order_note( $message );
+	}
+
+
+	/**
+	 * Adds an order note, along with anything else required after an approved
+	 * echeck transaction
+	 *
+	 * @since 2.1-1
+	 * @param WC_Order $order the order
+	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response transaction response
+	 */
+	protected function do_echeck_transaction_approved( $order, $response ) {
+		// TODO: stub
+	}
+
+
+	/**
+	 * Adds an order note, along with anything else required after an approved
+	 * transaction.  This is a generic, default approved handler
 	 *
 	 * @since 2.1
 	 * @param WC_Order $order the order
@@ -578,8 +731,8 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 
 	/**
-	 * Returns true if this gateway uses an automatic form-post from the pay
-	 * page to "redirect" to the hosted payment page
+	 * Returns true if this gateway uses a form-post from the pay
+	 * page to "redirect" to a hosted payment page
 	 *
 	 * @since 2.1
 	 * @return boolean true if this gateway uses a form post, false if it
@@ -587,6 +740,24 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 */
 	public function use_form_post() {
 		return false;
+	}
+
+
+	/**
+	 * Returns true if this gateway uses an automatic form-post from the pay
+	 * page to "redirect" to the hosted payment page where payment information
+	 * is securely entered.  Return false if payment information is collected
+	 * on the pay page and then posted to a remote server.
+	 *
+	 * This method has no effect if use_form_post() returns false
+	 *
+	 * @since 2.1-1
+	 * @see SV_WC_Payment_Gateway_Hosted::use_form_post()
+	 * @return boolean true if this gateway automatically posts to the remote
+	 *         processor server from the pay page
+	 */
+	public function use_auto_form_post() {
+		return $this->use_form_post() && true;
 	}
 
 
