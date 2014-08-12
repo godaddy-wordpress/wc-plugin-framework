@@ -299,6 +299,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->id          = $id;  // @see WC_Payment_Gateway::$id
 
 		$this->plugin      = $plugin;
+		// kind of sucks, but we need to register back to the plugin because
+		//  there's no other way of grabbing existing gateways so as to avoid
+		//  double-instantiation errors (esp for shared settings)
+		$this->get_plugin()->set_gateway( $id, $this );
 		$this->text_domain = $text_domain;
 
 		// optional parameters
@@ -459,6 +463,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			'cvv_length_invalid'             => _x( 'Card security code is invalid (must be 3 or 4 digits)', 'Supports direct credit card', $this->text_domain ),
 			'card_exp_date_invalid'          => _x( 'Card expiration date is invalid', 'Supports direct credit card', $this->text_domain ),
 			'check_number_digits_invalid'    => _x( 'Check Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ),
+			'check_number_missing'           => _x( 'Check Number is missing', 'Supports direct cheque', $this->text_domain ),
 			'drivers_license_state_missing'  => _x( 'Drivers license state is missing', 'Supports direct cheque', $this->text_domain ),
 			'drivers_license_number_missing' => _x( 'Drivers license number is missing', 'Supports direct cheque', $this->text_domain ),
 			'drivers_license_number_invalid' => _x( 'Drivers license number is invalid', 'Supports direct cheque', $this->text_domain ),
@@ -1656,7 +1661,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// add debug message to woocommerce->errors/messages if checkout or both is enabled
-		if ( $this->debug_checkout() && ! is_admin() ) {
+		if ( ( $this->debug_checkout() || $this->is_test_environment() ) && ! is_admin() ) {
 
 			if ( 'message' === $type ) {
 
@@ -1801,6 +1806,18 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function inherit_settings() {
 		return 'yes' == $this->inherit_settings;
+	}
+
+
+	/**
+	 * Returns an array of two-letter country codes this gateway is allowed for, defaults to all
+	 *
+	 * @since 2.1-1
+	 * @see WC_Payment_Gateway::$countries
+	 * @return array of two-letter country codes this gateway is allowed for, defaults to all
+	 */
+	public function get_available_countries() {
+		return $this->countries;
 	}
 
 

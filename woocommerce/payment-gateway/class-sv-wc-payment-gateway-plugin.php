@@ -205,6 +205,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( 'api/interface-sv-wc-payment-gateway-api-get-tokenized-payment-methods-response.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-response.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-credit-card-response.php' );
+		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-echeck-response.php' );
 
 		require_once( 'exceptions/class-sv-wc-payment-gateway-feature-unsupported-exception.php' );
 		require_once( 'exceptions/class-sv-wc-payment-gateway-unimplemented-method-exception.php' );
@@ -890,6 +891,18 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
+	 * Adds the given $gateway to the internal gateways store
+	 *
+	 * @since 2.1-1
+	 * @param string $gateway_id the gateway identifier
+	 * @param SV_WC_Payment_Gateway $gateway the gateway object
+	 */
+	public function set_gateway( $gateway_id, $gateway ) {
+		$this->gateways[ $gateway_id ]['gateway'] = $gateway;
+	}
+
+
+	/**
 	 * Returns the identified gateway object
 	 *
 	 * @since 1.0
@@ -908,7 +921,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 			// instantiate and cache
 			$gateway_class_name = $this->get_gateway_class_name( $gateway_id );
-			$this->gateways[ $gateway_id ]['gateway'] = new $gateway_class_name();
+			$this->set_gateway( $gateway_id, new $gateway_class_name() );
 		}
 
 		return $this->gateways[ $gateway_id ]['gateway'];

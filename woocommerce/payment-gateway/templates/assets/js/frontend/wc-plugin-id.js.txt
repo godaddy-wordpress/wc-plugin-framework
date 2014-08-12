@@ -210,7 +210,7 @@ jQuery( document ).ready( function( $ ) {
 
 		} else {
 
-			if ( accountNumber.length < 5 || accountNumber.length > 17 ) {
+			if ( accountNumber.length < 3 || accountNumber.length > 17 ) {
 				errors.push( %%PLUGIN ID%%_params.account_number_length_invalid );
 			}
 
@@ -353,17 +353,17 @@ jQuery( document ).ready( function( $ ) {
 
 		} ).change();
 
-
-%%IF SUPPORTS CHECKS%%
-		// Show the sample check image when the help bubble is clicked
-			$( '.js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-help' ).click( function() {
-				if ( ! $( this ).closest( '.payment_method_%%GATEWAY ID CHECKS%%' ).find( '.sample-check' ).is( ':visible' ) ) {
-					$( this ).closest( '.payment_method_%%GATEWAY ID CHECKS%%' ).find( '.sample-check' ).slideDown();
-				}
-		} );
-%%ENDIF SUPPORTS CHECKS%%
-
 	}
 %%ENDIF SUPPORTS TOKENIZATION%%
+
+
+%%IF SUPPORTS CHECKS%%
+  // Show the sample check image when the help bubble is clicked
+    $( '.js-wc-payment-gateway-account-help' ).click( function() {
+      if ( ! $( this ).closest( '.payment_method_%%GATEWAY ID CHECKS%%' ).find( '.sample-check' ).is( ':visible' ) ) {
+        $( this ).closest( '.payment_method_%%GATEWAY ID CHECKS%%' ).find( '.sample-check' ).slideDown();
+      }
+  } );
+%%ENDIF SUPPORTS CHECKS%%
 
 } );

@@ -55,15 +55,6 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response ex
 
 
 	/**
-	 * Returns the card PAN or checking account number, if available
-	 *
-	 * @since 2.1-1
-	 * @return string PAN or account number or null if not available
-	 */
-	public function get_account_number();
-
-
-	/**
 	 * Returns the card type, if available, i.e., 'visa', 'mc', etc
 	 *
 	 * @since 2.1-1

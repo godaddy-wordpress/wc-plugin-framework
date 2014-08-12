@@ -496,18 +496,18 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		// add parent transaction data
 		parent::add_transaction_data( $order, $response );
 
-		if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
+		// account number
+		if ( $response->get_account_number() ) {
+			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_four', substr( $response->get_account_number(), -4 ) );
+		}
 
-			// account number
-			if ( $response->get_account_number() ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_four', substr( $response->get_account_number(), -4 ) );
-			}
+		if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
 
 			if ( $response->get_authorization_code() ) {
 				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_authorization_code', $response->get_authorization_code() );
 			}
 
-			if ( $order->get_order_total() > 0 ) {
+			if ( $order->get_total() > 0 ) {
 				// mark as captured
 				if ( $response->is_charge() ) {
 					$captured = 'yes';
@@ -527,16 +527,14 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		} elseif ( self::PAYMENT_TYPE_ECHECK == $response->get_payment_type() ) {
 
-			// checking gateway data  TODO
-
 			// optional account type (checking/savings)
-			if ( isset( $order->payment->account_type ) && $order->payment->account_type ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_type', $order->payment->account_type );
+			if ( $response->get_account_type() ) {
+				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_type', $response->get_account_type() );
 			}
 
 			// optional check number
-			if ( isset( $order->payment->check_number ) && $order->payment->check_number ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_check_number', $order->payment->check_number );
+			if ( $response->get_check_number() ) {
+				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_check_number', $response->get_check_number() );
 			}
 		}
 	}
@@ -590,7 +588,29 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response transaction response
 	 */
 	protected function do_echeck_transaction_approved( $order, $response ) {
-		// TODO: stub
+
+		$last_four = substr( $response->get_account_number(), -4 );
+
+		// credit card order note
+		$message = sprintf(
+			__( '%s %s Transaction Approved: %s ending in %s', $this->text_domain ),
+			$this->get_method_title(),
+			$this->is_test_environment() ? 'Test' : '',
+			$response->get_account_type() ? $response->get_account_type() : 'account',
+			$last_four
+		);
+
+		// adds the check number (if any) to the order note
+		if ( $response->get_check_number() ) {
+			$message .= ' ' . sprintf( __( '(expires %s)', $this->text_domain ), $response->get_check_number() );
+		}
+
+		// adds the transaction id (if any) to the order note
+		if ( $response->get_transaction_id() ) {
+			$message .= ' ' . sprintf( __( '(Transaction ID %s)', $this->text_domain ), $response->get_transaction_id() );
+		}
+
+		$order->add_order_note( $message );
 	}
 
 
