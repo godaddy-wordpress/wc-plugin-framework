@@ -1437,11 +1437,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param int $order_id the order identifier
 	 * @return true|array true to process this payment as a regular transaction, otherwise
 	 *         return an array containing keys 'result' and 'redirect'
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if pre-orders are not supported by this gateway or its current configuration
 	 */
 	public function process_pre_order_payment( $result, $order_id ) {
 
-		if ( ! $this->supports_pre_orders() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Pre-Orders not supported by gateway' );
+		assert( $this->supports_pre_orders() );
 
 		if ( WC_Pre_Orders_Order::order_contains_pre_order( $order_id ) &&
 			WC_Pre_Orders_Order::order_requires_payment_tokenization( $order_id ) ) {
@@ -1606,11 +1605,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param string $token payment token
 	 * @param array $data payment token data
 	 * @return SV_WC_Payment_Gateway_Payment_Token payment token
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	protected function build_payment_token( $token, $data ) {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		return new SV_WC_Payment_Gateway_Payment_Token( $token, $data );
 
@@ -1626,11 +1624,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response optional create payment token response, or null if the tokenize payment method request should be made
 	 * @return WC_Order the order object
 	 * @throws Exception on network error or request error
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	protected function create_payment_token( $order, $response = null ) {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		// perform the API request to tokenize the payment method if needed
 		if ( ! $response || $this->tokenize_after_sale() ) {
@@ -1695,11 +1692,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 1.0
 	 * @return boolean true if tokenization should be forced on the checkout page, false otherwise
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	public function tokenization_forced() {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		// otherwise generally no need to force tokenization
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_tokenization_forced', false, $this );
@@ -1713,11 +1709,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 1.0
 	 * @return boolean true if the current payment method should be tokenized
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	protected function should_tokenize_payment_method() {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		return $this->get_post( 'wc-' . $this->get_id_dasherized() . '-tokenize-payment-method' ) && ! $this->get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' );
 
@@ -1737,11 +1732,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0
 	 * @param string $environment_id optional environment id, defaults to plugin current environment
 	 * @return string payment token user meta name
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	public function get_payment_token_user_meta_name( $environment_id = null ) {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		// default to current environment
 		if ( is_null( $environment_id ) )
@@ -1761,11 +1755,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param int $user_id WordPress user identifier, or 0 for guest
 	 * @param string $customer_id optional unique customer identifier, if not provided this will be looked up based on $user_id which cannot be 0 in that case
 	 * @return array associative array of string token to SV_WC_Payment_Gateway_Payment_Token object
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	public function get_payment_tokens( $user_id, $customer_id = null ) {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		if ( is_null( $customer_id ) ) {
 			$customer_id = $this->get_customer_id( $user_id );
@@ -1857,11 +1850,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param string $token payment token
 	 * @param string $customer_id optional unique customer identifier, if not provided this will be looked up based on $user_id which cannot be 0
 	 * @return SV_WC_Payment_Gateway_Payment_Token payment token object or null
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	public function get_payment_token( $user_id, $token, $customer_id = null ) {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		$tokens = $this->get_payment_tokens( $user_id, $customer_id );
 
@@ -1879,11 +1871,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param string|SV_WC_Payment_Gateway_Payment_Token $token payment token
 	 * @param string $customer_id optional unique customer identifier, if not provided this will be looked up based on $user_id which cannot be 0
 	 * @return boolean true if the user has the payment token, false otherwise
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	public function has_payment_token( $user_id, $token, $customer_id = null ) {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		if ( is_object( $token ) ) {
 			$token = $token->get_token();
@@ -1910,11 +1901,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token the token
 	 * @return bool|int false if token not added, user meta ID if added
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	public function add_payment_token( $user_id, $token ) {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		// get existing tokens
 		$tokens = $this->get_payment_tokens( $user_id );
@@ -1941,11 +1931,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token|string $token the payment token to delete
 	 * @return bool|int false if not deleted, updated user meta ID if deleted
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	public function remove_payment_token( $user_id, $token ) {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		// unknown token?
 		if ( ! $this->has_payment_token( $user_id, $token ) )
@@ -1998,11 +1987,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token|string $token the token to make default
 	 * @return string|bool false if not set, updated user meta ID if set
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	public function set_default_payment_token( $user_id, $token ) {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		// unknown token?
 		if ( ! $this->has_payment_token( $user_id, $token ) )
@@ -2036,14 +2024,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Returns $tokens in a format suitable for data storage
 	 *
 	 * @since 1.0
-	 * @param int $user_id user identifier
 	 * @param array $tokens array of SV_WC_Payment_Gateway_Payment_Token tokens
 	 * @return array data storage version of $tokens
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	protected function payment_tokens_to_database_format( $tokens ) {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		$_tokens = array();
 
@@ -2064,7 +2050,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function handle_my_payment_methods_actions() {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		// pre-conditions
 		if ( ! $this->is_available() || ! $this->tokenization_enabled() )
@@ -2119,11 +2105,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Display the 'My Payment Methods' section on the 'My Account'
 	 *
 	 * @since 1.0
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	public function show_my_payment_methods() {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		if ( ! $this->is_available() || ! $this->tokenization_enabled() )
 			return;
@@ -2140,15 +2125,13 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * tokenization
 	 *
 	 * @since 1.0
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
-	 * @throws SV_WC_Payment_Gateway_Unimplemented_Method_Exception if this gateway supports direct communication but has not provided an implementation for this method
 	 */
 	protected function show_my_payment_methods_load_template() {
 
-		if ( ! $this->supports_tokenization() ) throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
+		assert( $this->supports_tokenization() );
 
 		// concrete stub method
-		throw new SV_WC_Payment_Gateway_Unimplemented_Method_Exception( get_class( $this ) . substr( __METHOD__, strpos( __METHOD__, '::' ) ) . "()" );
+		assert( false );
 	}
 
 
@@ -2163,13 +2146,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 1.0
 	 * @return SV_WC_Payment_Gateway_API the payment gateway API instance
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if this gateway does not support direct communication
-	 * @throws SV_WC_Payment_Gateway_Unimplemented_Method_Exception if this gateway supports direct communication but has not provided an implementation for this method
 	 */
 	public function get_api() {
 
 		// concrete stub method
-		throw new SV_WC_Payment_Gateway_Unimplemented_Method_Exception( get_class( $this ) . substr( __METHOD__, strpos( __METHOD__, '::' ) ) . "()" );
+		assert( false );
 	}
 
 
