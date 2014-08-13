@@ -344,6 +344,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// add gateway.js checkout javascript
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+		// add API request logging
+		$this->add_api_request_logging();
 	}
 
 
@@ -399,13 +402,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			return false;
 		}
 
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
 		// load gateway.js checkout script
-		$script_src = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_javascript_url', $this->get_plugin()->get_plugin_url() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . $suffix . '.js', $suffix );
+		$script_src = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_javascript_url', $this->get_plugin()->get_plugin_url() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . '.min.js' );
 
 		// some gateways don't use frontend scripts so don't enqueue if one doesn't exist
-		if ( ! is_readable( $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . $suffix . '.js' ) ) {
+		if ( ! is_readable( $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . '.min.js' ) ) {
 			return false;
 		}
 
@@ -1645,6 +1646,41 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
+	 * Add API request logging for the gateway. The main plugin class typically handles this, but the payment
+	 * gateway plugin class no-ops the method so each gateway's requests can be logged individually (e.g. credit card &
+	 * eCheck) and make use of the payment gateway-specific add_debug_message() method
+	 *
+	 * @since 2.1-1
+	 * @see SV_WC_Plugin::add_api_request_logging()
+	 */
+	public function add_api_request_logging() {
+
+		if ( ! has_action( 'wc_' . $this->get_id() . '_api_request_performed' ) ) {
+			add_action( 'wc_' . $this->get_id() . '_api_request_performed', array( $this, 'log_api_request' ), 10, 2 );
+		}
+	}
+
+
+	/**
+	 * Log gateway API requests/responses
+	 *
+	 * @since 2.1-1
+	 * @param array $request request data, see SV_WC_API_Base::broadcast_request() for format
+	 * @param array $response response data
+	 */
+	public function log_api_request( $request, $response ) {
+
+		// request
+		$this->add_debug_message( $this->get_plugin()->get_api_log_message( $request ), 'message' );
+
+		// response
+		if ( ! empty( $response ) ) {
+			$this->add_debug_message( $this->get_plugin()->get_api_log_message( $response ), 'message' );
+		}
+	}
+
+
+	/**
 	 * Adds debug messages to the page as a WC message/error, and/or to the WC Error log
 	 *
 	 * @since 1.0
@@ -1715,6 +1751,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * is based on the WooCommerce core Cart::needs_shipping()
 	 *
 	 * @since 2.1-1
+	 * @param \WC_Order $order
 	 * @return boolean true if $order needs shipping, false otherwise
 	 */
 	protected function order_needs_shipping( $order ) {
@@ -1733,6 +1770,82 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// no shipping required
 		return false;
+	}
+
+
+	/** Order Meta helper methods *********************************************/
+
+
+	/**
+	 * Add order meta
+	 *
+	 * @since 2.1-1
+	 * @param int|string $order_id ID for order to add meta to
+	 * @param string $key meta key (already prefixed with gateway ID)
+	 * @param mixed $value meta value
+	 * @param bool $unique
+	 * @return bool|int
+	 */
+	protected function add_order_meta( $order_id, $key, $value, $unique = false ) {
+
+		return add_post_meta( $order_id, $this->get_order_meta_prefix() . $key, $value, $unique );
+	}
+
+
+	/**
+	 * Get order meta
+	 *
+	 * Note this is hardcoded to return a single value for the get_post_meta() call
+	 *
+	 * @since 2.1-1
+	 * @param int|string $order_id ID for order to get meta for
+	 * @param string $key meta key
+	 * @return mixed
+	 */
+	protected function get_order_meta( $order_id, $key ) {
+
+		return get_post_meta( $order_id, $this->get_order_meta_prefix() . $key, true );
+	}
+
+
+	/**
+	 * Update order meta
+	 *
+	 * @since 2.1-1
+	 * @param int|string $order_id ID for order to update meta for
+	 * @param string $key meta key
+	 * @param mixed $value meta value
+	 * @return bool|int
+	 */
+	protected function update_order_meta( $order_id, $key, $value ) {
+
+		return update_post_meta( $order_id, $this->get_order_meta_prefix() . $key, $value );
+	}
+
+
+	/**
+	 * Delete order meta
+	 *
+	 * @since 2.1-1
+	 * @param int|string $order_id ID for order to delete meta for
+	 * @param string $key meta key
+	 * @return bool
+	 */
+	protected function delete_order_meta( $order_id, $key ) {
+		return delete_post_meta( $order_id, $this->get_order_meta_prefix() . $key );
+	}
+
+
+	/**
+	 * Gets the order meta prefixed used for the *_order_meta() methods
+	 *
+	 * Defaults to `_wc_{gateway_id}_`
+	 *
+	 * @since 2.1-1
+	 * @return string
+	 */
+	protected function get_order_meta_prefix() {
+		return '_wc_' . $this->get_id() . '_';
 	}
 
 

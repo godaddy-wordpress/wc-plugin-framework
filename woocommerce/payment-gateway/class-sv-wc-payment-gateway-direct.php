@@ -563,6 +563,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// set capture total here so it can be modified later as needed prior to capture
 		$order->capture_total = number_format( $order->get_total(), 2, '.', '' );
 
+		// capture-specific order description
+		$order->description = sprintf( _x( '%s - Capture for Order %s', 'Capture order description', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_capture', $order, $this );
 	}
 
@@ -671,7 +674,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} elseif ( $this->is_echeck_gateway() ) {
 			$response = $this->do_check_transaction( $order );
 		} else {
-			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'no do_transaction() method for this gateway type' );
+			$do_payment_type_transaction = 'do_' . $this->get_payment_type() . '_transaction';
+			$response = $this->$do_payment_type_transaction( $order );
 		}
 
 		// handle the response
@@ -744,8 +748,23 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		$transaction_time = strtotime( get_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_date', true ) );
 
-		// use 30 days as a standard authorization window.  Individual gateways can override this as necessary
-		return floor( ( time() - $transaction_time ) / 86400 ) > 30;
+		return floor( ( time() - $transaction_time ) / 3600 ) > $this->get_authorization_time_window();
+	}
+
+
+	/**
+	 * Return the authorization time window in hours. An authorization is considered
+	 * expired if it is older than this.
+	 *
+	 * 30 days (720 hours) is the standard authorization window. Individual gateways
+	 * can override this as necessary.
+	 *
+	 * @since 2.1-1
+	 * @return int hours
+	 */
+	protected function get_authorization_time_window() {
+
+		return 720;
 	}
 
 
@@ -901,6 +920,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// mark the order as captured
 		update_post_meta( $order->id, '_wc_' . $this->get_id() . '_charge_captured', 'yes' );
+
+		// add capture transaction ID
+		if ( $response && $response->get_transaction_id() ) {
+			update_post_meta( $order->id, '_wc_' . $this->get_id() . 'capture_trans_id', $response->get_transaction_id() );
+		}
 	}
 
 

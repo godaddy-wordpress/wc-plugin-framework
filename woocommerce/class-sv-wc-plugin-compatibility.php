@@ -792,6 +792,91 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Return an array of formatted item meta in format:
+	 *
+	 * array(
+	 *   $meta_key => array(
+	 *     'label' => $label,
+	 *     'value' => $value
+	 *   )
+	 * )
+	 *
+	 * e.g.
+	 *
+	 * array(
+	 *   'pa_size' => array(
+	 *     'label' => 'Size',
+	 *     'value' => 'Medium',
+	 *   )
+	 * )
+	 *
+	 * Backports the get_formatted() method to WC 2.1
+	 *
+	 * @since 2.1-1
+	 * @see WC_Order_Item_Meta::get_formatted()
+	 * @param \WC_Order_Item_Meta $item_meta order item meta class instance
+	 * @param string $hide_prefix exclude meta when key is prefixed with this, defaults to `_`
+	 * @return array
+	 */
+	public static function get_formatted_item_meta( WC_Order_Item_Meta $item_meta, $hide_prefix = '_' ) {
+
+		if ( self::is_wc_version_gte_2_2() ) {
+
+			return $item_meta->get_formatted( $hide_prefix );
+
+		} else {
+
+			if ( empty( $item_meta->meta ) ) {
+				return array();
+			}
+
+			$formatted_meta = array();
+
+			foreach ( (array) $item_meta->meta as $meta_key => $meta_values ) {
+
+				if ( empty( $meta_values ) || ! is_array( $meta_values ) || ( ! empty( $hide_prefix ) && substr( $meta_key, 0, 1 ) == $hide_prefix ) ) {
+					continue;
+				}
+
+				foreach ( $meta_values as $meta_value ) {
+
+					// Skip serialised meta
+					if ( is_serialized( $meta_value ) ) {
+						continue;
+					}
+
+					$attribute_key = urldecode( str_replace( 'attribute_', '', $meta_key ) );
+
+					// If this is a term slug, get the term's nice name
+					if ( taxonomy_exists( $attribute_key ) ) {
+						$term = get_term_by( 'slug', $meta_value, $attribute_key );
+
+						if ( ! is_wp_error( $term ) && is_object( $term ) && $term->name ) {
+							$meta_value = $term->name;
+						}
+
+						// If we have a product, and its not a term, try to find its non-sanitized name
+					} elseif ( $item_meta->product ) {
+						$product_attributes = $item_meta->product->get_attributes();
+
+						if ( isset( $product_attributes[ $attribute_key ] ) ) {
+							$meta_key = wc_attribute_label( $product_attributes[ $attribute_key ]['name'] );
+						}
+					}
+
+					$formatted_meta[ $meta_key ] = array(
+						'label'     => wc_attribute_label( $attribute_key ),
+						'value'     => apply_filters( 'woocommerce_order_item_display_meta_value', $meta_value ),
+					);
+				}
+			}
+
+			return $formatted_meta;
+		}
+	}
+
+
+	/**
 	 * Compatibility function to get the version of the currently installed WooCommerce
 	 *
 	 * @since 2.0
@@ -848,6 +933,17 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function is_wc_version_gte_2_1() {
 		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.1', '>=' );
+	}
+
+
+	/**
+	 * Returns true if the installed version of WooCommerce is 2.2 or greater
+	 *
+	 * @since 2.1-1
+	 * @return boolean true if the installed version of WooCommerce is 2.2 or greater
+	 */
+	public static function is_wc_version_gte_2_2() {
+		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.2', '>=' );
 	}
 
 

@@ -16,7 +16,7 @@
  * versions in the future. If you wish to customize the plugin for your
  * needs please refer to http://www.skyverge.com
  *
- * @package   SkyVerge/WooCommerce/Payment-Gateway/API
+ * @package   SkyVerge/WooCommerce/Payment-Gateway/Exceptions
  * @author    SkyVerge
  * @copyright Copyright (c) 2013-2014, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
@@ -24,11 +24,11 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( ! interface_exists( 'SV_WC_Payment_Gateway_API_Request' ) ) :
+if ( ! class_exists( 'SV_WC_Payment_Gateway_Exception' ) ) :
 
 /**
- * WooCommerce Direct Payment Gateway API Request
+ * Payment Gateway Exception - generic payment failure Exception
  */
-interface SV_WC_Payment_Gateway_API_Request extends SV_WC_API_Request { }
+class SV_WC_Payment_Gateway_Exception extends Exception { }
 
-endif;  // interface exists check
+endif;  // class exists check

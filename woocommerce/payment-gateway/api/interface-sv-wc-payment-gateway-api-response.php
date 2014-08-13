@@ -29,7 +29,7 @@ if ( ! interface_exists( 'SV_WC_Payment_Gateway_API_Response' ) ) :
 /**
  * WooCommerce Direct Payment Gateway API Response
  */
-interface SV_WC_Payment_Gateway_API_Response {
+interface SV_WC_Payment_Gateway_API_Response extends SV_WC_API_Response {
 
 
 	/**
@@ -80,25 +80,6 @@ interface SV_WC_Payment_Gateway_API_Response {
 	 * @return string transaction id
 	 */
 	public function get_transaction_id();
-
-
-	/**
-	 * Returns the string representation of this response
-	 *
-	 * @since 1.0
-	 * @return string response
-	 */
-	public function to_string();
-
-
-	/**
-	 * Returns the string representation of this response with any and all
-	 * sensitive elements masked or removed
-	 *
-	 * @since 1.0
-	 * @return string response safe for logging/displaying
-	 */
-	public function to_string_safe();
 
 
 }

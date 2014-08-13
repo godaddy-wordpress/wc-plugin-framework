@@ -139,6 +139,9 @@ abstract class SV_WC_Plugin {
 		// AJAX handler to dismiss any warning/error notices
 		add_action( 'wp_ajax_wc_plugin_framework_' . $this->get_id() . '_dismiss_message', array( $this, 'handle_dismiss_message' ) );
 
+		// automatically log HTTP requests from SV_WC_API_Base
+		$this->add_api_request_logging();
+
 		// Load translation files
 		add_action( 'init', array( $this, 'load_translation' ) );
 	}
@@ -176,7 +179,21 @@ abstract class SV_WC_Plugin {
 	 * @since 2.0
 	 */
 	private function includes() {
+
+		// common exception class
+		require_once( 'class-sv-wc-plugin-exception.php' );
+
+		// common utility methods
+		require_once( 'class-sv-wc-helper.php' );
+
+		// backwards compatibility for older WC versions
 		require_once( 'class-sv-wc-plugin-compatibility.php' );
+
+		// generic API base
+		require_once( 'api/class-sv-wc-api-exception.php' );
+		require_once( 'api/class-sv-wc-api-base.php' );
+		require_once( 'api/interface-sv-wc-api-request.php' );
+		require_once( 'api/interface-sv-wc-api-response.php' );
 	}
 
 
@@ -374,6 +391,8 @@ abstract class SV_WC_Plugin {
 	 * Returns the home url for the server, forcing to https protocol if $ssl
 	 * is true
 	 *
+	 * TODO: move to helper class, check usages first
+	 *
 	 * @since 2.1
 	 * @param boolean $ssl true to use https protocol, false otherwise
 	 * @return string the URL for the server
@@ -387,6 +406,60 @@ abstract class SV_WC_Plugin {
 		}
 
 		return $url;
+	}
+
+
+	/**
+	 * Automatically log API requests/responses when using SV_WC_API_Base
+	 *
+	 * @since 2.1-1
+	 * @see SV_WC_API_Base::broadcast_request()
+	 */
+	public function add_api_request_logging() {
+
+		if ( ! has_action( 'wc_' . $this->get_id() . '_api_request_performed' ) ) {
+			add_action( 'wc_' . $this->get_id() . '_api_request_performed', array( $this, 'log_api_request' ), 10, 2 );
+		}
+	}
+
+
+	/**
+	 * Log API requests/responses
+	 *
+	 * @since 2.1-1
+	 * @param array $request request data, see SV_WC_API_Base::broadcast_request() for format
+	 * @param array $response response data
+	 * @param string|null $log_id log to write data to
+	 */
+	public function log_api_request( $request, $response, $log_id = null ) {
+
+		$this->log( "Request\n" . $this->get_api_log_message( $request ), $log_id );
+
+		if ( ! empty( $response ) ) {
+			$this->log( "Response\n" . $this->get_api_log_message( $response ), $log_id );
+		}
+	}
+
+
+	/**
+	 * Transform the API request/response data into a string suitable for logging
+	 *
+	 * @since 2.1-1
+	 * @param array $data
+	 * @return string
+	 */
+	public function get_api_log_message( $data ) {
+
+		$messages = array();
+
+		$messages[] = isset( $data['uri'] ) ? 'Request' : 'Response';
+
+		foreach ( (array) $data as $key => $value ) {
+
+			$messages[] = sprintf( '%s: %s', $key, is_array( $value ) ? print_r( $value, true ) : $value );
+		}
+
+		return implode( "\n", $messages );
 	}
 
 

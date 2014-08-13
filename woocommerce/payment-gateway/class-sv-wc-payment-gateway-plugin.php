@@ -958,6 +958,17 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
+	 * No-op the plugin class implementation so the payment gateway class can
+	 * implement its own request logging. This is primarily done to keep the log
+	 * files separated by gateway ID
+	 *
+	 * @see SV_WC_Plugin::add_api_request_logging()
+	 * @since 2.1-1
+	 */
+	public function add_api_request_logging() { }
+
+
+	/**
 	 * Returns the set of accepted currencies, or empty array if all currencies
 	 * are accepted.  This is the intersection of all currencies accepted by
 	 * any gateways this plugin supports.
