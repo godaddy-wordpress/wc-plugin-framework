@@ -748,8 +748,23 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		$transaction_time = strtotime( get_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_date', true ) );
 
-		// use 30 days as a standard authorization window.  Individual gateways can override this as necessary
-		return floor( ( time() - $transaction_time ) / 86400 ) > 30;
+		return floor( ( time() - $transaction_time ) / 3600 ) > $this->get_authorization_time_window();
+	}
+
+
+	/**
+	 * Return the authorization time window in hours. An authorization is considered
+	 * expired if it is older than this.
+	 *
+	 * 30 days (720 hours) is the standard authorization window. Individual gateways
+	 * can override this as necessary.
+	 *
+	 * @since 2.1-1
+	 * @return int hours
+	 */
+	protected function get_authorization_time_window() {
+
+		return 720;
 	}
 
 
