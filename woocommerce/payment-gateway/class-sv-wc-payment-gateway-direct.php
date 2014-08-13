@@ -563,6 +563,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// set capture total here so it can be modified later as needed prior to capture
 		$order->capture_total = number_format( $order->get_total(), 2, '.', '' );
 
+		// capture-specific order description
+		$order->description = sprintf( _x( '%s - Capture for Order %s', 'Capture order description', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_capture', $order, $this );
 	}
 
