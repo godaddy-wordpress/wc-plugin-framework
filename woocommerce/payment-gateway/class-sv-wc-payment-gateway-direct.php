@@ -674,7 +674,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} elseif ( $this->is_echeck_gateway() ) {
 			$response = $this->do_check_transaction( $order );
 		} else {
-			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'no do_transaction() method for this gateway type' );
+			$do_payment_type_transaction = 'do_' . $this->get_payment_type() . '_transaction';
+			$response = $this->$do_payment_type_transaction( $order );
 		}
 
 		// handle the response
