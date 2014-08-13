@@ -29,28 +29,6 @@ if ( ! interface_exists( 'SV_WC_Payment_Gateway_API_Request' ) ) :
 /**
  * WooCommerce Direct Payment Gateway API Request
  */
-interface SV_WC_Payment_Gateway_API_Request {
-
-
-	/**
-	 * Returns the string representation of this request
-	 *
-	 * @since 1.0
-	 * @return string the request
-	 */
-	public function to_string();
-
-
-	/**
-	 * Returns the string representation of this request with any and all
-	 * sensitive elements masked or removed
-	 *
-	 * @since 1.0
-	 * @return string the request, safe for logging/displaying
-	 */
-	public function to_string_safe();
-
-
-}
+interface SV_WC_Payment_Gateway_API_Request extends SV_WC_API_Request { }
 
 endif;  // interface exists check
