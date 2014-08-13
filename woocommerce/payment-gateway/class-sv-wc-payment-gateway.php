@@ -1751,6 +1751,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * is based on the WooCommerce core Cart::needs_shipping()
 	 *
 	 * @since 2.1-1
+	 * @param \WC_Order $order
 	 * @return boolean true if $order needs shipping, false otherwise
 	 */
 	protected function order_needs_shipping( $order ) {
@@ -1769,6 +1770,82 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// no shipping required
 		return false;
+	}
+
+
+	/** Order Meta helper methods *********************************************/
+
+
+	/**
+	 * Add order meta
+	 *
+	 * @since 2.1-1
+	 * @param int|string $order_id ID for order to add meta to
+	 * @param string $key meta key (already prefixed with gateway ID)
+	 * @param mixed $value meta value
+	 * @param bool $unique
+	 * @return bool|int
+	 */
+	protected function add_order_meta( $order_id, $key, $value, $unique = false ) {
+
+		return add_post_meta( $order_id, $this->get_order_meta_prefix() . $key, $value, $unique );
+	}
+
+
+	/**
+	 * Get order meta
+	 *
+	 * Note this is hardcoded to return a single value for the get_post_meta() call
+	 *
+	 * @since 2.1-1
+	 * @param int|string $order_id ID for order to get meta for
+	 * @param string $key meta key
+	 * @return mixed
+	 */
+	protected function get_order_meta( $order_id, $key ) {
+
+		return get_post_meta( $order_id, $this->get_order_meta_prefix() . $key, true );
+	}
+
+
+	/**
+	 * Update order meta
+	 *
+	 * @since 2.1-1
+	 * @param int|string $order_id ID for order to update meta for
+	 * @param string $key meta key
+	 * @param mixed $value meta value
+	 * @return bool|int
+	 */
+	protected function update_order_meta( $order_id, $key, $value ) {
+
+		return update_post_meta( $order_id, $this->get_order_meta_prefix() . $key, $value );
+	}
+
+
+	/**
+	 * Delete order meta
+	 *
+	 * @since 2.1-1
+	 * @param int|string $order_id ID for order to delete meta for
+	 * @param string $key meta key
+	 * @return bool
+	 */
+	protected function delete_order_meta( $order_id, $key ) {
+		return delete_post_meta( $order_id, $this->get_order_meta_prefix() . $key );
+	}
+
+
+	/**
+	 * Gets the order meta prefixed used for the *_order_meta() methods
+	 *
+	 * Defaults to `_wc_{gateway_id}_`
+	 *
+	 * @since 2.1-1
+	 * @return string
+	 */
+	protected function get_order_meta_prefix() {
+		return '_wc_' . $this->get_id() . '_';
 	}
 
 
