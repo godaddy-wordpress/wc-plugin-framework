@@ -183,6 +183,10 @@ abstract class SV_WC_Plugin {
 		// common exception class
 		require_once( 'class-sv-wc-plugin-exception.php' );
 
+		// common utility methods
+		require_once( 'class-sv-wc-helper.php' );
+
+		// backwards compatibility for older WC versions
 		require_once( 'class-sv-wc-plugin-compatibility.php' );
 
 		// generic API base
