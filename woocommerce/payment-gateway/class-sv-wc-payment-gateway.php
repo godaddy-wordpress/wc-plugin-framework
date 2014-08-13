@@ -344,6 +344,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// add gateway.js checkout javascript
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+		// add API request logging
+		$this->add_api_request_logging();
 	}
 
 
@@ -1641,6 +1644,41 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		return substr( $account_number, $ix - 1 ) == ( ( 10 - $sum % 10 ) % 10 );
+	}
+
+
+	/**
+	 * Add API request logging for the gateway. The main plugin class typically handles this, but the payment
+	 * gateway plugin class no-ops the method so each gateway's requests can be logged individually (e.g. credit card &
+	 * eCheck) and make use of the payment gateway-specific add_debug_message() method
+	 *
+	 * @since 2.1-1
+	 * @see SV_WC_Plugin::add_api_request_logging()
+	 */
+	public function add_api_request_logging() {
+
+		if ( ! has_action( 'wc_' . $this->get_id() . '_api_request_performed' ) ) {
+			add_action( 'wc_' . $this->get_id() . '_api_request_performed', array( $this, 'log_api_request' ), 10, 2 );
+		}
+	}
+
+
+	/**
+	 * Log gateway API requests/responses
+	 *
+	 * @since 2.1-1
+	 * @param array $request request data, see SV_WC_API_Base::broadcast_request() for format
+	 * @param array $response response data
+	 */
+	public function log_api_request( $request, $response ) {
+
+		// request
+		$this->add_debug_message( $this->get_plugin()->get_api_log_message( $request ), 'message' );
+
+		// response
+		if ( ! empty( $response ) ) {
+			$this->add_debug_message( $this->get_plugin()->get_api_log_message( $response ), 'message' );
+		}
 	}
 
 
