@@ -196,7 +196,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		parent::lib_includes();
 
-		// include framework files
+		// interfaces
 		require_once( 'api/interface-sv-wc-payment-gateway-api.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-request.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-response.php' );
@@ -207,9 +207,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-credit-card-response.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-echeck-response.php' );
 
-		require_once( 'exceptions/class-sv-wc-payment-gateway-feature-unsupported-exception.php' );
-		require_once( 'exceptions/class-sv-wc-payment-gateway-unimplemented-method-exception.php' );
+		// exceptions
+		require_once( 'exceptions/class-sv-wc-payment-gateway-exception.php' );
 
+		// gateway
 		require_once( 'class-sv-wc-payment-gateway.php' );
 		require_once( 'class-sv-wc-payment-gateway-direct.php' );
 		require_once( 'class-sv-wc-payment-gateway-hosted.php' );

@@ -1373,13 +1373,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 1.0
 	 * @param array $form_fields gateway form fields
 	 * @return array $form_fields gateway form fields
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if authorization & charge are not supported
 	 */
 	protected function add_authorization_charge_form_fields( $form_fields ) {
 
-		if ( ! ( $this->supports_credit_card_authorization() && $this->supports_credit_card_charge() ) ) {
-			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Authorization/Charge transactions not supported by gateway' );
-		}
+		assert( $this->supports_credit_card_authorization() && $this->supports_credit_card_charge() );
 
 		$form_fields['transaction_type'] = array(
 			'title'    => _x( 'Transaction Type', 'Supports credit card authorization/charge', $this->text_domain ),
@@ -1406,9 +1403,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function perform_credit_card_charge() {
 
-		if ( ! $this->supports_credit_card_charge() ) {
-			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Credit Card charge transactions not supported by this gateway' );
-		}
+		assert( $this->supports_credit_card_charge() );
 
 		return  self::TRANSACTION_TYPE_CHARGE == $this->transaction_type;
 	}
@@ -1424,9 +1419,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function perform_credit_card_authorization() {
 
-		if ( ! $this->supports_credit_card_authorization() ) {
-			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Credit Card authorization transactions not supported by this gateway' );
-		}
+		assert( $this->supports_credit_card_authorization() );
 
 		return self::TRANSACTION_TYPE_AUTHORIZATION == $this->transaction_type;
 	}
@@ -1454,13 +1447,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 1.0
 	 * @see get_available_card_types()
 	 * @return array of accepted card types, ie 'VISA', 'MC', 'AMEX', etc
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if card types are not supported
 	 */
 	public function get_card_types() {
 
-		if ( ! $this->supports_card_types() ) {
-			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Card Types not supported by gateway' );
-		}
+		assert( $this->supports_card_types() );
 
 		return $this->card_types;
 	}
@@ -1473,13 +1463,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 1.0
 	 * @param array $form_fields gateway form fields
 	 * @return array $form_fields gateway form fields
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if card types are not supported
 	 */
 	protected function add_card_types_form_fields( $form_fields ) {
 
-		if ( ! $this->supports_card_types() ) {
-			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Card Types not supported by gateway' );
-		}
+		assert( $this->supports_card_types() );
 
 		$form_fields['card_types'] = array(
 			'title'    => _x( 'Accepted Card Logos', 'Supports card types', $this->text_domain ),
@@ -1500,13 +1487,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 *
 	 * @since 1.0
 	 * @return array associative array of card type to display name
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if credit card types is not supported
 	 */
 	public function get_available_card_types() {
 
-		if ( ! $this->supports_card_types() ) {
-			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Card Types not supported by gateway' );
-		}
+		assert( $this->supports_card_types() );
 
 		// default available card types
 		if ( ! isset( $this->available_card_types ) ) {
@@ -1546,13 +1530,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 *
 	 * @since 1.0
 	 * @return boolean true if tokenization is enabled
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	public function tokenization_enabled() {
 
-		if ( ! $this->supports_tokenization() ) {
-			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
-		}
+		assert( $this->supports_tokenization() );
 
 		return 'yes' == $this->tokenization;
 	}
@@ -1564,13 +1545,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 1.0
 	 * @param array $form_fields gateway form fields
 	 * @return array $form_fields gateway form fields
-	 * @throws SV_WC_Payment_Gateway_Feature_Unsupported_Exception if payment method tokenization is not supported
 	 */
 	protected function add_tokenization_form_fields( $form_fields ) {
 
-		if ( ! $this->supports_tokenization() ) {
-			throw new SV_WC_Payment_Gateway_Feature_Unsupported_Exception( 'Payment tokenization not supported by gateway' );
-		}
+		assert( $this->supports_tokenization() );
 
 		$form_fields['tokenization'] = array(
 			'title'   => _x( 'Tokenization', 'Supports tokenization', $this->text_domain ),
@@ -1978,13 +1956,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 1.0
 	 * @param string $field_name check gateway field name, includes 'check_number', 'account_type'
 	 * @return boolean true if this check gateway supports the named field
-	 * @throws Exception if this is called on a non-check gateway
 	 */
 	public function supports_check_field( $field_name ) {
 
-		if ( ! $this->is_echeck_gateway() ) {
-			throw new Exception( 'Check method called on non-check gateway' );
-		}
+		assert( $this->is_echeck_gateway() );
 
 		return is_array( $this->supported_check_fields ) && in_array( $field_name, $this->supported_check_fields );
 
