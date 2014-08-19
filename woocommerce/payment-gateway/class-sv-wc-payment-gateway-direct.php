@@ -919,11 +919,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	protected function add_capture_data( $order, $response ) {
 
 		// mark the order as captured
-		update_post_meta( $order->id, '_wc_' . $this->get_id() . '_charge_captured', 'yes' );
+		$this->update_order_meta( $order->id, 'charge_captured', 'yes' );
 
 		// add capture transaction ID
 		if ( $response && $response->get_transaction_id() ) {
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . 'capture_trans_id', $response->get_transaction_id() );
+			$this->update_order_meta( $order->id, 'capture_trans_id', $response->get_transaction_id() );
 		}
 	}
 
