@@ -414,7 +414,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		try {
 
 			// registered customer checkout (already logged in or creating account at checkout)
-			if ( $this->supports_tokenization() && 0 != $order->user_id && $this->should_tokenize_payment_method() &&
+			if ( $this->supports_tokenization() && 0 != SV_WC_Plugin_Compatibility::get_order_user_id( $order) && $this->should_tokenize_payment_method() &&
 				( 0 == $order->payment_total || $this->tokenize_before_sale() ) ) {
 				$order = $this->create_payment_token( $order );
 			}
@@ -516,7 +516,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} elseif ( $this->get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 			// paying with tokenized payment method (we've already verified that this token exists in the validate_fields method)
-			$token = $this->get_payment_token( $order->user_id, $this->get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) );
+			$token = $this->get_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order), $this->get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) );
 
 			$order->payment->token          = $token->get_token();
 			$order->payment->account_number = $token->get_last_four();
@@ -540,7 +540,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			}
 
 			// make this the new default payment token
-			$this->set_default_payment_token( $order->user_id, $token );
+			$this->set_default_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order), $token );
 		}
 
 		// allow other actors to modify the order object
@@ -682,7 +682,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// handle the response
 		if ( $response->transaction_approved() || $response->transaction_held() ) {
 
-			if ( $this->supports_tokenization() && 0 != $order->user_id && $this->should_tokenize_payment_method() &&
+			if ( $this->supports_tokenization() && 0 != SV_WC_Plugin_Compatibility::get_order_user_id( $order) && $this->should_tokenize_payment_method() &&
 				( $order->payment_total > 0 && ( $this->tokenize_with_sale() || $this->tokenize_after_sale() ) ) ) {
 				$order = $this->create_payment_token( $order, $response );
 			}
@@ -1044,12 +1044,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$order->customer_id = $this->get_order_meta( $order->id, 'customer_id' );
 
 		// ensure the payment token is still valid
-		if ( ! $this->has_payment_token( $order->user_id, $order->payment->token ) ) {
+		if ( ! $this->has_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order), $order->payment->token ) ) {
 			$order->payment->token = null;
 		} else {
 
 			// get the token object
-			$token = $this->get_payment_token( $order->user_id, $order->payment->token );
+			$token = $this->get_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order), $order->payment->token );
 
 			if ( ! isset( $order->payment->account_number ) || ! $order->payment->account_number )
 				$order->payment->account_number = $token->get_last_four();
@@ -1113,12 +1113,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$order->payment_total = number_format( (double) $amount_to_charge, 2, '.', '' );
 
 			// required
-			if ( ! $order->payment->token || ! $order->user_id ) {
+			if ( ! $order->payment->token || ! SV_WC_Plugin_Compatibility::get_order_user_id( $order) ) {
 				throw new Exception( 'Subscription Renewal: Payment Token or User ID is missing/invalid.' );
 			}
 
 			// get the token, we've already verified it's good
-			$token = $this->get_payment_token( $order->user_id, $order->payment->token );
+			$token = $this->get_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order), $order->payment->token );
 
 			// perform the transaction
 			if ( $this->is_credit_card_gateway() ) {
@@ -1273,7 +1273,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( $this->get_id() !== $order->recurring_payment_method )
 			return $payment_method_to_display;
 
-		$token = $this->get_payment_token( $order->user_id, $this->get_order_meta( $order->id, 'payment_token' ) );
+		$token = $this->get_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order), $this->get_order_meta( $order->id, 'payment_token' ) );
 
 		if ( is_object( $token )  )
 			$payment_method_to_display = sprintf( _x( 'Via %s ending in %s', 'Supports direct payment method subscriptions', $this->text_domain ), $token->get_type_full(), $token->get_last_four() );
@@ -1376,7 +1376,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order ) ) {
 
 			// normally a guest user wouldn't be assigned a customer id, but for a pre-order requiring tokenization, it might be
-			if ( 0 == $order->user_id && false !== ( $customer_id = $this->get_guest_customer_id( $order ) ) )
+			if ( 0 == SV_WC_Plugin_Compatibility::get_order_user_id( $order) && false !== ( $customer_id = $this->get_guest_customer_id( $order ) ) )
 				$order->customer_id = $customer_id;
 
 		} elseif ( WC_Pre_Orders_Order::order_has_payment_token( $order ) ) {
@@ -1390,7 +1390,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$order->customer_id = $this->get_order_meta( $order->id, 'customer_id' );
 
 			// verify that this customer still has the token tied to this order.  Pass in customer_id to support tokenized guest orders
-			if ( ! $this->has_payment_token( $order->user_id, $order->payment->token, $order->customer_id ) ) {
+			if ( ! $this->has_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order), $order->payment->token, $order->customer_id ) ) {
 
 				$order->payment->token = null;
 
@@ -1400,7 +1400,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				//  most up-to-date data, while the meta attached to the order is a second best
 
 				// for a guest transaction with a gateway that doesn't support "tokenization get" this will return null and the token data will be pulled from the order meta
-				$token = $this->get_payment_token( $order->user_id, $order->payment->token, $order->customer_id );
+				$token = $this->get_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order), $order->payment->token, $order->customer_id );
 
 				// account last four
 				$order->payment->account_number = $token && $token->get_last_four() ? $token->get_last_four() : $this->get_order_meta( $order->id, 'account_four' );
@@ -1654,8 +1654,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			}
 
 			// set the token to the user account
-			if ( $order->user_id ) {
-				$this->add_payment_token( $order->user_id, $token );
+			if ( SV_WC_Plugin_Compatibility::get_order_user_id( $order) ) {
+				$this->add_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order), $token );
 			}
 
 			// order note based on gateway type
