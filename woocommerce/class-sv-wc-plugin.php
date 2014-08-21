@@ -132,8 +132,8 @@ abstract class SV_WC_Plugin {
 			// add a 'Configure' link to the plugin action links
 			add_filter( 'plugin_action_links_' . plugin_basename( $this->get_file() ), array( $this, 'plugin_action_links' ) );
 
-			// run every time
-			$this->do_install();
+			// defer until WP/WC has fully loaded
+			add_action( 'wp_loaded', array( $this, 'do_install' ) );
 		}
 
 		// AJAX handler to dismiss any warning/error notices
@@ -885,7 +885,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 2.0
 	 */
-	protected function do_install() {
+	public function do_install() {
 
 		$installed_version = get_option( $this->get_plugin_version_name() );
 
@@ -901,7 +901,6 @@ abstract class SV_WC_Plugin {
 			// new version number
 			update_option( $this->get_plugin_version_name(), $this->get_version() );
 		}
-
 	}
 
 
