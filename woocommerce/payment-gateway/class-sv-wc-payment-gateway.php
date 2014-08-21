@@ -1074,6 +1074,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// transaction id if available
 		if ( $response && $response->get_transaction_id() ) {
 			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_id', $response->get_transaction_id() );
+
+			// set transaction ID for WC core - remove this and use WC_Order::payment_complete() to add transaction ID after 2.2+ can be required
+			update_post_meta( $order->id, '_transaction_id', $response->get_transaction_id() );
 		}
 
 		// transaction date
