@@ -829,7 +829,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function is_plugin_active( $plugin_name ) {
 
-		// backwards compat
+		// handle full plugin names (plugin-dir/plugin-filename.php)
 		if ( SV_WC_Helper::str_exists( $plugin_name, '/' ) ) {
 			list( , $plugin_name ) = explode( '/', $plugin_name );
 		}
@@ -844,7 +844,16 @@ abstract class SV_WC_Plugin {
 
 		foreach ( $active_plugins as $plugin ) {
 
-			list( , $filename ) = explode( '/', $plugin );
+			if ( SV_WC_Helper::str_exists( $plugin, '/' ) ) {
+
+				// normal plugin name (plugin-dir/plugin-filename.php)
+				list( , $filename ) = explode( '/', $plugin );
+
+			} else {
+
+				// no directory, just plugin file
+				$filename = $plugin;
+			}
 
 			$plugin_filenames[] = $filename;
 		}
