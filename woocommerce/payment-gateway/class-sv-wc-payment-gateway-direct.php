@@ -2113,8 +2113,30 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( ! $this->is_available() || ! $this->tokenization_enabled() )
 			return;
 
+		// add delete icon
+		wp_enqueue_style( 'dashicons' );
+		add_action( 'wp_footer', array( $this, 'render_my_payment_methods_css' ) );
+
 		// render the template
 		$this->show_my_payment_methods_load_template();
+	}
+
+
+	/**
+	 * Render CSS to display the X icon for the Delete Payment Method action
+	 *
+	 * @since 2.1-1
+	 */
+	public function render_my_payment_methods_css() {
+
+		$class = esc_attr( $this->get_id_dasherized() );
+
+		?>
+			<style type="text/css">
+				.wc-<?php echo $class; ?>-delete-payment-method {text-decoration: none;}
+				.wc-<?php echo $class; ?>-delete-payment-method:before {font-family: 'dashicons';content:"\f158";font-size:200%;-webkit-font-smoothing:antialiased;speak:none;font-weight:400;font-variant:normal;text-transform:none;}
+			</style>
+		<?php
 	}
 
 
