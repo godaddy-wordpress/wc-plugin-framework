@@ -1412,7 +1412,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 						$order->payment->exp_month  = $token->get_exp_month();
 						$order->payment->exp_year   = $token->get_exp_year();
 					} else {
-						list( $exp_year, $exp_month ) = explode( '-', $this->get_order_meta( $order->id, 'card_expiry_date' );
+						list( $exp_year, $exp_month ) = explode( '-', $this->get_order_meta( $order->id, 'card_expiry_date' ) );
 						$order->payment->exp_month  = $exp_month;
 						$order->payment->exp_year   = $exp_year;
 					}
