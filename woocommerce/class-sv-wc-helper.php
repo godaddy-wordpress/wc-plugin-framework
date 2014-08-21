@@ -97,7 +97,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 
 		/**
-		 * Returns true if the haystack contains the needle
+		 * Returns true if the needle exists in haystack
 		 *
 		 * Note: case-sensitive
 		 *
@@ -106,7 +106,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * @param $needle
 		 * @return bool
 		 */
-		public static function str_contains( $haystack, $needle ) {
+		public static function str_exists( $haystack, $needle ) {
 
 			if ( self::multibyte_loaded() ) {
 
