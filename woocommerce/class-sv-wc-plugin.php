@@ -824,10 +824,15 @@ abstract class SV_WC_Plugin {
 	 * Helper function to determine whether a plugin is active
 	 *
 	 * @since 2.0
-	 * @param string $plugin_name the plugin name, as the plugin-dir/plugin-class.php
+	 * @param string $plugin_name plugin name, as the plugin-filename.php
 	 * @return boolean true if the named plugin is installed and active
 	 */
 	public function is_plugin_active( $plugin_name ) {
+
+		// backwards compat
+		if ( SV_WC_Helper::str_exists( $plugin_name, '/' ) ) {
+			list( , $plugin_name ) = explode( '/', $plugin_name );
+		}
 
 		$active_plugins = (array) get_option( 'active_plugins', array() );
 
@@ -835,8 +840,16 @@ abstract class SV_WC_Plugin {
 			$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
 		}
 
-		return in_array( $plugin_name, $active_plugins ) || array_key_exists( $plugin_name, $active_plugins );
+		$plugin_filenames = array();
 
+		foreach ( $active_plugins as $plugin ) {
+
+			list( , $filename ) = explode( '/', $plugin );
+
+			$plugin_filenames[] = $filename;
+		}
+
+		return in_array( $plugin_name, $plugin_filenames );
 	}
 
 
