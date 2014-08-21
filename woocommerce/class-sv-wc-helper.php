@@ -320,6 +320,76 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 			}
 		}
 
+
+		/** WooCommerce helper functions **************************************/
+
+
+		/**
+		 * Get order line items (products) in a neatly-formatted array of objects
+		 * with properties:
+		 *
+		 * + id - item ID
+		 * + name - item name, usually product title, processed through htmlentities()
+		 * + description - formatted item meta (e.g. Size: Medium, Color: blue), processed through htmlentities()
+		 * + quantity - item quantity
+		 * + item_total - item total (line total divided by quantity, excluding tax & rounded)
+		 * + line_total - line item total (excluding tax & rounded)
+		 * + meta - formatted item meta array
+		 * + product - item product or null if getting product from item failed
+		 * + item - raw item array
+		 *
+		 * @since 2.2-1
+		 * @param \WC_Order $order
+		 * @return array
+		 */
+		public static function get_order_line_items( $order ) {
+
+			$line_items = array();
+
+			foreach ( $order->get_items() as $id => $item ) {
+
+				$line_item = new stdClass();
+
+				$product = $order->get_product_from_item( $item );
+
+				// get meta + format it
+				$item_meta = new WC_Order_Item_Meta( $item['item_meta'] );
+
+				$item_meta = SV_WC_Plugin_Compatibility::get_formatted_item_meta( $item_meta );
+
+				if ( ! empty( $item_meta ) ) {
+
+					$item_desc = array();
+
+					foreach ( $item_meta as $meta ) {
+						$item_desc[] = sprintf( '%s: %s', $meta['label'], $meta['value'] );
+					}
+
+					$item_desc = implode( ', ', $item_desc );
+
+				} else {
+
+					// default description to SKU
+					$item_desc = is_callable( array( $product, 'get_sku') ) && $product->get_sku() ? sprintf( 'SKU: %s', $product->get_sku() ) : null;
+				}
+
+				$line_item->id          = $id;
+				$line_item->name        = htmlentities( $item['name'], ENT_QUOTES, 'UTF-8', false );
+				$line_item->description = htmlentities( $item_desc, ENT_QUOTES, 'UTF-8', false );
+				$line_item->quantity    = $item['qty'];
+				$line_item->item_total  = $order->get_item_total( $item );
+				$line_item->line_total  = $order->get_line_total( $item );
+				$line_item->meta        = $item_meta;
+				$line_item->product     = is_object( $product ) ? $product : null;
+				$line_item->item        = $item;
+
+				$line_items[] = $line_item;
+			}
+
+			return $line_items;
+		}
+
+
 	}
 
 endif; // Class exists check
