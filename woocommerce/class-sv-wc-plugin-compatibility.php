@@ -43,8 +43,145 @@ if ( ! class_exists( 'SV_WC_Plugin_Compatibility' ) ) :
  */
 class SV_WC_Plugin_Compatibility {
 
-	// wc_get_order()
-	// wc_get_product()
+
+	/**
+	 * Get the WC Order instance for a given order ID or order post
+	 *
+	 * Introduced in WC 2.2 as part of the Order Factory so the 2.1 version is
+	 * not an exact replacement.
+	 *
+	 * If no param is passed, it will use the global post. Otherwise pass an
+	 * the order post ID or post object.
+	 *
+	 * @since 2.2-1
+	 * @param bool|int|string|\WP_Post $the_order
+	 * @return bool|\WC_Order
+	 */
+	public static function wc_get_order( $the_order = false ) {
+
+		if ( self::is_wc_version_gte_2_2() ) {
+
+			return wc_get_order( $the_order );
+
+		} else {
+
+			global $post;
+
+			if ( false === $the_order ) {
+				$the_order = $post;
+			} elseif ( is_numeric( $the_order ) ) {
+				$the_order = get_post( $the_order );
+			}
+
+			if ( ! $the_order || ! is_object( $the_order ) ) {
+				return false;
+			}
+
+			return new WC_Order( $the_order );
+		}
+	}
+
+
+	/**
+	 * Transparently backport the `post_status` WP Query arg used by WC 2.2
+	 * for order statuses to the `shop_order_status` taxonomy query arg used by
+	 * WC 2.1
+	 *
+	 * @since 2.2-1
+	 * @param array $args WP_Query args
+	 * @return array
+	 */
+	public static function backport_order_status_query_args( $args ) {
+
+		if ( ! self::is_wc_version_gte_2_2() ) {
+
+			// convert post status arg to taxonomy query compatible with WC 2.1
+			if ( ! empty( $args['post_status'] ) ) {
+
+				$order_statuses = array();
+
+				foreach ( (array) $args['post_status'] as $order_status ) {
+
+					$order_statuses[] = str_replace( 'wc-', '', $order_status );
+				}
+
+				$args['post_status'] = 'publish';
+
+				$tax_query = array(
+					'taxonomy' => 'shop_order_status',
+					'field'    => 'slug',
+					'terms'    => $order_statuses,
+					'operator' => 'IN',
+				);
+
+				$args['tax_query'] = array_merge( isset( $args['tax_query'] ) ? $args['tax_query'] : array(), $tax_query );
+			}
+		}
+
+		return $args;
+	}
+
+
+	/**
+	 * Get the user ID for an order
+	 *
+	 * @since 2.2-1
+	 * @param \WC_Order $order
+	 * @return int
+	 */
+	public static function get_order_user_id( WC_Order $order ) {
+
+		if ( self::is_wc_version_gte_2_2() ) {
+
+			return $order->get_user_id();
+
+		} else {
+
+			return $order->customer_user ? $order->customer_user : 0;
+		}
+	}
+
+
+	/**
+	 * Get the user for an order
+	 *
+	 * @since 2.2-1
+	 * @param \WC_Order $order
+	 * @return bool|WP_User
+	 */
+	public static function get_order_user( WC_Order $order ) {
+
+		if ( self::is_wc_version_gte_2_2() ) {
+
+			return $order->get_user();
+
+		} else {
+
+			return self::get_order_user_id( $order ) ? get_user_by( 'id', self::get_order_user_id( $order ) ) : false;
+		}
+	}
+
+
+	/**
+	 * Get the WC Product instance for a given product ID or post
+	 *
+	 * get_product() is soft-deprecated in WC 2.2
+	 *
+	 * @param bool|int|string|\WP_Post $the_product
+	 * @param array $args
+	 * @return WC_Product
+	 */
+	public static function wc_get_product( $the_product = false, $args = array() ) {
+
+		if ( self::is_wc_version_gte_2_2() ) {
+
+			return wc_get_product( $the_product, $args );
+
+		} else {
+
+			return get_product( $the_product, $args );
+		}
+	}
 
 
 	/**
