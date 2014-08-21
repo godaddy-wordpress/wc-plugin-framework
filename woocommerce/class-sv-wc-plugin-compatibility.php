@@ -68,16 +68,19 @@ class SV_WC_Plugin_Compatibility {
 			global $post;
 
 			if ( false === $the_order ) {
-				$the_order = $post;
+
+				$order_id = $post->ID;
+
+			} elseif ( $the_order instanceof WP_Post ) {
+
+				$order_id = $the_order->ID;
+
 			} elseif ( is_numeric( $the_order ) ) {
-				$the_order = get_post( $the_order );
+
+				$order_id = $the_order;
 			}
 
-			if ( ! $the_order || ! is_object( $the_order ) ) {
-				return false;
-			}
-
-			return new WC_Order( $the_order );
+			return new WC_Order( $order_id );
 		}
 	}
 
