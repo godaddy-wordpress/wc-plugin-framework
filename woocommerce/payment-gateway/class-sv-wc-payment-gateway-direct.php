@@ -111,7 +111,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				// unknown token?
 				if ( ! $this->has_payment_token( get_current_user_id(), $this->get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) ) {
-					SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Payment error, please try another payment method or contact us to complete your transaction.', 'Supports tokenization', $this->text_domain ), 'error' );
+					wc_add_notice( _x( 'Payment error, please try another payment method or contact us to complete your transaction.', 'Supports tokenization', $this->text_domain ), 'error' );
 					$is_valid = false;
 				}
 
@@ -184,7 +184,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			( $expiration_year == $current_year && $expiration_month < $current_month ) ||
 			$expiration_year > $current_year + 20
 		) {
-			SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card expiration date is invalid', 'Supports direct credit card', $this->text_domain ), 'error' );
+			wc_add_notice( _x( 'Card expiration date is invalid', 'Supports direct credit card', $this->text_domain ), 'error' );
 			$is_valid = false;
 		}
 
@@ -208,23 +208,23 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		if ( empty( $account_number ) ) {
 
-			SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card number is missing', 'Supports direct credit card', $this->text_domain ), 'error' );
+			wc_add_notice( _x( 'Card number is missing', 'Supports direct credit card', $this->text_domain ), 'error' );
 			$is_valid = false;
 
 		} else {
 
 			if ( strlen( $account_number ) < 12 || strlen( $account_number ) > 19 ) {
-				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card number is invalid (wrong length)', 'Supports direct credit card', $this->text_domain ), 'error' );
+				wc_add_notice( _x( 'Card number is invalid (wrong length)', 'Supports direct credit card', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
 			if ( ! ctype_digit( $account_number ) ) {
-				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card number is invalid (only digits allowed)', 'Supports direct credit card', $this->text_domain ), 'error' );
+				wc_add_notice( _x( 'Card number is invalid (only digits allowed)', 'Supports direct credit card', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
 			if ( ! $this->luhn_check( $account_number ) ) {
-				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card number is invalid', 'Supports direct credit card', $this->text_domain ), 'error' );
+				wc_add_notice( _x( 'Card number is invalid', 'Supports direct credit card', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
@@ -249,20 +249,20 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// validate security code
 		if ( empty( $csc ) ) {
 
-			SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card security code is missing', 'Supports direct credit card', $this->text_domain ), 'error' );
+			wc_add_notice( _x( 'Card security code is missing', 'Supports direct credit card', $this->text_domain ), 'error' );
 			$is_valid = false;
 
 		} else {
 
 			// digit validation
 			if ( ! ctype_digit( $csc ) ) {
-				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card security code is invalid (only digits are allowed)', 'Supports direct credit card', $this->text_domain ), 'error' );
+				wc_add_notice( _x( 'Card security code is invalid (only digits are allowed)', 'Supports direct credit card', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
 			// length validation
 			if ( strlen( $csc ) < 3 || strlen( $csc ) > 4 ) {
-				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Card security code is invalid (must be 3 or 4 digits)', 'Supports direct credit card', $this->text_domain ), 'error' );
+				wc_add_notice( _x( 'Card security code is invalid (must be 3 or 4 digits)', 'Supports direct credit card', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
@@ -292,20 +292,20 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// routing number exists?
 		if ( empty( $routing_number ) ) {
 
-			SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Routing Number is missing', 'Supports direct cheque', $this->text_domain ), 'error' );
+			wc_add_notice( _x( 'Routing Number is missing', 'Supports direct cheque', $this->text_domain ), 'error' );
 			$is_valid = false;
 
 		} else {
 
 			// routing number digit validation
 			if ( ! ctype_digit( $routing_number ) ) {
-				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Routing Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ), 'error' );
+				wc_add_notice( _x( 'Routing Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
 			// routing number length validation
 			if ( 9 != strlen( $routing_number ) ) {
-				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Routing number is invalid (must be 9 digits)', 'Supports direct cheque', $this->text_domain ), 'error' );
+				wc_add_notice( _x( 'Routing number is invalid (must be 9 digits)', 'Supports direct cheque', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
@@ -314,33 +314,33 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// account number exists?
 		if ( empty( $account_number ) ) {
 
-			SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Account Number is missing', 'Supports direct cheque', $this->text_domain ), 'error' );
+			wc_add_notice( _x( 'Account Number is missing', 'Supports direct cheque', $this->text_domain ), 'error' );
 			$is_valid = false;
 
 		} else {
 
 			// account number digit validation
 			if ( ! ctype_digit( $account_number ) ) {
-				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Account Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ), 'error' );
+				wc_add_notice( _x( 'Account Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 
 			// account number length validation
 			if ( strlen( $account_number ) < 5 || strlen( $account_number ) > 17 ) {
-				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Account number is invalid (must be between 5 and 17 digits)', 'Supports direct cheque', $this->text_domain ), 'error' );
+				wc_add_notice( _x( 'Account number is invalid (must be between 5 and 17 digits)', 'Supports direct cheque', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}
 		}
 
 		// optional drivers license number validation
 		if ( ! empty( $drivers_license_number ) &&  preg_match( '/^[a-zA-Z0-9 -]+$/', $drivers_license_number ) ) {
-			SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Drivers license number is invalid', 'Supports direct cheque', $this->text_domain ), 'error' );
+			wc_add_notice( _x( 'Drivers license number is invalid', 'Supports direct cheque', $this->text_domain ), 'error' );
 			$is_valid = false;
 		}
 
 		// optional check number validation
 		if ( ! empty( $check_number ) && ! ctype_digit( $check_number ) ) {
-			SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Check Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ), 'error' );
+			wc_add_notice( _x( 'Check Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ), 'error' );
 			$is_valid = false;
 		}
 
@@ -434,7 +434,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					$order->payment_complete(); // mark order as having received payment
 				}
 
-				SV_WC_Plugin_Compatibility::WC()->cart->empty_cart();
+				WC()->cart->empty_cart();
 
 				return array(
 					'result'   => 'success',
@@ -788,7 +788,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$message = sprintf(
 					_x( '%s Capture of %s Approved', 'Supports capture charge', $this->text_domain ),
 					$this->get_method_title(),
-					get_woocommerce_currency_symbol() . SV_WC_Plugin_Compatibility::wc_format_decimal( $order->capture_total )
+					get_woocommerce_currency_symbol() . wc_format_decimal( $order->capture_total )
 				);
 
 				// adds the transaction id (if any) to the order note
@@ -1000,7 +1000,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$pay_page_subscription = false;
 		if ( $this->is_pay_page_gateway() ) {
 
-			$order_id = SV_WC_Plugin_Compatibility::get_checkout_pay_page_order_id();
+			$order_id = $this->get_checkout_pay_page_order_id();
 
 			if ( $order_id ) {
 				$pay_page_subscription = WC_Subscriptions_Order::order_contains_subscription( $order_id );
@@ -1335,7 +1335,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$pay_page_pre_order = false;
 		if ( $this->is_pay_page_gateway() ) {
 
-			$order_id  = SV_WC_Plugin_Compatibility::get_checkout_pay_page_order_id();
+			$order_id  = $this->get_checkout_pay_page_order_id();
 
 			if ( $order_id ) {
 				$pay_page_pre_order = WC_Pre_Orders_Order::order_contains_pre_order( $order_id ) && WC_Pre_Orders_Product::product_is_charged_upon_release( WC_Pre_Orders_Order::get_pre_order_product( $order_id ) );
@@ -1465,7 +1465,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				WC_Pre_Orders_Order::mark_order_as_pre_ordered( $order );
 
 				// empty cart
-				SV_WC_Plugin_Compatibility::WC()->cart->empty_cart();
+				WC()->cart->empty_cart();
 
 				// redirect to thank you page
 				return array(
@@ -2065,8 +2065,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// security check
 			if ( false === wp_verify_nonce( $_GET['_wpnonce'], 'wc-' . $this->get_id_dasherized() . '-token-action' ) ) {
 
-				SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'There was an error with your request, please try again.', 'Supports direct payment method tokenization', $this->text_domain ), 'error' );
-				SV_WC_Plugin_Compatibility::set_messages();
+				wc_add_notice( _x( 'There was an error with your request, please try again.', 'Supports direct payment method tokenization', $this->text_domain ), 'error' );
+
 				wp_redirect( get_permalink( woocommerce_get_page_id( 'myaccount' ) ) );
 				exit;
 
@@ -2080,11 +2080,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				if ( ! $this->remove_payment_token( $user_id, $token ) ) {
 
-					SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Error removing payment method', 'Supports direct payment method tokenization', $this->text_domain ), 'error' );
-					SV_WC_Plugin_Compatibility::set_messages();
+					wc_add_notice( _x( 'Error removing payment method', 'Supports direct payment method tokenization', $this->text_domain ), 'error' );
 
 				} else {
-					SV_WC_Plugin_Compatibility::wc_add_notice( _x( 'Payment method deleted.', 'Supports direct payment method tokenization', $this->text_domain ) );
+					wc_add_notice( _x( 'Payment method deleted.', 'Supports direct payment method tokenization', $this->text_domain ) );
 				}
 
 			}

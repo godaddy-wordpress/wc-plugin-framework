@@ -108,7 +108,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			return array( 'result' => 'failure' );
 		}
 
-		SV_WC_Plugin_Compatibility::WC()->cart->empty_cart();
+		WC()->cart->empty_cart();
 
 		return array(
 			'result'   => 'success',
@@ -228,10 +228,10 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 */
 	public function render_auto_post_form( $order, $request_params ) {
 
-		// attempt to automatically submit the form and bring them to the payza paymen site
-		SV_WC_Plugin_Compatibility::wc_enqueue_js('
+		// attempt to automatically submit the form and redirect
+		wc_enqueue_js('
 			$( "body" ).block( {
-					message: "<img src=\"' . esc_url( SV_WC_Plugin_Compatibility::WC()->plugin_url() ) . '/assets/images/ajax-loader.gif\" alt=\"Redirecting&hellip;\" style=\"float:left; margin-right: 10px;\" />' . __( 'Thank you for your order. We are now redirecting you to complete payment.', $this->text_domain ) . '",
+					message: "<img src=\"' . esc_url( WC()->plugin_url() ) . '/assets/images/ajax-loader.gif\" alt=\"Redirecting&hellip;\" style=\"float:left; margin-right: 10px;\" />' . __( 'Thank you for your order. We are now redirecting you to complete payment.', $this->text_domain ) . '",
 					overlayCSS: {
 						background: "#fff",
 						opacity: 0.6

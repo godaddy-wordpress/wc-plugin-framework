@@ -330,7 +330,7 @@ abstract class SV_WC_Plugin {
 		<?php
 		$javascript = ob_get_clean();
 
-		SV_WC_Plugin_Compatibility::wc_enqueue_js( $javascript );
+		wc_enqueue_js( $javascript );
 	}
 
 
@@ -519,7 +519,7 @@ abstract class SV_WC_Plugin {
 		}
 
 		if ( ! is_object( $this->logger ) ) {
-			$this->logger = SV_WC_Plugin_Compatibility::new_wc_logger();
+			$this->logger = new WC_Logger();
 		}
 
 		$this->logger->add( $log_id, $message );
@@ -701,6 +701,30 @@ abstract class SV_WC_Plugin {
 
 		// stub method
 		return '';
+	}
+
+
+	/**
+	 * Returns true if the current page is the admin general configuration page
+	 *
+	 * @since 2.2-1
+	 * @return boolean true if the current page is the admin general configuration page
+	 */
+	public function is_general_configuration_page() {
+
+		return isset( $_GET['page'] ) && 'wc-settings' == $_GET['page'] && ( ! isset( $_GET['tab'] ) || 'general' == $_GET['tab'] );
+	}
+
+
+	/**
+	 * Returns the admin configuration url for the admin general configuration page
+	 *
+	 * @since 2.2-1
+	 * @return string admin configuration url for the admin general configuration page
+	 */
+	public function get_general_configuration_url() {
+
+		return admin_url( 'admin.php?page=wc-settings&tab=general' );
 	}
 
 

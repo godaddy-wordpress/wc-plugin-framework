@@ -429,9 +429,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function is_pay_page_gateway() {
 
-		if ( SV_WC_Plugin_Compatibility::is_checkout_pay_page() ) {
+		if ( is_checkout_pay_page()) {
 
-			$order_id  = SV_WC_Plugin_Compatibility::get_checkout_pay_page_order_id();
+			$order_id  = $this->get_checkout_pay_page_order_id();
 
 			if ( $order_id ) {
 				$order = new WC_Order( $order_id );
@@ -773,7 +773,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			SV_WC_Plugin_Compatibility::wc_enqueue_js( ob_get_clean() );
+			wc_enqueue_js( ob_get_clean() );
 
 		}
 
@@ -799,7 +799,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			SV_WC_Plugin_Compatibility::wc_enqueue_js( ob_get_clean() );
+			wc_enqueue_js( ob_get_clean() );
 
 		}
 
@@ -840,7 +840,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// any required countries?
-		if ( $this->countries && SV_WC_Plugin_Compatibility::WC()->customer && SV_WC_Plugin_Compatibility::WC()->customer->get_country() && ! in_array( SV_WC_Plugin_Compatibility::WC()->customer->get_country(), $this->countries ) ) {
+		if ( $this->countries && WC()->customer && WC()->customer->get_country() && ! in_array( WC()->customer->get_country(), $this->countries ) ) {
 			$is_available = false;
 		}
 
@@ -875,7 +875,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( $this->icon ) {
 
 			// use icon provided by filter
-			$icon = '<img src="' . esc_url( SV_WC_Plugin_Compatibility::force_https_url( $this->icon ) ) . '" alt="' . esc_attr( $this->title ) . '" />';
+			$icon = '<img src="' . esc_url( WC_HTTPS::force_https_url( $this->icon ) ) . '" alt="' . esc_attr( $this->title ) . '" />';
 		}
 
 		// credit card images
@@ -955,13 +955,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// first, is the card image available within the plugin?
 		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/assets/images/card-' . $image_type . '.png' ) ) {
-			return SV_WC_Plugin_Compatibility::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/assets/images/card-' . $image_type . '.png';
+			return WC_HTTPS::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/assets/images/card-' . $image_type . '.png';
 		}
 
 		// default: is the card image available within the framework?
 		// NOTE: I don't particularly like hardcoding this path, but I don't see any real way around it
 		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/' . $this->get_plugin()->get_framework_image_path() . 'card-' . $image_type . '.png' ) ) {
-			return SV_WC_Plugin_Compatibility::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/' . $this->get_plugin()->get_framework_image_path() . 'card-' . $image_type . '.png';
+			return WC_HTTPS::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/' . $this->get_plugin()->get_framework_image_path() . 'card-' . $image_type . '.png';
 		}
 
 		return null;
@@ -1012,8 +1012,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order->description = sprintf( _x( '%s - Order %s', 'Order description', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
 
 		// generate a unique retry count
-		if ( is_numeric( SV_WC_Plugin_Compatibility::get_order_custom_field( $order, 'wc_' . $this->get_id() . '_retry_count' ) ) ) {
-			$retry_count = SV_WC_Plugin_Compatibility::get_order_custom_field( $order, 'wc_' . $this->get_id() . '_retry_count' );
+		if ( is_numeric( $this->get_order_meta( $order->id, 'retry_count' ) ) ) {
+			$retry_count = $this->get_order_meta( $order->id, 'retry_count' );
 
 			$retry_count++;
 		} else {
@@ -1124,10 +1124,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		$this->add_debug_message( $message, 'message', true );
 
-		// we don't have control over the "Thank you. Your order has been received." message shown on the "Thank You" page.  Yet
-		SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Your order has been received and is being reviewed.  Thank you for your business.', $this->text_domain ) );
-		SV_WC_Plugin_Compatibility::set_messages();  // TODO: do we need this?
-
+		// we don't have control over the "Thank you. Your order has been received." message shown on the "Thank You" pageYet
+		wc_add_notice( __( 'Your order has been received and is being reviewed. Thank you for your business.', $this->text_domain ) );
 	}
 
 
@@ -1151,7 +1149,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		$this->add_debug_message( $error_message, 'error' );
 
-		SV_WC_Plugin_Compatibility::wc_add_notice( __( 'An error occurred, please try again or try an alternate form of payment.', $this->text_domain ), 'error' );
+		wc_add_notice( __( 'An error occurred, please try again or try an alternate form of payment.', $this->text_domain ), 'error' );
 	}
 
 
@@ -1665,9 +1663,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param string $message message to add
 	 * @param string $type how to add the message, options are:
 	 *     'message' (styled as WC message), 'error' (styled as WC Error)
-	 * @param bool $set_message sets any WC messages/errors provided so they appear on the next page load, useful for displaying messages on the thank you page
 	 */
-	protected function add_debug_message( $message, $type = 'message', $set_message = false ) {
+	protected function add_debug_message( $message, $type = 'message' ) {
 
 		// do nothing when debug mode is off or no message
 		if ( 'off' == $this->debug_off() || ! $message ) {
@@ -1679,18 +1676,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 			if ( 'message' === $type ) {
 
-				SV_WC_Plugin_Compatibility::wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'notice' );
+				wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'notice' );
 
 			} else {
 
 				// defaults to error message
-				SV_WC_Plugin_Compatibility::wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'error' );
+				wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'error' );
 			}
-		}
-
-		// set messages for next page load
-		if ( $set_message && ( ! is_admin() || defined( 'DOING_AJAX' ) ) ) {
-			SV_WC_Plugin_Compatibility::set_messages();
 		}
 
 		// add log message to WC logger if log/both is enabled
@@ -2169,6 +2161,36 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	public function is_echeck_gateway() {
 		return self::PAYMENT_TYPE_ECHECK == $this->get_payment_type();
 	}
+
+
+	/**
+	 * Returns the order_id if on the checkout pay page
+	 *
+	 * @since 2.2-1
+	 * @return int order identifier
+	 */
+	public function get_checkout_pay_page_order_id() {
+		global $wp;
+
+		return isset( $wp->query_vars['order-pay'] ) ? absint( $wp->query_vars['order-pay'] ) : 0;
+	}
+
+
+	/**
+	 * Returns the order_id if on the checkout order received page
+	 *
+	 * Note this must be used in the `wp` or later action, as earlier
+	 * actions do not yet have access to the query vars
+	 *
+	 * @since 2.2-1
+	 * @return int order identifier
+	 */
+	public function get_checkout_order_received_order_id() {
+		global $wp;
+
+		return isset( $wp->query_vars['order-received'] ) ? absint( $wp->query_vars['order-received'] ) : 0;
+	}
+
 
 }
 
