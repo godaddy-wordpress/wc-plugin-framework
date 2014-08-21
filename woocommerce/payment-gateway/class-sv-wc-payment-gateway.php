@@ -1021,7 +1021,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// keep track of the retry count
-		update_post_meta( $order->id, '_wc_' . $this->get_id() . '_retry_count', $retry_count );
+		$this->update_order_meta( $order->id, 'retry_count', $retry_count );
 
 		// generate a unique transaction ref based on the order number and retry count, for gateways that require a unique identifier for every transaction request
 		$order->unique_transaction_ref = ltrim( $order->get_order_number(),  _x( '#', 'hash before order number', $this->text_domain ) ) . ( $retry_count > 0 ? '-' . $retry_count : '' );
@@ -1073,23 +1073,23 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// transaction id if available
 		if ( $response && $response->get_transaction_id() ) {
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_id', $response->get_transaction_id() );
+			$this->update_order_meta( $order->id, 'trans_id', $response->get_transaction_id() );
 
 			// set transaction ID for WC core - remove this and use WC_Order::payment_complete() to add transaction ID after 2.2+ can be required
 			update_post_meta( $order->id, '_transaction_id', $response->get_transaction_id() );
 		}
 
 		// transaction date
-		update_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_date', current_time( 'mysql' ) );
+		$this->update_order_meta( $order->id, 'trans_date', current_time( 'mysql' ) );
 
 		// if there's more than one environment
 		if ( count( $this->get_environments() ) > 1 ) {
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_environment', $this->get_environment() );
+			$this->update_order_meta( $order->id, 'environment', $this->get_environment() );
 		}
 
 		// if there is a payment gateway customer id, set it to the order (we don't append the environment here like we do for the user meta, because it's available from the 'environment' order meta already)
 		if ( isset( $order->customer_id ) && $order->customer_id ) {
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_customer_id', $order->customer_id );
+			$this->update_order_meta( $order->id, 'customer_id', $order->customer_id );
 		}
 	}
 
@@ -1257,7 +1257,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	public function get_guest_customer_id( WC_Order $order ) {
 
 		// is there a customer id already tied to this order?
-		$customer_id = get_post_meta( $order->id, '_wc_' . $this->get_id() . '_customer_id', true );
+		$customer_id = $this->get_order_meta( $order->id, 'customer_id' );
 
 		if ( $customer_id ) {
 			return $customer_id;

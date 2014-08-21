@@ -746,7 +746,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function has_authorization_expired( $order ) {
 
-		$transaction_time = strtotime( get_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_date', true ) );
+		$transaction_time = strtotime( $this->get_order_meta( $order->id, 'trans_date', true ) );
 
 		return floor( ( time() - $transaction_time ) / 3600 ) > $this->get_authorization_time_window();
 	}
@@ -855,12 +855,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// payment info
 		if ( isset( $order->payment->token ) && $order->payment->token ) {
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_payment_token', $order->payment->token );
+			$this->update_order_meta( $order->id, 'payment_token', $order->payment->token );
 		}
 
 		// account number
 		if ( isset( $order->payment->account_number ) && $order->payment->account_number ) {
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_four', substr( $order->payment->account_number, -4 ) );
+			$this->update_order_meta( $order->id, 'account_four', substr( $order->payment->account_number, -4 ) );
 		}
 
 		if ( $this->is_credit_card_gateway() ) {
@@ -869,7 +869,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( $response && $response instanceof SV_WC_Payment_Gateway_API_Authorization_Response ) {
 
 				if ( $response->get_authorization_code() ) {
-					update_post_meta( $order->id, '_wc_' . $this->get_id() . '_authorization_code', $response->get_authorization_code() );
+					$this->update_order_meta( $order->id, 'authorization_code', $response->get_authorization_code() );
 				}
 
 				if ( $order->payment_total > 0 ) {
@@ -879,17 +879,17 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					} else {
 						$captured = 'no';
 					}
-					update_post_meta( $order->id, '_wc_' . $this->get_id() . '_charge_captured', $captured );
+					$this->update_order_meta( $order->id, 'charge_captured', $captured );
 				}
 
 			}
 
 			if ( isset( $order->payment->exp_year ) && $order->payment->exp_year && isset( $order->payment->exp_month ) && $order->payment->exp_month ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_card_expiry_date', $order->payment->exp_year . '-' . $order->payment->exp_month );
+				$this->update_order_meta( $order->id, 'card_expiry_date', $order->payment->exp_year . '-' . $order->payment->exp_month );
 			}
 
 			if ( isset( $order->payment->card_type ) && $order->payment->card_type ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_card_type', $order->payment->card_type );
+				$this->update_order_meta( $order->id, 'card_type', $order->payment->card_type );
 			}
 
 		} elseif ( $this->is_echeck_gateway() ) {
@@ -898,12 +898,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// optional account type (checking/savings)
 			if ( isset( $order->payment->account_type ) && $order->payment->account_type ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_type', $order->payment->account_type );
+				$this->update_order_meta( $order->id, 'account_type', $order->payment->account_type );
 			}
 
 			// optional check number
 			if ( isset( $order->payment->check_number ) && $order->payment->check_number ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_check_number', $order->payment->check_number );
+				$this->update_order_meta( $order->id, 'check_number', $order->payment->check_number );
 			}
 		}
 	}
@@ -1037,10 +1037,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// load any required members that we might not have
 		if ( ! isset( $order->payment->token ) || ! $order->payment->token )
-			$order->payment->token = get_post_meta( $order->id, '_wc_' . $this->get_id() . '_payment_token', true );
+			$order->payment->token = $this->get_order_meta( $order->id, 'payment_token' );
 
 		if ( ! isset( $order->customer_id ) || ! $order->customer_id )
-			$order->customer_id = get_post_meta( $order->id, '_wc_' . $this->get_id() . '_customer_id', true );
+			$order->customer_id = $this->get_order_meta( $order->id, 'customer_id' );
 
 		// ensure the payment token is still valid
 		if ( ! $this->has_payment_token( $order->user_id, $order->payment->token ) ) {
@@ -1190,16 +1190,18 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( 'parent' == $new_order_role ) {
 			$order_meta_query .= $this->get_remove_subscription_renewal_order_meta(
 				array(
-					'_wc_' . $this->get_id() . '_trans_id',
-					'_wc_' . $this->get_id() . '_payment_token',
-					'_wc_' . $this->get_id() . '_account_four',
-					'_wc_' . $this->get_id() . '_card_expiry_date',
-					'_wc_' . $this->get_id() . '_card_type',
-					'_wc_' . $this->get_id() . '_authorization_code',
-					'_wc_' . $this->get_id() . '_account_type',
-					'_wc_' . $this->get_id() . '_check_number',
-					'_wc_' . $this->get_id() . '_environment',
-					'_wc_' . $this->get_id() . '_customer_id',
+					$this->get_order_meta_prefix() . 'trans_id',
+					$this->get_order_meta_prefix() . 'payment_token',
+					$this->get_order_meta_prefix() . 'account_four',
+					$this->get_order_meta_prefix() . 'card_expiry_date',
+					$this->get_order_meta_prefix() . 'card_type',
+					$this->get_order_meta_prefix() . 'authorization_code',
+					$this->get_order_meta_prefix() . 'account_type',
+					$this->get_order_meta_prefix() . 'check_number',
+					$this->get_order_meta_prefix() . 'environment',
+					$this->get_order_meta_prefix() . 'customer_id',
+					$this->get_order_meta_prefix() . 'charge_captured',
+					$this->get_order_meta_prefix() . 'capture_trans_id',
 				)
 			);
 		}
@@ -1250,8 +1252,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function update_failing_payment_method( WC_Order $original_order, WC_Order $renewal_order ) {
 
-		update_post_meta( $original_order->id, '_wc_' . $this->get_id() . '_customer_id',   get_post_meta( $renewal_order->id, '_wc_' . $this->get_id() . '_customer_id', true ) );
-		update_post_meta( $original_order->id, '_wc_' . $this->get_id() . '_payment_token', get_post_meta( $renewal_order->id, '_wc_' . $this->get_id() . '_payment_token', true ) );
+		$this->update_order_meta( $original_order->id, 'customer_id',   $this->get_order_meta( $renewal_order->id, 'customer_id' ) );
+		$this->update_order_meta( $original_order->id, 'payment_token', $this->get_order_meta( $renewal_order->id, 'payment_token' ) );
 	}
 
 
@@ -1270,7 +1272,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( $this->get_id() !== $order->recurring_payment_method )
 			return $payment_method_to_display;
 
-		$token = $this->get_payment_token( $order->user_id, get_post_meta( $order->id, '_wc_' . $this->get_id() . '_payment_token', true ) );
+		$token = $this->get_payment_token( $order->user_id, $this->get_order_meta( $order->id, 'payment_token' ) );
 
 		if ( is_object( $token )  )
 			$payment_method_to_display = sprintf( _x( 'Via %s ending in %s', 'Supports direct payment method subscriptions', $this->text_domain ), $token->get_type_full(), $token->get_last_four() );
@@ -1381,10 +1383,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// if this is a pre-order release payment with a tokenized payment method, get the payment token to complete the order
 
 			// retrieve the payment token
-			$order->payment->token = get_post_meta( $order->id, '_wc_' . $this->get_id() . '_payment_token', true );
+			$order->payment->token = $this->get_order_meta( $order->id, 'payment_token' );
 
 			// retrieve the customer id (might not be one)
-			$order->customer_id = get_post_meta( $order->id, '_wc_' . $this->get_id() . '_customer_id', true );
+			$order->customer_id = $this->get_order_meta( $order->id, 'customer_id' );
 
 			// verify that this customer still has the token tied to this order.  Pass in customer_id to support tokenized guest orders
 			if ( ! $this->has_payment_token( $order->user_id, $order->payment->token, $order->customer_id ) ) {
@@ -1400,17 +1402,17 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$token = $this->get_payment_token( $order->user_id, $order->payment->token, $order->customer_id );
 
 				// account last four
-				$order->payment->account_number = $token && $token->get_last_four() ? $token->get_last_four() : get_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_four', true );
+				$order->payment->account_number = $token && $token->get_last_four() ? $token->get_last_four() : $this->get_order_meta( $order->id, 'account_four' );
 
 				if ( $this->is_credit_card_gateway() ) {
 
-					$order->payment->card_type = $token && $token->get_card_type() ? $token->get_card_type() : get_post_meta( $order->id, '_wc_' . $this->get_id() . '_card_type', true );
+					$order->payment->card_type = $token && $token->get_card_type() ? $token->get_card_type() : $this->get_order_meta( $order->id, 'card_type' );
 
 					if ( $token && $token->get_exp_month() && $token->get_exp_year() ) {
 						$order->payment->exp_month  = $token->get_exp_month();
 						$order->payment->exp_year   = $token->get_exp_year();
 					} else {
-						list( $exp_year, $exp_month ) = explode( '-', get_post_meta( $order->id, '_wc_' . $this->get_id() . '_card_expiry_date', true ) );
+						list( $exp_year, $exp_month ) = explode( '-', $this->get_order_meta( $order->id, 'card_expiry_date' );
 						$order->payment->exp_month  = $exp_month;
 						$order->payment->exp_year   = $exp_year;
 					}
@@ -1418,7 +1420,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				} elseif ( $this->is_echeck_gateway() ) {
 
 					// set the account type if available (checking/savings)
-					$order->payment->account_type = $token && $token->get_account_type ? $token->get_account_type() : get_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_type', true );
+					$order->payment->account_type = $token && $token->get_account_type ? $token->get_account_type() : $this->get_order_meta( $order->id, 'account_type' );
 				}
 			}
 		}
@@ -1742,8 +1744,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$environment_id = $this->get_environment();
 
 		// leading underscore since this will never be displayed to an admin user in its raw form
-		return '_wc_' . $this->get_id() . '_payment_tokens' . ( ! $this->is_production_environment( $environment_id ) ? '_' . $environment_id : '' );
-
+		return $this->get_order_meta_prefix() . 'payment_tokens' . ( ! $this->is_production_environment( $environment_id ) ? '_' . $environment_id : '' );
 	}
 
 

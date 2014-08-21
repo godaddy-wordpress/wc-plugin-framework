@@ -498,13 +498,13 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		// account number
 		if ( $response->get_account_number() ) {
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_four', substr( $response->get_account_number(), -4 ) );
+			$this->update_order_meta( $order->id, 'account_four', substr( $response->get_account_number(), -4 ) );
 		}
 
 		if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
 
 			if ( $response->get_authorization_code() ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_authorization_code', $response->get_authorization_code() );
+				$this->update_order_meta( $order->id, 'authorization_code', $response->get_authorization_code() );
 			}
 
 			if ( $order->get_total() > 0 ) {
@@ -514,27 +514,27 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				} else {
 					$captured = 'no';
 				}
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_charge_captured', $captured );
+				$this->update_order_meta( $order->id, 'charge_captured', $captured );
 			}
 
 			if ( $response->get_exp_month() && $response->get_exp_year() ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_card_expiry_date', $response->get_exp_year() . '-' . $response->get_exp_month() );
+				$this->update_order_meta( $order->id, 'card_expiry_date', $response->get_exp_year() . '-' . $response->get_exp_month() );
 			}
 
 			if ( $response->get_card_type() ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_card_type', $response->get_card_type() );
+				$this->update_order_meta( $order->id, 'card_type', $response->get_card_type() );
 			}
 
 		} elseif ( self::PAYMENT_TYPE_ECHECK == $response->get_payment_type() ) {
 
 			// optional account type (checking/savings)
 			if ( $response->get_account_type() ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_type', $response->get_account_type() );
+				$this->update_order_meta( $order->id, 'account_type', $response->get_account_type() );
 			}
 
 			// optional check number
 			if ( $response->get_check_number() ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_check_number', $response->get_check_number() );
+				$this->update_order_meta( $order->id, 'check_number', $response->get_check_number() );
 			}
 		}
 	}
