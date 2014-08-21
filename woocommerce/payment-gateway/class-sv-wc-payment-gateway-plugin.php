@@ -857,11 +857,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 1.0
 	 * @return array of string gateway class names
-	 * @throws Exception if no gateways are available
 	 */
 	public function get_gateway_class_names() {
 
-		if ( empty( $this->gateways ) ) throw new Exception( 'Gateways not available' );
+		assert( ! empty( $this->gateways ) );
 
 		$gateway_class_names = array();
 
@@ -879,13 +878,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * @since 1.0
 	 * @param string $gateway_id the gateway identifier
 	 * @return string gateway class name
-	 * @throws Exception if gateway is not found
 	 */
 	public function get_gateway_class_name( $gateway_id ) {
 
-		if ( ! isset( $this->gateways[ $gateway_id ]['gateway_class_name'] ) ) {
-			throw new Exception( sprintf( "Gateway '%s' not available", $gateway_id ) );
-		}
+		assert( isset( $this->gateways[ $gateway_id ]['gateway_class_name'] ) );
 
 		return $this->gateways[ $gateway_id ]['gateway_class_name'];
 	}
@@ -897,13 +893,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 1.0
 	 * @return array of SV_WC_Payment_Gateway gateway objects
-	 * @throws Exception if no gateways are available
 	 */
 	public function get_gateways() {
 
-		if ( empty( $this->gateways ) ) {
-			throw new Exception( 'Gateways not available' );
-		}
+		assert( ! empty( $this->gateways ) );
 
 		$gateways = array();
 
@@ -969,14 +962,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns all available gateway ids for the plugin
 	 *
 	 * @since 1.0
-	 * @throws Exception
 	 * @return array of gateway id strings
 	 */
 	public function get_gateway_ids() {
 
-		if ( empty( $this->gateways ) ) {
-			throw new Exception( 'Gateways not available' );
-		}
+		assert( ! empty( $this->gateway ) );
 
 		return array_keys( $this->gateways );
 	}
