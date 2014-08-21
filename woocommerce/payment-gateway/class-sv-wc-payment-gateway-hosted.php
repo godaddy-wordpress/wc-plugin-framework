@@ -96,7 +96,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @see WC_Payment_Gateway::process_payment()
 	 * @param int $order_id the order to process
 	 * @return array with keys 'result' and 'redirect'
-	 * @throws Exception if payment processing must be halted, and a message displayed to the customer
+	 * @throws \SV_WC_Payment_Gateway_Exception if payment processing must be halted, and a message displayed to the customer
 	 */
 	public function process_payment( $order_id ) {
 
@@ -347,7 +347,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				}
 			}
 
-		} catch ( Exception $e ) {
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 			// failure
 
 			if ( isset( $order ) && $order ) {
@@ -419,7 +419,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() ) );
 			}
 
-		} catch( Exception $e ) {
+		} catch( SV_WC_Payment_Gateway_Exception $e ) {
 			// failure
 
 			if ( isset( $order ) && $order ) {

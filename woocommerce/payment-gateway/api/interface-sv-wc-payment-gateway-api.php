@@ -40,7 +40,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * @since 1.0
 	 * @param WC_Order $order the order
 	 * @return SV_WC_Payment_Gateway_API_Response credit card charge response
-	 * @throws Exception network timeouts, etc
+	 * @throws SV_WC_Payment_Gateway_SV_WC_Payment_Gateway_Exception network timeouts, etc
 	 */
 	public function credit_card_authorization( WC_Order $order );
 
@@ -53,7 +53,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * @since 1.0
 	 * @param WC_Order $order the order
 	 * @return SV_WC_Payment_Gateway_API_Response credit card charge response
-	 * @throws Exception network timeouts, etc
+	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
 	 */
 	public function credit_card_charge( WC_Order $order );
 
@@ -66,7 +66,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * @since 1.0
 	 * @param WC_Order $order the order
 	 * @return SV_WC_Payment_Gateway_API_Response credit card capture response
-	 * @throws Exception network timeouts, etc
+	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
 	 */
 	public function credit_card_capture( WC_Order $order );
 
@@ -79,7 +79,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * @since 1.0
 	 * @param WC_Order $order the order
 	 * @return SV_WC_Payment_Gateway_API_Response check debit response
-	 * @throws Exception network timeouts, etc
+	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
 	 */
 	public function check_debit( WC_Order $order );
 
@@ -92,7 +92,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * @since 1.0
 	 * @param WC_Order $order the order
 	 * @return SV_WC_Payment_Gateway_API_Create_Payment_Token_Response payment method tokenization response
-	 * @throws Exception network timeouts, etc
+	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
 	 */
 	public function tokenize_payment_method( WC_Order $order );
 
@@ -107,7 +107,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * @param string $token the payment method token
 	 * @param string $customer_id optional unique customer id for gateways that support it
 	 * @return SV_WC_Payment_Gateway_API_Response remove tokenized payment method response
-	 * @throws Exception network timeouts, etc
+	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
 	 */
 	public function remove_tokenized_payment_method( $token, $customer_id );
 
@@ -133,7 +133,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * @see SV_WC_Payment_Gateway_API::supports_get_tokenized_payment_methods()
 	 * @param string $customer_id unique customer id
 	 * @return SV_WC_API_Get_Tokenized_Payment_Methods_Response response containing any payment tokens for the customer
-	 * @throws Exception network timeouts, etc
+	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
 	 */
 	public function get_tokenized_payment_methods( $customer_id );
 

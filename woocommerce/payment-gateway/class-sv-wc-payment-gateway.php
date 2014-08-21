@@ -1399,7 +1399,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * authorization should be
 	 *
 	 * @since 1.0
-	 * @throws Exception
 	 * @return boolean true if a charge should be performed
 	 */
 	public function perform_credit_card_charge() {
@@ -1415,7 +1414,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * charge should be
 	 *
 	 * @since 1.0
-	 * @throws Exception
 	 * @return boolean true if an authorization should be performed
 	 */
 	public function perform_credit_card_authorization() {

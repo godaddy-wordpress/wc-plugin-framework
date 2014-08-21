@@ -443,7 +443,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				);
 			}
 
-		} catch ( Exception $e ) {
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
 			$this->mark_order_as_failed( $order, $e->getMessage() );
 
@@ -578,7 +578,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0
 	 * @param WC_Order $order the order object
 	 * @return SV_WC_Payment_Gateway_API_Response the response
-	 * @throws Exception network timeouts, etc
+	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
 	 */
 	protected function do_check_transaction( $order ) {
 
@@ -618,7 +618,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0
 	 * @param WC_Order $order the order object
 	 * @return SV_WC_Payment_Gateway_API_Response the response
-	 * @throws Exception network timeouts, etc
+	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
 	 */
 	protected function do_credit_card_transaction( $order ) {
 
@@ -665,7 +665,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0
 	 * @param WC_Order $order the order object
 	 * @return bool true if transaction was successful, false otherwise
-	 * @throws Exception network timeouts, etc
+	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
 	 */
 	protected function do_transaction( $order ) {
 
@@ -826,7 +826,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			return $response;
 
-		} catch ( Exception $e ) {
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
 			$message = sprintf(
 				_x( '%s Capture Failed: %s', 'Supports capture charge', $this->text_domain ),
@@ -1114,7 +1114,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// required
 			if ( ! $order->payment->token || ! SV_WC_Plugin_Compatibility::get_order_user_id( $order) ) {
-				throw new Exception( 'Subscription Renewal: Payment Token or User ID is missing/invalid.' );
+				throw new SV_WC_Payment_Gateway_Exception( 'Subscription Renewal: Payment Token or User ID is missing/invalid.' );
 			}
 
 			// get the token, we've already verified it's good
@@ -1161,10 +1161,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			} else {
 
 				// failure
-				throw new Exception( sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
+				throw new SV_WC_Payment_Gateway_Exception( sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
 			}
 
-		} catch ( Exception $e ) {
+		} catch ( SV_WC_Payment_Gateway_SV_WC_Payment_Gateway_Exception $e ) {
 
 			$this->mark_order_as_failed( $order, $e->getMessage() );
 
@@ -1476,7 +1476,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					'redirect' => $this->get_return_url( $order ),
 				);
 
-			} catch( Exception $e ) {
+			} catch( SV_WC_Payment_Gateway_Exception $e ) {
 
 				$this->mark_order_as_failed( $order, sprintf( _x( 'Pre-Order Tokenization attempt failed (%s)', 'Supports direct payment method pre-orders', $this->text_domain ), $this->get_method_title(), $e->getMessage() ) );
 
@@ -1506,7 +1506,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// token is required
 			if ( ! $order->payment->token )
-				throw new Exception( _x( 'Payment token missing/invalid.', 'Supports direct payment method pre-orders', $this->text_domain ) );
+				throw new SV_WC_Payment_Gateway_Exception( _x( 'Payment token missing/invalid.', 'Supports direct payment method pre-orders', $this->text_domain ) );
 
 			// perform the transaction
 			if ( $this->is_credit_card_gateway() ) {
@@ -1575,11 +1575,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			} else {
 
 				// failure
-				throw new Exception( sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
+				throw new SV_WC_Payment_Gateway_Exception( sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
 
 			}
 
-		} catch ( Exception $e ) {
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
 			// Mark order as failed
 			$this->mark_order_as_failed( $order, sprintf( _x( 'Pre-Order Release Payment Failed: %s', 'Supports direct payment method pre-orders', $this->text_domain ), $e->getMessage() ) );
@@ -1626,7 +1626,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response optional create payment token response, or null if the tokenize payment method request should be made
 	 * @return WC_Order the order object
-	 * @throws Exception on network error or request error
+	 * @throws SV_WC_Payment_Gateway_Exception on network error or request error
 	 */
 	protected function create_payment_token( $order, $response = null ) {
 
@@ -1681,7 +1681,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$this->add_transaction_data( $order, $response );
 
 		} else {
-			throw new Exception( sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
+			throw new SV_WC_Payment_Gateway_Exception( sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
 		}
 
 		return $order;
@@ -1809,7 +1809,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					$this->tokens[ $customer_id ][ $default_token->get_token() ]->set_default( true );
 				}
 
-			} catch( Exception $e ) {
+			} catch( SV_WC_Payment_Gateway_Exception $e ) {
 				// communication or other error, fallback to the locally stored tokens
 				$this->tokens[ $customer_id ] = $tokens;
 			}
@@ -1958,7 +1958,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					return false;
 				}
 
-			} catch( Exception $e ) {
+			} catch( SV_WC_Payment_Gateway_Exception $e ) {
 				return false;
 			}
 		}
