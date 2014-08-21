@@ -2,9 +2,12 @@
 
 2014.nn.nn - version 2.1-1
  * Feature - Added API base class and automatic request logging
+ * Feature - Introduced Helper class
  * Tweak - Introduced named exceptions
  * Tweak - Updates to support Chase Paymentech certification mode
  * Tweak - Updates to the Hosted Gateway class for improved handling of redirect-back gateways
+ * Tweak - My Payment Methods template now uses Dashicons instead of images
+ * Tweak - Plugin active method now checks filename only
  * Fix - Fixed product page URLs
 
 2014.05.26 - version 2.1
