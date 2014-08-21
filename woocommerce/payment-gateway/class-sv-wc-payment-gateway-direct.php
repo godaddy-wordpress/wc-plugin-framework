@@ -286,7 +286,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// optional fields (excluding account type for now)
 		$drivers_license_number = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
-		$drivers_license_state  = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-state' );
+		// $drivers_license_state  = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-state' );
 		$check_number           = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-check-number' );
 
 		// routing number exists?
@@ -398,6 +398,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Handles payment processing
 	 *
 	 * @since 1.0
+	 * @param int|string $order_id
 	 * @see WC_Payment_Gateway::process_payment()
 	 */
 	public function process_payment( $order_id ) {
@@ -555,7 +556,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * $order->capture_total - the capture total
 	 *
 	 * @since 2.0
-	 * @param int $order_id order ID being processed
+	 * @param \WC_Order $order order being processed
 	 * @return WC_Order object with payment and transaction information attached
 	 */
 	protected function get_order_for_capture( $order ) {
@@ -2134,7 +2135,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		?>
 			<style type="text/css">
 				.wc-<?php echo $class; ?>-delete-payment-method {text-decoration: none;}
-				.wc-<?php echo $class; ?>-delete-payment-method:before {font-family: 'dashicons';content:"\f158";font-size:200%;-webkit-font-smoothing:antialiased;speak:none;font-weight:400;font-variant:normal;text-transform:none;}
+				.wc-<?php echo $class; ?>-delete-payment-method:before {font-family: 'dashicons', Monospace;content:"\f158";font-size:200%;-webkit-font-smoothing:antialiased;speak:none;font-weight:400;font-variant:normal;text-transform:none;}
 			</style>
 		<?php
 	}
