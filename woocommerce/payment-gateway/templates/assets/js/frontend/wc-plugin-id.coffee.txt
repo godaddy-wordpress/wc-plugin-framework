@@ -1,0 +1,261 @@
+###
+ %%PLUGIN NAME%%
+ Version TODO
+
+ Copyright (c) %%COPYRIGHT YEAR%%, SkyVerge, Inc.
+ Licensed under the GNU General Public License v3.0
+ http://www.gnu.org/licenses/gpl-3.0.html
+###
+jQuery( document ).ready( $ ) ->
+	"use strict"
+
+	# checkout page
+	if $( 'form.checkout' ).length
+
+%%IF SUPPORTS TOKENIZATION%%
+		# handle payment methods, note this is bound to the updated_checkout trigger so it fires even when other parts
+		# of the checkout are changed
+		$( 'body' ).bind 'updated_checkout', -> handleSavedPaymentMethods()
+%%ENDIF SUPPORTS TOKENIZATION%%
+
+		# validate payment data before order is submitted
+%%IF SUPPORTS CREDIT-CARDS%%
+		$( 'form.checkout' ).bind 'checkout_place_order_%%GATEWAY ID%%', -> validateCardData $( this )
+%%ENDIF SUPPORTS CREDIT-CARDS%%
+%%IF SUPPORTS CHECKS%%
+		$( 'form.checkout' ).bind 'checkout_place_order_%%GATEWAY ID CHECKS%%', -> validateAccountData $( this )
+%%ENDIF SUPPORTS CHECKS%%
+
+	# checkout->pay page
+	else
+
+%%IF SUPPORTS TOKENIZATION%%
+		# handle payment methods on checkout->pay page
+		handleSavedPaymentMethods()
+%%ENDIF SUPPORTS TOKENIZATION%%
+
+		# validate card data before order is submitted when the payment gateway is selected
+		$( 'form#order_review' ).submit ->
+
+%%IF SUPPORTS CREDIT-CARDS%%
+			return validateCardData $( this ) if '%%GATEWAY ID%%' == $( '#order_review input[name=payment_method]:checked' ).val()
+%%ENDIF SUPPORTS CREDIT-CARDS%%
+%%IF SUPPORTS CHECKS%%
+
+			return validateAccountData $( this ) if '%%GATEWAY ID CHECKS%%' == $( '#order_review input[name=payment_method]:checked' ).val()
+%%ENDIF SUPPORTS CHECKS%%
+
+%%IF SUPPORTS CREDIT-CARDS%%
+	 Perform validation on the card info entered
+	validateCardData = ( $form ) ->
+
+		return false if $form.is '.processing'
+
+		$paymentFields = $( '.payment_method_%%GATEWAY ID%%' )
+
+%%IF SUPPORTS TOKENIZATION%%
+		tokenizedPaymentMethodSelected = $paymentFields.find( '.js-wc-payment-gateway-payment-token:checked' ).val()
+
+		# don't validate fields if a saved payment method is being used
+		return true if tokenizedPaymentMethodSelected
+%%ENDIF SUPPORTS TOKENIZATION%%
+
+		errors = []
+
+		accountNumber = $paymentFields.find( '.js-wc-payment-gateway-account-number' ).val()
+		csc           = $paymentFields.find( '.js-wc-payment-gateway-csc' ).val()  # optional element
+		expMonth      = $paymentFields.find( '.js-wc-payment-gateway-card-exp-month' ).val()
+		expYear       = $paymentFields.find( '.js-wc-payment-gateway-card-exp-year' ).val()
+
+		# replace any dashes or spaces in the card number
+		accountNumber = accountNumber.replace /-|\s/g, ''
+
+		# validate card number
+		if ! accountNumber
+			errors.push %%PLUGIN ID%%_params.card_number_missing
+		else
+			errors.push( %%PLUGIN ID%%_params.card_number_length_invalid ) if accountNumber.length < 12 || accountNumber.length > 19
+			errors.push( %%PLUGIN ID%%_params.card_number_digits_invalid ) if /\D/.test accountNumber
+			errors.push( %%PLUGIN ID%%_params.card_number_invalid unless luhnCheck accountNumber
+
+		# validate expiration date
+		currentYear = new Date().getFullYear()
+		errors.push( %%PLUGIN ID%%_params.card_exp_date_invalid ) if /\D/.test( expMonth ) || /\D/.test( expYear ) || expMonth > 12 || expMonth < 1 || expYear < currentYear || expYear > currentYear + 20
+
+		# validate CSC if present
+		if 'undefined' !== typeof csc
+
+			if ! csc
+				errors.push %%PLUGIN ID%%_params.cvv_missing
+			else
+				errors.push( %%PLUGIN ID%%_params.cvv_digits_invalid ) if /\D/.test( csc )
+				errors.push( %%PLUGIN ID%%_params.cvv_length_invalid ) if csc.length < 3 || csc.length > 4
+
+		if errors.length > 0
+			renderErrors $form, errors
+			return false
+		else
+			# get rid of any space/dash characters
+			$paymentFields.find( '.js-wc-payment-gateway-account-number' ).val accountNumber
+			return true
+
+
+	# luhn check
+	luhnCheck = ( accountNumber ) ->
+		sum = 0
+		for i in [ 0..( accountNumber.length - 2 ) ]
+			weight = parseInt( accountNumber.substr( accountNumber.length - ( i + 2 ), 1 ) * ( 2 - ( i % 2 ) ) )
+			sum += if weight < 10 then weight else weight - 9
+		accountNumber.substr( accountNumber.length - 1 ) == ( ( 10 - sum % 10 ) % 10 ).toString()
+%%ENDIF SUPPORTS CREDIT-CARDS%%
+%%IF SUPPORTS CHECKS%%
+
+
+	# Perform validation on the checking account info entered
+	validateAccountData = ( $form ) ->
+
+		return false if $form.is '.processing'
+
+		$paymentFields = $( '.payment_method_%%GATEWAY ID CHECKS%%' )
+
+%%IF SUPPORTS TOKENIZATION%%
+		tokenizedPaymentMethodSelected = $paymentFields.find( '.js-wc-payment-gateway-payment-token:checked' ).val()
+
+		# don't validate fields if a saved payment method is being used
+		return true if tokenizedPaymentMethodSelected
+%%ENDIF SUPPORTS TOKENIZATION%%
+
+		errors = []
+
+		routingNumber        = $paymentFields.find( '.js-wc-payment-gateway-routing-number' ).val()
+		accountNumber        = $paymentFields.find( '.js-wc-payment-gateway-account-number' ).val()
+		driversLicenseNumber = $paymentFields.find( '.js-wc-payment-gateway-drivers-license-number' ).val()
+		driversLicenseState  = $paymentFields.find( '.js-wc-payment-gateway-drivers-license-state' ).val()
+		checkNumber          = $paymentFields.find( '.js-wc-payment-gateway-check-number' ).val()  # optional
+
+		# validate routing number
+		if ! routingNumber
+			errors.push %%PLUGIN ID%%_params.routing_number_missing
+		else
+			errors.push( %%PLUGIN ID%%_params.routing_number_length_invalid ) if 9 != routingNumber.length
+			errors.push( %%PLUGIN ID%%_params.routing_number_digits_invalid ) if /\D/.test routingNumber
+
+		# validate account number
+		if ! accountNumber
+			errors.push %%PLUGIN ID%%_params.account_number_missing
+		else
+			errors.push( %%PLUGIN ID%%_params.account_number_length_invalid ) if accountNumber.length < 3 || accountNumber.length > 17
+			errors.push( %%PLUGIN ID%%_params.account_number_invalid ) if /\D/.test accountNumber
+
+		# validate drivers license number
+		if ! driversLicenseNumber
+			errors.push %%PLUGIN ID%%_params.drivers_license_number_missing
+		else if ! /^[a-zA-Z0-9 -]+$/.test driversLicenseNumber
+			errors.push %%PLUGIN ID%%_params.drivers_license_number_invalid
+
+		# validate drivers license state
+		errors.push( %%PLUGIN ID%%_params.drivers_license_state_missing ) unless driversLicenseState
+
+		# validate check number if present
+		if 'undefined' !== typeof checkNumber
+			errors.push( %%PLUGIN ID%%_params.check_number_digits_invalid ) if /\D/.test checkNumber
+
+		if errors.length > 0
+			renderErrors $form, errors
+			return false
+		else
+			# get rid of any space/dash characters
+			$paymentFields.find( '.js-wc-payment-gateway-account-number' ).val accountNumber
+			return true
+
+%%ENDIF SUPPORTS CHECKS%%
+
+
+	# render any new errors and bring them into the viewport
+	renderErrors = ( $form, errors ) ->
+
+		# hide and remove any previous errors
+		$( '.woocommerce-error, .woocommerce-message' ).remove()
+
+		# add errors
+		$form.prepend '<ul class="woocommerce-error"><li>' + errors.join( '</li><li>' ) + '</li></ul>'
+
+		# unblock UI
+		$form.removeClass( 'processing' ).unblock()
+		$form.find( '.input-text, select' ).blur()
+
+		# scroll to top
+		$( 'html, body' ).animate { scrollTop: $form.offset().top - 100 }, 1000
+%%IF SUPPORTS TOKENIZATION%%
+
+
+	# show/hide the saved payment methods when a saved payment method is de-selected/selected
+	handleSavedPaymentMethods = ->
+%%IF SUPPORTS CREDIT-CARDS%%
+
+		$( 'input.js-wc-%%GATEWAY ID DASHERIZED%%-payment-token' ).change ->
+
+			tokenizedPaymentMethodSelected = $( 'input.js-wc-%%GATEWAY ID DASHERIZED%%-payment-token:checked' ).val()
+			$newPaymentMethodSection = $( 'div.js-wc-%%GATEWAY ID DASHERIZED%%-new-payment-method-form' )
+
+			if tokenizedPaymentMethodSelected
+				# using an existing tokenized payment method, hide the 'new method' fields
+				$newPaymentMethodSection.slideUp 200
+			else
+				# use new payment method, display the 'new method' fields
+				$newPaymentMethodSection.slideDown 200
+		.change()
+%%ENDIF SUPPORTS CREDIT-CARDS%%
+%%IF SUPPORTS CHECKS%%
+
+		$( 'input.js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-payment-token' ).change ->
+
+			tokenizedPaymentMethodSelected = $( 'input.js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-payment-token:checked' ).val()
+			$newPaymentMethodSection = $( 'div.js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-new-payment-method-form' )
+
+			if tokenizedPaymentMethodSelected
+				# using an existing tokenized payment method, hide the 'new method' fields
+				$newPaymentMethodSection.slideUp 200
+			else
+				# use new payment method, display the 'new method' fields
+				$newPaymentMethodSection.slideDown 200
+		.change()
+%%ENDIF SUPPORTS CHECKS%%
+
+		# display the 'save payment method' option for guest checkouts if the 'create account' option is checked
+		#  but only hide the input if there is a 'create account' checkbox (some themes just display the password)
+		$( 'input#createaccount' ).change ->
+
+%%IF SUPPORTS CREDIT-CARDS%%
+
+			$parentRow = $( 'input.js-wc-%%GATEWAY ID DASHERIZED%%-tokenize-payment-method' ).closest 'p.form-row'
+
+			if $( this ).is ':checked'
+				$parentRow.slideDown()
+				$parentRow.next().show()
+			else
+				$parentRow.hide()
+				$parentRow.next().hide()
+%%ENDIF SUPPORTS CREDIT-CARDS%%
+%%IF SUPPORTS CHECKS%%
+
+			$parentRow = $( 'input.js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-tokenize-payment-method' ).closest 'p.form-row'
+
+			if $( this ).is ':checked'
+				$parentRow.slideDown()
+				$parentRow.next().show()
+			else
+				$parentRow.hide()
+				$parentRow.next().hide()
+%%ENDIF SUPPORTS CHECKS%%
+		.change()
+
+	}
+%%ENDIF SUPPORTS TOKENIZATION%%
+
+
+%%IF SUPPORTS CHECKS%%
+	# Show the sample check image when the help bubble is clicked
+	$( '.js-wc-cybersource-sa-sop-echeck-account-help' ).click ->
+		$( this ).closest( '.payment_method_%%GATEWAY ID CHECKS%%' ).find( '.sample-check' ).slideDown() unless $( this ).closest( '.payment_method_%%GATEWAY ID CHECKS%%' ).find( '.sample-check' ).is( ':visible' )
+%%ENDIF SUPPORTS CHECKS%%

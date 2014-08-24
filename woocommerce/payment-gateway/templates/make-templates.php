@@ -30,7 +30,7 @@
 
 // the template templates
 $filenames = array(
-	'assets/js/frontend/wc-plugin-id.js.txt'                  => null,
+	'assets/js/frontend/wc-plugin-id.coffee.txt'              => null,
 	'check/checkout/gateway-id-checks-payment-fields.php.txt' => null,
 	'check/myaccount/gateway-id-checks-my-accounts.php.txt'   => null,
 	'credit-card/checkout/gateway-id-payment-fields.php.txt'  => null,

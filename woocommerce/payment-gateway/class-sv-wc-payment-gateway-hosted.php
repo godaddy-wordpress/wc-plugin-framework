@@ -304,6 +304,8 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		// log the IPN request
 		$this->log_transaction_response_request( $_REQUEST );
 
+		$response = null;
+
 		try {
 
 			// get the transaction response object for the current request
@@ -351,7 +353,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			// failure
 
 			if ( isset( $order ) && $order ) {
-				$this->mark_order_as_failed( $order, $e->getMessage() );
+				$this->mark_order_as_failed( $order, $e->getMessage(), $response );
 			}
 
 			if ( $this->debug_log() ) {
@@ -374,6 +376,8 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		// log the redirect back request
 		$this->log_transaction_response_request( $_REQUEST );
+
+		$response = null;
 
 		try {
 
@@ -423,7 +427,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			// failure
 
 			if ( isset( $order ) && $order ) {
-				$this->mark_order_as_failed( $order, $e->getMessage() );
+				$this->mark_order_as_failed( $order, $e->getMessage(), $response );
 				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() ) );
 			}
 
@@ -465,14 +469,14 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			// if the transaction was held (ie fraud validation failure) mark it as such
 			if ( $response->transaction_held() ) {
-				$this->mark_order_as_held( $order, $response->get_status_message() );
+				$this->mark_order_as_held( $order, $response->get_status_message(), $response );
 			}
 
 			return true;
 
 		} elseif ( $response->transaction_cancelled() ) {
 
-			$this->mark_order_as_cancelled( $order, $response->get_status_message() );
+			$this->mark_order_as_cancelled( $order, $response->get_status_message(), $response );
 
 			return true;
 

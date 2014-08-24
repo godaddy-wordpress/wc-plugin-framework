@@ -3,6 +3,7 @@
 2014.nn.nn - version 2.1-1
  * Feature - Added API base class and automatic request logging
  * Feature - Introduced Helper class
+ * Feature - Optional detailed customer decline messages on checkout
  * Tweak - Introduced named exceptions
  * Tweak - Updates to support Chase Paymentech certification mode
  * Tweak - Updates to the Hosted Gateway class for improved handling of redirect-back gateways

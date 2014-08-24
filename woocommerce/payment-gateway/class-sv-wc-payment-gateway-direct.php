@@ -696,7 +696,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// TODO: consider checking whether the response *was* an authorization, rather than blanket-assuming it was because of the settings.  There are times when an auth will be used rather than charge, ie when performing in-plugin AVS handling (moneris)
 			if ( $response->transaction_held() || ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
 				// TODO: need to make this more flexible, and not force the message to 'Authorization only transaction' for auth transactions (re moneris efraud handling)
-				$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? _x( 'Authorization only transaction', 'Supports credit card authorization', $this->text_domain ) : $response->get_status_message() );
+				$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? _x( 'Authorization only transaction', 'Supports credit card authorization', $this->text_domain ) : $response->get_status_message(), $response );
 			}
 
 			return true;
@@ -1502,8 +1502,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$order->description = sprintf( _x( '%s - Pre-Order Release Payment for Order %s', 'Supports direct payment method pre-orders', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
 
 			// token is required
-			if ( ! $order->payment->token )
+			if ( ! $order->payment->token ) {
 				throw new Exception( _x( 'Payment token missing/invalid.', 'Supports direct payment method pre-orders', $this->text_domain ) );
+			}
 
 			// perform the transaction
 			if ( $this->is_credit_card_gateway() ) {
@@ -1561,7 +1562,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				// if the transaction was held (ie fraud validation failure) mark it as such
 				if ( $response->transaction_held() || ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
 
-					$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? _x( 'Authorization only transaction', 'Supports direct payment method pre-orders', $this->text_domain ) : $response->get_status_message() );
+					$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? _x( 'Authorization only transaction', 'Supports direct payment method pre-orders', $this->text_domain ) : $response->get_status_message(), $response );
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
 
 				} else {
@@ -2110,8 +2111,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		assert( $this->supports_tokenization() );
 
-		if ( ! $this->is_available() || ! $this->tokenization_enabled() )
+		if ( ! $this->is_available() || ! $this->tokenization_enabled() ) {
 			return;
+		}
 
 		// add delete icon
 		wp_enqueue_style( 'dashicons' );

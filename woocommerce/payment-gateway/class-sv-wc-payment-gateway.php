@@ -37,6 +37,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
  * + `card_types`    - allows the user to configure a set of card types to display on the checkout page
  * + `charge`        - transaction type charge
  * + `authorization` - transaction type authorization
+ * + `customer_decline_messages` - detailed customer decline messages on checkout
  *
  * ## Payment Types (one and only one):
  *
@@ -211,6 +212,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/** Credit Card authorization transaction feature */
 	const FEATURE_CREDIT_CARD_AUTHORIZATION = 'authorization';
 
+	/** Display detailed customer decline messages on checkout */
+	const FEATURE_DETAILED_CUSTOMER_DECLINE_MESSAGES = 'customer_decline_messages';
+
 
 	/** @var SV_WC_Payment_Gateway_Plugin the parent plugin class */
 	private $plugin;
@@ -248,6 +252,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/** @var string configuration option: indicates whether tokenization is enabled, either 'yes' or 'no' */
 	private $tokenization;
 
+	/** @var string configuration option: indicates whether detailed customer decline messages should be displayed at checkout, either 'yes' or 'no' */
+	private $enable_customer_decline_messages;
+
 	/** @var string configuration option: 4 options for debug mode - off, checkout, log, both */
 	private $debug_mode;
 
@@ -268,7 +275,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * + `supports` - array  list of supported gateway features, possible values include:
 	 *   'products', 'card_types', 'tokenziation', 'charge', 'authorization', 'subscriptions',
 	 *   'subscription_suspension', 'subscription_cancellation', 'subscription_reactivation',
-	 *   'subscription_amount_changes', 'subscription_date_changes', 'subscription_payment_method_change'.
+	 *   'subscription_amount_changes', 'subscription_date_changes', 'subscription_payment_method_change',
+	 *   'customer_decline_messages'
 	 *   Defaults to 'products', 'charge' (credit-card gateways only)
 	 * + `payment_type` - string one of 'credit-card' or 'echeck', defaults to 'credit-card'
 	 * + `card_types` - array  associative array of card type to display name, used if the payment_type is 'credit-card' and the 'card_types' feature is supported.  Defaults to:
@@ -603,6 +611,16 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// add unique method fields added by concrete gateway class
 		$gateway_form_fields = $this->get_method_form_fields();
 		$this->form_fields = array_merge( $this->form_fields, $gateway_form_fields );
+
+		// add "detailed customer decline messages" option if the feature is supported
+		if ( $this->supports( self::FEATURE_DETAILED_CUSTOMER_DECLINE_MESSAGES ) ) {
+			$this->form_fields['enable_customer_decline_messages'] = array(
+				'title'   => __( 'Detailed Decline Messages', $this->text_domain ),
+				'type'    => 'checkbox',
+				'label'   => __( 'Check to enable detailed decline messages to the customer during checkout when possible, rather than a generic decline message.', $this->text_domain ),
+				'default' => 'no',
+			);
+		}
 
 		// add any common bottom fields
 		$this->form_fields['debug_mode'] = array(
@@ -1056,7 +1074,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$order_note .= ' ' . sprintf( __( 'Transaction id %s', $this->text_domain ), $response->get_transaction_id() );
 		}
 
-		$this->mark_order_as_failed( $order, $order_note );
+		$this->mark_order_as_failed( $order, $order_note, $response );
 
 		return false;
 	}
@@ -1110,8 +1128,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 1.0
 	 * @param WC_Order $order the order
 	 * @param string $message a message to display within the order note
+	 * @param SV_WC_Payment_Gateway_API_Response optional $response the transaction response object
 	 */
-	protected function mark_order_as_held( $order, $message ) {
+	protected function mark_order_as_held( $order, $message, $response = null ) {
 
 		$order_note = sprintf( __( '%s Transaction Held for Review (%s)', $this->text_domain ), $this->get_method_title(), $message );
 
@@ -1124,9 +1143,17 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		$this->add_debug_message( $message, 'message', true );
 
-		// we don't have control over the "Thank you. Your order has been received." message shown on the "Thank You" page.  Yet
-		SV_WC_Plugin_Compatibility::wc_add_notice( __( 'Your order has been received and is being reviewed.  Thank you for your business.', $this->text_domain ) );
-		SV_WC_Plugin_Compatibility::set_messages();  // TODO: do we need this?
+		// user message
+		$user_message = '';
+		if ( $response && $this->is_detailed_customer_decline_messages_enabled() ) {
+			$user_message = $response->get_user_message();
+		}
+		if ( ! $user_message ) {
+			$user_message = __( 'Your order has been received and is being reviewed.  Thank you for your business.', $this->text_domain );
+		}
+		SV_WC_Plugin_Compatibility::wc_add_notice( $user_message );
+
+		SV_WC_Plugin_Compatibility::set_messages();  // TODO: do we need this?  test with a direct and redirect gateway
 
 	}
 
@@ -1137,8 +1164,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 1.0
 	 * @param WC_Order $order the order
 	 * @param string $error_message a message to display inside the "Payment Failed" order note
+	 * @param SV_WC_Payment_Gateway_API_Response optional $response the transaction response object
 	 */
-	protected function mark_order_as_failed( $order, $error_message ) {
+	protected function mark_order_as_failed( $order, $error_message, $response = null ) {
 
 		$order_note = sprintf( _x( '%s Payment Failed (%s)', 'Order Note: (Payment method) Payment failed (error)', $this->text_domain ), $this->get_method_title(), $error_message );
 
@@ -1151,7 +1179,15 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		$this->add_debug_message( $error_message, 'error' );
 
-		SV_WC_Plugin_Compatibility::wc_add_notice( __( 'An error occurred, please try again or try an alternate form of payment.', $this->text_domain ), 'error' );
+		// user message
+		$user_message = '';
+		if ( $response && $this->is_detailed_customer_decline_messages_enabled() ) {
+			$user_message = $response->get_user_message();
+		}
+		if ( ! $user_message ) {
+			$user_message = __( 'An error occurred, please try again or try an alternate form of payment.', $this->text_domain );
+		}
+		SV_WC_Plugin_Compatibility::wc_add_notice( $user_message, 'error' );
 	}
 
 
@@ -1161,12 +1197,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 2.1
 	 * @param WC_Order $order the order
 	 * @param string $error_message a message to display inside the "Payment Cancelled" order note
+	 * @param SV_WC_Payment_Gateway_API_Response optional $response the transaction response object
 	 */
-	protected function mark_order_as_cancelled( $order, $message ) {
+	protected function mark_order_as_cancelled( $order, $message, $response = null ) {
 
 		$order_note = sprintf( _x( '%s Transaction Cancelled (%s)', 'Cancelled order note', $this->text_domain ), $this->get_method_title(), $message );
 
-		// Mark order as failed if not already set, otherwise, make sure we add the order note so we can detect when someone fails to check out multiple times
+		// Mark order as cancelled if not already set
 		if ( 'cancelled' != $order->status ) {
 			$order->update_status( 'cancelled', $order_note );
 		} else {
@@ -2053,6 +2090,22 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function is_enabled() {
 		return 'yes' == $this->enabled;
+	}
+
+
+	/**
+	 * Returns true if detailed decline messages should be displayed to
+	 * customers on checkout when available, rather than a single generic
+	 * decline message
+	 *
+	 * @since 2.1-1
+	 * @see SV_WC_Payment_Gateway_API_Response_Message_Helper
+	 * @see SV_WC_Payment_Gateway_API_Response::get_user_message()
+	 * @return boolean true if detailed decline messages should be displayed
+	 *         on checkout
+	 */
+	public function is_detailed_customer_decline_messages_enabled() {
+		return 'yes' == $this->enable_customer_decline_messages;
 	}
 
 

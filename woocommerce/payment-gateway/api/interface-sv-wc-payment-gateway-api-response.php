@@ -82,6 +82,19 @@ interface SV_WC_Payment_Gateway_API_Response extends SV_WC_API_Response {
 	public function get_transaction_id();
 
 
+	/**
+	 * Returns a message appropriate for a frontend user.  This should be used
+	 * to provide enough information to a user to allow them to resolve an
+	 * issue on their own, but not enough to help nefarious folks fishing for
+	 * info.
+	 *
+	 * @since 2.1-1
+	 * @see SV_WC_Payment_Gateway_API_Response_Message_Helper
+	 * @return string user message, if there is one
+	 */
+	public function get_user_message();
+
+
 }
 
 endif;  // interface exists check

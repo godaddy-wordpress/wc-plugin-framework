@@ -215,6 +215,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( 'class-sv-wc-payment-gateway-direct.php' );
 		require_once( 'class-sv-wc-payment-gateway-hosted.php' );
 		require_once( 'class-sv-wc-payment-token.php' );
+
+		// helpers
+		require_once( 'api/class-sv-wc-payment-gateway-api-response-message-helper.php' );
 	}
 
 
