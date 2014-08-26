@@ -1191,15 +1191,19 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$order_meta_query .= $this->get_remove_subscription_renewal_order_meta(
 				array(
 					'_wc_' . $this->get_id() . '_trans_id',
+					'_wc_' . $this->get_id() . '_trans_date',
 					'_wc_' . $this->get_id() . '_payment_token',
 					'_wc_' . $this->get_id() . '_account_four',
 					'_wc_' . $this->get_id() . '_card_expiry_date',
 					'_wc_' . $this->get_id() . '_card_type',
 					'_wc_' . $this->get_id() . '_authorization_code',
+					'_wc_' . $this->get_id() . '_auth_can_be_captured',
+					'_wc_' . $this->get_id() . '_charge_captured',
 					'_wc_' . $this->get_id() . '_account_type',
 					'_wc_' . $this->get_id() . '_check_number',
 					'_wc_' . $this->get_id() . '_environment',
 					'_wc_' . $this->get_id() . '_customer_id',
+					'_wc_' . $this->get_id() . '_retry_count',
 				)
 			);
 		}

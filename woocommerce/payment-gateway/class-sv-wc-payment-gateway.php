@@ -113,23 +113,16 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
  *
  * ### Logging
  *
- * You are responsible for handling your own logging, though some helper
- * methods and best practices are defined.
+ * You are responsible for firing an action from your API/response class to provide
+ * logging of the request/response.
  *
- * A recommended implementation strategy for direct payment gateways is to
- * do an action from within the API class, immediately after the remote request,
- * for instance like:
+ * From within the API class, immediately after the remote request, for instance like:
  *
  * do_action( 'wc_intuit_qbms_api_request_performed', $request_data, $response_data );
  *
- * Hook into this action from your child class constructor, ie:
- *
- * add_action( 'wc_intuit_qbms_api_request_performed', array( $this, 'log_api_communication' ), 10, 2 );
- *
- * Then define your own log_api_communication method, making use of
- * add_debug_message() method if so desired, ie:
- *
- * $this->add_debug_message( sprintf( __( "Request Method: %s\nRequest URI: %s\nRequest Body: %s", My_Gateway::TEXT_DOMAIN ), $request['method'], $request['uri'], $request['body'] ), 'message', true );
+ * Where $request_data and $response_data are associative arrays.  Don't
+ * forget to fire the action even when errors occur and when handling exceptions
+ * even if there isn't any response data to pass (that parameter is optional)
  *
  * This will have the effect of logging every communication request with the
  * remote endpoint, without you having to litter your code with logging calls,
@@ -1029,6 +1022,21 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		$order->description = sprintf( _x( '%s - Order %s', 'Order description', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
 
+		$order = $this->get_order_with_unique_transaction_ref( $order );
+
+		return $order;
+	}
+
+
+	/**
+	 * Returns the $order object with a unique transaction ref member added
+	 *
+	 * @since 2.1-1
+	 * @param WC_Order $order the order object
+	 * @return WC_Order order object with member named unique_transaction_ref
+	 */
+	protected function get_order_with_unique_transaction_ref( $order ) {
+
 		// generate a unique retry count
 		if ( is_numeric( SV_WC_Plugin_Compatibility::get_order_custom_field( $order, 'wc_' . $this->get_id() . '_retry_count' ) ) ) {
 			$retry_count = SV_WC_Plugin_Compatibility::get_order_custom_field( $order, 'wc_' . $this->get_id() . '_retry_count' );
@@ -1712,7 +1720,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// add debug message to woocommerce->errors/messages if checkout or both is enabled
-		if ( ( $this->debug_checkout() || $this->is_test_environment() ) && ! is_admin() ) {
+		if ( ( $this->debug_checkout() || ( 'error' === $type && $this->is_test_environment() ) ) && ( ! is_admin() || defined( 'DOING_AJAX' ) ) ) {
 
 			if ( 'message' === $type ) {
 

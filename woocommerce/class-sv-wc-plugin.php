@@ -452,11 +452,10 @@ abstract class SV_WC_Plugin {
 
 		$messages = array();
 
-		$messages[] = isset( $data['uri'] ) ? 'Request' : 'Response';
+		$messages[] = isset( $data['uri'] ) && $data['uri'] ? 'Request' : 'Response';
 
 		foreach ( (array) $data as $key => $value ) {
-
-			$messages[] = sprintf( '%s: %s', $key, is_array( $value ) ? print_r( $value, true ) : $value );
+			$messages[] = sprintf( '%s: %s', $key, is_array( $value ) || ( is_object( $value ) && 'stdClass' == get_class( $value ) ) ? print_r( (array) $value, true ) : $value );
 		}
 
 		return implode( "\n", $messages );

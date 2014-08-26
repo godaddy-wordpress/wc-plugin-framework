@@ -420,7 +420,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				return wp_redirect( $this->get_return_url( $order ) );
 			} else {
 				// failed response, redirect back to pay page
-				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() ) );
+				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() && ! $this->use_auto_form_post() ) );
 			}
 
 		} catch( Exception $e ) {
@@ -428,7 +428,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			if ( isset( $order ) && $order ) {
 				$this->mark_order_as_failed( $order, $e->getMessage(), $response );
-				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() ) );
+				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() && ! $this->use_auto_form_post() ) );
 			}
 
 			// otherwise, if no order is available, log the issue and redirect to home
@@ -550,7 +550,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 2.1-1
 	 * @param WC_Order $order the order
-	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response transaction response
+	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response transaction response
 	 */
 	protected function do_credit_card_transaction_approved( $order, $response ) {
 
