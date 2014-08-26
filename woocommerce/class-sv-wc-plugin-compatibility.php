@@ -39,7 +39,7 @@ if ( ! class_exists( 'SV_WC_Plugin_Compatibility' ) ) :
  *
  * Current Compatibility: 2.0.x - 2.1
  *
- * @since 2.0
+ * @since 2.0.0
  */
 class SV_WC_Plugin_Compatibility {
 
@@ -47,7 +47,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Compatibility function for outputting a woocommerce attribute label
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $label the label to display
 	 * @return string the label to display
 	 */
@@ -65,7 +65,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Compatibility function to add and store a notice
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $message The text to display in the notice.
 	 * @param string $notice_type The singular name of the notice type - either error, success or notice. [optional]
 	 */
@@ -88,7 +88,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Prints messages and errors which are stored in the session, then clears them.
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 */
 	public static function wc_print_notices() {
 
@@ -104,7 +104,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Compatibility function to queue some JavaScript code to be output in the footer.
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $code javascript
 	 */
 	public static function wc_enqueue_js( $code ) {
@@ -121,7 +121,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Forces the provided $content url to https protocol
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $content the url
 	 * @return string the url with https protocol
 	 */
@@ -139,7 +139,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns true if on the pay page, false otherwise
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return boolean true if on the pay page, false otherwise
 	 */
 	public static function is_checkout_pay_page() {
@@ -155,7 +155,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns the checkout pay page URL
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @return string checkout pay page URL
 	 */
 	public static function get_checkout_pay_page_url() {
@@ -177,7 +177,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns the order_id if on the checkout pay page
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return int order identifier
 	 */
 	public static function get_checkout_pay_page_order_id() {
@@ -202,7 +202,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns the total shipping cost for the given order
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param WC_Order $order
 	 * @return float the shipping total
 	 */
@@ -220,7 +220,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Returns the value of the custom field named $name, if any.  $name should
 	 * not have a leading underscore
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param WC_Order $order WC Order object
 	 * @param string $name meta key name without a leading underscore
 	 * @return string|mixed order custom field value for field named $name
@@ -238,7 +238,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Sets WooCommerce messages
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 */
 	public static function set_messages() {
 
@@ -254,7 +254,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns a new instance of the woocommerce logger
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return object logger
 	 */
 	public static function new_wc_logger() {
@@ -272,7 +272,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Returns the admin configuration url for the gateway with class name
 	 * $gateway_class_name
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $gateway_class_name the gateway class name
 	 * @return string admin configuration url for the gateway
 	 */
@@ -290,7 +290,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Returns true if the current page is the admin configuration page for the
 	 * gateway with class name $gateway_class_name
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $gateway_class_name the gateway class name
 	 * @return boolean true if the current page is the admin configuration page for the gateway
 	 */
@@ -312,7 +312,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Returns the admin configuration url for the shipping method with class name
 	 * $gateway_class_name
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $shipping_method_class_name the shipping method class name
 	 * @return string admin configuration url for the shipping method
 	 */
@@ -330,7 +330,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Returns true if the current page is the admin configuration page for the
 	 * shipping method with class name $shipping_method_class_name
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $shipping_method_class_name the shipping method class name
 	 * @return boolean true if the current page is the admin configuration page for the shipping method
 	 */
@@ -353,7 +353,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * Sanitize, remove locale formatting, and optionally round + trim off zeros
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param  float|string $number Expects either a float or a string with a decimal separator only (no thousands)
 	 * @param  mixed $dp number of decimal points to use, blank to use woocommerce_price_num_decimals, or false to avoid all rounding.
 	 * @param  boolean $trim_zeros from end of string
@@ -373,7 +373,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Get the count of notices added, either for all notices (default) or for one particular notice type specified
 	 * by $notice_type.
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $notice_type The name of the notice type - either error, success or notice. [optional]
 	 * @return int the notice count
 	 */
@@ -396,7 +396,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns the array of shipping methods chosen during checkout
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return array of chosen shipping method ids
 	 */
 	public static function get_chosen_shipping_methods() {
@@ -415,7 +415,7 @@ class SV_WC_Plugin_Compatibility {
 	 * to but not a precise replacement for WC_Order::get_shipping_methods(), just
 	 * because there can't be a direct equivalent for pre WC 2.1
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param WC_Order $order
 	 * @return array of shipping method ids for $order
 	 */
@@ -444,7 +444,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns true if the order has the given shipping method
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param WC_Order $order
 	 * @param string $method_id
 	 * @return boolean true if $order is shipped by $method_id
@@ -466,7 +466,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Compatibility function to use the new WC_Admin_Meta_Boxes class for the save_errors() function
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return callback old save_errors function or new class
 	 */
 	public static function save_errors() {
@@ -482,7 +482,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Get coupon types.
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return array of coupon types
 	 */
 	public static function wc_get_coupon_types() {
@@ -499,7 +499,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Gets a product meta field value, regardless of product type
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param WC_Product $product the product
 	 * @param string $field_name the field name
 	 * @return mixed meta value
@@ -519,7 +519,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Format the price with a currency symbol.
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param float $price the price
 	 * @param array $args (default: array())
 	 * @return string formatted price
@@ -537,7 +537,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * WooCommerce Shortcode wrapper
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param mixed $function shortcode callback
 	 * @param array $atts (default: array())
 	 * @param array $wrapper array of wrapper options (class, before, after)
@@ -564,7 +564,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Compatibility for the woocommerce_get_template() function which is soft-deprecated in 2.1+
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $template_name
 	 * @param array $args
 	 * @param string $template_path
@@ -586,7 +586,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Compatibility for the woocommerce_date_format() function which is soft-deprecated in 2.1+
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string date format
 	 */
 	public static function wc_date_format() {
@@ -598,7 +598,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Compatibility for the woocommerce_time_format() function which is soft-deprecated in 2.1+
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string time format
 	 */
 	public static function wc_time_format() {
@@ -611,7 +611,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Compatibility for the wc_timezone_string() function, which only
 	 * exists in 2.1+
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string a valid PHP timezone string for the site
 	 */
 	public static function wc_timezone_string() {
@@ -667,7 +667,7 @@ class SV_WC_Plugin_Compatibility {
 	 * so plugins targeting those versions can safely use WC_Admin_Settings::output_fields()
 	 * and WC_Admin_Settings::save_fields instead
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 */
 	public static function load_wc_admin_functions() {
 
@@ -689,7 +689,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns true if the current page is the admin general configuration page
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return boolean true if the current page is the admin general configuration page
 	 */
 	public static function is_general_configuration_page() {
@@ -707,7 +707,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns the admin configuration url for the admin general configuration page
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string admin configuration url for the admin general configuration page
 	 */
 	public static function get_general_configuration_url() {
@@ -726,7 +726,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Note this must be used in the `wp` or later action, as earlier
 	 * actions do not yet have access to the query vars
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return int order identifier
 	 */
 	public static function get_checkout_order_received_order_id() {
@@ -743,7 +743,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Generates a URL for the thanks page (order received)
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param WC_Order $order
 	 * @return string url to thanks page
 	 */
@@ -812,7 +812,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * Backports the get_formatted() method to WC 2.1
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @see WC_Order_Item_Meta::get_formatted()
 	 * @param \WC_Order_Item_Meta $item_meta order item meta class instance
 	 * @param string $hide_prefix exclude meta when key is prefixed with this, defaults to `_`
@@ -879,7 +879,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Compatibility function to get the version of the currently installed WooCommerce
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string woocommerce version number or null
 	 */
 	public static function get_wc_version() {
@@ -895,7 +895,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns the WooCommerce instance
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return WooCommerce woocommerce instance
 	 */
 	public static function WC() {
@@ -912,7 +912,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns true if the WooCommerce plugin is loaded
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return boolean true if WooCommerce is loaded
 	 */
 	public static function is_wc_loaded() {
@@ -928,7 +928,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns true if the installed version of WooCommerce is 2.1 or greater
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return boolean true if the installed version of WooCommerce is 2.1 or greater
 	 */
 	public static function is_wc_version_gte_2_1() {
@@ -939,7 +939,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns true if the installed version of WooCommerce is 2.2 or greater
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @return boolean true if the installed version of WooCommerce is 2.2 or greater
 	 */
 	public static function is_wc_version_gte_2_2() {
@@ -950,7 +950,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns true if the installed version of WooCommerce is greater than $version
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $version the version to compare
 	 * @return boolean true if the installed version of WooCommerce is > $version
 	 */

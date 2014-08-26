@@ -32,7 +32,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 	 * The purpose of this class is to centralize common utility functions that
 	 * are commonly used in SkyVerge plugins
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 */
 	class SV_WC_Helper {
 
@@ -44,7 +44,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * Note: case-sensitive
 		 *
-		 * @since 2.1-1
+		 * @since 2.2.0
 		 * @param $haystack
 		 * @param $needle
 		 * @return bool
@@ -71,7 +71,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * Note: case-sensitive
 		 *
-		 * @since 2.1-1
+		 * @since 2.2.0
 		 * @param $haystack
 		 * @param $needle
 		 * @return bool
@@ -101,7 +101,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * Note: case-sensitive
 		 *
-		 * @since 2.1-1
+		 * @since 2.2.0
 		 * @param $haystack
 		 * @param $needle
 		 * @return bool
@@ -124,7 +124,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * $length. The last characters will be replaced with the $omission string
 		 * for a total length not exceeding $length
 		 *
-		 * @since 2.1-1
+		 * @since 2.2.0
 		 * @param string $string text to truncate
 		 * @param int $length total desired length of string, including omission
 		 * @param string $omission omission text, defaults to '...'
@@ -155,7 +155,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * for any string functions that expect only ASCII chars and can't
 		 * safely handle UTF-8
 		 *
-		 * @since 2.1-1
+		 * @since 2.2.0
 		 * @param string $string string to make ASCII
 		 * @return string|null ASCII string or null if error occurred
 		 */
@@ -169,7 +169,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * Helper method to check if the multibyte extension is loaded, which
 		 * indicates it's safe to use the mb_*() string methods
 		 *
-		 * @since 2.1-1
+		 * @since 2.2.0
 		 * @return bool
 		 */
 		private static function multibyte_loaded() {
@@ -196,7 +196,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * array( 'item_1' => 'foo', 'item_1.5' => 'w00t', 'item_2' => 'bar' )
 		 *
-		 * @since 2.1-1
+		 * @since 2.2.0
 		 * @param array $array array to insert the given element into
 		 * @param string $insert_key key to insert given element after
 		 * @param array $element element to insert into array
@@ -243,7 +243,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * $your_xml_string = $xml->outputMemory();
 		 *
-		 * @since 2.1-1
+		 * @since 2.2.0
 		 * @param \XMLWriter $xml_writer XML writer instance
 		 * @param string|array $element_key name for element, e.g. <per_page>
 		 * @param string|array $element_value value for element, e.g. 100

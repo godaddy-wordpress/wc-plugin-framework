@@ -50,7 +50,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Plugin' ) ) :
  * + `transaction_link` - adds actions to render the merchant account transaction direct link on the Admin Order Edit page.  (Don't forget to override the SV_WC_Payment_Gateway::get_transaction_url() method!)
  * + `capture_charge`   - adds actions to capture charge for authorization-only transactions
  *
- * @version 2.0
+ * @version 2.0.0
  */
 abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
@@ -95,7 +95,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * + `currencies` -  array of currency codes this gateway is allowed for, defaults to all
 	 * + `supports` - array named features that this gateway supports, including 'tokenization', 'transaction_link', 'customer_id', 'capture_charge'
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @see SV_WC_Plugin::__construct()
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
@@ -173,7 +173,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Adds any gateways supported by this plugin to the list of available payment gateways
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param array $gateways
 	 * @return array $gateways
 	 */
@@ -189,7 +189,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Include required library files
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @see SV_WC_Plugin::lib_includes()
 	 */
 	public function lib_includes() {
@@ -227,7 +227,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Helper to add the 'My Cards' section to the 'My Account' page
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 */
 	public function add_my_payment_methods() {
 
@@ -245,7 +245,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Helper to handle any actions from the 'My Cards' section on the 'My Account'
 	 * page
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 */
 	public function handle_my_payment_methods_actions() {
 
@@ -267,7 +267,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Returns true if on the admin gateway settings page for this gateway
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @see SV_WC_Plugin::is_plugin_settings()
 	 * @return boolean true if on the admin gateway settings page
 	 */
@@ -288,7 +288,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * admin notice if either check fails.  Also plugin settings can be checked
 	 * as well.
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @see SV_WC_Plugin::render_admin_notices()
 	 */
 	public function render_admin_notices() {
@@ -309,7 +309,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * notice if so.  Notice will not be rendered to the admin user once dismissed
 	 * unless on the plugin settings page, if any
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @see SV_WC_Payment_Gateway_Plugin::render_admin_notices()
 	 */
 	protected function render_ssl_admin_notices() {
@@ -349,7 +349,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * dismissible admin notice if so.  Notice will not be rendered to the admin
 	 * user once dismissed unless on the plugin settings page, if any
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @see SV_WC_Payment_Gateway_Plugin::render_admin_notices()
 	 */
 	protected function render_currency_admin_notices() {
@@ -408,7 +408,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Add a button to the order actions meta box to view the order in the
 	 * gateway merchant account, if supported
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @see SV_WC_Payment_Gateway::get_transaction_url()
 	 * @see SV_WC_Payment_Gateway::order_meta_box_transaction_link()
 	 * @param int $post_id the order identifier
@@ -440,7 +440,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * assumed that in the case of a plugin having multiple gateways (ie credit
 	 * card and eCheck) the customer id will be the same between them.
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @see SV_WC_Payment_Gateway::get_customer_id_user_meta_name()
 	 * @see SV_WC_Payment_Gateway_Plugin::save_customer_id_meta_field()
 	 * @param WP_User $user user object for the current edit page
@@ -492,7 +492,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * assumed that in the case of a plugin having multiple gateways (ie credit
 	 * card and eCheck) the customer id will be the same between them.
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @see SV_WC_Payment_Gateway_Plugin::add_customer_id_meta_field()
 	 * @param int $user_id identifies the user to save the settings for
 	 */
@@ -526,7 +526,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Return the plugin action links.  This will only be called if the plugin
 	 * is active.
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @see SV_WC_Plugin::plugin_action_links()
 	 * @param array $actions associative array of action names to anchor tags
 	 * @return array associative array of plugin action links
@@ -560,7 +560,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * method was used for the given order, the charge hasn't already been
 	 * captured, and the gateway supports issuing a capture request
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param \WC_Order|int $order the order identifier or order object
 	 */
 	public function maybe_capture_charge( $order ) {
@@ -609,7 +609,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Add a "Capture Charge" action to the Admin Order Edit Order
 	 * Actions select if there is an authorization awaiting capture
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param array $actions available order actions
 	 * @return array actions
 	 */
@@ -641,7 +641,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Adds 'Capture charge' to the Orders screen bulk action select
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 */
 	public function add_capture_charge_bulk_order_action() {
 		global $post_type, $post_status;
@@ -666,7 +666,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Process the 'Capture Charge' custom bulk action on the Orders screen
 	 * bulk action select
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 */
 	public function process_capture_charge_bulk_order_action() {
 		global $typenow;
@@ -712,7 +712,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Add a "Capture Charge" action to the Admin Order Edit Order
 	 * Actions dropdown
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @param array $actions available order actions
 	 * @return array actions
 	 */
@@ -730,7 +730,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Returns true if the gateway supports the named feature
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param string $feature the feature
 	 * @return boolean true if the named feature is supported
 	 */
@@ -743,7 +743,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns true if the gateway supports the charge capture operation and it
 	 * can be invoked
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param \SV_WC_Payment_Gateway $gateway the payment gateway
 	 * @return boolean true if the gateway supports the charge capture operation and it can be invoked
 	 */
@@ -759,7 +759,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns the gateway settings option name for the identified gateway.
 	 * Defaults to woocommerce_{gateway id}_settings
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param string $gateway_id
 	 * @return string the gateway settings option name
 	 */
@@ -774,7 +774,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns the settings array for the identified gateway.  Note that this
 	 * will not include any defaults if the gateway has yet to be saved
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param string $gateway_id gateway identifier
 	 * @return array settings array
 	 */
@@ -788,7 +788,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Returns true if this plugin requires SSL to function properly
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return boolean true if this plugin requires ssl
 	 */
 	protected function requires_ssl() {
@@ -799,7 +799,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Gets the plugin configuration URL
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @see SV_WC_Plugin::get_settings_url()
 	 * @param string $gateway_id the gateway identifier
 	 * @return string gateway settings URL
@@ -820,7 +820,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Adds the given gateway id and gateway class name as an available gateway
 	 * supported by this plugin
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param string $gateway_id the gateway identifier
 	 * @param string $gateway_class_name the corresponding gateway class name
 	 */
@@ -834,7 +834,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Gets all supported gateway class names; typically this will be just one,
 	 * unless the plugin supports credit card and echeck variations
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return array of string gateway class names
 	 * @throws Exception if no gateways are available
 	 */
@@ -855,7 +855,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Gets the gateway class name for the given gateway id
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param string $gateway_id the gateway identifier
 	 * @return string gateway class name
 	 * @throws Exception if gateway is not found
@@ -874,7 +874,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Gets all supported gateway objects; typically this will be just one,
 	 * unless the plugin supports credit card and echeck variations
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return array of SV_WC_Payment_Gateway gateway objects
 	 * @throws Exception if no gateways are available
 	 */
@@ -897,7 +897,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Adds the given $gateway to the internal gateways store
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @param string $gateway_id the gateway identifier
 	 * @param SV_WC_Payment_Gateway $gateway the gateway object
 	 */
@@ -909,7 +909,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Returns the identified gateway object
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param string $gateway_id optional gateway identifier, defaults to first gateway, which will be the credit card gateway in plugins with support for both credit cards and echecks
 	 * @return SV_WC_Payment_Gateway the gateway object
 	 */
@@ -935,7 +935,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Returns true if the plugin supports this gateway
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param string $gateway_id the gateway identifier
 	 * @return boolean true if the plugin has this gateway available, false otherwise
 	 */
@@ -947,7 +947,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Returns all available gateway ids for the plugin
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @throws Exception
 	 * @return array of gateway id strings
 	 */
@@ -967,7 +967,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * files separated by gateway ID
 	 *
 	 * @see SV_WC_Plugin::add_api_request_logging()
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 */
 	public function add_api_request_logging() { }
 
@@ -977,7 +977,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * are accepted.  This is the intersection of all currencies accepted by
 	 * any gateways this plugin supports.
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return array of accepted currencies
 	 */
 	public function get_accepted_currencies() {
@@ -988,7 +988,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Checks is WooCommerce Subscriptions is active
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return bool true if the WooCommerce Subscriptions plugin is active, false if not active
 	 */
 	public function is_subscriptions_active() {
@@ -1004,7 +1004,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Checks is WooCommerce Pre-Orders is active
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return bool true if WC Pre-Orders is active, false if not active
 	 */
 	public function is_pre_orders_active() {

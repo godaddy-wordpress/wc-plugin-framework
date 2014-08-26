@@ -71,7 +71,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Construct and initialize the admin message handler class
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param string $message_id optional message id.  Best practice is to set
 	 *        this to a unique identifier based on the client plugin, such as __FILE__
 	 */
@@ -89,7 +89,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Persist messages
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return boolean true if any messages were set, false otherwise
 	 */
 	public function set_messages() {
@@ -113,7 +113,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Loads messages
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 */
 	public function load_messages() {
 
@@ -132,7 +132,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Clear messages and errors
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param string $id the messages identifier
 	 */
 	public function clear_messages( $id ) {
@@ -143,7 +143,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Add an error message.
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param string $error error message
 	 */
 	public function add_error( $error ) {
@@ -154,7 +154,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Add a message.
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param string $message the message to add
 	 */
 	public function add_message( $message ) {
@@ -165,7 +165,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Get error count.
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return int error message count
 	 */
 	public function error_count() {
@@ -176,7 +176,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Get message count.
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return int message count
 	 */
 	public function message_count() {
@@ -187,7 +187,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Get error messages
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return array of error message strings
 	 */
 	public function get_errors() {
@@ -198,7 +198,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Get an error message
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param int $index the error index
 	 * @return string the error message
 	 */
@@ -210,7 +210,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Get messages
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return array of message strings
 	 */
 	public function get_messages() {
@@ -221,7 +221,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Get a message
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param int $index the message index
 	 * @return string the message
 	 */
@@ -233,7 +233,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Render the errors and messages.
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 */
 	public function show_messages() {
 		if ( $this->error_count() > 0 )
@@ -248,7 +248,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Redirection hook which persists messages into session data.
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @param string $location the URL to redirect to
 	 * @param int $status the http status
 	 * @return string the URL to redirect to
@@ -267,7 +267,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Generate a unique id to identify the messages
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return string unique identifier
 	 */
 	private function get_message_id() {

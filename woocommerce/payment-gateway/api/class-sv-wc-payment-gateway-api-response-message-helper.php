@@ -47,7 +47,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_API_Response_Message_Helper' ) ) :
  * base class as they are encountered during gateway integration development,
  * and use a subclass to include any gateway-specific codes/messages.
  *
- * @since 2.1-1
+ * @since 2.2.0
  */
 class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 
@@ -59,7 +59,7 @@ class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 	/**
 	 * Initialize the API response message handler
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @param string $text_domain the plugin text domain
 	 */
 	public function __construct( $text_domain ) {
@@ -73,7 +73,7 @@ class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 	 * issue on their own, but not enough to help nefarious folks fishing for
 	 * info.
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @param array of string $message_id's which identify the message(s) to return
 	 * @return string a user message, combining all $message_ids
 	 */
@@ -94,7 +94,7 @@ class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 	 * issue on their own, but not enough to help nefarious folks fishing for
 	 * info.
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @param string $message_id identifies the message to return
 	 * @return string a user message
 	 */
