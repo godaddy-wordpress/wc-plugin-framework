@@ -128,7 +128,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		if ( $this->use_form_post() ) {
 			// the checkout pay page
-			$order = new WC_Order( $order_id );
+			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order_id );
 			return $order->get_checkout_payment_url( true );
 		} else {
 

@@ -441,7 +441,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$order_id  = $this->get_checkout_pay_page_order_id();
 
 			if ( $order_id ) {
-				$order = new WC_Order( $order_id );
+				$order = SV_WC_Plugin_Compatibility::wc_get_order( $order_id );
 
 				return $order->payment_method == $this->get_id();
 			}
@@ -1009,7 +1009,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function get_order( $order ) {
 
 		if ( is_int( $order ) ) {
-			$order = new WC_Order( $order );
+			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order );
 		}
 
 		// set payment total here so it can be modified for later by add-ons like subscriptions which may need to charge an amount different than the get_total()

@@ -415,7 +415,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function order_meta_box_transaction_link( $post_id ) {
 
-		$order = new WC_Order( $post_id );
+		$order = SV_WC_Plugin_Compatibility::wc_get_order( $post_id );
 
 		if ( $this->has_gateway( $order->payment_method ) ) {
 
@@ -566,7 +566,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	public function maybe_capture_charge( $order ) {
 
 		if ( ! is_object( $order ) ) {
-			$order = new WC_Order( $order );
+			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order );
 		}
 
 		// bail if the order wasn't paid for with this gateway
@@ -609,7 +609,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function maybe_add_capture_charge_order_action( $actions ) {
 
-		$order = new WC_Order( $_REQUEST['post'] );
+		$order = SV_WC_Plugin_Compatibility::wc_get_order( $_REQUEST['post'] );
 
 		// bail if the order wasn't paid for with this gateway
 		if ( ! $this->has_gateway( $order->payment_method ) ) {
@@ -694,7 +694,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 			foreach ( $order_ids as $order_id ) {
 
-				$order = new WC_Order( $order_id );
+				$order = SV_WC_Plugin_Compatibility::wc_get_order( $order_id );
 
 				$this->maybe_capture_charge( $order );
 			}
