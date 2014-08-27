@@ -288,7 +288,7 @@ class SV_WC_Plugin_Compatibility {
 
 		} else {
 
-			return sprintf( 'wp-content/plugins/woocommerce/logs/%s-%s.txt', $handle, sanitize_file_name( wp_hash( $handle ) ) );
+			return sprintf( '%s/plugins/woocommerce/logs/%s-%s.txt', WP_CONTENT_DIR, $handle, sanitize_file_name( wp_hash( $handle ) ) );
 		}
 	}
 

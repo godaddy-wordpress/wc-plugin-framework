@@ -625,7 +625,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->form_fields['debug_mode'] = array(
 			'title'       => __( 'Debug Mode', $this->text_domain ),
 			'type'        => 'select',
-			'description' => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the debug log: %s', $this->text_domain ), '<strong class="nobr">wp-content/plugins/woocommerce/logs/' . $this->log_file_name() . '</strong>' ),
+			'description' => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the debug log: %s', $this->text_domain ), '<strong class="nobr">' . SV_WC_Plugin_Compatibility::wc_get_log_file_path( $this->get_id() ) . '</strong>' ),
 			'default'     => self::DEBUG_MODE_OFF,
 			'options'     => array(
 				self::DEBUG_MODE_OFF      => _x( 'Off', 'Debug mode off', $this->text_domain ),
@@ -1008,7 +1008,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function get_order( $order ) {
 
-		if ( is_int( $order ) ) {
+		if ( is_numeric( $order ) ) {
 			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order );
 		}
 
@@ -1016,7 +1016,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order->payment_total = number_format( $order->get_total(), 2, '.', '' );
 
 		// logged in customer?
-		if ( 0 != SV_WC_Plugin_Compatibility::get_order_user_id( $order) && false !== ( $customer_id = $this->get_customer_id( SV_WC_Plugin_Compatibility::get_order_user_id( $order), array( 'order' => $order ) ) ) ) {
+		if ( 0 != SV_WC_Plugin_Compatibility::get_order_user_id( $order ) && false !== ( $customer_id = $this->get_customer_id( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), array( 'order' => $order ) ) ) ) {
 			$order->customer_id = $customer_id;
 		}
 
@@ -1168,7 +1168,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( ! $user_message ) {
 			$user_message = __( 'Your order has been received and is being reviewed.  Thank you for your business.', $this->text_domain );
 		}
-		SV_WC_Plugin_Compatibility::wc_add_notice( $user_message );
+		wc_add_notice( $user_message );
 	}
 
 
@@ -1201,7 +1201,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( ! $user_message ) {
 			$user_message = __( 'An error occurred, please try again or try an alternate form of payment.', $this->text_domain );
 		}
-		SV_WC_Plugin_Compatibility::wc_add_notice( $user_message, 'error' );
+		wc_add_notice( $user_message, 'error' );
 	}
 
 
@@ -2160,20 +2160,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function debug_checkout() {
 		return self::DEBUG_MODE_CHECKOUT === $this->debug_mode || self::DEBUG_MODE_BOTH === $this->debug_mode;
-	}
-
-
-	/**
-	 * Returns the log file name
-	 *
-	 * @param string $handle optional log handle, defaults to plugin id
-	 * @return string the log file name
-	 */
-	protected function log_file_name( $handle = null ) {
-		if ( ! $handle ) {
-			$handle = $this->get_id();
-		}
-		return $handle . '-' . sanitize_file_name( wp_hash( $handle ) ) . '.txt';
 	}
 
 
