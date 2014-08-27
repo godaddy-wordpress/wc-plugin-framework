@@ -273,6 +273,26 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Get the full path to the log file for a given $handle
+	 *
+	 * @since 2.2-1
+	 * @param string $handle log handle
+	 * @return string
+	 */
+	public static function wc_get_log_file_path( $handle ) {
+
+		if ( self::is_wc_version_gte_2_2() ) {
+
+			return wc_get_log_file_path( $handle );
+
+		} else {
+
+			return sprintf( 'wp-content/plugins/woocommerce/logs/%s-%s.txt', $handle, sanitize_file_name( wp_hash( $handle ) ) );
+		}
+	}
+
+
+	/**
 	 * Helper method to get the version of the currently installed WooCommerce
 	 *
 	 * @since 2.2-1
