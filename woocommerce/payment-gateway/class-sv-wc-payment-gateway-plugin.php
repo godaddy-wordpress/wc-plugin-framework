@@ -814,7 +814,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns the admin configuration url for the gateway with class name
 	 * $gateway_class_name
 	 *
-	 * @since 2.2-1
+	 * @since 2.2.0-1
 	 * @param string $gateway_class_name the gateway class name
 	 * @return string admin configuration url for the gateway
 	 */
@@ -828,7 +828,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns true if the current page is the admin configuration page for the
 	 * gateway with class name $gateway_class_name
 	 *
-	 * @since 2.2-1
+	 * @since 2.2.0-1
 	 * @param string $gateway_class_name the gateway class name
 	 * @return boolean true if the current page is the admin configuration page for the gateway
 	 */

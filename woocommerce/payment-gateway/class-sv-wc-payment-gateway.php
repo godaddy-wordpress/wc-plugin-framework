@@ -2222,7 +2222,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns the order_id if on the checkout pay page
 	 *
-	 * @since 2.2-1
+	 * @since 2.2.0-1
 	 * @return int order identifier
 	 */
 	public function get_checkout_pay_page_order_id() {
@@ -2238,7 +2238,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Note this must be used in the `wp` or later action, as earlier
 	 * actions do not yet have access to the query vars
 	 *
-	 * @since 2.2-1
+	 * @since 2.2.0-1
 	 * @return int order identifier
 	 */
 	public function get_checkout_order_received_order_id() {

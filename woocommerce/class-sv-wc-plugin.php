@@ -706,7 +706,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Returns true if the current page is the admin general configuration page
 	 *
-	 * @since 2.2-1
+	 * @since 2.2.0-1
 	 * @return boolean true if the current page is the admin general configuration page
 	 */
 	public function is_general_configuration_page() {
@@ -718,7 +718,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Returns the admin configuration url for the admin general configuration page
 	 *
-	 * @since 2.2-1
+	 * @since 2.2.0-1
 	 * @return string admin configuration url for the admin general configuration page
 	 */
 	public function get_general_configuration_url() {

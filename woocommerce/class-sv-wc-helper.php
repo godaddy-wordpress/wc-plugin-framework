@@ -347,7 +347,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * + product - item product or null if getting product from item failed
 		 * + item - raw item array
 		 *
-		 * @since 2.2-1
+		 * @since 2.2.0-1
 		 * @param \WC_Order $order
 		 * @return array
 		 */
