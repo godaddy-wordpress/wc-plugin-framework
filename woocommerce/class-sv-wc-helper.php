@@ -132,8 +132,12 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function str_truncate( $string, $length, $omission = '...' ) {
 
-
 			if ( self::multibyte_loaded() ) {
+
+				// bail if string doesn't need to be truncated
+				if ( mb_strlen( $string ) <= $length ) {
+					return $string;
+				}
 
 				$length -= mb_strlen( $omission );
 
@@ -142,6 +146,11 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 			} else {
 
 				$string = self::str_to_ascii( $string );
+
+				// bail if string doesn't need to be truncated
+				if ( strlen( $string ) <= $length ) {
+					return $string;
+				}
 
 				$length -= strlen( $omission );
 
