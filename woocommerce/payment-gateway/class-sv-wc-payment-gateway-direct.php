@@ -397,13 +397,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Handles payment processing
 	 *
-<<<<<<< HEAD
-	 * @since 1.0
-	 * @param int|string $order_id
-=======
 	 * @since 1.0.0
->>>>>>> master
 	 * @see WC_Payment_Gateway::process_payment()
+	 * @param int|string $order_id
 	 */
 	public function process_payment( $order_id ) {
 
