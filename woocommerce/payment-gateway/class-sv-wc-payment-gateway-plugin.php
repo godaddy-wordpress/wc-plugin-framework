@@ -969,7 +969,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_gateway_ids() {
 
-		assert( ! empty( $this->gateway ) );
+		assert( ! empty( $this->gateways ) );
 
 		return array_keys( $this->gateways );
 	}
