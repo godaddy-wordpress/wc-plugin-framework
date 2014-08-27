@@ -40,7 +40,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * @since 1.0.0
 	 * @param WC_Order $order the order
 	 * @return SV_WC_Payment_Gateway_API_Response credit card charge response
-	 * @throws SV_WC_Payment_Gateway_SV_WC_Payment_Gateway_Exception network timeouts, etc
+	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
 	 */
 	public function credit_card_authorization( WC_Order $order );
 

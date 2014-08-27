@@ -286,7 +286,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// optional fields (excluding account type for now)
 		$drivers_license_number = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
-		// $drivers_license_state  = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-state' );
 		$check_number           = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-check-number' );
 
 		// routing number exists?
@@ -1169,7 +1168,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				throw new SV_WC_Payment_Gateway_Exception( sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
 			}
 
-		} catch ( SV_WC_Payment_Gateway_SV_WC_Payment_Gateway_Exception $e ) {
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
 			$this->mark_order_as_failed( $order, $e->getMessage() );
 
