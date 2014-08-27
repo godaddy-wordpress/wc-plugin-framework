@@ -1002,7 +1002,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function get_order( $order ) {
 
-		if ( is_int( $order ) ) {
+		if ( is_numeric( $order ) ) {
 			$order = new WC_Order( $order );
 		}
 
