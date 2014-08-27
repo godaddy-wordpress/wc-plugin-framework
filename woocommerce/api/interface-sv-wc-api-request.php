@@ -35,7 +35,7 @@ interface SV_WC_API_Request {
 	/**
 	 * Returns the string representation of this request
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @return string the request
 	 */
 	public function to_string();
@@ -45,7 +45,7 @@ interface SV_WC_API_Request {
 	 * Returns the string representation of this request with any and all
 	 * sensitive elements masked or removed
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @return string the request, safe for logging/displaying
 	 */
 	public function to_string_safe();

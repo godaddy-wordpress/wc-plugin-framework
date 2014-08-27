@@ -31,7 +31,7 @@ if ( ! interface_exists( 'SV_WC_Payment_Gateway_API_Payment_Notification_Credit_
  *
  * Represents an IPN or redirect-back credit card request response
  *
- * @since 2.1-1
+ * @since 2.2.0
  */
 interface SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response extends SV_WC_Payment_Gateway_API_Payment_Notification_Response, SV_WC_Payment_Gateway_API_Authorization_Response {
 
@@ -39,7 +39,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response ex
 	/**
 	 * Returns true if this is an authorization response
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @return boolean true if this is an authorization response
 	 */
 	public function is_authorization();
@@ -48,7 +48,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response ex
 	/**
 	 * Returns true if this is an charge response
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @return boolean true if this is a charge response
 	 */
 	public function is_charge();
@@ -57,7 +57,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response ex
 	/**
 	 * Returns the card type, if available, i.e., 'visa', 'mc', etc
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @see SV_WC_Payment_Gateway_Payment_Token::type_to_name()
 	 * @return string card type or null if not available
 	 */
@@ -67,7 +67,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response ex
 	/**
 	 * Returns the card expiration month with leading zero, if available
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @return string card expiration month or null if not available
 	 */
 	public function get_exp_month();
@@ -76,7 +76,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response ex
 	/**
 	 * Returns the card expiration year with four digits, if available
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @return string card expiration year or null if not available
 	 */
 	public function get_exp_year();

@@ -29,7 +29,7 @@
  * @param array $tokens optional array of payment token string to SV_WC_Payment_Gateway_Payment_Token object
  *
  * @version TODO
- * @since 1.0
+ * @since 1.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly

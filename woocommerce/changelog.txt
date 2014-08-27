@@ -1,8 +1,12 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2014.nn.nn - version 2.1-1
+XXXX.XX.XX - version 2.2.0-1
+ * Misc - WooCommerce 2.2 compatibility
+
+2014.08.26 - version 2.2.0
  * Feature - Added API base class and automatic request logging
  * Feature - Introduced Helper class
+ * Feature - Optional detailed customer decline messages on checkout
  * Tweak - Introduced named exceptions
  * Tweak - Updates to support Chase Paymentech certification mode
  * Tweak - Updates to the Hosted Gateway class for improved handling of redirect-back gateways
@@ -10,7 +14,7 @@
  * Tweak - Plugin active method now checks filename only
  * Fix - Fixed product page URLs
 
-2014.05.26 - version 2.1
+2014.05.26 - version 2.1.0
  * Feature - Implemented hosted payment gateway framework
  * Feature - Capture charge bulk order action for payment gateways
  * Tweak - Authorized charges are no longer automatically capture when changing order status from on-hold to processing/completed
@@ -25,10 +29,10 @@
 2014.01.29 - version 2.0.1
  * Tweak - Additional WC 2.1 compatibility helpers
 
-2014.01.20 - version 2.0
+2014.01.20 - version 2.0.0
  * Feature - Generalized Plugin Framework
  * Feature - Support for "tokenize with sale" gateways
  * Tweak - Improved handling for credit card capture request
 
-2013.11.11 - version 1.0
+2013.11.11 - version 1.0.0
  * First Release

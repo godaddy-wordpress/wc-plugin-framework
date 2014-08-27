@@ -31,7 +31,7 @@ if ( ! interface_exists( 'SV_WC_Payment_Gateway_API_Payment_Notification_Respons
  *
  * Represents an IPN or redirect-back request response
  *
- * @since 2.1
+ * @since 2.1.0
  */
 interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_Payment_Gateway_API_Response {
 
@@ -39,7 +39,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 	/**
 	 * Returns the order id associated with this response
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @return int the order id associated with this response, or null if it could not be determined
 	 * @throws Exception if there was a serious error finding the order id
 	 */
@@ -49,7 +49,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 	/**
 	 * Returns the order associated with this response
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @return WC_Order the order associated with this response, or null if it could not be determined
 	 * @throws Exception if there was a serious error finding the order
 	 */
@@ -59,7 +59,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 	/**
 	 * Returns true if the transaction was cancelled, false otherwise
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @return bool true if cancelled, false otherwise
 	 */
 	public function transaction_cancelled();
@@ -69,7 +69,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 	 * Returns the payment type: 'credit-card', 'echeck', etc
 	 *
 	 * TODO: move to SV_WC_Payment_Gateway_API_Response
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @return string payment type or null if not available
 	 */
 	public function get_payment_type();
@@ -78,7 +78,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 	/**
 	 * Returns the card PAN or checking account number, if available
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @return string PAN or account number or null if not available
 	 */
 	public function get_account_number();

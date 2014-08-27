@@ -48,12 +48,12 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * + `get_settings_url()` - return the plugin admin settings URL, if any
  * + `render_admin_notices()` - override to perform custom admin plugin requirement checks (defaults to checking for php extension depenencies).  Use the is_message_dismissed() and add_dismissible_notice() methods
  *
- * @version 2.1-1
+ * @version 2.2.0-1
  */
 abstract class SV_WC_Plugin {
 
 	/** Plugin Framework Version */
-	const VERSION = '2.1-1';
+	const VERSION = '2.2.0-1';
 
 	/** @var string plugin id */
 	private $id;
@@ -96,7 +96,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * Child plugin classes may add their own optional arguments
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
 	 * @param string $text_domain the plugin text domain
@@ -158,7 +158,7 @@ abstract class SV_WC_Plugin {
 	 * variable or constant, otherwise localization plugins (Codestyling) will
 	 * not be able to detect the localization directory.
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 */
 	abstract public function load_translation();
 
@@ -166,7 +166,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Include required library files
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 */
 	public function lib_includes() {
 		// stub method
@@ -176,7 +176,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Include any critical files which must be available as early as possible
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 */
 	private function includes() {
 
@@ -203,7 +203,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Returns true if on the admin plugin settings page, if any
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return boolean true if on the admin plugin settings page
 	 */
 	public function is_plugin_settings() {
@@ -217,7 +217,7 @@ abstract class SV_WC_Plugin {
 	 * for any missing extensions.  Also plugin settings can be checked
 	 * as well.
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 */
 	public function render_admin_notices() {
 
@@ -231,7 +231,7 @@ abstract class SV_WC_Plugin {
 	 * notice if so.  Notice will not be rendered to the admin user once dismissed
 	 * unless on the plugin settings page, if any
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @see SV_WC_Plugin::render_admin_notices()
 	 */
 	protected function render_dependencies_admin_notices() {
@@ -281,7 +281,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Adds the given $message as a dismissible notice identified by $message_id
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 */
 	public function add_dismissible_notice( $message, $message_id ) {
 
@@ -301,7 +301,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Render the javascript to handle the notice "dismiss" functionality
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 */
 	public function render_admin_dismissible_notice_js() {
 
@@ -338,7 +338,7 @@ abstract class SV_WC_Plugin {
 	 * Return the plugin action links.  This will only be called if the plugin
 	 * is active.
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param array $actions associative array of action names to anchor tags
 	 * @return array associative array of plugin action links
 	 */
@@ -375,7 +375,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Dismiss the identified message
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 */
 	public function handle_dismiss_message() {
 
@@ -393,7 +393,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * TODO: move to helper class, check usages first
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @param boolean $ssl true to use https protocol, false otherwise
 	 * @return string the URL for the server
 	 */
@@ -412,7 +412,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Automatically log API requests/responses when using SV_WC_API_Base
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @see SV_WC_API_Base::broadcast_request()
 	 */
 	public function add_api_request_logging() {
@@ -426,7 +426,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Log API requests/responses
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @param array $request request data, see SV_WC_API_Base::broadcast_request() for format
 	 * @param array $response response data
 	 * @param string|null $log_id log to write data to
@@ -444,7 +444,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Transform the API request/response data into a string suitable for logging
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @param array $data
 	 * @return string
 	 */
@@ -452,11 +452,10 @@ abstract class SV_WC_Plugin {
 
 		$messages = array();
 
-		$messages[] = isset( $data['uri'] ) ? 'Request' : 'Response';
+		$messages[] = isset( $data['uri'] ) && $data['uri'] ? 'Request' : 'Response';
 
 		foreach ( (array) $data as $key => $value ) {
-
-			$messages[] = sprintf( '%s: %s', $key, is_array( $value ) ? print_r( $value, true ) : $value );
+			$messages[] = sprintf( '%s: %s', $key, is_array( $value ) || ( is_object( $value ) && 'stdClass' == get_class( $value ) ) ? print_r( (array) $value, true ) : $value );
 		}
 
 		return implode( "\n", $messages );
@@ -466,7 +465,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the string name of any required PHP extensions that are not loaded
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return array of missing dependencies
 	 */
 	public function get_missing_dependencies() {
@@ -487,7 +486,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the string name of any required PHP functions that are not loaded
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @return array of missing functions
 	 */
 	public function get_missing_function_dependencies() {
@@ -508,7 +507,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Saves errors or messages to WooCommerce Log (woocommerce/logs/plugin-id-xxx.txt)
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $message error or message to save to log
 	 * @param string $log_id optional log id to segment the files by, defaults to plugin id
 	 */
@@ -530,7 +529,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Marks the identified admin message as dismissed for the given user
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $message_id the message identifier
 	 * @param int $user_id optional user identifier, defaults to current user
 	 * @return boolean true if the message has been dismissed by the admin user
@@ -555,7 +554,7 @@ abstract class SV_WC_Plugin {
 	 * Returns true if the identified admin message has been dismissed for the
 	 * given user
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $message_id the message identifier
 	 * @param int $user_id optional user identifier, defaults to current user
 	 * @return boolean true if the message has been dismissed by the admin user
@@ -580,7 +579,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * return __FILE__;
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string the full path and filename of the plugin file
 	 */
 	abstract protected function get_file();
@@ -589,7 +588,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Returns the plugin id
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string plugin id
 	 */
 	public function get_id() {
@@ -601,7 +600,7 @@ abstract class SV_WC_Plugin {
 	 * Returns the plugin id with dashes in place of underscores, and
 	 * appropriate for use in frontend element names, classes and ids
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string plugin id with dashes in place of underscores
 	 */
 	public function get_id_dasherized() {
@@ -613,7 +612,7 @@ abstract class SV_WC_Plugin {
 	 * Returns the plugin full name including "WooCommerce", ie
 	 * "WooCommerce X".  This method is defined abstract for localization purposes
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string plugin name
 	 */
 	abstract public function get_plugin_name();
@@ -622,7 +621,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Returns the plugin version name.  Defaults to wc_{plugin id}_version
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string the plugin version name
 	 */
 	protected function get_plugin_version_name() {
@@ -633,7 +632,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Returns the current version of the plugin
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string plugin version
 	 */
 	public function get_version() {
@@ -644,7 +643,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Get the PHP dependencies for extension depending on the gateway being used
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return array of required PHP extension names, based on the gateway in use
 	 */
 	protected function get_dependencies() {
@@ -655,7 +654,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Get the PHP dependencies for functions depending on the gateway being used
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @return array of required PHP function names, based on the gateway in use
 	 */
 	protected function get_function_dependencies() {
@@ -667,7 +666,7 @@ abstract class SV_WC_Plugin {
 	 * Returns the "Configure" plugin action link to go directly to the plugin
 	 * settings page (if any)
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @see SV_WC_Plugin::get_settings_url()
 	 * @param string $plugin_id optional plugin identifier.  Note that this can be a
 	 *        sub-identifier for plugins with multiple parallel settings pages
@@ -690,7 +689,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the plugin configuration URL
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @see SV_WC_Plugin::get_settings_link()
 	 * @param string $plugin_id optional plugin identifier.  Note that this can be a
 	 *        sub-identifier for plugins with multiple parallel settings pages
@@ -732,7 +731,7 @@ abstract class SV_WC_Plugin {
 	 * Gets the plugin documentation url, which defaults to:
 	 * http://docs.woothemes.com/document/woocommerce-{dasherized plugin id}/
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string documentation URL
 	 */
 	public function get_documentation_url() {
@@ -745,7 +744,7 @@ abstract class SV_WC_Plugin {
 	 * Gets the plugin review URL, which defaults to:
 	 * {product page url}#tab-reviews
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string review url
 	 */
 	public function get_review_url() {
@@ -758,7 +757,7 @@ abstract class SV_WC_Plugin {
 	 * Gets the skyverge.com product page URL, which defaults to:
 	 * http://www.skyverge.com/product/{dasherized plugin id}/
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string skyverge.com product page url
 	 */
 	public function get_product_page_url() {
@@ -771,7 +770,7 @@ abstract class SV_WC_Plugin {
 	 * Returns the plugin's path without a trailing slash, i.e.
 	 * /path/to/wp-content/plugins/plugin-directory
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string the plugin path
 	 */
 	public function get_plugin_path() {
@@ -788,7 +787,7 @@ abstract class SV_WC_Plugin {
 	 * Returns the plugin's url without a trailing slash, i.e.
 	 * http://skyverge.com/wp-content/plugins/plugin-directory
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string the plugin URL
 	 */
 	public function get_plugin_url() {
@@ -805,7 +804,7 @@ abstract class SV_WC_Plugin {
 	 * Returns the woocommerce uploads path, sans trailing slash.  Oddly WooCommerce
 	 * core does not provide a way to get this
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string upload path for woocommerce
 	 */
 	public static function get_woocommerce_uploads_path() {
@@ -818,7 +817,7 @@ abstract class SV_WC_Plugin {
 	 * Returns the relative path to the framework image directory, with a
 	 * trailing slash
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return string relative path to framework image directory
 	 */
 	public function get_framework_image_path() {
@@ -830,7 +829,7 @@ abstract class SV_WC_Plugin {
 	 * Returns the WP Admin Message Handler instance for use with
 	 * setting/displaying admin messages & errors
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return SV_WP_Admin_Message_Handler
 	 */
 	public function get_message_handler() {
@@ -847,13 +846,13 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Helper function to determine whether a plugin is active
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $plugin_name plugin name, as the plugin-filename.php
 	 * @return boolean true if the named plugin is installed and active
 	 */
 	public function is_plugin_active( $plugin_name ) {
 
-		// backwards compat
+		// handle full plugin names (plugin-dir/plugin-filename.php)
 		if ( SV_WC_Helper::str_exists( $plugin_name, '/' ) ) {
 			list( , $plugin_name ) = explode( '/', $plugin_name );
 		}
@@ -868,7 +867,16 @@ abstract class SV_WC_Plugin {
 
 		foreach ( $active_plugins as $plugin ) {
 
-			list( , $filename ) = explode( '/', $plugin );
+			if ( SV_WC_Helper::str_exists( $plugin, '/' ) ) {
+
+				// normal plugin name (plugin-dir/plugin-filename.php)
+				list( , $filename ) = explode( '/', $plugin );
+
+			} else {
+
+				// no directory, just plugin file
+				$filename = $plugin;
+			}
 
 			$plugin_filenames[] = $filename;
 		}
@@ -883,7 +891,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Handles version checking
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 */
 	public function do_install() {
 
@@ -907,7 +915,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Plugin install method.  Perform any installation tasks here
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 */
 	protected function install() {
 		// stub
@@ -917,7 +925,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Plugin upgrade method.  Perform any required upgrades here
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $installed_version the currently installed version
 	 */
 	protected function upgrade( $installed_version ) {

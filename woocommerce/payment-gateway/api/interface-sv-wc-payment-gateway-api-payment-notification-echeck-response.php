@@ -31,7 +31,7 @@ if ( ! interface_exists( 'SV_WC_Payment_Gateway_API_Payment_Notification_eCheck_
  *
  * Represents an IPN or redirect-back eCheck request response
  *
- * @since 2.1-1
+ * @since 2.2.0
  */
 interface SV_WC_Payment_Gateway_API_Payment_Notification_eCheck_Response extends SV_WC_Payment_Gateway_API_Payment_Notification_Response {
 
@@ -40,7 +40,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_eCheck_Response extends
 	/**
 	 * Returns the account type, one of 'checking' or 'savings', if available
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @return string account type, one of 'checking' or 'savings'
 	 */
 	public function get_account_type();
@@ -49,7 +49,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_eCheck_Response extends
 	/**
 	 * Returns the check number used, if available
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @return int check number, or null
 	 */
 	public function get_check_number();

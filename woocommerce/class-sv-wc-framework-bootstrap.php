@@ -45,7 +45,7 @@ if ( ! class_exists( 'SV_WC_Framework_Bootstrap' ) ) :
  *   require_once( 'lib/skyverge/woocommerce/class-sv-wc-framework-bootstrap.php' );
  * }
  *
- * SV_WC_Framework_Bootstrap::instance()->register_plugin( '2.0', __( 'WooCommerce My Plugin', 'woocommerce-my-plugin' ), __FILE__, 'init_woocommerce_my_plugin' );
+ * SV_WC_Framework_Bootstrap::instance()->register_plugin( '2.0.0', __( 'WooCommerce My Plugin', 'woocommerce-my-plugin' ), __FILE__, 'init_woocommerce_my_plugin' );
  *
  * ...
  *
@@ -95,7 +95,7 @@ if ( ! class_exists( 'SV_WC_Framework_Bootstrap' ) ) :
  * `sv_wc_framework_plugins_loaded` action which is fired after all framework
  * plugins are loaded.
  *
- * @since 2.0
+ * @since 2.0.0
  */
 class SV_WC_Framework_Bootstrap {
 
@@ -113,7 +113,7 @@ class SV_WC_Framework_Bootstrap {
 	/**
 	 * Hidden constructor
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 */
 	private function __construct() {
 
@@ -125,7 +125,7 @@ class SV_WC_Framework_Bootstrap {
 	/**
 	 * Instantiate the class singleton
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @return SV_WC_Framework_Bootstrap singleton instance
 	 */
 	public static function instance() {
@@ -140,7 +140,7 @@ class SV_WC_Framework_Bootstrap {
 	/**
 	 * Register a frameworked plugin
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $version the framework version
 	 * @param string $plugin_name the plugin name
 	 * @param string $path the plugin path
@@ -156,7 +156,7 @@ class SV_WC_Framework_Bootstrap {
 	 * Loads all registered framework plugins, first initializing the plugin
 	 * framework by loading the highest versioned one.
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 */
 	public function load_framework_plugins() {
 
@@ -213,7 +213,7 @@ class SV_WC_Framework_Bootstrap {
 	 * Render a notice to update any plugins with incompatible framework
 	 * versions
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 */
 	public function render_update_plugin_notice() {
 
@@ -241,7 +241,7 @@ class SV_WC_Framework_Bootstrap {
 	 * Compare the two framework versions.  Returns -1 if $a is less than $b, 0 if
 	 * they're equal, and 1 if $a is greater than $b
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param array $a first registered plugin to compare
 	 * @param array $b second registered plugin to compare
 	 * @return int -1 if $a is less than $b, 0 if they're equal, and 1 if $a is greater than $b
@@ -255,7 +255,7 @@ class SV_WC_Framework_Bootstrap {
 	/**
 	 * Returns the plugin path for the given $file
 	 *
-	 * @since 2.0
+	 * @since 2.0.0
 	 * @param string $file the file
 	 * @return string plugin path
 	 */

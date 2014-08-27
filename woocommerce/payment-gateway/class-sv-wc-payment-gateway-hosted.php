@@ -35,7 +35,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Hosted' ) ) :
  * + `get_hosted_pay_page_params()` - Return any hosted pay page parameters
  * + `get_transaction_response()` - Return the transaction response object on redirect-back/IPN
  *
- * @since 1.0
+ * @since 1.0.0
  */
 abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
@@ -49,7 +49,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * See parent constructor for full method documentation
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @see SV_WC_Payment_Gateway::__construct()
 	 * @param string $id the gateway id
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the parent plugin class
@@ -78,7 +78,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Display the payment fields on the checkout page
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @see WC_Payment_Gateway::payment_fields()
 	 */
 	public function payment_fields() {
@@ -92,7 +92,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * Process the payment by redirecting customer to the WooCommerce pay page
 	 * or the gatway hosted pay page
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @see WC_Payment_Gateway::process_payment()
 	 * @param int $order_id the order to process
 	 * @return array with keys 'result' and 'redirect'
@@ -120,7 +120,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Gets the payment URL: the checkout pay page
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @param int $order_id the order id
 	 * @return string the payment URL, or false if unavailable
 	 */
@@ -150,7 +150,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Render the payment page for gateways that use a form post method
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @see SV_WC_Payment_Gateway::payment_page()
 	 * @see SV_WC_Payment_Gateway_Hosted::use_form_post()
 	 * @see SV_WC_Payment_Gateway_Hosted::add_pay_page_handler()
@@ -172,7 +172,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * auto-submit this pay form, so as to make the checkout process as
 	 * seamless as possile
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @param int $order_id the order identifier
 	 */
 	public function generate_pay_form( $order_id ) {
@@ -206,7 +206,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * that collect some or all payment information on-site, and POST the
 	 * entered information to a remote server for processing
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @see SV_WC_Payment_Gateway_Hosted::use_auto_form_post()
 	 * @param WC_Order $order the order object
 	 * @param array $request_params associative array of request parameters
@@ -221,7 +221,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * collect no payment information on-site, but must POST parameters to a
 	 * hosted payment page where payment information is entered.
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @see SV_WC_Payment_Gateway_Hosted::use_auto_form_post()
 	 * @param WC_Order $order the order object
 	 * @param array $request_params associative array of request parameters
@@ -268,7 +268,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Returns the gateway hosted pay page parameters, if any
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @param WC_Order $order the order object
 	 * @return array associative array of name-value parameters
 	 */
@@ -284,7 +284,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * This method may be called more than once during a single request.
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @see SV_WC_Payment_Gateway_Hosted::get_hosted_pay_page_params()
 	 * @param WC_Order $order the order object
 	 * @return string hosted pay page url, or false if it could not be determined
@@ -297,12 +297,14 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Process IPN request
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 */
 	public function process_ipn() {
 
 		// log the IPN request
 		$this->log_transaction_response_request( $_REQUEST );
+
+		$response = null;
 
 		try {
 
@@ -351,7 +353,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			// failure
 
 			if ( isset( $order ) && $order ) {
-				$this->mark_order_as_failed( $order, $e->getMessage() );
+				$this->mark_order_as_failed( $order, $e->getMessage(), $response );
 			}
 
 			if ( $this->debug_log() ) {
@@ -368,12 +370,14 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Process redirect back (non-IPN gateway)
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 */
 	public function process_redirect_back() {
 
 		// log the redirect back request
 		$this->log_transaction_response_request( $_REQUEST );
+
+		$response = null;
 
 		try {
 
@@ -416,15 +420,15 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				return wp_redirect( $this->get_return_url( $order ) );
 			} else {
 				// failed response, redirect back to pay page
-				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() ) );
+				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() && ! $this->use_auto_form_post() ) );
 			}
 
 		} catch( SV_WC_Payment_Gateway_Exception $e ) {
 			// failure
 
 			if ( isset( $order ) && $order ) {
-				$this->mark_order_as_failed( $order, $e->getMessage() );
-				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() ) );
+				$this->mark_order_as_failed( $order, $e->getMessage(), $response );
+				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() && ! $this->use_auto_form_post() ) );
 			}
 
 			// otherwise, if no order is available, log the issue and redirect to home
@@ -437,7 +441,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Process the transaction response for the given order
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @param WC_Order $order the order
 	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response transaction response
 	 * @return boolean true if transaction did not fail, false otherwise
@@ -465,14 +469,14 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			// if the transaction was held (ie fraud validation failure) mark it as such
 			if ( $response->transaction_held() ) {
-				$this->mark_order_as_held( $order, $response->get_status_message() );
+				$this->mark_order_as_held( $order, $response->get_status_message(), $response );
 			}
 
 			return true;
 
 		} elseif ( $response->transaction_cancelled() ) {
 
-			$this->mark_order_as_cancelled( $order, $response->get_status_message() );
+			$this->mark_order_as_cancelled( $order, $response->get_status_message(), $response );
 
 			return true;
 
@@ -486,7 +490,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Adds the standard transaction data to the order
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @see SV_WC_Payment_Gateway::add_transaction_data()
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response|null $response optional transaction response
@@ -544,9 +548,9 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * Adds an order note, along with anything else required after an approved
 	 * credit card transaction
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @param WC_Order $order the order
-	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response transaction response
+	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response transaction response
 	 */
 	protected function do_credit_card_transaction_approved( $order, $response ) {
 
@@ -583,7 +587,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * Adds an order note, along with anything else required after an approved
 	 * echeck transaction
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @param WC_Order $order the order
 	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response transaction response
 	 */
@@ -618,7 +622,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * Adds an order note, along with anything else required after an approved
 	 * transaction.  This is a generic, default approved handler
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @param WC_Order $order the order
 	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response transaction response
 	 */
@@ -643,7 +647,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Returns an API response object for the current response request
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @param array $request_response_data the current request response data
 	 * @return SV_WC_Payment_Gateway_API_Payment_Notification_Response the response object
 	 */
@@ -658,7 +662,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Returns the WC API URL for this gateway, based on the current protocol
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @return string the WC API URL for this server
 	 */
 	public function get_transaction_response_handler_url() {
@@ -681,7 +685,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Returns true if currently doing a transaction response request
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @return boolean true if currently doing a transaction response request
 	 */
 	public function doing_transaction_response_handler() {
@@ -692,7 +696,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Log pay page form submission request
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @param array $request the request data associative array, which should
 	 *        include members 'method', 'uri', 'body'
 	 * @param object $response optional response object
@@ -714,7 +718,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Log IPN/redirect-back transaction response request to the log file
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @param array $response the request data
 	 * @param string $message optional message string with a %s to hold the
 	 *        response data.  Defaults to 'IPN Request %s' or 'Redirect-back
@@ -742,7 +746,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Returns true if this is a hosted type gateway
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return boolean true if this is a hosted payment gateway
 	 */
 	public function is_hosted_gateway() {
@@ -754,7 +758,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * Returns true if this gateway uses a form-post from the pay
 	 * page to "redirect" to a hosted payment page
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @return boolean true if this gateway uses a form post, false if it
 	 *         redirects directly to the hosted pay page from checkout
 	 */
@@ -771,7 +775,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * This method has no effect if use_form_post() returns false
 	 *
-	 * @since 2.1-1
+	 * @since 2.2.0
 	 * @see SV_WC_Payment_Gateway_Hosted::use_form_post()
 	 * @return boolean true if this gateway automatically posts to the remote
 	 *         processor server from the pay page
@@ -786,7 +790,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * If not, the transaction results are expected to be found in the redirect
 	 * of the client back to the site.
 	 *
-	 * @since 2.1
+	 * @since 2.1.0
 	 * @return boolean true if this is a gateway uses an IPN
 	 */
 	public function has_ipn() {

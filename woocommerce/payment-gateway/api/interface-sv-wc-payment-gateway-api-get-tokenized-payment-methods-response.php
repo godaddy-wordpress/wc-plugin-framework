@@ -35,7 +35,7 @@ interface SV_WC_API_Get_Tokenized_Payment_Methods_Response extends SV_WC_Payment
 	/**
 	 * Returns any payment tokens
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return array array of SV_WC_Payment_Gateway_Payment_Token payment tokens
 	 */
 	public function get_payment_tokens();
