@@ -193,6 +193,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/** Bank transfer gateway */
 	const PAYMENT_TYPE_BANK_TRANSFER = 'bank_transfer';
 
+	/** Products feature */
+	const FEATURE_PRODUCTS = 'products';
+
 	/** Credit card types feature */
 	const FEATURE_CARD_TYPES = 'card_types';
 
@@ -204,6 +207,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 	/** Credit Card authorization transaction feature */
 	const FEATURE_CREDIT_CARD_AUTHORIZATION = 'authorization';
+
+	/** Credit Card capture charge transaction feature */
+	const FEATURE_CREDIT_CARD_CAPTURE = 'capture_charge';
 
 	/** Display detailed customer decline messages on checkout */
 	const FEATURE_DETAILED_CUSTOMER_DECLINE_MESSAGES = 'customer_decline_messages';

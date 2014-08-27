@@ -103,6 +103,7 @@ class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 		$message = null;
 
 		switch ( $message_id ) {
+
 			// generic messages
 			case 'error':           $message = __( 'An error occurred, please try again or try an alternate form of payment', $this->text_domain ); break;
 			case 'decline':         $message = __( 'We cannot process your order with the payment information that you provided. Please use a different payment account or an alternate payment method.', $this->text_domain ); break;
@@ -124,7 +125,7 @@ class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 			case 'card_expiry_invalid':       $message = __( 'The card expiration date is invalid, please re-enter and try again.', $this->text_domain ); break;
 			case 'card_expiry_month_invalid': $message = __( 'The card expiration month is invalid, please re-enter and try again.', $this->text_domain ); break;
 			case 'card_expiry_year_invalid':  $message = __( 'The card expiration year is invalid, please re-enter and try again.', $this->text_domain ); break;
-			case 'card_expiry_missing':       $message = __( 'Please enter your card exipiration date and try again.', $this->text_domain ); break;
+			case 'card_expiry_missing':       $message = __( 'Please enter your card expiration date and try again.', $this->text_domain ); break;
 
 			// decline reasons
 			case 'card_expired':         $message = __( 'The provided card is expired, please use an alternate card or other form of payment.', $this->text_domain ); break;
