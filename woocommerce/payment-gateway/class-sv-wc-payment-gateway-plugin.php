@@ -274,7 +274,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	public function is_plugin_settings() {
 
 		foreach ( $this->get_gateway_class_names() as $gateway_class_name ) {
-			if ( SV_WC_Plugin_Compatibility::is_payment_gateway_configuration_page( $gateway_class_name ) ) {
+			if ( $this->is_payment_gateway_configuration_page( $gateway_class_name ) ) {
 				return true;
 			}
 		}
@@ -393,7 +393,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					),
 					$name,
 					'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
-					SV_WC_Plugin_Compatibility::get_general_configuration_url(),
+					$this->get_general_configuration_url(),
 					'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>'
 				);
 
@@ -415,7 +415,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function order_meta_box_transaction_link( $post_id ) {
 
-		$order = new WC_Order( $post_id );
+		$order = SV_WC_Plugin_Compatibility::wc_get_order( $post_id );
 
 		if ( $this->has_gateway( $order->payment_method ) ) {
 
@@ -566,7 +566,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	public function maybe_capture_charge( $order ) {
 
 		if ( ! is_object( $order ) ) {
-			$order = new WC_Order( $order );
+			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order );
 		}
 
 		// bail if the order wasn't paid for with this gateway
@@ -590,15 +590,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		remove_action( 'woocommerce_order_action_wc_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
 
 		// since a capture results in an update to the post object (by updating
-		// the paid date) we need to unhook the save_post action, otherwise we
+		// the paid date) we need to unhook the meta box save action, otherwise we
 		// can get boomeranged and change the status back to on-hold
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_1() ) {
-			// WC 2.1+
-			remove_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Data::save', 40, 2 );
-		} else {
-			// WC 2.0
-			remove_action( 'woocommerce_process_shop_order_meta', 'woocommerce_process_shop_order_meta', 10, 2 );
-		}
+		remove_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Data::save', 40, 2 );
 
 		// perform the capture
 		$gateway->do_credit_card_capture( $order );
@@ -615,7 +609,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function maybe_add_capture_charge_order_action( $actions ) {
 
-		$order = new WC_Order( $_REQUEST['post'] );
+		$order = SV_WC_Plugin_Compatibility::wc_get_order( $_REQUEST['post'] );
 
 		// bail if the order wasn't paid for with this gateway
 		if ( ! $this->has_gateway( $order->payment_method ) ) {
@@ -700,7 +694,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 			foreach ( $order_ids as $order_id ) {
 
-				$order = new WC_Order( $order_id );
+				$order = SV_WC_Plugin_Compatibility::wc_get_order( $order_id );
 
 				$this->maybe_capture_charge( $order );
 			}
@@ -812,7 +806,37 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			$gateway_id = key( $this->gateways );
 		}
 
-		return SV_WC_Plugin_Compatibility::get_payment_gateway_configuration_url( $this->get_gateway_class_name( $gateway_id ) );
+		return $this->get_payment_gateway_configuration_url( $this->get_gateway_class_name( $gateway_id ) );
+	}
+
+
+	/**
+	 * Returns the admin configuration url for the gateway with class name
+	 * $gateway_class_name
+	 *
+	 * @since 2.2-1
+	 * @param string $gateway_class_name the gateway class name
+	 * @return string admin configuration url for the gateway
+	 */
+	public function get_payment_gateway_configuration_url( $gateway_class_name ) {
+
+		return admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . strtolower( $gateway_class_name ) );
+	}
+
+
+	/**
+	 * Returns true if the current page is the admin configuration page for the
+	 * gateway with class name $gateway_class_name
+	 *
+	 * @since 2.2-1
+	 * @param string $gateway_class_name the gateway class name
+	 * @return boolean true if the current page is the admin configuration page for the gateway
+	 */
+	public function is_payment_gateway_configuration_page( $gateway_class_name ) {
+
+		return isset( $_GET['page'] ) && 'wc-settings' == $_GET['page'] &&
+		isset( $_GET['tab'] ) && 'checkout' == $_GET['tab'] &&
+		isset( $_GET['section'] ) && strtolower( $gateway_class_name ) == $_GET['section'];
 	}
 
 
@@ -836,11 +860,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 1.0.0
 	 * @return array of string gateway class names
-	 * @throws Exception if no gateways are available
 	 */
 	public function get_gateway_class_names() {
 
-		if ( empty( $this->gateways ) ) throw new Exception( 'Gateways not available' );
+		assert( ! empty( $this->gateways ) );
 
 		$gateway_class_names = array();
 
@@ -858,13 +881,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * @since 1.0.0
 	 * @param string $gateway_id the gateway identifier
 	 * @return string gateway class name
-	 * @throws Exception if gateway is not found
 	 */
 	public function get_gateway_class_name( $gateway_id ) {
 
-		if ( ! isset( $this->gateways[ $gateway_id ]['gateway_class_name'] ) ) {
-			throw new Exception( sprintf( "Gateway '%s' not available", $gateway_id ) );
-		}
+		assert( isset( $this->gateways[ $gateway_id ]['gateway_class_name'] ) );
 
 		return $this->gateways[ $gateway_id ]['gateway_class_name'];
 	}
@@ -876,13 +896,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 1.0.0
 	 * @return array of SV_WC_Payment_Gateway gateway objects
-	 * @throws Exception if no gateways are available
 	 */
 	public function get_gateways() {
 
-		if ( empty( $this->gateways ) ) {
-			throw new Exception( 'Gateways not available' );
-		}
+		assert( ! empty( $this->gateways ) );
 
 		$gateways = array();
 
@@ -948,14 +965,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns all available gateway ids for the plugin
 	 *
 	 * @since 1.0.0
-	 * @throws Exception
 	 * @return array of gateway id strings
 	 */
 	public function get_gateway_ids() {
 
-		if ( empty( $this->gateways ) ) {
-			throw new Exception( 'Gateways not available' );
-		}
+		assert( ! empty( $this->gateways ) );
 
 		return array_keys( $this->gateways );
 	}

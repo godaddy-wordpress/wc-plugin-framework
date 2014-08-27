@@ -48,12 +48,12 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * + `get_settings_url()` - return the plugin admin settings URL, if any
  * + `render_admin_notices()` - override to perform custom admin plugin requirement checks (defaults to checking for php extension depenencies).  Use the is_message_dismissed() and add_dismissible_notice() methods
  *
- * @version 2.2.0
+ * @version 2.2.0-1
  */
 abstract class SV_WC_Plugin {
 
 	/** Plugin Framework Version */
-	const VERSION = '2.2.0';
+	const VERSION = '2.2.0-1';
 
 	/** @var string plugin id */
 	private $id;
@@ -132,8 +132,8 @@ abstract class SV_WC_Plugin {
 			// add a 'Configure' link to the plugin action links
 			add_filter( 'plugin_action_links_' . plugin_basename( $this->get_file() ), array( $this, 'plugin_action_links' ) );
 
-			// run every time
-			$this->do_install();
+			// defer until WP/WC has fully loaded
+			add_action( 'wp_loaded', array( $this, 'do_install' ) );
 		}
 
 		// AJAX handler to dismiss any warning/error notices
@@ -330,7 +330,7 @@ abstract class SV_WC_Plugin {
 		<?php
 		$javascript = ob_get_clean();
 
-		SV_WC_Plugin_Compatibility::wc_enqueue_js( $javascript );
+		wc_enqueue_js( $javascript );
 	}
 
 
@@ -518,7 +518,7 @@ abstract class SV_WC_Plugin {
 		}
 
 		if ( ! is_object( $this->logger ) ) {
-			$this->logger = SV_WC_Plugin_Compatibility::new_wc_logger();
+			$this->logger = new WC_Logger();
 		}
 
 		$this->logger->add( $log_id, $message );
@@ -704,6 +704,30 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Returns true if the current page is the admin general configuration page
+	 *
+	 * @since 2.2-1
+	 * @return boolean true if the current page is the admin general configuration page
+	 */
+	public function is_general_configuration_page() {
+
+		return isset( $_GET['page'] ) && 'wc-settings' == $_GET['page'] && ( ! isset( $_GET['tab'] ) || 'general' == $_GET['tab'] );
+	}
+
+
+	/**
+	 * Returns the admin configuration url for the admin general configuration page
+	 *
+	 * @since 2.2-1
+	 * @return string admin configuration url for the admin general configuration page
+	 */
+	public function get_general_configuration_url() {
+
+		return admin_url( 'admin.php?page=wc-settings&tab=general' );
+	}
+
+
+	/**
 	 * Gets the plugin documentation url, which defaults to:
 	 * http://docs.woothemes.com/document/woocommerce-{dasherized plugin id}/
 	 *
@@ -869,7 +893,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 2.0.0
 	 */
-	protected function do_install() {
+	public function do_install() {
 
 		$installed_version = get_option( $this->get_plugin_version_name() );
 
@@ -885,7 +909,6 @@ abstract class SV_WC_Plugin {
 			// new version number
 			update_option( $this->get_plugin_version_name(), $this->get_version() );
 		}
-
 	}
 
 

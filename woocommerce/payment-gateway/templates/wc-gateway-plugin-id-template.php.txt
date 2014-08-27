@@ -75,7 +75,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID%%_payment_fields' ) ) {
 		$tokenization_allowed = $gateway->tokenization_enabled();
 
 		// on the pay page there is no way of creating an account, so disallow tokenization for guest customers
-		if ( $tokenization_allowed && SV_WC_Plugin_Compatibility::is_checkout_pay_page() && ! is_user_logged_in() ) {
+		if ( $tokenization_allowed && is_checkout_pay_page() && ! is_user_logged_in() ) {
 			$tokenization_allowed = false;
 		}
 
@@ -151,7 +151,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID%%_show_my_payment_methods' ) )
 				}
 			} );
 		<?php
-		SV_WC_Plugin_Compatibility::wc_enqueue_js( ob_get_clean() );
+		wc_enqueue_js( ob_get_clean() );
 	}
 
 }
@@ -216,7 +216,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_payment_fields' ) ) {
 		$tokenization_allowed = $gateway->tokenization_enabled();
 
 		// on the pay page there is no way of creating an account, so disallow tokenization for guest customers
-		if ( $tokenization_allowed && SV_WC_Plugin_Compatibility::is_checkout_pay_page() && ! is_user_logged_in() ) {
+		if ( $tokenization_allowed && is_checkout_pay_page() && ! is_user_logged_in() ) {
 			$tokenization_allowed = false;
 		}
 
@@ -239,8 +239,8 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_payment_fields' ) ) {
 			'checkout/%%GATEWAY ID DASHERIZED CHECKS%%-payment-fields.php',
 			array(
 				'payment_method_defaults' => $payment_method_defaults,
-				'sample_check_image_url'  => SV_WC_Plugin_Compatibility::force_https_url( $gateway->get_plugin()->get_plugin_url() ) . '/' . $gateway->get_plugin()->get_framework_image_path() . 'example-check.png',
-				'states'                  => SV_WC_Plugin_Compatibility::WC()->countries->get_states( 'US' ),
+				'sample_check_image_url'  => WC_HTTPS::force_https_url( $gateway->get_plugin()->get_plugin_url() ) . '/' . $gateway->get_plugin()->get_framework_image_path() . 'example-check.png',
+				'states'                  => WC()->countries->get_states( 'US' ),
 %%IF SUPPORTS TOKENIZATION%%
 				'tokens'                  => $tokens,
 				'tokenization_allowed'    => $tokenization_allowed,
@@ -293,7 +293,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_show_my_payment_metho
 				}
 			} );
 		<?php
-		SV_WC_Plugin_Compatibility::wc_enqueue_js( ob_get_clean() );
+		wc_enqueue_js( ob_get_clean() );
 	}
 
 }

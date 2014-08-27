@@ -96,7 +96,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @see WC_Payment_Gateway::process_payment()
 	 * @param int $order_id the order to process
 	 * @return array with keys 'result' and 'redirect'
-	 * @throws Exception if payment processing must be halted, and a message displayed to the customer
+	 * @throws \SV_WC_Payment_Gateway_Exception if payment processing must be halted, and a message displayed to the customer
 	 */
 	public function process_payment( $order_id ) {
 
@@ -108,7 +108,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			return array( 'result' => 'failure' );
 		}
 
-		SV_WC_Plugin_Compatibility::WC()->cart->empty_cart();
+		WC()->cart->empty_cart();
 
 		return array(
 			'result'   => 'success',
@@ -128,7 +128,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		if ( $this->use_form_post() ) {
 			// the checkout pay page
-			$order = new WC_Order( $order_id );
+			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order_id );
 			return $order->get_checkout_payment_url( true );
 		} else {
 
@@ -228,10 +228,10 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 */
 	public function render_auto_post_form( $order, $request_params ) {
 
-		// attempt to automatically submit the form and bring them to the payza paymen site
-		SV_WC_Plugin_Compatibility::wc_enqueue_js('
+		// attempt to automatically submit the form and redirect
+		wc_enqueue_js('
 			$( "body" ).block( {
-					message: "<img src=\"' . esc_url( SV_WC_Plugin_Compatibility::WC()->plugin_url() ) . '/assets/images/ajax-loader.gif\" alt=\"Redirecting&hellip;\" style=\"float:left; margin-right: 10px;\" />' . __( 'Thank you for your order. We are now redirecting you to complete payment.', $this->text_domain ) . '",
+					message: "<img src=\"' . esc_url( WC()->plugin_url() ) . '/assets/images/ajax-loader.gif\" alt=\"Redirecting&hellip;\" style=\"float:left; margin-right: 10px;\" />' . __( 'Thank you for your order. We are now redirecting you to complete payment.', $this->text_domain ) . '",
 					overlayCSS: {
 						background: "#fff",
 						opacity: 0.6
@@ -349,7 +349,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				}
 			}
 
-		} catch ( Exception $e ) {
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 			// failure
 
 			if ( isset( $order ) && $order ) {
@@ -423,7 +423,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() && ! $this->use_auto_form_post() ) );
 			}
 
-		} catch( Exception $e ) {
+		} catch( SV_WC_Payment_Gateway_Exception $e ) {
 			// failure
 
 			if ( isset( $order ) && $order ) {
@@ -502,13 +502,13 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		// account number
 		if ( $response->get_account_number() ) {
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_four', substr( $response->get_account_number(), -4 ) );
+			$this->update_order_meta( $order->id, 'account_four', substr( $response->get_account_number(), -4 ) );
 		}
 
 		if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
 
 			if ( $response->get_authorization_code() ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_authorization_code', $response->get_authorization_code() );
+				$this->update_order_meta( $order->id, 'authorization_code', $response->get_authorization_code() );
 			}
 
 			if ( $order->get_total() > 0 ) {
@@ -518,27 +518,27 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				} else {
 					$captured = 'no';
 				}
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_charge_captured', $captured );
+				$this->update_order_meta( $order->id, 'charge_captured', $captured );
 			}
 
 			if ( $response->get_exp_month() && $response->get_exp_year() ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_card_expiry_date', $response->get_exp_year() . '-' . $response->get_exp_month() );
+				$this->update_order_meta( $order->id, 'card_expiry_date', $response->get_exp_year() . '-' . $response->get_exp_month() );
 			}
 
 			if ( $response->get_card_type() ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_card_type', $response->get_card_type() );
+				$this->update_order_meta( $order->id, 'card_type', $response->get_card_type() );
 			}
 
 		} elseif ( self::PAYMENT_TYPE_ECHECK == $response->get_payment_type() ) {
 
 			// optional account type (checking/savings)
 			if ( $response->get_account_type() ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_account_type', $response->get_account_type() );
+				$this->update_order_meta( $order->id, 'account_type', $response->get_account_type() );
 			}
 
 			// optional check number
 			if ( $response->get_check_number() ) {
-				update_post_meta( $order->id, '_wc_' . $this->get_id() . '_check_number', $response->get_check_number() );
+				$this->update_order_meta( $order->id, 'check_number', $response->get_check_number() );
 			}
 		}
 	}

@@ -66,11 +66,11 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 %%ENDIF SUPPORTS TOKENIZATION%%
 
 		<p class="form-row form-row-first">
-			<label for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-routing-number"><?php _e( 'Routing Number (9 digits)', %%TEXT DOMAIN%% ); ?> <img title="<?php esc_attr_e( 'Where do I find this?', %%TEXT DOMAIN%% ); ?>" class="js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-help" style="margin-bottom:3px;cursor:pointer;box-shadow:none;" src="<?php echo SV_WC_Plugin_Compatibility::WC()->plugin_url(); ?>/assets/images/help.png" width="16" height="16" /></label>
+			<label for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-routing-number"><?php _e( 'Routing Number (9 digits)', %%TEXT DOMAIN%% ); ?> <img title="<?php esc_attr_e( 'Where do I find this?', %%TEXT DOMAIN%% ); ?>" class="js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-help" style="margin-bottom:3px;cursor:pointer;box-shadow:none;" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" width="16" height="16" /></label>
 			<input id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-routing-number" name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-routing-number" value="<?php echo $payment_method_defaults['routing-number']; ?>" type="text" class="input-text js-wc-payment-gateway-routing-number" autocomplete="off" />
 		</p>
 		<p class="form-row form-row-last">
-			<label for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-number"><?php _e( 'Account Number (3-17 digits)', %%TEXT DOMAIN%% ); ?> <img title="<?php esc_attr_e( 'Where do I find this?', %%TEXT DOMAIN%% ); ?>" class="js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-help" style="margin-bottom:3px;cursor:pointer;box-shadow:none;" class="help_tip" src="<?php echo SV_WC_Plugin_Compatibility::WC()->plugin_url(); ?>/assets/images/help.png" width="16" height="16" /></label>
+			<label for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-number"><?php _e( 'Account Number (3-17 digits)', %%TEXT DOMAIN%% ); ?> <img title="<?php esc_attr_e( 'Where do I find this?', %%TEXT DOMAIN%% ); ?>" class="js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-help" style="margin-bottom:3px;cursor:pointer;box-shadow:none;" class="help_tip" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" width="16" height="16" /></label>
 			<input id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-number" name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-number" value="<?php echo $payment_method_defaults['account-number']; ?>" type="text" class="input-text js-wc-payment-gateway-account-number" autocomplete="off" />
 		</p>
 		<div class="clear"></div>
@@ -103,7 +103,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 %%IF SUPPORTS CHECK-NUMBER%%
 		<p class="form-row">
-			<label for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-check-number"><?php _e( 'Check Number', %%TEXT DOMAIN%% ); ?> <img title="<?php esc_attr_e( 'Where do I find this?', %%TEXT DOMAIN%% ); ?>" class="js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-help" style="margin-bottom:3px;cursor:pointer;box-shadow:none;" class="help_tip" src="<?php echo SV_WC_Plugin_Compatibility::WC()->plugin_url(); ?>/assets/images/help.png" width="16" height="16" /></label>
+			<label for="wc-%%GATEWAY ID DASHERIZED CHECKS%%-check-number"><?php _e( 'Check Number', %%TEXT DOMAIN%% ); ?> <img title="<?php esc_attr_e( 'Where do I find this?', %%TEXT DOMAIN%% ); ?>" class="js-wc-%%GATEWAY ID DASHERIZED CHECKS%%-account-help" style="margin-bottom:3px;cursor:pointer;box-shadow:none;" class="help_tip" src="<?php echo WC()->plugin_url(); ?>/assets/images/help.png" width="16" height="16" /></label>
 			<input id="wc-%%GATEWAY ID DASHERIZED CHECKS%%-check-number" name="wc-%%GATEWAY ID DASHERIZED CHECKS%%-check-number" type="text" class="input-text js-wc-payment-gateway-check-number" autocomplete="off" style="width:33%;" />
 		</p>
 		<div class="clear"></div>

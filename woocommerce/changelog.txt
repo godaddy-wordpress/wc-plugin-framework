@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+XXXX.XX.XX - version 2.2.0-1
+ * Misc - WooCommerce 2.2 compatibility
+
 2014.08.26 - version 2.2.0
  * Feature - Added API base class and automatic request logging
  * Feature - Introduced Helper class

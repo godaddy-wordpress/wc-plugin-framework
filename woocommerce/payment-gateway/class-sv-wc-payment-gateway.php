@@ -436,12 +436,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function is_pay_page_gateway() {
 
-		if ( SV_WC_Plugin_Compatibility::is_checkout_pay_page() ) {
+		if ( is_checkout_pay_page()) {
 
-			$order_id  = SV_WC_Plugin_Compatibility::get_checkout_pay_page_order_id();
+			$order_id  = $this->get_checkout_pay_page_order_id();
 
 			if ( $order_id ) {
-				$order = new WC_Order( $order_id );
+				$order = SV_WC_Plugin_Compatibility::wc_get_order( $order_id );
 
 				return $order->payment_method == $this->get_id();
 			}
@@ -625,7 +625,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->form_fields['debug_mode'] = array(
 			'title'       => __( 'Debug Mode', $this->text_domain ),
 			'type'        => 'select',
-			'description' => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the debug log: %s', $this->text_domain ), '<strong class="nobr">wp-content/plugins/woocommerce/logs/' . $this->log_file_name() . '</strong>' ),
+			'description' => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the debug log: %s', $this->text_domain ), '<strong class="nobr">' . SV_WC_Plugin_Compatibility::wc_get_log_file_path( $this->get_id() ) . '</strong>' ),
 			'default'     => self::DEBUG_MODE_OFF,
 			'options'     => array(
 				self::DEBUG_MODE_OFF      => _x( 'Off', 'Debug mode off', $this->text_domain ),
@@ -790,7 +790,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			SV_WC_Plugin_Compatibility::wc_enqueue_js( ob_get_clean() );
+			wc_enqueue_js( ob_get_clean() );
 
 		}
 
@@ -816,7 +816,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			SV_WC_Plugin_Compatibility::wc_enqueue_js( ob_get_clean() );
+			wc_enqueue_js( ob_get_clean() );
 
 		}
 
@@ -857,7 +857,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// any required countries?
-		if ( $this->countries && SV_WC_Plugin_Compatibility::WC()->customer && SV_WC_Plugin_Compatibility::WC()->customer->get_country() && ! in_array( SV_WC_Plugin_Compatibility::WC()->customer->get_country(), $this->countries ) ) {
+		if ( $this->countries && WC()->customer && WC()->customer->get_country() && ! in_array( WC()->customer->get_country(), $this->countries ) ) {
 			$is_available = false;
 		}
 
@@ -892,7 +892,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( $this->icon ) {
 
 			// use icon provided by filter
-			$icon = '<img src="' . esc_url( SV_WC_Plugin_Compatibility::force_https_url( $this->icon ) ) . '" alt="' . esc_attr( $this->title ) . '" />';
+			$icon = '<img src="' . esc_url( WC_HTTPS::force_https_url( $this->icon ) ) . '" alt="' . esc_attr( $this->title ) . '" />';
 		}
 
 		// credit card images
@@ -972,13 +972,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// first, is the card image available within the plugin?
 		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/assets/images/card-' . $image_type . '.png' ) ) {
-			return SV_WC_Plugin_Compatibility::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/assets/images/card-' . $image_type . '.png';
+			return WC_HTTPS::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/assets/images/card-' . $image_type . '.png';
 		}
 
 		// default: is the card image available within the framework?
 		// NOTE: I don't particularly like hardcoding this path, but I don't see any real way around it
 		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/' . $this->get_plugin()->get_framework_image_path() . 'card-' . $image_type . '.png' ) ) {
-			return SV_WC_Plugin_Compatibility::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/' . $this->get_plugin()->get_framework_image_path() . 'card-' . $image_type . '.png';
+			return WC_HTTPS::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/' . $this->get_plugin()->get_framework_image_path() . 'card-' . $image_type . '.png';
 		}
 
 		return null;
@@ -1009,14 +1009,15 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function get_order( $order ) {
 
 		if ( is_numeric( $order ) ) {
-			$order = new WC_Order( $order );
+
+			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order );
 		}
 
 		// set payment total here so it can be modified for later by add-ons like subscriptions which may need to charge an amount different than the get_total()
 		$order->payment_total = number_format( $order->get_total(), 2, '.', '' );
 
 		// logged in customer?
-		if ( 0 != $order->user_id && false !== ( $customer_id = $this->get_customer_id( $order->user_id, array( 'order' => $order ) ) ) ) {
+		if ( 0 != SV_WC_Plugin_Compatibility::get_order_user_id( $order ) && false !== ( $customer_id = $this->get_customer_id( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), array( 'order' => $order ) ) ) ) {
 			$order->customer_id = $customer_id;
 		}
 
@@ -1044,8 +1045,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function get_order_with_unique_transaction_ref( $order ) {
 
 		// generate a unique retry count
-		if ( is_numeric( SV_WC_Plugin_Compatibility::get_order_custom_field( $order, 'wc_' . $this->get_id() . '_retry_count' ) ) ) {
-			$retry_count = SV_WC_Plugin_Compatibility::get_order_custom_field( $order, 'wc_' . $this->get_id() . '_retry_count' );
+		if ( is_numeric( $this->get_order_meta( $order->id, 'retry_count' ) ) ) {
+			$retry_count = $this->get_order_meta( $order->id, 'retry_count' );
 
 			$retry_count++;
 		} else {
@@ -1053,7 +1054,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// keep track of the retry count
-		update_post_meta( $order->id, '_wc_' . $this->get_id() . '_retry_count', $retry_count );
+		$this->update_order_meta( $order->id, 'retry_count', $retry_count );
 
 		// generate a unique transaction ref based on the order number and retry count, for gateways that require a unique identifier for every transaction request
 		$order->unique_transaction_ref = ltrim( $order->get_order_number(),  _x( '#', 'hash before order number', $this->text_domain ) ) . ( $retry_count > 0 ? '-' . $retry_count : '' );
@@ -1105,20 +1106,23 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// transaction id if available
 		if ( $response && $response->get_transaction_id() ) {
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_id', $response->get_transaction_id() );
+			$this->update_order_meta( $order->id, 'trans_id', $response->get_transaction_id() );
+
+			// set transaction ID for WC core - remove this and use WC_Order::payment_complete() to add transaction ID after 2.2+ can be required
+			update_post_meta( $order->id, '_transaction_id', $response->get_transaction_id() );
 		}
 
 		// transaction date
-		update_post_meta( $order->id, '_wc_' . $this->get_id() . '_trans_date', current_time( 'mysql' ) );
+		$this->update_order_meta( $order->id, 'trans_date', current_time( 'mysql' ) );
 
 		// if there's more than one environment
 		if ( count( $this->get_environments() ) > 1 ) {
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_environment', $this->get_environment() );
+			$this->update_order_meta( $order->id, 'environment', $this->get_environment() );
 		}
 
 		// if there is a payment gateway customer id, set it to the order (we don't append the environment here like we do for the user meta, because it's available from the 'environment' order meta already)
 		if ( isset( $order->customer_id ) && $order->customer_id ) {
-			update_post_meta( $order->id, '_wc_' . $this->get_id() . '_customer_id', $order->customer_id );
+			$this->update_order_meta( $order->id, 'customer_id', $order->customer_id );
 		}
 	}
 
@@ -1165,10 +1169,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( ! $user_message ) {
 			$user_message = __( 'Your order has been received and is being reviewed.  Thank you for your business.', $this->text_domain );
 		}
-		SV_WC_Plugin_Compatibility::wc_add_notice( $user_message );
-
-		SV_WC_Plugin_Compatibility::set_messages();  // TODO: do we need this?  test with a direct and redirect gateway
-
+		wc_add_notice( $user_message );
 	}
 
 
@@ -1201,7 +1202,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( ! $user_message ) {
 			$user_message = __( 'An error occurred, please try again or try an alternate form of payment.', $this->text_domain );
 		}
-		SV_WC_Plugin_Compatibility::wc_add_notice( $user_message, 'error' );
+		wc_add_notice( $user_message, 'error' );
 	}
 
 
@@ -1307,7 +1308,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	public function get_guest_customer_id( WC_Order $order ) {
 
 		// is there a customer id already tied to this order?
-		$customer_id = get_post_meta( $order->id, '_wc_' . $this->get_id() . '_customer_id', true );
+		$customer_id = $this->get_order_meta( $order->id, 'customer_id' );
 
 		if ( $customer_id ) {
 			return $customer_id;
@@ -1456,7 +1457,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		assert( $this->supports_credit_card_charge() );
 
-		return  self::TRANSACTION_TYPE_CHARGE == $this->transaction_type;
+		return self::TRANSACTION_TYPE_CHARGE == $this->transaction_type;
 	}
 
 
@@ -1716,9 +1717,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param string $message message to add
 	 * @param string $type how to add the message, options are:
 	 *     'message' (styled as WC message), 'error' (styled as WC Error)
-	 * @param bool $set_message sets any WC messages/errors provided so they appear on the next page load, useful for displaying messages on the thank you page
 	 */
-	protected function add_debug_message( $message, $type = 'message', $set_message = false ) {
+	protected function add_debug_message( $message, $type = 'message' ) {
 
 		// do nothing when debug mode is off or no message
 		if ( 'off' == $this->debug_off() || ! $message ) {
@@ -1730,18 +1730,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 			if ( 'message' === $type ) {
 
-				SV_WC_Plugin_Compatibility::wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'notice' );
+				wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'notice' );
 
 			} else {
 
 				// defaults to error message
-				SV_WC_Plugin_Compatibility::wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'error' );
+				wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'error' );
 			}
-		}
-
-		// set messages for next page load
-		if ( $set_message && ( ! is_admin() || defined( 'DOING_AJAX' ) ) ) {
-			SV_WC_Plugin_Compatibility::set_messages();
 		}
 
 		// add log message to WC logger if log/both is enabled
@@ -2170,20 +2165,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
-	 * Returns the log file name
-	 *
-	 * @param string $handle optional log handle, defaults to plugin id
-	 * @return string the log file name
-	 */
-	protected function log_file_name( $handle = null ) {
-		if ( ! $handle ) {
-			$handle = $this->get_id();
-		}
-		return $handle . '-' . sanitize_file_name( wp_hash( $handle ) ) . '.txt';
-	}
-
-
-	/**
 	 * Returns true if this is a direct type gateway
 	 *
 	 * @since 1.0.0
@@ -2236,6 +2217,36 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	public function is_echeck_gateway() {
 		return self::PAYMENT_TYPE_ECHECK == $this->get_payment_type();
 	}
+
+
+	/**
+	 * Returns the order_id if on the checkout pay page
+	 *
+	 * @since 2.2-1
+	 * @return int order identifier
+	 */
+	public function get_checkout_pay_page_order_id() {
+		global $wp;
+
+		return isset( $wp->query_vars['order-pay'] ) ? absint( $wp->query_vars['order-pay'] ) : 0;
+	}
+
+
+	/**
+	 * Returns the order_id if on the checkout order received page
+	 *
+	 * Note this must be used in the `wp` or later action, as earlier
+	 * actions do not yet have access to the query vars
+	 *
+	 * @since 2.2-1
+	 * @return int order identifier
+	 */
+	public function get_checkout_order_received_order_id() {
+		global $wp;
+
+		return isset( $wp->query_vars['order-received'] ) ? absint( $wp->query_vars['order-received'] ) : 0;
+	}
+
 
 }
 
