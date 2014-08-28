@@ -317,6 +317,17 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Returns true if the installed version of WooCommerce is less than 2.2
+	 *
+	 * @since 2.2.0
+	 * @return boolean true if the installed version of WooCommerce is less than 2.2
+	 */
+	public static function is_wc_version_lt_2_2() {
+		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.2', '<' );
+	}
+
+
+	/**
 	 * Returns true if the installed version of WooCommerce is greater than $version
 	 *
 	 * @since 2.0.0

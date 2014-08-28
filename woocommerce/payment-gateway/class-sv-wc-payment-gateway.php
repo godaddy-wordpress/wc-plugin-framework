@@ -1009,7 +1009,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function get_order( $order ) {
 
 		if ( is_numeric( $order ) ) {
-
 			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order );
 		}
 
@@ -1353,6 +1352,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Add a button to the order actions meta box to view the order in the
 	 * merchant account, if supported
 	 *
+	 * @deprecated since WC 2.2
 	 * @since 1.0.0
 	 * @see SV_WC_Payment_Gateway_Plugin::order_meta_box_transaction_link()
 	 * @see SV_WC_Payment_Gateway::get_transaction_url()
@@ -1378,16 +1378,24 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 *
 	 * Override this method to return the transaction URL, if supported
 	 *
+	 * @deprecated since WC 2.2
 	 * @since 1.0.0
+	 * @see WC_Payment_Gateway::get_transaction_url()
 	 * @see SV_WC_Payment_Gateway_Plugin::order_meta_box_transaction_link()
 	 * @see SV_WC_Payment_Gateway::order_meta_box_transaction_link()
 	 * @param WC_Order $order the order object
 	 * @return string transaction url or null if not supported
 	 */
 	public function get_transaction_url( $order ) {
+		// implementation copied directly from core WC_Payment_Gateway (WC 2.2) to provide backwards compatibility for WC 2.1 remove this method wholesale once we require WC 2.2
+		$return_url = '';
+		$transaction_id = $order->transaction_id;  // get transaction id regardless of WC version
 
-		// method stub
-		return null;
+		if ( ! empty( $this->view_transaction_url ) && ! empty( $transaction_id ) ) {
+			$return_url = sprintf( $this->view_transaction_url, $transaction_id );
+		}
+
+		return apply_filters( 'woocommerce_get_transaction_url', $return_url, $order, $this );
 	}
 
 
