@@ -399,6 +399,40 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		}
 
 
+		/**
+		 * Returns the admin configuration url for the gateway with class name
+		 * $gateway_class_name
+		 *
+		 * Temporary home for this function, until all payment gateways are brought into the frameworked fold
+		 *
+		 * @since 2.2.0-1
+		 * @param string $gateway_class_name the gateway class name
+		 * @return string admin configuration url for the gateway
+		 */
+		public static function get_payment_gateway_configuration_url( $gateway_class_name ) {
+
+			return admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . strtolower( $gateway_class_name ) );
+		}
+
+
+		/**
+		 * Returns true if the current page is the admin configuration page for the
+		 * gateway with class name $gateway_class_name
+		 *
+		 * Temporary home for this function, until all payment gateways are brought into the frameworked fold
+		 *
+		 * @since 2.0.0-1
+		 * @param string $gateway_class_name the gateway class name
+		 * @return boolean true if the current page is the admin configuration page for the gateway
+		 */
+		public static function is_payment_gateway_configuration_page( $gateway_class_name ) {
+
+			return isset( $_GET['page'] ) && 'wc-settings' == $_GET['page'] &&
+				isset( $_GET['tab'] ) && 'checkout' == $_GET['tab'] &&
+				isset( $_GET['section'] ) && strtolower( $gateway_class_name ) == $_GET['section'];
+		}
+
+
 	}
 
 endif; // Class exists check
