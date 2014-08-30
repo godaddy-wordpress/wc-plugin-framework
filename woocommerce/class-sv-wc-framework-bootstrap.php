@@ -45,7 +45,7 @@ if ( ! class_exists( 'SV_WC_Framework_Bootstrap' ) ) :
  *   require_once( 'lib/skyverge/woocommerce/class-sv-wc-framework-bootstrap.php' );
  * }
  *
- * SV_WC_Framework_Bootstrap::instance()->register_plugin( '2.0.0', __( 'WooCommerce My Plugin', 'woocommerce-my-plugin' ), __FILE__, 'init_woocommerce_my_plugin' );
+ * SV_WC_Framework_Bootstrap::instance()->register_plugin( '2.2.0', __( 'WooCommerce My Plugin', 'woocommerce-my-plugin' ), __FILE__, 'init_woocommerce_my_plugin', array( 'minimum_wc_version' => '2.2' ) );
  *
  * ...
  *
@@ -67,6 +67,7 @@ if ( ! class_exists( 'SV_WC_Framework_Bootstrap' ) ) :
  *
  * + `is_payment_gateway` - Set to true if this is a payment gateway, to load the payment gateway framework files
  * + `backwards_compatible` - Set to a version number to declare backwards compatibility support from that version number (and hence no support for earlier versions).
+ * + `minimum_wc_version` - Set to a version number to require a minimum WooCommerce version for the given plugin
  *
  * ### Backwards Compatibility
  *
@@ -106,8 +107,11 @@ class SV_WC_Framework_Bootstrap {
 	/** @var array registered framework plugins */
 	protected $registered_plugins = array();
 
-	/** @var array of incompatible frameworked plugins */
-	protected $incompatible_plugins = array();
+	/** @var array of plugins that need to be updated due to an outdated framework */
+	protected $incompatible_framework_plugins = array();
+
+	/** @var array of plugins that require a newer version of WC */
+	protected $incompatible_wc_version_plugins = array();
 
 
 	/**
@@ -176,18 +180,20 @@ class SV_WC_Framework_Bootstrap {
 			// if the loaded version of the framework has a backwards compatibility requirement
 			//  which is not met by the current plugin add an admin notice and move on without
 			//  loading the plugin
-			if ( isset( $loaded_framework['args']['backwards_compatible'] ) &&
-				$loaded_framework['args']['backwards_compatible'] &&
-				version_compare( $loaded_framework['args']['backwards_compatible'], $plugin['version'], '>' ) ) {
+			if ( ! empty( $loaded_framework['args']['backwards_compatible'] ) && version_compare( $loaded_framework['args']['backwards_compatible'], $plugin['version'], '>' ) ) {
 
-				if ( is_admin() && ! defined( 'DOING_AJAX' ) && ! has_action( 'admin_notices', array( $this, 'render_update_plugin_notice' ) ) ) {
-					// render any admin notices
-					add_action( 'admin_notices', array( $this, 'render_update_plugin_notice' ) );
-				}
+				$this->incompatible_framework_plugins[] = $plugin;
 
-				$this->incompatible_plugins[] = $plugin;
+				// next plugin
+				continue;
+			}
 
-				// on to the next plugin
+			// if a plugin defines a minimum WC version, render a notice and skip loading the plugin
+			if ( ! empty( $plugin['args']['minimum_wc_version'] ) && version_compare( $this->get_wc_version(), $plugin['args']['minimum_wc_version'], '<' ) ) {
+
+				$this->incompatible_wc_version_plugins[] = $plugin;
+
+				// next plugin
 				continue;
 			}
 
@@ -198,10 +204,15 @@ class SV_WC_Framework_Bootstrap {
 
 			// initialize the plugin
 			$plugin['callback']();
-
 		}
 
-		// frameworked plugins can hook onto this action rather than 'plugins_loaded'/'woocommerce_loaded' when need be
+		// render update notices
+		if ( ( $this->incompatible_framework_plugins || $this->incompatible_wc_version_plugins ) && is_admin() && ! defined( 'DOING_AJAX' ) && ! has_action( 'admin_notices', array( $this, 'render_update_notices' ) ) ) {
+
+			add_action( 'admin_notices', array( $this, 'render_update_notices' ) );
+		}
+
+		// frameworked plugins can hook onto this action rather than 'plugins_loaded'/'woocommerce_loaded' when necessary
 		do_action( 'sv_wc_framework_plugins_loaded' );
 	}
 
@@ -213,23 +224,35 @@ class SV_WC_Framework_Bootstrap {
 	 * Render a notice to update any plugins with incompatible framework
 	 * versions
 	 *
+	 * Note that no localization is available because there's no text domain
+	 * for the bootstrap.
+	 *
 	 * @since 2.0.0
 	 */
-	public function render_update_plugin_notice() {
+	public function render_update_notices() {
 
-		$plugin_names = array();
+		// must update plugin notice
+		if ( ! empty( $this->incompatible_framework_plugins ) ) {
 
-		foreach ( $this->incompatible_plugins as $plugin ) {
-			$plugin_names[] = $plugin['plugin_name'];
+			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_framework_plugins ) > 1 ? 'The following plugins are inactive because they require a newer version to function properly:' : 'The following plugin is inactive because it requires a newer version to function properly:' );
+
+			foreach ( $this->incompatible_framework_plugins as $plugin ) {
+				printf( '<li>%s</li>', $plugin['plugin_name'] );
+			}
+
+			echo '</ul><p>Please <a href="' . admin_url( 'update-core.php' ) . '">update&nbsp;&raquo;</a></p></div>';
 		}
 
-		if ( ! empty( $plugin_names ) ) {
+		// must update WC notice
+		if ( ! empty( $this->incompatible_wc_version_plugins ) ) {
 
-			// no localization
-			echo sprintf(
-				'<div class="error"><p>%s</p><ul><li>%s</ul></ul></div>',
-				count( $plugin_names ) > 1 ? 'The following plugins must be updated in order to function properly:' : 'The following plugin must be updated in order to function properly:',
-				implode( '</li><li>', $plugin_names ) );
+			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_wc_version_plugins ) > 1 ? 'The following plugins are inactive because they require a newer version of WooCommerce:' : 'The following plugin is inactive because it requires a newer version of WooCommerce:' );
+
+			foreach ( $this->incompatible_wc_version_plugins as $plugin ) {
+				printf( '<li>%s requires WooCommerce %s or newer</li>', $plugin['plugin_name'], $plugin['args']['minimum_wc_version'] );
+			}
+
+			echo '</ul><p>Please <a href="' . admin_url( 'update-core.php' ) . '">update WooCommerce&nbsp;&raquo;</a></p></div>';
 		}
 	}
 
@@ -261,6 +284,22 @@ class SV_WC_Framework_Bootstrap {
 	 */
 	public function get_plugin_path( $file ) {
 		return untrailingslashit( plugin_dir_path( $file ) );
+	}
+
+
+	/**
+	 * Returns the WooCommerce version number, backwards compatible to
+	 * WC 1.5
+	 *
+	 * @since 2.2.0-1
+	 * @return null|string
+	 */
+	private function get_wc_version() {
+
+		if ( defined( 'WC_VERSION' )          && WC_VERSION )          return WC_VERSION;
+		if ( defined( 'WOOCOMMERCE_VERSION' ) && WOOCOMMERCE_VERSION ) return WOOCOMMERCE_VERSION;
+
+		return null;
 	}
 
 }
