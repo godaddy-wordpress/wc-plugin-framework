@@ -47,11 +47,11 @@ class SV_WC_Admin_Notice_Handler {
 	/** @var array associative array of id to notice text */
 	private $admin_notices = array();
 
-	/** @var boolean static member to enforce a single rendering of the admin message placeholder element */
-	static private $admin_message_placeholder_rendered = false;
+	/** @var boolean static member to enforce a single rendering of the admin notice placeholder element */
+	static private $admin_notice_placeholder_rendered = false;
 
-	/** @var boolean static member to enforce a single rendering of the admin message javascript */
-	static private $admin_message_js_rendered = false;
+	/** @var boolean static member to enforce a single rendering of the admin notice javascript */
+	static private $admin_notice_js_rendered = false;
 
 
 	/**
@@ -70,13 +70,13 @@ class SV_WC_Admin_Notice_Handler {
 		add_action( 'admin_footer',  array( $this, 'render_admin_notice_js'       ), 20 );
 
 		// AJAX handler to dismiss any warning/error notices
-		add_action( 'wp_ajax_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismiss_message', array( $this, 'handle_dismiss_message' ) );
+		add_action( 'wp_ajax_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismiss_notice', array( $this, 'handle_dismiss_notice' ) );
 	}
 
 
 	/**
 	 * Adds the given $message as a dismissible notice identified by $message_id,
-	 * unless the message has been dismissed, or we're on the plugin settings page
+	 * unless the notice has been dismissed, or we're on the plugin settings page
 	 *
 	 * @since 2.2.0-2
 	 * @param string $message the notice message to display
@@ -103,8 +103,8 @@ class SV_WC_Admin_Notice_Handler {
 
 
 	/**
-	 * Returns true if the identified message hasn't been cleared, or we're on
-	 * the plugin settings page (where messages are always displayed)
+	 * Returns true if the identified notice hasn't been cleared, or we're on
+	 * the plugin settings page (where notices are always displayed)
 	 *
 	 * @since 2.2.0-2
 	 * @param string $message_id the message id
@@ -120,7 +120,7 @@ class SV_WC_Admin_Notice_Handler {
 			$params['always_show_on_settings'] = true;
 		}
 
-		// if the message is always shown on the settings page, and we're on the settings page
+		// if the notice is always shown on the settings page, and we're on the settings page
 		if ( $params['always_show_on_settings'] && $this->get_plugin()->is_plugin_settings() ) {
 			return true;
 		}
@@ -130,8 +130,8 @@ class SV_WC_Admin_Notice_Handler {
 			return true;
 		}
 
-		// dismissible: display if message has not been dismissed
-		return ! $this->is_message_dismissed( $message_id );
+		// dismissible: display if notice has not been dismissed
+		return ! $this->is_notice_dismissed( $message_id );
 	}
 
 
@@ -139,7 +139,7 @@ class SV_WC_Admin_Notice_Handler {
 	 * Render any admin notices, as well as the admin notice placeholder
 	 *
 	 * @since 2.2.0-2
-	 * @param boolean $is_visible true if the messages should be immediately visible, false otherwise
+	 * @param boolean $is_visible true if the notices should be immediately visible, false otherwise
 	 */
 	public function render_admin_notices( $is_visible = true ) {
 
@@ -156,10 +156,10 @@ class SV_WC_Admin_Notice_Handler {
 			}
 		}
 
-		if ( $is_visible && ! self::$admin_message_placeholder_rendered ) {
-			// placeholder for moving delayed messages up into place
-			echo '<div class="js-wc-plugin-framework-admin-message-placeholder"></div>';
-			self::$admin_message_placeholder_rendered = true;
+		if ( $is_visible && ! self::$admin_notice_placeholder_rendered ) {
+			// placeholder for moving delayed notices up into place
+			echo '<div class="js-wc-plugin-framework-admin-notice-placeholder"></div>';
+			self::$admin_notice_placeholder_rendered = true;
 		}
 
 	}
@@ -187,12 +187,12 @@ class SV_WC_Admin_Notice_Handler {
 
 		$dismiss_link = '';
 
-		// dismissible link if the message is dismissible and it's not always shown on the settings page, or we're on the settings page
+		// dismissible link if the notice is dismissible and it's not always shown on the settings page, or we're on the settings page
 		if ( isset( $params['dismissible'] ) && $params['dismissible'] && ( ! isset( $params['always_show_on_settings'] ) || ! $params['always_show_on_settings'] || ! $this->get_plugin()->is_plugin_settings() ) ) {
-			$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-message-dismiss" data-message-id="%s" style="float: right;">%s</a>', $message_id, __( 'Dismiss', $this->text_domain ) );
+			$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-notice-dismiss" data-message-id="%s" style="float: right;">%s</a>', $message_id, __( 'Dismiss', $this->text_domain ) );
 		}
 
-		echo sprintf( '<div data-plugin-id="' . $this->get_plugin()->get_id() . '" class="error js-wc-plugin-framework-admin-message"%s><p>%s %s</p></div>', ! isset( $params['is_visible'] ) || ! $params['is_visible'] ? ' style="display:none;"' : '', $message, $dismiss_link );
+		echo sprintf( '<div data-plugin-id="' . $this->get_plugin()->get_id() . '" class="error js-wc-plugin-framework-admin-notice"%s><p>%s %s</p></div>', ! isset( $params['is_visible'] ) || ! $params['is_visible'] ? ' style="display:none;"' : '', $message, $dismiss_link );
 	}
 
 
@@ -204,21 +204,21 @@ class SV_WC_Admin_Notice_Handler {
 	public function render_admin_notice_js() {
 
 		// if there were no notices, or we've already rendered the js, there's nothing to do
-		if ( empty( $this->admin_notices ) || self::$admin_message_js_rendered ) {
+		if ( empty( $this->admin_notices ) || self::$admin_notice_js_rendered ) {
 			return;
 		}
 
-		self::$admin_message_js_rendered = true;
+		self::$admin_notice_js_rendered = true;
 
 		ob_start();
 		?>
 		// hide notice
-		$( 'a.js-wc-plugin-framework-message-dismiss' ).click( function() {
+		$( 'a.js-wc-plugin-framework-notice-dismiss' ).click( function() {
 
 			$.get(
 				ajaxurl,
 				{
-					action: 'wc_plugin_framework_' + $( this ).closest( '.js-wc-plugin-framework-admin-message' ).data( 'plugin-id') + '_dismiss_message',
+					action: 'wc_plugin_framework_' + $( this ).closest( '.js-wc-plugin-framework-admin-notice' ).data( 'plugin-id') + '_dismiss_notice',
 					messageid: $( this ).data( 'message-id' )
 				}
 			);
@@ -228,8 +228,8 @@ class SV_WC_Admin_Notice_Handler {
 			return false;
 		} );
 
-		// move any delayed messages up into position .show();
-		$( '.js-wc-plugin-framework-admin-message:hidden' ).insertAfter( '.js-wc-plugin-framework-admin-message-placeholder' ).show();
+		// move any delayed notices up into position .show();
+		$( '.js-wc-plugin-framework-admin-notice:hidden' ).insertAfter( '.js-wc-plugin-framework-admin-notice-placeholder' ).show();
 		<?php
 		$javascript = ob_get_clean();
 
@@ -238,31 +238,52 @@ class SV_WC_Admin_Notice_Handler {
 
 
 	/**
-	 * Marks the identified admin message as dismissed for the given user
+	 * Marks the identified admin notice as dismissed for the given user
 	 *
 	 * @since 2.2.0-2
 	 * @param string $message_id the message identifier
 	 * @param int $user_id optional user identifier, defaults to current user
 	 * @return boolean true if the message has been dismissed by the admin user
 	 */
-	public function dismiss_message( $message_id, $user_id = null ) {
+	public function dismiss_notice( $message_id, $user_id = null ) {
 
 		if ( is_null( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
 
-		$dismissed_messages = get_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', true );
+		$dismissed_notices = $this->get_dismissed_notices( $user_id );
 
-		$dismissed_messages[ $message_id ] = true;
+		$dismissed_notices[ $message_id ] = true;
 
-		update_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', $dismissed_messages );
+		update_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', $dismissed_notices );
 
-		do_action( 'wc_' . $this->get_plugin()->get_id(). '_dismiss_message', $message_id, $user_id );
+		do_action( 'wc_' . $this->get_plugin()->get_id(). '_dismiss_notice', $message_id, $user_id );
 	}
 
 
 	/**
-	 * Returns true if the identified admin message has been dismissed for the
+	 * Marks the identified admin notice as not dismissed for the identified user
+	 *
+	 * @since 2.2.0-2
+	 * @param string $message_id the message identifier
+	 * @param int $user_id optional user identifier, defaults to current user
+	 */
+	public function undismiss_notice( $message_id, $user_id = null ) {
+
+		if ( is_null( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+
+		$dismissed_notices = $this->get_dismissed_notices( $user_id );
+
+		$dismissed_notices[ $message_id ] = false;
+
+		update_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', $dismissed_notices );
+	}
+
+
+	/**
+	 * Returns true if the identified admin notice has been dismissed for the
 	 * given user
 	 *
 	 * @since 2.2.0-2
@@ -270,15 +291,35 @@ class SV_WC_Admin_Notice_Handler {
 	 * @param int $user_id optional user identifier, defaults to current user
 	 * @return boolean true if the message has been dismissed by the admin user
 	 */
-	public function is_message_dismissed( $message_id, $user_id = null ) {
+	public function is_notice_dismissed( $message_id, $user_id = null ) {
+
+		$dismissed_notices = $this->get_dismissed_notices( $user_id );
+
+		return isset( $dismissed_notices[ $message_id ] ) && $dismissed_notices[ $message_id ];
+	}
+
+
+	/**
+	 * Returns the full set of dismissed notices for the user identified by
+	 * $user_id, for this plugin
+	 *
+	 * @since 2.2.0-2
+	 * @param int $user_id optional user identifier, defaults to current user
+	 * @return array of message id to dismissed status (true or false)
+	 */
+	public function get_dismissed_notices( $user_id = null ) {
 
 		if ( is_null( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
 
-		$dismissed_messages = get_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', true );
+		$dismissed_notices = get_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', true );
 
-		return isset( $dismissed_messages[ $message_id ] ) && $dismissed_messages[ $message_id ];
+		if ( empty( $dismissed_notices ) ) {
+			return array();
+		} else {
+			return $dismissed_notices;
+		}
 	}
 
 
@@ -286,13 +327,13 @@ class SV_WC_Admin_Notice_Handler {
 
 
 	/**
-	 * Dismiss the identified message
+	 * Dismiss the identified notice
 	 *
 	 * @since 2.2.0-2
 	 */
-	public function handle_dismiss_message() {
+	public function handle_dismiss_notice() {
 
-		$this->dismiss_message( $_REQUEST['messageid'] );
+		$this->dismiss_notice( $_REQUEST['messageid'] );
 
 	}
 

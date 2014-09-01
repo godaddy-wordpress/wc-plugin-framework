@@ -268,7 +268,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Returns true if on the admin gateway settings page for this gateway
+	 * Returns true if on the admin gateway settings page for this plugin.
+	 * Multi-gateway plugins will return true if on either settings page
 	 *
 	 * @since 2.0.0
 	 * @see SV_WC_Plugin::is_plugin_settings()
