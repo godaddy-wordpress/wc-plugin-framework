@@ -3,6 +3,7 @@
 XXXX.XX.XX - version 2.2.0-2
  * Tweak - Improved dismissible admin notices
  * Misc - WooCommerce 2.2 compatibility
+ * Misc - Backwards incompatible
 
 2014.08.26 - version 2.2.0
  * Feature - Added API base class and automatic request logging
