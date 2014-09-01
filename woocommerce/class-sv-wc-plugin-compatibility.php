@@ -86,6 +86,42 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	* Get all order statuses
+	*
+	* Introduced in WC 2.2
+	*
+	* @since 2.2.0-1
+	* @return array
+	*/
+	public static function wc_get_order_statuses() {
+
+		if ( self::is_wc_version_gte_2_2() ) {
+
+			return wc_get_order_statuses();
+
+		} else {
+
+			// get available order statuses
+			$order_status_terms = get_terms( 'shop_order_status', array( 'hide_empty' => false ) );
+
+			if ( is_wp_error( $order_status_terms ) ) {
+
+				$order_status_terms = array();
+			}
+
+			$order_statuses = array();
+
+			foreach ( $order_status_terms as $term ) {
+
+				$order_statuses[ $term->slug ] = $term->name;
+			}
+
+			return $order_statuses;
+		}
+	}
+
+
+	/**
 	 * Transparently backport the `post_status` WP Query arg used by WC 2.2
 	 * for order statuses to the `shop_order_status` taxonomy query arg used by
 	 * WC 2.1
