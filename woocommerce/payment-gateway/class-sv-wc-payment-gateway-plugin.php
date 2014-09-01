@@ -287,23 +287,21 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Checks if required PHP extensions are loaded and SSL is enabled. Adds an
-	 * admin notice if either check fails.  Also plugin settings can be checked
-	 * as well.
+	 * Convenience method to add delayed admin notices, which may depend upon
+	 * some setting being saved prior to determining whether to render
 	 *
-	 * @since 1.0.0
-	 * @see SV_WC_Plugin::render_admin_notices()
+	 * @since 2.2.0-2
+	 * @see SV_WC_Plugin::add_delayed_admin_notices()
 	 */
-	public function render_admin_notices() {
+	public function add_delayed_admin_notices() {
 
-		// any plugin notices
-		parent::render_admin_notices();
+		parent::add_delayed_admin_notices();
 
 		// notices for ssl requirement
-		$this->render_ssl_admin_notices();
+		$this->add_ssl_admin_notices();
 
 		// notices for currency issues
-		$this->render_currency_admin_notices();
+		$this->add_currency_admin_notices();
 	}
 
 
@@ -312,14 +310,14 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * notice if so.  Notice will not be rendered to the admin user once dismissed
 	 * unless on the plugin settings page, if any
 	 *
-	 * @since 2.0.0
-	 * @see SV_WC_Payment_Gateway_Plugin::render_admin_notices()
+	 * @since 2.2.0-2
+	 * @see SV_WC_Payment_Gateway_Plugin::add_admin_notices()
 	 */
-	protected function render_ssl_admin_notices() {
+	protected function add_ssl_admin_notices() {
 
 		// check settings:  gateway active and SSL enabled
 		// TODO: does this work when a plugin is first activated, before the settings page has been saved?
-		if ( $this->requires_ssl() && ( ! $this->is_message_dismissed( 'ssl-required' ) || $this->is_plugin_settings() ) ) {
+		if ( $this->requires_ssl() && $this->get_admin_notice_handler()->should_display_notice( 'ssl-required' ) ) {
 
 			foreach ( $this->get_gateway_ids() as $gateway_id ) {
 
@@ -334,7 +332,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 							$message = sprintf( _x( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", 'Requires SSL', $this->text_domain ), '<strong>' . $this->get_plugin_name() . '</strong>' );
 
-							$this->add_dismissible_notice( $message, 'ssl-required' );
+							$this->get_admin_notice_handler()->add_admin_notice( $message, 'ssl-required' );
 
 							// just show the message once for plugins with multiple gateway support
 							break;
@@ -352,10 +350,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * dismissible admin notice if so.  Notice will not be rendered to the admin
 	 * user once dismissed unless on the plugin settings page, if any
 	 *
-	 * @since 2.0.0
+	 * @since 2.2.0-2
 	 * @see SV_WC_Payment_Gateway_Plugin::render_admin_notices()
 	 */
-	protected function render_currency_admin_notices() {
+	protected function add_currency_admin_notices() {
 
 		// report any currency issues
 		if ( $this->get_accepted_currencies() ) {
@@ -384,25 +382,22 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				$accepted_currencies = $this->get_accepted_currencies();
 			}
 
-			if ( ! $this->is_message_dismissed( 'accepted-currency' . $suffix ) || $this->is_plugin_settings() ) {
+			$message = sprintf(
+				_n(
+					'%s accepts payment in %s only.  <a href="%s">Configure</a> WooCommerce to accept %s to enable this gateway for checkout.',
+					'%s accepts payment in one of %s only.  <a href="%s">Configure</a> WooCommerce to accept one of %s to enable this gateway for checkout.',
+					count( $accepted_currencies ),
+					'(Plugin) accepts payments in (currency/currencies) only.',
+					$this->text_domain
+				),
+				$name,
+				'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
+				$this->get_general_configuration_url(),
+				'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>'
+			);
 
-				$message = sprintf(
-					_n(
-						'%s accepts payment in %s only.  <a href="%s">Configure</a> WooCommerce to accept %s to enable this gateway for checkout.',
-						'%s accepts payment in one of %s only.  <a href="%s">Configure</a> WooCommerce to accept one of %s to enable this gateway for checkout.',
-						count( $accepted_currencies ),
-						'(Plugin) accepts payments in (currency/currencies) only.',
-						$this->text_domain
-					),
-					$name,
-					'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
-					$this->get_general_configuration_url(),
-					'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>'
-				);
+			$this->get_admin_notice_handler()->add_admin_notice( $message, 'accepted-currency' . $suffix );
 
-				$this->add_dismissible_notice( $message, 'accepted-currency' . $suffix );
-
-			}
 		}
 	}
 
@@ -818,7 +813,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns the admin configuration url for the gateway with class name
 	 * $gateway_class_name
 	 *
-	 * @since 2.2.0-1
+	 * @since 2.2.0-2
 	 * @param string $gateway_class_name the gateway class name
 	 * @return string admin configuration url for the gateway
 	 */
@@ -832,7 +827,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns true if the current page is the admin configuration page for the
 	 * gateway with class name $gateway_class_name
 	 *
-	 * @since 2.2.0-1
+	 * @since 2.2.0-2
 	 * @param string $gateway_class_name the gateway class name
 	 * @return boolean true if the current page is the admin configuration page for the gateway
 	 */

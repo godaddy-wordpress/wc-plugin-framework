@@ -347,7 +347,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * + product - item product or null if getting product from item failed
 		 * + item - raw item array
 		 *
-		 * @since 2.2.0-1
+		 * @since 2.2.0-2
 		 * @param \WC_Order $order
 		 * @return array
 		 */
@@ -405,7 +405,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * Temporary home for this function, until all payment gateways are brought into the frameworked fold
 		 *
-		 * @since 2.2.0-1
+		 * @since 2.2.0-2
 		 * @param string $gateway_class_name the gateway class name
 		 * @return string admin configuration url for the gateway
 		 */

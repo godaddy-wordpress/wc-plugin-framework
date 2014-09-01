@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-XXXX.XX.XX - version 2.2.0-1
+XXXX.XX.XX - version 2.2.0-2
+ * Tweak - Improved dismissible admin notices
  * Misc - WooCommerce 2.2 compatibility
 
 2014.08.26 - version 2.2.0

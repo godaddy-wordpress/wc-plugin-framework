@@ -46,7 +46,29 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  *
  * + `is_plugin_settings()` - if the plugin has an admin settings page you can return true when on it
  * + `get_settings_url()` - return the plugin admin settings URL, if any
- * + `render_admin_notices()` - override to perform custom admin plugin requirement checks (defaults to checking for php extension depenencies).  Use the is_message_dismissed() and add_dismissible_notice() methods
+ *
+ * ### Admin Notices
+ *
+ * Admin notices, can be displayed by calling the `add_admin_notice()`
+ * instance method.  Notices default to dismissible unless on the plugin
+ * settings page, in which case they are always displayed.
+ *
+ * Two methods are defined in this class for convenience when adding notices:
+ *
+ * + `add_admin_notices()` - Use this for notices that don't depend on settings.  A missing PHP extension is a good example
+ * + `add_delayed_admin_notices()` - Use this for notices that might depend on a setting first being saved.  A currency requirement for a payment gateway is a good example
+ *
+ * The notices functionality is implemented by the `SV_WC_Admin_Notice_Handler`
+ * class instance, which can be retrieved by calling `get_admin_notice_handler()`
+ * on this plugin.  Note that this method can easily be overridden by a concrete
+ * plugin implementation, in order to return a specific subclas of the admin
+ * notice handler.
+ *
+ * `SV_WC_Admin_Notice_Handler` includes some convenience methods:
+ *
+ * + `add_admin_notice()` - Conditionally add an admin notice for display
+ * + `should_display_notice()` - Returns true if message has not been dismissed, or currently on the plugin settings page
+ * + `is_message_dismissed()` - Returns true if message has been dismissed
  *
  * @version 2.2.0-1
  */
@@ -82,8 +104,8 @@ abstract class SV_WC_Plugin {
 	/** @var array string names of required PHP functions */
 	private $function_dependencies = array();
 
-	/** @var boolean whether a dismissible notice has been rendered */
-	private $dismissible_notice_rendered = false;
+	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
+	private $admin_notice_handler;
 
 
 	/**
@@ -125,9 +147,9 @@ abstract class SV_WC_Plugin {
 			// admin message handler
 			require_once( 'class-sv-wp-admin-message-handler.php' );
 
-			// render any admin notices
-			add_action( 'admin_notices', array( $this, 'render_admin_notices'               ), 10 );
-			add_action( 'admin_notices', array( $this, 'render_admin_dismissible_notice_js' ), 15 );
+			// render any admin notices, delayed notices, and
+			add_action( 'admin_notices', array( $this, 'add_admin_notices'            ), 10 );
+			add_action( 'admin_footer',  array( $this, 'add_delayed_admin_notices'    ), 10 );
 
 			// add a 'Configure' link to the plugin action links
 			add_filter( 'plugin_action_links_' . plugin_basename( $this->get_file() ), array( $this, 'plugin_action_links' ) );
@@ -135,9 +157,6 @@ abstract class SV_WC_Plugin {
 			// defer until WP/WC has fully loaded
 			add_action( 'wp_loaded', array( $this, 'do_install' ) );
 		}
-
-		// AJAX handler to dismiss any warning/error notices
-		add_action( 'wp_ajax_wc_plugin_framework_' . $this->get_id() . '_dismiss_message', array( $this, 'handle_dismiss_message' ) );
 
 		// automatically log HTTP requests from SV_WC_API_Base
 		$this->add_api_request_logging();
@@ -169,7 +188,11 @@ abstract class SV_WC_Plugin {
 	 * @since 2.0.0
 	 */
 	public function lib_includes() {
-		// stub method
+
+		if ( is_admin() ) {
+			// instantiate the admin notice handler
+			$this->get_admin_notice_handler();
+		}
 	}
 
 
@@ -188,6 +211,11 @@ abstract class SV_WC_Plugin {
 
 		// backwards compatibility for older WC versions
 		require_once( 'class-sv-wc-plugin-compatibility.php' );
+
+		if ( is_admin() ) {
+			// load admin notice handler
+			require_once( 'class-sv-wc-admin-notice-handler.php' );
+		}
 
 		// generic API base
 		require_once( 'api/class-sv-wc-api-exception.php' );
@@ -217,12 +245,23 @@ abstract class SV_WC_Plugin {
 	 * for any missing extensions.  Also plugin settings can be checked
 	 * as well.
 	 *
-	 * @since 2.0.0
+	 * @since 2.2.0-1
 	 */
-	public function render_admin_notices() {
+	public function add_admin_notices() {
 
 		// notices for any missing dependencies
-		$this->render_dependencies_admin_notices();
+		$this->add_dependencies_admin_notices();
+	}
+
+
+	/**
+	 * Convenience method to add delayed admin notices, which may depend upon
+	 * some setting being saved prior to determining whether to render
+	 *
+	 * @since 2.2.0-1
+	 */
+	public function add_delayed_admin_notices() {
+		// stub method
 	}
 
 
@@ -231,15 +270,14 @@ abstract class SV_WC_Plugin {
 	 * notice if so.  Notice will not be rendered to the admin user once dismissed
 	 * unless on the plugin settings page, if any
 	 *
-	 * @since 2.0.0
-	 * @see SV_WC_Plugin::render_admin_notices()
+	 * @since 2.2.0-1
 	 */
-	protected function render_dependencies_admin_notices() {
+	protected function add_dependencies_admin_notices() {
 
 		// report any missing extensions
 		$missing_extensions = $this->get_missing_dependencies();
 
-		if ( count( $missing_extensions ) > 0 && ( ! $this->is_message_dismissed( 'missing-extensions' ) || $this->is_plugin_settings() ) ) {
+		if ( count( $missing_extensions ) > 0 ) {
 
 			$message = sprintf(
 				_n(
@@ -252,14 +290,14 @@ abstract class SV_WC_Plugin {
 				'<strong>' . implode( ', ', $missing_extensions ) . '</strong>'
 			);
 
-			$this->add_dismissible_notice( $message, 'missing-extensions' );
+			$this->get_admin_notice_handler()->add_admin_notice( $message, 'missing-extensions' );
 
 		}
 
 		// report any missing functions
 		$missing_functions = $this->get_missing_function_dependencies();
 
-		if ( count( $missing_functions ) > 0 && ( ! $this->is_message_dismissed( 'missing-functions' ) || $this->is_plugin_settings() ) ) {
+		if ( count( $missing_functions ) > 0 ) {
 
 			$message = sprintf(
 				_n(
@@ -272,65 +310,9 @@ abstract class SV_WC_Plugin {
 				'<strong>' . implode( ', ', $missing_functions ) . '</strong>'
 			);
 
-			$this->add_dismissible_notice( $message, 'missing-functions' );
+			$this->get_admin_notice_handler()->add_admin_notice( $message, 'missing-functions' );
 
 		}
-	}
-
-
-	/**
-	 * Adds the given $message as a dismissible notice identified by $message_id
-	 *
-	 * @since 2.0.0
-	 */
-	public function add_dismissible_notice( $message, $message_id ) {
-
-		// dismiss link unless we're on the plugin settings page, in which case we'll always display the notice
-		$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-%s-message-dismiss" data-message-id="%s" style="float: right;">%s</a>', $this->get_id(), $message_id, __( 'Dismiss', $this->text_domain ) );
-
-		if ( $this->is_plugin_settings() ) {
-			$dismiss_link = '';
-		}
-
-		echo sprintf( '<div class="error"><p>%s %s</p></div>', $message, $dismiss_link );
-
-		$this->dismissible_notice_rendered = true;
-	}
-
-
-	/**
-	 * Render the javascript to handle the notice "dismiss" functionality
-	 *
-	 * @since 2.0.0
-	 */
-	public function render_admin_dismissible_notice_js() {
-
-		// if a notice was rendered, add the javascript code to handle the notice dismiss action
-		if ( ! $this->dismissible_notice_rendered ) {
-			return;
-		}
-
-		ob_start();
-		?>
-		// hide notice
-		$( 'a.js-wc-plugin-framework-<?php echo $this->get_id(); ?>-message-dismiss' ).click( function() {
-
-			$.get(
-				ajaxurl,
-				{
-					action: 'wc_plugin_framework_<?php echo $this->get_id(); ?>_dismiss_message',
-					messageid: $( this ).data( 'message-id' )
-				}
-			);
-
-			$( this ).closest( 'div.error' ).fadeOut();
-
-			return false;
-		} );
-		<?php
-		$javascript = ob_get_clean();
-
-		wc_enqueue_js( $javascript );
 	}
 
 
@@ -366,21 +348,6 @@ abstract class SV_WC_Plugin {
 
 		// add the links to the front of the actions list
 		return array_merge( $custom_actions, $actions );
-	}
-
-
-	/** AJAX methods ******************************************************/
-
-
-	/**
-	 * Dismiss the identified message
-	 *
-	 * @since 2.0.0
-	 */
-	public function handle_dismiss_message() {
-
-		$this->dismiss_message( $_REQUEST['messageid'] );
-
 	}
 
 
@@ -526,51 +493,6 @@ abstract class SV_WC_Plugin {
 	}
 
 
-	/**
-	 * Marks the identified admin message as dismissed for the given user
-	 *
-	 * @since 2.0.0
-	 * @param string $message_id the message identifier
-	 * @param int $user_id optional user identifier, defaults to current user
-	 * @return boolean true if the message has been dismissed by the admin user
-	 */
-	protected function dismiss_message( $message_id, $user_id = null ) {
-
-		if ( is_null( $user_id ) ) {
-			$user_id = get_current_user_id();
-		}
-
-		$dismissed_messages = get_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_id() . '_dismissed_messages', true );
-
-		$dismissed_messages[ $message_id ] = true;
-
-		update_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_id() . '_dismissed_messages', $dismissed_messages );
-
-		do_action( 'wc_' . $this->get_id(). '_dismiss_message', $message_id, $user_id );
-	}
-
-
-	/**
-	 * Returns true if the identified admin message has been dismissed for the
-	 * given user
-	 *
-	 * @since 2.0.0
-	 * @param string $message_id the message identifier
-	 * @param int $user_id optional user identifier, defaults to current user
-	 * @return boolean true if the message has been dismissed by the admin user
-	 */
-	protected function is_message_dismissed( $message_id, $user_id = null ) {
-
-		if ( is_null( $user_id ) ) {
-			$user_id = get_current_user_id();
-		}
-
-		$dismissed_messages = get_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_id() . '_dismissed_messages', true );
-
-		return isset( $dismissed_messages[ $message_id ] ) && $dismissed_messages[ $message_id ];
-	}
-
-
 	/** Getter methods ******************************************************/
 
 
@@ -616,6 +538,21 @@ abstract class SV_WC_Plugin {
 	 * @return string plugin name
 	 */
 	abstract public function get_plugin_name();
+
+
+	/**
+	 * Returns the admin notice handler instance
+	 *
+	 * @since 2.2.0-2
+	 */
+	public function get_admin_notice_handler() {
+
+		if ( ! is_null( $this->admin_notice_handler ) ) {
+			return $this->admin_notice_handler;
+		}
+
+		return $this->admin_notice_handler = new SV_WC_Admin_Notice_Handler( $this, $this->text_domain );
+	}
 
 
 	/**

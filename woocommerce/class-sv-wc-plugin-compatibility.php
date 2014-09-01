@@ -53,7 +53,7 @@ class SV_WC_Plugin_Compatibility {
 	 * If no param is passed, it will use the global post. Otherwise pass an
 	 * the order post ID or post object.
 	 *
-	 * @since 2.2.0-1
+	 * @since 2.2.0-2
 	 * @param bool|int|string|\WP_Post $the_order
 	 * @return bool|\WC_Order
 	 */
@@ -90,7 +90,7 @@ class SV_WC_Plugin_Compatibility {
 	 * for order statuses to the `shop_order_status` taxonomy query arg used by
 	 * WC 2.1
 	 *
-	 * @since 2.2.0-1
+	 * @since 2.2.0-2
 	 * @param array $args WP_Query args
 	 * @return array
 	 */
@@ -128,7 +128,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Get the user ID for an order
 	 *
-	 * @since 2.2.0-1
+	 * @since 2.2.0-2
 	 * @param \WC_Order $order
 	 * @return int
 	 */
@@ -148,7 +148,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Get the user for an order
 	 *
-	 * @since 2.2.0-1
+	 * @since 2.2.0-2
 	 * @param \WC_Order $order
 	 * @return bool|WP_User
 	 */
@@ -170,7 +170,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * get_product() is soft-deprecated in WC 2.2
 	 *
-	 * @since 2.2.0-1
+	 * @since 2.2.0-2
 	 * @param bool|int|string|\WP_Post $the_product
 	 * @param array $args
 	 * @return WC_Product
@@ -276,7 +276,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Get the full path to the log file for a given $handle
 	 *
-	 * @since 2.2.0-1
+	 * @since 2.2.0-2
 	 * @param string $handle log handle
 	 * @return string
 	 */
@@ -296,7 +296,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Helper method to get the version of the currently installed WooCommerce
 	 *
-	 * @since 2.2.0-1
+	 * @since 2.2.0-2
 	 * @return string woocommerce version number or null
 	 */
 	private static function get_wc_version() {
