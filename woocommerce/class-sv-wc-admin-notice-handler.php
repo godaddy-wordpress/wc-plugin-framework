@@ -81,12 +81,15 @@ class SV_WC_Admin_Notice_Handler {
 	 * @since 2.2.0-2
 	 * @param string $message the notice message to display
 	 * @param string $message_id the message id
-	 * @param array $params optional parameters array.  Defaults to array( 'dismissible' => true )
+	 * @param array $params optional parameters array.  Defaults to array( 'dismissible' => true, 'always_show_on_settings' => true )
 	 */
 	public function add_admin_notice( $message, $message_id, $params = array() ) {
 
 		if ( ! isset( $params['dismissible'] ) ) {
 			$params['dismissible'] = true;
+		}
+		if ( ! isset( $params['always_show_on_settings'] ) ) {
+			$params['always_show_on_settings'] = true;
 		}
 
 		if ( $this->should_display_notice( $message_id, $params ) ) {
@@ -105,13 +108,21 @@ class SV_WC_Admin_Notice_Handler {
 	 *
 	 * @since 2.2.0-2
 	 * @param string $message_id the message id
-	 * @param array $params optional parameters array.  Defaults to array( 'dismissible' => true )
+	 * @param array $params optional parameters array.  Defaults to array( 'dismissible' => true, 'always_show_on_settings' => true )
 	 */
 	public function should_display_notice( $message_id, $params = array() ) {
 
-		// default to dismissible
+		// default to dismissible, always on settings
 		if ( ! isset( $params['dismissible'] ) ) {
 			$params['dismissible'] = true;
+		}
+		if ( ! isset( $params['always_show_on_settings'] ) ) {
+			$params['always_show_on_settings'] = true;
+		}
+
+		// if the message is always shown on the settings page, and we're on the settings page
+		if ( $params['always_show_on_settings'] && $this->get_plugin()->is_plugin_settings() ) {
+			return true;
 		}
 
 		// non-dismissible, always display
@@ -119,8 +130,8 @@ class SV_WC_Admin_Notice_Handler {
 			return true;
 		}
 
-		// dismissible: display if message has not been dismissed, or on the plugin settings page
-		return ! $this->is_message_dismissed( $message_id ) || $this->get_plugin()->is_plugin_settings();
+		// dismissible: display if message has not been dismissed
+		return ! $this->is_message_dismissed( $message_id );
 	}
 
 
@@ -170,14 +181,14 @@ class SV_WC_Admin_Notice_Handler {
 	 * @since 2.2.0-2
 	 * @param string $message the notice message to display
 	 * @param string $message_id the message id
-	 * @param array $params optional parameters array.  Options: 'dismissible', 'is_visible'
+	 * @param array $params optional parameters array.  Options: 'dismissible', 'is_visible', 'always_show_on_settings'
 	 */
 	public function render_admin_notice( $message, $message_id, $params = array() ) {
 
 		$dismiss_link = '';
 
-		if ( isset( $params['dismissible'] ) &&  $params['dismissible'] && ! $this->get_plugin()->is_plugin_settings() ) {
-			// dismiss link unless we're on the plugin settings page, in which case we'll always display the notice
+		// dismissible link if the message is dismissible and it's not always shown on the settings page, or we're on the settings page
+		if ( isset( $params['dismissible'] ) && $params['dismissible'] && ( ! isset( $params['always_show_on_settings'] ) || ! $params['always_show_on_settings'] || ! $this->get_plugin()->is_plugin_settings() ) ) {
 			$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-message-dismiss" data-message-id="%s" style="float: right;">%s</a>', $message_id, __( 'Dismiss', $this->text_domain ) );
 		}
 
