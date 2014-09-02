@@ -1659,31 +1659,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
-	 * Perform standard luhn check.  Algorithm:
-	 *
-	 * 1. Double the value of every second digit beginning with the second-last right-hand digit.
-	 * 2. Add the individual digits comprising the products obtained in step 1 to each of the other digits in the original number.
-	 * 3. Subtract the total obtained in step 2 from the next higher number ending in 0.
-	 * 4. This number should be the same as the last digit (the check digit). If the total obtained in step 2 is a number ending in zero (30, 40 etc.), the check digit is 0.
-	 *
-	 * @since 1.0.0
-	 * @param string $account_number the credit card number to check
-	 * @return bool true if $account_number passes the check, false otherwise
-	 */
-	protected function luhn_check( $account_number ) {
-
-		for ( $sum = 0, $i = 0, $ix = strlen( $account_number ); $i < $ix - 1; $i++) {
-
-			$weight = substr( $account_number, $ix - ( $i + 2 ), 1 ) * ( 2 - ( $i % 2 ) );
-			$sum += $weight < 10 ? $weight : $weight - 9;
-
-		}
-
-		return substr( $account_number, $ix - 1 ) == ( ( 10 - $sum % 10 ) % 10 );
-	}
-
-
-	/**
 	 * Add API request logging for the gateway. The main plugin class typically handles this, but the payment
 	 * gateway plugin class no-ops the method so each gateway's requests can be logged individually (e.g. credit card &
 	 * eCheck) and make use of the payment gateway-specific add_debug_message() method

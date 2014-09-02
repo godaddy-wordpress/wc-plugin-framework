@@ -223,7 +223,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$is_valid = false;
 			}
 
-			if ( ! $this->luhn_check( $account_number ) ) {
+			if ( ! SV_WC_Helper::luhn_check( $account_number ) ) {
 				wc_add_notice( _x( 'Card number is invalid', 'Supports direct credit card', $this->text_domain ), 'error' );
 				$is_valid = false;
 			}

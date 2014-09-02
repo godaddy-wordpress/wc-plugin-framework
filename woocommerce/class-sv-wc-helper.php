@@ -433,6 +433,31 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		}
 
 
+		/**
+		 * Perform standard luhn check.  Algorithm:
+		 *
+		 * 1. Double the value of every second digit beginning with the second-last right-hand digit.
+		 * 2. Add the individual digits comprising the products obtained in step 1 to each of the other digits in the original number.
+		 * 3. Subtract the total obtained in step 2 from the next higher number ending in 0.
+		 * 4. This number should be the same as the last digit (the check digit). If the total obtained in step 2 is a number ending in zero (30, 40 etc.), the check digit is 0.
+		 *
+		 * @since 2.2.0-2
+		 * @param string $account_number the credit card number to check
+		 * @return bool true if $account_number passes the check, false otherwise
+		 */
+		public static function luhn_check( $account_number ) {
+
+			for ( $sum = 0, $i = 0, $ix = strlen( $account_number ); $i < $ix - 1; $i++) {
+
+				$weight = substr( $account_number, $ix - ( $i + 2 ), 1 ) * ( 2 - ( $i % 2 ) );
+				$sum += $weight < 10 ? $weight : $weight - 9;
+
+			}
+
+			return substr( $account_number, $ix - 1 ) == ( ( 10 - $sum % 10 ) % 10 );
+		}
+
+
 	}
 
 endif; // Class exists check
