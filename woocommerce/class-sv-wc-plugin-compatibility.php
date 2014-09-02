@@ -145,7 +145,7 @@ class SV_WC_Plugin_Compatibility {
 	 * @since 2.2.0-2
 	 * @return bool
 	 */
-	public static function has_order_status( $order, $status ) {
+	public static function order_has_status( $order, $status ) {
 
 		if ( self::is_wc_version_gte_2_2() ) {
 
