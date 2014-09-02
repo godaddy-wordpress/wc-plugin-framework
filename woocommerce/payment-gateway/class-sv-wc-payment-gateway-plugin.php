@@ -1010,7 +1010,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			return $this->subscriptions_active;
 		}
 
-		return $this->subscriptions_active = $this->is_plugin_active( 'woocommerce-subscriptions/woocommerce-subscriptions.php' );
+		return $this->subscriptions_active = $this->is_plugin_active( 'woocommerce-subscriptions.php' );
 	}
 
 
@@ -1026,7 +1026,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			return $this->pre_orders_active;
 		}
 
-		return $this->pre_orders_active = $this->is_plugin_active( 'woocommerce-pre-orders/woocommerce-pre-orders.php' );
+		return $this->pre_orders_active = $this->is_plugin_active( 'woocommerce-pre-orders.php' );
 	}
 }
 

@@ -781,11 +781,6 @@ abstract class SV_WC_Plugin {
 	 */
 	public function is_plugin_active( $plugin_name ) {
 
-		// handle full plugin names (plugin-dir/plugin-filename.php)
-		if ( SV_WC_Helper::str_exists( $plugin_name, '/' ) ) {
-			list( , $plugin_name ) = explode( '/', $plugin_name );
-		}
-
 		$active_plugins = (array) get_option( 'active_plugins', array() );
 
 		if ( is_multisite() ) {
