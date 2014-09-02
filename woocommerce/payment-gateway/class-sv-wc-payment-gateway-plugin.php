@@ -317,7 +317,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	protected function add_ssl_admin_notices() {
 
 		// check settings:  gateway active and SSL enabled
-		// TODO: does this work when a plugin is first activated, before the settings page has been saved?
 		if ( $this->requires_ssl() && $this->get_admin_notice_handler()->should_display_notice( 'ssl-required' ) ) {
 
 			foreach ( $this->get_gateway_ids() as $gateway_id ) {

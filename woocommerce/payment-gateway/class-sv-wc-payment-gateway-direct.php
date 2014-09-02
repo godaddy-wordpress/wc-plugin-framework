@@ -635,7 +635,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// success! update order record
 		if ( $response->transaction_approved() ) {
 
-			// TODO: consider adding a get_order() method to the API response interface, and using the order object returned from there.  This would allow us one last chance to modify the order object, ie for hosted tokenized transactions in Moneris
 			$last_four = substr( $order->payment->account_number, -4 );
 
 			// credit card order note

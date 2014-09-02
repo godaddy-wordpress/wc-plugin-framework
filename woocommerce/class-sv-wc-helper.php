@@ -458,6 +458,26 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		}
 
 
+		/**
+		 * Returns the home url for the server, forcing to https protocol if $ssl
+		 * is true
+		 *
+		 * @since 2.2.0-2
+		 * @param boolean $ssl true to use https protocol, false otherwise
+		 * @return string the URL for the server
+		 */
+		public static function get_home_url( $ssl = false ) {
+			$url = home_url( '/' );
+
+			// make ssl?
+			if ( $ssl ) {
+				$url = str_replace( 'http:', 'https:', $url );
+			}
+
+			return $url;
+		}
+
+
 	}
 
 endif; // Class exists check
