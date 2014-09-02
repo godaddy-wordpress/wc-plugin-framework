@@ -687,7 +687,34 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			if ( $this->supports_tokenization() && 0 != SV_WC_Plugin_Compatibility::get_order_user_id( $order ) && $this->should_tokenize_payment_method() &&
 				( $order->payment_total > 0 && ( $this->tokenize_with_sale() || $this->tokenize_after_sale() ) ) ) {
-				$order = $this->create_payment_token( $order, $response );
+
+				try {
+					$order = $this->create_payment_token( $order, $response );
+				} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+
+					// handle the case of a "tokenize-after-sale" request failing by marking the order as on-hold with an explanatory note
+					if ( ! $response->transaction_held() && ! ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
+
+						// transaction has already been successful, but we've encountered an issue with the post-tokenization, add an order note to that effect and continue on
+						$message = sprintf(
+							__( 'Tokenization Request Failed: %s', $this->text_domain ),
+							$e->getMessage()
+						);
+
+						$this->mark_order_as_held( $order, $message, $response );
+
+					} else {
+
+						// transaction has already been successful, but we've encountered an issue with the post-tokenization, add an order note to that effect and continue on
+						$message = sprintf(
+							__( '%s Tokenization Request Failed: %s', $this->text_domain ),
+							$this->get_method_title(),
+							$e->getMessage()
+						);
+
+						$order->add_order_note( $message );
+					}
+				}
 			}
 
 			// add the standard transaction data
@@ -1688,7 +1715,18 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$this->add_transaction_data( $order, $response );
 
 		} else {
-			throw new SV_WC_Payment_Gateway_Exception( sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
+
+			if ( $response->get_status_code() && $response->get_status_message() ) {
+				$message = sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() );
+			} elseif ( $response->get_status_code() ) {
+				$message = sprintf( 'Code: %s', $response->get_status_code() );
+			} elseif ( $response->get_status_message() ) {
+				$message = sprintf( '%s', $response->get_status_message() );
+			} else {
+				$message = 'Unknown Error';
+			}
+
+			throw new SV_WC_Payment_Gateway_Exception( $message );
 		}
 
 		return $order;

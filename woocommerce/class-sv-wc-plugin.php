@@ -49,7 +49,7 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  *
  * ### Admin Notices
  *
- * Admin notices, can be displayed by calling the `add_admin_notice()`
+ * Admin notices, can be displayed by calling the `SV_WC_Admin_Notice_Handler::add_admin_notice()`
  * instance method.  Notices default to dismissible unless on the plugin
  * settings page, in which case they are always displayed.
  *
@@ -66,9 +66,23 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  *
  * `SV_WC_Admin_Notice_Handler` includes some convenience methods:
  *
- * + `add_admin_notice()` - Conditionally add an admin notice for display
+ * + `add_admin_notice()` - Conditionally add an admin notice for display.
  * + `should_display_notice()` - Returns true if message has not been dismissed, or currently on the plugin settings page
  * + `is_message_dismissed()` - Returns true if message has been dismissed
+ *
+ * Use the optional parameters for the `add_admin_notice()` call to more finely
+ * control the behavior of the notice.  The default behavior is to display the
+ * notice everywhere with a "dismiss" link, except for the plugin settings page
+ * (if any) where the notice is always displayed, with no "dismiss".
+ *
+ * To add a notice that can be dismissed from the plugin settings, use:
+ * `always_show_on_settings => false`
+ *
+ * To add a notice that can not be dismissed from anywhere, use:
+ * `dismissible` => false
+ *
+ * Use the standard WordPress/WooCommerce `is_*` methods when adding the notice
+ * to control which pages it does (or does not) display on.
  *
  * @version 2.2.0-1
  */
