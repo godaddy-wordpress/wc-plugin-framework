@@ -122,6 +122,50 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Get the order status
+	 *
+	 * Order statuses changed from a taxonomy in 2.1 to using `post_status`
+	 * in 2.2
+	 *
+	 * @since 2.2.0-2
+	 * @param WC_Order $order
+	 * @return mixed|string
+	 */
+	public static function get_order_status( WC_Order $order ) {
+
+		return self::is_wc_version_gte_2_2() ? $order->get_status() : $order->status;
+	}
+
+
+	/**
+	 * Check if the order has the given status
+	 *
+	 * @param WC_Order $order
+	 * @param string|array $status single status or array of statuses to check
+	 * @since 2.2.0-2
+	 * @return bool
+	 */
+	public static function has_order_status( $order, $status ) {
+
+		if ( self::is_wc_version_gte_2_2() ) {
+
+			return $order->has_status( $status );
+
+		} else {
+
+			if ( is_array( $status ) ) {
+
+				return in_array( $order->status, $status );
+
+			} else {
+
+				return $status === $order->status;
+			}
+		}
+	}
+
+
+	/**
 	 * Transparently backport the `post_status` WP Query arg used by WC 2.2
 	 * for order statuses to the `shop_order_status` taxonomy query arg used by
 	 * WC 2.1
