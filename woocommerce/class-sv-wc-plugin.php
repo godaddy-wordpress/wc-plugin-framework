@@ -61,7 +61,7 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * The notices functionality is implemented by the `SV_WC_Admin_Notice_Handler`
  * class instance, which can be retrieved by calling `get_admin_notice_handler()`
  * on this plugin.  Note that this method can easily be overridden by a concrete
- * plugin implementation, in order to return a specific subclas of the admin
+ * plugin implementation, in order to return a specific subclass of the admin
  * notice handler.
  *
  * `SV_WC_Admin_Notice_Handler` includes some convenience methods:
