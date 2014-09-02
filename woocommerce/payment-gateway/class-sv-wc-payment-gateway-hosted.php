@@ -32,7 +32,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Hosted' ) ) :
  * Implement the following methods:
  *
  * + `get_hosted_pay_page_url()` - Return the hosted pay page url
- * + `get_hosted_pay_page_params()` - Return any hosted pay page parameters
+ * + `get_hosted_pay_page_params()` - Return any hosted pay page parameters (optional)
  * + `get_transaction_response()` - Return the transaction response object on redirect-back/IPN
  *
  * @since 1.0.0
@@ -286,12 +286,10 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 2.1.0
 	 * @see SV_WC_Payment_Gateway_Hosted::get_hosted_pay_page_params()
-	 * @param WC_Order $order the order object
+	 * @param WC_Order $order optional order object, defaults to null
 	 * @return string hosted pay page url, or false if it could not be determined
 	 */
-	public function get_hosted_pay_page_url( $order ) {
-		// TODO: make me abstract with the next breaking compatiblity framework update, also make $order optional
-	}
+	abstract public function get_hosted_pay_page_url( $order = null );
 
 
 	/**
@@ -651,9 +649,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @param array $request_response_data the current request response data
 	 * @return SV_WC_Payment_Gateway_API_Payment_Notification_Response the response object
 	 */
-	protected function get_transaction_response( $request_response_data ) {
-		// TODO: make me abstract with the next breaking compatiblity framework update
-	}
+	abstract protected function get_transaction_response( $request_response_data );
 
 
 	/** Helper methods ******************************************************/

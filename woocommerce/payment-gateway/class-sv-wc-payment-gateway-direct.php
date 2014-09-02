@@ -1137,7 +1137,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$response = $this->get_api()->check_debit( $order );
 			}
 
-			// check for success  TODO: handle transaction held
+			// check for success
 			if ( $response->transaction_approved() ) {
 
 				// order note based on gateway type
