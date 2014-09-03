@@ -163,7 +163,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				add_action( 'woocommerce_order_action_wc_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
 
 				// bulk capture charge order action
-				add_action( 'admin_footer-edit.php', array( $this, 'add_capture_charge_bulk_order_action' ) );
+				add_action( 'admin_footer-edit.php', array( $this, 'maybe_add_capture_charge_bulk_order_action' ) );
 				add_action( 'load-edit.php',         array( $this, 'process_capture_charge_bulk_order_action' ) );
 			}
 		}
@@ -634,12 +634,28 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Adds 'Capture charge' to the Orders screen bulk action select
 	 *
-	 * @since 2.1.0
+	 * @since 2.2.0-2
 	 */
-	public function add_capture_charge_bulk_order_action() {
+	public function maybe_add_capture_charge_bulk_order_action() {
 		global $post_type, $post_status;
 
 		if ( $post_type == 'shop_order' && $post_status != 'trash' ) {
+
+			// ensure at least one gateway supports capturing charge
+			$can_capture_charge = false;
+			foreach ( $this->get_gateways() as $gateway ) {
+
+				// ensure that it supports captures
+				if ( $this->can_capture_charge( $gateway ) ) {
+					$can_capture_charge = true;
+					break;
+				}
+			}
+
+			if ( ! $can_capture_charge ) {
+				return;
+			}
+
 			?>
 				<script type="text/javascript">
 					jQuery( document ).ready( function ( $ ) {
