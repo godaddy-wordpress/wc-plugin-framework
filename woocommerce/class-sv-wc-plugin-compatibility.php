@@ -191,13 +191,15 @@ class SV_WC_Plugin_Compatibility {
 				$args['post_status'] = 'publish';
 
 				$tax_query = array(
-					'taxonomy' => 'shop_order_status',
-					'field'    => 'slug',
-					'terms'    => $order_statuses,
-					'operator' => 'IN',
+					array(
+						'taxonomy' => 'shop_order_status',
+						'field'    => 'slug',
+						'terms'    => $order_statuses,
+						'operator' => 'IN',
+					)
 				);
 
-				$args['tax_query'] = array_merge( isset( $args['tax_query'] ) ? $args['tax_query'] : array(), $tax_query );
+				$args['tax_query'] = array_merge( ( isset( $args['tax_query'] ) ? $args['tax_query'] : array() ), $tax_query );
 			}
 		}
 
