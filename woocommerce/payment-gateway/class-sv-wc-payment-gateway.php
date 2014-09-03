@@ -1529,9 +1529,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		assert( $this->supports_card_types() );
 
 		$form_fields['card_types'] = array(
-			'title'    => _x( 'Accepted Card Logos', 'Supports card types', $this->text_domain ),
+			'title'    => _x( 'Accepted Card Types', 'Supports card types', $this->text_domain ),
 			'type'     => 'multiselect',
-			'desc_tip' => _x( 'Select which card types you accept to display the logos for on your checkout page.', 'Supports card types', $this->text_domain ),
+			'desc_tip' => _x( 'Select which card types you accept.', 'Supports card types', $this->text_domain ),
 			'default'  => array_keys( $this->get_available_card_types() ),
 			'class'    => 'chosen_select',
 			'css'      => 'width: 350px;',
