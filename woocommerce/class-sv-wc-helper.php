@@ -330,6 +330,25 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		}
 
 
+		/** Number helper functions *******************************************/
+
+
+		/**
+		 * Format a number with 2 decimal points, using a period for the decimal
+		 * separator and no thousands separator.
+		 *
+		 * Commonly used for payment gateways which require amounts in this format.
+		 *
+		 * @since 2.2.0-2
+		 * @param float $number
+		 * @return string
+		 */
+		public static function number_format( $number ) {
+
+			return number_format( $number, 2, '.', '' );
+		}
+
+
 		/** WooCommerce helper functions **************************************/
 
 
