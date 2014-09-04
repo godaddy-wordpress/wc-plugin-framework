@@ -217,6 +217,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// helpers
 		require_once( 'api/class-sv-wc-payment-gateway-api-response-message-helper.php' );
+		require_once( 'class-sv-wc-payment-gateway-helper.php' );
 
 		if ( is_admin() ) {
 			// load admin notice handler
@@ -742,7 +743,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			$gateway_id = key( $this->gateways );
 		}
 
-		return $this->get_payment_gateway_configuration_url( $this->get_gateway_class_name( $gateway_id ) );
+		return SV_WC_Payment_Gateway_Helper::get_payment_gateway_configuration_url( $this->get_gateway_class_name( $gateway_id ) );
 	}
 
 

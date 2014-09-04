@@ -391,7 +391,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 				// if an order could not be determined, there's not a whole lot
 				// we can do besides redirecting back to the home page
-				return wp_redirect( SV_WC_Helper::get_home_url() );
+				return wp_redirect( get_home_url( null, '' ) );
 			}
 
 			// check for duplicate order processing
@@ -431,7 +431,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			// otherwise, if no order is available, log the issue and redirect to home
 			$this->add_debug_message( 'Redirect-back error: ' . $e->getMessage(), 'error' );
-			return wp_redirect( SV_WC_Helper::get_home_url() );
+			return wp_redirect( get_home_url( null, '' ) );
 		}
 	}
 
