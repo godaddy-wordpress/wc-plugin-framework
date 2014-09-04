@@ -27,11 +27,14 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 if ( ! class_exists( 'SV_WC_Payment_Gateway_Admin_User_Edit_Handler' ) ) :
 
 /**
- * SkyVerge Admin Notice Handler Class
+ * SkyVerge Admin User Edit Handler Class
  *
- * The purpose of this class is to provide a facility for displaying
- * conditional (often dismissible) admin notices during a single page
- * request
+ * The purpose of this class is to add support for editing the following fields
+ * from the Admin User Edit screen:
+ *
+ * * Customer ID (if supported by gateway)
+ * * Payment tokens (if supported by gateway, and gateway does not support a
+ *   payment token retrieval API query; meaning they are locally stored)
  *
  * TODO: handle echeck tokens better
  *
