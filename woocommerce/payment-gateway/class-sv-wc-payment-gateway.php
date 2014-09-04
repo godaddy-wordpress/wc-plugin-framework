@@ -313,14 +313,30 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->text_domain = $text_domain;
 
 		// optional parameters
-		if ( isset( $args['method_title'] ) )       $this->method_title                 = $args['method_title'];        // @see WC_Settings_API::$method_title
-		if ( isset( $args['method_description'] ) ) $this->method_description           = $args['method_description'];  // @see WC_Settings_API::$method_description
-		if ( isset( $args['supports'] ) )           $this->set_supports( $args['supports'] );
-		if ( isset( $args['card_types'] ) )         $this->available_card_types         = $args['card_types'];
-		if ( isset( $args['echeck_fields'] ) )      $this->supported_check_fields       = $args['echeck_fields'];
-		if ( isset( $args['environments'] ) )       $this->environments                 = array_merge( $this->get_environments(), $args['environments'] );
-		if ( isset( $args['countries'] ) )          $this->countries                    = $args['countries'];  // @see WC_Payment_Gateway::$countries
-		if ( isset( $args['shared_settings'] ) )    $this->shared_settings              = $args['shared_settings'];
+		if ( isset( $args['method_title'] ) ) {
+			$this->method_title = $args['method_title'];        // @see WC_Settings_API::$method_title
+		}
+		if ( isset( $args['method_description'] ) ) {
+			$this->method_description = $args['method_description'];  // @see WC_Settings_API::$method_description
+		}
+		if ( isset( $args['supports'] ) ) {
+			$this->set_supports( $args['supports'] );
+		}
+		if ( isset( $args['card_types'] ) ) {
+			$this->available_card_types = $args['card_types'];
+		}
+		if ( isset( $args['echeck_fields'] ) ) {
+			$this->supported_check_fields = $args['echeck_fields'];
+		}
+		if ( isset( $args['environments'] ) ) {
+			$this->environments = array_merge( $this->get_environments(), $args['environments'] );
+		}
+		if ( isset( $args['countries'] ) ) {
+			$this->countries = $args['countries'];  // @see WC_Payment_Gateway::$countries
+		}
+		if ( isset( $args['shared_settings'] ) ) {
+			$this->shared_settings = $args['shared_settings'];
+		}
 		if ( isset( $args['currencies'] ) ) {
 			$this->currencies = $args['currencies'];
 		} else {
@@ -436,7 +452,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function is_pay_page_gateway() {
 
-		if ( is_checkout_pay_page()) {
+		if ( is_checkout_pay_page() ) {
 
 			$order_id  = $this->get_checkout_pay_page_order_id();
 
@@ -873,6 +889,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @return boolean true if the gateway is properly configured
 	 */
 	protected function is_configured() {
+		// override this to check for gateway-specific required settings (user names, passwords, secret keys, etc)
 		return true;
 	}
 
@@ -1339,8 +1356,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function get_customer_id_user_meta_name( $environment_id = null ) {
 
-		if ( is_null( $environment_id ) )
+		if ( is_null( $environment_id ) ) {
 			$environment_id = $this->get_environment();
+		}
 
 		// no leading underscore since this is meant to be visible to the admin
 		return 'wc_' . $this->get_plugin()->get_id() . '_customer_id' . ( ! $this->is_production_environment( $environment_id ) ? '_' . $environment_id : '' );
@@ -1627,6 +1645,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Safely get and trim data from $_POST
 	 *
+	 * @deprecated use SV_WC_Helper::get_post()
 	 * @since 1.0.0
 	 * @param string $key array key to get from $_POST array
 	 * @return string value from $_POST or blank string if $_POST[ $key ] is not set

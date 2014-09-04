@@ -478,6 +478,40 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		}
 
 
+		/**
+		 * Safely get and trim data from $_POST
+		 *
+		 * @since 2.2.0-2
+		 * @param string $key array key to get from $_POST array
+		 * @return string value from $_POST or blank string if $_POST[ $key ] is not set
+		 */
+		public static function get_post( $key ) {
+
+			if ( isset( $_POST[ $key ] ) ) {
+				return trim( $_POST[ $key ] );
+			}
+
+			return '';
+		}
+
+
+		/**
+		 * Safely get and trim data from $_REQUEST
+		 *
+		 * @since 2.2.0-2
+		 * @param string $key array key to get from $_REQUEST array
+		 * @return string value from $_REQUEST or blank string if $_REQUEST[ $key ] is not set
+		 */
+		public static function get_request( $key ) {
+
+			if ( isset( $_REQUEST[ $key ] ) ) {
+				return trim( $_REQUEST[ $key ] );
+			}
+
+			return '';
+		}
+
+
 	}
 
 endif; // Class exists check

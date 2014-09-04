@@ -107,10 +107,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( $this->supports_tokenization() ) {
 
 			// tokenized transaction?
-			if ( $this->get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
+			if ( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 				// unknown token?
-				if ( ! $this->has_payment_token( get_current_user_id(), $this->get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) ) {
+				if ( ! $this->has_payment_token( get_current_user_id(), SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) ) {
 					wc_add_notice( _x( 'Payment error, please try another payment method or contact us to complete your transaction.', 'Supports tokenization', $this->text_domain ), 'error' );
 					$is_valid = false;
 				}
@@ -143,10 +143,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function validate_credit_card_fields( $is_valid ) {
 
-		$account_number   = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' );
-		$expiration_month = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
-		$expiration_year  = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
-		$csc              = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
+		$account_number   = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' );
+		$expiration_month = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
+		$expiration_year  = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
+		$csc              = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
 
 		$is_valid = $this->validate_credit_card_account_number( $account_number ) && $is_valid;
 
@@ -281,12 +281,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function validate_check_fields( $is_valid ) {
 
-		$account_number         = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' );
-		$routing_number         = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
+		$account_number         = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' );
+		$routing_number         = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
 
 		// optional fields (excluding account type for now)
-		$drivers_license_number = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
-		$check_number           = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-check-number' );
+		$drivers_license_number = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
+		$check_number           = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-check-number' );
 
 		// routing number exists?
 		if ( empty( $routing_number ) ) {
@@ -485,37 +485,37 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$order = parent::get_order( $order_id );
 
 		// payment info
-		if ( $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' ) && ! $this->get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
+		if ( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' ) && ! SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 			// common attributes
-			$order->payment->account_number = str_replace( array( ' ', '-' ), '', $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' ) );
+			$order->payment->account_number = str_replace( array( ' ', '-' ), '', SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' ) );
 
 			if ( $this->is_credit_card_gateway() ) {
 
 				// credit card specific attributes
-				$order->payment->card_type      = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-card-type' );
-				$order->payment->exp_month      = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
-				$order->payment->exp_year       = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
+				$order->payment->card_type      = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-card-type' );
+				$order->payment->exp_month      = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
+				$order->payment->exp_year       = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
 
 				if ( $this->csc_enabled() ) {
-					$order->payment->csc        = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
+					$order->payment->csc        = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
 			} elseif ( $this->is_echeck_gateway() ) {
 
 				// echeck specific attributes
-				$order->payment->routing_number         = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
-				$order->payment->account_type           = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-account-type' );
-				$order->payment->check_number           = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-check-number' );
-				$order->payment->drivers_license_number = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
-				$order->payment->drivers_license_state  = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-state' );
+				$order->payment->routing_number         = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
+				$order->payment->account_type           = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-account-type' );
+				$order->payment->check_number           = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-check-number' );
+				$order->payment->drivers_license_number = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
+				$order->payment->drivers_license_state  = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-state' );
 
 			}
 
-		} elseif ( $this->get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
+		} elseif ( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 			// paying with tokenized payment method (we've already verified that this token exists in the validate_fields method)
-			$token = $this->get_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $this->get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) );
+			$token = $this->get_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) );
 
 			$order->payment->token          = $token->get_token();
 			$order->payment->account_number = $token->get_last_four();
@@ -528,7 +528,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$order->payment->exp_year  = $token->get_exp_year();
 
 				if ( $this->csc_enabled() ) {
-					$order->payment->csc      = $this->get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
+					$order->payment->csc      = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
 			} elseif ( $this->is_echeck_gateway() ) {
@@ -554,13 +554,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * $order->capture_total - the capture total
 	 *
-<<<<<<< HEAD
-	 * @since 2.0
-	 * @param \WC_Order $order order being processed
-=======
 	 * @since 2.0.0
-	 * @param int $order_id order ID being processed
->>>>>>> master
+	 * @param WC_Order $order order being processed
 	 * @return WC_Order object with payment and transaction information attached
 	 */
 	protected function get_order_for_capture( $order ) {
@@ -1633,8 +1628,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Payment token data can include:
 	 *
 	 * + `default`   - boolean optional indicates this is the default payment token
-	 * + `type`      - string credit card type (visa, mc, amex, disc, diners, jcb) or echeck
+	 * + `type`      - string one of 'credit_card' or 'check'
 	 * + `last_four` - string last four digits of account number
+	 * + `card_type` - string credit card type (visa, mc, amex, disc, diners, jcb) or echeck
 	 * + `exp_month` - string optional expiration month (credit card only)
 	 * + `exp_year`  - string optional expiration year (credit card only)
 	 *
@@ -1643,7 +1639,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param array $data payment token data
 	 * @return SV_WC_Payment_Gateway_Payment_Token payment token
 	 */
-	protected function build_payment_token( $token, $data ) {
+	public function build_payment_token( $token, $data ) {
 
 		assert( $this->supports_tokenization() );
 
@@ -1659,12 +1655,18 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response optional create payment token response, or null if the tokenize payment method request should be made
+	 * @param string $environment_id optional environment id, defaults to plugin current environment
 	 * @return WC_Order the order object
 	 * @throws SV_WC_Payment_Gateway_Exception on network error or request error
 	 */
-	protected function create_payment_token( $order, $response = null ) {
+	protected function create_payment_token( $order, $response = null, $environment_id = null ) {
 
 		assert( $this->supports_tokenization() );
+
+		// default to current environment
+		if ( is_null( $environment_id ) ) {
+			$environment_id = $this->get_environment();
+		}
 
 		// perform the API request to tokenize the payment method if needed
 		if ( ! $response || $this->tokenize_after_sale() ) {
@@ -1689,7 +1691,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// set the token to the user account
 			if ( SV_WC_Plugin_Compatibility::get_order_user_id( $order ) ) {
-				$this->add_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $token );
+				$this->add_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $token, $environment_id );
 			}
 
 			// order note based on gateway type
@@ -1762,7 +1764,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		assert( $this->supports_tokenization() );
 
-		return $this->get_post( 'wc-' . $this->get_id_dasherized() . '-tokenize-payment-method' ) && ! $this->get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' );
+		return SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-tokenize-payment-method' ) && ! SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' );
 
 	}
 
@@ -1786,8 +1788,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		assert( $this->supports_tokenization() );
 
 		// default to current environment
-		if ( is_null( $environment_id ) )
+		if ( is_null( $environment_id ) ) {
 			$environment_id = $this->get_environment();
+		}
 
 		// leading underscore since this will never be displayed to an admin user in its raw form
 		return $this->get_order_meta_prefix() . 'payment_tokens' . ( ! $this->is_production_environment( $environment_id ) ? '_' . $environment_id : '' );
@@ -1801,27 +1804,35 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @param int $user_id WordPress user identifier, or 0 for guest
 	 * @param string $customer_id optional unique customer identifier, if not provided this will be looked up based on $user_id which cannot be 0 in that case
+	 * @param string $environment_id optional environment id, defaults to plugin current environment
 	 * @return array associative array of string token to SV_WC_Payment_Gateway_Payment_Token object
 	 */
-	public function get_payment_tokens( $user_id, $customer_id = null ) {
+	public function get_payment_tokens( $user_id, $customer_id = null, $environment_id = null ) {
 
 		assert( $this->supports_tokenization() );
 
+		// default to current environment
+		if ( is_null( $environment_id ) ) {
+			$environment_id = $this->get_environment();
+		}
+
 		if ( is_null( $customer_id ) ) {
-			$customer_id = $this->get_customer_id( $user_id );
+			$customer_id = $this->get_customer_id( $user_id, array( 'environment_id' => $environment_id ) );
 		}
 
 		// return tokens cached during a single request
-		if ( isset( $this->tokens[ $customer_id ] ) )
-			return $this->tokens[ $customer_id ];
+		if ( isset( $this->tokens[ $environment_id ][ $customer_id ] ) ) {
+			return $this->tokens[ $environment_id ][ $customer_id ];
+		}
 
-		$this->tokens[ $customer_id ] = array();
+		$this->tokens[ $environment_id ][ $customer_id ] = array();
 		$tokens = array();
 
 		// retrieve the datastore persisted tokens first, so we have a fallback, as well as the default token
 		if ( $user_id ) {
 
-			$_tokens = get_user_meta( $user_id, $this->get_payment_token_user_meta_name(), true );
+
+			$_tokens = get_user_meta( $user_id, $this->get_payment_token_user_meta_name( $environment_id ), true );
 
 			// from database format
 			if ( is_array( $_tokens ) ) {
@@ -1830,7 +1841,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				}
 			}
 
-			$this->tokens[ $customer_id ] = $tokens;
+			$this->tokens[ $environment_id ][ $customer_id ] = $tokens;
 		}
 
 		// if the payment gateway API supports retrieving tokens directly, do so as it's easier to stay synchronized
@@ -1840,33 +1851,34 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				// retrieve the payment method tokes from the remote API
 				$response = $this->get_api()->get_tokenized_payment_methods( $customer_id );
-				$this->tokens[ $customer_id ] = $response->get_payment_tokens();
+				$this->tokens[ $environment_id ][ $customer_id ] = $response->get_payment_tokens();
 
 				// check for a default from the persisted set, if any
 				$default_token = null;
 				foreach ( $tokens as $default_token ) {
-					if ( $default_token->is_default() )
+					if ( $default_token->is_default() ) {
 						break;
+					}
 				}
 
 				// mark the corresponding token from the API as the default one
-				if ( $default_token && $default_token->is_default() && isset( $this->tokens[ $customer_id ][ $default_token->get_token() ] ) ) {
-					$this->tokens[ $customer_id ][ $default_token->get_token() ]->set_default( true );
+				if ( $default_token && $default_token->is_default() && isset( $this->tokens[ $environment_id ][ $customer_id ][ $default_token->get_token() ] ) ) {
+					$this->tokens[ $environment_id ][ $customer_id ][ $default_token->get_token() ]->set_default( true );
 				}
 
 			} catch( SV_WC_Payment_Gateway_Exception $e ) {
 				// communication or other error, fallback to the locally stored tokens
-				$this->tokens[ $customer_id ] = $tokens;
+				$this->tokens[ $environment_id ][ $customer_id ] = $tokens;
 			}
 
 		}
 
 		// set the payment type image url, if any, for convenience
-		foreach ( $this->tokens[ $customer_id ] as $key => $token ) {
-			$this->tokens[ $customer_id ][ $key ]->set_image_url( $this->get_payment_method_image_url( $token->is_credit_card() ? $token->get_card_type() : 'echeck' ) );
+		foreach ( $this->tokens[ $environment_id ][ $customer_id ] as $key => $token ) {
+			$this->tokens[ $environment_id ][ $customer_id ][ $key ]->set_image_url( $this->get_payment_method_image_url( $token->is_credit_card() ? $token->get_card_type() : 'echeck' ) );
 		}
 
-		return $this->tokens[ $customer_id ];
+		return $this->tokens[ $environment_id ][ $customer_id ];
 	}
 
 
@@ -1876,15 +1888,21 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @param int $user_id wordpress user identifier
 	 * @param array $tokens array of tokens
+	 * @param string $environment_id optional environment id, defaults to plugin current environment
 	 * @return string updated user meta id
 	 */
-	protected function update_payment_tokens( $user_id, $tokens ) {
+	protected function update_payment_tokens( $user_id, $tokens, $environment_id = null ) {
+
+		// default to current environment
+		if ( is_null( $environment_id ) ) {
+			$environment_id = $this->get_environment();
+		}
 
 		// update the local cache
-		$this->tokens[ $this->get_customer_id( $user_id ) ] = $tokens;
+		$this->tokens[ $environment_id ][ $this->get_customer_id( $user_id, array( 'environment_id' => $environment_id ) ) ] = $tokens;
 
 		// persist the updated tokens to the user meta
-		return update_user_meta( $user_id, $this->get_payment_token_user_meta_name(), $this->payment_tokens_to_database_format( $tokens ) );
+		return update_user_meta( $user_id, $this->get_payment_token_user_meta_name( $environment_id ), $this->payment_tokens_to_database_format( $tokens ) );
 	}
 
 
@@ -1896,13 +1914,19 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param int $user_id WordPress user identifier, or 0 for guest
 	 * @param string $token payment token
 	 * @param string $customer_id optional unique customer identifier, if not provided this will be looked up based on $user_id which cannot be 0
+	 * @param string $environment_id optional environment id, defaults to plugin current environment
 	 * @return SV_WC_Payment_Gateway_Payment_Token payment token object or null
 	 */
-	public function get_payment_token( $user_id, $token, $customer_id = null ) {
+	public function get_payment_token( $user_id, $token, $customer_id = null, $environment_id = null ) {
 
 		assert( $this->supports_tokenization() );
 
-		$tokens = $this->get_payment_tokens( $user_id, $customer_id );
+		// default to current environment
+		if ( is_null( $environment_id ) ) {
+			$environment_id = $this->get_environment();
+		}
+
+		$tokens = $this->get_payment_tokens( $user_id, $customer_id, $environment_id );
 
 		if ( isset( $tokens[ $token ] ) ) return $tokens[ $token ];
 
@@ -1917,11 +1941,17 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param int $user_id WordPress user identifier, or 0 for guest
 	 * @param string|SV_WC_Payment_Gateway_Payment_Token $token payment token
 	 * @param string $customer_id optional unique customer identifier, if not provided this will be looked up based on $user_id which cannot be 0
+	 * @param string $environment_id optional environment id, defaults to plugin current environment
 	 * @return boolean true if the user has the payment token, false otherwise
 	 */
-	public function has_payment_token( $user_id, $token, $customer_id = null ) {
+	public function has_payment_token( $user_id, $token, $customer_id = null, $environment_id = null ) {
 
 		assert( $this->supports_tokenization() );
+
+		// default to current environment
+		if ( is_null( $environment_id ) ) {
+			$environment_id = $this->get_environment();
+		}
 
 		if ( is_object( $token ) ) {
 			$token = $token->get_token();
@@ -1937,7 +1967,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		// token exists?
-		return ! is_null( $this->get_payment_token( $user_id, $token, $customer_id ) );
+		return ! is_null( $this->get_payment_token( $user_id, $token, $customer_id, $environment_id ) );
 	}
 
 
@@ -1947,14 +1977,20 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token the token
+	 * @param string $environment_id optional environment id, defaults to plugin current environment
 	 * @return bool|int false if token not added, user meta ID if added
 	 */
-	public function add_payment_token( $user_id, $token ) {
+	public function add_payment_token( $user_id, $token, $environment_id = null ) {
 
 		assert( $this->supports_tokenization() );
 
+		// default to current environment
+		if ( is_null( $environment_id ) ) {
+			$environment_id = $this->get_environment();
+		}
+
 		// get existing tokens
-		$tokens = $this->get_payment_tokens( $user_id );
+		$tokens = $this->get_payment_tokens( $user_id, null, $environment_id );
 
 		// if this token is set as active, mark all others as false
 		if ( $token->is_default() ) {
@@ -1967,7 +2003,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$tokens[ $token->get_token() ] = $token;
 
 		// persist the updated tokens
-		return $this->update_payment_tokens( $user_id, $tokens );
+		return $this->update_payment_tokens( $user_id, $tokens, $environment_id );
 	}
 
 
@@ -1977,19 +2013,26 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token|string $token the payment token to delete
+	 * @param string $environment_id optional environment id, defaults to plugin current environment
 	 * @return bool|int false if not deleted, updated user meta ID if deleted
 	 */
-	public function remove_payment_token( $user_id, $token ) {
+	public function remove_payment_token( $user_id, $token, $environment_id = null ) {
 
 		assert( $this->supports_tokenization() );
 
+		// default to current environment
+		if ( is_null( $environment_id ) ) {
+			$environment_id = $this->get_environment();
+		}
+
 		// unknown token?
-		if ( ! $this->has_payment_token( $user_id, $token ) )
+		if ( ! $this->has_payment_token( $user_id, $token, $environment_id ) ) {
 			return false;
+		}
 
 		// get the payment token object as needed
 		if ( ! is_object( $token ) ) {
-			$token = $this->get_payment_token( $user_id, $token );
+			$token = $this->get_payment_token( $user_id, $token, $environment_id );
 		}
 
 		// for direct gateways that allow it, attempt to delete the token from the endpoint
@@ -1997,7 +2040,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			try {
 
-				$response = $this->get_api()->remove_tokenized_payment_method( $token->get_token(), $this->get_customer_id( $user_id ) );
+				$response = $this->get_api()->remove_tokenized_payment_method( $token->get_token(), $this->get_customer_id( $user_id, array( 'environment_id' => $environment_id ) ) );
 
 				if ( ! $response->transaction_approved() ) {
 					return false;
@@ -2009,7 +2052,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		// get existing tokens
-		$tokens = $this->get_payment_tokens( $user_id );
+		$tokens = $this->get_payment_tokens( $user_id, null, $environment_id );
 
 		unset( $tokens[ $token->get_token() ] );
 
@@ -2033,11 +2076,17 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token|string $token the token to make default
+	 * @param string $environment_id optional environment id, defaults to plugin current environment
 	 * @return string|bool false if not set, updated user meta ID if set
 	 */
-	public function set_default_payment_token( $user_id, $token ) {
+	public function set_default_payment_token( $user_id, $token, $environment_id = null ) {
 
 		assert( $this->supports_tokenization() );
+
+		// default to current environment
+		if ( is_null( $environment_id ) ) {
+			$environment_id = $this->get_environment();
+		}
 
 		// unknown token?
 		if ( ! $this->has_payment_token( $user_id, $token ) )
@@ -2045,24 +2094,25 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// get the payment token object as needed
 		if ( ! is_object( $token ) ) {
-			$token = $this->get_payment_token( $user_id, $token );
+			$token = $this->get_payment_token( $user_id, $token, $environment_id );
 		}
 
 		// get existing tokens
-		$tokens = $this->get_payment_tokens( $user_id );
+		$tokens = $this->get_payment_tokens( $user_id, null, $environment_id );
 
 		// mark $token as the only active
 		foreach ( $tokens as $key => $_token ) {
 
-			if ( $token->get_token() == $_token->get_token() )
+			if ( $token->get_token() == $_token->get_token() ) {
 				$tokens[ $key ]->set_default( true );
-			else
+			} else {
 				$tokens[ $key ]->set_default( false );
+			}
 
 		}
 
 		// persist the updated tokens
-		return $this->update_payment_tokens( $user_id, $tokens );
+		return $this->update_payment_tokens( $user_id, $tokens, $environment_id );
 
 	}
 

@@ -87,6 +87,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/** @var boolean true if this gateway requires SSL for processing transactions, false otherwise */
 	private $require_ssl;
 
+	/** @var SV_WC_Payment_Gateway_Admin_User_Edit_Handler adds admin user edit payment gateway functionality */
+	private $admin_user_edit_handler;
+
 
 	/**
 	 * Initialize the plugin
@@ -118,9 +121,15 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		}
 
-		if ( isset( $args['currencies'] ) )         $this->currencies   = $args['currencies'];
-		if ( isset( $args['supports'] ) )           $this->supports     = $args['supports'];
-		if ( isset( $args['require_ssl'] ) )        $this->require_ssl  = $args['require_ssl'];
+		if ( isset( $args['currencies'] ) ) {
+			$this->currencies   = $args['currencies'];
+		}
+		if ( isset( $args['supports'] ) ) {
+			$this->supports     = $args['supports'];
+		}
+		if ( isset( $args['require_ssl'] ) ) {
+			$this->require_ssl  = $args['require_ssl'];
+		}
 
 		if ( ! is_admin() && $this->supports( self::FEATURE_TOKENIZATION ) ) {
 
@@ -134,19 +143,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// Admin
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
-
-			// show/persist customer id field on edit user pages, if supported
-			if ( $this->supports( self::FEATURE_CUSTOMER_ID ) ) {
-
-				// show the customer ID
-				add_action( 'show_user_profile', array( $this, 'add_customer_id_meta_field' ) );
-				add_action( 'edit_user_profile', array( $this, 'add_customer_id_meta_field' ) );
-
-				// save the customer ID
-				add_action( 'personal_options_update',  array( $this, 'save_customer_id_meta_field' ) );
-				add_action( 'edit_user_profile_update', array( $this, 'save_customer_id_meta_field' ) );
-
-			}
 
 			// order admin link to transaction, if supported
 			if ( $this->supports( self::FEATURE_TRANSACTION_LINK ) && SV_WC_Plugin_Compatibility::is_wc_version_lt_2_2() ) {
@@ -221,6 +217,12 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// helpers
 		require_once( 'api/class-sv-wc-payment-gateway-api-response-message-helper.php' );
+
+		if ( is_admin() ) {
+			// load admin notice handler
+			require_once( 'admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php' );
+			$this->get_admin_user_edit_handler();
+		}
 	}
 
 
@@ -422,102 +424,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		}
 
-	}
-
-
-	/**
-	 * Display fields for the Customer ID meta for each and every environment,
-	 * on the view/edit user page, if this gateway uses Customer ID's
-	 * (ie SV_WC_Payment_Gateway::get_customer_id_user_meta_name() does not
-	 * return false).
-	 *
-	 * If only a single environment is defined, the field will be named
-	 * "Customer ID".  If more than one environment is defined the field will
-	 * be named like "Customer ID (Production)", etc to distinguish them.
-	 *
-	 * NOTE: the plugin id, rather than gateway id, is used here, because it's
-	 * assumed that in the case of a plugin having multiple gateways (ie credit
-	 * card and eCheck) the customer id will be the same between them.
-	 *
-	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::get_customer_id_user_meta_name()
-	 * @see SV_WC_Payment_Gateway_Plugin::save_customer_id_meta_field()
-	 * @param WP_User $user user object for the current edit page
-	 */
-	public function add_customer_id_meta_field( $user ) {
-
-		// bail if the current user is not allowed to manage woocommerce
-		if ( ! current_user_can( 'manage_woocommerce' ) )
-			return;
-
-		// if this plugin has multiple gateways available, just get the first one
-		$gateway      = $this->get_gateway();
-		$environments = $gateway->get_environments();
-
-		// customer id's not supported
-		if ( false === $gateway->get_customer_id_user_meta_name() )
-			return;
-
-		?>
-		<h3><?php printf( _x( '%s Customer Details', 'Supports customer details', $this->text_domain ), $this->get_plugin_name() ); ?></h3>
-		<table class="form-table">
-		<?php
-
-		foreach ( $environments as $environment_id => $environment_name ) :
-
-			?>
-				<tr>
-					<th><label for="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>"><?php echo count( $environments ) > 1 ? sprintf( _x( 'Customer ID (%s)', 'Supports customer details', $this->text_domain ), $environment_name ) : _x( 'Customer ID', 'Supports customer details', $this->text_domain ); ?></label></th>
-					<td>
-						<input type="text" name="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>" id="<?php printf( '_wc_%s_customer_id_%s', $this->get_id(), $environment_id ); ?>" value="<?php echo esc_attr( $gateway->get_customer_id( $user->ID, array( 'environment_id' => $environment_id, 'autocreate' => false ) ) ); ?>" class="regular-text" /><br/>
-						<span class="description"><?php echo count( $environments ) > 1 ? sprintf( _x( 'The customer ID for the user in the %s environment. Only edit this if necessary.', 'Supports customer details', $this->text_domain ), $environment_name ) : _x( 'The customer ID for the user in the environment. Only edit this if necessary.', 'Supports customer details', $this->text_domain ); ?></span>
-					</td>
-				</tr>
-			<?php
-
-		endforeach;
-
-		?>
-		</table>
-		<?php
-	}
-
-
-	/**
-	 * Persist the user gateway Customer ID for each defined environment, if
-	 * the gateway uses Customer ID's
-	 *
-	 * NOTE: the plugin id, rather than gateway id, is used here, because it's
-	 * assumed that in the case of a plugin having multiple gateways (ie credit
-	 * card and eCheck) the customer id will be the same between them.
-	 *
-	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway_Plugin::add_customer_id_meta_field()
-	 * @param int $user_id identifies the user to save the settings for
-	 */
-	public function save_customer_id_meta_field( $user_id ) {
-
-		// bail if the current user is not allowed to manage woocommerce
-		if ( ! current_user_can( 'manage_woocommerce' ) )
-			return;
-
-		// if this plugin has multiple gateways available, just get the first one
-		$gateway      = $this->get_gateway();
-		$environments = $gateway->get_environments();
-
-		// customer id's not supported
-		if ( false === $gateway->get_customer_id_user_meta_name() )
-			return;
-
-		// valid environments only
-		foreach ( array_keys( $environments ) as $environment_id ) {
-
-			// update (or blank out) customer id for the given environment
-			if ( isset( $_POST[ '_wc_' . $this->get_id() . '_customer_id_' . $environment_id ] ) ) {
-				$gateway->update_customer_id( $user_id, trim( $_POST[ '_wc_' . $this->get_id() . '_customer_id_' . $environment_id ] ), $environment_id );
-			}
-
-		}
 	}
 
 
@@ -762,6 +668,21 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/** Getter methods ******************************************************/
+
+
+	/**
+	 * Returns the admin notice handler instance
+	 *
+	 * @since 2.2.0-2
+	 */
+	public function get_admin_user_edit_handler() {
+
+		if ( ! is_null( $this->admin_user_edit_handler ) ) {
+			return $this->admin_user_edit_handler;
+		}
+
+		return $this->admin_user_edit_handler = new SV_WC_Payment_Gateway_Admin_User_Edit_Handler( $this, $this->text_domain );
+	}
 
 
 	/**
