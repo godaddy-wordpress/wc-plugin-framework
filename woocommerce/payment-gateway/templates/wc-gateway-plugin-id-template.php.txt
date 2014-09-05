@@ -94,7 +94,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID%%_payment_fields' ) ) {
 %%ENDIF SUPPORTS TOKENIZATION%%
 
 		// load the payment fields template file
-		woocommerce_get_template(
+		wc_get_template(
 			'checkout/%%GATEWAY ID DASHERIZED%%-payment-fields.php',
 			array(
 				'payment_method_defaults' => $payment_method_defaults,
@@ -132,7 +132,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID%%_show_my_payment_methods' ) )
 		$tokens = $gateway->get_payment_tokens( $user_id );
 
 		// load the My Account - My Cards template file
-		woocommerce_get_template(
+		wc_get_template(
 			'myaccount/%%GATEWAY ID DASHERIZED%%-my-cards.php',
 			array(
 				'gateway' => $gateway,
@@ -235,7 +235,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_payment_fields' ) ) {
 %%ENDIF SUPPORTS TOKENIZATION%%
 
 		// load the payment fields template file
-		woocommerce_get_template(
+		wc_get_template(
 			'checkout/%%GATEWAY ID DASHERIZED CHECKS%%-payment-fields.php',
 			array(
 				'payment_method_defaults' => $payment_method_defaults,
@@ -274,7 +274,7 @@ if ( ! function_exists( 'woocommerce_%%GATEWAY ID CHECKS%%_show_my_payment_metho
 		$tokens = $gateway->get_payment_tokens( $user_id );
 
 		// load the My Account - My Accounts template file
-		woocommerce_get_template(
+		wc_get_template(
 			'myaccount/%%GATEWAY ID DASHERIZED CHECKS%%-my-accounts.php',
 			array(
 				'gateway' => $gateway,

@@ -2164,7 +2164,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				wc_add_notice( _x( 'There was an error with your request, please try again.', 'Supports direct payment method tokenization', $this->text_domain ), 'error' );
 
-				wp_redirect( get_permalink( woocommerce_get_page_id( 'myaccount' ) ) );
+				wp_redirect( get_permalink( wc_get_page_id( 'myaccount' ) ) );
 				exit;
 
 			}
@@ -2191,7 +2191,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			}
 
 			// remove the query params
-			wp_redirect( get_permalink( woocommerce_get_page_id( 'myaccount' ) ) );
+			wp_redirect( get_permalink( wc_get_page_id( 'myaccount' ) ) );
 			exit;
 		}
 	}
