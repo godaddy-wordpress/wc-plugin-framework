@@ -1169,7 +1169,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order_note = sprintf( __( '%s Transaction Held for Review (%s)', $this->text_domain ), $this->get_method_title(), $message );
 
 		// mark order as held
-		if ( 'on-hold' != $order->status ) {
+		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) ) {
 			$order->update_status( 'on-hold', $order_note );
 		} else {
 			$order->add_order_note( $order_note );
@@ -1202,7 +1202,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order_note = sprintf( _x( '%s Payment Failed (%s)', 'Order Note: (Payment method) Payment failed (error)', $this->text_domain ), $this->get_method_title(), $error_message );
 
 		// Mark order as failed if not already set, otherwise, make sure we add the order note so we can detect when someone fails to check out multiple times
-		if ( 'failed' != $order->status ) {
+		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'failed' ) ) {
 			$order->update_status( 'failed', $order_note );
 		} else {
 			$order->add_order_note( $order_note );
@@ -1235,7 +1235,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order_note = sprintf( _x( '%s Transaction Cancelled (%s)', 'Cancelled order note', $this->text_domain ), $this->get_method_title(), $message );
 
 		// Mark order as cancelled if not already set
-		if ( 'cancelled' != $order->status ) {
+		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'cancelled' ) ) {
 			$order->update_status( 'cancelled', $order_note );
 		} else {
 			$order->add_order_note( $order_note );

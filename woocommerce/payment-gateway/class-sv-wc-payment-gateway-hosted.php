@@ -340,9 +340,9 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			if ( $this->process_transaction_response( $order, $response ) ) {
 
-				if ( 'on-hold' == $order->status ) {
+				if ( SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) ) {
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
-				} elseif ( 'cancelled' != $order->status ) {
+				} elseif ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'cancelled' ) ) {
 					$order->payment_complete(); // mark order as having received payment
 				}
 			}
@@ -408,9 +408,9 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			if ( $this->process_transaction_response( $order, $response ) ) {
 
-				if ( 'on-hold' == $order->status ) {
+				if ( SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) ) {
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
-				} elseif ( 'cancelled' != $order->status ) {
+				} elseif ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'cancelled' ) ) {
 					$order->payment_complete(); // mark order as having received payment
 				}
 
