@@ -376,6 +376,27 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Gets a product meta field value, regardless of product type
+	 *
+	 * @since 2.0
+	 * @param WC_Product $product the product
+	 * @param string $field_name the field name
+	 * @return mixed meta value
+	 */
+	public static function get_product_meta( $product, $field_name ) {
+
+		// Should be able to drop this when we drop support for WC 2.1
+		// even in WC >= 2.0 product variations still use the product_custom_fields array apparently
+		if ( $product->variation_id && isset( $product->product_custom_fields[ '_' . $field_name ][0] ) && '' !== $product->product_custom_fields[ '_' . $field_name ][0] ) {
+			return $product->product_custom_fields[ '_' . $field_name ][0];
+		}
+
+		// use magic __get
+		return $product->$field_name;
+	}
+
+
+	/**
 	 * Helper method to get the version of the currently installed WooCommerce
 	 *
 	 * @since 2.2.0-2
