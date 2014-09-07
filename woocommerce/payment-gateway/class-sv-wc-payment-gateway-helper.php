@@ -32,7 +32,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Helper' ) ) :
  * The purpose of this class is to centralize common utility functions that
  * are commonly used in SkyVerge payment gateway plugins
  *
- * @since 2.2.0-2
+ * @since 3.0.0
  */
 class SV_WC_Payment_Gateway_Helper {
 
@@ -43,7 +43,7 @@ class SV_WC_Payment_Gateway_Helper {
 	 *
 	 * Temporary home for this function, until all payment gateways are brought into the frameworked fold
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param string $gateway_class_name the gateway class name
 	 * @return string admin configuration url for the gateway
 	 */
@@ -59,7 +59,7 @@ class SV_WC_Payment_Gateway_Helper {
 	 *
 	 * Temporary home for this function, until all payment gateways are brought into the frameworked fold
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param string $gateway_class_name the gateway class name
 	 * @return boolean true if the current page is the admin configuration page for the gateway
 	 */
@@ -79,7 +79,7 @@ class SV_WC_Payment_Gateway_Helper {
 	 * 3. Subtract the total obtained in step 2 from the next higher number ending in 0.
 	 * 4. This number should be the same as the last digit (the check digit). If the total obtained in step 2 is a number ending in zero (30, 40 etc.), the check digit is 0.
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param string $account_number the credit card number to check
 	 * @return bool true if $account_number passes the check, false otherwise
 	 */

@@ -294,7 +294,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Convenience method to add delayed admin notices, which may depend upon
 	 * some setting being saved prior to determining whether to render
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @see SV_WC_Plugin::add_delayed_admin_notices()
 	 */
 	public function add_delayed_admin_notices() {
@@ -314,7 +314,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * notice if so.  Notice will not be rendered to the admin user once dismissed
 	 * unless on the plugin settings page, if any
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @see SV_WC_Payment_Gateway_Plugin::add_admin_notices()
 	 */
 	protected function add_ssl_admin_notices() {
@@ -353,7 +353,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * dismissible admin notice if so.  Notice will not be rendered to the admin
 	 * user once dismissed unless on the plugin settings page, if any
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @see SV_WC_Payment_Gateway_Plugin::render_admin_notices()
 	 */
 	protected function add_currency_admin_notices() {
@@ -541,7 +541,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Adds 'Capture charge' to the Orders screen bulk action select
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 */
 	public function maybe_add_capture_charge_bulk_order_action() {
 		global $post_type, $post_status;
@@ -674,7 +674,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Returns the admin notice handler instance
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 */
 	public function get_admin_user_edit_handler() {
 
@@ -751,7 +751,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns the admin configuration url for the gateway with class name
 	 * $gateway_class_name
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param string $gateway_class_name the gateway class name
 	 * @return string admin configuration url for the gateway
 	 */
@@ -765,7 +765,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns true if the current page is the admin configuration page for the
 	 * gateway with class name $gateway_class_name
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param string $gateway_class_name the gateway class name
 	 * @return boolean true if the current page is the admin configuration page for the gateway
 	 */

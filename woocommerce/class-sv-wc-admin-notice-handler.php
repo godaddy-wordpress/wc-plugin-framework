@@ -33,7 +33,7 @@ if ( ! class_exists( 'SV_WC_Admin_Notice_Handler' ) ) :
  * conditional (often dismissible) admin notices during a single page
  * request
  *
- * @since 2.2.0-2
+ * @since 3.0.0
  */
 class SV_WC_Admin_Notice_Handler {
 
@@ -57,7 +57,7 @@ class SV_WC_Admin_Notice_Handler {
 	/**
 	 * Initialize and setup the Admin Notice Handler
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 */
 	public function __construct( $plugin, $text_domain ) {
 
@@ -78,7 +78,7 @@ class SV_WC_Admin_Notice_Handler {
 	 * Adds the given $message as a dismissible notice identified by $message_id,
 	 * unless the notice has been dismissed, or we're on the plugin settings page
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param string $message the notice message to display
 	 * @param string $message_id the message id
 	 * @param array $params optional parameters array.  Defaults to array( 'dismissible' => true, 'always_show_on_settings' => true )
@@ -106,7 +106,7 @@ class SV_WC_Admin_Notice_Handler {
 	 * Returns true if the identified notice hasn't been cleared, or we're on
 	 * the plugin settings page (where notices are always displayed)
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param string $message_id the message id
 	 * @param array $params optional parameters array.  Defaults to array( 'dismissible' => true, 'always_show_on_settings' => true )
 	 */
@@ -138,7 +138,7 @@ class SV_WC_Admin_Notice_Handler {
 	/**
 	 * Render any admin notices, as well as the admin notice placeholder
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param boolean $is_visible true if the notices should be immediately visible, false otherwise
 	 */
 	public function render_admin_notices( $is_visible = true ) {
@@ -168,7 +168,7 @@ class SV_WC_Admin_Notice_Handler {
 	/**
 	 * Render any delayed admin notices, which have not yet already been rendered
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 */
 	public function render_delayed_admin_notices() {
 		$this->render_admin_notices( false );
@@ -178,7 +178,7 @@ class SV_WC_Admin_Notice_Handler {
 	/**
 	 * Render a single admin notice
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param string $message the notice message to display
 	 * @param string $message_id the message id
 	 * @param array $params optional parameters array.  Options: 'dismissible', 'is_visible', 'always_show_on_settings'
@@ -199,7 +199,7 @@ class SV_WC_Admin_Notice_Handler {
 	/**
 	 * Render the javascript to handle the notice "dismiss" functionality
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 */
 	public function render_admin_notice_js() {
 
@@ -240,7 +240,7 @@ class SV_WC_Admin_Notice_Handler {
 	/**
 	 * Marks the identified admin notice as dismissed for the given user
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param string $message_id the message identifier
 	 * @param int $user_id optional user identifier, defaults to current user
 	 * @return boolean true if the message has been dismissed by the admin user
@@ -264,7 +264,7 @@ class SV_WC_Admin_Notice_Handler {
 	/**
 	 * Marks the identified admin notice as not dismissed for the identified user
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param string $message_id the message identifier
 	 * @param int $user_id optional user identifier, defaults to current user
 	 */
@@ -286,7 +286,7 @@ class SV_WC_Admin_Notice_Handler {
 	 * Returns true if the identified admin notice has been dismissed for the
 	 * given user
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param string $message_id the message identifier
 	 * @param int $user_id optional user identifier, defaults to current user
 	 * @return boolean true if the message has been dismissed by the admin user
@@ -303,7 +303,7 @@ class SV_WC_Admin_Notice_Handler {
 	 * Returns the full set of dismissed notices for the user identified by
 	 * $user_id, for this plugin
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param int $user_id optional user identifier, defaults to current user
 	 * @return array of message id to dismissed status (true or false)
 	 */
@@ -329,7 +329,7 @@ class SV_WC_Admin_Notice_Handler {
 	/**
 	 * Dismiss the identified notice
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 */
 	public function handle_dismiss_notice() {
 
@@ -344,7 +344,7 @@ class SV_WC_Admin_Notice_Handler {
 	/**
 	 * Get the plugin
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @return SV_WC_Plugin returns the plugin instance
 	 */
 	private function get_plugin() {

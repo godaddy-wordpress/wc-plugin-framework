@@ -339,7 +339,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * Commonly used for payment gateways which require amounts in this format.
 		 *
-		 * @since 2.2.0-2
+		 * @since 3.0.0
 		 * @param float $number
 		 * @return string
 		 */
@@ -366,7 +366,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * + product - item product or null if getting product from item failed
 		 * + item - raw item array
 		 *
-		 * @since 2.2.0-2
+		 * @since 3.0.0
 		 * @param \WC_Order $order
 		 * @return array
 		 */
@@ -421,7 +421,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		/**
 		 * Safely get and trim data from $_POST
 		 *
-		 * @since 2.2.0-2
+		 * @since 3.0.0
 		 * @param string $key array key to get from $_POST array
 		 * @return string value from $_POST or blank string if $_POST[ $key ] is not set
 		 */
@@ -438,7 +438,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		/**
 		 * Safely get and trim data from $_REQUEST
 		 *
-		 * @since 2.2.0-2
+		 * @since 3.0.0
 		 * @param string $key array key to get from $_REQUEST array
 		 * @return string value from $_REQUEST or blank string if $_REQUEST[ $key ] is not set
 		 */

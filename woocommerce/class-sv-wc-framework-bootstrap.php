@@ -291,7 +291,7 @@ class SV_WC_Framework_Bootstrap {
 	 * Returns the WooCommerce version number, backwards compatible to
 	 * WC 1.5
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @return null|string
 	 */
 	private function get_wc_version() {

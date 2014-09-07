@@ -38,7 +38,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Admin_User_Edit_Handler' ) ) :
  *
  * TODO: handle echeck tokens better
  *
- * @since 2.2.0-2
+ * @since 3.0.0
  */
 class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 
@@ -56,7 +56,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 	/**
 	 * Initialize and setup the Admin User Edit Handler
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 */
 	public function __construct( $plugin, $text_domain ) {
 
@@ -81,7 +81,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 	 * Renders any available customer profile fields on the Admin Edit User
 	 * screen
 	 *
-	 * @since 2.2.0-1
+	 * @since 3.0.0
 	 * @see SV_WC_Payment_Gateway_Admin_User_Edit_Handler::save_user_profile_fields()
 	 * @param WP_User $user user object for the current edit page
 	 */
@@ -134,7 +134,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 	 * Saves any editable customer profile fields from the Admin Edit user
 	 * screen
 	 *
-	 * @since 2.2.0-1
+	 * @since 3.0.0
 	 * @see SV_WC_Payment_Gateway_Admin_User_Edit_Handler::add_user_profile_fields()
 	 * @param int $user_id identifies the user to save the settings for
 	 */
@@ -176,7 +176,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 	 * to add their specific user profile fields.  These fields will be displayed
 	 * on the Admin User edit page, and should be echoed.
 	 *
-	 * @since 2.2.0-1
+	 * @since 3.0.0
 	 * @see SV_WC_Payment_Gateway_Admin_User_Edit_Handler::add_user_profile_fields()
 	 * @see SV_WC_Payment_Gateway_Admin_User_Edit_Handler::save_custom_user_profile_fields()
 	 * @param SV_WC_Payment_Gateway $gateway the gateway instance
@@ -191,7 +191,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 	 * Stub method that can be overridden by concrete gateway implementations
 	 * to save their specific user profile fields.
 	 *
-	 * @since 2.2.0-1
+	 * @since 3.0.0
 	 * @see SV_WC_Payment_Gateway_Admin_User_Edit_Handler::add_custom_user_profile_fields()
 	 * @see SV_WC_Payment_Gateway_Admin_User_Edit_Handler::save_user_profile_fields()
 	 * @param SV_WC_Payment_Gateway $gateway the gateway instance
@@ -216,7 +216,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 	 * assumed that in the case of a plugin having multiple gateways (ie credit
 	 * card and eCheck) the customer id will be the same between them.
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @see SV_WC_Payment_Gateway::get_customer_id_user_meta_name()
 	 * @see SV_WC_Payment_Gateway_Admin_User_Edit_Handler::save_user_profile_customer_id_fields()
 	 * @param SV_WC_Payment_Gateway $gateway the gateway instance
@@ -258,7 +258,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 	 * assumed that in the case of a plugin having multiple gateways (ie credit
 	 * card and eCheck) the customer id will be the same between them.
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @see SV_WC_Payment_Gateway_Admin_User_Edit_Handler::maybe_add_user_profile_customer_id_fields()
 	 * @param SV_WC_Payment_Gateway $gateway the gateway instance
 	 * @param int $user_id identifies the user to save the settings for
@@ -446,7 +446,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 	/**
 	 * Get the plugin
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @return SV_WC_Plugin returns the plugin instance
 	 */
 	private function get_plugin() {

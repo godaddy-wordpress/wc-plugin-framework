@@ -84,12 +84,12 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * Use the standard WordPress/WooCommerce `is_*` methods when adding the notice
  * to control which pages it does (or does not) display on.
  *
- * @version 2.2.0-1
+ * @version 3.0.0
  */
 abstract class SV_WC_Plugin {
 
 	/** Plugin Framework Version */
-	const VERSION = '2.2.0-1';
+	const VERSION = '3.0.0';
 
 	/** @var string plugin id */
 	private $id;
@@ -259,7 +259,7 @@ abstract class SV_WC_Plugin {
 	 * for any missing extensions.  Also plugin settings can be checked
 	 * as well.
 	 *
-	 * @since 2.2.0-1
+	 * @since 3.0.0
 	 */
 	public function add_admin_notices() {
 
@@ -272,7 +272,7 @@ abstract class SV_WC_Plugin {
 	 * Convenience method to add delayed admin notices, which may depend upon
 	 * some setting being saved prior to determining whether to render
 	 *
-	 * @since 2.2.0-1
+	 * @since 3.0.0
 	 */
 	public function add_delayed_admin_notices() {
 		// stub method
@@ -284,7 +284,7 @@ abstract class SV_WC_Plugin {
 	 * notice if so.  Notice will not be rendered to the admin user once dismissed
 	 * unless on the plugin settings page, if any
 	 *
-	 * @since 2.2.0-1
+	 * @since 3.0.0
 	 */
 	protected function add_dependencies_admin_notices() {
 
@@ -535,7 +535,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Returns the admin notice handler instance
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 */
 	public function get_admin_notice_handler() {
 
@@ -635,7 +635,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Returns true if the current page is the admin general configuration page
 	 *
-	 * @since 2.2.0-1
+	 * @since 3.0.0
 	 * @return boolean true if the current page is the admin general configuration page
 	 */
 	public function is_general_configuration_page() {
@@ -647,7 +647,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Returns the admin configuration url for the admin general configuration page
 	 *
-	 * @since 2.2.0-1
+	 * @since 3.0.0
 	 * @return string admin configuration url for the admin general configuration page
 	 */
 	public function get_general_configuration_url() {

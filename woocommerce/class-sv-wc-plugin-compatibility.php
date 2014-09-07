@@ -53,7 +53,7 @@ class SV_WC_Plugin_Compatibility {
 	 * If no param is passed, it will use the global post. Otherwise pass an
 	 * the order post ID or post object.
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param bool|int|string|\WP_Post $the_order
 	 * @return bool|\WC_Order
 	 */
@@ -90,7 +90,7 @@ class SV_WC_Plugin_Compatibility {
 	*
 	* Introduced in WC 2.2
 	*
-	* @since 2.2.0-1
+	* @since 3.0.0
 	* @return array
 	*/
 	public static function wc_get_order_statuses() {
@@ -127,7 +127,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Order statuses changed from a taxonomy in 2.1 to using `post_status`
 	 * in 2.2
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param WC_Order $order
 	 * @return mixed|string
 	 */
@@ -142,7 +142,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * @param WC_Order $order
 	 * @param string|array $status single status or array of statuses to check
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @return bool
 	 */
 	public static function order_has_status( $order, $status ) {
@@ -170,7 +170,7 @@ class SV_WC_Plugin_Compatibility {
 	 * for order statuses to the `shop_order_status` taxonomy query arg used by
 	 * WC 2.1
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param array $args WP_Query args
 	 * @return array
 	 */
@@ -210,7 +210,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Get the user ID for an order
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param \WC_Order $order
 	 * @return int
 	 */
@@ -230,7 +230,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Get the user for an order
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param \WC_Order $order
 	 * @return bool|WP_User
 	 */
@@ -252,7 +252,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * get_product() is soft-deprecated in WC 2.2
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param bool|int|string|\WP_Post $the_product
 	 * @param array $args
 	 * @return WC_Product
@@ -358,7 +358,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Get the full path to the log file for a given $handle
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @param string $handle log handle
 	 * @return string
 	 */
@@ -399,7 +399,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Helper method to get the version of the currently installed WooCommerce
 	 *
-	 * @since 2.2.0-2
+	 * @since 3.0.0
 	 * @return string woocommerce version number or null
 	 */
 	private static function get_wc_version() {
