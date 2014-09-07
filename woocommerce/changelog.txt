@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-XXXX.XX.XX - version 3.0.0
+2014.09.07 - version 3.0.0
  * Feature - Edit tokens from Admin Order Edit screen
  * Tweak - Improved dismissible admin notices
  * Misc - WooCommerce 2.2 compatibility
