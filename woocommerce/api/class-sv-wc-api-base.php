@@ -80,6 +80,9 @@ abstract class SV_WC_API_Base {
 	/**
 	 * Perform the request and return the parsed response
 	 *
+	 * TODO: during next backwards-incompatible framework update, the try/catch
+	 * block should catch SV_WC_Plugin_Exception for maximum flexibility
+	 *
 	 * @since 2.2.0
 	 * @param object $request class instance which implements \SV_WC_API_Request
 	 * @throws Exception
@@ -228,6 +231,10 @@ abstract class SV_WC_API_Base {
 	/**
 	 * Alert other actors that a request has been performed. This is primarily used
 	 * for request logging.
+	 *
+	 * TODO: during the next backwards-incompatible framework update, the visibility
+	 * for this method should be changed from private to protected so sub-classes
+	 * can adjust it
 	 *
 	 * @since 2.2.0
 	 */
