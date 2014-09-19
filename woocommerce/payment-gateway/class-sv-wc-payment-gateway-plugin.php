@@ -515,6 +515,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function maybe_add_capture_charge_order_action( $actions ) {
 
+		// bail adding a new order from the admin
+		if ( ! isset( $_REQUEST['post'] ) ) {
+			return $actions;
+		}
+
 		$order = SV_WC_Plugin_Compatibility::wc_get_order( $_REQUEST['post'] );
 
 		// bail if the order wasn't paid for with this gateway
