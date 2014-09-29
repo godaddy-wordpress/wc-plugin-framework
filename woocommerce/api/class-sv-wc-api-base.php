@@ -147,7 +147,7 @@ abstract class SV_WC_API_Base {
 		// check for WP HTTP API specific errors (network timeout, etc)
 		if ( is_wp_error( $response ) ) {
 
-			throw new SV_WC_API_Exception( $response->get_error_message(), $response->get_error_code() );
+			throw new SV_WC_API_Exception( $response->get_error_message(), (int) $response->get_error_code() );
 		}
 
 		// set response data
