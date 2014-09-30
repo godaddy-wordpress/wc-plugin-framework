@@ -589,7 +589,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @param WC_Order $order the order
 	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response transaction response
 	 */
-	protected function do_echeck_transaction_approved( $order, $response ) {
+	protected function do_check_transaction_approved( $order, $response ) {
 
 		$last_four = substr( $response->get_account_number(), -4 );
 
