@@ -215,7 +215,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 2.0.0
 	 */
-	protected function includes() {
+	private function includes() {
 
 		// common exception class
 		require_once( 'class-sv-wc-plugin-exception.php' );

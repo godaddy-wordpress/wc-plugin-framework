@@ -119,7 +119,7 @@ class SV_WC_Framework_Bootstrap {
 	 *
 	 * @since 2.0.0
 	 */
-	protected function __construct() {
+	private function __construct() {
 
 		// load framework plugins once all plugins are loaded
 		add_action( 'plugins_loaded', array( $this, 'load_framework_plugins' ) );
