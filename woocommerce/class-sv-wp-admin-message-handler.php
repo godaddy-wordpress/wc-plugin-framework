@@ -270,7 +270,7 @@ class SV_WP_Admin_Message_Handler {
 	 * @since 1.0.0
 	 * @return string unique identifier
 	 */
-	private function get_message_id() {
+	protected function get_message_id() {
 
 		if ( ! isset( $this->message_id ) ) $this->message_id = __FILE__;
 

@@ -402,7 +402,7 @@ class SV_WC_Plugin_Compatibility {
 	 * @since 3.0.0
 	 * @return string woocommerce version number or null
 	 */
-	private static function get_wc_version() {
+	protected static function get_wc_version() {
 
 		return defined( 'WC_VERSION' ) && WC_VERSION ? WC_VERSION : null;
 	}

@@ -119,7 +119,7 @@ class SV_WC_Framework_Bootstrap {
 	 *
 	 * @since 2.0.0
 	 */
-	private function __construct() {
+	protected function __construct() {
 
 		// load framework plugins once all plugins are loaded
 		add_action( 'plugins_loaded', array( $this, 'load_framework_plugins' ) );
@@ -294,7 +294,7 @@ class SV_WC_Framework_Bootstrap {
 	 * @since 3.0.0
 	 * @return null|string
 	 */
-	private function get_wc_version() {
+	protected function get_wc_version() {
 
 		if ( defined( 'WC_VERSION' )          && WC_VERSION )          return WC_VERSION;
 		if ( defined( 'WOOCOMMERCE_VERSION' ) && WOOCOMMERCE_VERSION ) return WOOCOMMERCE_VERSION;

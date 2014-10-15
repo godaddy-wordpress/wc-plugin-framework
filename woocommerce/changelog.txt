@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2014.nn.nn - version 3.0.0-1
+ * Tweak - Method visibility changed from private to protected to allow adjustment via sub-classes
  * Fix - Fix "Wrong parameters for Exception" fatal error
 
 2014.09.07 - version 3.0.0

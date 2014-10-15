@@ -232,13 +232,9 @@ abstract class SV_WC_API_Base {
 	 * Alert other actors that a request has been performed. This is primarily used
 	 * for request logging.
 	 *
-	 * TODO: during the next backwards-incompatible framework update, the visibility
-	 * for this method should be changed from private to protected so sub-classes
-	 * can adjust it
-	 *
 	 * @since 2.2.0
 	 */
-	private function broadcast_request() {
+	protected function broadcast_request() {
 
 		$request_data = array(
 			'method'     => $this->get_request_method(),

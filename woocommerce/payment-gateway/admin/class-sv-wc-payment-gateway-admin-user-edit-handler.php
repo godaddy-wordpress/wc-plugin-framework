@@ -449,7 +449,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 	 * @since 3.0.0
 	 * @return SV_WC_Plugin returns the plugin instance
 	 */
-	private function get_plugin() {
+	protected function get_plugin() {
 		return $this->plugin;
 	}
 

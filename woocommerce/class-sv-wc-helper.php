@@ -181,7 +181,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * @since 2.2.0
 		 * @return bool
 		 */
-		private static function multibyte_loaded() {
+		protected static function multibyte_loaded() {
 
 			return extension_loaded( 'mbstring' );
 		}

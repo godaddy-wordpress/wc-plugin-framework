@@ -347,7 +347,7 @@ class SV_WC_Admin_Notice_Handler {
 	 * @since 3.0.0
 	 * @return SV_WC_Plugin returns the plugin instance
 	 */
-	private function get_plugin() {
+	protected function get_plugin() {
 		return $this->plugin;
 	}
 
