@@ -1185,7 +1185,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( ! $user_message ) {
 			$user_message = __( 'Your order has been received and is being reviewed.  Thank you for your business.', $this->text_domain );
 		}
-		wc_add_notice( $user_message );
+		SV_WC_Helper::wc_add_notice( $user_message );
 	}
 
 
@@ -1218,7 +1218,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( ! $user_message ) {
 			$user_message = __( 'An error occurred, please try again or try an alternate form of payment.', $this->text_domain );
 		}
-		wc_add_notice( $user_message, 'error' );
+		SV_WC_Helper::wc_add_notice( $user_message, 'error' );
 	}
 
 
@@ -1732,12 +1732,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 			if ( 'message' === $type ) {
 
-				wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'notice' );
+				SV_WC_Helper::wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'notice' );
 
 			} else {
 
 				// defaults to error message
-				wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'error' );
+				SV_WC_Helper::wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'error' );
 			}
 		}
 

@@ -452,6 +452,60 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		}
 
 
+		/**
+		 * Get the count of notices added, either for all notices (default) or for one
+ 		 * particular notice type specified by $notice_type.
+		 *
+		 * WC notice funtions are not available in the admin
+		 *
+		 * @since 3.0.1-1
+		 * @param string $notice_type The name of the notice type - either error, success or notice. [optional]
+		 * @return int
+		 */
+		public static function wc_notice_count( $notice_type = '' ) {
+
+			if ( function_exists( 'wc_notice_count' ) ) {
+				return wc_notice_count( $notice_type );
+			}
+
+			return 0;
+		}
+
+
+		/**
+		 * Add and store a notice.
+		 *
+		 * WC notice funtions are not available in the admin
+		 *
+		 * @since 3.0.1-1
+		 * @param string $message The text to display in the notice.
+		 * @param string $notice_type The singular name of the notice type - either error, success or notice. [optional]
+		 */
+		public static function wc_add_notice( $message, $notice_type = 'success' ) {
+
+			if ( function_exists( 'wc_add_notice' ) ) {
+				wc_add_notice( $message, $notice_type );
+			}
+		}
+
+
+		/**
+		 * Print a single notice immediately
+		 *
+		 * WC notice funtions are not available in the admin
+		 *
+		 * @since 3.0.1-1
+		 * @param string $message The text to display in the notice.
+		 * @param string $notice_type The singular name of the notice type - either error, success or notice. [optional]
+		 */
+		public static function wc_print_notice( $message, $notice_type = 'success' ) {
+
+			if ( function_exists( 'wc_print_notice' ) ) {
+				wc_print_notice( $message, $notice_type );
+			}
+		}
+
+
 	}
 
 endif; // Class exists check

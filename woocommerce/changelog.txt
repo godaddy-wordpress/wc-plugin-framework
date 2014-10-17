@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2014.nn.nn - version 3.0.1-1
+ * Fix - Add commonly used notice functions to avoid errors when renewing subscriptions
+
 2014.10.15 - version 3.0.1
  * Tweak - Method visibility changed from private to protected to allow adjustment via sub-classes
  * Fix - Fix "Wrong parameters for Exception" fatal error
