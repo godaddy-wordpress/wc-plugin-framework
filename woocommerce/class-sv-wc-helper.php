@@ -458,7 +458,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * WC notice funtions are not available in the admin
 		 *
-		 * @since 3.0.1-1
+		 * @since 3.0.2
 		 * @param string $notice_type The name of the notice type - either error, success or notice. [optional]
 		 * @return int
 		 */
@@ -477,7 +477,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * WC notice funtions are not available in the admin
 		 *
-		 * @since 3.0.1-1
+		 * @since 3.0.2
 		 * @param string $message The text to display in the notice.
 		 * @param string $notice_type The singular name of the notice type - either error, success or notice. [optional]
 		 */
@@ -494,7 +494,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * WC notice funtions are not available in the admin
 		 *
-		 * @since 3.0.1-1
+		 * @since 3.0.2
 		 * @param string $message The text to display in the notice.
 		 * @param string $notice_type The singular name of the notice type - either error, success or notice. [optional]
 		 */
