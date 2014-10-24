@@ -347,7 +347,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				}
 			}
 
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+		} catch ( SV_WC_Plugin_Exception $e ) {
 			// failure
 
 			if ( isset( $order ) && $order ) {

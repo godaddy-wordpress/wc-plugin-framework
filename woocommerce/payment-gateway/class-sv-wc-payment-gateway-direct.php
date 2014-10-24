@@ -442,7 +442,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				);
 			}
 
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			$this->mark_order_as_failed( $order, $e->getMessage() );
 
@@ -685,7 +685,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				try {
 					$order = $this->create_payment_token( $order, $response );
-				} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+				} catch ( SV_WC_Plugin_Exception $e ) {
 
 					// handle the case of a "tokenize-after-sale" request failing by marking the order as on-hold with an explanatory note
 					if ( ! $response->transaction_held() && ! ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
@@ -851,7 +851,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			return $response;
 
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			$message = sprintf(
 				_x( '%s Capture Failed: %s', 'Supports capture charge', $this->text_domain ),
@@ -1189,7 +1189,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				throw new SV_WC_Payment_Gateway_Exception( sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
 			}
 
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			$this->mark_order_as_failed( $order, $e->getMessage() );
 
@@ -1608,7 +1608,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			}
 
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			// Mark order as failed
 			$this->mark_order_as_failed( $order, sprintf( _x( 'Pre-Order Release Payment Failed: %s', 'Supports direct payment method pre-orders', $this->text_domain ), $e->getMessage() ) );

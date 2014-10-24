@@ -29,6 +29,6 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Exception' ) ) :
 /**
  * Payment Gateway Exception - generic payment failure Exception
  */
-class SV_WC_Payment_Gateway_Exception extends Exception { }
+class SV_WC_Payment_Gateway_Exception extends SV_WC_Plugin_Exception { }
 
 endif;  // class exists check
