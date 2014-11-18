@@ -2047,6 +2047,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				}
 
 			} catch( SV_WC_Payment_Gateway_Exception $e ) {
+				if ( $this->debug_log() ) {
+					$this->get_plugin()->log( $e->getMessage() . "\n" . $e->getTraceAsString(), $this->get_id() );
+				}
 				return false;
 			}
 		}
