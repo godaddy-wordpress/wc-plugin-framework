@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2014.nn.nn - version 3.0.2-1
+2014.11.20 - version 3.0.3
  * Fix - Payment gateway framework now catches all SV_WC_Plugin_Exception exceptions. Fixes uncaught SV_WC_API_Exception error.
 
 2014.10.19 - version 3.0.2
