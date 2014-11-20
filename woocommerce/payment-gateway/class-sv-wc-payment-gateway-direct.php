@@ -616,15 +616,18 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 1.0.0
 	 * @param WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response optional credit card transaction response
 	 * @return SV_WC_Payment_Gateway_API_Response the response
 	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
 	 */
-	protected function do_credit_card_transaction( $order ) {
+	protected function do_credit_card_transaction( $order, $response = null ) {
 
-		if ( $this->perform_credit_card_charge() ) {
-			$response = $this->get_api()->credit_card_charge( $order );
-		} else {
-			$response = $this->get_api()->credit_card_authorization( $order );
+		if ( is_null( $response ) ) {
+			if ( $this->perform_credit_card_charge() ) {
+				$response = $this->get_api()->credit_card_charge( $order );
+			} else {
+				$response = $this->get_api()->credit_card_authorization( $order );
+			}
 		}
 
 		// success! update order record
