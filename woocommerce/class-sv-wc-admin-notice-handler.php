@@ -225,7 +225,7 @@ class SV_WC_Admin_Notice_Handler {
 				}
 			);
 
-			$( this ).closest( 'div.error' ).fadeOut();
+			$( this ).closest( 'div.js-wc-plugin-framework-admin-notice' ).fadeOut();
 
 			return false;
 		} );
