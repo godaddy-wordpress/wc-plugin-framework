@@ -108,7 +108,7 @@ class SV_WC_Admin_Notice_Handler {
 	 *
 	 * @since 3.0.0
 	 * @param string $message_id the message id
-	 * @param array $params optional parameters array.  Defaults to array( 'dismissible' => true, 'always_show_on_settings' => true )
+	 * @param array $params optional parameters array.  Defaults to array( 'dismissible' => true, 'always_show_on_settings' => true, 'notice_class' => 'updated' )
 	 */
 	public function should_display_notice( $message_id, $params = array() ) {
 
@@ -181,7 +181,7 @@ class SV_WC_Admin_Notice_Handler {
 	 * @since 3.0.0
 	 * @param string $message the notice message to display
 	 * @param string $message_id the message id
-	 * @param array $params optional parameters array.  Options: 'dismissible', 'is_visible', 'always_show_on_settings'
+	 * @param array $params optional parameters array.  Options: 'dismissible', 'is_visible', 'always_show_on_settings', 'notice_class'
 	 */
 	public function render_admin_notice( $message, $message_id, $params = array() ) {
 
@@ -192,7 +192,7 @@ class SV_WC_Admin_Notice_Handler {
 			$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-notice-dismiss" data-message-id="%s" style="float: right;">%s</a>', $message_id, __( 'Dismiss', $this->text_domain ) );
 		}
 
-		$class = isset( $params['notice-class'] ) ? $params['notice-class'] : 'error';
+		$class = isset( $params['notice_class'] ) ? $params['notice_class'] : 'error';
 
 		echo sprintf( '<div data-plugin-id="' . $this->get_plugin()->get_id() . '" class="' . $class . ' js-wc-plugin-framework-admin-notice"%s><p>%s %s</p></div>', ! isset( $params['is_visible'] ) || ! $params['is_visible'] ? ' style="display:none;"' : '', $message, $dismiss_link );
 	}
