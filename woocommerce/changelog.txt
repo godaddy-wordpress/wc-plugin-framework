@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2014.nn.nn - version 3.0.3-1
+ * Tweak - Accept a notice-class parameter when rendering admin notice to avoid always using the "error" notice
+
 2014.11.20 - version 3.0.3
  * Fix - Payment gateway framework now catches all SV_WC_Plugin_Exception exceptions. Fixes uncaught SV_WC_API_Exception error.
 

@@ -192,7 +192,9 @@ class SV_WC_Admin_Notice_Handler {
 			$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-notice-dismiss" data-message-id="%s" style="float: right;">%s</a>', $message_id, __( 'Dismiss', $this->text_domain ) );
 		}
 
-		echo sprintf( '<div data-plugin-id="' . $this->get_plugin()->get_id() . '" class="error js-wc-plugin-framework-admin-notice"%s><p>%s %s</p></div>', ! isset( $params['is_visible'] ) || ! $params['is_visible'] ? ' style="display:none;"' : '', $message, $dismiss_link );
+		$class = isset( $params['notice-class'] ) ? $params['notice-class'] : 'error';
+
+		echo sprintf( '<div data-plugin-id="' . $this->get_plugin()->get_id() . '" class="' . $class . ' js-wc-plugin-framework-admin-notice"%s><p>%s %s</p></div>', ! isset( $params['is_visible'] ) || ! $params['is_visible'] ? ' style="display:none;"' : '', $message, $dismiss_link );
 	}
 
 
