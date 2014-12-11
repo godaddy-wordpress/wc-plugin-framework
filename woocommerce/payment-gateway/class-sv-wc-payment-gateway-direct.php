@@ -2029,13 +2029,13 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		// unknown token?
-		if ( ! $this->has_payment_token( $user_id, $token, $environment_id ) ) {
+		if ( ! $this->has_payment_token( $user_id, $token, null, $environment_id ) ) {
 			return false;
 		}
 
 		// get the payment token object as needed
 		if ( ! is_object( $token ) ) {
-			$token = $this->get_payment_token( $user_id, $token, $environment_id );
+			$token = $this->get_payment_token( $user_id, $token, null, $environment_id );
 		}
 
 		// for direct gateways that allow it, attempt to delete the token from the endpoint
@@ -2100,7 +2100,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// get the payment token object as needed
 		if ( ! is_object( $token ) ) {
-			$token = $this->get_payment_token( $user_id, $token, $environment_id );
+			$token = $this->get_payment_token( $user_id, $token, null, $environment_id );
 		}
 
 		// get existing tokens

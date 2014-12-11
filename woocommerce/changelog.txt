@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2014.nn.nn - version 3.0.3-1
+2014.nn.nn - version 3.0.3-2
+ * Fix - Bug when removing a tokenized credit card from the My Account page
  * Tweak - Accept a notice-class parameter when rendering admin notice to avoid always using the "error" notice
 
 2014.11.20 - version 3.0.3
