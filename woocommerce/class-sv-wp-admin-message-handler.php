@@ -236,6 +236,11 @@ class SV_WP_Admin_Message_Handler {
 	 * @since 1.0.0
 	 */
 	public function show_messages() {
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
 		if ( $this->error_count() > 0 )
 			echo '<div id="wp-admin-message-handler-error" class="error"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_errors() ) . "</strong></li></ul></div>";
 

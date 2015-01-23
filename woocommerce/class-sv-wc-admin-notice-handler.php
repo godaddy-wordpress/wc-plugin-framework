@@ -112,6 +112,10 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function should_display_notice( $message_id, $params = array() ) {
 
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return false;
+		}
+
 		// default to dismissible, always on settings
 		if ( ! isset( $params['dismissible'] ) ) {
 			$params['dismissible'] = true;
