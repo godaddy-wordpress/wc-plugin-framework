@@ -85,6 +85,32 @@ interface SV_WC_Payment_Gateway_API {
 
 
 	/**
+	 * Perform a refund for the given order
+	 *
+	 * If the gateway does not support refunds, this method can be a no-op.
+	 *
+	 * @since 3.0.4-1
+	 * @param WC_Order $order order object
+	 * @return SV_WC_Payment_Gateway_API_Response refund response
+	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
+	 */
+	public function refund( WC_Order $order );
+
+
+	/**
+	 * Perform a void for the given order
+	 *
+	 * If the gateway does not support voids, this method can be a no-op.
+	 *
+	 * @since 3.0.4-1
+	 * @param WC_Order $order order object
+	 * @return SV_WC_Payment_Gateway_API_Response void response
+	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
+	 */
+	public function void( WC_Order $order );
+
+
+	/**
 	 * Creates a payment token for the given order
 	 *
 	 * If the gateway does not support tokenization, this method can be a no-op.

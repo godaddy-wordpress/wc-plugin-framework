@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2015.nn.nn - version 3.0.4-1
+ * Refund/Void support for the payment gateway framework, huzzah!
+
 2014.12.11 - version 3.0.4
  * Fix - Bug when removing a tokenized credit card from the My Account page
  * Tweak - Accept a notice-class parameter when rendering admin notice to avoid always using the "error" notice

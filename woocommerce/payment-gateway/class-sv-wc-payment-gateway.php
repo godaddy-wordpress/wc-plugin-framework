@@ -214,6 +214,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/** Display detailed customer decline messages on checkout */
 	const FEATURE_DETAILED_CUSTOMER_DECLINE_MESSAGES = 'customer_decline_messages';
 
+	/** Refunds feature */
+	const FEATURE_REFUNDS = 'refunds';
+
+	/** Voids feature */
+	const FEATURE_VOIDS = 'voids';
 
 	/** @var SV_WC_Payment_Gateway_Plugin the parent plugin class */
 	private $plugin;
@@ -1051,6 +1056,385 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	}
 
 
+	/** Refund feature ********************************************************/
+
+
+	/**
+	 * Returns true if this is gateway that supports refunds
+	 *
+	 * @since 3.0.4-1
+	 * @return boolean true if the gateway supports refunds
+	 */
+	public function supports_refunds() {
+
+		return $this->supports( self::FEATURE_REFUNDS );
+	}
+
+
+	/**
+	 * Process refund
+	 *
+	 * @since 3.0.4-1
+	 * @param int $order_id order being refunded
+	 * @param float $amount refund amount
+	 * @param string $reason user-entered reason text for refund
+	 * @return bool|WP_Error true on success, or a WP_Error object on failure/error
+	 */
+	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+
+		// add transaction-specific refund info (amount, reason, transaction IDs, etc)
+		$order = $this->get_order_for_refund( $order_id, $amount, $reason );
+
+		// let implementations/actors error out early (e.g. order is missing required data for refund, etc)
+		if ( is_wp_error( $order ) ) {
+			return $order;
+		}
+
+		// if captures are supported and the order has an authorized, but not captured charge, void it instead
+		if ( $this->supports_voids() && $this->authorization_valid_for_capture( $order ) ) {
+			return $this->process_void( $order );
+		}
+
+		try {
+
+			$response = $response = $this->get_api()->refund( $order );
+
+			if ( $response->transaction_approved() ) {
+
+				// add standard refund-specific transaction data
+				$this->add_refund_data( $order, $response );
+
+				// let payment gateway implementations add their own data
+				$this->add_payment_gateway_refund_data( $order, $response );
+
+				// add order note
+				$this->add_refund_order_note( $order, $response );
+
+				// when full amount is refunded, update status to refunded
+				if ( $order->get_total() == $order->get_total_refunded() ) {
+
+					$this->mark_order_as_refunded( $order );
+				}
+
+				return true;
+
+			} else {
+
+				$error = $this->get_refund_failed_wp_error( $response->get_status_code(), $response->get_status_message() );
+
+				$order->add_order_note( $error->get_error_message() );
+
+				return $error;
+			}
+
+		} catch ( SV_WC_Plugin_Exception $e ) {
+
+			$error = $this->get_refund_failed_wp_error( $e->getCode(), $e->getMessage() );
+
+			$order->add_order_note( $error->get_error_message() );
+
+			return $error;
+		}
+	}
+
+
+	/**
+	 * Add refund information as class members of WC_Order
+	 * instance for use in refund transactions.  Standard information includes:
+	 *
+	 * $order->refund->amount = refund amount
+	 * $order->refund->reason = user-entered reason text for the refund
+	 * $order->refund->trans_id = the ID of the original payment transaction for the order
+	 *
+	 * Payment gateway implementations can override this to add their own
+	 * refund-specific data
+	 *
+	 * @since 3.0.4-1
+	 * @param WC_Order|int $order order being processed
+	 * @param float $amount refund amount
+	 * @param string $reason optional refund reason text
+	 * @return WC_Order object with refund information attached
+	 */
+	protected function get_order_for_refund( $order, $amount, $reason ) {
+
+		if ( is_numeric( $order ) ) {
+			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order );
+		}
+
+		// add refund info
+		$order->refund = new stdClass();
+		$order->refund->amount = number_format( $amount, 2, '.', '' );
+		$order->refund->reason = $reason ? $reason : sprintf( _x( '%s - Refund for Order %s', 'Order refund description', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+
+		// almost all gateways require the original transaction ID, so include it by default
+		$order->refund->trans_id = $this->get_order_meta( $order->id, 'trans_id' );
+
+		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_refund', $order, $this );
+	}
+
+
+	/**
+	 * Adds the standard refund transaction data to the order
+	 *
+	 * Note that refunds can be performed multiple times for a single order so
+	 * transaction IDs keys are not unique
+	 *
+	 * @since 3.0.4-1
+	 * @param WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
+	 */
+	protected function add_refund_data( WC_Order $order, $response ) {
+
+		// indicate the order was refunded along with the refund amount
+		$this->add_order_meta( $order->id, 'refund_amount', $order->refund->amount );
+
+		// add refund transaction ID
+		if ( $response && $response->get_transaction_id() ) {
+			$this->add_order_meta( $order->id, 'refund_trans_id', $response->get_transaction_id() );
+		}
+	}
+
+
+	/**
+	 * Adds any gateway-specific data to the order after a refund is performed
+	 *
+	 * @since 3.0.4-1
+	 * @param WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
+	 */
+	protected function add_payment_gateway_refund_data( WC_Order $order, $response ) {
+		// Optional method
+	}
+
+
+	/**
+	 * Adds an order note with the amount and (optional) refund transaction ID
+	 *
+	 * @since 3.0.4-1
+	 * @param WC_Order $order order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
+	 */
+	protected function add_refund_order_note( WC_Order $order, $response ) {
+
+		$message = sprintf(
+			_x( '%s Refund in the amount of %s approved.', 'Supports refund charge', $this->text_domain ),
+			$this->get_method_title(),
+			wc_price( $order->refund->amount, array( 'currency' => $order->get_order_currency() ) )
+		);
+
+		// adds the transaction id (if any) to the order note
+		if ( $response->get_transaction_id() ) {
+			$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports refund charge', $this->text_domain ), $response->get_transaction_id() );
+		}
+
+		$order->add_order_note( $message );
+	}
+
+
+	/**
+	 * Build the WP_Error object for a failed refund
+	 *
+	 * @since 3.0.4-1
+	 * @param int|string $error_code error code
+	 * @param string $error_message error message
+	 * @return WP_Error suitable for returning from the process_refund() method
+	 */
+	protected function get_refund_failed_wp_error( $error_code, $error_message ) {
+
+		if ( $error_code ) {
+			$message = sprintf(
+				_x( '%s Refund Failed: %s - %s', 'Supports refund charge', $this->text_domain ),
+				$this->get_method_title(),
+				$error_code,
+				$error_message
+			);
+		} else {
+			$message = sprintf(
+				_x( '%s Refund Failed: %s', 'Supports refund charge', $this->text_domain ),
+				$this->get_method_title(),
+				$error_message
+			);
+		}
+
+		return new WP_Error( 'wc_' . $this->get_id() . '_refund_failed', $message );
+	}
+
+
+	/**
+	 * Mark an order as refunded. This should only be used when the full order
+	 * amount has been refunded.
+	 *
+	 * @since 3.0.4-1
+	 * @param WC_Order $order order object
+	 */
+	protected function mark_order_as_refunded( $order ) {
+
+		$order_note = sprintf( _x( '%s Order completely refunded.', 'Refunded order note', $this->text_domain ), $this->get_method_title() );
+
+		// Mark order as refunded if not already set
+		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'refunded' ) ) {
+			$order->update_status( 'refunded', $order_note );
+		} else {
+			$order->add_order_note( $order_note );
+		}
+	}
+
+
+	/** Void feature ********************************************************/
+
+
+	/**
+	 * Returns true if this is gateway that supports voids
+	 *
+	 * @since 3.0.4-1
+	 * @return boolean true if the gateway supports voids
+	 */
+	public function supports_voids() {
+
+		return $this->supports( self::FEATURE_VOIDS ) && $this->supports_credit_card_capture();
+	}
+
+
+	/**
+	 * Process a void
+	 *
+	 * @since 3.0.4-1
+	 * @param WC_Order $order order object (with refund class member already added)
+	 * @return bool|WP_Error true on success, or a WP_Error object on failure/error
+	 */
+	protected function process_void( WC_Order $order ) {
+
+		// partial voids are not supported
+		if ( $order->refund->amount != $order->get_total() ) {
+			return new WP_Error( 'wc_' . $this->get_id() . '_void_error', _x( 'Oops, you cannot partially void this order. Please use the full order amount.', 'Supports void charge', $this->text_domain ) );
+		}
+
+		try {
+
+			$response = $this->get_api()->void( $order );
+
+			if ( $response->transaction_approved() ) {
+
+				// add standard void-specific transaction data
+				$this->add_void_data( $order, $response );
+
+				// let payment gateway implementations add their own data
+				$this->add_payment_gateway_void_data( $order, $response );
+
+				// update order status to "refunded" and add an order note
+				$this->mark_order_as_voided( $order, $response );
+
+				return true;
+
+			} else {
+
+				$error = $this->get_void_failed_wp_error( $response->get_status_code(), $response->get_status_message() );
+
+				$order->add_order_note( $error->get_error_message() );
+
+				return $error;
+			}
+
+		} catch ( SV_WC_Plugin_Exception $e ) {
+
+			$error = $this->get_void_failed_wp_error( $e->getCode(), $e->getMessage() );
+
+			$order->add_order_note( $error->get_error_message() );
+
+			return $error;
+		}
+	}
+
+
+	/**
+	 * Adds the standard void transaction data to the order
+	 *
+	 * @since 3.0.4-1
+	 * @param WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
+	 */
+	protected function add_void_data( WC_Order $order, $response ) {
+
+		// indicate the order was voided along with the amount
+		$this->update_order_meta( $order->id, 'void_amount', $order->refund->amount );
+
+		// add refund transaction ID
+		if ( $response && $response->get_transaction_id() ) {
+			$this->add_order_meta( $order->id, 'void_trans_id', $response->get_transaction_id() );
+		}
+	}
+
+
+	/**
+	 * Adds any gateway-specific data to the order after a void is performed
+	 *
+	 * @since 3.0.4-1
+	 * @param WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
+	 */
+	protected function add_payment_gateway_void_data( WC_Order $order, $response ) {
+		// Optional method
+	}
+
+
+	/**
+	 * Build the WP_Error object for a failed void
+	 *
+	 * @since 3.0.4-1
+	 * @param int|string $error_code error code
+	 * @param string $error_message error message
+	 * @return WP_Error suitable for returning from the process_refund() method
+	 */
+	protected function get_void_failed_wp_error( $error_code, $error_message ) {
+
+		if ( $error_code ) {
+			$message = sprintf(
+				_x( '%s Void Failed: %s - %s', 'Supports void charge', $this->text_domain ),
+				$this->get_method_title(),
+				$error_code,
+				$error_message
+			);
+		} else {
+			$message = sprintf(
+				_x( '%s Void Failed: %s', 'Supports void charge', $this->text_domain ),
+				$this->get_method_title(),
+				$error_message
+			);
+		}
+
+		return new WP_Error( 'wc_' . $this->get_id() . '_void_failed', $message );
+	}
+
+
+	/**
+	 * Mark an order as voided. Because WC has no status for "void", we use
+	 * refunded.
+	 *
+	 * @since 3.0.4-1
+	 * @param WC_Order $order order object
+	 */
+	protected function mark_order_as_voided( $order, $response ) {
+
+		$message = sprintf(
+			_x( '%s Void in the amount of %s approved.', 'Supports void charge', $this->text_domain ),
+			$this->get_method_title(),
+			wc_price( $order->refund->amount, array( 'currency' => $order->get_order_currency() ) )
+		);
+
+		// adds the transaction id (if any) to the order note
+		if ( $response->get_transaction_id() ) {
+			$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports void charge', $this->text_domain ), $response->get_transaction_id() );
+		}
+
+		// Mark order as refunded if not already set
+		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'refunded' ) ) {
+			$order->update_status( 'refunded', $message );
+		} else {
+			$order->add_order_note( $message);
+		}
+	}
+
+
 	/**
 	 * Returns the $order object with a unique transaction ref member added
 	 *
@@ -1417,7 +1801,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	}
 
 
-	/** Authorization/Charge feature ******************************************************/
+	/** Authorization/Charge feature ******************************************/
 
 
 	/**
@@ -1445,6 +1829,17 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
+	 * Returns true if the gateway supports capturing a charge
+	 *
+	 * @since 3.0.4-1
+	 * @return boolean true if the gateway supports capturing a charge
+	 */
+	public function supports_credit_card_capture() {
+		return $this->supports( self::FEATURE_CREDIT_CARD_CAPTURE );
+	}
+
+
+	/**
 	 * Adds any credit card authorization/charge admin fields, allowing the
 	 * administrator to choose between performing authorizations or charges
 	 *
@@ -1468,6 +1863,65 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		);
 
 		return $form_fields;
+	}
+
+
+	/**
+	 * Returns true if the authorization for $order is still valid for capture
+	 *
+	 * @since 2.0.0
+	 * @param $order WC_Order the order
+	 * @return boolean true if the authorization is valid for capture, false otherwise
+	 */
+	public function authorization_valid_for_capture( $order ) {
+
+		// check whether the charge has already been captured by this gateway
+		$charge_captured = $this->get_order_meta( $order->id, 'charge_captured' );
+
+		if ( 'yes' == $charge_captured ) {
+			return false;
+		}
+
+		// if for any reason the authorization can not be captured
+		$auth_can_be_captured = $this->get_order_meta( $order->id, 'auth_can_be_captured' );
+
+		if ( 'no' == $auth_can_be_captured ) {
+			return false;
+		}
+
+		// authorization hasn't already been captured, but has it expired?
+		return ! $this->has_authorization_expired( $order );
+	}
+
+
+	/**
+	 * Returns true if the authorization for $order has expired
+	 *
+	 * @since 2.0.0
+	 * @param $order WC_Order the order
+	 * @return boolean true if the authorization has expired, false otherwise
+	 */
+	public function has_authorization_expired( $order ) {
+
+		$transaction_time = strtotime( $this->get_order_meta( $order->id, 'trans_date' ) );
+
+		return floor( ( time() - $transaction_time ) / 3600 ) > $this->get_authorization_time_window();
+	}
+
+
+	/**
+	 * Return the authorization time window in hours. An authorization is considered
+	 * expired if it is older than this.
+	 *
+	 * 30 days (720 hours) is the standard authorization window. Individual gateways
+	 * can override this as necessary.
+	 *
+	 * @since 2.2.0
+	 * @return int hours
+	 */
+	protected function get_authorization_time_window() {
+
+		return 720;
 	}
 
 
@@ -1727,7 +2181,18 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			return;
 		}
 
-		// add debug message to woocommerce->errors/messages if checkout or both is enabled
+		// add log message to WC logger if log/both is enabled
+		if ( $this->debug_log() ) {
+			$this->get_plugin()->log( $message, $this->get_id() );
+		}
+
+		// avoid adding notices when performing refunds, these occur in the admin as an Ajax call, so checking the current filter
+		// is the only reliably way to do so
+		if ( in_array( 'wp_ajax_woocommerce_refund_line_items', $GLOBALS['wp_current_filter'] ) ) {
+			return;
+		}
+
+		// add debug message to woocommerce->errors/messages if checkout or both is enabled, the admin/Ajax check ensures capture charge transactions aren't logged as notices to the front end
 		if ( ( $this->debug_checkout() || ( 'error' === $type && $this->is_test_environment() ) ) && ( ! is_admin() || defined( 'DOING_AJAX' ) ) ) {
 
 			if ( 'message' === $type ) {
@@ -1739,11 +2204,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 				// defaults to error message
 				SV_WC_Helper::wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'error' );
 			}
-		}
-
-		// add log message to WC logger if log/both is enabled
-		if ( $this->debug_log() ) {
-			$this->get_plugin()->log( $message, $this->get_id() );
 		}
 	}
 
@@ -2218,6 +2678,22 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function is_echeck_gateway() {
 		return self::PAYMENT_TYPE_ECHECK == $this->get_payment_type();
+	}
+
+
+	/**
+	 * Returns the API instance for this gateway if it uses direct communication
+	 *
+	 * This is a stub method which must be overridden if this gateway performs
+	 * direct communication
+	 *
+	 * @since 1.0.0
+	 * @return SV_WC_Payment_Gateway_API the payment gateway API instance
+	 */
+	public function get_api() {
+
+		// concrete stub method
+		assert( false );
 	}
 
 
