@@ -431,6 +431,28 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Returns true if the installed version of WooCommerce is 2.3 or greater
+	 *
+	 * @since 3.0.4-1
+	 * @return boolean true if the installed version of WooCommerce is 2.3 or greater
+	 */
+	public static function is_wc_version_gte_2_3() {
+		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.3', '>=' );
+	}
+
+
+	/**
+	 * Returns true if the installed version of WooCommerce is less than 2.3
+	 *
+	 * @since 3.0.4-1
+	 * @return boolean true if the installed version of WooCommerce is less than 2.3
+	 */
+	public static function is_wc_version_lt_2_3() {
+		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.3', '<' );
+	}
+
+
+	/**
 	 * Returns true if the installed version of WooCommerce is greater than $version
 	 *
 	 * @since 2.0.0
