@@ -2005,7 +2005,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			'type'     => 'multiselect',
 			'desc_tip' => _x( 'Select which card types you accept.', 'Supports card types', $this->text_domain ),
 			'default'  => array_keys( $this->get_available_card_types() ),
-			'class'    => 'chosen_select',
+			'class'    => 'wc-enhanced-select chosen_select',
 			'css'      => 'width: 350px;',
 			'options'  => $this->get_available_card_types(),
 		);
