@@ -164,6 +164,9 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * for any string functions that expect only ASCII chars and can't
 		 * safely handle UTF-8
 		 *
+		 * Note: We must do a strict false check on the iconv() output due to a
+		 * bug in PHP/glibc {@link https://bugs.php.net/bug.php?id=63450}
+		 *
 		 * @since 2.2.0
 		 * @param string $string string to make ASCII
 		 * @return string|null ASCII string or null if error occurred
