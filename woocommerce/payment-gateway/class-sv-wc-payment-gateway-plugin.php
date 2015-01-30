@@ -178,10 +178,15 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function load_gateways( $gateways ) {
 
-		$gateways = array_merge( $gateways, $this->get_gateway_class_names() );
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_3() ) {
+
+				$gateways = array_merge( $gateways, $this->get_gateways() );
+		} else {
+
+				$gateways = array_merge( $gateways, $this->get_gateway_class_names() );
+		}
 
 		return $gateways;
-
 	}
 
 
