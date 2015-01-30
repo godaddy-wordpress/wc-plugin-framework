@@ -170,7 +170,9 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function str_to_ascii( $string ) {
 
-			return iconv('UTF-8', 'ASCII//IGNORE', $string);
+			$ascii = iconv( 'UTF-8', 'ASCII//IGNORE', $string );
+
+			return false === $ascii ? preg_replace( '/[^a-zA-Z0-9]/', '', $string ) : $ascii;
 		}
 
 
