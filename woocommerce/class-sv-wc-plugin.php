@@ -91,6 +91,9 @@ abstract class SV_WC_Plugin {
 	/** Plugin Framework Version */
 	const VERSION = '3.0.4-1';
 
+	/** @var object single instance of plugin */
+	protected static $instance;
+
 	/** @var string plugin id */
 	private $id;
 
@@ -177,6 +180,25 @@ abstract class SV_WC_Plugin {
 
 		// Load translation files
 		add_action( 'init', array( $this, 'load_translation' ) );
+	}
+
+
+	/**
+	 * Cloning instances is forbidden due to singleton pattern.
+	 *
+	 * @since 3.0.4-1
+	 */
+	public function __clone() {
+		_doing_it_wrong( __FUNCTION__, sprintf( __( 'You cannot clone instances of %s.', $this->text_domain ), $this->get_plugin_name() ), '3.0.4-1' );
+	}
+
+	/**
+	 * Unserializing instances is forbidden due to singleton pattern.
+	 *
+	 * @since 3.0.4-1
+	 */
+	public function __wakeup() {
+		_doing_it_wrong( __FUNCTION__, sprintf( __( 'You cannot unserialize instances of %s.', $this->text_domain ), $this->get_plugin_name() ), '3.0.4-1' );
 	}
 
 
