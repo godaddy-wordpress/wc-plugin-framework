@@ -511,6 +511,171 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		}
 
 
+		/** JavaScript helper functions ***************************************/
+
+
+		/**
+		 * Enhanced search JavaScript (Select2)
+		 *
+		 * Enqueues JavaScript required for AJAX search with Select2.
+		 *
+		 * Example usage:
+		 *    <input type="hidden" class="sv-wc-enhanced-search" name="category_ids" data-multiple="true" style="min-width: 300px;"
+		 *       data-action="wc_cart_notices_json_search_product_categories"
+		 *       data-nonce="<?php echo wp_create_nonce( 'search-categories' ); ?>"
+		 *       data-request_data = "<?php echo esc_attr( json_encode( array( 'field_name' => 'something_exciting', 'default' => 'default_label' ) ) ) ?>"
+		 *       data-placeholder="<?php _e( 'Search for a category&hellip;', WC_Cart_Notices::TEXT_DOMAIN ) ?>"
+		 *       data-allow_clear="true"
+		 *       data-selected="<?php
+		 *          $json_ids    = array();
+		 *          if ( isset( $notice->data['categories'] ) ) {
+		 *             foreach ( $notice->data['categories'] as $value => $title ) {
+		 *                $json_ids[ esc_attr( $value ) ] = esc_html( $title );
+		 *             }
+		 *          }
+		 *          echo esc_attr( json_encode( $json_ids ) );
+		 *       ?>"
+		 *       value="<?php echo implode( ',', array_keys( $json_ids ) ); ?>" />
+		 *
+		 * - `data-selected` can be a json encoded associative array like Array( 'key' => 'value' )
+		 * - `value` should be a comma-seperated list of selected keys
+		 * - `data-request_data` can be used to pass any additonal data to the AJAX request
+		 *
+		 * @since 3.0.4-1
+		 */
+		public static function render_select2_ajax() {
+
+			if ( ! did_action( 'sv_wc_select2_ajax_rendered' ) ) {
+
+				$javascript = "( function(){
+					if ( ! $().select2 ) return;
+				";
+
+				// ensure localized strings are used
+				$javascript .= "
+					function getEnhancedSelectFormatString() {
+						var formatString = {
+							formatMatches: function( matches ) {
+								if ( 1 === matches ) {
+									return wc_select_params.i18n_matches_1;
+								}
+
+								return wc_select_params.i18n_matches_n.replace( '%qty%', matches );
+							},
+							formatNoMatches: function() {
+								return wc_select_params.i18n_no_matches;
+							},
+							formatAjaxError: function( jqXHR, textStatus, errorThrown ) {
+								return wc_select_params.i18n_ajax_error;
+							},
+							formatInputTooShort: function( input, min ) {
+								var number = min - input.length;
+
+								if ( 1 === number ) {
+									return wc_select_params.i18n_input_too_short_1
+								}
+
+								return wc_select_params.i18n_input_too_short_n.replace( '%qty%', number );
+							},
+							formatInputTooLong: function( input, max ) {
+								var number = input.length - max;
+
+								if ( 1 === number ) {
+									return wc_select_params.i18n_input_too_long_1
+								}
+
+								return wc_select_params.i18n_input_too_long_n.replace( '%qty%', number );
+							},
+							formatSelectionTooBig: function( limit ) {
+								if ( 1 === limit ) {
+									return wc_select_params.i18n_selection_too_long_1;
+								}
+
+								return wc_select_params.i18n_selection_too_long_n.replace( '%qty%', number );
+							},
+							formatLoadMore: function( pageNumber ) {
+								return wc_select_params.i18n_load_more;
+							},
+							formatSearching: function() {
+								return wc_select_params.i18n_searching;
+							}
+						};
+
+						return formatString;
+					}
+				";
+
+				// add Select2 ajax call
+				$javascript .= "
+					$( ':input.sv-wc-enhanced-search' ).filter( ':not(.enhanced)' ).each( function() {
+						var select2_args = {
+							allowClear:  $( this ).data( 'allow_clear' ) ? true : false,
+							placeholder: $( this ).data( 'placeholder' ),
+							minimumInputLength: $( this ).data( 'minimum_input_length' ) ? $( this ).data( 'minimum_input_length' ) : '3',
+							escapeMarkup: function( m ) {
+								return m;
+							},
+							ajax: {
+								url:         '" . admin_url( 'admin-ajax.php' ) . "',
+								dataType:    'json',
+								quietMillis: 250,
+								data: function( term, page ) {
+									return {
+										term:         term,
+										request_data: $( this ).data( 'request_data' ) ? $( this ).data( 'request_data' ) : {},
+										action:       $( this ).data( 'action' ) || 'woocommerce_json_search_products_and_variations',
+										security:     $( this ).data( 'nonce' )
+									};
+								},
+								results: function( data, page ) {
+									var terms = [];
+									if ( data ) {
+										$.each( data, function( id, text ) {
+											terms.push( { id: id, text: text } );
+										});
+									}
+									return { results: terms };
+								},
+								cache: true
+							}
+						};
+						if ( $( this ).data( 'multiple' ) === true ) {
+							select2_args.multiple = true;
+							select2_args.initSelection = function( element, callback ) {
+								var data     = $.parseJSON( element.attr( 'data-selected' ) );
+								var selected = [];
+
+								$( element.val().split( ',' ) ).each( function( i, val ) {
+									selected.push( { id: val, text: data[ val ] } );
+								});
+								return callback( selected );
+							};
+							select2_args.formatSelection = function( data ) {
+								return '<div class=\"selected-option\" data-id=\"' + data.id + '\">' + data.text + '</div>';
+							};
+						} else {
+							select2_args.multiple = false;
+							select2_args.initSelection = function( element, callback ) {
+								var data = {id: element.val(), text: element.attr( 'data-selected' )};
+								return callback( data );
+							};
+						}
+
+						select2_args = $.extend( select2_args, getEnhancedSelectFormatString() );
+
+						$( this ).select2( select2_args ).addClass( 'enhanced' );
+					});
+				";
+
+				$javascript .= "} )();";
+
+				wc_enqueue_js( $javascript );
+
+				do_action( 'sv_wc_select2_ajax_rendered' );
+			}
+		}
+
+
 	}
 
 endif; // Class exists check
