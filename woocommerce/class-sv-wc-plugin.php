@@ -84,12 +84,12 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * Use the standard WordPress/WooCommerce `is_*` methods when adding the notice
  * to control which pages it does (or does not) display on.
  *
- * @version 3.0.4-1
+ * @version 3.1.0
  */
 abstract class SV_WC_Plugin {
 
 	/** Plugin Framework Version */
-	const VERSION = '3.0.4-1';
+	const VERSION = '3.1.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -186,19 +186,19 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Cloning instances is forbidden due to singleton pattern.
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, sprintf( __( 'You cannot clone instances of %s.', $this->text_domain ), $this->get_plugin_name() ), '3.0.4-1' );
+		_doing_it_wrong( __FUNCTION__, sprintf( __( 'You cannot clone instances of %s.', $this->text_domain ), $this->get_plugin_name() ), '3.1.0' );
 	}
 
 	/**
 	 * Unserializing instances is forbidden due to singleton pattern.
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, sprintf( __( 'You cannot unserialize instances of %s.', $this->text_domain ), $this->get_plugin_name() ), '3.0.4-1' );
+		_doing_it_wrong( __FUNCTION__, sprintf( __( 'You cannot unserialize instances of %s.', $this->text_domain ), $this->get_plugin_name() ), '3.1.0' );
 	}
 
 

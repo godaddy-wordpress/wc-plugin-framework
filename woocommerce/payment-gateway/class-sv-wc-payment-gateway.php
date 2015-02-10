@@ -1062,7 +1062,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if this is gateway that supports refunds
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @return boolean true if the gateway supports refunds
 	 */
 	public function supports_refunds() {
@@ -1074,7 +1074,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Process refund
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @param int $order_id order being refunded
 	 * @param float $amount refund amount
 	 * @param string $reason user-entered reason text for refund
@@ -1149,7 +1149,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Payment gateway implementations can override this to add their own
 	 * refund-specific data
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @param WC_Order|int $order order being processed
 	 * @param float $amount refund amount
 	 * @param string $reason optional refund reason text
@@ -1179,7 +1179,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Note that refunds can be performed multiple times for a single order so
 	 * transaction IDs keys are not unique
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
 	 */
@@ -1198,7 +1198,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds any gateway-specific data to the order after a refund is performed
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
 	 */
@@ -1210,7 +1210,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds an order note with the amount and (optional) refund transaction ID
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @param WC_Order $order order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
 	 */
@@ -1234,7 +1234,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Build the WP_Error object for a failed refund
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @param int|string $error_code error code
 	 * @param string $error_message error message
 	 * @return WP_Error suitable for returning from the process_refund() method
@@ -1264,7 +1264,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Mark an order as refunded. This should only be used when the full order
 	 * amount has been refunded.
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @param WC_Order $order order object
 	 */
 	protected function mark_order_as_refunded( $order ) {
@@ -1286,7 +1286,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if this is gateway that supports voids
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @return boolean true if the gateway supports voids
 	 */
 	public function supports_voids() {
@@ -1298,7 +1298,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Process a void
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @param WC_Order $order order object (with refund class member already added)
 	 * @return bool|WP_Error true on success, or a WP_Error object on failure/error
 	 */
@@ -1349,7 +1349,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds the standard void transaction data to the order
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
 	 */
@@ -1368,7 +1368,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds any gateway-specific data to the order after a void is performed
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
 	 */
@@ -1380,7 +1380,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Build the WP_Error object for a failed void
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @param int|string $error_code error code
 	 * @param string $error_message error message
 	 * @return WP_Error suitable for returning from the process_refund() method
@@ -1410,7 +1410,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Mark an order as voided. Because WC has no status for "void", we use
 	 * refunded.
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @param WC_Order $order order object
 	 */
 	protected function mark_order_as_voided( $order, $response ) {
@@ -1831,7 +1831,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if the gateway supports capturing a charge
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @return boolean true if the gateway supports capturing a charge
 	 */
 	public function supports_credit_card_capture() {

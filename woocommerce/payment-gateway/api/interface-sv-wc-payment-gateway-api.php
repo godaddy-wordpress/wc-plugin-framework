@@ -89,7 +89,7 @@ interface SV_WC_Payment_Gateway_API {
 	 *
 	 * If the gateway does not support refunds, this method can be a no-op.
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @param WC_Order $order order object
 	 * @return SV_WC_Payment_Gateway_API_Response refund response
 	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
@@ -102,7 +102,7 @@ interface SV_WC_Payment_Gateway_API {
 	 *
 	 * If the gateway does not support voids, this method can be a no-op.
 	 *
-	 * @since 3.0.4-1
+	 * @since 3.1.0
 	 * @param WC_Order $order order object
 	 * @return SV_WC_Payment_Gateway_API_Response void response
 	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc

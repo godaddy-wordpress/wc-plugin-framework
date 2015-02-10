@@ -541,7 +541,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * - `value` should be a comma-seperated list of selected keys
 		 * - `data-request_data` can be used to pass any additonal data to the AJAX request
 		 *
-		 * @since 3.0.4-1
+		 * @since 3.1.0
 		 */
 		public static function render_select2_ajax() {
 
