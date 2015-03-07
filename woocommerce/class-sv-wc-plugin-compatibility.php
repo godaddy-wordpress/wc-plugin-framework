@@ -86,13 +86,13 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
-	* Get all order statuses
-	*
-	* Introduced in WC 2.2
-	*
-	* @since 3.0.0
-	* @return array
-	*/
+	 * Get all order statuses
+	 *
+	 * Introduced in WC 2.2
+	 *
+	 * @since 3.0.0
+	 * @return array
+	 */
 	public static function wc_get_order_statuses() {
 
 		if ( self::is_wc_version_gte_2_2() ) {
@@ -243,6 +243,44 @@ class SV_WC_Plugin_Compatibility {
 		} else {
 
 			return self::get_order_user_id( $order ) ? get_user_by( 'id', self::get_order_user_id( $order ) ) : false;
+		}
+	}
+
+
+	/**
+	 * Get the raw (unescaped) cancel-order URL
+	 *
+	 * Introduced in WC 2.3.6
+	 *
+	 * @since 3.1.0-1
+	 * @param \WC_Order $order
+	 * @return string The unescaped cancel-order URL
+	 */
+	public static function get_cancel_order_url_raw( WC_Order $order, $redirect = '' ) {
+
+		if ( self::is_wc_version_gt( '2.3.5' ) ) {
+
+			return $order->get_cancel_order_url_raw( $redirect );
+
+		} else {
+
+			// Get cancel endpoint
+			$cancel_endpoint = get_permalink( wc_get_page_id( 'cart' ) );
+			if ( ! $cancel_endpoint ) {
+				$cancel_endpoint = home_url();
+			}
+
+			if ( false === strpos( $cancel_endpoint, '?' ) ) {
+				$cancel_endpoint = trailingslashit( $cancel_endpoint );
+			}
+
+			return apply_filters( 'woocommerce_get_cancel_order_url_raw', add_query_arg( array(
+				'cancel_order' => 'true',
+				'order'        => $order->order_key,
+				'order_id'     => $order->id,
+				'redirect'     => $redirect,
+				'_wpnonce'     => wp_create_nonce( 'woocommerce-cancel_order' )
+			), $cancel_endpoint ) );
 		}
 	}
 

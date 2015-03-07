@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2015.nn.nn - version 3.1.0-1
+ * Tweak - Add `get_cancel_order_url_raw()` compatibility method
+
 2015.02.09 - version 3.1.0
  * Refund/Void support for the payment gateway framework, huzzah!
  * Misc - WooCommerce 2.3 compatibility
