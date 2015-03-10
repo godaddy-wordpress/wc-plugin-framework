@@ -252,7 +252,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * Introduced in WC 2.3.6
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.1
 	 * @param \WC_Order $order
 	 * @return string The unescaped cancel-order URL
 	 */
