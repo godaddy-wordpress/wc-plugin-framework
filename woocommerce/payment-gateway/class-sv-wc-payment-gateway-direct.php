@@ -455,7 +455,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * instance.  The standard information that can be added includes:
 	 *
 	 * $order->payment_total           - the payment total
-	 * $order->customer_id             - optional payment gateway customer id (useful for tokenized payments, etc)
+	 * $order->customer_id             - optional payment gateway customer id (used for tokenized payments for certain gateways, etc)
 	 * $order->payment->account_number - the credit card or checking account number
 	 * $order->payment->routing_number - account routing number (check transactions only)
 	 * $order->payment->account_type   - optional type of account one of 'checking' or 'savings' if type is 'check'
@@ -1215,7 +1215,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 
 	/**
-	 * Update the customer id/payment token for a subscription after a customer
+	 * Update the payment token and optional customer id for a subscription after a customer
 	 * uses this gateway to successfully complete the payment for an automatic
 	 * renewal payment which had previously failed.
 	 *
@@ -1225,7 +1225,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function update_failing_payment_method( WC_Order $original_order, WC_Order $renewal_order ) {
 
-		$this->update_order_meta( $original_order->id, 'customer_id',   $this->get_order_meta( $renewal_order->id, 'customer_id' ) );
+		if ( $this->get_order_meta( $renewal_order->id, 'customer_id' ) ) {
+			$this->update_order_meta( $original_order->id, 'customer_id',   $this->get_order_meta( $renewal_order->id, 'customer_id' ) );
+		}
 		$this->update_order_meta( $original_order->id, 'payment_token', $this->get_order_meta( $renewal_order->id, 'payment_token' ) );
 	}
 
@@ -1358,7 +1360,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// retrieve the payment token
 			$order->payment->token = $this->get_order_meta( $order->id, 'payment_token' );
 
-			// retrieve the customer id (might not be one)
+			// retrieve the optional customer id
 			$order->customer_id = $this->get_order_meta( $order->id, 'customer_id' );
 
 			// verify that this customer still has the token tied to this order.  Pass in customer_id to support tokenized guest orders
@@ -1747,34 +1749,37 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 1.0.0
 	 * @param int $user_id WordPress user identifier, or 0 for guest
-	 * @param string $customer_id optional unique customer identifier, if not provided this will be looked up based on $user_id which cannot be 0 in that case
-	 * @param string $environment_id optional environment id, defaults to plugin current environment
+	 * @param array $args optional arguments array, can include 'environment_id' and 'customer_id'
 	 * @return array associative array of string token to SV_WC_Payment_Gateway_Payment_Token object
 	 */
-	public function get_payment_tokens( $user_id, $customer_id = null, $environment_id = null ) {
+	public function get_payment_tokens( $user_id, $args = array() ) {
 
 		assert( $this->supports_tokenization() );
 
 		// default to current environment
-		if ( is_null( $environment_id ) ) {
-			$environment_id = $this->get_environment();
+		if ( ! isset( $args['environment_id'] ) ) {
+			$args['environment_id'] = $this->get_environment();
 		}
 
-		if ( is_null( $customer_id ) ) {
-			$customer_id = $this->get_customer_id( $user_id, array( 'environment_id' => $environment_id ) );
+		if ( ! isset( $args['customer_id'] ) ) {
+			$args['customer_id'] = $this->get_customer_id( $user_id, $args );
 		}
+
+		$environment_id = $args['environment_id'];
+		$customer_id    = $args['customer_id'];
 
 		// return tokens cached during a single request
-		if ( isset( $this->tokens[ $environment_id ][ $customer_id ] ) ) {
-			return $this->tokens[ $environment_id ][ $customer_id ];
+		if ( isset( $this->tokens[ $environment_id ][ $user_id ] ) ) {
+			return $this->tokens[ $environment_id ][ $user_id ];
 		}
 
-		$this->tokens[ $environment_id ][ $customer_id ] = array();
+		$this->tokens[ $environment_id ][ $user_id ] = array();
 		$tokens = array();
 
-		// retrieve the datastore persisted tokens first, so we have a fallback, as well as the default token
+		// retrieve the datastore persisted tokens first, so we have them for
+		// gateways that don't support getting them over the API, as well as the
+		// default token for gateways that do
 		if ( $user_id ) {
-
 
 			$_tokens = get_user_meta( $user_id, $this->get_payment_token_user_meta_name( $environment_id ), true );
 
@@ -1785,7 +1790,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				}
 			}
 
-			$this->tokens[ $environment_id ][ $customer_id ] = $tokens;
+			$this->tokens[ $environment_id ][ $user_id ] = $tokens;
 		}
 
 		// if the payment gateway API supports retrieving tokens directly, do so as it's easier to stay synchronized
@@ -1795,7 +1800,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				// retrieve the payment method tokes from the remote API
 				$response = $this->get_api()->get_tokenized_payment_methods( $customer_id );
-				$this->tokens[ $environment_id ][ $customer_id ] = $response->get_payment_tokens();
+				$this->tokens[ $environment_id ][ $user_id ] = $response->get_payment_tokens();
 
 				// check for a default from the persisted set, if any
 				$default_token = null;
@@ -1806,23 +1811,23 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				}
 
 				// mark the corresponding token from the API as the default one
-				if ( $default_token && $default_token->is_default() && isset( $this->tokens[ $environment_id ][ $customer_id ][ $default_token->get_token() ] ) ) {
-					$this->tokens[ $environment_id ][ $customer_id ][ $default_token->get_token() ]->set_default( true );
+				if ( $default_token && $default_token->is_default() && isset( $this->tokens[ $environment_id ][ $user_id ][ $default_token->get_token() ] ) ) {
+					$this->tokens[ $environment_id ][ $user_id ][ $default_token->get_token() ]->set_default( true );
 				}
 
 			} catch( SV_WC_Payment_Gateway_Exception $e ) {
-				// communication or other error, fallback to the locally stored tokens
-				$this->tokens[ $environment_id ][ $customer_id ] = $tokens;
+				// communication or other error
+				$this->tokens[ $environment_id ][ $user_id ] = array();
 			}
 
 		}
 
 		// set the payment type image url, if any, for convenience
-		foreach ( $this->tokens[ $environment_id ][ $customer_id ] as $key => $token ) {
-			$this->tokens[ $environment_id ][ $customer_id ][ $key ]->set_image_url( $this->get_payment_method_image_url( $token->is_credit_card() ? $token->get_card_type() : 'echeck' ) );
+		foreach ( $this->tokens[ $environment_id ][ $user_id ] as $key => $token ) {
+			$this->tokens[ $environment_id ][ $user_id ][ $key ]->set_image_url( $this->get_payment_method_image_url( $token->is_credit_card() ? $token->get_card_type() : 'echeck' ) );
 		}
 
-		return $this->tokens[ $environment_id ][ $customer_id ];
+		return $this->tokens[ $environment_id ][ $user_id ];
 	}
 
 
@@ -1970,13 +1975,13 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		// unknown token?
-		if ( ! $this->has_payment_token( $user_id, $token, null, $environment_id ) ) {
+		if ( ! $this->has_payment_token( $user_id, $token, $environment_id ) ) {
 			return false;
 		}
 
 		// get the payment token object as needed
 		if ( ! is_object( $token ) ) {
-			$token = $this->get_payment_token( $user_id, $token, null, $environment_id );
+			$token = $this->get_payment_token( $user_id, $token, $environment_id );
 		}
 
 		// for direct gateways that allow it, attempt to delete the token from the endpoint
@@ -2041,7 +2046,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// get the payment token object as needed
 		if ( ! is_object( $token ) ) {
-			$token = $this->get_payment_token( $user_id, $token, null, $environment_id );
+			$token = $this->get_payment_token( $user_id, $token, $environment_id );
 		}
 
 		// get existing tokens
