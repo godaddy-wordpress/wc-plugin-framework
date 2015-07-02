@@ -644,11 +644,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// add any common bottom fields
 		$this->form_fields['debug_mode'] = array(
-			'title'       => __( 'Debug Mode', $this->text_domain ),
-			'type'        => 'select',
-			'description' => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the debug log: %s', $this->text_domain ), '<strong class="nobr">' . SV_WC_Plugin_Compatibility::wc_get_log_file_path( $this->get_id() ) . '</strong>' ),
-			'default'     => self::DEBUG_MODE_OFF,
-			'options'     => array(
+			'title'   => __( 'Debug Mode', $this->text_domain ),
+			'type'    => 'select',
+			'desc'    => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the <a href="%s">debug log</a>', $this->text_domain ), SV_WC_Helper::get_wc_log_file_url( $this->get_id() ) ),
+			'default' => self::DEBUG_MODE_OFF,
+			'options' => array(
 				self::DEBUG_MODE_OFF      => _x( 'Off', 'Debug mode off', $this->text_domain ),
 				self::DEBUG_MODE_CHECKOUT => __( 'Show on Checkout Page', $this->text_domain ),
 				self::DEBUG_MODE_LOG      => __( 'Save to Log', $this->text_domain ),
@@ -1870,7 +1870,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns true if the authorization for $order is still valid for capture
 	 *
 	 * @since 2.0.0
-	 * @param $order WC_Order the order
+	 * @param WC_Order $order the order
 	 * @return boolean true if the authorization is valid for capture, false otherwise
 	 */
 	public function authorization_valid_for_capture( $order ) {
@@ -1898,7 +1898,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns true if the authorization for $order has expired
 	 *
 	 * @since 2.0.0
-	 * @param $order WC_Order the order
+	 * @param WC_Order $order the order
 	 * @return boolean true if the authorization has expired, false otherwise
 	 */
 	public function has_authorization_expired( $order ) {

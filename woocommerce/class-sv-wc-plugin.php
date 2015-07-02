@@ -89,7 +89,7 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
 abstract class SV_WC_Plugin {
 
 	/** Plugin Framework Version */
-	const VERSION = '3.1.2';
+	const VERSION = '3.1.2-1';
 
 	/** @var object single instance of plugin */
 	protected static $instance;

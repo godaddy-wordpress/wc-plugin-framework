@@ -742,7 +742,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Perform a credit card capture for the given order
 	 *
 	 * @since 1.0.0
-	 * @param $order WC_Order the order
+	 * @param WC_Order $order the order
 	 * @return null|SV_WC_Payment_Gateway_API_Response the response of the capture attempt
 	 */
 	public function do_credit_card_capture( $order ) {
