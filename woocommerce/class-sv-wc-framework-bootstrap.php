@@ -261,6 +261,26 @@ class SV_WC_Framework_Bootstrap {
 
 
 	/**
+	 * Is the WooCommerce plugin installed and active? This method is handy for
+	 * frameworked plugins that are listed on wordpress.org and thus don't have
+	 * access to the Woo Helper functions bundled with WooThemes-listed plugins.
+	 *
+	 * @since 3.1.2-1
+	 * @return boolean true if the WooCommerce plugin is installed and active
+	 */
+	public static function is_woocommerce_active() {
+
+		$active_plugins = (array) get_option( 'active_plugins', array() );
+
+		if ( is_multisite() ) {
+			$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
+		}
+
+		return in_array( 'woocommerce/woocommerce.php', $active_plugins ) || array_key_exists( 'woocommerce/woocommerce.php', $active_plugins );
+	}
+
+
+	/**
 	 * Compare the two framework versions.  Returns -1 if $a is less than $b, 0 if
 	 * they're equal, and 1 if $a is greater than $b
 	 *

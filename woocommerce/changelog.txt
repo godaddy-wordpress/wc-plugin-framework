@@ -1,7 +1,10 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+XXXX.XX.XX - version 3.1.2-1
+ * Tweak - Adds is_woocommerce_active() method to bootstrap class, to support non-WooThemes listed frameworked plugins
+
 2015.03.17 - version 3.1.2
-* Fix - JS variable `wc_select_params` undefined in WC 2.3.6+
+ * Fix - JS variable `wc_select_params` undefined in WC 2.3.6+
 
 2015.03.10 - version 3.1.1
  * Tweak - Add `get_cancel_order_url_raw()` compatibility method
