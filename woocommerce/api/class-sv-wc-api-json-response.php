@@ -42,7 +42,7 @@ class SV_WC_API_JSON_Response implements SV_WC_API_Response {
 	protected $raw_response_json;
 
 	/** @var mixed decoded response data */
-	protected $response_data;
+	public $response_data;
 
 
 	/**
@@ -65,11 +65,6 @@ class SV_WC_API_JSON_Response implements SV_WC_API_Response {
 	 * @return mixed the attribute value
 	 */
 	public function __get( $name ) {
-
-		// accessing the response_data object directly (useful when it's an array)
-		if ( 'response_data' == $name ) {
-			return $this->response_data;
-		}
 
 		// accessing the response_data object indirectly via attribute (useful when it's a class)
 		return isset( $this->response_data->$name ) ? $this->response_data->$name : null;
