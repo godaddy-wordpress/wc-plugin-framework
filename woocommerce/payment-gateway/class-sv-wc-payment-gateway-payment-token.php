@@ -34,10 +34,8 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Payment_Token' ) ) :
 class SV_WC_Payment_Gateway_Payment_Token {
 
 
-	/**
-	 * @var string payment gateway token
-	 */
-	private $token;
+	/** @var string payment gateway token ID */
+	protected $id;
 
 	/**
 	 * @var array associated token data
@@ -55,7 +53,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * have the following members:
 	 *
 	 * default      - boolean optional indicates this is the default payment token
-	 * type         - string one of 'credit_card' or 'check'
+	 * type         - string one of 'credit_card' or 'echeck' ('check' for backwards compatibility)
 	 * last_four    - string last four digits of account number
 	 * card_type    - string credit card type: visa, mc, amex, disc, diners, jcb, etc (credit card only)
 	 * exp_month    - string optional expiration month MM (credit card only)
@@ -63,20 +61,20 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * account_type - string one of 'checking' or 'savings' (checking gateway only)
 	 *
 	 * @since 1.0.0
-	 * @param string $token the payment gateway token
+	 * @param string $id the payment gateway token ID
 	 * @param array $data associated data
 	 */
-	public function __construct( $token, $data ) {
+	public function __construct( $id, $data ) {
 
 		// get the payment type from the account number if not provided
 		if ( isset( $data['type'] ) && 'credit_card' == $data['type'] && ( ! isset( $data['card_type'] ) || ! $data['card_type'] ) && isset( $data['account_number'] ) ) {
-			$data['card_type'] = $this->type_from_account_number( $data['account_number'] );
+			$data['card_type'] = SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $data['account_number'] );
 		}
 
 		// remove account number so it's not saved to the token
 		unset( $data['account_number'] );
 
-		$this->token = $token;
+		$this->id    = $id;
 		$this->data  = $data;
 	}
 
@@ -85,11 +83,24 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * Returns the payment token string
 	 *
 	 * @since 1.0.0
+	 * @deprecated since 3.1.0-1
 	 * @return string payment token string
 	 */
 	public function get_token() {
 
-		return $this->token;
+		return $this->get_id();
+	}
+
+
+	/**
+	 * Returns the payment token string
+	 *
+	 * @since 3.1.0-1
+	 * @return string payment token string
+	 */
+	public function get_id() {
+
+		return $this->id;
 	}
 
 
@@ -130,19 +141,32 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
-	 * Returns true if this payment token represents a check
+	 * Returns true if this payment token represents an eCheck
 	 *
 	 * @since 1.0.0
-	 * @return boolean true if this payment token represents a check
+	 * @deprecated since 3.1.0-1
+	 * @return boolean true if this payment token represents an eCheck
 	 */
 	public function is_check() {
+
+		return $this->is_echeck();
+	}
+
+
+	/**
+	 * Returns true if this payment token represents an eCheck
+	 *
+	 * @since 3.1.0-1
+	 * @return boolean true if this payment token represents an eCheck
+	 */
+	public function is_echeck() {
 
 		return ! $this->is_credit_card();
 	}
 
 
 	/**
-	 * Returns the payment type, one of 'credit_card' or 'check'
+	 * Returns the payment type, one of 'credit_card' or 'echeck'
 	 *
 	 * @since 1.0.0
 	 * @return string the payment type
@@ -168,40 +192,37 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Set the card type
+	 *
+	 * Credit Card gateway only
+	 *
+	 * @since 3.1.0-1
+	 * @param string $card_type
+	 */
+	public function set_card_type( $card_type ) {
+
+		$this->data['card_type'] = $card_type;
+	}
+
+
+	/**
 	 * Determine the credit card type from the full account number
 	 *
 	 * @since 1.0.0
+	 * @deprecated since 3.1.0-1 in favor of SV_WC_Payment_Gateway_Helper::card_type_from_account_number()
 	 * @param string $account_number the credit card account number
 	 * @return string the credit card type
 	 */
 	public static function type_from_account_number( $account_number ) {
 
-		// card type regex patterns from https://github.com/stripe/jquery.payment/blob/master/src/jquery.payment.coffee
-		$types = array(
-			'visa'     => '/^4/',
-			'mc'       => '/^5[1-5]/',
-			'amex'     => '/^3[47]/',
-			'discover' => '/^(6011|65|64[4-9]|622)/',
-			'diners'   => '/^(36|38|30[0-5])/',
-			'jcb'      => '/^35/',
-			'maestro'  => '/^(5018|5020|5038|6304|6759|676[1-3])/',
-			'laser'    => '/^(6706|6771|6709)/',
-		);
-
-		foreach ( $types as $type => $pattern ) {
-
-			if ( 1 === preg_match( $pattern, $account_number ) )
-				return $type;
-		}
-
-		return null;
+		return SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $account_number );
 	}
 
 
 	/**
-	 * Returns the checking account type, one of 'checking' or 'savings'
+	 * Returns the bank account type, one of 'checking' or 'savings'
 	 *
-	 * Checking gateway only
+	 * eCheck gateway only
 	 *
 	 * @since 1.0.0
 	 * @return string the payment type
@@ -209,6 +230,20 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_account_type() {
 
 		return isset( $this->data['account_type'] ) ? $this->data['account_type'] : null;
+	}
+
+
+	/**
+	 * Set the account type
+	 *
+	 * eCheck gateway only
+	 *
+	 * @since 3.1.0-1
+	 * @param string $account_type
+	 */
+	public function set_account_type( $account_type ) {
+
+		$this->data['account_type'] = $account_type;
 	}
 
 
@@ -221,40 +256,13 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	public function get_type_full() {
 
-		return self::type_to_name( $this->is_credit_card() ? $this->get_card_type() : $this->get_account_type() );
-	}
-
-
-	/**
-	 * Translates a card type to a full name, ie 'mc' => 'MasterCard' or 'savings' => 'eCheck'
-	 *
-	 * @since 1.0.0
-	 * @param string $type the card type, ie 'mc', 'amex', etc
-	 * @return string the card name, ie 'MasterCard', 'American Express', etc
-	 */
-	public static function type_to_name( $type ) {
-
-		$name = '';
-		$type = strtolower( $type );
-
-		// special cases
-		switch ( $type ) {
-
-			case 'mc':         $name = 'MasterCard';       break;
-			case 'amex':       $name = 'American Express'; break;
-			case 'disc':       $name = 'Discover';         break;
-			case 'jcb':        $name = 'JCB';              break;
-			case 'cartebleue': $name = 'CarteBleue';       break;
-			case 'paypal':     $name = 'PayPal';           break;
-			case 'checking':   $name = 'eCheck';           break;
-			case 'savings':    $name = 'eCheck';           break;
-
+		if ( $this->is_credit_card() ) {
+			$type = $this->get_card_type() ? $this->get_card_type() : 'card';
+		} else {
+			$type = $this->get_account_type() ? $this->get_account_type() : 'bank';
 		}
 
-		// default: replace dashes with spaces and uppercase all words
-		if ( ! $name ) $name = ucwords( str_replace( '-', ' ', $type ) );
-
-		return apply_filters( 'wc_payment_gateway_payment_type_to_name', $name, $type );
+		return SV_WC_Payment_Gateway_Helper::payment_type_to_name( $type );
 	}
 
 
@@ -267,6 +275,18 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_last_four() {
 
 		return isset( $this->data['last_four'] ) ? $this->data['last_four'] : null;
+	}
+
+
+	/**
+	 * Set the account last four
+	 *
+	 * @since 3.1.0-1
+	 * @param string $last_four
+	 */
+	public function set_last_four( $last_four ) {
+
+		$this->data['last_four'] = $last_four;
 	}
 
 
@@ -284,6 +304,18 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Set the expiration month
+	 *
+	 * @since 3.1.0-1
+	 * @param string $month
+	 */
+	public function set_exp_month( $month ) {
+
+		$this->data['exp_month'] = $month;
+	}
+
+
+	/**
 	 * Returns the expiration year of the credit card.  This should only be
 	 * called for credit card tokens
 	 *
@@ -293,6 +325,18 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_exp_year() {
 
 		return isset( $this->data['exp_year'] ) ? $this->data['exp_year'] : null;
+	}
+
+
+	/**
+	 * Set the expiration year
+	 *
+	 * @since 3.1.0-1
+	 * @param string $year
+	 */
+	public function set_exp_year( $year ) {
+
+		$this->data['exp_year'] = $year;
 	}
 
 
