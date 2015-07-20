@@ -1368,14 +1368,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function add_refund_order_note( WC_Order $order, $response ) {
 
 		$message = sprintf(
-			_x( '%s Refund in the amount of %s approved.', 'Supports refund charge', $this->text_domain ),
+			_x( '%s Refund in the amount of %s approved.', 'Supports refund', $this->text_domain ),
 			$this->get_method_title(),
 			wc_price( $order->refund->amount, array( 'currency' => $order->get_order_currency() ) )
 		);
 
 		// adds the transaction id (if any) to the order note
 		if ( $response->get_transaction_id() ) {
-			$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports refund charge', $this->text_domain ), $response->get_transaction_id() );
+			$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports refund', $this->text_domain ), $response->get_transaction_id() );
 		}
 
 		$order->add_order_note( $message );
@@ -1394,14 +1394,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( $error_code ) {
 			$message = sprintf(
-				_x( '%s Refund Failed: %s - %s', 'Supports refund charge', $this->text_domain ),
+				_x( '%s Refund Failed: %s - %s', 'Supports refund', $this->text_domain ),
 				$this->get_method_title(),
 				$error_code,
 				$error_message
 			);
 		} else {
 			$message = sprintf(
-				_x( '%s Refund Failed: %s', 'Supports refund charge', $this->text_domain ),
+				_x( '%s Refund Failed: %s', 'Supports refund', $this->text_domain ),
 				$this->get_method_title(),
 				$error_message
 			);
@@ -1473,7 +1473,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// partial voids are not supported
 		if ( $order->refund->amount != $order->get_total() ) {
-			return new WP_Error( 'wc_' . $this->get_id() . '_void_error', _x( 'Oops, you cannot partially void this order. Please use the full order amount.', 'Supports void charge', $this->text_domain ) );
+			return new WP_Error( 'wc_' . $this->get_id() . '_void_error', _x( 'Oops, you cannot partially void this order. Please use the full order amount.', 'Supports voids', $this->text_domain ) );
 		}
 
 		try {
@@ -1556,14 +1556,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( $error_code ) {
 			$message = sprintf(
-				_x( '%s Void Failed: %s - %s', 'Supports void charge', $this->text_domain ),
+				_x( '%s Void Failed: %s - %s', 'Supports voids', $this->text_domain ),
 				$this->get_method_title(),
 				$error_code,
 				$error_message
 			);
 		} else {
 			$message = sprintf(
-				_x( '%s Void Failed: %s', 'Supports void charge', $this->text_domain ),
+				_x( '%s Void Failed: %s', 'Supports voids', $this->text_domain ),
 				$this->get_method_title(),
 				$error_message
 			);
@@ -1583,14 +1583,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function mark_order_as_voided( $order, $response ) {
 
 		$message = sprintf(
-			_x( '%s Void in the amount of %s approved.', 'Supports void charge', $this->text_domain ),
+			_x( '%s Void in the amount of %s approved.', 'Supports voids', $this->text_domain ),
 			$this->get_method_title(),
 			wc_price( $order->refund->amount, array( 'currency' => $order->get_order_currency() ) )
 		);
 
 		// adds the transaction id (if any) to the order note
 		if ( $response->get_transaction_id() ) {
-			$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports void charge', $this->text_domain ), $response->get_transaction_id() );
+			$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports voids', $this->text_domain ), $response->get_transaction_id() );
 		}
 
 		// mark order as cancelled, since no money was actually transferred
