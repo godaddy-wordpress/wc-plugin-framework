@@ -8,6 +8,7 @@
  * Tweak - Adds is_woocommerce_active() method to bootstrap class, to support non-WooThemes listed frameworked plugins
  * Tweak - Payment gateway token support now allows for merging local data with remote data, and caching results in a transient
  * Tweak - The order status for voided orders is now "cancelled" rather than "refunded"
+ * Tweak - Improved support for REST API development
 
 2015.03.17 - version 3.1.2
  * Fix - JS variable `wc_select_params` undefined in WC 2.3.6+

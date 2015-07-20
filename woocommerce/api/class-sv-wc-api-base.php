@@ -53,7 +53,7 @@ abstract class SV_WC_API_Base {
 	protected $request_http_version = '1.0';
 
 	/** @var string request duration */
-	private $request_duration;
+	protected $request_duration;
 
 	/** @var object request */
 	protected $request;
@@ -149,7 +149,6 @@ abstract class SV_WC_API_Base {
 
 		// check for WP HTTP API specific errors (network timeout, etc)
 		if ( is_wp_error( $response ) ) {
-
 			throw new SV_WC_API_Exception( $response->get_error_message(), (int) $response->get_error_code() );
 		}
 
@@ -265,6 +264,7 @@ abstract class SV_WC_API_Base {
 	 * @since 1.0.0
 	 */
 	protected function reset_response() {
+
 		$this->response_code     = null;
 		$this->response_message  = null;
 		$this->response_headers  = null;
@@ -284,7 +284,8 @@ abstract class SV_WC_API_Base {
 	 * @return string
 	 */
 	protected function get_request_uri() {
-		return $this->request_uri;
+		// API base request URI + any request-specific path
+		return $this->request_uri . ( $this->get_request() ? $this->get_request()->get_path() : '' );
 	}
 
 
@@ -331,7 +332,8 @@ abstract class SV_WC_API_Base {
 	 * @return string
 	 */
 	protected function get_request_method() {
-		return $this->request_method;
+		// if the request object specifies the method to use, use that, otherwise use the API default
+		return $this->get_request() && $this->get_request()->get_method() ? $this->get_request()->get_method() : $this->request_method;
 	}
 
 
@@ -522,13 +524,14 @@ abstract class SV_WC_API_Base {
 	 *
 	 * Child classes must implement this to return an object that implements
 	 * \SV_WC_API_Request which should be used in the child class API methods
-	 * to build the request. This is then passed to self::perform_request()
+	 * to build the request. The returned SV_WC_API_Request should be passed
+	 * to self::perform_request() by your concrete API methods
 	 *
 	 * @since 2.2.0
-	 * @param string $type optional request type
+	 * @param array $args optional request arguments
 	 * @return \SV_WC_API_Request
 	 */
-	abstract protected function get_new_request( $type = null );
+	abstract protected function get_new_request( $args = array() );
 
 
 	/**
@@ -590,7 +593,7 @@ abstract class SV_WC_API_Base {
 	 * Set the Accept request header
 	 *
 	 * @since 2.2.0
-	 * @param $type
+	 * @param string $type the request accept type
 	 */
 	protected function set_request_accept_header( $type ) {
 		$this->request_headers['accept'] = $type;

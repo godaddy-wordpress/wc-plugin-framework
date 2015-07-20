@@ -45,8 +45,8 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * Note: case-sensitive
 		 *
 		 * @since 2.2.0
-		 * @param $haystack
-		 * @param $needle
+		 * @param string $haystack
+		 * @param string $needle
 		 * @return bool
 		 */
 		public static function str_starts_with( $haystack, $needle) {
@@ -72,8 +72,8 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * Note: case-sensitive
 		 *
 		 * @since 2.2.0
-		 * @param $haystack
-		 * @param $needle
+		 * @param string $haystack
+		 * @param string $needle
 		 * @return bool
 		 */
 		public static function str_ends_with( $haystack, $needle ) {
@@ -102,8 +102,8 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * Note: case-sensitive
 		 *
 		 * @since 2.2.0
-		 * @param $haystack
-		 * @param $needle
+		 * @param string $haystack
+		 * @param string $needle
 		 * @return bool
 		 */
 		public static function str_exists( $haystack, $needle ) {
@@ -713,6 +713,18 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 				do_action( 'sv_wc_select2_ajax_rendered' );
 			}
+		}
+
+
+		/**
+		 * Gets the full URL to the log file for a given $handle
+		 *
+		 * @since 3.1.2-1
+		 * @param string $handle log handle
+		 * @return string URL to the WC log file identified by $handle
+		 */
+		public static function get_wc_log_file_url( $handle ) {
+			return admin_url( sprintf( 'admin.php?page=wc-status&tab=logs&log_file=%s-%s-log', $handle, sanitize_file_name( wp_hash( $handle ) ) ) );
 		}
 
 
