@@ -180,6 +180,37 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 
 		/**
+		 * Return a string with insane UTF-8 characters removed, like invisible
+		 * characters, unused code points, and other weirdness. It should
+		 * accept the common types of characters defined in Unicode.
+		 *
+		 * The following are allowed characters:
+		 *
+		 * p{L} - any kind of letter from any language
+		 * p{Mn} - a character intended to be combined with another character without taking up extra space (e.g. accents, umlauts, etc.)
+		 * p{Mc} - a character intended to be combined with another character that takes up extra space (vowel signs in many Eastern languages)
+		 * p{Nd} - a digit zero through nine in any script except ideographic scripts
+		 * p{Zs} - a whitespace character that is invisible, but does take up space
+		 * p{P} - any kind of punctuation character
+		 * p{Sm} - any mathematical symbol
+		 * p{Sc} - any currency sign
+		 *
+		 * pattern definitions from http://www.regular-expressions.info/unicode.html
+		 *
+		 * @since 3.1.2-2
+		 * @param string $string
+		 * @return mixed
+		 */
+		public static function str_to_sane_utf8( $string ) {
+
+			$sane_string = preg_replace( '/[^\p{L}\p{Mn}\p{Mc}\p{Nd}\p{Zs}\p{P}\p{Sm}\p{Sc}]/u', '', $string );
+
+			// preg_replace with the /u modifier can return null or false on failure
+			return ( is_null( $sane_string ) || false === $sane_string ) ? $string : $sane_string;
+		}
+
+
+		/**
 		 * Helper method to check if the multibyte extension is loaded, which
 		 * indicates it's safe to use the mb_*() string methods
 		 *
@@ -350,7 +381,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function number_format( $number ) {
 
-			return number_format( $number, 2, '.', '' );
+			return number_format( (float) $number, 2, '.', '' );
 		}
 
 
@@ -410,7 +441,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 				$line_item->name        = htmlentities( $item['name'], ENT_QUOTES, 'UTF-8', false );
 				$line_item->description = htmlentities( $item_desc, ENT_QUOTES, 'UTF-8', false );
 				$line_item->quantity    = $item['qty'];
-				$line_item->item_total  = $order->get_item_total( $item );
+				$line_item->item_total  = isset( $item['recurring_line_total'] ) ? $item['recurring_line_total'] : $order->get_item_total( $item );
 				$line_item->line_total  = $order->get_line_total( $item );
 				$line_item->meta        = $item_meta;
 				$line_item->product     = is_object( $product ) ? $product : null;

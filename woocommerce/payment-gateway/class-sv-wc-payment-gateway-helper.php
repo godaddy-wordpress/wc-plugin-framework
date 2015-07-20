@@ -96,6 +96,77 @@ class SV_WC_Payment_Gateway_Helper {
 	}
 
 
+	/**
+	 * Determine the credit card type from a given account number (only first 4
+	 * required)
+	 *
+	 * @since 3.1.2-2
+	 * @param string $account_number the credit card account number
+	 * @return string the credit card type
+	 */
+	public static function card_type_from_account_number( $account_number ) {
+
+		// card type regex patterns from https://github.com/stripe/jquery.payment/blob/master/src/jquery.payment.coffee
+		$types = array(
+			'visa'     => '/^4/',
+			'mc'       => '/^5[1-5]/',
+			'amex'     => '/^3[47]/',
+			'discover' => '/^(6011|65|64[4-9]|622)/',
+			'diners'   => '/^(36|38|30[0-5])/',
+			'jcb'      => '/^35/',
+			'maestro'  => '/^(5018|5020|5038|6304|6759|676[1-3])/',
+			'laser'    => '/^(6706|6771|6709)/',
+		);
+
+		foreach ( $types as $type => $pattern ) {
+
+			if ( 1 === preg_match( $pattern, $account_number ) ) {
+				return $type;
+			}
+		}
+
+		return null;
+	}
+
+
+	/**
+	 * Translates a credit card type or bank account name to a full name,
+	 * e.g. 'mc' => 'MasterCard' or 'savings' => 'eCheck'
+	 *
+	 * @since 3.1.2-2
+	 * @param string $payment_type the card or bank type, ie 'mc', 'amex', 'checking'
+	 * @return string the card or bank account name, ie 'MasterCard', 'American Express', 'Checking Account'
+	 */
+	public static function payment_type_to_name( $payment_type ) {
+
+		$name = '';
+		$type = strtolower( $payment_type );
+
+		// special cases
+		switch ( $type ) {
+
+			case 'mc':         $name = 'MasterCard';          break;
+			case 'amex':       $name = 'American Express';    break;
+			case 'disc':       $name = 'Discover';            break;
+			case 'jcb':        $name = 'JCB';                 break;
+			case 'cartebleue': $name = 'CarteBleue';          break;
+			case 'paypal':     $name = 'PayPal';              break;
+			case 'checking':   $name = 'Checking Account';    break;
+			case 'savings':    $name = 'Savings Account';     break;
+			case 'card':       $name = 'Credit / Debit Card'; break;
+			case 'bank':       $name = 'Bank Account';        break;
+			case '':           $name = 'Account';             break;
+		}
+
+		// default: replace dashes with spaces and uppercase all words
+		if ( ! $name ) {
+			$name = ucwords( str_replace( '-', ' ', $type ) );
+		}
+
+		return apply_filters( 'wc_payment_gateway_payment_type_to_name', $name, $type );
+	}
+
+
 }
 
 endif; // Class exists check

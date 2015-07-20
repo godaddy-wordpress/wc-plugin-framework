@@ -113,7 +113,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 				}
 			}
 
-			if ( $gateway->supports( SV_WC_Payment_Gateway_Plugin::FEATURE_TOKENIZATION ) ) {
+			if ( $gateway->supports_tokenization() ) {
 				$this->maybe_add_user_profile_tokenization_fields( $gateway, $user );
 			}
 
@@ -160,7 +160,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 				}
 			}
 
-			if ( $this->get_plugin()->supports( SV_WC_Payment_Gateway_Plugin::FEATURE_TOKENIZATION ) ) {
+			if ( $gateway->supports_tokenization() ) {
 				$this->save_user_profile_tokenization_fields( $gateway, $user_id );
 			}
 
@@ -299,7 +299,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 			foreach ( $environments as $environment_id => $environment_name ) :
 
 				// get any payment tokens
-				$payment_tokens = $gateway->get_payment_tokens( $user->ID, null, $environment_id );
+				$payment_tokens = $gateway->get_payment_tokens( $user->ID, array( 'environment_id' => $environment_id ) );
 
 				?>
 
@@ -340,7 +340,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 									foreach ( $gateway->get_card_types() as $card_type ) :
 										$card_type = strtolower( $card_type );
 										?>
-										<option value="<?php echo $card_type; ?>"><?php echo SV_WC_Payment_Gateway_Payment_Token::type_to_name( $card_type ); ?></option>
+										<option value="<?php echo esc_attr( $card_type ); ?>"><?php echo esc_html( SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ) ); ?></option>
 										<?php
 									endforeach;
 									?>

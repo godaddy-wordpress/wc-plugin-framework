@@ -1,7 +1,13 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-XXXX.XX.XX - version 3.1.2-1
+2015.nn.nn - version 3.1.2-2
+ * Feature - Standardized payment gateway form
+ * Feature - Add new payment method feature
+ * Feature - Standardized & unified My Payment Methods table
+ * Feature - New payment method icons in SVG format
  * Tweak - Adds is_woocommerce_active() method to bootstrap class, to support non-WooThemes listed frameworked plugins
+ * Tweak - Payment gateway token support now allows for merging local data with remote data, and caching results in a transient
+ * Tweak - The order status for voided orders is now "cancelled" rather than "refunded"
 
 2015.03.17 - version 3.1.2
  * Fix - JS variable `wc_select_params` undefined in WC 2.3.6+
@@ -10,7 +16,7 @@ XXXX.XX.XX - version 3.1.2-1
  * Tweak - Add `get_cancel_order_url_raw()` compatibility method
 
 2015.02.09 - version 3.1.0
- * Refund/Void support for the payment gateway framework, huzzah!
+ * Feature - Refund/Void support for the payment gateway framework, huzzah!
  * Misc - WooCommerce 2.3 compatibility
 
 2014.12.11 - version 3.0.4

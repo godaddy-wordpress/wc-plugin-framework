@@ -91,6 +91,9 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function perform_request( $request ) {
 
+		// ensure API is in its default state
+		$this->reset_response();
+
 		// save the request object
 		$this->request = $request;
 
@@ -256,6 +259,21 @@ abstract class SV_WC_API_Base {
 	}
 
 
+	/**
+	 * Reset the API response members to their
+	 *
+	 * @since 1.0.0
+	 */
+	protected function reset_response() {
+		$this->response_code     = null;
+		$this->response_message  = null;
+		$this->response_headers  = null;
+		$this->raw_response_body = null;
+		$this->response          = null;
+		$this->request_duration  = null;
+	}
+
+
 	/** Request Getters *******************************************************/
 
 
@@ -283,7 +301,7 @@ abstract class SV_WC_API_Base {
 			'timeout'     => MINUTE_IN_SECONDS,
 			'redirection' => 0,
 			'httpversion' => $this->get_request_http_version(),
-			'sslverify'   => false,
+			'sslverify'   => true,
 			'blocking'    => true,
 			'user-agent'  => $this->get_request_user_agent(),
 			'headers'     => $this->get_request_headers(),

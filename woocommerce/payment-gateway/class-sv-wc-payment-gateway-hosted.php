@@ -567,7 +567,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			$this->get_method_title(),
 			$this->is_test_environment() ? 'Test' : '',
 			$transaction_type,
-			$response->get_card_type() ? SV_WC_Payment_Gateway_Payment_Token::type_to_name( $response->get_card_type() ) : 'card',
+			SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_card_type() ? $response->get_card_type() : 'card' ) ),
 			$last_four,
 			$response->get_exp_month() . '/' . substr( $response->get_exp_year(), -2 )
 		);
@@ -598,7 +598,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			__( '%s %s Transaction Approved: %s ending in %s', $this->text_domain ),
 			$this->get_method_title(),
 			$this->is_test_environment() ? 'Test' : '',
-			$response->get_account_type() ? $response->get_account_type() : 'account',
+			SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_account_type() ? $response->get_account_type() : 'bank' ) ),
 			$last_four
 		);
 

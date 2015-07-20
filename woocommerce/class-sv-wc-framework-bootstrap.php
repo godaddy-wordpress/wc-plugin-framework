@@ -265,7 +265,7 @@ class SV_WC_Framework_Bootstrap {
 	 * frameworked plugins that are listed on wordpress.org and thus don't have
 	 * access to the Woo Helper functions bundled with WooThemes-listed plugins.
 	 *
-	 * @since 3.1.2-1
+	 * @since 3.1.2-2
 	 * @return boolean true if the WooCommerce plugin is installed and active
 	 */
 	public static function is_woocommerce_active() {

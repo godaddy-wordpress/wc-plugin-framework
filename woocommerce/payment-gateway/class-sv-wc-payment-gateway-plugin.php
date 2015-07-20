@@ -45,17 +45,15 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Plugin' ) ) :
  *
  * ## Supports (zero or more):
  *
- * + `tokenization`     - adds actions to show/handle the "My Payment Methods" area of the customer's My Account page
- * + `customer_id`      - adds actions to show/persist the "Customer ID" area of the admin User edit page
- * + `transaction_link` - adds actions to render the merchant account transaction direct link on the Admin Order Edit page.  (Don't forget to override the SV_WC_Payment_Gateway::get_transaction_url() method!)
- * + `capture_charge`   - adds actions to capture charge for authorization-only transactions
+ * + `customer_id`             - adds actions to show/persist the "Customer ID" area of the admin User edit page
+ * + `transaction_link`        - adds actions to render the merchant account transaction direct link on the Admin Order Edit page.  (Don't forget to override the SV_WC_Payment_Gateway::get_transaction_url() method!)
+ * + `capture_charge`          - adds actions to capture charge for authorization-only transactions
+ * + `my_payment_methods`      - adds actions to show/handle a "My Payment Methods" area on the customer's My Account page. This will show saved payment methods for all plugin gateways that support tokenization.
  *
  * @version 2.0.0
  */
 abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
-	/** Tokenization feature */
-	const FEATURE_TOKENIZATION = 'tokenization';
 
 	/** Customer ID feature */
 	const FEATURE_CUSTOMER_ID = 'customer_id';
@@ -68,6 +66,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 	/** Charge capture feature */
 	const FEATURE_CAPTURE_CHARGE = 'capture_charge';
+
+	/** My Payment Methods feature */
+	const FEATURE_MY_PAYMENT_METHODS = 'my_payment_methods';
 
 	/** @var array optional associative array of gateway id to array( 'gateway_class_name' => string, 'gateway' => SV_WC_Payment_Gateway ) */
 	private $gateways;
@@ -89,6 +90,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 	/** @var SV_WC_Payment_Gateway_Admin_User_Edit_Handler adds admin user edit payment gateway functionality */
 	private $admin_user_edit_handler;
+
+	/** @var SV_WC_Payment_Gateway_My_Payment_Methods adds My Payment Method functionality */
+	private $my_payment_methods;
 
 
 	/**
@@ -131,14 +135,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			$this->require_ssl  = $args['require_ssl'];
 		}
 
-		if ( ! is_admin() && $this->supports( self::FEATURE_TOKENIZATION ) ) {
+		// My Payment Methods feature
+		if ( ! is_admin() && $this->supports( self::FEATURE_MY_PAYMENT_METHODS ) ) {
 
-			// Handle any actions from the My Payment Methods section
-			add_action( 'wp', array( $this, 'handle_my_payment_methods_actions' ) );
-
-			// Add the 'Manage My Payment Methods' on the 'My Account' page for the gateway
-			add_action( 'woocommerce_after_my_account', array( $this, 'add_my_payment_methods' ) );
-
+			add_action( 'wp', array( $this, 'maybe_init_my_payment_methods' ) );
 		}
 
 		// Admin
@@ -210,6 +210,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-response.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-credit-card-response.php' );
 		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-echeck-response.php' );
+		require_once( 'api/interface-sv-wc-payment-gateway-api-customer-response.php' );
 
 		// exceptions
 		require_once( 'exceptions/class-sv-wc-payment-gateway-exception.php' );
@@ -218,7 +219,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( 'class-sv-wc-payment-gateway.php' );
 		require_once( 'class-sv-wc-payment-gateway-direct.php' );
 		require_once( 'class-sv-wc-payment-gateway-hosted.php' );
-		require_once( 'class-sv-wc-payment-token.php' );
+		require_once( 'class-sv-wc-payment-gateway-payment-token.php' );
+		require_once( 'class-sv-wc-payment-gateway-payment-form.php' );
+		require_once( 'class-sv-wc-payment-gateway-my-payment-methods.php' );
 
 		// helpers
 		require_once( 'api/class-sv-wc-payment-gateway-api-response-message-helper.php' );
@@ -232,43 +235,24 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	}
 
 
-	/** Frontend methods ******************************************************/
+	/** My Payment Methods methods ***********************************/
 
 
-	/**
-	 * Helper to add the 'My Cards' section to the 'My Account' page
-	 *
-	 * @since 1.0.0
-	 */
-	public function add_my_payment_methods() {
+	public function maybe_init_my_payment_methods() {
 
-		foreach ( $this->get_gateways() as $gateway ) {
+		if ( is_account_page() && is_user_logged_in() ) {
 
-			if ( $gateway->supports_tokenization() && $gateway->is_available() ) {
-				$gateway->show_my_payment_methods();
-			}
+			$this->my_payment_methods = $this->get_my_payment_methods_instance();
 		}
-
 	}
 
-
 	/**
-	 * Helper to handle any actions from the 'My Cards' section on the 'My Account'
-	 * page
 	 *
-	 * @since 1.0.0
+	 * @return SV_WC_Payment_Gateway_My_Payment_Methods
 	 */
-	public function handle_my_payment_methods_actions() {
+	protected function get_my_payment_methods_instance() {
 
-		if ( is_account_page() ) {
-
-			foreach ( $this->get_gateways() as $gateway ) {
-
-				if ( $gateway->supports_tokenization() ) {
-					$gateway->handle_my_payment_methods_actions();
-				}
-			}
-		}
+		return new SV_WC_Payment_Gateway_My_Payment_Methods( $this );
 	}
 
 
@@ -722,7 +706,18 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	public function get_gateway_settings( $gateway_id ) {
 
 		return get_option( $this->get_gateway_settings_name( $gateway_id ) );
+	}
 
+
+	/**
+	 * Returns the relative path to the payment gateway framework image directory,
+	 * with a trailing slash
+	 *
+	 * @since 3.1.2-2
+	 * @return string relative path to payment gateway framework image directory
+	 */
+	public function get_payment_gateway_framework_image_path() {
+		return 'lib/skyverge/woocommerce/payment-gateway/assets/images/';
 	}
 
 
@@ -748,7 +743,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	public function get_settings_url( $gateway_id = null ) {
 
 		// default to first gateway
-		if ( is_null( $gateway_id ) ) {
+		if ( is_null( $gateway_id ) || $gateway_id === $this->get_id() ) {
 			reset( $this->gateways );
 			$gateway_id = key( $this->gateways );
 		}
@@ -919,6 +914,27 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		assert( ! empty( $this->gateways ) );
 
 		return array_keys( $this->gateways );
+	}
+
+
+	/**
+	 * Returns the gateway for a given token
+	 *
+	 * @since 3.1.2-2
+	 * @param string|int $user_id the user ID associated with the token
+	 * @param string $token the token string
+	 * @return SV_WC_Payment_Gateway|null gateway if found, null otherwise
+	 */
+	public function get_gateway_from_token( $user_id, $token ) {
+
+		foreach ( $this->get_gateways() as $gateway ) {
+
+			if ( $gateway->has_payment_token( $user_id, $token ) ) {
+				return $gateway;
+			}
+		}
+
+		return null;
 	}
 
 
