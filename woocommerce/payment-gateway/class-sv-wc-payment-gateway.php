@@ -1245,6 +1245,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 			$response = $response = $this->get_api()->refund( $order );
 
+			// allow gateways to void an order in response to a refund attempt
+			if ( $this->supports_voids() && $this->maybe_void_instead_of_refund( $order, $response ) ) {
+				return $this->process_void( $order );
+			}
+
 			if ( $response->transaction_approved() ) {
 
 				// add standard refund-specific transaction data
@@ -1438,6 +1443,22 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	public function supports_voids() {
 
 		return $this->supports( self::FEATURE_VOIDS ) && $this->supports_credit_card_capture();
+	}
+
+
+	/**
+	 * Allow gateways to void an order that was attempted to be refunded. This is
+	 * particularly useful for gateways that can void an authorized & captured
+	 * charge that has not yet settled (e.g. Authorize.net AIM/CIM)
+	 *
+	 * @since 3.1.0-1
+	 * @param \WC_Order $order order
+	 * @param \SV_WC_Payment_Gateway_API_Response $response refund response
+	 * @return boolean true if a void should be performed for the given order/response
+	 */
+	protected function maybe_void_instead_of_refund( $order, $response ) {
+
+		return false;
 	}
 
 
