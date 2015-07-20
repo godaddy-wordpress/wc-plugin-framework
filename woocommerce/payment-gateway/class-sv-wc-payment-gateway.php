@@ -220,6 +220,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/** Voids feature */
 	const FEATURE_VOIDS = 'voids';
 
+	/** Payment Form feature */
+	const FEATURE_PAYMENT_FORM = 'payment_form';
+
 	/** Customer ID feature */
 	const FEATURE_CUSTOMER_ID = 'customer_id';
 
@@ -429,24 +432,44 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	public function enqueue_scripts() {
 
 		// only load javascript once, if the gateway is available
-		if ( ! $this->is_available() || wp_script_is( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', 'enqueued' ) ) {
+		if ( ! $this->is_available() || wp_script_is( 'sv-wc-payment-gateway-frontend', 'enqueued' ) || wp_script_is( 'wc-' . $this->get_plugin()->get_id_dasherized(), 'enqueued' ) ) {
 			return false;
 		}
 
-		// load gateway.js checkout script
-		$script_src = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_javascript_url', $this->get_plugin()->get_plugin_url() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . '.min.js' );
+		$localized_script_handle = '';
 
-		// some gateways don't use frontend scripts so don't enqueue if one doesn't exist
-		if ( ! is_readable( $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . '.min.js' ) ) {
-			return false;
+		// payment form JS/CSS
+		if ( $this->supports_payment_form() ) {
+
+			// jQuery.payment - for credit card validation/formatting
+			wp_enqueue_script( 'jquery-payment' );
+
+			// frontend JS
+			wp_enqueue_script( 'sv-wc-payment-gateway-frontend', $this->get_plugin()->get_plugin_url() . '/lib/skyverge/woocommerce/payment-gateway/assets/js/frontend/sv-wc-payment-gateway-frontend.min.js', array(), $this->get_plugin()->get_version(), true );
+
+			// frontend CSS
+			wp_enqueue_style( 'sv-wc-payment-gateway-frontend', $this->get_plugin()->get_plugin_url() . '/lib/skyverge/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-frontend.min.css', array(), $this->get_plugin()->get_version() );
+
+			$localized_script_handle = 'sv-wc-payment-gateway-frontend';
 		}
 
-		wp_enqueue_script( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', $script_src, array(), $this->get_plugin()->get_version(), true );
+		// some gateways (particularly those that don't support the payment form feature) have their own frontend JS
+		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . '.min.js' ) ) {
 
-		// localize error messages
-		$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() . '_js_localize_script_params', $this->get_js_localize_script_params() );
+			$script_src = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_javascript_url', $this->get_plugin()->get_plugin_url() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . '.min.js' );
 
-		wp_localize_script( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-js', $this->get_plugin()->get_id() . '_params', $params );
+			wp_enqueue_script( 'wc-' . $this->get_plugin()->get_id_dasherized(), $script_src, array(), $this->get_plugin()->get_version(), true );
+
+			$localized_script_handle = 'wc-' . $this->get_plugin()->get_id_dasherized();
+		}
+
+		// maybe localize error messages
+		if ( $localized_script_handle ) {
+
+			$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() . '_js_localize_script_params', $this->get_js_localize_script_params() );
+
+			wp_localize_script( $localized_script_handle, $this->get_plugin()->get_id() . '_params', $params );
+		}
 
 		return true;
 	}
@@ -528,6 +551,70 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function payment_page( $order_id ) {
 		echo '<p>' . __( 'Thank you for your order.', $this->text_domain ) . '</p>';
+	}
+
+
+	/** Payment Form Feature **************************************************/
+
+
+	/**
+	 * Returns true if the gateway supports the payment form feature
+	 *
+	 * @since 3.1.0-1
+	 * @return bool
+	 */
+	public function supports_payment_form() {
+
+		return $this->supports( self::FEATURE_PAYMENT_FORM );
+	}
+
+
+	/**
+	 * Render the payment fields
+	 *
+	 * @since 3.1.0-1
+	 * @see WC_Payment_Gateway::payment_fields()
+	 * @see SV_WC_Payment_Gateway_Payment_Form class
+	 */
+	public function payment_fields() {
+
+		if ( $this->supports_payment_form() ) {
+
+			$form = new SV_WC_Payment_Gateway_Payment_Form( $this );
+
+			$form->render();
+
+		} else {
+
+			parent::payment_fields();
+		}
+	}
+
+
+	/**
+	 * Get the payment form field defaults, primarily for gateways to override
+	 * and set dummy credit card/eCheck info when in the test environment
+	 *
+	 * @since 3.1.0-1
+	 * @return array
+	 */
+	public function get_payment_method_defaults() {
+
+		assert( $this->supports_payment_form() );
+
+		$defaults = array(
+			'account-number' => '',
+			'routing-number' => '',
+			'expiry'         => '',
+			'csc'            => '',
+		);
+
+		if ( $this->is_test_environment() ) {
+			$defaults['expiry'] = '01/' . ( date( 'Y' ) + 1 );
+			$defaults['csc'] = '123';
+		}
+
+		return $defaults;
 	}
 
 
@@ -2440,6 +2527,18 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function get_plugin() {
 		return $this->plugin;
+	}
+
+
+	/**
+	 * Get the text domain for the gateway
+	 *
+	 * @since 3.1.0-1
+	 * @return string
+	 */
+	public function get_text_domain() {
+
+		return $this->text_domain;
 	}
 
 
