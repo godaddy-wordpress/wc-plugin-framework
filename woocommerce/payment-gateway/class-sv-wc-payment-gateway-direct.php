@@ -1699,6 +1699,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// add the standard transaction data
 			$this->add_transaction_data( $order, $response );
 
+			// clear any cached tokens
+			if ( $transient_key = $this->get_payment_tokens_transient_key( SV_WC_Plugin_Compatibility::get_order_user_id( $order ) ) ) {
+				delete_transient( $transient_key );
+			}
+
 		} else {
 
 			if ( $response->get_status_code() && $response->get_status_message() ) {
@@ -1806,12 +1811,19 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		$environment_id = $args['environment_id'];
 		$customer_id    = $args['customer_id'];
+		$transient_key  = $this->get_payment_tokens_transient_key( $user_id );
+
 		// return tokens cached during a single request
 		if ( isset( $this->tokens[ $environment_id ][ $user_id ] ) ) {
 			return $this->tokens[ $environment_id ][ $user_id ];
 		}
 
-		$this->tokens[ $environment_id ][ $customer_id ] = array();
+		// return tokens cached in transient
+		if ( $transient_key && ( false !== ( $this->tokens[ $environment_id ][ $user_id ] = get_transient( $transient_key ) ) ) ) {
+			return $this->tokens[ $environment_id ][ $user_id ];
+		}
+
+		$this->tokens[ $environment_id ][ $user_id ] = array();
 		$tokens = array();
 
 		// retrieve the datastore persisted tokens first, so we have them for
@@ -1865,7 +1877,65 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$this->tokens[ $environment_id ][ $user_id ][ $key ]->set_image_url( $this->get_payment_method_image_url( $token->is_credit_card() ? $token->get_card_type() : 'echeck' ) );
 		}
 
+		if ( $transient_key ) {
+			set_transient( $transient_key, $this->tokens[ $environment_id ][ $user_id ], 60 );
+		}
 		return $remote_tokens;
+	}
+
+
+	/**
+
+	/**
+	 * Return the payment token transient key for the given user, gateway,
+	 * and environment
+	 *
+	 * Payment token transients can be disabled by using the filter below.
+	 *
+	 * @since 3.1.0-1
+	 * @param string|int $user_id
+	 * @return string transient key
+	 */
+	protected function get_payment_tokens_transient_key( $user_id = null ) {
+
+		if ( ! $user_id ) {
+			$user_id = get_current_user_id();
+		}
+
+		// ex: wc_sv_tokens_<md5 hash of gateway_id, user ID, and environment ID>
+		$key = sprintf( 'wc_sv_tokens_%s', md5( $this->get_id() . '_' . $user_id . '_' . $this->get_environment() ) );
+
+		/**
+		 * Filter payment tokens transient key
+		 *
+		 * Warning: this filter should generally only be used to disable token
+		 * transients by returning false or an empty string. Setting an incorrect or invalid
+		 * transient key (e.g. not keyed to the current user or environment) can
+		 * result in unexpected and difficult to debug situations involving tokens.
+		 *
+		 * filter responsibly!
+		 *
+		 * @since 3.1.0-1
+		 * @param string $key transient key (must be 45 chars or less)
+		 * @param \SV_WC_Payment_Gateway_Direct $this direct gateway class instance
+		 */
+		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_payment_tokens_transient_key', $key, $user_id, $this );
+	}
+
+
+	/**
+	 * Helper method to clear the tokens transient
+	 *
+	 * TODO: ideally the transient would make use of actions to clear itself
+	 * as needed (e.g. when customer IDs are updated/removed), but for now it's
+	 * only cleared when the tokens are updated.
+	 *
+	 * @since 3.1.0-1
+	 * @param int|string $user_id
+	 */
+	public function clear_payment_tokens_transient( $user_id ) {
+
+		delete_transient( $this->get_payment_tokens_transient_key( $user_id ) );
 	}
 
 
@@ -1886,7 +1956,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		// update the local cache
-		$this->tokens[ $environment_id ][ $this->get_customer_id( $user_id, array( 'environment_id' => $environment_id ) ) ] = $tokens;
+		$this->tokens[ $environment_id ][ $user_id ] = $tokens;
+
+		// clear the transient
+		$this->clear_payment_tokens_transient( $user_id );
 
 		// persist the updated tokens to the user meta
 		return update_user_meta( $user_id, $this->get_payment_token_user_meta_name( $environment_id ), $this->payment_tokens_to_database_format( $tokens ) );
