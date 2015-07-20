@@ -301,7 +301,7 @@ abstract class SV_WC_API_Base {
 			'timeout'     => MINUTE_IN_SECONDS,
 			'redirection' => 0,
 			'httpversion' => $this->get_request_http_version(),
-			'sslverify'   => false,
+			'sslverify'   => true,
 			'blocking'    => true,
 			'user-agent'  => $this->get_request_user_agent(),
 			'headers'     => $this->get_request_headers(),
