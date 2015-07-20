@@ -642,7 +642,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$this->get_method_title(),
 				$this->is_test_environment() ? _x( 'Test', 'Supports direct credit card', $this->text_domain ) : '',
 				$this->perform_credit_card_authorization() ? 'Authorization' : 'Charge',
-				isset( $order->payment->card_type ) && $order->payment->card_type ? SV_WC_Payment_Gateway_Payment_Token::type_to_name( $order->payment->card_type ) : 'card',
+				SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ),
 				$last_four,
 				$order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 )
 			);
@@ -1507,7 +1507,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 						_x( '%s %s Pre-Order Release Payment Approved: %s ending in %s (expires %s)', 'Supports direct payment method pre-orders', $this->text_domain ),
 						$this->get_method_title(),
 						$this->perform_credit_card_authorization() ? 'Authorization' : 'Charge',
-						isset( $order->payment->card_type ) && $order->payment->card_type ? SV_WC_Payment_Gateway_Payment_Token::type_to_name( $order->payment->card_type ) : 'card',
+						SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( ! empty( $order->payment->card_type ) ? $order->payment->card_type : 'card' ) ),
 						$last_four,
 						$order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 )
 					);
@@ -1515,7 +1515,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				} elseif ( $this->is_echeck_gateway() ) {
 
 					// account type (checking/savings) may or may not be available, which is fine
-					$message = sprintf( _x( '%s eCheck Pre-Order Release Payment Approved: %s account ending in %s', 'Supports direct payment method pre-orders', $this->text_domain ), $this->get_method_title(), $order->payment->account_type, $last_four );
+					$message = sprintf( _x( '%s eCheck Pre-Order Release Payment Approved: %s ending in %s', 'Supports direct payment method pre-orders', $this->text_domain ), $this->get_method_title(), SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( ! empty( $order->payment->account_type ) ? $order->payment->account_type : 'bank' ) ), $last_four );
 
 				}
 

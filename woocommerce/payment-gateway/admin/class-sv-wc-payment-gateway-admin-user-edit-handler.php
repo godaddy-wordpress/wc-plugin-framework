@@ -340,7 +340,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 									foreach ( $gateway->get_card_types() as $card_type ) :
 										$card_type = strtolower( $card_type );
 										?>
-										<option value="<?php echo $card_type; ?>"><?php echo SV_WC_Payment_Gateway_Payment_Token::type_to_name( $card_type ); ?></option>
+										<option value="<?php echo esc_attr( $card_type ); ?>"><?php echo esc_html( SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ) ); ?></option>
 										<?php
 									endforeach;
 									?>
