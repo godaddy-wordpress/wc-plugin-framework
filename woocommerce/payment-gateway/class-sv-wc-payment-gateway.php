@@ -1665,16 +1665,16 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// build the order note with what data we have
 		if ( $response->get_status_code() && $response->get_status_message() ) {
-			$order_note = sprintf( '%s: "%s"', $response->get_status_code(), $response->get_status_message() );
+			$order_note = sprintf( 'Status code %s: %s', $response->get_status_code(), $response->get_status_message() );
 		} elseif ( $response->get_status_code() ) {
-			$order_note = sprintf( 'Status code: "%s"', $response->get_status_code() );
+			$order_note = sprintf( 'Status code: %s', $response->get_status_code() );
 		} elseif ( $response->get_status_message() ) {
-			$order_note = sprintf( 'Status message: "%s"', $response->get_status_message() );
+			$order_note = sprintf( 'Status message: %s', $response->get_status_message() );
 		}
 
 		// add transaction id if there is one
 		if ( $response->get_transaction_id() ) {
-			$order_note .= ' ' . sprintf( __( 'Transaction id %s', $this->text_domain ), $response->get_transaction_id() );
+			$order_note .= ' ' . sprintf( __( 'Transaction ID %s', $this->text_domain ), $response->get_transaction_id() );
 		}
 
 		$this->mark_order_as_failed( $order, $order_note, $response );
