@@ -376,7 +376,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// pay page fallback
 		$this->add_pay_page_handler();
 
-		// Save settings
+		// filter order received text for held orders
+		add_filter( 'woocommerce_thankyou_order_received_text', array( $this, 'maybe_render_held_order_received_text' ), 10, 2 );
+
+		// admin only
 		if ( is_admin() ) {
 			add_action( 'woocommerce_update_options_payment_gateways_' . $this->get_id(), array( $this, 'process_admin_options' ) );
 		}
@@ -1713,7 +1716,41 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( ! $user_message ) {
 			$user_message = __( 'Your order has been received and is being reviewed.  Thank you for your business.', $this->text_domain );
 		}
-		SV_WC_Helper::wc_add_notice( $user_message );
+
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_2() ) {
+
+			WC()->session->held_order_received_text = $user_message;
+
+		} else {
+
+			// TODO: remove once 2.2+ is required
+			SV_WC_Helper::wc_add_notice( $user_message );
+		}
+	}
+
+
+	/**
+	 * Maybe render custom order received text on the thank you page when
+	 * an order is held
+	 *
+	 * If detailed customer decline messages are enabled, this message may
+	 * additionally include more detailed information.
+	 *
+	 * @since 3.1.0-1
+	 * @param string $text order received text
+	 * @param WC_Order|null $order order object
+	 * @return string
+	 */
+	public function maybe_render_held_order_received_text( $text, $order ) {
+
+		if ( $order && SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) && isset( WC()->session->held_order_received_text ) ) {
+
+			$text = WC()->session->held_order_received_text;
+
+			unset( WC()->session->held_order_received_text );
+		}
+
+		return $text;
 	}
 
 
