@@ -1044,7 +1044,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( $this->icon ) {
 
 			// use icon provided by filter
-			$icon = '<img src="' . esc_url( WC_HTTPS::force_https_url( $this->icon ) ) . '" alt="' . esc_attr( $this->get_title() ) . '" />';
+			$icon = sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" />', esc_url( WC_HTTPS::force_https_url( $this->icon ) ), esc_attr( $this->get_title() ), esc_attr( $this->get_id_dasherized() ) );
 		}
 
 		// credit card images
@@ -1054,7 +1054,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			foreach ( $this->get_card_types() as $card_type ) {
 
 				if ( $url = $this->get_payment_method_image_url( $card_type ) ) {
-					$icon .= '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( strtolower( $card_type ) ) . '" />';
+					$icon .= sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" width="40" height="25" />', esc_url( $url ), esc_attr( strtolower( $card_type ) ), esc_attr( $this->get_id_dasherized() ) );
 				}
 			}
 		}
@@ -1063,7 +1063,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( ! $icon && $this->is_echeck_gateway() ) {
 
 			if ( $url = $this->get_payment_method_image_url( 'echeck' ) ) {
-				$icon .= '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( 'echeck' ) . '" />';
+				$icon .= sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" width="40" height="25" />', esc_url( $url ), esc_attr( 'echeck' ), esc_attr( $this->get_id_dasherized() ) );
 			}
 		}
 
@@ -1112,6 +1112,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 				$image_type = 'visa-electron';
 			break;
 
+			case 'card':
+				$image_type = 'cc-plain';
+			break;
+
 			// default: accept $type as is
 		}
 
@@ -1122,15 +1126,17 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			}
 		}
 
+		// support fallback to PNG
+		$image_extension = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_use_svg', true ) ? '.svg' : '.png';
+
 		// first, is the card image available within the plugin?
-		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/assets/images/card-' . $image_type . '.png' ) ) {
-			return WC_HTTPS::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/assets/images/card-' . $image_type . '.png';
+		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/assets/images/card-' . $image_type . $image_extension ) ) {
+			return WC_HTTPS::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/assets/images/card-' . $image_type . $image_extension;
 		}
 
 		// default: is the card image available within the framework?
-		// NOTE: I don't particularly like hardcoding this path, but I don't see any real way around it
-		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/' . $this->get_plugin()->get_framework_image_path() . 'card-' . $image_type . '.png' ) ) {
-			return WC_HTTPS::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/' . $this->get_plugin()->get_framework_image_path() . 'card-' . $image_type . '.png';
+		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/' . $this->get_plugin()->get_payment_gateway_framework_image_path() . 'card-' . $image_type . $image_extension ) ) {
+			return WC_HTTPS::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/' . $this->get_plugin()->get_payment_gateway_framework_image_path() . 'card-' . $image_type . $image_extension;
 		}
 
 		return null;
