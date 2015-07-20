@@ -795,6 +795,18 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Returns the plugin's text domain
+	 *
+	 * @since 3.1.0-1
+	 * @return string text domain
+	 */
+	public function get_text_domain() {
+
+		return $this->text_domain;
+	}
+
+
+	/**
 	 * Helper function to determine whether a plugin is active
 	 *
 	 * @since 2.0.0
