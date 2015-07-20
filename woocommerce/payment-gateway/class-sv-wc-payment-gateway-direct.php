@@ -33,6 +33,10 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Direct' ) ) :
  */
 abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
+
+	/** Add new payment method feature */
+	const FEATURE_ADD_PAYMENT_METHOD = 'add_payment_method';
+
 	/** Subscriptions feature */
 	const FEATURE_SUBSCRIPTIONS = 'subscriptions';
 
@@ -2087,118 +2091,254 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	}
 
 
+	/** Add Payment Method feature ********************************************/
+
+
 	/**
-	 * Handle any actions from the 'My Payment Methods' section on the
-	 * 'My Account' page
+	 * Returns true if the gateway supports the add payment method feature
 	 *
-	 * @since 1.0.0
+	 * @since 3.1.0-1
+	 * @return boolean true if the gateway supports add payment method feature
 	 */
-	public function handle_my_payment_methods_actions() {
+	public function supports_add_payment_method() {
+		return $this->supports( self::FEATURE_ADD_PAYMENT_METHOD );
+	}
 
-		assert( $this->supports_tokenization() );
 
-		// pre-conditions
-		if ( ! $this->is_available() || ! $this->tokenization_enabled() )
-			return;
+	/**
+	 * Entry method for the Add Payment Method feature flow. Note this is *not*
+	 * stubbed in the WC_Payment_Gateway abstract class, but is called if the
+	 * gateway declares support for it.
+	 *
+	 * @since 3.1.0-1
+	 */
+	public function add_payment_method() {
 
-		$token  = isset( $_GET[ 'wc-' . $this->get_id_dasherized() . '-token' ] )  ? trim( $_GET[ 'wc-' . $this->get_id_dasherized() . '-token' ] ) : '';
-		$action = isset( $_GET[ 'wc-' . $this->get_id_dasherized() . '-action' ] ) ? $_GET[ 'wc-' . $this->get_id_dasherized() . '-action' ] : '';
+		assert( $this->supports_add_payment_method() );
 
-		// process payment method actions
-		if ( $token && $action && ! empty( $_GET['_wpnonce'] ) && is_user_logged_in() ) {
+		$order = $this->get_order_for_add_payment_method();
 
-			// security check
-			if ( false === wp_verify_nonce( $_GET['_wpnonce'], 'wc-' . $this->get_id_dasherized() . '-token-action' ) ) {
+		try {
 
-				SV_WC_Helper::wc_add_notice( _x( 'There was an error with your request, please try again.', 'Supports direct payment method tokenization', $this->text_domain ), 'error' );
+			$result = $this->do_add_payment_method_transaction( $order );
 
-				wp_redirect( get_permalink( wc_get_page_id( 'myaccount' ) ) );
-				exit;
+		} catch ( SV_WC_Plugin_Exception $e ) {
 
+			$result = array(
+				'message' => sprintf( __( 'Oops, adding your new payment method failed: %s', $this->text_domain ), $e->getMessage() ),
+				'success' => false,
+			);
+		}
+
+		SV_WC_Helper::wc_add_notice( $result['message'], $result['success'] ? 'success' : 'error' );
+
+		// redirect to my account on success, or back to Add Payment Method screen on failure so user can try again
+		wp_safe_redirect( $result['success'] ? get_permalink( wc_get_page_id( 'myaccount' ) ) : wc_get_endpoint_url( 'add-payment-method' ) );
+
+		exit();
+	}
+
+
+	/**
+	 * Perform the transaction to add the customer's payment method to their
+	 * account
+	 *
+	 * @since 3.1.0-1
+	 * @return array result with success/error message and request status (success/failure)
+	 */
+	protected function do_add_payment_method_transaction( WC_Order $order ) {
+
+		$response = $this->get_api()->tokenize_payment_method( $order );
+
+		if ( $response->transaction_approved() ) {
+
+			$token = $response->get_payment_token();
+
+			// set the token to the user account
+			$this->add_payment_token( $order->customer_user, $token );
+
+			// order note based on gateway type
+			if ( $this->is_credit_card_gateway() ) {
+
+				$message = sprintf( _x( 'Nice! New payment method added: %s ending in %s (expires %s)', 'Supports add payment method feature', $this->text_domain ),
+					$token->get_type_full(),
+					$token->get_last_four(),
+					$token->get_exp_date()
+				);
+
+			} elseif ( $this->is_echeck_gateway() ) {
+
+				// account type (checking/savings) may or may not be available, which is fine
+				$message = sprintf( _x( 'Nice! New payment method added: %s account ending in %s', 'Supports add payment method feature', $this->text_domain ),
+					$token->get_account_type(),
+					$token->get_last_four()
+				);
+
+			} else {
+				$message = _x( 'Nice! New payment method added.', 'Supports direct', $this->text_domain );
 			}
 
-			// current logged in user
-			$user_id = get_current_user_id();
+			// add transaction data to user meta
+			$this->add_add_payment_method_transaction_data( $response );
 
-			// handle deletion
-			if ( 'delete' === $action ) {
+			// add customer data, primarily customer ID to user meta
+			$this->add_add_payment_method_customer_data( $order, $response );
 
-				if ( ! $this->remove_payment_token( $user_id, $token ) ) {
+			$result = array( 'message' => $message, 'success' => true );
 
-					SV_WC_Helper::wc_add_notice( _x( 'Error removing payment method', 'Supports direct payment method tokenization', $this->text_domain ), 'error' );
+		} else {
 
-				} else {
-					SV_WC_Helper::wc_add_notice( _x( 'Payment method deleted.', 'Supports direct payment method tokenization', $this->text_domain ) );
-				}
-
+			if ( $response->get_status_code() && $response->get_status_message() ) {
+				$message = sprintf( 'Status codes %s: %s', $response->get_status_code(), $response->get_status_message() );
+			} elseif ( $response->get_status_code() ) {
+				$message = sprintf( 'Status code: %s', $response->get_status_code() );
+			} elseif ( $response->get_status_message() ) {
+				$message = sprintf( 'Status message: %s', $response->get_status_message() );
+			} else {
+				$message = 'Unknown Error';
 			}
 
-			// handle default change
-			if ( 'make-default' === $action ) {
-				$this->set_default_payment_token( $user_id, $token );
-			}
+			$result = array( 'message' => $message, 'success' => false );
+		}
 
-			// remove the query params
-			wp_redirect( get_permalink( wc_get_page_id( 'myaccount' ) ) );
-			exit;
+		/**
+		 * Add Payment Method Transaction Result Filter.
+		 *
+		 * Filter the result data from an add payment method transaction attempt -- this
+		 * can be used to control the notice message displayed and whether the
+		 * user is redirected back to the My Account page or remains on the add
+		 * new payment method screen
+		 *
+		 * @since 3.1.0-1
+		 * @param array $result {
+		 *   @type string $message notice message to render
+		 *   @type bool $success true to redirect to my account, false to stay on page
+		 * }
+		 * @param \SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response instance
+		 * @param \WC_Order $order order instance
+		 * @param \SV_WC_Payment_Gateway_Direct $this direct gateway instance
+		 */
+		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_add_payment_method_transaction_result', $result, $response, $order, $this );
+	}
+
+
+	/**
+	 * Creates the order required for adding a new payment method. Note that
+	 * a mock order is generated as there is no actual order associated with the
+	 * request.
+	 *
+	 * @since 3.1.0-1
+	 * @return WC_Order generated order object
+	 */
+	protected function get_order_for_add_payment_method() {
+
+		// mock order, as all gateway API implementations require an order object for tokenization
+		$order = $this->get_order( 0 );
+
+		$user = get_userdata( get_current_user_id() );
+
+		$order->customer_user = $user->ID;
+
+		// billing & shipping
+		$fields = array(
+			'billing_first_name', 'billing_last_name', 'billing_address_1', 'billing_company',
+			'billing_address_2', 'billing_city', 'billing_postcode', 'billing_state',
+			'billing_country', 'billing_phone', 'billing_email', 'shipping_first_name',
+			'shipping_last_name', 'shipping_company', 'shipping_address_1', 'shipping_address_2',
+			'shipping_city', 'shipping_postcode', 'shipping_state', 'shipping_country',
+		);
+
+		foreach ( $fields as $field ) {
+			$order->$field = $user->$field;
+		}
+
+		// other default info
+		$order->customer_id = $this->get_customer_id( $order->customer_user );
+		$order->description = sprintf( _x( '%s - Add Payment Method for %s', 'Add payment method request description', $this->text_domain ), sanitize_text_field( get_bloginfo( 'name' ) ), $order->billing_email );
+
+		// force zero amount
+		$order->payment_total = '0.00';
+
+		// allow other actors to modify the order object
+		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_add_payment_method', $order, $this );
+	}
+
+
+	/**
+	 * Add customer data as part of the add payment method transaction, primarily
+	 * customer ID
+	 *
+	 * @since 3.1.0-1
+	 * @param WC_Order $order mock order
+	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response
+	 */
+	protected function add_add_payment_method_customer_data( $order, $response ) {
+
+		$user_id = $order->get_user_id();
+
+		// set customer ID from response if available
+		if ( $this->supports_customer_id() && method_exists( $response, 'get_customer_id' ) && $response->get_customer_id() ) {
+
+			$order->customer_id = $customer_id = $response->get_customer_id();
+
+		} else {
+
+			// default to the customer ID on "order"
+			$customer_id = $order->customer_id;
+		}
+
+		// update the user
+		if ( 0 != $user_id ) {
+			$this->update_customer_id( $user_id, $customer_id );
 		}
 	}
 
 
 	/**
-	 * Display the 'My Payment Methods' section on the 'My Account'
+	 * Adds data from the add payment method transaction, primarily:
 	 *
-	 * @since 1.0.0
+	 * + transaction ID
+	 * + transaction date
+	 * + transaction environment
+	 *
+	 * @since 3.1.0-1
+	 * @param \SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response
 	 */
-	public function show_my_payment_methods() {
+	protected function add_add_payment_method_transaction_data( $response ) {
 
-		assert( $this->supports_tokenization() );
+		$user_meta_key = '_wc_' . $this->get_id() . '_add_payment_method_transaction_data';
 
-		if ( ! $this->is_available() || ! $this->tokenization_enabled() ) {
-			return;
+		$data = (array) get_user_meta( get_current_user_id(), $user_meta_key, true );
+
+		$new_data = array(
+			'trans_id'    => $response->get_transaction_id() ? $response->get_transaction_id() : null,
+			'trans_date'  => current_time( 'mysql' ),
+			'environment' => $this->get_environment(),
+		);
+
+		$data[] = array_merge( $new_data, $this->get_add_payment_method_payment_gateway_transaction_data( $response ) );
+
+		// only keep the 5 most recent transactions
+		if ( count( $data ) > 5 ) {
+			array_shift( $data );
 		}
 
-		// add delete icon
-		wp_enqueue_style( 'dashicons' );
-		add_action( 'wp_footer', array( $this, 'render_my_payment_methods_css' ) );
-
-		// render the template
-		$this->show_my_payment_methods_load_template();
+		update_user_meta( get_current_user_id(), $user_meta_key, array_filter( $data ) );
 	}
 
 
 	/**
-	 * Render CSS to display the X icon for the Delete Payment Method action
+	 * Allow gateway implementations to add additional data to the data saved
+	 * during the add payment method transaction
 	 *
-	 * @since 2.2.0
+	 * @since 3.1.0-1
+	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response create payment token response
+	 * @return array
 	 */
-	public function render_my_payment_methods_css() {
+	protected function get_add_payment_method_payment_gateway_transaction_data( $response ) {
 
-		$class = esc_attr( $this->get_id_dasherized() );
-
-		?>
-			<style type="text/css">
-				.wc-<?php echo $class; ?>-delete-payment-method {text-decoration: none;}
-				.wc-<?php echo $class; ?>-delete-payment-method:before {font-family: 'dashicons', Monospace;content:"\f158";font-size:200%;-webkit-font-smoothing:antialiased;speak:none;font-weight:400;font-variant:normal;text-transform:none;}
-			</style>
-		<?php
-	}
-
-
-	/**
-	 * Render the "My Payment Methods" template
-	 *
-	 * This is a stub method which must be overridden if this gateway supports
-	 * tokenization
-	 *
-	 * @since 1.0.0
-	 */
-	protected function show_my_payment_methods_load_template() {
-
-		assert( $this->supports_tokenization() );
-
-		// concrete stub method
-		assert( false );
+		// stub method
+		return array();
 	}
 
 
