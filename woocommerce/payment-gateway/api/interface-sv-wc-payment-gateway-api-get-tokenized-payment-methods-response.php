@@ -29,14 +29,14 @@ if ( ! interface_exists( 'SV_WC_API_Get_Tokenized_Payment_Methods_Response' ) ) 
 /**
  * WooCommerce Direct Payment Gateway API Create Payment Token Response
  */
-interface SV_WC_API_Get_Tokenized_Payment_Methods_Response extends SV_WC_Payment_Gateway_API_Response {
+interface SV_WC_Payment_Gateway_API_Get_Tokenized_Payment_Methods_Response extends SV_WC_Payment_Gateway_API_Response {
 
 
 	/**
 	 * Returns any payment tokens
 	 *
 	 * @since 1.0.0
-	 * @return array array of SV_WC_Payment_Gateway_Payment_Token payment tokens
+	 * @return array array of SV_WC_Payment_Gateway_Payment_Token payment tokens, keyed by the token ID
 	 */
 	public function get_payment_tokens();
 
