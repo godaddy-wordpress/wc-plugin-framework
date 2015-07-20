@@ -381,7 +381,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function number_format( $number ) {
 
-			return number_format( $number, 2, '.', '' );
+			return number_format( (float) $number, 2, '.', '' );
 		}
 
 
