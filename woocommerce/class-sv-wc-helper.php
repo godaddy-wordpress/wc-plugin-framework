@@ -441,7 +441,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 				$line_item->name        = htmlentities( $item['name'], ENT_QUOTES, 'UTF-8', false );
 				$line_item->description = htmlentities( $item_desc, ENT_QUOTES, 'UTF-8', false );
 				$line_item->quantity    = $item['qty'];
-				$line_item->item_total  = $order->get_item_total( $item );
+				$line_item->item_total  = isset( $item['recurring_line_total'] ) ? $item['recurring_line_total'] : $order->get_item_total( $item );
 				$line_item->line_total  = $order->get_line_total( $item );
 				$line_item->meta        = $item_meta;
 				$line_item->product     = is_object( $product ) ? $product : null;
