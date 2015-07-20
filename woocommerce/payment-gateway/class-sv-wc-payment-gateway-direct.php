@@ -469,8 +469,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * instance.  The standard information that can be added includes:
 	 *
 	 * $order->payment_total           - the payment total
-	 * $order->customer_id             - optional payment gateway customer id (useful for tokenized payments, etc)
+	 * $order->customer_id             - optional payment gateway customer id (useful for tokenized payments for certain gateways, etc)
 	 * $order->payment->account_number - the credit card or checking account number
+	 * $order->payment->last_four      - the last four digits of the account number
+	 * $order->payment->card_type      - the card type (e.g. visa) derived from the account number
 	 * $order->payment->routing_number - account routing number (check transactions only)
 	 * $order->payment->account_type   - optional type of account one of 'checking' or 'savings' if type is 'check'
 	 * $order->payment->card_type      - optional card type, ie one of 'visa', etc
@@ -487,8 +489,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * of gateways, it's up to the specific gateway implementation to make use
 	 * of, or ignore them, or add custom ones by overridding this method.
 	 *
-	 * Note: we could consider adding birthday to the list here, but do any gateways besides NETBilling use this one?
-	 *
 	 * @since 1.0.0
 	 * @see SV_WC_Payment_Gateway::get_order()
 	 * @param int $order_id order ID being processed
@@ -503,6 +503,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// common attributes
 			$order->payment->account_number = str_replace( array( ' ', '-' ), '', SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' ) );
+			$order->payment->last_four = substr( $order->payment->account_number, -4 );
 
 			if ( $this->is_credit_card_gateway() ) {
 
@@ -511,6 +512,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$order->payment->exp_month      = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
 				$order->payment->exp_year       = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
 
+				// add card type for gateways that don't require it displayed at checkout
+				if ( empty( $order->payment->card_type ) ) {
 					$order->payment->card_type = SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $order->payment->account_number );
 				}
 
@@ -542,6 +545,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			$order->payment->token          = $token->get_token();
 			$order->payment->account_number = $token->get_last_four();
+			$order->payment->last_four      = $token->get_last_four();
 
 			if ( $this->is_credit_card_gateway() ) {
 
@@ -657,6 +661,15 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( $response->transaction_approved() ) {
 
 			$last_four = substr( $order->payment->account_number, -4 );
+
+			// use direct card type if set, or try to guess it from card number
+			if ( ! empty( $order->payment->card_type ) ) {
+				$card_type = $order->payment->card_type;
+			} elseif ( $first_four = substr( $order->payment->account_number, 0, 4 ) ) {
+				$card_type = SV_WC_Payment_Gateway_Payment_Token::type_from_account_number( $first_four );
+			} else {
+				$card_type = 'card';
+			}
 
 			// credit card order note
 			$message = sprintf(
