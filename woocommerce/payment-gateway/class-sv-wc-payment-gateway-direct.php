@@ -1865,9 +1865,19 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					$this->tokens[ $environment_id ][ $user_id ][ $default_token->get_token() ]->set_default( true );
 				}
 
-			} catch( SV_WC_Payment_Gateway_Exception $e ) {
-				// communication or other error, fallback to the locally stored tokens
-				$this->tokens[ $environment_id ][ $customer_id ] = $tokens;
+				// merge local token data with remote data, sometimes local data is more robust
+				$this->tokens[ $environment_id ][ $user_id ] = $this->merge_payment_token_data( $tokens, $this->tokens[ $environment_id ][ $user_id ] );
+
+				// persist locally after merging
+				$this->update_payment_tokens( $user_id, $this->tokens[ $environment_id ][ $user_id ], $environment_id );
+
+			} catch( SV_WC_Plugin_Exception $e ) {
+
+				// communication or other error
+
+				$this->add_debug_message( $e->getMessage(), 'error' );
+
+				$this->tokens[ $environment_id ][ $user_id ] = $tokens;
 			}
 
 		}
@@ -1880,11 +1890,77 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( $transient_key ) {
 			set_transient( $transient_key, $this->tokens[ $environment_id ][ $user_id ], 60 );
 		}
+
+		/**
+		 * Direct Payment Gateway Payment Tokens Loaded Action.
+		 *
+		 * Fired when payment tokens have been completely loaded.
+		 *
+		 * @since 3.1.0-1
+		 * @param array $tokens array of SV_WC_Payment_Gateway_Payment_Tokens
+		 * @param \SV_WC_Payment_Gateway_Direct direct gateway class instance
+		 */
+		do_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_tokens_loaded', $this->tokens[ $environment_id ][ $user_id ], $this );
+
+		return $this->tokens[ $environment_id ][ $user_id ];
+	}
+
+
+	/**
+	 * Merge remote token data with local tokens, sometimes local tokens can provide
+	 * additional detail that's not provided remotely
+	 *
+	 * @since 3.1.0-1
+	 * @param array $local_tokens local tokens
+	 * @param array $remote_tokens remote tokens
+	 * @return array associative array of string token to SV_WC_Payment_Gateway_Payment_Token objects
+	 */
+	protected function merge_payment_token_data( $local_tokens, $remote_tokens ) {
+
+		foreach ( $remote_tokens as &$remote_token ) {
+
+			$remote_token_id = $remote_token->get_token();
+
+			// bail if the remote token doesn't exist locally
+			if ( ! isset( $local_tokens[ $remote_token_id ] ) ) {
+				continue;
+			}
+
+			foreach ( $this->get_payment_token_merge_attributes() as $attribute ) {
+
+				$get_method = "get_{$attribute}";
+				$set_method = "set_{$attribute}";
+
+				// if the remote token is missing an attribute and the local token has it...
+				if ( ! $remote_token->$get_method() && $local_tokens[ $remote_token_id ]->$get_method() ) {
+
+					// set the attribute on the remote token
+					$remote_token->$set_method( $local_tokens[ $remote_token_id ]->$get_method() );
+				}
+			}
+		}
+
 		return $remote_tokens;
 	}
 
 
 	/**
+	 * Return the attributes that should be used to merge local token data into
+	 * a remote token.
+	 *
+	 * Gateways can override this method to add their own attributes, but must
+	 * also include the associated get_*() & set_*() methods in the token class.
+	 *
+	 * See Authorize.net CIM for an example implementation.
+	 *
+	 * @since 3.1.0-1
+	 * @return array associative array of string token to SV_WC_Payment_Gateway_Payment_Token objects
+	 */
+	protected function get_payment_token_merge_attributes() {
+
+		return array( 'last_four', 'card_type', 'account_type', 'exp_month', 'exp_year' );
+	}
+
 
 	/**
 	 * Return the payment token transient key for the given user, gateway,
