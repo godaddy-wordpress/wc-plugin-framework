@@ -1707,13 +1707,18 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} else {
 
 			if ( $response->get_status_code() && $response->get_status_message() ) {
-				$message = sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() );
+				$message = sprintf( 'Status code %s: %s', $response->get_status_code(), $response->get_status_message() );
 			} elseif ( $response->get_status_code() ) {
-				$message = sprintf( 'Code: %s', $response->get_status_code() );
+				$message = sprintf( 'Status code: %s', $response->get_status_code() );
 			} elseif ( $response->get_status_message() ) {
-				$message = sprintf( '%s', $response->get_status_message() );
+				$message = sprintf( 'Status message: %s', $response->get_status_message() );
 			} else {
 				$message = 'Unknown Error';
+			}
+
+			// add transaction id if there is one
+			if ( $response->get_transaction_id() ) {
+				$message .= ' ' . sprintf( __( 'Transaction ID %s', $this->text_domain ), $response->get_transaction_id() );
 			}
 
 			throw new SV_WC_Payment_Gateway_Exception( $message );
