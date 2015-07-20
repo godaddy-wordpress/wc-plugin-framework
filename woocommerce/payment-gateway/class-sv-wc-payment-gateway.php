@@ -353,6 +353,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		} else {
 			$this->currencies = $this->get_plugin()->get_accepted_currencies();
 		}
+		if ( isset( $args['order_button_text'] ) ) {
+			$this->order_button_text = $args['order_button_text'];
+		} else {
+			$this->order_button_text = $this->get_order_button_text();
+		}
 
 		// always want to render the field area, even for gateways with no fields, so we can display messages  @see WC_Payment_Gateway::$has_fields
 		$this->has_fields = true;
@@ -530,6 +535,22 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			'routing_number_length_invalid'  => _x( 'Routing number is invalid (must be 9 digits)', 'Supports direct cheque', $this->text_domain ),
 		);
 
+	}
+
+
+	/**
+	 * Gets the order button text:
+	 *
+	 * Direct gateway: "Place order"
+	 * Redirect/Hosted gateway: "Continue"
+	 *
+	 * @since 3.1.0-1
+	 */
+	protected function get_order_button_text() {
+
+		$text = $this->is_hosted_gateway() ? __( 'Continue', $this->text_domain ) : __( 'Place order', $this->text_domain );
+
+		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_order_button_text', $text, $this );
 	}
 
 
