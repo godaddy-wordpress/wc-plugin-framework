@@ -91,6 +91,9 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function perform_request( $request ) {
 
+		// ensure API is in its default state
+		$this->reset_response();
+
 		// save the request object
 		$this->request = $request;
 
@@ -253,6 +256,21 @@ abstract class SV_WC_API_Base {
 		);
 
 		do_action( 'wc_' . $this->get_api_id() . '_api_request_performed', $request_data, $response_data, $this );
+	}
+
+
+	/**
+	 * Reset the API response members to their
+	 *
+	 * @since 1.0.0
+	 */
+	protected function reset_response() {
+		$this->response_code     = null;
+		$this->response_message  = null;
+		$this->response_headers  = null;
+		$this->raw_response_body = null;
+		$this->response          = null;
+		$this->request_duration  = null;
 	}
 
 
