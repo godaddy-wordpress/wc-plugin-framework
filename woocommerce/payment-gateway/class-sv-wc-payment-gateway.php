@@ -220,6 +220,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/** Voids feature */
 	const FEATURE_VOIDS = 'voids';
 
+	/** Customer ID feature */
+	const FEATURE_CUSTOMER_ID = 'customer_id';
+
 	/** @var SV_WC_Payment_Gateway_Plugin the parent plugin class */
 	private $plugin;
 
@@ -1520,9 +1523,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$this->update_order_meta( $order->id, 'environment', $this->get_environment() );
 		}
 
-		// if there is a payment gateway customer id, set it to the order (we don't append the environment here like we do for the user meta, because it's available from the 'environment' order meta already)
-		if ( isset( $order->customer_id ) && $order->customer_id ) {
-			$this->update_order_meta( $order->id, 'customer_id', $order->customer_id );
+		// customer data
+		if ( $this->supports_customer_id() ) {
+			$this->add_customer_data( $order, $response );
 		}
 	}
 
@@ -1532,10 +1535,43 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 *
 	 * @since 1.0.0
 	 * @param WC_Order $order the order object
-	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
+	 * @param SV_WC_Payment_Gateway_API_Customer_Response $response the transaction response
 	 */
 	protected function add_payment_gateway_transaction_data( $order, $response ) {
 		// Optional method
+	}
+
+
+	/**
+	 * Add customer data to an order/user if the gateway supports the customer ID
+	 * response
+	 *
+	 * @since 3.1.0-1
+	 * @param \WC_Order $order order
+	 * @param \SV_WC_Payment_Gateway_API_Customer_Response $response
+	 */
+	protected function add_customer_data( $order, $response = null ) {
+
+		$user_id = SV_WC_Plugin_Compatibility::get_order_user_id( $order );
+
+		if ( $response && method_exists( $response, 'get_customer_id' ) && $response->get_customer_id() ) {
+
+			$order->customer_id = $customer_id = $response->get_customer_id();
+
+		} else {
+
+			// default to the customer ID set on the order
+			$customer_id = $order->customer_id;
+		}
+
+		// update the order with the customer ID, note environment is not appended here because it's already available
+		// on the `environment` order meta
+		$this->update_order_meta( $order->id, 'customer_id', $customer_id );
+
+		// update the user
+		if ( 0 != $user_id ) {
+			$this->update_customer_id( $user_id, $customer_id );
+		}
 	}
 
 
@@ -1629,6 +1665,21 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	}
 
 
+	/** Customer ID Feature  **************************************************/
+
+
+	/**
+	 * Returns true if this is gateway that supports gateway customer IDs
+	 *
+	 * @since 3.1.0-1
+	 * @return boolean true if the gateway supports gateway customer IDs
+	 */
+	public function supports_customer_id() {
+
+		return $this->supports( self::FEATURE_CUSTOMER_ID );
+	}
+
+
 	/**
 	 * Gets/sets the payment gateway customer id, this defaults to wc-{user id}
 	 * and retrieves/stores to the user meta named by get_customer_id_user_meta_name()
@@ -1679,8 +1730,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 *
 	 * @since 1.0.0
 	 * @see SV_WC_Payment_Gateway::get_customer_id()
-	 * @param int $user_id wordpress user identifier
-	 * @param string payment gateway customer id
+	 * @param int $user_id WP user ID
+	 * @param string $customer_id payment gateway customer id
 	 * @param string $environment_id optional environment id, defaults to current environment
 	 * @return boolean|int false if no change was made (if the new value was the same as previous value) or if the update failed, meta id if the value was different and the update a success
 	 */
@@ -1692,6 +1743,26 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		return update_user_meta( $user_id, $this->get_customer_id_user_meta_name( $environment_id ), $customer_id );
+	}
+
+
+	/**
+	 * Removes the payment gateway customer id for the given $environment, or
+	 * for the plugin current environment
+	 *
+	 * @since 3.1.0-1
+	 * @param int $user_id WP user ID
+	 * @param string $environment_id optional environment id, defaults to current environment
+	 * @return boolean true on success, false on failure
+	 */
+	public function remove_customer_id( $user_id, $environment_id = null ){
+
+		if ( is_null( $environment_id ) ) {
+			$environment_id = $this->get_environment();
+		}
+
+		// remove the user meta entry so it can be re-created
+		return delete_user_meta( $user_id, $this->get_customer_id_user_meta_name( $environment_id ) );
 	}
 
 
@@ -1746,7 +1817,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// no leading underscore since this is meant to be visible to the admin
 		return 'wc_' . $this->get_plugin()->get_id() . '_customer_id' . ( ! $this->is_production_environment( $environment_id ) ? '_' . $environment_id : '' );
-
 	}
 
 
@@ -2043,7 +2113,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	}
 
 
-	/** Tokenization feature ******************************************************/
+	/** Tokenization feature **************************************************/
 
 
 	/**

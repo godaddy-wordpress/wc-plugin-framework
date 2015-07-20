@@ -131,7 +131,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * @since 1.0.0
 	 * @see SV_WC_Payment_Gateway_API::supports_remove_tokenized_payment_method()
 	 * @param string $token the payment method token
-	 * @param string $customer_id optional unique customer id for gateways that support it
+	 * @param string $customer_id unique customer id for gateways that support it
 	 * @return SV_WC_Payment_Gateway_API_Response remove tokenized payment method response
 	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
 	 */
