@@ -1901,7 +1901,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 *
 		 * Fired when payment tokens have been completely loaded.
 		 *
-		 * @since 3.1.0-1
+		 * @since 3.1.2-2
 		 * @param array $tokens array of SV_WC_Payment_Gateway_Payment_Tokens
 		 * @param \SV_WC_Payment_Gateway_Direct direct gateway class instance
 		 */
@@ -1915,7 +1915,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Merge remote token data with local tokens, sometimes local tokens can provide
 	 * additional detail that's not provided remotely
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param array $local_tokens local tokens
 	 * @param array $remote_tokens remote tokens
 	 * @return array associative array of string token to SV_WC_Payment_Gateway_Payment_Token objects
@@ -1958,7 +1958,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * See Authorize.net CIM for an example implementation.
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return array associative array of string token to SV_WC_Payment_Gateway_Payment_Token objects
 	 */
 	protected function get_payment_token_merge_attributes() {
@@ -1973,7 +1973,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * Payment token transients can be disabled by using the filter below.
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param string|int $user_id
 	 * @return string transient key
 	 */
@@ -1996,7 +1996,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 *
 		 * filter responsibly!
 		 *
-		 * @since 3.1.0-1
+		 * @since 3.1.2-2
 		 * @param string $key transient key (must be 45 chars or less)
 		 * @param \SV_WC_Payment_Gateway_Direct $this direct gateway class instance
 		 */
@@ -2011,7 +2011,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * as needed (e.g. when customer IDs are updated/removed), but for now it's
 	 * only cleared when the tokens are updated.
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param int|string $user_id
 	 */
 	public function clear_payment_tokens_transient( $user_id ) {
@@ -2077,7 +2077,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Update a single token by persisting it to user meta
 	 *
-	 * @since since 3.1.0-1
+	 * @since since 3.1.2-2
 	 * @param int $user_id WP user ID
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token to update
 	 * @param string $environment_id optional environment id, defaults to plugin current environment
@@ -2315,7 +2315,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Returns true if the gateway supports the add payment method feature
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return boolean true if the gateway supports add payment method feature
 	 */
 	public function supports_add_payment_method() {
@@ -2328,7 +2328,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * stubbed in the WC_Payment_Gateway abstract class, but is called if the
 	 * gateway declares support for it.
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 */
 	public function add_payment_method() {
 
@@ -2361,7 +2361,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Perform the transaction to add the customer's payment method to their
 	 * account
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return array result with success/error message and request status (success/failure)
 	 */
 	protected function do_add_payment_method_transaction( WC_Order $order ) {
@@ -2427,7 +2427,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 * user is redirected back to the My Account page or remains on the add
 		 * new payment method screen
 		 *
-		 * @since 3.1.0-1
+		 * @since 3.1.2-2
 		 * @param array $result {
 		 *   @type string $message notice message to render
 		 *   @type bool $success true to redirect to my account, false to stay on page
@@ -2445,7 +2445,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * a mock order is generated as there is no actual order associated with the
 	 * request.
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return WC_Order generated order object
 	 */
 	protected function get_order_for_add_payment_method() {
@@ -2486,7 +2486,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Add customer data as part of the add payment method transaction, primarily
 	 * customer ID
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param WC_Order $order mock order
 	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response
 	 */
@@ -2519,7 +2519,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * + transaction date
 	 * + transaction environment
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param \SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response
 	 */
 	protected function add_add_payment_method_transaction_data( $response ) {
@@ -2549,7 +2549,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Allow gateway implementations to add additional data to the data saved
 	 * during the add payment method transaction
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response create payment token response
 	 * @return array
 	 */

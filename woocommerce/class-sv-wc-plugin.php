@@ -84,12 +84,12 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * Use the standard WordPress/WooCommerce `is_*` methods when adding the notice
  * to control which pages it does (or does not) display on.
  *
- * @version 3.1.2-1
+ * @version 3.1.2-2
  */
 abstract class SV_WC_Plugin {
 
 	/** Plugin Framework Version */
-	const VERSION = '3.1.2-1';
+	const VERSION = '3.1.2-2';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -797,7 +797,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Returns the plugin's text domain
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return string text domain
 	 */
 	public function get_text_domain() {

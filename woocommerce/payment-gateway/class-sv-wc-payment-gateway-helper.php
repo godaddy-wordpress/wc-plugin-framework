@@ -100,7 +100,7 @@ class SV_WC_Payment_Gateway_Helper {
 	 * Determine the credit card type from a given account number (only first 4
 	 * required)
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param string $account_number the credit card account number
 	 * @return string the credit card type
 	 */
@@ -133,7 +133,7 @@ class SV_WC_Payment_Gateway_Helper {
 	 * Translates a credit card type or bank account name to a full name,
 	 * e.g. 'mc' => 'MasterCard' or 'savings' => 'eCheck'
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param string $payment_type the card or bank type, ie 'mc', 'amex', 'checking'
 	 * @return string the card or bank account name, ie 'MasterCard', 'American Express', 'Checking Account'
 	 */

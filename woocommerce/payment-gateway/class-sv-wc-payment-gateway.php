@@ -552,7 +552,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Direct gateway: "Place order"
 	 * Redirect/Hosted gateway: "Continue"
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 */
 	protected function get_order_button_text() {
 
@@ -589,7 +589,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if the gateway supports the payment form feature
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return bool
 	 */
 	public function supports_payment_form() {
@@ -601,7 +601,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Render the payment fields
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @see WC_Payment_Gateway::payment_fields()
 	 * @see SV_WC_Payment_Gateway_Payment_Form class
 	 */
@@ -624,7 +624,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Get the payment form field defaults, primarily for gateways to override
 	 * and set dummy credit card/eCheck info when in the test environment
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return array
 	 */
 	public function get_payment_method_defaults() {
@@ -785,7 +785,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		 *
 		 * Actors can use this to add, remove, or tweak gateway form fields
 		 *
-		 * @since 3.1.0-1
+		 * @since 3.1.2-2
 		 * @param array $form_fields array of form fields in format required by WC_Settings_API
 		 * @param \SV_WC_Payment_Gateway $this gateway instance
 		 */
@@ -1194,7 +1194,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		 * Actors can use this filter to adjust or add additional information to
 		 * the order object that gateways use for processing transactions.
 		 *
-		 * @since 3.1.0-1
+		 * @since 3.1.2-2
 		 * @param \WC_Order $order order object
 		 * @param \SV_WC_Payment_Gateway $this payment gateway instance
 		 */
@@ -1451,7 +1451,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * particularly useful for gateways that can void an authorized & captured
 	 * charge that has not yet settled (e.g. Authorize.net AIM/CIM)
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param \WC_Order $order order
 	 * @param \SV_WC_Payment_Gateway_API_Response $response refund response
 	 * @return boolean true if a void should be performed for the given order/response
@@ -1609,7 +1609,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Maybe change the order status for a voided order to cancelled
 	 *
 	 * @see SV_WC_Payment_Gateway::mark_order_as_voided()
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param int $order_id order ID
 	 */
 	public function maybe_cancel_voided_order( $order_id ) {
@@ -1731,7 +1731,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Add customer data to an order/user if the gateway supports the customer ID
 	 * response
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param \WC_Order $order order
 	 * @param \SV_WC_Payment_Gateway_API_Customer_Response $response
 	 */
@@ -1810,7 +1810,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * If detailed customer decline messages are enabled, this message may
 	 * additionally include more detailed information.
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param string $text order received text
 	 * @param WC_Order|null $order order object
 	 * @return string
@@ -1890,7 +1890,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if this is gateway that supports gateway customer IDs
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return boolean true if the gateway supports gateway customer IDs
 	 */
 	public function supports_customer_id() {
@@ -1969,7 +1969,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Removes the payment gateway customer id for the given $environment, or
 	 * for the plugin current environment
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param int $user_id WP user ID
 	 * @param string $environment_id optional environment id, defaults to current environment
 	 * @return boolean true on success, false on failure
@@ -2665,7 +2665,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Get the text domain for the gateway
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return string
 	 */
 	public function get_text_domain() {

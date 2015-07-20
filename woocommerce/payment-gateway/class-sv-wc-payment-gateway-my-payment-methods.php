@@ -32,7 +32,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
  * Renders the My Payment Methods table on the My Account page and handles
  * any associated actions (deleting a payment method, etc)
  *
- * @since 3.1.0-1
+ * @since 3.1.2-2
  */
 class SV_WC_Payment_Gateway_My_Payment_Methods {
 
@@ -59,7 +59,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * Note: this constructor executes during the `wp` action
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin gateway plugin
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 */
 	public function __construct( $plugin ) {
 
@@ -84,7 +84,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Enqueue frontend CSS/JS
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 */
 	public function maybe_enqueue_styles_scripts() {
 
@@ -109,7 +109,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * Tokens are also separated into Credit Card and eCheck-specific class members
 	 * for convenience.
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 */
 	protected function load_tokens() {
 
@@ -150,7 +150,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Render the My Payment Methods section
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 */
 	public function render() {
 
@@ -176,7 +176,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Return the no payment methods section HTML
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return string no payment methods HTML
 	 */
 	protected function get_no_payment_methods_html() {
@@ -193,7 +193,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Return the table title HTML, text defaults to "My Payment Methods"
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return string table title HTML
 	 */
 	protected function get_table_title_html() {
@@ -217,7 +217,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Return the table HTML
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return string table HTML
 	 */
 	public function get_table_html() {
@@ -237,7 +237,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Return the table head HTML
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return string table thead HTML
 	 */
 	protected function get_table_head_html() {
@@ -258,7 +258,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Return the table headers
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return array of table headers in key => Title format
 	 */
 	protected function get_table_headers() {
@@ -276,7 +276,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Return the table body HTML
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return string table tbody HTML
 	 */
 	protected function get_table_body_html() {
@@ -311,7 +311,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Return the table body row HTML, each row represents a single payment method
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return string table tbody > tr HTML
 	 */
 	protected function get_table_body_row_html( $tokens ) {
@@ -340,7 +340,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Return the payment method data for a given set of tokens
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param array $tokens array of tokens
 	 * @return array payment method data suitable for HTML output
 	 */
@@ -374,7 +374,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * `make-default` - available if the token isn't already the default token
 	 * `delete` - delete the token
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token
 	 * @return array payment method actions
 	 */
@@ -415,7 +415,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 *
 	 * <Amex logo> American Express ending in 6666
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token
 	 * @return string payment method title
 	 */
@@ -459,7 +459,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * Handle payment methods actions, e.g. deleting a payment method or setting
 	 * one as default
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 */
 	public function handle_payment_method_actions() {
 
@@ -530,7 +530,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Redirect back to the My Account page
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 */
 	protected function redirect_to_my_account() {
 
@@ -543,7 +543,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * Return the gateway plugin, primarily a convenience method to other actors
 	 * using filters
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return SV_WC_Payment_Gateway_Plugin
 	 */
 	public function get_plugin() {
@@ -555,7 +555,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * Returns true if at least one of the plugin's gateways supports the
 	 * add new payment method feature
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return bool
 	 */
 	protected function supports_add_payment_method() {

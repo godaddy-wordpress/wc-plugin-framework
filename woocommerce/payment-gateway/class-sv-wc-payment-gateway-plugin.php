@@ -713,7 +713,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns the relative path to the payment gateway framework image directory,
 	 * with a trailing slash
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @return string relative path to payment gateway framework image directory
 	 */
 	public function get_payment_gateway_framework_image_path() {
@@ -920,7 +920,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Returns the gateway for a given token
 	 *
-	 * @since 3.1.0-1
+	 * @since 3.1.2-2
 	 * @param string|int $user_id the user ID associated with the token
 	 * @param string $token the token string
 	 * @return SV_WC_Payment_Gateway|null gateway if found, null otherwise
