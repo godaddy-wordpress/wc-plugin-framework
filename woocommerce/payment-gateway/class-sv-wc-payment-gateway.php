@@ -774,6 +774,17 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		foreach ( $this->shared_settings as $field_name ) {
 			$this->form_fields[ $field_name ]['class'] = trim( isset( $this->form_fields[ $field_name ]['class'] ) ? $this->form_fields[ $field_name ]['class'] : '' ) . ' shared-settings-field';
 		}
+
+		/**
+		 * Payment Gateway Form Fields Filter.
+		 *
+		 * Actors can use this to add, remove, or tweak gateway form fields
+		 *
+		 * @since 3.1.0-1
+		 * @param array $form_fields array of form fields in format required by WC_Settings_API
+		 * @param \SV_WC_Payment_Gateway $this gateway instance
+		 */
+		$this->form_fields = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_form_fields', $this->form_fields, $this );
 	}
 
 
@@ -1166,7 +1177,17 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		$order = $this->get_order_with_unique_transaction_ref( $order );
 
-		return $order;
+		/**
+		 * Filter the base order for a payment transaction
+		 *
+		 * Actors can use this filter to adjust or add additional information to
+		 * the order object that gateways use for processing transactions.
+		 *
+		 * @since 3.1.0-1
+		 * @param \WC_Order $order order object
+		 * @param \SV_WC_Payment_Gateway $this payment gateway instance
+		 */
+		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_base', $order, $this );
 	}
 
 
