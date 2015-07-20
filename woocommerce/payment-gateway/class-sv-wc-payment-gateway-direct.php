@@ -150,7 +150,13 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$account_number   = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' );
 		$expiration_month = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
 		$expiration_year  = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
+		$expiry           = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-expiry' );
 		$csc              = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
+
+		// handle single expiry field formatted like "MM / YY" or "MM / YYYY"
+		if ( ! $expiration_month & ! $expiration_year && $expiry ) {
+			list( $expiration_month, $expiration_year ) = array_map( 'trim', explode( '/', $expiry ) );
+		}
 
 		$is_valid = $this->validate_credit_card_account_number( $account_number ) && $is_valid;
 
@@ -176,6 +182,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	protected function validate_credit_card_expiration_date( $expiration_month, $expiration_year ) {
 
 		$is_valid = true;
+
+		if ( 2 === strlen( $expiration_year ) ) {
+			$expiration_year = '20' . $expiration_year;
+		}
 
 		// validate expiration data
 		$current_year  = date( 'Y' );
@@ -502,6 +512,14 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$order->payment->exp_year       = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
 
 					$order->payment->card_type = SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $order->payment->account_number );
+				}
+
+				// handle single expiry field formatted like "MM / YY" or "MM / YYYY"
+				if ( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) {
+					list( $order->payment->exp_month, $order->payment->exp_year ) = array_map( 'trim', explode( '/', SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) );
+				}
+
+				// add CSC if enabled
 				if ( $this->csc_enabled() ) {
 					$order->payment->csc        = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
