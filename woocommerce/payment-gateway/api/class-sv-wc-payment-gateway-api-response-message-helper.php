@@ -74,7 +74,7 @@ class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 	 * info.
 	 *
 	 * @since 2.2.0
-	 * @param array of string $message_id's which identify the message(s) to return
+	 * @param array $message_ids array of string $message_id's which identify the message(s) to return
 	 * @return string a user message, combining all $message_ids
 	 */
 	public function get_user_messages( $message_ids ) {
@@ -107,32 +107,43 @@ class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 			// generic messages
 			case 'error':           $message = __( 'An error occurred, please try again or try an alternate form of payment', $this->text_domain ); break;
 			case 'decline':         $message = __( 'We cannot process your order with the payment information that you provided. Please use a different payment account or an alternate payment method.', $this->text_domain ); break;
-			case 'held_for_review': $message = __( 'This order is being placed on hold for review.  You may contact the store to complete the transaction.', $this->text_domain ); break;
+			case 'held_for_review': $message = __( 'This order is being placed on hold for review. Please contact us to complete the transaction.', $this->text_domain ); break;
 
-			// missing/invalid fields
+			/* missing/invalid info */
+
+			// csc
 			case 'held_for_incorrect_csc':    $message = __( 'This order is being placed on hold for review due to an incorrect card verification number.  You may contact the store to complete the transaction.', $this->text_domain ); break;
 			case 'csc_invalid':               $message = __( 'The card verification number is invalid, please try again.', $this->text_domain ); break;
 			case 'csc_missing':               $message = __( 'Please enter your card verification number and try again.', $this->text_domain ); break;
 
+			// card type
 			case 'card_type_not_accepted':    $message = __( 'That card type is not accepted, please use an alternate card or other form of payment.', $this->text_domain ); break;
 			case 'card_type_invalid':         $message = __( 'The card type is invalid or does not correlate with the credit card number.  Please try again or use an alternate card or other form of payment.', $this->text_domain ); break;
 			case 'card_type_missing':         $message = __( 'Please select the card type and try again.', $this->text_domain ); break;
 
+			// card number
 			case 'card_number_type_invalid': $message = __( 'The card type is invalid or does not correlate with the credit card number.  Please try again or use an alternate card or other form of payment.', $this->text_domain ); break;
 			case 'card_number_invalid':      $message = __( 'The card number is invalid, please re-enter and try again.', $this->text_domain ); break;
 			case 'card_number_missing':      $message = __( 'Please enter your card number and try again.', $this->text_domain ); break;
 
+			// card expiry
 			case 'card_expiry_invalid':       $message = __( 'The card expiration date is invalid, please re-enter and try again.', $this->text_domain ); break;
 			case 'card_expiry_month_invalid': $message = __( 'The card expiration month is invalid, please re-enter and try again.', $this->text_domain ); break;
 			case 'card_expiry_year_invalid':  $message = __( 'The card expiration year is invalid, please re-enter and try again.', $this->text_domain ); break;
 			case 'card_expiry_missing':       $message = __( 'Please enter your card expiration date and try again.', $this->text_domain ); break;
 
-			// decline reasons
+			// bank
+			case 'bank_aba_invalid':            $message_id = __( 'The bank routing number is invalid, please re-enter and try again.', $this->text_domain ); break;
+			case 'bank_account_number_invalid': $message_id = __( 'The bank account number is invalid, please re-enter and try again.', $this->text_domain ); break;
+
+			/* decline reasons */
 			case 'card_expired':         $message = __( 'The provided card is expired, please use an alternate card or other form of payment.', $this->text_domain ); break;
 			case 'card_declined':        $message = __( 'The provided card was declined, please use an alternate card or other form of payment.', $this->text_domain ); break;
 			case 'insufficient_funds':   $message = __( 'Insufficient funds in account, please use an alternate card or other form of payment.', $this->text_domain ); break;
 			case 'card_inactive':        $message = __( 'The card is inactivate or not authorized for card-not-present transactions, please use an alternate card or other form of payment.', $this->text_domain ); break;
 			case 'credit_limit_reached': $message = __( 'The credit limit for the card has been reached, please use an alternate card or other form of payment.', $this->text_domain ); break;
+			case 'csc_mismatch':         $message = __( 'The card verification number does not match. Please re-enter and try again.', $this->text_domain ); break;
+			case 'avs_mismatch':         $message = __( 'The provided address does not match the billing address for cardholder. Please verify the address and try again.', $this->text_domain ); break;
 		}
 
 		return apply_filters( 'wc_payment_gateway_transaction_response_user_message', $message, $message_id, $this );
