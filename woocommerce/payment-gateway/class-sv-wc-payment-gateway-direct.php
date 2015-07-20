@@ -2070,6 +2070,34 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 
 	/**
+	 * Update a single token by persisting it to user meta
+	 *
+	 * @since since 3.1.0-1
+	 * @param int $user_id WP user ID
+	 * @param SV_WC_Payment_Gateway_Payment_Token $token token to update
+	 * @param string $environment_id optional environment id, defaults to plugin current environment
+	 * @return string|int updated user meta ID
+	 */
+	public function update_payment_token( $user_id, $token, $environment_id = null ) {
+
+		assert( $this->supports_tokenization() );
+
+		// default to current environment
+		if ( is_null( $environment_id ) ) {
+			$environment_id = $this->get_environment();
+		}
+
+		$tokens = $this->get_payment_tokens( $user_id, array( 'environment_id' => $environment_id ) );
+
+		if ( isset( $tokens[ $token->get_id() ] ) ) {
+			$tokens[ $token->get_id() ] = $token;
+		}
+
+		return $this->update_payment_tokens( $user_id, $tokens, $environment_id );
+	}
+
+
+	/**
 	 * Returns true if the identified user has the given payment token
 	 *
 	 * @since 1.0.0
