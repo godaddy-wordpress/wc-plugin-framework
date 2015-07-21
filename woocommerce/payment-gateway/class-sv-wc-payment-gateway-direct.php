@@ -666,7 +666,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( ! empty( $order->payment->card_type ) ) {
 				$card_type = $order->payment->card_type;
 			} elseif ( $first_four = substr( $order->payment->account_number, 0, 4 ) ) {
-				$card_type = SV_WC_Payment_Gateway_Payment_Token::type_from_account_number( $first_four );
+				$card_type = SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $first_four );
 			} else {
 				$card_type = 'card';
 			}
