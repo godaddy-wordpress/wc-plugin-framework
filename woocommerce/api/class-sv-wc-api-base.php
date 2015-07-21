@@ -130,7 +130,7 @@ abstract class SV_WC_API_Base {
 	 * @return array|WP_Error
 	 */
 	protected function do_remote_request( $request_uri, $request_args ) {
-		return wp_remote_request( $request_uri, $request_args );
+		return wp_safe_remote_request( $request_uri, $request_args );
 	}
 
 
