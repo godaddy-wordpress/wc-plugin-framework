@@ -231,7 +231,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		// attempt to automatically submit the form and redirect
 		wc_enqueue_js('
 			$( "body" ).block( {
-					message: "<img src=\"' . esc_url( $this->get_plugin()->get_plugin_url() . '/' . $this->get_plugin()->get_framework_image_path() . 'ajax-loader.gif' ) . '\" alt=\"Redirecting&hellip;\" style=\"float:left; margin-right: 10px;\" />' . __( 'Thank you for your order. We are now redirecting you to complete payment.', $this->text_domain ) . '",
+					message: "<img src=\"' . esc_url( $this->get_plugin()->get_framework_assets_url() . '/images/ajax-loader.gif' ) . '\" alt=\"Redirecting&hellip;\" style=\"float:left; margin-right: 10px;\" />' . __( 'Thank you for your order. We are now redirecting you to complete payment.', $this->text_domain ) . '",
 					overlayCSS: {
 						background: "#fff",
 						opacity: 0.6

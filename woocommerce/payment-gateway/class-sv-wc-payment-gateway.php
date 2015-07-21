@@ -1130,13 +1130,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$image_extension = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_use_svg', true ) ? '.svg' : '.png';
 
 		// first, is the card image available within the plugin?
-		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/assets/images/card-' . $image_type . $image_extension ) ) {
-			return WC_HTTPS::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/assets/images/card-' . $image_type . $image_extension;
+		if ( is_readable( $this->get_plugin()->get_payment_gateway_framework_assets_path() . '/images/card-' . $image_type . $image_extension ) ) {
+			return WC_HTTPS::force_https_url( $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/card-' . $image_type . $image_extension );
 		}
 
 		// default: is the card image available within the framework?
-		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/' . $this->get_plugin()->get_payment_gateway_framework_image_path() . 'card-' . $image_type . $image_extension ) ) {
-			return WC_HTTPS::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/' . $this->get_plugin()->get_payment_gateway_framework_image_path() . 'card-' . $image_type . $image_extension;
+		if ( is_readable( $this->get_plugin()->get_payment_gateway_framework_assets_path() . '/images/card-' . $image_type . $image_extension ) ) {
+			return WC_HTTPS::force_https_url( $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/card-' . $image_type . $image_extension );
 		}
 
 		return null;
@@ -2655,7 +2655,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns the parent plugin object
 	 *
 	 * @since 1.0.0
-	 * @return SV_WC_Payment_Gateway the parent plugin object
+	 * @return \SV_WC_Payment_Gateway_Plugin the parent plugin object
 	 */
 	public function get_plugin() {
 		return $this->plugin;

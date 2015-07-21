@@ -200,36 +200,38 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		parent::lib_includes();
 
+		$payment_gateway_framework_path = $this->get_payment_gateway_framework_path();
+
 		// interfaces
-		require_once( 'api/interface-sv-wc-payment-gateway-api.php' );
-		require_once( 'api/interface-sv-wc-payment-gateway-api-request.php' );
-		require_once( 'api/interface-sv-wc-payment-gateway-api-response.php' );
-		require_once( 'api/interface-sv-wc-payment-gateway-api-authorization-response.php' );
-		require_once( 'api/interface-sv-wc-payment-gateway-api-create-payment-token-response.php' );
-		require_once( 'api/interface-sv-wc-payment-gateway-api-get-tokenized-payment-methods-response.php' );
-		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-response.php' );
-		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-credit-card-response.php' );
-		require_once( 'api/interface-sv-wc-payment-gateway-api-payment-notification-echeck-response.php' );
-		require_once( 'api/interface-sv-wc-payment-gateway-api-customer-response.php' );
+		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api.php' );
+		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-request.php' );
+		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-response.php' );
+		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-authorization-response.php' );
+		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-create-payment-token-response.php' );
+		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-get-tokenized-payment-methods-response.php' );
+		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-payment-notification-response.php' );
+		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-payment-notification-credit-card-response.php' );
+		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-payment-notification-echeck-response.php' );
+		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-customer-response.php' );
 
 		// exceptions
-		require_once( 'exceptions/class-sv-wc-payment-gateway-exception.php' );
+		require_once( $payment_gateway_framework_path . '/exceptions/class-sv-wc-payment-gateway-exception.php' );
 
 		// gateway
-		require_once( 'class-sv-wc-payment-gateway.php' );
-		require_once( 'class-sv-wc-payment-gateway-direct.php' );
-		require_once( 'class-sv-wc-payment-gateway-hosted.php' );
-		require_once( 'class-sv-wc-payment-gateway-payment-token.php' );
-		require_once( 'class-sv-wc-payment-gateway-payment-form.php' );
-		require_once( 'class-sv-wc-payment-gateway-my-payment-methods.php' );
+		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway.php' );
+		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-direct.php' );
+		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-hosted.php' );
+		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-payment-token.php' );
+		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-payment-form.php' );
+		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-my-payment-methods.php' );
 
 		// helpers
-		require_once( 'api/class-sv-wc-payment-gateway-api-response-message-helper.php' );
-		require_once( 'class-sv-wc-payment-gateway-helper.php' );
+		require_once( $payment_gateway_framework_path . '/api/class-sv-wc-payment-gateway-api-response-message-helper.php' );
+		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-helper.php' );
 
 		if ( is_admin() ) {
 			// load admin notice handler
-			require_once( 'admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php' );
+			require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php' );
 			$this->get_admin_user_edit_handler();
 		}
 	}
@@ -754,18 +756,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Returns the relative path to the payment gateway framework image directory,
-	 * with a trailing slash
-	 *
-	 * @since 3.1.2-2
-	 * @return string relative path to payment gateway framework image directory
-	 */
-	public function get_payment_gateway_framework_image_path() {
-		return 'lib/skyverge/woocommerce/payment-gateway/assets/images/';
-	}
-
-
-	/**
 	 * Returns true if this plugin requires SSL to function properly
 	 *
 	 * @since 1.0.0
@@ -1036,6 +1026,60 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		return $this->pre_orders_active = $this->is_plugin_active( 'woocommerce-pre-orders.php' );
 	}
+
+
+	/**
+	 * Returns the loaded payment gateway framework __FILE__
+	 *
+	 * @since 4.0.0-beta
+	 * @return string
+	 */
+	public function get_payment_gateway_framework_file() {
+
+		return __FILE__;
+	}
+
+
+	/**
+	 * Returns the loaded payment gateway framework path, without trailing slash.
+	 *
+	 * This is the highest version payment gateway framework that was loaded by
+	 * the bootstrap.
+	 *
+	 * @since 4.0.0-beta
+	 * @return string
+	 */
+	public function get_payment_gateway_framework_path() {
+
+		return untrailingslashit( plugin_dir_path( $this->get_payment_gateway_framework_file() ) );
+	}
+
+
+	/**
+	 * Returns the absolute path to the loaded payment gateway framework image
+	 * directory, without a trailing slash
+	 *
+	 * @since 4.0.0-beta
+	 * @return string relative path to framework image directory
+	 */
+	public function get_payment_gateway_framework_assets_path() {
+
+		return $this->get_payment_gateway_framework_path() . '/assets';
+	}
+
+
+	/**
+	 * Returns the loaded payment gateway framework assets URL, without a trailing slash
+	 *
+	 * @since 4.0.0-beta
+	 * @return string
+	 */
+	public function get_payment_gateway_framework_assets_url() {
+
+		return untrailingslashit( plugins_url( '/assets', $this->get_payment_gateway_framework_file() ) );
+	}
+
+
 }
 
 endif;

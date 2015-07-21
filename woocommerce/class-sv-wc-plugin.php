@@ -162,7 +162,7 @@ abstract class SV_WC_Plugin {
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
 
 			// admin message handler
-			require_once( 'class-sv-wp-admin-message-handler.php' );
+			require_once( $this->get_framework_path() . '/class-sv-wp-admin-message-handler.php' );
 
 			// render any admin notices, delayed notices, and
 			add_action( 'admin_notices', array( $this, 'add_admin_notices'            ), 10 );
@@ -239,25 +239,27 @@ abstract class SV_WC_Plugin {
 	 */
 	private function includes() {
 
+		$framework_path = $this->get_framework_path();
+
 		// common exception class
-		require_once( 'class-sv-wc-plugin-exception.php' );
+		require_once(  $framework_path . '/class-sv-wc-plugin-exception.php' );
 
 		// common utility methods
-		require_once( 'class-sv-wc-helper.php' );
+		require_once( $framework_path . '/class-sv-wc-helper.php' );
 
 		// backwards compatibility for older WC versions
-		require_once( 'class-sv-wc-plugin-compatibility.php' );
+		require_once( $framework_path . '/class-sv-wc-plugin-compatibility.php' );
 
 		if ( is_admin() ) {
 			// load admin notice handler
-			require_once( 'class-sv-wc-admin-notice-handler.php' );
+			require_once( $framework_path . '/class-sv-wc-admin-notice-handler.php' );
 		}
 
 		// generic API base
-		require_once( 'api/class-sv-wc-api-exception.php' );
-		require_once( 'api/class-sv-wc-api-base.php' );
-		require_once( 'api/interface-sv-wc-api-request.php' );
-		require_once( 'api/interface-sv-wc-api-response.php' );
+		require_once( $framework_path . '/api/class-sv-wc-api-exception.php' );
+		require_once( $framework_path . '/api/class-sv-wc-api-base.php' );
+		require_once( $framework_path . '/api/interface-sv-wc-api-request.php' );
+		require_once( $framework_path . '/api/interface-sv-wc-api-response.php' );
 	}
 
 
@@ -734,7 +736,7 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Returns the woocommerce uploads path, sans trailing slash.  Oddly WooCommerce
+	 * Returns the woocommerce uploads path, without trailing slash.  Oddly WooCommerce
 	 * core does not provide a way to get this
 	 *
 	 * @since 2.0.0
@@ -747,14 +749,52 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Returns the relative path to the framework image directory, with a
+	 * Returns the loaded framework __FILE__
+	 *
+	 * @since 4.0.0-beta
+	 * @return string
+	 */
+	public function get_framework_file() {
+
+		return __FILE__;
+	}
+
+
+	/**
+	 * Returns the loaded framework path, without trailing slash. Ths is the highest
+	 * version framework that was loaded by the bootstrap.
+	 *
+	 * @since 4.0.0-beta
+	 * @return string
+	 */
+	public function get_framework_path() {
+
+		return untrailingslashit( plugin_dir_path( $this->get_framework_file() ) );
+	}
+
+
+	/**
+	 * Returns the absolute path to the loaded framework image directory, without a
 	 * trailing slash
 	 *
-	 * @since 2.0.0
-	 * @return string relative path to framework image directory
+	 * @since 4.0.0-beta
+	 * @return string
 	 */
-	public function get_framework_image_path() {
-		return 'lib/skyverge/woocommerce/assets/images/';
+	public function get_framework_assets_path() {
+
+		return $this->get_framework_path() . '/assets';
+	}
+
+
+	/**
+	 * Returns the loaded framework assets URL without a trailing slash
+	 *
+	 * @since 4.0.0-beta
+	 * @return string
+	 */
+	public function get_framework_assets_url() {
+
+		return untrailingslashit( plugins_url( '/assets', $this->get_framework_file() ) );
 	}
 
 
