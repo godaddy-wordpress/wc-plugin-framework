@@ -719,7 +719,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		/**
 		 * Gets the full URL to the log file for a given $handle
 		 *
-		 * @since 3.1.2-1
+		 * @since 4.0.0-beta
 		 * @param string $handle log handle
 		 * @return string URL to the WC log file identified by $handle
 		 */
