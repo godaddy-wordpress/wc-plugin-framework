@@ -197,7 +197,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * pattern definitions from http://www.regular-expressions.info/unicode.html
 		 *
-		 * @since 3.1.2-2
+		 * @since 4.0.0-beta
 		 * @param string $string
 		 * @return mixed
 		 */

@@ -35,7 +35,7 @@ if ( ! interface_exists( 'SV_WC_Payment_Gateway_API_Customer_Response' ) ) :
 		/**
 		 * Returns the customer ID
 		 *
-		 * @since 3.1.2-2
+		 * @since 4.0.0-beta
 		 * @return string customer ID returned by the gateway
 		 */
 		public function get_customer_id();

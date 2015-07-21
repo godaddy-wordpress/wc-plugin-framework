@@ -389,7 +389,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * and adds a notice if a gateway supports the integration *and* tokenization,
 	 * but tokenization is not enabled
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0-beta
 	 */
 	protected function add_integration_requires_tokenization_notices() {
 
@@ -916,7 +916,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Returns the gateway for a given token
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0-beta
 	 * @param string|int $user_id the user ID associated with the token
 	 * @param string $token the token string
 	 * @return SV_WC_Payment_Gateway|null gateway if found, null otherwise
