@@ -45,6 +45,32 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Get the page permalink
+	 *
+	 * Backports wc_page_page_permalink to WC 2.3.3 and lower
+	 *
+	 * @link https://github.com/woothemes/woocommerce/pull/7438
+	 *
+	 * @since 4.0.0-beta
+	 * @param string $page page - myaccount, edit_address, shop, cart, checkout, pay, view_order, terms
+	 * @return string
+	 */
+	public static function wc_get_page_permalink( $page ) {
+
+		if ( self::is_wc_version_gt( '2.3.3' ) ) {
+
+			return wc_get_page_permalink( $page );
+
+		} else {
+
+			$permalink = get_permalink( wc_get_page_id( $page ) );
+
+			return apply_filters( 'woocommerce_get_' . $page . '_page_permalink', $permalink );
+		}
+	}
+
+
+	/**
 	 * Get the raw (unescaped) cancel-order URL
 	 *
 	 * Backports WC_Order::get_cancel_order_url_raw() to WC 2.3.5 and lower
@@ -62,7 +88,7 @@ class SV_WC_Plugin_Compatibility {
 		} else {
 
 			// Get cancel endpoint
-			$cancel_endpoint = get_permalink( wc_get_page_id( 'cart' ) );
+			$cancel_endpoint = self::wc_get_page_permalink( 'cart' );
 			if ( ! $cancel_endpoint ) {
 				$cancel_endpoint = home_url();
 			}

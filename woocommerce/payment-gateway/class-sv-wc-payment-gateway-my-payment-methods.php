@@ -534,7 +534,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	protected function redirect_to_my_account() {
 
-		wp_redirect( get_permalink( wc_get_page_id( 'myaccount' ) ) );
+		wp_redirect( SV_WC_Plugin_Compatibility::wc_get_page_permalink( 'myaccount' ) );
 		exit;
 	}
 
