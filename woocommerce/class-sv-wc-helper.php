@@ -419,7 +419,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 				// get meta + format it
 				$item_meta = new WC_Order_Item_Meta( $item['item_meta'] );
 
-				$item_meta = SV_WC_Plugin_Compatibility::get_formatted_item_meta( $item_meta );
+				$item_meta = $item_meta->get_formatted();
 
 				if ( ! empty( $item_meta ) ) {
 

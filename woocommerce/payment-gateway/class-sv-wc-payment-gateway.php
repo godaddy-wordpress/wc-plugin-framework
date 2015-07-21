@@ -501,7 +501,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$order_id  = $this->get_checkout_pay_page_order_id();
 
 			if ( $order_id ) {
-				$order = SV_WC_Plugin_Compatibility::wc_get_order( $order_id );
+				$order = wc_get_order( $order_id );
 
 				return $order->payment_method == $this->get_id();
 			}
@@ -1167,14 +1167,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function get_order( $order ) {
 
 		if ( is_numeric( $order ) ) {
-			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order );
+			$order = wc_get_order( $order );
 		}
 
 		// set payment total here so it can be modified for later by add-ons like subscriptions which may need to charge an amount different than the get_total()
 		$order->payment_total = number_format( $order->get_total(), 2, '.', '' );
 
 		// logged in customer?
-		if ( 0 != SV_WC_Plugin_Compatibility::get_order_user_id( $order ) && false !== ( $customer_id = $this->get_customer_id( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), array( 'order' => $order ) ) ) ) {
+		if ( 0 != $order->get_user_id() && false !== ( $customer_id = $this->get_customer_id( $order->get_user_id(), array( 'order' => $order ) ) ) ) {
 			$order->customer_id = $customer_id;
 		}
 
@@ -1309,7 +1309,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function get_order_for_refund( $order, $amount, $reason ) {
 
 		if ( is_numeric( $order ) ) {
-			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order );
+			$order = wc_get_order( $order );
 		}
 
 		// add refund info
@@ -1423,7 +1423,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order_note = sprintf( _x( '%s Order completely refunded.', 'Refunded order note', $this->text_domain ), $this->get_method_title() );
 
 		// Mark order as refunded if not already set
-		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'refunded' ) ) {
+		if ( ! $order->has_status( 'refunded' ) ) {
 			$order->update_status( 'refunded', $order_note );
 		} else {
 			$order->add_order_note( $order_note );
@@ -1597,7 +1597,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// this must be deferred until the `woocommerce_order_refunded` action, otherwise
 		// it's changed back to refunded ಠ_ಠ
 		// TODO: remove once WC 2.4+ is required with https://github.com/woothemes/woocommerce/pull/8559
-		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'cancelled' ) ) {
+		if ( ! $order->has_status( 'cancelled' ) ) {
 			$this->force_voided_order_status_to_cancelled = $message;
 		} else {
 			$order->add_order_note( $message );
@@ -1737,7 +1737,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function add_customer_data( $order, $response = null ) {
 
-		$user_id = SV_WC_Plugin_Compatibility::get_order_user_id( $order );
+		$user_id = $order->get_user_id();
 
 		if ( $response && method_exists( $response, 'get_customer_id' ) && $response->get_customer_id() ) {
 
@@ -1774,7 +1774,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order_note = sprintf( __( '%s Transaction Held for Review (%s)', $this->text_domain ), $this->get_method_title(), $message );
 
 		// mark order as held
-		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) ) {
+		if ( ! $order->has_status( 'on-hold' ) ) {
 			$order->update_status( 'on-hold', $order_note );
 		} else {
 			$order->add_order_note( $order_note );
@@ -1791,15 +1791,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$user_message = __( 'Your order has been received and is being reviewed.  Thank you for your business.', $this->text_domain );
 		}
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_2() ) {
-
-			WC()->session->held_order_received_text = $user_message;
-
-		} else {
-
-			// TODO: remove once 2.2+ is required
-			SV_WC_Helper::wc_add_notice( $user_message );
-		}
+		WC()->session->held_order_received_text = $user_message;
 	}
 
 
@@ -1817,7 +1809,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function maybe_render_held_order_received_text( $text, $order ) {
 
-		if ( $order && SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) && isset( WC()->session->held_order_received_text ) ) {
+		if ( $order && $order->has_status( 'on-hold') && isset( WC()->session->held_order_received_text ) ) {
 
 			$text = WC()->session->held_order_received_text;
 
@@ -1841,7 +1833,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order_note = sprintf( _x( '%s Payment Failed (%s)', 'Order Note: (Payment method) Payment failed (error)', $this->text_domain ), $this->get_method_title(), $error_message );
 
 		// Mark order as failed if not already set, otherwise, make sure we add the order note so we can detect when someone fails to check out multiple times
-		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'failed' ) ) {
+		if ( ! $order->has_status( 'failed' ) ) {
 			$order->update_status( 'failed', $order_note );
 		} else {
 			$order->add_order_note( $order_note );
@@ -1874,7 +1866,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order_note = sprintf( _x( '%s Transaction Cancelled (%s)', 'Cancelled order note', $this->text_domain ), $this->get_method_title(), $message );
 
 		// Mark order as cancelled if not already set
-		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'cancelled' ) ) {
+		if ( ! $order->has_status( 'cancelled' ) ) {
 			$order->update_status( 'cancelled', $order_note );
 		} else {
 			$order->add_order_note( $order_note );
@@ -2036,57 +2028,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// no leading underscore since this is meant to be visible to the admin
 		return 'wc_' . $this->get_plugin()->get_id() . '_customer_id' . ( ! $this->is_production_environment( $environment_id ) ? '_' . $environment_id : '' );
-	}
-
-
-	/**
-	 * Add a button to the order actions meta box to view the order in the
-	 * merchant account, if supported
-	 *
-	 * @deprecated since WC 2.2
-	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway_Plugin::order_meta_box_transaction_link()
-	 * @see SV_WC_Payment_Gateway::get_transaction_url()
-	 * @param WC_Order $order the order object
-	 */
-	public function order_meta_box_transaction_link( $order ) {
-
-		if ( $url = $this->get_transaction_url( $order ) ) {
-
-			?>
-			<li class="wide" style="text-align: center;">
-				<a class="button tips" href="<?php echo esc_url( $url ); ?>" target="_blank" data-tip="<?php esc_attr_x( 'View this transaction in your merchant account', 'Supports transaction link', $this->text_domain ); ?>" style="cursor: pointer !important;"><?php printf( _x( 'View in %s', 'Supports transaction link', $this->text_domain ), $this->get_method_title() ); ?></a>
-			</li>
-			<?php
-
-		}
-	}
-
-
-	/**
-	 * Returns the merchant account transaction URL for the given order, if the
-	 * gateway supports transaction direct-links, which not all gateways do.
-	 *
-	 * Override this method to return the transaction URL, if supported
-	 *
-	 * @deprecated since WC 2.2
-	 * @since 1.0.0
-	 * @see WC_Payment_Gateway::get_transaction_url()
-	 * @see SV_WC_Payment_Gateway_Plugin::order_meta_box_transaction_link()
-	 * @see SV_WC_Payment_Gateway::order_meta_box_transaction_link()
-	 * @param WC_Order $order the order object
-	 * @return string transaction url or null if not supported
-	 */
-	public function get_transaction_url( $order ) {
-		// implementation copied directly from core WC_Payment_Gateway (WC 2.2) to provide backwards compatibility for WC 2.1 remove this method wholesale once we require WC 2.2
-		$return_url = '';
-		$transaction_id = $order->transaction_id;  // get transaction id regardless of WC version
-
-		if ( ! empty( $this->view_transaction_url ) && ! empty( $transaction_id ) ) {
-			$return_url = sprintf( $this->view_transaction_url, $transaction_id );
-		}
-
-		return apply_filters( 'woocommerce_get_transaction_url', $return_url, $order, $this );
 	}
 
 

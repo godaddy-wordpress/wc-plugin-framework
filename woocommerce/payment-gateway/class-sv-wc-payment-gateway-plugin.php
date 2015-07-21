@@ -58,12 +58,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/** Customer ID feature */
 	const FEATURE_CUSTOMER_ID = 'customer_id';
 
-	/**
-	 * Link to transaction feature
-	 * @deprecated since WC 2.2
-	 */
-	const FEATURE_TRANSACTION_LINK = 'transaction_link';
-
 	/** Charge capture feature */
 	const FEATURE_CAPTURE_CHARGE = 'capture_charge';
 
@@ -122,7 +116,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			foreach ( $args['gateways'] as $gateway_id => $gateway_class_name ) {
 				$this->add_gateway( $gateway_id, $gateway_class_name );
 			}
-
 		}
 
 		if ( isset( $args['currencies'] ) ) {
@@ -144,15 +137,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		// Admin
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
 
-			// order admin link to transaction, if supported
-			if ( $this->supports( self::FEATURE_TRANSACTION_LINK ) && SV_WC_Plugin_Compatibility::is_wc_version_lt_2_2() ) {
-				add_action( 'woocommerce_order_actions_start', array( $this, 'order_meta_box_transaction_link' ) );
-			}
-		}
-
-		if ( $this->supports( self::FEATURE_CAPTURE_CHARGE ) ) {
-
-			if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+			if ( $this->supports( self::FEATURE_CAPTURE_CHARGE ) ) {
 
 				// capture charge order action
 				add_filter( 'woocommerce_order_actions', array( $this, 'maybe_add_capture_charge_order_action' ) );
@@ -441,29 +426,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Add a button to the order actions meta box to view the order in the
-	 * gateway merchant account, if supported
-	 *
-	 * @deprecated since WC 2.2
-	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::get_transaction_url()
-	 * @see SV_WC_Payment_Gateway::order_meta_box_transaction_link()
-	 * @param int $post_id the order identifier
-	 */
-	public function order_meta_box_transaction_link( $post_id ) {
-
-		$order = SV_WC_Plugin_Compatibility::wc_get_order( $post_id );
-
-		if ( $this->has_gateway( $order->payment_method ) ) {
-
-			$this->get_gateway( $order->payment_method )->order_meta_box_transaction_link( $order );
-
-		}
-
-	}
-
-
-	/**
 	 * Return the plugin action links.  This will only be called if the plugin
 	 * is active.
 	 *
@@ -507,7 +469,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	public function maybe_capture_charge( $order ) {
 
 		if ( ! is_object( $order ) ) {
-			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order );
+			$order = wc_get_order( $order );
 		}
 
 		// bail if the order wasn't paid for with this gateway
@@ -555,7 +517,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			return $actions;
 		}
 
-		$order = SV_WC_Plugin_Compatibility::wc_get_order( $_REQUEST['post'] );
+		$order = wc_get_order( $_REQUEST['post'] );
 
 		// bail if the order wasn't paid for with this gateway
 		if ( ! $this->has_gateway( $order->payment_method ) ) {
@@ -656,7 +618,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 			foreach ( $order_ids as $order_id ) {
 
-				$order = SV_WC_Plugin_Compatibility::wc_get_order( $order_id );
+				$order = wc_get_order( $order_id );
 
 				$this->maybe_capture_charge( $order );
 			}

@@ -128,7 +128,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		if ( $this->use_form_post() ) {
 			// the checkout pay page
-			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order_id );
+			$order = wc_get_order( $order_id );
 			return $order->get_checkout_payment_url( true );
 		} else {
 
@@ -340,9 +340,9 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			if ( $this->process_transaction_response( $order, $response ) ) {
 
-				if ( SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) ) {
+				if ( $order->has_status( 'on-hold' ) ) {
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
-				} elseif ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'cancelled' ) ) {
+				} elseif ( ! $order->has_status( 'cancelled' ) ) {
 					$order->payment_complete(); // mark order as having received payment
 				}
 			}
@@ -408,9 +408,9 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			if ( $this->process_transaction_response( $order, $response ) ) {
 
-				if ( SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) ) {
+				if ( $order->has_status( 'on-hold' ) ) {
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
-				} elseif ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'cancelled' ) ) {
+				} elseif ( ! $order->has_status( 'cancelled' ) ) {
 					$order->payment_complete(); // mark order as having received payment
 				}
 
