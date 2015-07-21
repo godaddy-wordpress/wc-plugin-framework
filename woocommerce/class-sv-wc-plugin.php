@@ -374,9 +374,9 @@ abstract class SV_WC_Plugin {
 			$custom_actions['docs'] = sprintf( '<a href="%s">%s</a>', $this->get_documentation_url(), __( 'Docs', $this->text_domain ) );
 		}
 
-		// support url
-		$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', 'http://support.woothemes.com/', __( 'Support', $this->text_domain ) );
-
+		// support url if any
+		if ( $this->get_support_url() ) {
+			$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', $this->get_documentation_url(), __( 'Support', $this->text_domain ) );
 		}
 
 		// add the links to the front of the actions list
@@ -676,37 +676,26 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Gets the plugin documentation url, which defaults to:
-	 * http://docs.woothemes.com/document/woocommerce-{dasherized plugin id}/
+	 * Gets the plugin documentation url, used for the 'Docs' plugin action
 	 *
 	 * @since 2.0.0
 	 * @return string documentation URL
 	 */
 	public function get_documentation_url() {
 
-		return 'http://docs.woothemes.com/document/woocommerce-' . $this->get_id_dasherized() . '/';
+		return null;
 	}
 
 
 	/**
-	 * Gets the plugin review URL, which defaults to:
-	 * {product page url}#tab-reviews
+	 * Gets the support URL, used for the 'Support' plugin action link
 	 *
-	 * @since 2.0.0
+	 * @since 4.0.0-beta
 	 * @return string review url
 	 */
+	public function get_support_url() {
 
-
-	/**
-	 * Gets the skyverge.com product page URL, which defaults to:
-	 * http://www.skyverge.com/product/{dasherized plugin id}/
-	 *
-	 * @since 2.0.0
-	 * @return string skyverge.com product page url
-	 */
-	public function get_product_page_url() {
-
-		return 'http://www.skyverge.com/product/woocommerce-' . $this->get_id_dasherized() . '/';
+		return null;
 	}
 
 
