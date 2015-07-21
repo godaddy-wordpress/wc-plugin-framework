@@ -295,6 +295,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// notices for currency issues
 		$this->add_currency_admin_notices();
+
+		// notices for subscriptions/pre-orders
+		$this->add_integration_requires_tokenization_notices();
 	}
 
 
@@ -390,6 +393,47 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 			$this->get_admin_notice_handler()->add_admin_notice( $message, 'accepted-currency' . $suffix );
 
+		}
+	}
+
+
+	/**
+	 * Checks if a supported integration is activated (Subscriptions or Pre-Orders)
+	 * and adds a notice if a gateway supports the integration *and* tokenization,
+	 * but tokenization is not enabled
+	 *
+	 * @since 3.1.2-2
+	 */
+	protected function add_integration_requires_tokenization_notices() {
+
+		// either integration requires tokenization
+		if ( $this->is_subscriptions_active() || $this->is_pre_orders_active() ) {
+
+			foreach ( $this->get_gateways() as $gateway ) {
+
+				$tokenization_supported_but_not_enabled = $gateway->supports_tokenization() && ! $gateway->tokenization_enabled();
+
+				// subscriptions
+				if ( $this->is_subscriptions_active() && $gateway->is_enabled() && $gateway->supports( SV_WC_Payment_Gateway_Direct::FEATURE_SUBSCRIPTIONS ) && $tokenization_supported_but_not_enabled ) {
+
+					$message = sprintf( __( '%1$s is inactive for subscription transactions. Please <a href="%2$s">enable tokenization</a> to activate %1$s for Subscriptions.', $this->get_text_domain() ),
+						$gateway->get_method_title(), $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) );
+
+					// add notice -- allow it to be dismissed even on the settings page as the admin may not want to use subscriptions with a particular gateway
+					$this->get_admin_notice_handler()->add_admin_notice( $message, 'subscriptions-tokenization-' . $gateway->get_id(), array( 'always_show_on_settings' => false ) );
+
+				}
+
+				// pre-orders
+				if ( $this->is_pre_orders_active() && $gateway->is_enabled() && $gateway->supports( SV_WC_Payment_Gateway_Direct::FEATURE_PRE_ORDERS ) && $tokenization_supported_but_not_enabled ) {
+
+					$message = sprintf( __( '%1$s is inactive for pre-order transactions. Please <a href="%2$s">enable tokenization</a> to activate %1$s for Pre-Orders.', $this->get_text_domain() ),
+						$gateway->get_method_title(), $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) );
+
+					// add notice -- allow it to be dismissed even on the settings page as the admin may not want to use pre-orders with a particular gateway
+					$this->get_admin_notice_handler()->add_admin_notice( $message, 'pre-orders-tokenization-' . $gateway->get_id(), array( 'always_show_on_settings' => false ) );
+				}
+			}
 		}
 	}
 
