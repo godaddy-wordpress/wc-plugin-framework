@@ -384,9 +384,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 			// save settings
 			add_action( 'woocommerce_update_options_payment_gateways_' . $this->get_id(), array( $this, 'process_admin_options' ) );
-
-			// change the order status for a voided order to cancelled
-			add_action( 'woocommerce_order_refunded', array( $this, 'maybe_cancel_voided_order' ) );
 		}
 
 		// add gateway.js checkout javascript
@@ -1594,12 +1591,24 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// mark order as cancelled, since no money was actually transferred
-		// this must be deferred until the `woocommerce_order_refunded` action, otherwise
-		// it's changed back to refunded ಠ_ಠ
-		// TODO: remove once WC 2.4+ is required with https://github.com/woothemes/woocommerce/pull/8559
 		if ( ! $order->has_status( 'cancelled' ) ) {
-			$this->force_voided_order_status_to_cancelled = $message;
+
+			$this->voided_order_message = $message;
+
+			// voids are fully "refunded" so cancel the voided order instead of marking as refunded
+			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_4() ) {
+
+				// filter in WC 2.4+ allows us to skip the "refunded" then "cancelled" transition
+				add_filter( 'woocommerce_order_fully_refunded_status', array( $this, 'maybe_cancel_voided_order' ), 10, 2 );
+
+			} else {
+
+				// WC 2.3/2.2 requires changing the order status to cancelled after it's already been changed to refunded ಠ_ಠ
+				add_action( 'woocommerce_order_refunded', array( $this, 'maybe_cancel_voided_order_2_3' ) );
+			}
+
 		} else {
+
 			$order->add_order_note( $message );
 		}
 	}
@@ -1608,17 +1617,50 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Maybe change the order status for a voided order to cancelled
 	 *
+	 * @hooked woocommerce_order_fully_refunded_status filter
+	 *
+	 * @see SV_WC_Payment_Gateway::mark_order_as_voided()
+	 * @since 4.0.0-beta
+	 * @param string $order_status default order status for fully refunded orders
+	 * @param int $order_id order ID
+	 * @return string 'cancelled'
+	 */
+	public function maybe_cancel_voided_order( $order_status, $order_id ) {
+
+		if ( empty( $this->voided_order_message ) ) {
+			return $order_status;
+		}
+
+		$order = wc_get_order( $order_id );
+
+		// no way to set the order note with the status change
+		$order->add_order_note( $this->voided_order_message );
+
+		return 'cancelled';
+	}
+
+
+	/**
+	 * Maybe change the order status for a voided order to cancelled for WC 2.3/2.2
+	 *
+	 * This must be deferred until the woocommerce_order_refunded, otherwise
+	 * it's changed back to refunded
+	 *
+	 * @TODO: this can be removed once WC 2.4 is required @MR 2015-07-21
+	 *
+	 * @hooked woocommerce_order_refunded action
+	 *
 	 * @see SV_WC_Payment_Gateway::mark_order_as_voided()
 	 * @since 4.0.0-beta
 	 * @param int $order_id order ID
 	 */
-	public function maybe_cancel_voided_order( $order_id ) {
+	public function maybe_cancel_voided_order_2_3( $order_id ) {
 
-		if ( ! empty( $this->force_voided_order_status_to_cancelled ) ) {
+		if ( ! empty( $this->voided_order_message ) ) {
 
 			$order = wc_get_order( $order_id );
 
-			$order->update_status( 'cancelled', $this->force_voided_order_status_to_cancelled );
+			$order->update_status( 'cancelled', $this->voided_order_message );
 		}
 	}
 
