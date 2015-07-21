@@ -458,10 +458,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			wp_enqueue_script( 'jquery-payment' );
 
 			// frontend JS
-			wp_enqueue_script( 'sv-wc-payment-gateway-frontend', $this->get_plugin()->get_plugin_url() . '/lib/skyverge/woocommerce/payment-gateway/assets/js/frontend/sv-wc-payment-gateway-frontend.min.js', array(), $this->get_plugin()->get_version(), true );
+			wp_enqueue_script( 'sv-wc-payment-gateway-frontend', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-frontend.min.js', array(), SV_WC_Plugin::VERSION, true );
 
 			// frontend CSS
-			wp_enqueue_style( 'sv-wc-payment-gateway-frontend', $this->get_plugin()->get_plugin_url() . '/lib/skyverge/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-frontend.min.css', array(), $this->get_plugin()->get_version() );
+			wp_enqueue_style( 'sv-wc-payment-gateway-frontend', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-frontend.min.css', array(), SV_WC_Plugin::VERSION );
 
 			$localized_script_handle = 'sv-wc-payment-gateway-frontend';
 		}
