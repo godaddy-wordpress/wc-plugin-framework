@@ -728,6 +728,57 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		}
 
 
+		/**
+		 * Gettext `__()` wrapper for framework-translated strings
+		 *
+		 * Warning! This function should only be used if an existing
+		 * translation from the framework is to be used. It should
+		 * never be called for plugin-specific or untranslated strings!
+		 * Untranslated = not registered via string literal.
+		 *
+		 * @since 3.0.0
+		 * @param string $text
+		 */
+		public static function f__( $text ) {
+
+			return __( $text, 'sv-wc-plugin-framework' );
+		}
+
+
+		/**
+		 * Gettext `_e()` wrapper for framework-translated strings
+		 *
+		 * Warning! This function should only be used if an existing
+		 * translation from the framework is to be used. It should
+		 * never be called for plugin-specific or untranslated strings!
+		 * Untranslated = not registered via string literal.
+		 *
+		 * @since 3.0.0
+		 * @param string $text
+		 */
+		public static function f_e( $text ) {
+
+			return _e( $text, 'sv-wc-plugin-framework' );
+		}
+
+
+		/**
+		 * Gettext `_x()` wrapper for framework-translated strings
+		 *
+		 * Warning! This function should only be used if an existing
+		 * translation from the framework is to be used. It should
+		 * never be called for plugin-specific or untranslated strings!
+		 * Untranslated = not registered via string literal.
+		 *
+		 * @since 3.0.0
+		 * @param string $text
+		 */
+		public static function f_x( $text, $context ) {
+
+			return _x( $text, $context, 'sv-wc-plugin-framework' );
+		}
+
+
 	}
 
 endif; // Class exists check
