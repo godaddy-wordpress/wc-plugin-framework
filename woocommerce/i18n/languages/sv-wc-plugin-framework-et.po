@@ -1,0 +1,1254 @@
+# Copyright (C) 2015
+# This file is distributed under the same license as the  package.
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Plugin Framework\n"
+"Report-Msgid-Bugs-To: https://support.woothemes.com/hc/\n"
+"POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
+"PO-Revision-Date: 2015-05-28 12:14+0200\n"
+"Last-Translator: Illimar Tambek\n"
+"Language-Team: \n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: class-sv-wc-admin-notice-handler.php:192
+msgid "Dismiss"
+msgstr "Loobu"
+
+#: class-sv-wc-framework-bootstrap.php:234
+msgid ""
+"The following plugins are inactive because they require a newer version to "
+"function properly:"
+msgstr "Järgnevad pluginad ei ole aktiivsed ja vajavad toimimiseks uuendamist:"
+
+#: class-sv-wc-framework-bootstrap.php:234
+msgid ""
+"The following plugin is inactive because it requires a newer version to "
+"function properly:"
+msgstr "Järgnev plugin ei ole aktiivne ja vajab toimimiseks uuendamist:"
+
+#: class-sv-wc-framework-bootstrap.php:240
+msgid "Please %supdate%s"
+msgstr "Palun %suuenda%s"
+
+#: class-sv-wc-framework-bootstrap.php:246
+msgid ""
+"The following plugins are inactive because they require a newer version of "
+"WooCommerce:"
+msgstr ""
+"Järgnevad pluginad ei ole aktiivsed, kuna vajavad korrektselt töötamiseks "
+"uuemat WooCommerce'i versiooni:"
+
+#: class-sv-wc-framework-bootstrap.php:246
+msgid ""
+"The following plugin is inactive because it requires a newer version of "
+"WooCommerce:"
+msgstr ""
+"Järgnev plugin ei ole aktiivne, kuna vajab korrektselt töötamiseks uuemat "
+"WooCommerce'i versiooni:"
+
+#: class-sv-wc-framework-bootstrap.php:249
+msgid "%s requires WooCommerce %s or newer"
+msgstr "%s vajab WooCommerce'i versiooni %s või uuemat"
+
+#: class-sv-wc-framework-bootstrap.php:252
+msgid "Please %supdate WooCommerce%s"
+msgstr "Palun %uuenda WooCommerce'i%s"
+
+#: class-sv-wc-plugin.php:187
+msgid "You cannot clone instances of %s."
+msgstr ""
+
+#: class-sv-wc-plugin.php:196
+msgid "You cannot unserialize instances of %s."
+msgstr ""
+
+#: class-sv-wc-plugin.php:331
+msgid ""
+"%s requires the %s PHP extension to function.  Contact your host or server "
+"administrator to configure and install the missing extension."
+msgid_plural ""
+"%s requires the following PHP extensions to function: %s.  Contact your host "
+"or server administrator to configure and install the missing extensions."
+msgstr[0] ""
+"%s vajab töötamiseks PHP %s laiendust. Puuduva laienduse paigaldamiseks võta "
+"ühendust oma serveri või veebimajutusteenuse halduriga."
+msgstr[1] ""
+"%s vajab töötamiseks järgnevaid PHP laiendusi: %s. Puuduvate laienduste "
+"paigaldamiseks võta ühendust oma serveri või veebimajutusteenuse halduriga."
+
+#: class-sv-wc-plugin.php:351
+msgid ""
+"%s requires the %s PHP function to exist.  Contact your host or server "
+"administrator to configure and install the missing function."
+msgid_plural ""
+"%s requires the following PHP functions to exist: %s.  Contact your host or "
+"server administrator to configure and install the missing functions."
+msgstr[0] ""
+"%s vajab töötamiseks järgnevat PHP funktsiooni: %s. Puuduva funktsiooni "
+"paigaldamiseks võta ühendust oma serveri või veebimajutusteenuse halduriga."
+msgstr[1] ""
+"%s vajab töötamiseks järgnevaid PHP funktsioone: %s. Puuduvate funktsioonide "
+"paigaldamiseks võta ühendust oma serveri või veebimajutusteenuse halduriga."
+
+#: class-sv-wc-plugin.php:386
+msgid "Docs"
+msgstr "Dokumentatsioon"
+
+#: class-sv-wc-plugin.php:391
+msgid "Support"
+msgstr "Kasutajatugi"
+
+#: class-sv-wc-plugin.php:641
+msgid "Configure"
+msgstr "Seadista"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:304
+msgid "%s Payment Tokens"
+msgstr "%s maksetähised"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:304
+msgid "Payment Tokens"
+msgstr "Maksetähised"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:308
+msgid "This customer has no saved payment tokens"
+msgstr "Sel kliendil ei ole salvestatud maksetähiseid"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:317
+msgid "Default card"
+msgstr "Vaikimisi kaart"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:318
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:405
+msgid "Delete"
+msgstr "Kustuta"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:329
+msgid "Add a Payment Token"
+msgstr "Lisa maksetähis"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:331
+msgid "Token"
+msgstr "Tähis"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:334
+msgid "Card Type"
+msgstr "Kaardi tüüp"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:345
+msgid "Last Four"
+msgstr "Viimased 4 numbrit"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:346
+msgid "Expiry Date (01/%s)"
+msgstr "Aegumiskuupäev (01/%s)"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:374
+msgid ""
+"Are you sure you wish to do this?  Change will not be finalized until you "
+"click \"Update\""
+msgstr ""
+"Oled kindel, et soovid seda teha? Muudatust ei rakendata enne kui klikid "
+"\"Uuenda\""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:93
+msgid "An error occurred, please try again or try an alternate form of payment"
+msgstr "Esines viga, palun proovi uuesti või kasuta teistsugust makseviisi"
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:94
+msgid ""
+"We cannot process your order with the payment information that you provided. "
+"Please use a different payment account or an alternate payment method."
+msgstr ""
+"Me ei saa sinu tellimust antud makseinfo alusel töödelda. Palun kasuta teist "
+"maksekontot või teistsugust makseviisi."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:95
+#, fuzzy
+msgid ""
+"This order is being placed on hold for review. Please contact us to complete "
+"the transaction."
+msgstr ""
+"Tellimus on pandud ootele. Tehingu kiiremaks kinnitamiseks võid poega "
+"ühendust võtta."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:100
+msgid ""
+"This order is being placed on hold for review due to an incorrect card "
+"verification number.  You may contact the store to complete the transaction."
+msgstr ""
+"Tellimus pandi ootele, kuna kaardi turvakood oli vale. Tehingu "
+"lõpuleviimiseks võid poega ühendust võtta."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:101
+msgid "The card verification number is invalid, please try again."
+msgstr "Kaardi turvakood on vale, palun proovi uuesti."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:102
+msgid "Please enter your card verification number and try again."
+msgstr "Palun sisesta oma kaardi turvakood ja proovi uuesti."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:105
+msgid ""
+"That card type is not accepted, please use an alternate card or other form "
+"of payment."
+msgstr ""
+"Sellist tüüpi kaarti ei võeta vastu, palun proovi mõnda teist kaarti või "
+"teistsugust makseviisi."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:106
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:110
+msgid ""
+"The card type is invalid or does not correlate with the credit card number.  "
+"Please try again or use an alternate card or other form of payment."
+msgstr ""
+"Kaardi tüüp on vigane või ei vasta kaardi numbrile. Palun proovi uuesti, "
+"proovi mõnda teist kaarti või teistsugust makseviisi."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:107
+msgid "Please select the card type and try again."
+msgstr "Palun vali kaardi tüüp ja proovi uuesti."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:111
+msgid "The card number is invalid, please re-enter and try again."
+msgstr "Kaardi number on vigane, palun sisesta uuesti ja proovi veelkord."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:112
+msgid "Please enter your card number and try again."
+msgstr "Palun sisesta oma kaardi number ja proovi uuesti."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:115
+msgid "The card expiration date is invalid, please re-enter and try again."
+msgstr ""
+"Kaardi aegumiskuupäev on vale, palun sisesta uuesti ja proovi veelkord."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:116
+msgid "The card expiration month is invalid, please re-enter and try again."
+msgstr "Kaardi aegumise kuu on vale, palun sisesta uuesti ja proovi veelkord."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:117
+msgid "The card expiration year is invalid, please re-enter and try again."
+msgstr ""
+"Kaardi aegumise aasta on vale, palun sisesta uuesti ja proovi veelkord."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:118
+msgid "Please enter your card expiration date and try again."
+msgstr "Palun sisesta oma kaardi aegumiskuupäev ja proovi uuesti."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:121
+#, fuzzy
+msgid "The bank routing number is invalid, please re-enter and try again."
+msgstr "Kaardi number on vigane, palun sisesta uuesti ja proovi veelkord."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:122
+#, fuzzy
+msgid "The bank account number is invalid, please re-enter and try again."
+msgstr "Kaardi number on vigane, palun sisesta uuesti ja proovi veelkord."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:125
+msgid ""
+"The provided card is expired, please use an alternate card or other form of "
+"payment."
+msgstr ""
+"Antud kaart on aegunud, palun kasuta mõnda teist kaarti või teistsugust "
+"makseviisi."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:126
+msgid ""
+"The provided card was declined, please use an alternate card or other form "
+"of payment."
+msgstr ""
+"Antud kaart klükati tagasi, palun kasuta mõnda teist kaarti või teistsugust "
+"makseviisi."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:127
+msgid ""
+"Insufficient funds in account, please use an alternate card or other form of "
+"payment."
+msgstr ""
+"Kontol pole piisavalt vahendeid, palun kasuta mõnda teist kaarti või "
+"teistsugust makseviisi."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:128
+msgid ""
+"The card is inactivate or not authorized for card-not-present transactions, "
+"please use an alternate card or other form of payment."
+msgstr ""
+"Antud kaart ei ole aktiveeritud või ei ole sellega internetimaksed lubatud. "
+"Palun kasuta mõnda teist kaarti või teistsugust makseviisi."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:129
+msgid ""
+"The credit limit for the card has been reached, please use an alternate card "
+"or other form of payment."
+msgstr ""
+"Kaardi krediitilimiit on ära kasutatud, palun kasuta mõnda teist kaarti või "
+"teistsugust makseviisi."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:130
+#, fuzzy
+msgid ""
+"The card verification number does not match. Please re-enter and try again."
+msgstr ""
+"Kaardi aegumise aasta on vale, palun sisesta uuesti ja proovi veelkord."
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:131
+msgid ""
+"The provided address does not match the billing address for cardholder. "
+"Please verify the address and try again."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:627
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:686
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:801
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1561
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:576
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:611
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:637
+msgid "(Transaction ID %s)"
+msgstr "(Tehingu ID %s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:733
+msgid "Tokenization Request Failed: %s"
+msgstr "Tunnuse loomise päring ebaõnnestus: %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:743
+msgid "%s Tokenization Request Failed: %s"
+msgstr "%s Tunnuse loomise päring ebaõnnestus: %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1720
+#: payment-gateway/class-sv-wc-payment-gateway.php:1714
+#, fuzzy
+msgid "Transaction ID %s"
+msgstr "(Tehingu ID %s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:2345
+msgid "Oops, adding your new payment method failed: %s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:233
+msgid ""
+"Thank you for your order. We are now redirecting you to complete payment."
+msgstr "Aitäh tellimuse eest. Makse teostamiseks suunatakse sind nüüd edasi."
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:258
+msgid "Thank you for your order, please click the button below to pay."
+msgstr "Aitäh tellimuse eest. Palun kliki maksmiseks alloleval nupul."
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:261
+msgid "Pay Now"
+msgstr "Maksa"
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:262
+msgid "Cancel Order"
+msgstr "Tühista tellimus"
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:333
+msgid "IPN processing error: %s duplicate transaction received"
+msgstr "IPN töötlemise viga: %s duplikaattehing"
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:401
+msgid "%s duplicate transaction received"
+msgstr "%s duplikaattehing"
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:565
+msgid "%s %s %s Approved: %s ending in %s (expires %s)"
+msgstr "%s %s %s vastu võetud: %s lõpeb numbritega %s (aegub %s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:597
+msgid "%s %s Transaction Approved: %s ending in %s"
+msgstr "%s %s tehing vastu võetud: %s lõpeb numbritega %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:606
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:609
+msgid "(expires %s)"
+msgstr "(aegub %s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:630
+msgid "%s %sTransaction Approved"
+msgstr "%s %stehing vastu võetud"
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:97
+msgid "Are you sure you want to delete this payment method?"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:184
+#, fuzzy
+msgid "You do not have any saved payment methods."
+msgstr "Sel kliendil ei ole salvestatud maksetähiseid"
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:201
+#, fuzzy
+msgid "My Payment Methods"
+msgstr "Maksevahendit uuendati."
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:267
+msgid "Method"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:268
+#, fuzzy
+msgid "Expires"
+msgstr "(aegub %s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:289
+#, fuzzy
+msgid "Credit/Debit Cards"
+msgstr "Krediitkaard"
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:295
+msgid "Bank Accounts"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:362
+msgid "N/A"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:394
+msgid "Make Default"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:442
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:603
+#, fuzzy
+msgid "ending in %s"
+msgstr "%s, lõpeb numbritega %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:448
+msgid "(default)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:358
+msgid "Where do I find this?"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:432
+msgid "TEST MODE ENABLED"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:519
+msgid "Manage Payment Methods"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:645
+msgid "Use a new card"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:645
+msgid "Use a new bank account"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:683
+msgid "Securely Save to Account"
+msgstr ""
+
+#. translators: [Plugin name] accepts payments in [currency/list of currencies]
+#. only
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:368
+msgid ""
+"%s accepts payment in %s only.  <a href=\"%s\">Configure</a> WooCommerce to "
+"accept %s to enable this gateway for checkout."
+msgid_plural ""
+"%s accepts payment in one of %s only.  <a href=\"%s\">Configure</a> "
+"WooCommerce to accept one of %s to enable this gateway for checkout."
+msgstr[0] ""
+"%s võimaldab makseid vastu võtta ainult %s vääringus. Selle makseviisi "
+"kasutamiseks luba palun %s vastuvõtmine WooCommerce'i <a href=\"%s"
+"\">seadetes</a>."
+msgstr[1] ""
+"%s võimaldab makseid vastu võtta ainult järgmistes vääringutes: %s. Selle "
+"makseviisi kasutamiseks luba palun vähemalt vääringu (%s) vastuvõtmine "
+"WooCommerce'i <a href=\"%s\">seadetes</a>."
+
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:405
+msgid ""
+"%1$s is inactive for subscription transactions. Please <a href=\"%2$s"
+"\">enable tokenization</a> to activate %1$s for Subscriptions."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:416
+msgid ""
+"%1$s is inactive for pre-order transactions. Please <a href=\"%2$s\">enable "
+"tokenization</a> to activate %1$s for Pre-Orders."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:551
+msgid "Continue"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:551
+#, fuzzy
+msgid "Place order"
+msgstr "Tühista tellimus"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:574
+msgid "Thank you for your order."
+msgstr "Aitäh tellimuse eest."
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:690
+msgid "Enable / Disable"
+msgstr "Luba / Keela"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:691
+msgid "Enable this gateway"
+msgstr "Lülita see makseviis sisse"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:697
+msgid "Title"
+msgstr "Nimetus"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:699
+msgid "Payment method title that the customer will see during checkout."
+msgstr "Kliendile kassas nähtav makseviisi nimetus."
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:704
+msgid "Description"
+msgstr "Kirjeldus"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:706
+msgid "Payment method description that the customer will see during checkout."
+msgstr "Kliendile kassas nähtav makseviisi kirjeldus."
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:749
+msgid "Detailed Decline Messages"
+msgstr "Täpsemad maksest keeldumise teated"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:751
+msgid ""
+"Check to enable detailed decline messages to the customer during checkout "
+"when possible, rather than a generic decline message."
+msgstr ""
+"Lülita see valik sisse, kui soovid klientidele üldise maksest keeldumise "
+"teate asemel näidata võimaluse korral täpsemaid põhjusi."
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:758
+msgid "Debug Mode"
+msgstr "Veaotsingu režiim"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:760
+#, fuzzy
+msgid ""
+"Show Detailed Error Messages and API requests/responses on the checkout page "
+"and/or save them to the <a href=\"%s\">debug log</a>"
+msgstr ""
+"Näita üksikasjalikke veateateud ja API päringuid/vastuseid kassas ja/või "
+"salvesta need logifaili. Logid leiad %sWooCommerce -> Süsteemi olek -> Logid"
+"%s alt."
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:764
+msgid "Show on Checkout Page"
+msgstr "Näita kassas"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:765
+msgid "Save to Log"
+msgstr "Salvesta logifaili"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:811
+msgid "Environment"
+msgstr "Keskkond"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:814
+msgid "Select the gateway environment to use for transactions."
+msgstr "Vali makseviisi tehingute teostamise keskkond."
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:868
+msgid "Disabled because the other gateway is using these settings"
+msgstr "Ei saa muuta, kuna teine makseviis kasutab neid seadeid"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1811
+msgid "%s Transaction Held for Review (%s)"
+msgstr "%s tehing pandi ootele (%s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1828
+msgid ""
+"Your order has been received and is being reviewed. Thank you for your "
+"business."
+msgstr ""
+"Sinu tellimus on vastu võetud ja on ülevaatamisel. Täname koostöö eest."
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1887
+msgid ""
+"An error occurred, please try again or try an alternate form of payment."
+msgstr "Esines viga, palun proovi uuesti või kasuta teistsugust makseviisi."
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:122
+msgctxt "Supports customer details"
+msgid "%s Customer Details"
+msgstr "%s Kliendi andmed"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:233
+msgctxt "Supports customer details"
+msgid "Customer ID (%s)"
+msgstr "Kliendi ID (%s)"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:233
+msgctxt "Supports customer details"
+msgid "Customer ID"
+msgstr "Kliendi ID"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:236
+msgctxt "Supports customer details"
+msgid ""
+"The gateway customer ID for the user in the %s environment. Only edit this "
+"if necessary."
+msgstr ""
+"Kasutajale makseviisi poolt määratud kliendi tunnus %s keskkonnas. Muuda "
+"seda ainult siis, kui tõesti vajalik."
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:236
+msgctxt "Supports customer details"
+msgid "The gateway customer ID for the user. Only edit this if necessary."
+msgstr ""
+"Kasutajale makseviisi poolt määratud kliendi tunnus. Muuda seda ainult siis, "
+"kui tõesti vajalik."
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:117
+msgctxt "Supports tokenization"
+msgid ""
+"Payment error, please try another payment method or contact us to complete "
+"your transaction."
+msgstr ""
+"Viga maksega, palun proovi teistsugust makseviisi või võta meiega ühendust."
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2353
+msgctxt "Supports tokenization"
+msgid "Tokenization"
+msgstr "Maksetunnused"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2354
+msgctxt "Supports tokenization"
+msgid ""
+"Allow customers to securely save their payment details for future checkout."
+msgstr ""
+"Võimalda klientidel oma makseandmeid edaspidisteks tehinguteks turvaliselt "
+"talletada."
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:200
+#: payment-gateway/class-sv-wc-payment-gateway.php:524
+msgctxt "Supports direct credit card"
+msgid "Card expiration date is invalid"
+msgstr "Kaardi aegumiskuupäeva on vigane"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:224
+#: payment-gateway/class-sv-wc-payment-gateway.php:517
+msgctxt "Supports direct credit card"
+msgid "Card number is missing"
+msgstr "Kaardi number on puudu"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:230
+#: payment-gateway/class-sv-wc-payment-gateway.php:520
+msgctxt "Supports direct credit card"
+msgid "Card number is invalid (wrong length)"
+msgstr "Kaardi number on vigane (pikkus on vale)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:235
+#: payment-gateway/class-sv-wc-payment-gateway.php:519
+msgctxt "Supports direct credit card"
+msgid "Card number is invalid (only digits allowed)"
+msgstr "Kaardi number on vigane (lubatud on ainult numbrid)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:240
+#: payment-gateway/class-sv-wc-payment-gateway.php:518
+msgctxt "Supports direct credit card"
+msgid "Card number is invalid"
+msgstr "Kaardi number on vigane"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:265
+#: payment-gateway/class-sv-wc-payment-gateway.php:521
+msgctxt "Supports direct credit card"
+msgid "Card security code is missing"
+msgstr "Kaardi turvakood on puudu"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:272
+#: payment-gateway/class-sv-wc-payment-gateway.php:522
+msgctxt "Supports direct credit card"
+msgid "Card security code is invalid (only digits are allowed)"
+msgstr "Kaardi turvakood on vigane (lubatud on ainult numbrid)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:278
+#: payment-gateway/class-sv-wc-payment-gateway.php:523
+msgctxt "Supports direct credit card"
+msgid "Card security code is invalid (must be 3 or 4 digits)"
+msgstr "Kaardi turvakood on vigane (peab olema 3 või 4 numbrit)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:675
+msgctxt "Supports direct credit card"
+msgid "%s %s %s Approved: %s ending in %s (expires %s)"
+msgstr "%s %s %s Vastu võetud: %s lõpeb numbritega %s (aegub %s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:293
+#, fuzzy
+msgctxt "Supports direct credit card"
+msgid "Card Number"
+msgstr "Kaardi number on puudu"
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:306
+msgctxt "Supports direct credit card"
+msgid "Expiration (MM/YY)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:309
+msgctxt "Supports direct credit card"
+msgid "MM / YY"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:321
+#, fuzzy
+msgctxt "Supports direct credit card"
+msgid "Card Security Code"
+msgstr "Kaardi turvakood on puudu"
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:324
+msgctxt "Supports direct credit card"
+msgid "CSC"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:885
+msgctxt "Supports direct credit card"
+msgid "Card Verification (CSC)"
+msgstr "Kaardi turvakood (CSC)"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:886
+msgctxt "Supports direct credit card"
+msgid "Display the Card Security Code (CV2) field on checkout"
+msgstr "Näita kassas kaardi turvakoodi (CV2) välja"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:307
+#: payment-gateway/class-sv-wc-payment-gateway.php:533
+msgctxt "Supports direct cheque"
+msgid "Routing Number is missing"
+msgstr "Suunakood on puudu"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:314
+#: payment-gateway/class-sv-wc-payment-gateway.php:534
+msgctxt "Supports direct cheque"
+msgid "Routing Number is invalid (only digits are allowed)"
+msgstr "Suunakood on vigane (lubatud on ainult numbrid)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:320
+#: payment-gateway/class-sv-wc-payment-gateway.php:535
+msgctxt "Supports direct cheque"
+msgid "Routing number is invalid (must be 9 digits)"
+msgstr "Suunakood on vigane (peab olemas 9 numbrit)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:329
+#: payment-gateway/class-sv-wc-payment-gateway.php:530
+msgctxt "Supports direct cheque"
+msgid "Account Number is missing"
+msgstr "Konto number on puudu"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:336
+#: payment-gateway/class-sv-wc-payment-gateway.php:531
+msgctxt "Supports direct cheque"
+msgid "Account Number is invalid (only digits are allowed)"
+msgstr "Konto number on vigane (lubatud on ainult numbrid)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:342
+#: payment-gateway/class-sv-wc-payment-gateway.php:532
+msgctxt "Supports direct cheque"
+msgid "Account number is invalid (must be between 5 and 17 digits)"
+msgstr "Konto number on vigane (peab olemas 5-17 numbrit)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:349
+#: payment-gateway/class-sv-wc-payment-gateway.php:529
+msgctxt "Supports direct cheque"
+msgid "Drivers license number is invalid"
+msgstr "Juhiloa number on vigane"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:355
+#: payment-gateway/class-sv-wc-payment-gateway.php:525
+msgctxt "Supports direct cheque"
+msgid "Check Number is invalid (only digits are allowed)"
+msgstr "Tšeki number on vigane (lubatud on ainult numbrid)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:618
+msgctxt "Supports direct cheque"
+msgid "%s Check Transaction Approved: %s account ending in %s"
+msgstr "%s tšeki tehing vastu võetud: %s konto, lõpeb numbritega %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:622
+msgctxt "Supports direct cheque"
+msgid "Check number %s"
+msgstr "Tšeki number %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:526
+msgctxt "Supports direct cheque"
+msgid "Check Number is missing"
+msgstr "Tehingu number on puudu"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:527
+msgctxt "Supports direct cheque"
+msgid "Drivers license state is missing"
+msgstr "Juhiloa osariik on puudu"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:528
+msgctxt "Supports direct cheque"
+msgid "Drivers license number is missing"
+msgstr "Juhiloa number on puudu"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:593
+msgctxt "Capture order description"
+msgid "%s - Capture for Order %s"
+msgstr "%s - tellimuse %s tasumine"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:677
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:567
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:599
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:632
+msgctxt "Supports environments"
+msgid "Test"
+msgstr "Testimine"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2755
+msgctxt "Supports environments"
+msgid "Production"
+msgstr "Töö/avalik"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:763
+msgctxt "Supports credit card authorization"
+msgid "Authorization only transaction"
+msgstr "Autoriseeriv tehing"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:794
+msgctxt "Supports capture charge"
+msgid "%s Capture of %s Approved"
+msgstr "%s %s tasumine vastu võetud"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:821
+msgctxt "Supports capture charge"
+msgid "%s Capture Failed: %s - %s"
+msgstr "%s tasumine ebaõnnestus: %s - %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:836
+msgctxt "Supports capture charge"
+msgid "%s Capture Failed: %s"
+msgstr "%s tasumine ebaõnnestus: %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:572
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:638
+msgctxt "Supports capture charge"
+msgid "Capture Charge"
+msgstr "Makse "
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1108
+msgctxt "Supports direct credit card subscriptions"
+msgid "%s0 Subscription Renewal Approved"
+msgstr "%s0 tellimuse uuendamine vastu võetud"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1146
+msgctxt "Supports direct credit card subscriptions"
+msgid ""
+"%s %s Subscription Renewal Payment Approved: %s ending in %s (expires %s)"
+msgstr ""
+"%s %s tellimuse uuendamise makse vastu võetud: %s lõpeb numbritega %s (aegub "
+"%s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1156
+msgctxt "Supports direct cheque subscriptions"
+msgid "%s Check Subscription Renewal Payment Approved: %s account ending in %s"
+msgstr ""
+"%s tšeki tellimuse uuendamise makse vastu võetud: %s konto, lõpeb numbritega "
+"%s"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1289
+msgctxt "Supports direct payment method subscriptions"
+msgid "Via %s ending in %s"
+msgstr "%s, lõpeb numbritega %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1491
+msgctxt "Supports direct payment method pre-orders"
+msgid "Pre-Order Tokenization attempt failed (%s)"
+msgstr "Eeltellimuse maksetunnuse loomise katse ebaõnnestus (%s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1515
+msgctxt "Supports direct payment method pre-orders"
+msgid "%s - Pre-Order Release Payment for Order %s"
+msgstr "%s - Eeltellimuse väljastamise makse tellimuse %s eest"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1519
+msgctxt "Supports direct payment method pre-orders"
+msgid "Payment token missing/invalid."
+msgstr "Maksetunnus on puudu või vigane."
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1544
+msgctxt "Supports direct payment method pre-orders"
+msgid "%s %s Pre-Order Release Payment Approved: %s ending in %s (expires %s)"
+msgstr ""
+"%s %s eeltellimuse väljastamise makse vastu võetud: %s lõpeb numbritega %s "
+"(aegub %s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1555
+#, fuzzy
+msgctxt "Supports direct payment method pre-orders"
+msgid "%s eCheck Pre-Order Release Payment Approved: %s ending in %s"
+msgstr ""
+"%s e-tšeki eeltellimuse väljastamise makse vastu võetud: %s konto, lõpeb "
+"numbritega %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1578
+msgctxt "Supports direct payment method pre-orders"
+msgid "Authorization only transaction"
+msgstr "Autoriseeriv tehing"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1596
+msgctxt "Supports direct payment method pre-orders"
+msgid "Pre-Order Release Payment Failed: %s"
+msgstr "Eeltellimuse väljastamise makse ebaõnnestus: %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1681
+msgctxt "Supports direct credit card tokenization"
+msgid "%s Payment Method Saved: %s ending in %s (expires %s)"
+msgstr "%s maksevahend salvestatud: %s lõpeb numbritega %s (aegub %s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1689
+msgctxt "Supports direct cheque tokenization"
+msgid "%s eCheck Payment Method Saved: %s account ending in %s"
+msgstr "%s e-tšeki maksevahend salvestatud: %s konto, lõpeb numbritega %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:2380
+#, fuzzy
+msgctxt "Supports add payment method feature"
+msgid "Nice! New payment method added: %s ending in %s (expires %s)"
+msgstr "%s maksevahend salvestatud: %s lõpeb numbritega %s (aegub %s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:2389
+#, fuzzy
+msgctxt "Supports add payment method feature"
+msgid "Nice! New payment method added: %s account ending in %s"
+msgstr "%s e-tšeki maksevahend salvestatud: %s konto, lõpeb numbritega %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:2395
+#, fuzzy
+msgctxt "Supports direct"
+msgid "Nice! New payment method added."
+msgstr "Maksevahendit uuendati."
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:2474
+#, fuzzy
+msgctxt "Add payment method request description"
+msgid "%s - Add Payment Method for %s"
+msgstr "%s makse ebaõnnestus (%s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:208
+#, fuzzy
+msgctxt "Supports add new payment method feature"
+msgid "Add New Payment Method"
+msgstr "Lisa maksetähis"
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:479
+msgctxt "Supports my payment method feature"
+msgid "Oops, you took too long, please try again."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:492
+#, fuzzy
+msgctxt "Supports my payment method feature"
+msgid "There was an error with your request, please try again."
+msgstr "Sinu päringuga esines viga, palun proovi uuesti."
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:504
+#, fuzzy
+msgctxt "Supports my payment method feature"
+msgid "Error removing payment method"
+msgstr "Viga maksevahendi eemaldamisel"
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:507
+#, fuzzy
+msgctxt "Supports my payment method feature"
+msgid "Payment method deleted."
+msgstr "Maksevahendit uuendati."
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:516
+#, fuzzy
+msgctxt "Supports my payment method feature"
+msgid "Default payment method updated."
+msgstr "Maksevahendit uuendati."
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:363
+#, fuzzy
+msgctxt "Supports direct eCheck"
+msgid "Routing Number"
+msgstr "Suunakood on puudu"
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:376
+#, fuzzy
+msgctxt "Supports direct eCheck"
+msgid "Account Number"
+msgstr "Konto number on puudu"
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:388
+msgctxt "Supports direct eCheck"
+msgid "Account Type"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:395
+#, fuzzy
+msgctxt "Supports direct eCheck"
+msgid "Checking"
+msgstr "E-tšekk"
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:396
+msgctxt "Supports direct eCheck"
+msgid "Savings"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:314
+msgctxt "Requires SSL"
+msgid ""
+"%s: WooCommerce is not being forced over SSL; your customer's payment data "
+"may be at risk."
+msgstr ""
+"%s: WooCommerce'i ei sunnita SSLi kasutama; sinu klientide andmed võivad "
+"olla ohus."
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:653
+msgctxt "Supports credit card"
+msgid "Credit Card"
+msgstr "Krediitkaard"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:671
+msgctxt "Supports credit card"
+msgid "Pay securely using your credit card."
+msgstr "Maksa turvaliselt oma krediitkaardiga."
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:655
+msgctxt "Supports cheque"
+msgid "eCheck"
+msgstr "E-tšekk"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:673
+msgctxt "Supports cheque"
+msgid "Pay securely using your checking account."
+msgstr "Maksa turvaliselt oma tšekikotoga."
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:763
+msgctxt "Debug mode off"
+msgid "Off"
+msgstr "Välja lülitatud"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:766
+msgctxt "Debug mode both show on checkout and log"
+msgid "Both"
+msgstr "Mõlemad"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:863
+msgctxt "Supports sibling gateways"
+msgid "Share connection settings"
+msgstr "Jaga ühenduse andmeid"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:865
+#, fuzzy
+msgctxt "Supports sibling gateways"
+msgid "Use connection/authentication settings from other gateway"
+msgstr "Kasute teise makseviisi ühenduse/autentimise seadeid"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1179
+msgctxt "Order description"
+msgid "%s - Order %s"
+msgstr "%s - Tellimus %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1310
+#, fuzzy
+msgctxt "Order refund description"
+msgid "%s - Refund for Order %s"
+msgstr "%s - tellimuse %s tasumine"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1363
+msgctxt "Supports refund"
+msgid "%s Refund in the amount of %s approved."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1370
+#, fuzzy
+msgctxt "Supports refund"
+msgid "(Transaction ID %s)"
+msgstr "(Tehingu ID %s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1389
+#, fuzzy
+msgctxt "Supports refund"
+msgid "%s Refund Failed: %s - %s"
+msgstr "%s tasumine ebaõnnestus: %s - %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1396
+#, fuzzy
+msgctxt "Supports refund"
+msgid "%s Refund Failed: %s"
+msgstr "%s tasumine ebaõnnestus: %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1415
+msgctxt "Refunded order note"
+msgid "%s Order completely refunded."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1468
+msgctxt "Supports voids"
+msgid ""
+"Oops, you cannot partially void this order. Please use the full order amount."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1551
+#, fuzzy
+msgctxt "Supports voids"
+msgid "%s Void Failed: %s - %s"
+msgstr "%s tasumine ebaõnnestus: %s - %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1558
+#, fuzzy
+msgctxt "Supports voids"
+msgid "%s Void Failed: %s"
+msgstr "%s tasumine ebaõnnestus: %s"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1578
+#, fuzzy
+msgctxt "Supports voids"
+msgid "%s Void in the amount of %s approved."
+msgstr "%s %s tasumine vastu võetud"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1585
+#, fuzzy
+msgctxt "Supports voids"
+msgid "(Transaction ID %s)"
+msgstr "(Tehingu ID %s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1685
+msgctxt "hash before order number"
+msgid "#"
+msgstr "#"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1870
+msgctxt "Order Note: (Payment method) Payment failed (error)"
+msgid "%s Payment Failed (%s)"
+msgstr "%s makse ebaõnnestus (%s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1903
+msgctxt "Cancelled order note"
+msgid "%s Transaction Cancelled (%s)"
+msgstr "%s tehing tühistatud (%s)"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2122
+msgctxt "Supports credit card authorization/charge"
+msgid "Transaction Type"
+msgstr "Tehingu tüüp"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2124
+msgctxt "Supports credit card authorization/charge"
+msgid ""
+"Select how transactions should be processed. Charge submits all transactions "
+"for settlement, Authorization simply authorizes the order total for capture "
+"later."
+msgstr ""
+"Vali, kuidas peaks tehinguid töötlema. Makse saadab kõik tehingud koheselt "
+"tasumisele, Autoriseerimine lihtsalt autoriseerib tellimuse summa hilisemaks "
+"tasumiseks."
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2127
+msgctxt "Supports credit card authorization/charge"
+msgid "Charge"
+msgstr "Makse"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2128
+msgctxt "Supports credit card authorization/charge"
+msgid "Authorization"
+msgstr "Autoriseerimine"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2271
+msgctxt "Supports card types"
+msgid "Accepted Card Types"
+msgstr "Vastuvõetavad kaardid"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2273
+msgctxt "Supports card types"
+msgid "Select which card types you accept."
+msgstr "Vali, millist tüüpi kaarte soovid vastu võtta."
+
+#~ msgid "Write a Review"
+#~ msgstr "Kirjuta ülevaade"
+
+#~ msgid ""
+#~ "Show Detailed Error Messages and API requests/responses on the checkout "
+#~ "page and/or save them to the debug log. Logs can be found under "
+#~ "%sWooCommerce -> System Status -> Logs%s."
+#~ msgstr ""
+#~ "Näita üksikasjalikke veateateid ja API päringuid/vastuseid kassas ja/või "
+#~ "salvesta need logifaili. Logid leiad %sWooCommerce -> Süsteemi olek -> "
+#~ "Logid%s alt."
+
+#~ msgid "Transaction id %s"
+#~ msgstr "Tehingu id %s"
+
+#~ msgid "Debug info: %s"
+#~ msgstr "Veaotsingu info: %s"
+
+#~ msgid "A technical error occurred. Error code: %s"
+#~ msgstr "Esines tehniline viga. Veakood: %s"
+
+#~ msgid "Customer cancelled payment"
+#~ msgstr "Klient katkestas makse"
+
+#~ msgid "Unknown error occurred"
+#~ msgstr "Esines tundmatu viga"
+
+#~ msgid "Transaction rejected"
+#~ msgstr "Tehing tagasi lükatud"
+
+#~ msgid "Payment for order %s"
+#~ msgstr "Makse tellimuse %s eest"
+
+#~ msgid "Payment response error: "
+#~ msgstr "Makse vastuse viga:"
+
+#~ msgctxt "Supports transaction link"
+#~ msgid "View this transaction in your merchant account"
+#~ msgstr "Vaata seda tehingut oma kaupmehekontol"
+
+#~ msgctxt "Supports transaction link"
+#~ msgid "View in %s"
+#~ msgstr "Vaata %s"
+
+#~ msgid "Test"
+#~ msgstr "Testimine"
+
+#~ msgctxt "Supports direct credit card"
+#~ msgid "Test"
+#~ msgstr "Test"
+
+#~ msgctxt "Supports direct credit card"
+#~ msgid "(Transaction ID %s)"
+#~ msgstr "(Tehingu ID %s)"
+
+#~ msgctxt "Supports direct cheque"
+#~ msgid "(Transaction ID %s)"
+#~ msgstr "(Tehingu ID %s)"
+
+#~ msgctxt "Supports capture charge"
+#~ msgid "(Transaction ID %s)"
+#~ msgstr "(Tehingu ID %s)"
+
+#~ msgctxt "Supports direct payment method pre-orders"
+#~ msgid "(Transaction ID %s)"
+#~ msgstr "(Tehingu ID %s)"
+
+#~ msgctxt "divid-woocommerce-plugin-framework"
+#~ msgid "Use connection/authentication settings from other gateway"
+#~ msgstr "Kasuta ühenduse/autentimise seadeid teisest makseviisist"
+
+#~ msgid ""
+#~ "%s accepts payment in %s only. <a href=\"%s\">Configure</a> WooCommerce "
+#~ "to accept %s to enable this gateway for checkout."
+#~ msgid_plural ""
+#~ "%s accepts payment in one of %s only. <a href=\"%s\">Configure</a> "
+#~ "WooCommerce to accept one of %s to enable this gateway for checkout."
+#~ msgstr[0] ""
+#~ "%s võimaldab makseid vastu võtta ainult %s vääringus. Selle makseviisi "
+#~ "kasutamiseks <a href=\"%s\">seadista</a> WooCommerce võtma vastu makseid "
+#~ "%s vääringus."
+#~ msgstr[1] ""
+#~ "%s võimaldab makseid vastu võtta ainus %s ainult vääringutes. Selle "
+#~ "makseviisi kasutamiseks <a href=\"%s\">seadista</a> WooCommerce võtma "
+#~ "vastu vähemalt ühte järgmistest vääringutest: %s."
