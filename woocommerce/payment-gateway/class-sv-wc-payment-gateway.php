@@ -1825,7 +1825,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$user_message = $response->get_user_message();
 		}
 		if ( ! $user_message ) {
-			$user_message = __( 'Your order has been received and is being reviewed.  Thank you for your business.', 'sv-wc-plugin-framework' );
+			$user_message = __( 'Your order has been received and is being reviewed. Thank you for your business.', 'sv-wc-plugin-framework' );
 		}
 
 		WC()->session->held_order_received_text = $user_message;
