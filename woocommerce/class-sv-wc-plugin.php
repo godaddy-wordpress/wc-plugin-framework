@@ -174,7 +174,7 @@ abstract class SV_WC_Plugin {
 		$this->add_api_request_logging();
 
 		// Load translation files
-		add_action( 'init', array( $this, 'load_translation' ) );
+		add_action( 'init', array( $this, 'load_translations' ) );
 	}
 
 
@@ -194,6 +194,21 @@ abstract class SV_WC_Plugin {
 	 */
 	public function __wakeup() {
 		_doing_it_wrong( __FUNCTION__, sprintf( __( 'You cannot unserialize instances of %s.', 'sv-wc-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
+	}
+
+
+	/**
+	 * Load plugin & framework text domains
+	 *
+	 * @since 4.0.0-beta
+	 */
+	public function load_translations() {
+
+		// Load framework text domain
+		load_plugin_textdomain( 'sv-wc-plugin-framework', false, dirname( plugin_basename( $this->get_file() ) ) . '/lib/skyverge/woocommerce/i18n/languages' );
+
+		// Load plugin text domain
+		$this->load_translation();
 	}
 
 
