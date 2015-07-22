@@ -237,7 +237,7 @@ class SV_WC_Framework_Bootstrap {
 				printf( '<li>%s</li>', $plugin['plugin_name'] );
 			}
 
-			echo '</ul><p>Please <a href="' . admin_url( 'update-core.php' ) . '">update&nbsp;&raquo;</a></p></div>';
+			echo '</ul><p>' . printf( __( "Please %supdate%s", 'sv-wc-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
 		}
 
 		// must update WC notice
@@ -249,7 +249,7 @@ class SV_WC_Framework_Bootstrap {
 				echo '<li>' . sprintf( __( '%s requires WooCommerce %s or newer', 'sv-wc-plugin-framework' ), $plugin['plugin_name'], $plugin['args']['minimum_wc_version'] ) . '</li>';
 			}
 
-			echo '</ul><p>' . printf( __( "Please %supdate WooCommerce%s", 'sv-wc-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) ) . '</p></div>';
+			echo '</ul><p>' . printf( __( "Please %supdate WooCommerce%s", 'sv-wc-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
 		}
 	}
 
