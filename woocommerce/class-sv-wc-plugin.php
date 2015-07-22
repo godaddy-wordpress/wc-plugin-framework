@@ -378,7 +378,7 @@ abstract class SV_WC_Plugin {
 
 		// support url if any
 		if ( $this->get_support_url() ) {
-			$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', $this->get_documentation_url(), __( 'Support', $this->text_domain ) );
+			$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', $this->get_support_url(), __( 'Support', $this->text_domain ) );
 		}
 
 		// add the links to the front of the actions list
