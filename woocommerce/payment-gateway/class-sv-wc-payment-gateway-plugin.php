@@ -311,7 +311,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 						// SSL check if gateway enabled/production mode
 						if ( 'no' === get_option( 'woocommerce_force_ssl_checkout' ) ) {
 
-							$message = sprintf( _x( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", 'Requires SSL', $this->text_domain ), '<strong>' . $this->get_plugin_name() . '</strong>' );
+							$message = sprintf( _x( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", 'Requires SSL', 'sv-wc-plugin-framework' ), '<strong>' . $this->get_plugin_name() . '</strong>' );
 
 							$this->get_admin_notice_handler()->add_admin_notice( $message, 'ssl-required' );
 
@@ -369,7 +369,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					'%s accepts payment in one of %s only.  <a href="%s">Configure</a> WooCommerce to accept one of %s to enable this gateway for checkout.',
 					count( $accepted_currencies ),
 					'(Plugin) accepts payments in (currency/currencies) only.',
-					$this->text_domain
+					'sv-wc-plugin-framework'
 				),
 				$name,
 				'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
@@ -402,7 +402,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				// subscriptions
 				if ( $this->is_subscriptions_active() && $gateway->is_enabled() && $gateway->supports( SV_WC_Payment_Gateway_Direct::FEATURE_SUBSCRIPTIONS ) && $tokenization_supported_but_not_enabled ) {
 
-					$message = sprintf( __( '%1$s is inactive for subscription transactions. Please <a href="%2$s">enable tokenization</a> to activate %1$s for Subscriptions.', $this->get_text_domain() ),
+					$message = sprintf( __( '%1$s is inactive for subscription transactions. Please <a href="%2$s">enable tokenization</a> to activate %1$s for Subscriptions.', 'sv-wc-plugin-framework' ),
 						$gateway->get_method_title(), $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) );
 
 					// add notice -- allow it to be dismissed even on the settings page as the admin may not want to use subscriptions with a particular gateway
@@ -413,7 +413,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				// pre-orders
 				if ( $this->is_pre_orders_active() && $gateway->is_enabled() && $gateway->supports( SV_WC_Payment_Gateway_Direct::FEATURE_PRE_ORDERS ) && $tokenization_supported_but_not_enabled ) {
 
-					$message = sprintf( __( '%1$s is inactive for pre-order transactions. Please <a href="%2$s">enable tokenization</a> to activate %1$s for Pre-Orders.', $this->get_text_domain() ),
+					$message = sprintf( __( '%1$s is inactive for pre-order transactions. Please <a href="%2$s">enable tokenization</a> to activate %1$s for Pre-Orders.', 'sv-wc-plugin-framework' ),
 						$gateway->get_method_title(), $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) );
 
 					// add notice -- allow it to be dismissed even on the settings page as the admin may not want to use pre-orders with a particular gateway
@@ -569,7 +569,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					jQuery( document ).ready( function ( $ ) {
 						if ( 0 == $( 'select[name^=action] option[value=wc_capture_charge]' ).size() ) {
 							$( 'select[name^=action]' ).append(
-								$( '<option>' ).val( '<?php echo esc_js( 'wc_capture_charge' ); ?>' ).text( '<?php _ex( 'Capture Charge', 'Supports capture charge', $this->text_domain ); ?>' )
+								$( '<option>' ).val( '<?php echo esc_js( 'wc_capture_charge' ); ?>' ).text( '<?php _ex( 'Capture Charge', 'Supports capture charge', 'sv-wc-plugin-framework' ); ?>' )
 							);
 						}
 					});
@@ -635,7 +635,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function add_order_action_charge_action( $actions ) {
 
-		$actions[ 'wc_' . $this->get_id() . '_capture_charge' ] = _x( 'Capture Charge', 'Supports capture charge', $this->text_domain );
+		$actions[ 'wc_' . $this->get_id() . '_capture_charge' ] = _x( 'Capture Charge', 'Supports capture charge', 'sv-wc-plugin-framework' );
 
 		return $actions;
 	}
@@ -683,7 +683,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			return $this->admin_user_edit_handler;
 		}
 
-		return $this->admin_user_edit_handler = new SV_WC_Payment_Gateway_Admin_User_Edit_Handler( $this, $this->text_domain );
+		return $this->admin_user_edit_handler = new SV_WC_Payment_Gateway_Admin_User_Edit_Handler( $this, 'sv-wc-plugin-framework' );
 	}
 
 

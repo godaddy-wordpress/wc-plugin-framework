@@ -290,7 +290,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		$fields = array(
 			'card-number' => array(
 				'type'              => 'text',
-				'label'             => _x( 'Card Number', 'Supports direct credit card', $this->get_gateway()->get_text_domain() ),
+				'label'             => _x( 'Card Number', 'Supports direct credit card', 'sv-wc-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
 				'placeholder'       => '•••• •••• •••• ••••',
@@ -303,10 +303,10 @@ class SV_WC_Payment_Gateway_Payment_Form {
 			),
 			'card-expiry' => array(
 				'type'              => 'text',
-				'label'             => _x( 'Expiration (MM/YY)', 'Supports direct credit card', $this->get_gateway()->get_text_domain() ),
+				'label'             => _x( 'Expiration (MM/YY)', 'Supports direct credit card', 'sv-wc-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-expiry',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-expiry',
-				'placeholder'       => _x( 'MM / YY', 'Supports direct credit card', $this->get_gateway()->get_text_domain() ),
+				'placeholder'       => _x( 'MM / YY', 'Supports direct credit card', 'sv-wc-plugin-framework' ),
 				'required'          => true,
 				'class'             => array( 'form-row-first' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-expiry' ),
@@ -318,10 +318,10 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		if ( $this->get_gateway()->csc_enabled() ) {
 			$fields['card-csc']    = array(
 				'type'              => 'text',
-				'label'             => _x( 'Card Security Code', 'Supports direct credit card', $this->get_gateway()->get_text_domain() ),
+				'label'             => _x( 'Card Security Code', 'Supports direct credit card', 'sv-wc-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
-				'placeholder'       => _x( 'CSC', 'Supports direct credit card', $this->get_gateway()->get_text_domain() ),
+				'placeholder'       => _x( 'CSC', 'Supports direct credit card', 'sv-wc-plugin-framework' ),
 				'required'          => true,
 				'class'             => array( 'form-row-last' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-csc' ),
@@ -355,12 +355,12 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 		$defaults = $this->get_gateway()->get_payment_method_defaults();
 
-		$check_hint = sprintf( '<img title="%s" class="js-sv-wc-payment-gateway-echeck-form-check-hint" src="%s" width="16" height="16" />', esc_attr__( 'Where do I find this?', $this->get_gateway()->get_text_domain() ), esc_url( WC()->plugin_url() . '/assets/images/help.png' ) );
+		$check_hint = sprintf( '<img title="%s" class="js-sv-wc-payment-gateway-echeck-form-check-hint" src="%s" width="16" height="16" />', esc_attr__( 'Where do I find this?', 'sv-wc-plugin-framework' ), esc_url( WC()->plugin_url() . '/assets/images/help.png' ) );
 
 		$fields = array(
 			'routing-number' => array(
 				'type'              => 'text',
-				'label'             => _x( 'Routing Number', 'Supports direct eCheck', $this->get_gateway()->get_text_domain() ) . $check_hint,
+				'label'             => _x( 'Routing Number', 'Supports direct eCheck', 'sv-wc-plugin-framework' ) . $check_hint,
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-routing-number',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-routing-number',
 				'placeholder'       => '•••••••••',
@@ -373,7 +373,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 			),
 			'account-number' => array(
 				'type'              => 'text',
-				'label'             => _x( 'Account Number', 'Supports direct eCheck', $this->get_gateway()->get_text_domain() ) . $check_hint,
+				'label'             => _x( 'Account Number', 'Supports direct eCheck', 'sv-wc-plugin-framework' ) . $check_hint,
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
 				'required'          => true,
@@ -385,15 +385,15 @@ class SV_WC_Payment_Gateway_Payment_Form {
 			),
 			'account-type'   => array(
 				'type'              => 'select',
-				'label'             => _x( 'Account Type', 'Supports direct eCheck', $this->get_gateway()->get_text_domain() ),
+				'label'             => _x( 'Account Type', 'Supports direct eCheck', 'sv-wc-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-type',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-type',
 				'required'          => true,
 				'class'             => array( 'form-row-wide' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-echeck-form-input js-sv-wc-payment-gateway-echeck-form-account-type' ),
 				'options'           => array(
-					'checking' => _x( 'Checking', 'Supports direct eCheck', $this->get_gateway()->get_text_domain() ),
-					'savings'  => _x( 'Savings', 'Supports direct eCheck', $this->get_gateway()->get_text_domain() ),
+					'checking' => _x( 'Checking', 'Supports direct eCheck', 'sv-wc-plugin-framework' ),
+					'savings'  => _x( 'Savings', 'Supports direct eCheck', 'sv-wc-plugin-framework' ),
 				),
 				'custom_attributes' => array(),
 				'value'             => 'checking',
@@ -429,7 +429,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		}
 
 		if ( $this->get_gateway()->is_test_environment() ) {
-			echo '<p>' . __( 'TEST MODE ENABLED', $this->get_gateway()->get_text_domain() ) . '</p>';
+			echo '<p>' . __( 'TEST MODE ENABLED', 'sv-wc-plugin-framework' ) . '</p>';
 		}
 
 		/**
@@ -516,7 +516,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 		$html = sprintf( '<a class="button" style="float:right;" href="%s">%s</a>',
 			esc_url( SV_WC_Plugin_Compatibility::wc_get_page_permalink( 'myaccount' ) . '#wc-' . $this->get_gateway()->get_plugin()->get_id_dasherized() . '-my-payment-methods' ),
-			wp_kses_post( apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_manage_payment_methods_text', __( "Manage Payment Methods", $this->get_gateway()->get_text_domain() ) ) )
+			wp_kses_post( apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_manage_payment_methods_text', __( "Manage Payment Methods", 'sv-wc-plugin-framework' ) ) )
 		);
 
 		/**
@@ -589,24 +589,24 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		if ( $image_url ) {
 
 			// format like "<Amex logo image> American Express"
-			$title = sprintf( '<img src="%1$s" alt="%2$s" title="%2$s" width="30" height="20" />%3$s', esc_url( $image_url ), esc_attr__( $type, $this->get_gateway()->get_text_domain() ), esc_html__( $type, $this->get_gateway()->get_text_domain() ) );
+			$title = sprintf( '<img src="%1$s" alt="%2$s" title="%2$s" width="30" height="20" />%3$s', esc_url( $image_url ), esc_attr__( $type, 'sv-wc-plugin-framework' ), esc_html__( $type, 'sv-wc-plugin-framework' ) );
 
 		} else {
 
 			// missing payment method image, format like "American Express"
-			$title = esc_html__( $type, $this->get_gateway()->get_text_domain() );
+			$title = esc_html__( $type, 'sv-wc-plugin-framework' );
 		}
 
 		// add "ending in XXXX" if available
 		if ( $last_four ) {
 
-			$title .= '&nbsp;' . sprintf( esc_html__( 'ending in %s', $this->get_gateway()->get_text_domain() ), $last_four );
+			$title .= '&nbsp;' . sprintf( esc_html__( 'ending in %s', 'sv-wc-plugin-framework' ), $last_four );
 		}
 
 		// add "(expires MM/DD)" if available
 		if ( $token->get_exp_month() && $token->get_exp_year() ) {
 
-			$title .= ' ' . sprintf( esc_html__( '(expires %s)', $this->get_gateway()->get_text_domain() ), $token->get_exp_date() );
+			$title .= ' ' . sprintf( esc_html__( '(expires %s)', 'sv-wc-plugin-framework' ), $token->get_exp_date() );
 		}
 
 		/**
@@ -642,7 +642,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		// label
 		$html .= sprintf( '<label style="display:inline;" for="wc-%s-use-new-payment-method">%s</label>',
 			esc_attr( $this->get_gateway()->get_id_dasherized() ),
-			$this->get_gateway()->is_credit_card_gateway() ? esc_html__( 'Use a new card', $this->get_gateway()->get_text_domain() ) : esc_html__( 'Use a new bank account', $this->get_gateway()->get_text_domain() )
+			$this->get_gateway()->is_credit_card_gateway() ? esc_html__( 'Use a new card', 'sv-wc-plugin-framework' ) : esc_html__( 'Use a new bank account', 'sv-wc-plugin-framework' )
 		);
 
 		/**
@@ -680,7 +680,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 				$html .= '<p class="form-row">';
 				$html .= sprintf( '<input name="wc-%1$s-tokenize-payment-method" id="wc-%1$s-tokenize-payment-method" class="js-sv-wc-tokenize-payment method js-wc-%1$s-tokenize-payment-method" type="checkbox" value="true" style="width:auto;" />', $this->get_gateway()->get_id_dasherized() );
-				$html .= sprintf( '<label for="wc-%s-tokenize-payment-method" style="display:inline;">%s</label>', $this->get_gateway()->get_id_dasherized(), apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_tokenize_payment_method_text', __( 'Securely Save to Account', $this->get_gateway()->get_text_domain() ) ) );
+				$html .= sprintf( '<label for="wc-%s-tokenize-payment-method" style="display:inline;">%s</label>', $this->get_gateway()->get_id_dasherized(), apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_tokenize_payment_method_text', __( 'Securely Save to Account', 'sv-wc-plugin-framework' ) ) );
 				$html .= '</p><div class="clear"></div>';
 			}
 		}

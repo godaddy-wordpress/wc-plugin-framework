@@ -119,7 +119,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 			$fields = ob_get_clean();
 
 			if ( $fields ) {
-				echo '<h3>' . sprintf( _x( '%s Customer Details', 'Supports customer details', $this->text_domain ), $gateway->get_method_title() ) . '</h3>';
+				echo '<h3>' . sprintf( _x( '%s Customer Details', 'Supports customer details', 'sv-wc-plugin-framework' ), $gateway->get_method_title() ) . '</h3>';
 				echo $fields;
 			}
 		}
@@ -230,10 +230,10 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 
 			?>
 				<tr>
-					<th><label for="<?php printf( '_wc_%s_customer_id_%s', $gateway->get_id(), $environment_id ); ?>"><?php echo count( $environments ) > 1 ? sprintf( _x( 'Customer ID (%s)', 'Supports customer details', $this->text_domain ), $environment_name ) : _x( 'Customer ID', 'Supports customer details', $this->text_domain ); ?></label></th>
+					<th><label for="<?php printf( '_wc_%s_customer_id_%s', $gateway->get_id(), $environment_id ); ?>"><?php echo count( $environments ) > 1 ? sprintf( _x( 'Customer ID (%s)', 'Supports customer details', 'sv-wc-plugin-framework' ), $environment_name ) : _x( 'Customer ID', 'Supports customer details', 'sv-wc-plugin-framework' ); ?></label></th>
 					<td>
 						<input type="text" name="<?php printf( '_wc_%s_customer_id_%s', $gateway->get_id(), $environment_id ); ?>" value="<?php echo esc_attr( $gateway->get_customer_id( $user->ID, array( 'environment_id' => $environment_id, 'autocreate' => false ) ) ); ?>" class="regular-text" /><br/>
-						<span class="description"><?php echo count( $environments ) > 1 ? sprintf( _x( 'The gateway customer ID for the user in the %s environment. Only edit this if necessary.', 'Supports customer details', $this->text_domain ), $environment_name ) : _x( 'The gateway customer ID for the user. Only edit this if necessary.', 'Supports customer details', $this->text_domain ); ?></span>
+						<span class="description"><?php echo count( $environments ) > 1 ? sprintf( _x( 'The gateway customer ID for the user in the %s environment. Only edit this if necessary.', 'Supports customer details', 'sv-wc-plugin-framework' ), $environment_name ) : _x( 'The gateway customer ID for the user. Only edit this if necessary.', 'Supports customer details', 'sv-wc-plugin-framework' ); ?></span>
 					</td>
 				</tr>
 			<?php
@@ -301,11 +301,11 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 
 				<table class="form-table">
 					<tr>
-						<th style="padding-bottom:0px;"><?php echo ( count( $environments ) > 1 ? sprintf( __( '%s Payment Tokens', $this->text_domain ), $environment_name ) : __( 'Payment Tokens', $this->text_domain ) ); ?></th>
+						<th style="padding-bottom:0px;"><?php echo ( count( $environments ) > 1 ? sprintf( __( '%s Payment Tokens', 'sv-wc-plugin-framework' ), $environment_name ) : __( 'Payment Tokens', 'sv-wc-plugin-framework' ) ); ?></th>
 						<td style="padding-bottom:0px;">
 							<?php
 							if ( empty( $payment_tokens ) ):
-								echo "<p>" . __( 'This customer has no saved payment tokens', $this->text_domain ) . "</p>";
+								echo "<p>" . __( 'This customer has no saved payment tokens', 'sv-wc-plugin-framework' ) . "</p>";
 							else:
 								?>
 								<ul style="margin:0;">
@@ -314,8 +314,8 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 
 										?>
 											<li>
-												<?php echo $token->get_token(); ?> (<?php printf( '%s ending in %s expiring %s', $token->get_type_full(), $token->get_last_four(), $token->get_exp_month() . '/' . $token->get_exp_year() ); echo ( $token->is_default() ? ' <strong>' . __( 'Default card', $this->text_domain ) . '</strong>' : '' ); ?>)
-												<a href="#" class="js-sv-wc-payment-token-delete" data-payment_token="<?php echo $token->get_token(); ?>"><?php _e( 'Delete', $this->text_domain ); ?></a>
+												<?php echo $token->get_token(); ?> (<?php printf( '%s ending in %s expiring %s', $token->get_type_full(), $token->get_last_four(), $token->get_exp_month() . '/' . $token->get_exp_year() ); echo ( $token->is_default() ? ' <strong>' . __( 'Default card', 'sv-wc-plugin-framework' ) . '</strong>' : '' ); ?>)
+												<a href="#" class="js-sv-wc-payment-token-delete" data-payment_token="<?php echo $token->get_token(); ?>"><?php _e( 'Delete', 'sv-wc-plugin-framework' ); ?></a>
 											</li>
 										<?php
 
@@ -326,12 +326,12 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 						</td>
 					</tr>
 					<tr>
-						<th style="padding-top:0px;"><?php _e( 'Add a Payment Token', $this->text_domain ); ?></th>
+						<th style="padding-top:0px;"><?php _e( 'Add a Payment Token', 'sv-wc-plugin-framework' ); ?></th>
 						<td style="padding-top:0px;">
-							<input type="text" name="wc_<?php echo $gateway->get_id(); ?>_payment_token_<?php echo $environment_id; ?>" placeholder="<?php esc_attr_e( 'Token', $this->text_domain ); ?>" style="width:145px;" />
+							<input type="text" name="wc_<?php echo $gateway->get_id(); ?>_payment_token_<?php echo $environment_id; ?>" placeholder="<?php esc_attr_e( 'Token', 'sv-wc-plugin-framework' ); ?>" style="width:145px;" />
 							<?php if ( $gateway->supports( SV_WC_Payment_Gateway::FEATURE_CARD_TYPES ) ) : ?>
 								<select name="wc_<?php echo $gateway->get_id(); ?>_payment_token_type_<?php echo $environment_id; ?>">
-									<option value=""><?php _e( "Card Type", $this->text_domain ); ?></option>
+									<option value=""><?php _e( "Card Type", 'sv-wc-plugin-framework' ); ?></option>
 									<?php
 									foreach ( $gateway->get_card_types() as $card_type ) :
 										$card_type = strtolower( $card_type );
@@ -342,8 +342,8 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 									?>
 								</select>
 							<?php endif; ?>
-							<input type="text" name="wc_<?php echo $gateway->get_id(); ?>_payment_token_last_four_<?php echo $environment_id; ?>" placeholder="<?php printf( esc_attr__( 'Last Four', $this->text_domain ), substr( date( 'Y' ) + 1, -2 ) ); ?>" style="width:75px;" />
-							<input type="text" name="wc_<?php echo $gateway->get_id(); ?>_payment_token_exp_date_<?php echo $environment_id; ?>" placeholder="<?php printf( esc_attr__( 'Expiry Date (01/%s)', $this->text_domain ), date( 'Y' ) + 1 ); ?>" style="width:155px;" />
+							<input type="text" name="wc_<?php echo $gateway->get_id(); ?>_payment_token_last_four_<?php echo $environment_id; ?>" placeholder="<?php printf( esc_attr__( 'Last Four', 'sv-wc-plugin-framework' ), substr( date( 'Y' ) + 1, -2 ) ); ?>" style="width:75px;" />
+							<input type="text" name="wc_<?php echo $gateway->get_id(); ?>_payment_token_exp_date_<?php echo $environment_id; ?>" placeholder="<?php printf( esc_attr__( 'Expiry Date (01/%s)', 'sv-wc-plugin-framework' ), date( 'Y' ) + 1 ); ?>" style="width:155px;" />
 							<br/>
 							<span class="description"><?php echo apply_filters( 'wc_payment_gateway_' . $gateway->get_id() . '_user_profile_add_token_description', '', $gateway, $user ); ?></span>
 						</td>
@@ -371,7 +371,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 				jQuery( document ).ready( function( $ ) {
 					$( '.js-sv-wc-payment-token-delete' ).click( function() {
 
-						if ( ! confirm( '<?php _e( 'Are you sure you wish to do this?  Change will not be finalized until you click "Update"', $this->text_domain ); ?>' ) ) {
+						if ( ! confirm( '<?php _e( 'Are you sure you wish to do this?  Change will not be finalized until you click "Update"', 'sv-wc-plugin-framework' ); ?>' ) ) {
 							return false;
 						}
 
