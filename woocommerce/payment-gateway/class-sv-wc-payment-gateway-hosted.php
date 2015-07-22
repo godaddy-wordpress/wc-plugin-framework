@@ -564,7 +564,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		$message = sprintf(
 			__( '%s %s %s Approved: %s ending in %s (expires %s)', 'sv-wc-plugin-framework' ),
 			$this->get_method_title(),
-			$this->is_test_environment() ? 'Test' : '',
+			$this->is_test_environment() ? _x( 'Test', 'Supports environments', 'sv-wc-plugin-framework' ) : '',
 			$transaction_type,
 			SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_card_type() ? $response->get_card_type() : 'card' ) ),
 			$last_four,
@@ -596,7 +596,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		$message = sprintf(
 			__( '%s %s Transaction Approved: %s ending in %s', 'sv-wc-plugin-framework' ),
 			$this->get_method_title(),
-			$this->is_test_environment() ? 'Test' : '',
+			$this->is_test_environment() ? _x( 'Test', 'Supports environments', 'sv-wc-plugin-framework' ) : '',
 			SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_account_type() ? $response->get_account_type() : 'bank' ) ),
 			$last_four
 		);
@@ -629,7 +629,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		$message = sprintf(
 			__( '%s %sTransaction Approved', 'sv-wc-plugin-framework' ),
 			$this->get_method_title(),
-			$this->is_test_environment() ? __( 'Test', 'sv-wc-plugin-framework' ) . ' ' : ''
+			$this->is_test_environment() ? _x( 'Test', 'Supports environments', 'sv-wc-plugin-framework' ) : ''
 		);
 
 		// adds the transaction id (if any) to the order note

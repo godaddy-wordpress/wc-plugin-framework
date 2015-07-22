@@ -862,7 +862,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$form_fields['inherit_settings'] = array(
 			'title'       => _x( 'Share connection settings', 'Supports sibling gateways', 'sv-wc-plugin-framework' ),
 			'type'        => 'checkbox',
-			'label'       => _x( 'Use connection/authentication settings from other gateway', 'sv-wc-plugin-framework' ),
+			'label'       => _x( 'Use connection/authentication settings from other gateway', 'Supports sibling gateways', 'sv-wc-plugin-framework' ),
 			'default'     => count( $configured_other_gateway_ids ) > 0 ? 'yes' : 'no',
 			'disabled'    => count( $inherit_settings_other_gateway_ids ) > 0 ? true : false,
 			'description' => count( $inherit_settings_other_gateway_ids ) > 0 ? __( 'Disabled because the other gateway is using these settings', 'sv-wc-plugin-framework' ) : '',

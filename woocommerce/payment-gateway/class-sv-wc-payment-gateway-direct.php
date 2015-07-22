@@ -624,7 +624,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// adds the transaction id (if any) to the order note
 			if ( $response->get_transaction_id() ) {
-				$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports direct cheque', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
+				$message .= ' ' . sprintf( __( '(Transaction ID %s)', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
 			}
 
 			$order->add_order_note( $message );
@@ -674,7 +674,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$message = sprintf(
 				_x( '%s %s %s Approved: %s ending in %s (expires %s)', 'Supports direct credit card', 'sv-wc-plugin-framework' ),
 				$this->get_method_title(),
-				$this->is_test_environment() ? _x( 'Test', 'Supports direct credit card', 'sv-wc-plugin-framework' ) : '',
+				$this->is_test_environment() ? _x( 'Test', 'Supports environments', 'sv-wc-plugin-framework' ) : '',
 				$this->perform_credit_card_authorization() ? 'Authorization' : 'Charge',
 				SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ),
 				$last_four,
@@ -683,7 +683,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// adds the transaction id (if any) to the order note
 			if ( $response->get_transaction_id() ) {
-				$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports direct credit card', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
+				$message .= ' ' . sprintf( __( '(Transaction ID %s)', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
 			}
 
 			$order->add_order_note( $message );
@@ -798,7 +798,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				// adds the transaction id (if any) to the order note
 				if ( $response->get_transaction_id() ) {
-					$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports capture charge', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
+					$message .= ' ' . sprintf( __( '(Transaction ID %s)', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
 				}
 
 				$order->add_order_note( $message );
@@ -1558,7 +1558,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				// adds the transaction id (if any) to the order note
 				if ( $response->get_transaction_id() ) {
-					$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports direct payment method pre-orders', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
+					$message .= ' ' . sprintf( __( '(Transaction ID %s)', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
 				}
 
 				$order->add_order_note( $message );
