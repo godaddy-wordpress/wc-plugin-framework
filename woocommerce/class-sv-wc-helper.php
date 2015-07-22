@@ -555,7 +555,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *       data-action="wc_cart_notices_json_search_product_categories"
 		 *       data-nonce="<?php echo wp_create_nonce( 'search-categories' ); ?>"
 		 *       data-request_data = "<?php echo esc_attr( json_encode( array( 'field_name' => 'something_exciting', 'default' => 'default_label' ) ) ) ?>"
-		 *       data-placeholder="<?php _e( 'Search for a category&hellip;', WC_Cart_Notices::TEXT_DOMAIN ) ?>"
+		 *       data-placeholder="<?php _e( 'Search for a category&hellip;', 'wc-cart-notices' ) ?>"
 		 *       data-allow_clear="true"
 		 *       data-selected="<?php
 		 *          $json_ids    = array();

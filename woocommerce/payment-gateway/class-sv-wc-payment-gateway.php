@@ -229,9 +229,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/** @var SV_WC_Payment_Gateway_Plugin the parent plugin class */
 	private $plugin;
 
-	/** @var string plugin text domain */
-	protected $text_domain;
-
 	/** @var string payment type, one of 'credit-card' or 'echeck' */
 	private $payment_type;
 
@@ -300,10 +297,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @param string $id the gateway id
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the parent plugin class
-	 * @param string $text_domain the plugin text domain
 	 * @param array $args gateway arguments
 	 */
-	public function __construct( $id, $plugin, $text_domain, $args ) {
+	public function __construct( $id, $plugin, $args ) {
 
 		// first setup the gateway and payment type for this gateway
 		$this->payment_type = isset( $args['payment_type'] ) ? $args['payment_type'] : self::PAYMENT_TYPE_CREDIT_CARD;
@@ -321,7 +317,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		//  there's no other way of grabbing existing gateways so as to avoid
 		//  double-instantiation errors (esp for shared settings)
 		$this->get_plugin()->set_gateway( $id, $this );
-		$this->text_domain = $text_domain;
 
 		// optional parameters
 		if ( isset( $args['method_title'] ) ) {
@@ -2642,18 +2637,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function get_plugin() {
 		return $this->plugin;
-	}
-
-
-	/**
-	 * Get the text domain for the gateway
-	 *
-	 * @since 4.0.0-beta
-	 * @return string
-	 */
-	public function get_text_domain() {
-
-		return $this->text_domain;
 	}
 
 

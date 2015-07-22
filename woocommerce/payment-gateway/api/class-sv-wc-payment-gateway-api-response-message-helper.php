@@ -52,21 +52,6 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_API_Response_Message_Helper' ) ) :
 class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 
 
-	/** @var string the plugin text domain */
-	private $text_domain;
-
-
-	/**
-	 * Initialize the API response message handler
-	 *
-	 * @since 2.2.0
-	 * @param string $text_domain the plugin text domain
-	 */
-	public function __construct( $text_domain ) {
-		$this->text_domain = $text_domain;
-	}
-
-
 	/**
 	 * Returns a message appropriate for a frontend user.  This should be used
 	 * to provide enough information to a user to allow them to resolve an

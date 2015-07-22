@@ -53,13 +53,12 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @see SV_WC_Payment_Gateway::__construct()
 	 * @param string $id the gateway id
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the parent plugin class
-	 * @param string $text_domain the plugin text domain
 	 * @param array $args gateway arguments
 	 */
-	public function __construct( $id, $plugin, $text_domain, $args ) {
+	public function __construct( $id, $plugin, $args ) {
 
 		// parent constructor
-		parent::__construct( $id, $plugin, $text_domain, $args );
+		parent::__construct( $id, $plugin, $args );
 
 		// IPN or redirect-back
 		if ( $this->has_ipn() ) {
