@@ -184,6 +184,7 @@ abstract class SV_WC_Plugin {
 	 * @since 3.1.0
 	 */
 	public function __clone() {
+		// translators: %s - plugin name
 		_doing_it_wrong( __FUNCTION__, sprintf( __( 'You cannot clone instances of %s.', 'sv-wc-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
 	}
 
@@ -193,6 +194,7 @@ abstract class SV_WC_Plugin {
 	 * @since 3.1.0
 	 */
 	public function __wakeup() {
+		// translators: %s - plugin name
 		_doing_it_wrong( __FUNCTION__, sprintf( __( 'You cannot unserialize instances of %s.', 'sv-wc-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
 	}
 
@@ -328,9 +330,10 @@ abstract class SV_WC_Plugin {
 		if ( count( $missing_extensions ) > 0 ) {
 
 			$message = sprintf(
+				// translators: %1$s - plugin name, %2$s - a PHP extension/comma-separated list of PHP extensions
 				_n(
-					'%s requires the %s PHP extension to function.  Contact your host or server administrator to configure and install the missing extension.',
-					'%s requires the following PHP extensions to function: %s.  Contact your host or server administrator to configure and install the missing extensions.',
+					'%1$s requires the %2$s PHP extension to function. Contact your host or server administrator to configure and install the missing extension.',
+					'%1$s requires the following PHP extensions to function: %2$s. Contact your host or server administrator to configure and install the missing extensions.',
 					count( $missing_extensions ),
 					'sv-wc-plugin-framework'
 				),
@@ -348,9 +351,10 @@ abstract class SV_WC_Plugin {
 		if ( count( $missing_functions ) > 0 ) {
 
 			$message = sprintf(
+				// translators: %1$s - plugin name, %2$s - a PHP function/comma-separated list of PHP functions
 				_n(
-					'%s requires the %s PHP function to exist.  Contact your host or server administrator to configure and install the missing function.',
-					'%s requires the following PHP functions to exist: %s.  Contact your host or server administrator to configure and install the missing functions.',
+					'%1$s requires the %2$s PHP function to exist.  Contact your host or server administrator to configure and install the missing function.',
+					'%1$s requires the following PHP functions to exist: %2$s.  Contact your host or server administrator to configure and install the missing functions.',
 					count( $missing_functions ),
 					'sv-wc-plugin-framework'
 				),
@@ -383,12 +387,13 @@ abstract class SV_WC_Plugin {
 
 		// documentation url if any
 		if ( $this->get_documentation_url() ) {
+			// translators: Docs as in Documentation
 			$custom_actions['docs'] = sprintf( '<a href="%s">%s</a>', $this->get_documentation_url(), __( 'Docs', 'sv-wc-plugin-framework' ) );
 		}
 
 		// support url if any
 		if ( $this->get_support_url() ) {
-			$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', $this->get_support_url(), __( 'Support', 'sv-wc-plugin-framework' ) );
+			$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', $this->get_support_url(), _x( 'Support', 'noun', 'sv-wc-plugin-framework' ) );
 		}
 
 		// add the links to the front of the actions list

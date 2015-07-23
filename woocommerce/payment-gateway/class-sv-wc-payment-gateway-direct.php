@@ -114,7 +114,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				// unknown token?
 				if ( ! $this->has_payment_token( get_current_user_id(), SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) ) {
-					SV_WC_Helper::wc_add_notice( _x( 'Payment error, please try another payment method or contact us to complete your transaction.', 'Supports tokenization', 'sv-wc-plugin-framework' ), 'error' );
+					SV_WC_Helper::wc_add_notice( __( 'Payment error, please try another payment method or contact us to complete your transaction.', 'sv-wc-plugin-framework' ), 'error' );
 					$is_valid = false;
 				}
 
@@ -197,7 +197,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			( $expiration_year == $current_year && $expiration_month < $current_month ) ||
 			$expiration_year > $current_year + 20
 		) {
-			SV_WC_Helper::wc_add_notice( _x( 'Card expiration date is invalid', 'Supports direct credit card', 'sv-wc-plugin-framework' ), 'error' );
+			SV_WC_Helper::wc_add_notice( __( 'Card expiration date is invalid', 'sv-wc-plugin-framework' ), 'error' );
 			$is_valid = false;
 		}
 
@@ -221,23 +221,23 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		if ( empty( $account_number ) ) {
 
-			SV_WC_Helper::wc_add_notice( _x( 'Card number is missing', 'Supports direct credit card', 'sv-wc-plugin-framework' ), 'error' );
+			SV_WC_Helper::wc_add_notice( __( 'Card number is missing', 'sv-wc-plugin-framework' ), 'error' );
 			$is_valid = false;
 
 		} else {
 
 			if ( strlen( $account_number ) < 12 || strlen( $account_number ) > 19 ) {
-				SV_WC_Helper::wc_add_notice( _x( 'Card number is invalid (wrong length)', 'Supports direct credit card', 'sv-wc-plugin-framework' ), 'error' );
+				SV_WC_Helper::wc_add_notice( __( 'Card number is invalid (wrong length)', 'sv-wc-plugin-framework' ), 'error' );
 				$is_valid = false;
 			}
 
 			if ( ! ctype_digit( $account_number ) ) {
-				SV_WC_Helper::wc_add_notice( _x( 'Card number is invalid (only digits allowed)', 'Supports direct credit card', 'sv-wc-plugin-framework' ), 'error' );
+				SV_WC_Helper::wc_add_notice( __( 'Card number is invalid (only digits allowed)', 'sv-wc-plugin-framework' ), 'error' );
 				$is_valid = false;
 			}
 
 			if ( ! SV_WC_Payment_Gateway_Helper::luhn_check( $account_number ) ) {
-				SV_WC_Helper::wc_add_notice( _x( 'Card number is invalid', 'Supports direct credit card', 'sv-wc-plugin-framework' ), 'error' );
+				SV_WC_Helper::wc_add_notice( __( 'Card number is invalid', 'sv-wc-plugin-framework' ), 'error' );
 				$is_valid = false;
 			}
 
@@ -262,20 +262,20 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// validate security code
 		if ( empty( $csc ) ) {
 
-			SV_WC_Helper::wc_add_notice( _x( 'Card security code is missing', 'Supports direct credit card', 'sv-wc-plugin-framework' ), 'error' );
+			SV_WC_Helper::wc_add_notice( __( 'Card security code is missing', 'sv-wc-plugin-framework' ), 'error' );
 			$is_valid = false;
 
 		} else {
 
 			// digit validation
 			if ( ! ctype_digit( $csc ) ) {
-				SV_WC_Helper::wc_add_notice( _x( 'Card security code is invalid (only digits are allowed)', 'Supports direct credit card', 'sv-wc-plugin-framework' ), 'error' );
+				SV_WC_Helper::wc_add_notice( __( 'Card security code is invalid (only digits are allowed)', 'sv-wc-plugin-framework' ), 'error' );
 				$is_valid = false;
 			}
 
 			// length validation
 			if ( strlen( $csc ) < 3 || strlen( $csc ) > 4 ) {
-				SV_WC_Helper::wc_add_notice( _x( 'Card security code is invalid (must be 3 or 4 digits)', 'Supports direct credit card', 'sv-wc-plugin-framework' ), 'error' );
+				SV_WC_Helper::wc_add_notice( __( 'Card security code is invalid (must be 3 or 4 digits)', 'sv-wc-plugin-framework' ), 'error' );
 				$is_valid = false;
 			}
 
@@ -304,20 +304,20 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// routing number exists?
 		if ( empty( $routing_number ) ) {
 
-			SV_WC_Helper::wc_add_notice( _x( 'Routing Number is missing', 'Supports direct cheque', 'sv-wc-plugin-framework' ), 'error' );
+			SV_WC_Helper::wc_add_notice( __( 'Routing Number is missing', 'sv-wc-plugin-framework' ), 'error' );
 			$is_valid = false;
 
 		} else {
 
 			// routing number digit validation
 			if ( ! ctype_digit( $routing_number ) ) {
-				SV_WC_Helper::wc_add_notice( _x( 'Routing Number is invalid (only digits are allowed)', 'Supports direct cheque', 'sv-wc-plugin-framework' ), 'error' );
+				SV_WC_Helper::wc_add_notice( __( 'Routing Number is invalid (only digits are allowed)', 'sv-wc-plugin-framework' ), 'error' );
 				$is_valid = false;
 			}
 
 			// routing number length validation
 			if ( 9 != strlen( $routing_number ) ) {
-				SV_WC_Helper::wc_add_notice( _x( 'Routing number is invalid (must be 9 digits)', 'Supports direct cheque', 'sv-wc-plugin-framework' ), 'error' );
+				SV_WC_Helper::wc_add_notice( __( 'Routing number is invalid (must be 9 digits)', 'sv-wc-plugin-framework' ), 'error' );
 				$is_valid = false;
 			}
 
@@ -326,33 +326,33 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// account number exists?
 		if ( empty( $account_number ) ) {
 
-			SV_WC_Helper::wc_add_notice( _x( 'Account Number is missing', 'Supports direct cheque', 'sv-wc-plugin-framework' ), 'error' );
+			SV_WC_Helper::wc_add_notice( __( 'Account Number is missing', 'sv-wc-plugin-framework' ), 'error' );
 			$is_valid = false;
 
 		} else {
 
 			// account number digit validation
 			if ( ! ctype_digit( $account_number ) ) {
-				SV_WC_Helper::wc_add_notice( _x( 'Account Number is invalid (only digits are allowed)', 'Supports direct cheque', 'sv-wc-plugin-framework' ), 'error' );
+				SV_WC_Helper::wc_add_notice( __( 'Account Number is invalid (only digits are allowed)', 'sv-wc-plugin-framework' ), 'error' );
 				$is_valid = false;
 			}
 
 			// account number length validation
 			if ( strlen( $account_number ) < 5 || strlen( $account_number ) > 17 ) {
-				SV_WC_Helper::wc_add_notice( _x( 'Account number is invalid (must be between 5 and 17 digits)', 'Supports direct cheque', 'sv-wc-plugin-framework' ), 'error' );
+				SV_WC_Helper::wc_add_notice( __( 'Account number is invalid (must be between 5 and 17 digits)', 'sv-wc-plugin-framework' ), 'error' );
 				$is_valid = false;
 			}
 		}
 
 		// optional drivers license number validation
 		if ( ! empty( $drivers_license_number ) &&  preg_match( '/^[a-zA-Z0-9 -]+$/', $drivers_license_number ) ) {
-			SV_WC_Helper::wc_add_notice( _x( 'Drivers license number is invalid', 'Supports direct cheque', 'sv-wc-plugin-framework' ), 'error' );
+			SV_WC_Helper::wc_add_notice( __( 'Drivers license number is invalid', 'sv-wc-plugin-framework' ), 'error' );
 			$is_valid = false;
 		}
 
 		// optional check number validation
 		if ( ! empty( $check_number ) && ! ctype_digit( $check_number ) ) {
-			SV_WC_Helper::wc_add_notice( _x( 'Check Number is invalid (only digits are allowed)', 'Supports direct cheque', 'sv-wc-plugin-framework' ), 'error' );
+			SV_WC_Helper::wc_add_notice( __( 'Check Number is invalid (only digits are allowed)', 'sv-wc-plugin-framework' ), 'error' );
 			$is_valid = false;
 		}
 
@@ -590,7 +590,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$order->capture_total = number_format( $order->get_total(), 2, '.', '' );
 
 		// capture-specific order description
-		$order->description = sprintf( _x( '%s - Capture for Order %s', 'Capture order description', 'sv-wc-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+		// translators: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card.
+		$order->description = sprintf( __( '%1$s - Capture for Order %2$s', 'sv-wc-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
 
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_capture', $order, $this );
 	}
@@ -614,12 +615,14 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			$last_four = substr( $order->payment->account_number, -4 );
 
-			// check order note.  there may not be an account_type available, but that's fine
-			$message = sprintf( _x( '%s Check Transaction Approved: %s account ending in %s', 'Supports direct cheque', 'sv-wc-plugin-framework' ), $this->get_method_title(), $order->payment->account_type, $last_four );
+			// check order note. there may not be an account_type available, but that's fine
+			// translators: %1$s - payment method title, %2$s - payment account type (savings/checking) (may or may not be available), %3$s - last four digits of the account
+			$message = sprintf( __( '%1$s Check Transaction Approved: %2$s account ending in %3$s', 'sv-wc-plugin-framework' ), $this->get_method_title(), $order->payment->account_type, $last_four );
 
 			// optional check number
 			if ( ! empty( $order->payment->check_number ) ) {
-				$message .= '. ' . sprintf( _x( 'Check number %s', 'Supports direct cheque', 'sv-wc-plugin-framework' ), $order->payment->check_number );
+				// translators: %s - check number
+				$message .= '. ' . sprintf( __( 'Check number %s', 'sv-wc-plugin-framework' ), $order->payment->check_number );
 			}
 
 			// adds the transaction id (if any) to the order note
@@ -672,10 +675,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// credit card order note
 			$message = sprintf(
-				_x( '%s %s %s Approved: %s ending in %s (expires %s)', 'Supports direct credit card', 'sv-wc-plugin-framework' ),
+				// translators: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...), %5$s - last four digits of the card, %6$s - expiry date
+				__( '%1$s %2$s %3$s Approved: %4$s ending in %5$s (expires %6$s)', 'sv-wc-plugin-framework' ),
 				$this->get_method_title(),
-				$this->is_test_environment() ? _x( 'Test', 'Supports environments', 'sv-wc-plugin-framework' ) : '',
-				$this->perform_credit_card_authorization() ? 'Authorization' : 'Charge',
+				$this->is_test_environment() ? _x( 'Test', 'noun, software environment', 'sv-wc-plugin-framework' ) : '',
+				$this->perform_credit_card_authorization() ? _x( 'Authorization', 'credit card transaction type', 'sv-wc-plugin-framework' ) : _x( 'Charge', 'noun, credit card transaction type', 'sv-wc-plugin-framework' ),
 				SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ),
 				$last_four,
 				$order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 )
@@ -683,6 +687,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// adds the transaction id (if any) to the order note
 			if ( $response->get_transaction_id() ) {
+				// translators: %s - transaction ID
 				$message .= ' ' . sprintf( __( '(Transaction ID %s)', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
 			}
 
@@ -730,6 +735,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 						// transaction has already been successful, but we've encountered an issue with the post-tokenization, add an order note to that effect and continue on
 						$message = sprintf(
+							// translators: %s - failure message
 							__( 'Tokenization Request Failed: %s', 'sv-wc-plugin-framework' ),
 							$e->getMessage()
 						);
@@ -740,7 +746,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 						// transaction has already been successful, but we've encountered an issue with the post-tokenization, add an order note to that effect and continue on
 						$message = sprintf(
-							__( '%s Tokenization Request Failed: %s', 'sv-wc-plugin-framework' ),
+							// translators: %1$s - payment method title, %2$s - failure message
+							__( '%1$s Tokenization Request Failed: %2$s', 'sv-wc-plugin-framework' ),
 							$this->get_method_title(),
 							$e->getMessage()
 						);
@@ -760,7 +767,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// TODO: consider checking whether the response *was* an authorization, rather than blanket-assuming it was because of the settings.  There are times when an auth will be used rather than charge, ie when performing in-plugin AVS handling (moneris)
 			if ( $response->transaction_held() || ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
 				// TODO: need to make this more flexible, and not force the message to 'Authorization only transaction' for auth transactions (re moneris efraud handling)
-				$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? _x( 'Authorization only transaction', 'Supports credit card authorization', 'sv-wc-plugin-framework' ) : $response->get_status_message(), $response );
+				// translators: This is a message describing that the transaction in question only performed a credit card authorization and did not capture any funds.
+				$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? __( 'Authorization only transaction', 'sv-wc-plugin-framework' ) : $response->get_status_message(), $response );
 			}
 
 			return true;
@@ -791,7 +799,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( $response->transaction_approved() ) {
 
 				$message = sprintf(
-					_x( '%s Capture of %s Approved', 'Supports capture charge', 'sv-wc-plugin-framework' ),
+					// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount. Definitions: Capture, as in capture funds from a credit card.
+					__( '%1$s Capture of %2$s Approved', 'sv-wc-plugin-framework' ),
 					$this->get_method_title(),
 					get_woocommerce_currency_symbol() . wc_format_decimal( $order->capture_total )
 				);
@@ -818,7 +827,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			} else {
 
 				$message = sprintf(
-					_x( '%s Capture Failed: %s - %s', 'Supports capture charge', 'sv-wc-plugin-framework' ),
+					// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount, %3$s - transaction status message. Definitions: Capture, as in capture funds from a credit card.
+					__( '%1$s Capture Failed: %2$s - %3$s', 'sv-wc-plugin-framework' ),
 					$this->get_method_title(),
 					$response->get_status_code(),
 					$response->get_status_message()
@@ -833,7 +843,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			$message = sprintf(
-				_x( '%s Capture Failed: %s', 'Supports capture charge', 'sv-wc-plugin-framework' ),
+				// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - failure message. Definitions: "capture" as in capturing funds from a credit card.
+				__( '%1$s Capture Failed: %2$s', 'sv-wc-plugin-framework' ),
 				$this->get_method_title(),
 				$e->getMessage()
 			);
@@ -1105,7 +1116,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( 0 == $amount_to_charge ) {
 
 				// add order note
-				$order->add_order_note( sprintf( _x( '%s0 Subscription Renewal Approved', 'Supports direct credit card subscriptions', 'sv-wc-plugin-framework' ), get_woocommerce_currency_symbol() ) );
+				// translators: %s - a formatted subscription charge amount, such as $1,000
+				$order->add_order_note( sprintf( __( '%s Subscription Renewal Approved', 'sv-wc-plugin-framework' ), wc_price( 0 ) ) );
 
 				// update subscription
 				WC_Subscriptions_Manager::process_subscription_payments_on_order( $order, $product_id );
@@ -1118,7 +1130,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// required
 			if ( ! $order->payment->token || ! $order->get_user_id() ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Subscription Renewal: Payment Token or User ID is missing/invalid.' );
+				throw new SV_WC_Payment_Gateway_Exception( __( 'Subscription Renewal: Payment Token or User ID is missing/invalid.', 'sv-wc-plugin-framework' ) );
 			}
 
 			// get the token, we've already verified it's good
@@ -1143,9 +1155,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				// order note based on gateway type
 				if ( $this->is_credit_card_gateway() ) {
 					$message = sprintf(
-						_x( '%s %s Subscription Renewal Payment Approved: %s ending in %s (expires %s)', 'Supports direct credit card subscriptions', 'sv-wc-plugin-framework' ),
+						// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction type (authorization/charge), %3$s - card type (mastercard, visa, ...), %4$s - last four digits of the card, %5$s - card expiry date
+						__( '%1$s %2$s Subscription Renewal Payment Approved: %3$s ending in %4$s (expires %5$s)', 'sv-wc-plugin-framework' ),
 						$this->get_method_title(),
-						$this->perform_credit_card_authorization() ? 'Authorization' : 'Charge',
+						$this->perform_credit_card_authorization() ? _x( 'Authorization', 'credit card transaction type', 'sv-wc-plugin-framework' ) : _x( 'Charge', 'noun, credit card transaction type', 'sv-wc-plugin-framework' ),
 						$token->get_card_type() ? $token->get_type_full() : 'card',
 						$token->get_last_four(),
 						$token->get_exp_month() . '/' . $token->get_exp_year()
@@ -1153,7 +1166,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				} elseif ( $this->is_echeck_gateway() ) {
 
 					// there may or may not be an account type (checking/savings) available, which is fine
-					$message = sprintf( _x( '%s Check Subscription Renewal Payment Approved: %s account ending in %s', 'Supports direct cheque subscriptions', 'sv-wc-plugin-framework' ), $this->get_method_title(), $token->get_account_type(), $token->get_last_four() );
+					// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - account type (checking/savings - may or may not be available), %3$s - last four digits of the account
+					$message = sprintf( __( '%1$s Check Subscription Renewal Payment Approved: %2$s account ending in %3$s', 'sv-wc-plugin-framework' ), $this->get_method_title(), $token->get_account_type(), $token->get_last_four() );
 				}
 
 				// add order note
@@ -1285,8 +1299,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		$token = $this->get_payment_token( $order->get_user_id(), $this->get_order_meta( $order->id, 'payment_token' ) );
 
-		if ( is_object( $token )  )
-			$payment_method_to_display = sprintf( _x( 'Via %s ending in %s', 'Supports direct payment method subscriptions', 'sv-wc-plugin-framework' ), $token->get_type_full(), $token->get_last_four() );
+		if ( is_object( $token )  ) {
+			// translators: %1$s - payment type (MasterCard, Visa, eCheck, Bank Account, etc), %2$s - last four digits for the payment method (credit card, checkings account, etc)
+			$payment_method_to_display = sprintf( __( 'Via %1$s ending in %2$s', 'sv-wc-plugin-framework' ), $token->get_type_full(), $token->get_last_four() );
+		}
 
 		return $payment_method_to_display;
 	}
@@ -1488,7 +1504,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			} catch( SV_WC_Payment_Gateway_Exception $e ) {
 
-				$this->mark_order_as_failed( $order, sprintf( _x( 'Pre-Order Tokenization attempt failed (%s)', 'Supports direct payment method pre-orders', 'sv-wc-plugin-framework' ), $this->get_method_title(), $e->getMessage() ) );
+				// translators: payment type (MasterCard, Visa, eCheck, Bank Account, etc), %2$s - failure message
+				$this->mark_order_as_failed( $order, sprintf( __( '%1$s Pre-Order Tokenization attempt failed (%2$s)', 'sv-wc-plugin-framework' ), $this->get_method_title(), $e->getMessage() ) );
 
 			}
 		}
@@ -1512,11 +1529,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$order = $this->get_order( $order->id );
 
 			// order description
-			$order->description = sprintf( _x( '%s - Pre-Order Release Payment for Order %s', 'Supports direct payment method pre-orders', 'sv-wc-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+			// translators: %1$s: site title, %2$s: order number
+			$order->description = sprintf( __( '%1$s - Pre-Order Release Payment for Order %2$s', 'sv-wc-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
 
 			// token is required
 			if ( ! $order->payment->token ) {
-				throw new SV_WC_Payment_Gateway_Exception( _x( 'Payment token missing/invalid.', 'Supports direct payment method pre-orders', 'sv-wc-plugin-framework' ) );
+				throw new SV_WC_Payment_Gateway_Exception( __( 'Payment token missing/invalid.', 'sv-wc-plugin-framework' ) );
 			}
 
 			// perform the transaction
@@ -1541,9 +1559,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				if ( $this->is_credit_card_gateway() ) {
 
 					$message = sprintf(
-						_x( '%s %s Pre-Order Release Payment Approved: %s ending in %s (expires %s)', 'Supports direct payment method pre-orders', 'sv-wc-plugin-framework' ),
+						// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction type (authorzation/charge), %3$s - credit card type (mastercard, visa, ...), %4$s - last for digits of the the card, %5$s - card expiry date
+						__( '%1$s %2$s Pre-Order Release Payment Approved: %3$s ending in %4$s (expires %5$s)', 'sv-wc-plugin-framework' ),
 						$this->get_method_title(),
-						$this->perform_credit_card_authorization() ? 'Authorization' : 'Charge',
+						$this->perform_credit_card_authorization() ? _x( 'Authorization', 'credit card transaction type', 'sv-wc-plugin-framework' ) : _x( 'Charge', 'noun, credit card transaction type', 'sv-wc-plugin-framework' ),
 						SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( ! empty( $order->payment->card_type ) ? $order->payment->card_type : 'card' ) ),
 						$last_four,
 						$order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 )
@@ -1552,7 +1571,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				} elseif ( $this->is_echeck_gateway() ) {
 
 					// account type (checking/savings) may or may not be available, which is fine
-					$message = sprintf( _x( '%s eCheck Pre-Order Release Payment Approved: %s ending in %s', 'Supports direct payment method pre-orders', 'sv-wc-plugin-framework' ), $this->get_method_title(), SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( ! empty( $order->payment->account_type ) ? $order->payment->account_type : 'bank' ) ), $last_four );
+					// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - e-check account type (Savings Account, Checking Account), %3$s - last four digits of the account
+					$message = sprintf( __( '%1$s eCheck Pre-Order Release Payment Approved: %2$s ending in %3$s', 'sv-wc-plugin-framework' ), $this->get_method_title(), SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( ! empty( $order->payment->account_type ) ? $order->payment->account_type : 'bank' ) ), $last_four );
 
 				}
 
@@ -1575,7 +1595,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				// if the transaction was held (ie fraud validation failure) mark it as such
 				if ( $response->transaction_held() || ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
 
-					$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? _x( 'Authorization only transaction', 'Supports direct payment method pre-orders', 'sv-wc-plugin-framework' ) : $response->get_status_message(), $response );
+					$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? __( 'Authorization only transaction', 'sv-wc-plugin-framework' ) : $response->get_status_message(), $response );
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
 
 				} else {
@@ -1593,7 +1613,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			// Mark order as failed
-			$this->mark_order_as_failed( $order, sprintf( _x( 'Pre-Order Release Payment Failed: %s', 'Supports direct payment method pre-orders', 'sv-wc-plugin-framework' ), $e->getMessage() ) );
+			// Translators: %s - failure message
+			$this->mark_order_as_failed( $order, sprintf( __( 'Pre-Order Release Payment Failed: %s', 'sv-wc-plugin-framework' ), $e->getMessage() ) );
 
 		}
 	}
@@ -1678,7 +1699,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// order note based on gateway type
 			if ( $this->is_credit_card_gateway() ) {
-				$message = sprintf( _x( '%s Payment Method Saved: %s ending in %s (expires %s)', 'Supports direct credit card tokenization', 'sv-wc-plugin-framework' ),
+				// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - payment method name (mastercard, bank account, etc), %3$s - last four digits of the card/account, %4$s - card/account expiry date
+				$message = sprintf( __( '%1$s Payment Method Saved: %2$s ending in %3$s (expires %4$s)', 'sv-wc-plugin-framework' ),
 					$this->get_method_title(),
 					$token->get_type_full(),
 					$token->get_last_four(),
@@ -1686,7 +1708,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				);
 			} elseif ( $this->is_echeck_gateway() ) {
 				// account type (checking/savings) may or may not be available, which is fine
-				$message = sprintf( _x( '%s eCheck Payment Method Saved: %s account ending in %s', 'Supports direct cheque tokenization', 'sv-wc-plugin-framework' ),
+				// translators: %1$s - payment gateway title (such as Cybersouce, Netbilling, etc), %2$s - account type (cheking/savings - may or may not be available), %3$s - last four digits of the account
+				$message = sprintf( __( '%1$s eCheck Payment Method Saved: %2$s account ending in %3$s', 'sv-wc-plugin-framework' ),
 					$this->get_method_title(),
 					$token->get_account_type(),
 					$token->get_last_four()
@@ -1706,13 +1729,16 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} else {
 
 			if ( $response->get_status_code() && $response->get_status_message() ) {
-				$message = sprintf( 'Status code %s: %s', $response->get_status_code(), $response->get_status_message() );
+				// translators: %1$s - payment request response status code, %2$s - payment request response status message
+				$message = sprintf( __( 'Status code %1$s: %2$s', 'sv-wc-plugin-framework' ), $response->get_status_code(), $response->get_status_message() );
 			} elseif ( $response->get_status_code() ) {
-				$message = sprintf( 'Status code: %s', $response->get_status_code() );
+				// translators: %s - payment request response status code
+				$message = sprintf( __( 'Status code: %s', 'sv-wc-plugin-framework' ), $response->get_status_code() );
 			} elseif ( $response->get_status_message() ) {
-				$message = sprintf( 'Status message: %s', $response->get_status_message() );
+				// translators: %s - payment request response status message
+				$message = sprintf( __( 'Status message: %s', 'sv-wc-plugin-framework' ), $response->get_status_message() );
 			} else {
-				$message = 'Unknown Error';
+				$message = __( 'Unknown Error', 'sv-wc-plugin-framework' );
 			}
 
 			// add transaction id if there is one
@@ -2342,6 +2368,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			$result = array(
+				// translators: %s - failure message. Payment method as in a specific credit card, e-check or bank account
 				'message' => sprintf( __( 'Oops, adding your new payment method failed: %s', 'sv-wc-plugin-framework' ), $e->getMessage() ),
 				'success' => false,
 			);
@@ -2377,7 +2404,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// order note based on gateway type
 			if ( $this->is_credit_card_gateway() ) {
 
-				$message = sprintf( _x( 'Nice! New payment method added: %s ending in %s (expires %s)', 'Supports add payment method feature', 'sv-wc-plugin-framework' ),
+				// translators: Payment method as in a specific credit card. Placeholders: %1$s - card type (visa, mastercard, ...), %2$s - last four digits of the card, %3$s - card expiry date
+				$message = sprintf( __( 'Nice! New payment method added: %1$s ending in %2$s (expires %3$s)', 'sv-wc-plugin-framework' ),
 					$token->get_type_full(),
 					$token->get_last_four(),
 					$token->get_exp_date()
@@ -2386,13 +2414,15 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			} elseif ( $this->is_echeck_gateway() ) {
 
 				// account type (checking/savings) may or may not be available, which is fine
-				$message = sprintf( _x( 'Nice! New payment method added: %s account ending in %s', 'Supports add payment method feature', 'sv-wc-plugin-framework' ),
+				// translators: Payment method as in a specific e-check account. Placeholders: %1$s - account type (checking/savings), %2$s - last four digits of the account
+				$message = sprintf( __( 'Nice! New payment method added: %1$s account ending in %2$s', 'sv-wc-plugin-framework' ),
 					$token->get_account_type(),
 					$token->get_last_four()
 				);
 
 			} else {
-				$message = _x( 'Nice! New payment method added.', 'Supports direct', 'sv-wc-plugin-framework' );
+				// translators: Payment method as in a specific credit card, e-check or bank account
+				$message = __( 'Nice! New payment method added.', 'sv-wc-plugin-framework' );
 			}
 
 			// add transaction data to user meta
@@ -2471,7 +2501,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// other default info
 		$order->customer_id = $this->get_customer_id( $order->customer_user );
-		$order->description = sprintf( _x( '%s - Add Payment Method for %s', 'Add payment method request description', 'sv-wc-plugin-framework' ), sanitize_text_field( get_bloginfo( 'name' ) ), $order->billing_email );
+		// translators: %1$s - site title, %2$s - customer email. Payment method as in a specific credit card, e-check or bank account
+		$order->description = sprintf( __( '%1$s - Add Payment Method for %2$s', 'sv-wc-plugin-framework' ), sanitize_text_field( get_bloginfo( 'name' ) ), $order->billing_email );
 
 		// force zero amount
 		$order->payment_total = '0.00';

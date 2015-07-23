@@ -189,6 +189,8 @@ class SV_WC_Admin_Notice_Handler {
 
 		// dismissible link if the notice is dismissible and it's not always shown on the settings page, or we're on the settings page
 		if ( isset( $params['dismissible'] ) && $params['dismissible'] && ( ! isset( $params['always_show_on_settings'] ) || ! $params['always_show_on_settings'] || ! $this->get_plugin()->is_plugin_settings() ) ) {
+
+			// translators: this is an action that dismisses a message
 			$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-notice-dismiss" data-message-id="%s" style="float: right;">%s</a>', $message_id, __( 'Dismiss', 'sv-wc-plugin-framework' ) );
 		}
 

@@ -145,17 +145,17 @@ class SV_WC_Payment_Gateway_Helper {
 		// special cases
 		switch ( $type ) {
 
-			case 'mc':         $name = 'MasterCard';          break;
-			case 'amex':       $name = 'American Express';    break;
-			case 'disc':       $name = 'Discover';            break;
-			case 'jcb':        $name = 'JCB';                 break;
-			case 'cartebleue': $name = 'CarteBleue';          break;
-			case 'paypal':     $name = 'PayPal';              break;
-			case 'checking':   $name = 'Checking Account';    break;
-			case 'savings':    $name = 'Savings Account';     break;
-			case 'card':       $name = 'Credit / Debit Card'; break;
-			case 'bank':       $name = 'Bank Account';        break;
-			case '':           $name = 'Account';             break;
+			case 'mc':         $name = _x( 'MasterCard', 'credit card type', 'sv-wc-plugin-framework' );          break;
+			case 'amex':       $name = _x( 'American Express', 'credit card type', 'sv-wc-plugin-framework' );    break;
+			case 'disc':       $name = _x( 'Discover', 'credit card type', 'sv-wc-plugin-framework' );            break;
+			case 'jcb':        $name = _x( 'JCB', 'credit card type', 'sv-wc-plugin-framework' );                 break;
+			case 'cartebleue': $name = _x( 'CarteBleue', 'credit card type', 'sv-wc-plugin-framework' );          break;
+			case 'paypal':     $name = __( 'PayPal', 'sv-wc-plugin-framework' );                                  break;
+			case 'checking':   $name = __( 'Checking Account', 'sv-wc-plugin-framework' );                        break;
+			case 'savings':    $name = __( 'Savings Account', 'sv-wc-plugin-framework' );                         break;
+			case 'card':       $name = __( 'Credit / Debit Card', 'sv-wc-plugin-framework' );                     break;
+			case 'bank':       $name = __( 'Bank Account', 'sv-wc-plugin-framework' );                            break;
+			case '':           $name = _x( 'Account', 'payment method type', 'sv-wc-plugin-framework' );          break;
 		}
 
 		// default: replace dashes with spaces and uppercase all words
