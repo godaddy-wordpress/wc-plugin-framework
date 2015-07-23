@@ -448,8 +448,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		$localized_script_handle = '';
 
-		// payment form JS/CSS
-		if ( $this->supports_payment_form() ) {
+		// loaded when:
+		// 1) gateway supports the payment form feature
+		// 2) gateway supports the add payment method feature
+		// 3) plugin supports the my payment methods feature *and* user is on account page
+		if ( $this->supports_payment_form() || $this->supports( 'add_payment_method' ) || ( $this->get_plugin()->supports( 'my_payment_methods' ) && is_account_page() ) ) {
 
 			// jQuery.payment - for credit card validation/formatting
 			wp_enqueue_script( 'jquery-payment' );
