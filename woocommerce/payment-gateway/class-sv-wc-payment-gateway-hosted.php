@@ -53,13 +53,12 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @see SV_WC_Payment_Gateway::__construct()
 	 * @param string $id the gateway id
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the parent plugin class
-	 * @param string $text_domain the plugin text domain
 	 * @param array $args gateway arguments
 	 */
-	public function __construct( $id, $plugin, $text_domain, $args ) {
+	public function __construct( $id, $plugin, $args ) {
 
 		// parent constructor
-		parent::__construct( $id, $plugin, $text_domain, $args );
+		parent::__construct( $id, $plugin, $args );
 
 		// IPN or redirect-back
 		if ( $this->has_ipn() ) {
@@ -128,7 +127,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		if ( $this->use_form_post() ) {
 			// the checkout pay page
-			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order_id );
+			$order = wc_get_order( $order_id );
 			return $order->get_checkout_payment_url( true );
 		} else {
 
@@ -231,7 +230,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		// attempt to automatically submit the form and redirect
 		wc_enqueue_js('
 			$( "body" ).block( {
-					message: "<img src=\"' . esc_url( $this->get_plugin()->get_plugin_url() . '/' . $this->get_plugin()->get_framework_image_path() . 'ajax-loader.gif' ) . '\" alt=\"Redirecting&hellip;\" style=\"float:left; margin-right: 10px;\" />' . __( 'Thank you for your order. We are now redirecting you to complete payment.', $this->text_domain ) . '",
+					message: "<img src=\"' . esc_url( $this->get_plugin()->get_framework_assets_url() . '/images/ajax-loader.gif' ) . '\" alt=\"Redirecting&hellip;\" style=\"float:left; margin-right: 10px;\" />' . __( 'Thank you for your order. We are now redirecting you to complete payment.', 'sv-wc-plugin-framework' ) . '",
 					overlayCSS: {
 						background: "#fff",
 						opacity: 0.6
@@ -256,11 +255,12 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			$request_arg_fields[] = '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" />';
 		}
 
-		echo '<p>' . __( 'Thank you for your order, please click the button below to pay.', $this->text_domain ) . '</p>' .
+		echo '<p>' . __( 'Thank you for your order, please click the button below to pay.', 'sv-wc-plugin-framework' ) . '</p>' .
 			'<form action="' . esc_url( $this->get_hosted_pay_page_url( $order ) ) . '" method="post">' .
 				implode( '', $request_arg_fields ) .
-				'<input type="submit" class="button-alt" id="submit_' . $this->get_id() . '_payment_form" value="' . __( 'Pay Now', $this->text_domain ) . '" />' .
-				'<a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . __( 'Cancel Order', $this->text_domain ) . '</a>' .
+				'<input type="submit" class="button-alt" id="submit_' . $this->get_id() . '_payment_form" value="' . __( 'Pay Now', 'sv-wc-plugin-framework' ) . '" />' .
+				// translators: Order as in e-commerce
+				'<a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . __( 'Cancel Order', 'sv-wc-plugin-framework' ) . '</a>' .
 			'</form>';
 	}
 
@@ -331,7 +331,8 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 					$this->get_plugin()->log( sprintf( "IPN processing error: Order %s is already paid for.", $order->get_order_number() ), $this->get_id() );
 				}
 
-				$order_note = sprintf( __( 'IPN processing error: %s duplicate transaction received', $this->text_domain ), $this->get_method_title() );
+				// translators: IPN: https://en.wikipedia.org/wiki/Instant_payment_notification, %s: payment gateway title (such as Authorize.net, Braintree, etc)
+				$order_note = sprintf( __( 'IPN processing error: %s duplicate transaction received', 'sv-wc-plugin-framework' ), $this->get_method_title() );
 				$order->add_order_note( $order_note );
 
 				status_header( 200 );
@@ -340,9 +341,9 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			if ( $this->process_transaction_response( $order, $response ) ) {
 
-				if ( SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) ) {
+				if ( $order->has_status( 'on-hold' ) ) {
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
-				} elseif ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'cancelled' ) ) {
+				} elseif ( ! $order->has_status( 'cancelled' ) ) {
 					$order->payment_complete(); // mark order as having received payment
 				}
 			}
@@ -399,7 +400,8 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 				$this->add_debug_message( sprintf( "Order '%s' has already been processed", $order->get_order_number() ), 'error' );
 
-				$order_note = sprintf( __( '%s duplicate transaction received', $this->text_domain ), $this->get_method_title() );
+				// translators: %s - payment gateway title (such as Authorize.net, Braintree, etc)
+				$order_note = sprintf( __( '%s duplicate transaction received', 'sv-wc-plugin-framework' ), $this->get_method_title() );
 				$order->add_order_note( $order_note );
 
 				// since the order has already been paid for, redirect to the 'thank you' page
@@ -408,9 +410,9 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			if ( $this->process_transaction_response( $order, $response ) ) {
 
-				if ( SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) ) {
+				if ( $order->has_status( 'on-hold' ) ) {
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
-				} elseif ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'cancelled' ) ) {
+				} elseif ( ! $order->has_status( 'cancelled' ) ) {
 					$order->payment_complete(); // mark order as having received payment
 				}
 
@@ -556,16 +558,17 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		$transaction_type = '';
 		if ( $response->is_authorization() ) {
-			$transaction_type = 'Authorization';
+			$transaction_type = _x( 'Authorization', 'credit card transaction type', 'sv-wc-plugin-framework' );
 		} elseif ( $response->is_charge() ) {
-			$transaction_type = 'Charge';
+			$transaction_type = _x( 'Charge', 'noun, credit card transaction type', 'sv-wc-plugin-framework' )
 		}
 
 		// credit card order note
 		$message = sprintf(
-			__( '%s %s %s Approved: %s ending in %s (expires %s)', $this->text_domain ),
+			// translators: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...), %5$s - last four digits of the card, %6$s - expiry date
+			__( '%1$s %2$s %3$s Approved: %4$s ending in %5$s (expires %6$s)', 'sv-wc-plugin-framework' ),
 			$this->get_method_title(),
-			$this->is_test_environment() ? 'Test' : '',
+			$this->is_test_environment() ? _x( 'Test', 'noun, software environment', 'sv-wc-plugin-framework' ) : '',
 			$transaction_type,
 			SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_card_type() ? $response->get_card_type() : 'card' ) ),
 			$last_four,
@@ -574,7 +577,8 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		// adds the transaction id (if any) to the order note
 		if ( $response->get_transaction_id() ) {
-			$message .= ' ' . sprintf( __( '(Transaction ID %s)', $this->text_domain ), $response->get_transaction_id() );
+				// translators: %s - transaction ID
+			$message .= ' ' . sprintf( __( '(Transaction ID %s)', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
 		}
 
 		$order->add_order_note( $message );
@@ -595,21 +599,23 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		// credit card order note
 		$message = sprintf(
-			__( '%s %s Transaction Approved: %s ending in %s', $this->text_domain ),
+			// translators: %1$s - payment method title, %2$s - environment ("Test"), %3$s - card type (mastercard, visa, ...), %4$s - last four digits of the card
+			__( '%1$s %2$s Transaction Approved: %3$s ending in %4$s', 'sv-wc-plugin-framework' ),
 			$this->get_method_title(),
-			$this->is_test_environment() ? 'Test' : '',
+			$this->is_test_environment() ? _x( 'Test', 'noun, software environment', 'sv-wc-plugin-framework' ) : '',
 			SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_account_type() ? $response->get_account_type() : 'bank' ) ),
 			$last_four
 		);
 
 		// adds the check number (if any) to the order note
 		if ( $response->get_check_number() ) {
-			$message .= ' ' . sprintf( __( '(expires %s)', $this->text_domain ), $response->get_check_number() );
+			// translators: %s - check number
+			$message .= ' ' . sprintf( __( '(check number %s)', 'sv-wc-plugin-framework' ), $response->get_check_number() );
 		}
 
 		// adds the transaction id (if any) to the order note
 		if ( $response->get_transaction_id() ) {
-			$message .= ' ' . sprintf( __( '(Transaction ID %s)', $this->text_domain ), $response->get_transaction_id() );
+			$message .= ' ' . sprintf( __( '(Transaction ID %s)', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
 		}
 
 		$order->add_order_note( $message );
@@ -628,14 +634,16 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		// generic approve order note.  This is likely to be overwritten by a concrete payment gateway implementation
 		$message = sprintf(
-			__( '%s %sTransaction Approved', $this->text_domain ),
+			// translators: %1$s - payment method title, %2$s - environment ("Test")
+			// oh yess
+			__( '%1$s %2$s Transaction Approved', 'sv-wc-plugin-framework' ),
 			$this->get_method_title(),
-			$this->is_test_environment() ? __( 'Test', $this->text_domain ) . ' ' : ''
+			$this->is_test_environment() ? _x( 'Test', 'noun, software environment', 'sv-wc-plugin-framework' ) : '',
 		);
 
 		// adds the transaction id (if any) to the order note
 		if ( $response->get_transaction_id() ) {
-			$message .= ' ' . sprintf( __( '(Transaction ID %s)', $this->text_domain ), $response->get_transaction_id() );
+			$message .= ' ' . sprintf( __( '(Transaction ID %s)', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
 		}
 
 		$order->add_order_note( $message );

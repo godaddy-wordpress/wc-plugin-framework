@@ -229,9 +229,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/** @var SV_WC_Payment_Gateway_Plugin the parent plugin class */
 	private $plugin;
 
-	/** @var string plugin text domain */
-	protected $text_domain;
-
 	/** @var string payment type, one of 'credit-card' or 'echeck' */
 	private $payment_type;
 
@@ -300,10 +297,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @param string $id the gateway id
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the parent plugin class
-	 * @param string $text_domain the plugin text domain
 	 * @param array $args gateway arguments
 	 */
-	public function __construct( $id, $plugin, $text_domain, $args ) {
+	public function __construct( $id, $plugin, $args ) {
 
 		// first setup the gateway and payment type for this gateway
 		$this->payment_type = isset( $args['payment_type'] ) ? $args['payment_type'] : self::PAYMENT_TYPE_CREDIT_CARD;
@@ -321,7 +317,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		//  there's no other way of grabbing existing gateways so as to avoid
 		//  double-instantiation errors (esp for shared settings)
 		$this->get_plugin()->set_gateway( $id, $this );
-		$this->text_domain = $text_domain;
 
 		// optional parameters
 		if ( isset( $args['method_title'] ) ) {
@@ -384,9 +379,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 			// save settings
 			add_action( 'woocommerce_update_options_payment_gateways_' . $this->get_id(), array( $this, 'process_admin_options' ) );
-
-			// change the order status for a voided order to cancelled
-			add_action( 'woocommerce_order_refunded', array( $this, 'maybe_cancel_voided_order' ) );
 		}
 
 		// add gateway.js checkout javascript
@@ -458,10 +450,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			wp_enqueue_script( 'jquery-payment' );
 
 			// frontend JS
-			wp_enqueue_script( 'sv-wc-payment-gateway-frontend', $this->get_plugin()->get_plugin_url() . '/lib/skyverge/woocommerce/payment-gateway/assets/js/frontend/sv-wc-payment-gateway-frontend.min.js', array(), $this->get_plugin()->get_version(), true );
+			wp_enqueue_script( 'sv-wc-payment-gateway-frontend', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-frontend.min.js', array(), SV_WC_Plugin::VERSION, true );
 
 			// frontend CSS
-			wp_enqueue_style( 'sv-wc-payment-gateway-frontend', $this->get_plugin()->get_plugin_url() . '/lib/skyverge/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-frontend.min.css', array(), $this->get_plugin()->get_version() );
+			wp_enqueue_style( 'sv-wc-payment-gateway-frontend', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-frontend.min.css', array(), SV_WC_Plugin::VERSION );
 
 			$localized_script_handle = 'sv-wc-payment-gateway-frontend';
 		}
@@ -501,7 +493,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$order_id  = $this->get_checkout_pay_page_order_id();
 
 			if ( $order_id ) {
-				$order = SV_WC_Plugin_Compatibility::wc_get_order( $order_id );
+				$order = wc_get_order( $order_id );
 
 				return $order->payment_method == $this->get_id();
 			}
@@ -522,25 +514,25 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function get_js_localize_script_params() {
 
 		return array(
-			'card_number_missing'            => _x( 'Card number is missing', 'Supports direct credit card', $this->text_domain ),
-			'card_number_invalid'            => _x( 'Card number is invalid', 'Supports direct credit card', $this->text_domain ),
-			'card_number_digits_invalid'     => _x( 'Card number is invalid (only digits allowed)', 'Supports direct credit card', $this->text_domain ),
-			'card_number_length_invalid'     => _x( 'Card number is invalid (wrong length)', 'Supports direct credit card', $this->text_domain ),
-			'cvv_missing'                    => _x( 'Card security code is missing', 'Supports direct credit card', $this->text_domain ),
-			'cvv_digits_invalid'             => _x( 'Card security code is invalid (only digits are allowed)', 'Supports direct credit card', $this->text_domain ),
-			'cvv_length_invalid'             => _x( 'Card security code is invalid (must be 3 or 4 digits)', 'Supports direct credit card', $this->text_domain ),
-			'card_exp_date_invalid'          => _x( 'Card expiration date is invalid', 'Supports direct credit card', $this->text_domain ),
-			'check_number_digits_invalid'    => _x( 'Check Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ),
-			'check_number_missing'           => _x( 'Check Number is missing', 'Supports direct cheque', $this->text_domain ),
-			'drivers_license_state_missing'  => _x( 'Drivers license state is missing', 'Supports direct cheque', $this->text_domain ),
-			'drivers_license_number_missing' => _x( 'Drivers license number is missing', 'Supports direct cheque', $this->text_domain ),
-			'drivers_license_number_invalid' => _x( 'Drivers license number is invalid', 'Supports direct cheque', $this->text_domain ),
-			'account_number_missing'         => _x( 'Account Number is missing', 'Supports direct cheque', $this->text_domain ),
-			'account_number_invalid'         => _x( 'Account Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ),
-			'account_number_length_invalid'  => _x( 'Account number is invalid (must be between 5 and 17 digits)', 'Supports direct cheque', $this->text_domain ),
-			'routing_number_missing'         => _x( 'Routing Number is missing', 'Supports direct cheque', $this->text_domain ),
-			'routing_number_digits_invalid'  => _x( 'Routing Number is invalid (only digits are allowed)', 'Supports direct cheque', $this->text_domain ),
-			'routing_number_length_invalid'  => _x( 'Routing number is invalid (must be 9 digits)', 'Supports direct cheque', $this->text_domain ),
+			'card_number_missing'            => __( 'Card number is missing', 'sv-wc-plugin-framework' ),
+			'card_number_invalid'            => __( 'Card number is invalid', 'sv-wc-plugin-framework' ),
+			'card_number_digits_invalid'     => __( 'Card number is invalid (only digits allowed)', 'sv-wc-plugin-framework' ),
+			'card_number_length_invalid'     => __( 'Card number is invalid (wrong length)', 'sv-wc-plugin-framework' ),
+			'cvv_missing'                    => __( 'Card security code is missing', 'sv-wc-plugin-framework' ),
+			'cvv_digits_invalid'             => __( 'Card security code is invalid (only digits are allowed)', 'sv-wc-plugin-framework' ),
+			'cvv_length_invalid'             => __( 'Card security code is invalid (must be 3 or 4 digits)', 'sv-wc-plugin-framework' ),
+			'card_exp_date_invalid'          => __( 'Card expiration date is invalid', 'sv-wc-plugin-framework' ),
+			'check_number_digits_invalid'    => __( 'Check Number is invalid (only digits are allowed)', 'sv-wc-plugin-framework' ),
+			'check_number_missing'           => __( 'Check Number is missing', 'sv-wc-plugin-framework' ),
+			'drivers_license_state_missing'  => __( 'Drivers license state is missing', 'sv-wc-plugin-framework' ),
+			'drivers_license_number_missing' => __( 'Drivers license number is missing', 'sv-wc-plugin-framework' ),
+			'drivers_license_number_invalid' => __( 'Drivers license number is invalid', 'sv-wc-plugin-framework' ),
+			'account_number_missing'         => __( 'Account Number is missing', 'sv-wc-plugin-framework' ),
+			'account_number_invalid'         => __( 'Account Number is invalid (only digits are allowed)', 'sv-wc-plugin-framework' ),
+			'account_number_length_invalid'  => __( 'Account number is invalid (must be between 5 and 17 digits)', 'sv-wc-plugin-framework' ),
+			'routing_number_missing'         => __( 'Routing Number is missing', 'sv-wc-plugin-framework' ),
+			'routing_number_digits_invalid'  => __( 'Routing Number is invalid (only digits are allowed)', 'sv-wc-plugin-framework' ),
+			'routing_number_length_invalid'  => __( 'Routing number is invalid (must be 9 digits)', 'sv-wc-plugin-framework' ),
 		);
 
 	}
@@ -552,11 +544,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Direct gateway: "Place order"
 	 * Redirect/Hosted gateway: "Continue"
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0-beta
 	 */
 	protected function get_order_button_text() {
 
-		$text = $this->is_hosted_gateway() ? __( 'Continue', $this->text_domain ) : __( 'Place order', $this->text_domain );
+		$text = $this->is_hosted_gateway() ? __( 'Continue', 'sv-wc-plugin-framework' ) : __( 'Place order', 'sv-wc-plugin-framework' );
 
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_order_button_text', $text, $this );
 	}
@@ -579,7 +571,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param int $order_id identifies the order
 	 */
 	public function payment_page( $order_id ) {
-		echo '<p>' . __( 'Thank you for your order.', $this->text_domain ) . '</p>';
+		echo '<p>' . __( 'Thank you for your order.', 'sv-wc-plugin-framework' ) . '</p>';
 	}
 
 
@@ -589,7 +581,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if the gateway supports the payment form feature
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0-beta
 	 * @return bool
 	 */
 	public function supports_payment_form() {
@@ -601,7 +593,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Render the payment fields
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0-beta
 	 * @see WC_Payment_Gateway::payment_fields()
 	 * @see SV_WC_Payment_Gateway_Payment_Form class
 	 */
@@ -624,7 +616,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Get the payment form field defaults, primarily for gateways to override
 	 * and set dummy credit card/eCheck info when in the test environment
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0-beta
 	 * @return array
 	 */
 	public function get_payment_method_defaults() {
@@ -658,9 +650,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// defaults for credit card and echeck, override for others
 		if ( $this->is_credit_card_gateway() ) {
-			return _x( 'Credit Card', 'Supports credit card', $this->text_domain );
+			return __( 'Credit Card', 'sv-wc-plugin-framework' );
 		} elseif ( $this->is_echeck_gateway() ) {
-			return _x( 'eCheck', 'Supports cheque', $this->text_domain );
+			return __( 'eCheck', 'sv-wc-plugin-framework' );
 		}
 	}
 
@@ -676,9 +668,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// defaults for credit card and echeck, override for others
 		if ( $this->is_credit_card_gateway() ) {
-			return _x( 'Pay securely using your credit card.', 'Supports credit card', $this->text_domain );
+			return __( 'Pay securely using your credit card.', 'sv-wc-plugin-framework' );
 		} elseif ( $this->is_echeck_gateway() ) {
-			return _x( 'Pay securely using your checking account.', 'Supports cheque', $this->text_domain );
+			return __( 'Pay securely using your checking account.', 'sv-wc-plugin-framework' );
 		}
 	}
 
@@ -695,23 +687,23 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->form_fields = array(
 
 			'enabled' => array(
-				'title'   => __( 'Enable / Disable', $this->text_domain ),
-				'label'   => __( 'Enable this gateway', $this->text_domain ),
+				'title'   => __( 'Enable / Disable', 'sv-wc-plugin-framework' ),
+				'label'   => __( 'Enable this gateway', 'sv-wc-plugin-framework' ),
 				'type'    => 'checkbox',
 				'default' => 'no',
 			),
 
 			'title' => array(
-				'title'    => __( 'Title', $this->text_domain ),
+				'title'    => __( 'Title', 'sv-wc-plugin-framework' ),
 				'type'     => 'text',
-				'desc_tip' => __( 'Payment method title that the customer will see during checkout.', $this->text_domain ),
+				'desc_tip' => __( 'Payment method title that the customer will see during checkout.', 'sv-wc-plugin-framework' ),
 				'default'  => $this->get_default_title(),
 			),
 
 			'description' => array(
-				'title'    => __( 'Description', $this->text_domain ),
+				'title'    => __( 'Description', 'sv-wc-plugin-framework' ),
 				'type'     => 'textarea',
-				'desc_tip' => __( 'Payment method description that the customer will see during checkout.', $this->text_domain ),
+				'desc_tip' => __( 'Payment method description that the customer will see during checkout.', 'sv-wc-plugin-framework' ),
 				'default'  => $this->get_default_description(),
 			),
 
@@ -754,24 +746,25 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// add "detailed customer decline messages" option if the feature is supported
 		if ( $this->supports( self::FEATURE_DETAILED_CUSTOMER_DECLINE_MESSAGES ) ) {
 			$this->form_fields['enable_customer_decline_messages'] = array(
-				'title'   => __( 'Detailed Decline Messages', $this->text_domain ),
+				'title'   => __( 'Detailed Decline Messages', 'sv-wc-plugin-framework' ),
 				'type'    => 'checkbox',
-				'label'   => __( 'Check to enable detailed decline messages to the customer during checkout when possible, rather than a generic decline message.', $this->text_domain ),
+				'label'   => __( 'Check to enable detailed decline messages to the customer during checkout when possible, rather than a generic decline message.', 'sv-wc-plugin-framework' ),
 				'default' => 'no',
 			);
 		}
 
 		// add any common bottom fields
 		$this->form_fields['debug_mode'] = array(
-			'title'   => __( 'Debug Mode', $this->text_domain ),
+			'title'   => __( 'Debug Mode', 'sv-wc-plugin-framework' ),
 			'type'    => 'select',
-			'desc'    => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the <a href="%s">debug log</a>', $this->text_domain ), SV_WC_Helper::get_wc_log_file_url( $this->get_id() ) ),
+			// translators: %1$s - <a> tag, %2$s - </a> tag
+			'desc'    => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the %1$sdebug log%2$s', 'sv-wc-plugin-framework' ), '<a href="' . SV_WC_Helper::get_wc_log_file_url( $this->get_id() ) . '">', '</a>' ),
 			'default' => self::DEBUG_MODE_OFF,
 			'options' => array(
-				self::DEBUG_MODE_OFF      => _x( 'Off', 'Debug mode off', $this->text_domain ),
-				self::DEBUG_MODE_CHECKOUT => __( 'Show on Checkout Page', $this->text_domain ),
-				self::DEBUG_MODE_LOG      => __( 'Save to Log', $this->text_domain ),
-				self::DEBUG_MODE_BOTH     => _x( 'Both', 'Debug mode both show on checkout and log', $this->text_domain )
+				self::DEBUG_MODE_OFF      => __( 'Off', 'Debug mode off', 'sv-wc-plugin-framework' ),
+				self::DEBUG_MODE_CHECKOUT => __( 'Show on Checkout Page', 'sv-wc-plugin-framework' ),
+				self::DEBUG_MODE_LOG      => __( 'Save to Log', 'sv-wc-plugin-framework' ),
+				self::DEBUG_MODE_BOTH     => __( 'Both', 'Debug mode both show on checkout and log', 'sv-wc-plugin-framework' )
 			),
 		);
 
@@ -785,7 +778,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		 *
 		 * Actors can use this to add, remove, or tweak gateway form fields
 		 *
-		 * @since 3.1.2-2
+		 * @since 4.0.0-beta
 		 * @param array $form_fields array of form fields in format required by WC_Settings_API
 		 * @param \SV_WC_Payment_Gateway $this gateway instance
 		 */
@@ -816,10 +809,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function add_environment_form_fields( $form_fields ) {
 
 		$form_fields['environment'] = array(
-			'title'    => __( 'Environment', $this->text_domain ),
+			// translators: environment as in a software environment (test/production)
+			'title'    => __( 'Environment', 'sv-wc-plugin-framework' ),
 			'type'     => 'select',
 			'default'  => key( $this->get_environments() ),  // default to first defined environment
-			'desc_tip' => __( 'Select the gateway environment to use for transactions.', $this->text_domain ),
+			'desc_tip' => __( 'Select the gateway environment to use for transactions.', 'sv-wc-plugin-framework' ),
 			'options'  => $this->get_environments(),
 		);
 
@@ -868,12 +862,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// disable the field if the sibling gateway is already inheriting settings
 		$form_fields['inherit_settings'] = array(
-			'title'       => _x( 'Share connection settings', 'Supports sibling gateways', $this->text_domain ),
+			'title'       => __( 'Share connection settings', 'sv-wc-plugin-framework' ),
 			'type'        => 'checkbox',
-			'label'       => _x( 'Use connection/authentication settings from other gateway', $this->text_domain ),
+			'label'       => __( 'Use connection/authentication settings from other gateway', 'sv-wc-plugin-framework' ),
 			'default'     => count( $configured_other_gateway_ids ) > 0 ? 'yes' : 'no',
 			'disabled'    => count( $inherit_settings_other_gateway_ids ) > 0 ? true : false,
-			'description' => count( $inherit_settings_other_gateway_ids ) > 0 ? __( 'Disabled because the other gateway is using these settings', $this->text_domain ) : '',
+			'description' => count( $inherit_settings_other_gateway_ids ) > 0 ? __( 'Disabled because the other gateway is using these settings', 'sv-wc-plugin-framework' ) : '',
 		);
 
 		return $form_fields;
@@ -890,8 +884,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function add_csc_form_fields( $form_fields ) {
 
 		$form_fields['enable_csc'] = array(
-			'title'   => _x( 'Card Verification (CSC)', 'Supports direct credit card', $this->text_domain ),
-			'label'   => _x( 'Display the Card Security Code (CV2) field on checkout', 'Supports direct credit card', $this->text_domain ),
+			'title'   => __( 'Card Verification (CSC)', 'sv-wc-plugin-framework' ),
+			'label'   => __( 'Display the Card Security Code (CV2) field on checkout', 'sv-wc-plugin-framework' ),
 			'type'    => 'checkbox',
 			'default' => 'yes',
 		);
@@ -1130,13 +1124,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$image_extension = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_use_svg', true ) ? '.svg' : '.png';
 
 		// first, is the card image available within the plugin?
-		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/assets/images/card-' . $image_type . $image_extension ) ) {
-			return WC_HTTPS::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/assets/images/card-' . $image_type . $image_extension;
+		if ( is_readable( $this->get_plugin()->get_payment_gateway_framework_assets_path() . '/images/card-' . $image_type . $image_extension ) ) {
+			return WC_HTTPS::force_https_url( $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/card-' . $image_type . $image_extension );
 		}
 
 		// default: is the card image available within the framework?
-		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/' . $this->get_plugin()->get_payment_gateway_framework_image_path() . 'card-' . $image_type . $image_extension ) ) {
-			return WC_HTTPS::force_https_url( $this->get_plugin()->get_plugin_url() ) . '/' . $this->get_plugin()->get_payment_gateway_framework_image_path() . 'card-' . $image_type . $image_extension;
+		if ( is_readable( $this->get_plugin()->get_payment_gateway_framework_assets_path() . '/images/card-' . $image_type . $image_extension ) ) {
+			return WC_HTTPS::force_https_url( $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/card-' . $image_type . $image_extension );
 		}
 
 		return null;
@@ -1167,14 +1161,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function get_order( $order ) {
 
 		if ( is_numeric( $order ) ) {
-			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order );
+			$order = wc_get_order( $order );
 		}
 
 		// set payment total here so it can be modified for later by add-ons like subscriptions which may need to charge an amount different than the get_total()
 		$order->payment_total = number_format( $order->get_total(), 2, '.', '' );
 
 		// logged in customer?
-		if ( 0 != SV_WC_Plugin_Compatibility::get_order_user_id( $order ) && false !== ( $customer_id = $this->get_customer_id( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), array( 'order' => $order ) ) ) ) {
+		if ( 0 != $order->get_user_id() && false !== ( $customer_id = $this->get_customer_id( $order->get_user_id(), array( 'order' => $order ) ) ) ) {
 			$order->customer_id = $customer_id;
 		}
 
@@ -1184,7 +1178,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// payment type (credit_card/check/etc)
 		$order->payment->type = str_replace( '-', '_', $this->get_payment_type() );
 
-		$order->description = sprintf( _x( '%s - Order %s', 'Order description', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+		// translators: %1$s - site title, %2$s - order number
+		$order->description = sprintf( __( '%1$s - Order %2$s', 'sv-wc-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
 
 		$order = $this->get_order_with_unique_transaction_ref( $order );
 
@@ -1194,7 +1189,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		 * Actors can use this filter to adjust or add additional information to
 		 * the order object that gateways use for processing transactions.
 		 *
-		 * @since 3.1.2-2
+		 * @since 4.0.0-beta
 		 * @param \WC_Order $order order object
 		 * @param \SV_WC_Payment_Gateway $this payment gateway instance
 		 */
@@ -1309,13 +1304,15 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function get_order_for_refund( $order, $amount, $reason ) {
 
 		if ( is_numeric( $order ) ) {
-			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order );
+			$order = wc_get_order( $order );
 		}
 
 		// add refund info
 		$order->refund = new stdClass();
 		$order->refund->amount = number_format( $amount, 2, '.', '' );
-		$order->refund->reason = $reason ? $reason : sprintf( _x( '%s - Refund for Order %s', 'Order refund description', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+
+		// translators: %1$s - site title, %2$s - order number
+		$order->refund->reason = $reason ? $reason : sprintf( __( '%1$s - Refund for Order %2$s', 'sv-wc-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
 
 		// almost all gateways require the original transaction ID, so include it by default
 		$order->refund->trans_id = $this->get_order_meta( $order->id, 'trans_id' );
@@ -1368,14 +1365,15 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function add_refund_order_note( WC_Order $order, $response ) {
 
 		$message = sprintf(
-			_x( '%s Refund in the amount of %s approved.', 'Supports refund', $this->text_domain ),
+			// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - a monetary amount
+			__( '%1$s Refund in the amount of %2$s approved.', 'sv-wc-plugin-framework' ),
 			$this->get_method_title(),
 			wc_price( $order->refund->amount, array( 'currency' => $order->get_order_currency() ) )
 		);
 
 		// adds the transaction id (if any) to the order note
 		if ( $response->get_transaction_id() ) {
-			$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports refund', $this->text_domain ), $response->get_transaction_id() );
+			$message .= ' ' . sprintf( __( '(Transaction ID %s)', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
 		}
 
 		$order->add_order_note( $message );
@@ -1394,14 +1392,16 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( $error_code ) {
 			$message = sprintf(
-				_x( '%s Refund Failed: %s - %s', 'Supports refund', $this->text_domain ),
+				// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error code, %3$s - error message
+				__( '%1$s Refund Failed: %2$s - %3$s', 'sv-wc-plugin-framework' ),
 				$this->get_method_title(),
 				$error_code,
 				$error_message
 			);
 		} else {
 			$message = sprintf(
-				_x( '%s Refund Failed: %s', 'Supports refund', $this->text_domain ),
+				// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error message
+				__( '%1$s Refund Failed: %2$s', 'sv-wc-plugin-framework' ),
 				$this->get_method_title(),
 				$error_message
 			);
@@ -1420,10 +1420,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function mark_order_as_refunded( $order ) {
 
-		$order_note = sprintf( _x( '%s Order completely refunded.', 'Refunded order note', $this->text_domain ), $this->get_method_title() );
+		// translators: %s - payment gateway title (such as Authorize.net, Braintree, etc)
+		$order_note = sprintf( __( '%s Order completely refunded.', 'sv-wc-plugin-framework' ), $this->get_method_title() );
 
 		// Mark order as refunded if not already set
-		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'refunded' ) ) {
+		if ( ! $order->has_status( 'refunded' ) ) {
 			$order->update_status( 'refunded', $order_note );
 		} else {
 			$order->add_order_note( $order_note );
@@ -1451,7 +1452,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * particularly useful for gateways that can void an authorized & captured
 	 * charge that has not yet settled (e.g. Authorize.net AIM/CIM)
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0-beta
 	 * @param \WC_Order $order order
 	 * @param \SV_WC_Payment_Gateway_API_Response $response refund response
 	 * @return boolean true if a void should be performed for the given order/response
@@ -1473,7 +1474,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// partial voids are not supported
 		if ( $order->refund->amount != $order->get_total() ) {
-			return new WP_Error( 'wc_' . $this->get_id() . '_void_error', _x( 'Oops, you cannot partially void this order. Please use the full order amount.', 'Supports voids', $this->text_domain ) );
+			return new WP_Error( 'wc_' . $this->get_id() . '_void_error', __( 'Oops, you cannot partially void this order. Please use the full order amount.', 'sv-wc-plugin-framework' ) );
 		}
 
 		try {
@@ -1556,14 +1557,16 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( $error_code ) {
 			$message = sprintf(
-				_x( '%s Void Failed: %s - %s', 'Supports voids', $this->text_domain ),
+				// translators: %1$s - payment gateway title, %2$s - error code, %3$s - error message. Void as in to void an order.
+				__( '%1$s Void Failed: %2$s - %3$s', 'sv-wc-plugin-framework' ),
 				$this->get_method_title(),
 				$error_code,
 				$error_message
 			);
 		} else {
 			$message = sprintf(
-				_x( '%s Void Failed: %s', 'Supports voids', $this->text_domain ),
+				// translators: %1$s - payment gateway title, %2$s - error message. Void as in to void an order.
+				__( '%1$s Void Failed: %2$s', 'sv-wc-plugin-framework' ),
 				$this->get_method_title(),
 				$error_message
 			);
@@ -1583,23 +1586,36 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function mark_order_as_voided( $order, $response ) {
 
 		$message = sprintf(
-			_x( '%s Void in the amount of %s approved.', 'Supports voids', $this->text_domain ),
+			// translators: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order.
+			__( '%1$s Void in the amount of %2$s approved.', 'sv-wc-plugin-framework' ),
 			$this->get_method_title(),
 			wc_price( $order->refund->amount, array( 'currency' => $order->get_order_currency() ) )
 		);
 
 		// adds the transaction id (if any) to the order note
 		if ( $response->get_transaction_id() ) {
-			$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports voids', $this->text_domain ), $response->get_transaction_id() );
+			$message .= ' ' . sprintf( __( '(Transaction ID %s)', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
 		}
 
 		// mark order as cancelled, since no money was actually transferred
-		// this must be deferred until the `woocommerce_order_refunded` action, otherwise
-		// it's changed back to refunded ಠ_ಠ
-		// TODO: remove once WC 2.4+ is required with https://github.com/woothemes/woocommerce/pull/8559
-		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'cancelled' ) ) {
-			$this->force_voided_order_status_to_cancelled = $message;
+		if ( ! $order->has_status( 'cancelled' ) ) {
+
+			$this->voided_order_message = $message;
+
+			// voids are fully "refunded" so cancel the voided order instead of marking as refunded
+			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_4() ) {
+
+				// filter in WC 2.4+ allows us to skip the "refunded" then "cancelled" transition
+				add_filter( 'woocommerce_order_fully_refunded_status', array( $this, 'maybe_cancel_voided_order' ), 10, 2 );
+
+			} else {
+
+				// WC 2.3/2.2 requires changing the order status to cancelled after it's already been changed to refunded ಠ_ಠ
+				add_action( 'woocommerce_order_refunded', array( $this, 'maybe_cancel_voided_order_2_3' ) );
+			}
+
 		} else {
+
 			$order->add_order_note( $message );
 		}
 	}
@@ -1608,17 +1624,50 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Maybe change the order status for a voided order to cancelled
 	 *
+	 * @hooked woocommerce_order_fully_refunded_status filter
+	 *
 	 * @see SV_WC_Payment_Gateway::mark_order_as_voided()
-	 * @since 3.1.2-2
+	 * @since 4.0.0-beta
+	 * @param string $order_status default order status for fully refunded orders
+	 * @param int $order_id order ID
+	 * @return string 'cancelled'
+	 */
+	public function maybe_cancel_voided_order( $order_status, $order_id ) {
+
+		if ( empty( $this->voided_order_message ) ) {
+			return $order_status;
+		}
+
+		$order = wc_get_order( $order_id );
+
+		// no way to set the order note with the status change
+		$order->add_order_note( $this->voided_order_message );
+
+		return 'cancelled';
+	}
+
+
+	/**
+	 * Maybe change the order status for a voided order to cancelled for WC 2.3/2.2
+	 *
+	 * This must be deferred until the woocommerce_order_refunded, otherwise
+	 * it's changed back to refunded
+	 *
+	 * @TODO: this can be removed once WC 2.4 is required @MR 2015-07-21
+	 *
+	 * @hooked woocommerce_order_refunded action
+	 *
+	 * @see SV_WC_Payment_Gateway::mark_order_as_voided()
+	 * @since 4.0.0-beta
 	 * @param int $order_id order ID
 	 */
-	public function maybe_cancel_voided_order( $order_id ) {
+	public function maybe_cancel_voided_order_2_3( $order_id ) {
 
-		if ( ! empty( $this->force_voided_order_status_to_cancelled ) ) {
+		if ( ! empty( $this->voided_order_message ) ) {
 
 			$order = wc_get_order( $order_id );
 
-			$order->update_status( 'cancelled', $this->force_voided_order_status_to_cancelled );
+			$order->update_status( 'cancelled', $this->voided_order_message );
 		}
 	}
 
@@ -1645,7 +1694,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->update_order_meta( $order->id, 'retry_count', $retry_count );
 
 		// generate a unique transaction ref based on the order number and retry count, for gateways that require a unique identifier for every transaction request
-		$order->unique_transaction_ref = ltrim( $order->get_order_number(),  _x( '#', 'hash before order number', $this->text_domain ) ) . ( $retry_count > 0 ? '-' . $retry_count : '' );
+		$order->unique_transaction_ref = ltrim( $order->get_order_number(),  __( '#', 'hash before order number', 'sv-wc-plugin-framework' ) ) . ( $retry_count > 0 ? '-' . $retry_count : '' );
 
 		return $order;
 	}
@@ -1665,16 +1714,19 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// build the order note with what data we have
 		if ( $response->get_status_code() && $response->get_status_message() ) {
-			$order_note = sprintf( 'Status code %s: %s', $response->get_status_code(), $response->get_status_message() );
+			// translators: %1$s - status code, %2$s - status message
+			$order_note = sprintf( __( 'Status code %1$s: %2$s', 'sv-wc-plugin-framework' ), $response->get_status_code(), $response->get_status_message() );
 		} elseif ( $response->get_status_code() ) {
-			$order_note = sprintf( 'Status code: %s', $response->get_status_code() );
+			// translators: %s - status code
+			$order_note = sprintf( __( 'Status code: %s', 'sv-wc-plugin-framework' ), $response->get_status_code() );
 		} elseif ( $response->get_status_message() ) {
-			$order_note = sprintf( 'Status message: %s', $response->get_status_message() );
+			// translators: %s - status message
+			$order_note = sprintf( __( 'Status message: %s', 'sv-wc-plugin-framework' ), $response->get_status_message() );
 		}
 
 		// add transaction id if there is one
 		if ( $response->get_transaction_id() ) {
-			$order_note .= ' ' . sprintf( __( 'Transaction ID %s', $this->text_domain ), $response->get_transaction_id() );
+			$order_note .= ' ' . sprintf( __( 'Transaction ID %s', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
 		}
 
 		$this->mark_order_as_failed( $order, $order_note, $response );
@@ -1731,13 +1783,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Add customer data to an order/user if the gateway supports the customer ID
 	 * response
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0-beta
 	 * @param \WC_Order $order order
 	 * @param \SV_WC_Payment_Gateway_API_Customer_Response $response
 	 */
 	protected function add_customer_data( $order, $response = null ) {
 
-		$user_id = SV_WC_Plugin_Compatibility::get_order_user_id( $order );
+		$user_id = $order->get_user_id();
 
 		if ( $response && method_exists( $response, 'get_customer_id' ) && $response->get_customer_id() ) {
 
@@ -1771,10 +1823,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function mark_order_as_held( $order, $message, $response = null ) {
 
-		$order_note = sprintf( __( '%s Transaction Held for Review (%s)', $this->text_domain ), $this->get_method_title(), $message );
+		// translators: %1$s - payment gateway title, %2$s - message (probably reason for the transaction being held for review)
+		$order_note = sprintf( __( '%1$s Transaction Held for Review (%2$s)', 'sv-wc-plugin-framework' ), $this->get_method_title(), $message );
 
 		// mark order as held
-		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) ) {
+		if ( ! $order->has_status( 'on-hold' ) ) {
 			$order->update_status( 'on-hold', $order_note );
 		} else {
 			$order->add_order_note( $order_note );
@@ -1788,18 +1841,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$user_message = $response->get_user_message();
 		}
 		if ( ! $user_message ) {
-			$user_message = __( 'Your order has been received and is being reviewed.  Thank you for your business.', $this->text_domain );
+			$user_message = __( 'Your order has been received and is being reviewed. Thank you for your business.', 'sv-wc-plugin-framework' );
 		}
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_2() ) {
-
-			WC()->session->held_order_received_text = $user_message;
-
-		} else {
-
-			// TODO: remove once 2.2+ is required
-			SV_WC_Helper::wc_add_notice( $user_message );
-		}
+		WC()->session->held_order_received_text = $user_message;
 	}
 
 
@@ -1810,14 +1855,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * If detailed customer decline messages are enabled, this message may
 	 * additionally include more detailed information.
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0-beta
 	 * @param string $text order received text
 	 * @param WC_Order|null $order order object
 	 * @return string
 	 */
 	public function maybe_render_held_order_received_text( $text, $order ) {
 
-		if ( $order && SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) && isset( WC()->session->held_order_received_text ) ) {
+		if ( $order && $order->has_status( 'on-hold') && isset( WC()->session->held_order_received_text ) ) {
 
 			$text = WC()->session->held_order_received_text;
 
@@ -1838,10 +1883,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function mark_order_as_failed( $order, $error_message, $response = null ) {
 
-		$order_note = sprintf( _x( '%s Payment Failed (%s)', 'Order Note: (Payment method) Payment failed (error)', $this->text_domain ), $this->get_method_title(), $error_message );
+		// translators: Order Note: [Payment method] Payment failed [error]
+		// translators: %1$s - payment gateway title, %2$s - error message
+		$order_note = sprintf( __( '%1$s Payment Failed (%2$s)', 'sv-wc-plugin-framework' ), $this->get_method_title(), $error_message );
 
 		// Mark order as failed if not already set, otherwise, make sure we add the order note so we can detect when someone fails to check out multiple times
-		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'failed' ) ) {
+		if ( ! $order->has_status( 'failed' ) ) {
 			$order->update_status( 'failed', $order_note );
 		} else {
 			$order->add_order_note( $order_note );
@@ -1855,7 +1902,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$user_message = $response->get_user_message();
 		}
 		if ( ! $user_message ) {
-			$user_message = __( 'An error occurred, please try again or try an alternate form of payment.', $this->text_domain );
+			$user_message = __( 'An error occurred, please try again or try an alternate form of payment.', 'sv-wc-plugin-framework' );
 		}
 		SV_WC_Helper::wc_add_notice( $user_message, 'error' );
 	}
@@ -1871,10 +1918,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function mark_order_as_cancelled( $order, $message, $response = null ) {
 
-		$order_note = sprintf( _x( '%s Transaction Cancelled (%s)', 'Cancelled order note', $this->text_domain ), $this->get_method_title(), $message );
+		// translators: %1$s - payment gateway title, %2$s - message/error
+		$order_note = sprintf( __( '%1$s Transaction Cancelled (%2$s)', 'sv-wc-plugin-framework' ), $this->get_method_title(), $message );
 
 		// Mark order as cancelled if not already set
-		if ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'cancelled' ) ) {
+		if ( ! $order->has_status( 'cancelled' ) ) {
 			$order->update_status( 'cancelled', $order_note );
 		} else {
 			$order->add_order_note( $order_note );
@@ -1890,7 +1938,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Returns true if this is gateway that supports gateway customer IDs
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0-beta
 	 * @return boolean true if the gateway supports gateway customer IDs
 	 */
 	public function supports_customer_id() {
@@ -1969,7 +2017,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Removes the payment gateway customer id for the given $environment, or
 	 * for the plugin current environment
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0-beta
 	 * @param int $user_id WP user ID
 	 * @param string $environment_id optional environment id, defaults to current environment
 	 * @return boolean true on success, false on failure
@@ -2039,57 +2087,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	}
 
 
-	/**
-	 * Add a button to the order actions meta box to view the order in the
-	 * merchant account, if supported
-	 *
-	 * @deprecated since WC 2.2
-	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway_Plugin::order_meta_box_transaction_link()
-	 * @see SV_WC_Payment_Gateway::get_transaction_url()
-	 * @param WC_Order $order the order object
-	 */
-	public function order_meta_box_transaction_link( $order ) {
-
-		if ( $url = $this->get_transaction_url( $order ) ) {
-
-			?>
-			<li class="wide" style="text-align: center;">
-				<a class="button tips" href="<?php echo esc_url( $url ); ?>" target="_blank" data-tip="<?php esc_attr_x( 'View this transaction in your merchant account', 'Supports transaction link', $this->text_domain ); ?>" style="cursor: pointer !important;"><?php printf( _x( 'View in %s', 'Supports transaction link', $this->text_domain ), $this->get_method_title() ); ?></a>
-			</li>
-			<?php
-
-		}
-	}
-
-
-	/**
-	 * Returns the merchant account transaction URL for the given order, if the
-	 * gateway supports transaction direct-links, which not all gateways do.
-	 *
-	 * Override this method to return the transaction URL, if supported
-	 *
-	 * @deprecated since WC 2.2
-	 * @since 1.0.0
-	 * @see WC_Payment_Gateway::get_transaction_url()
-	 * @see SV_WC_Payment_Gateway_Plugin::order_meta_box_transaction_link()
-	 * @see SV_WC_Payment_Gateway::order_meta_box_transaction_link()
-	 * @param WC_Order $order the order object
-	 * @return string transaction url or null if not supported
-	 */
-	public function get_transaction_url( $order ) {
-		// implementation copied directly from core WC_Payment_Gateway (WC 2.2) to provide backwards compatibility for WC 2.1 remove this method wholesale once we require WC 2.2
-		$return_url = '';
-		$transaction_id = $order->transaction_id;  // get transaction id regardless of WC version
-
-		if ( ! empty( $this->view_transaction_url ) && ! empty( $transaction_id ) ) {
-			$return_url = sprintf( $this->view_transaction_url, $transaction_id );
-		}
-
-		return apply_filters( 'woocommerce_get_transaction_url', $return_url, $order, $this );
-	}
-
-
 	/** Authorization/Charge feature ******************************************/
 
 
@@ -2141,13 +2138,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		assert( $this->supports_credit_card_authorization() && $this->supports_credit_card_charge() );
 
 		$form_fields['transaction_type'] = array(
-			'title'    => _x( 'Transaction Type', 'Supports credit card authorization/charge', $this->text_domain ),
+			'title'    => __( 'Transaction Type', 'sv-wc-plugin-framework' ),
 			'type'     => 'select',
-			'desc_tip' => _x( 'Select how transactions should be processed. Charge submits all transactions for settlement, Authorization simply authorizes the order total for capture later.', 'Supports credit card authorization/charge', $this->text_domain ),
+			'desc_tip' => __( 'Select how transactions should be processed. Charge submits all transactions for settlement, Authorization simply authorizes the order total for capture later.', 'sv-wc-plugin-framework' ),
 			'default'  => self::TRANSACTION_TYPE_CHARGE,
 			'options'  => array(
-				self::TRANSACTION_TYPE_CHARGE        => _x( 'Charge', 'Supports credit card authorization/charge', $this->text_domain ),
-				self::TRANSACTION_TYPE_AUTHORIZATION => _x( 'Authorization', 'Supports credit card authorization/charge', $this->text_domain ),
+				self::TRANSACTION_TYPE_CHARGE        => _x( 'Charge',  'noun, credit card transaction type', 'sv-wc-plugin-framework' ),
+				self::TRANSACTION_TYPE_AUTHORIZATION => _x( 'Authorization', 'credit card transaction type', 'sv-wc-plugin-framework' ),
 			),
 		);
 
@@ -2290,9 +2287,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		assert( $this->supports_card_types() );
 
 		$form_fields['card_types'] = array(
-			'title'    => _x( 'Accepted Card Types', 'Supports card types', $this->text_domain ),
+			'title'    => __( 'Accepted Card Types', 'sv-wc-plugin-framework' ),
 			'type'     => 'multiselect',
-			'desc_tip' => _x( 'Select which card types you accept.', 'Supports card types', $this->text_domain ),
+			'desc_tip' => __( 'Select which card types you accept.', 'sv-wc-plugin-framework' ),
 			'default'  => array_keys( $this->get_available_card_types() ),
 			'class'    => 'wc-enhanced-select chosen_select',
 			'css'      => 'width: 350px;',
@@ -2317,12 +2314,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( ! isset( $this->available_card_types ) ) {
 
 			$this->available_card_types = array(
-				'VISA'   => 'Visa',
-				'MC'     => 'MasterCard',
-				'AMEX'   => 'American Express',
-				'DISC'   => 'Discover',
-				'DINERS' => 'Diners',
-				'JCB'    => 'JCB',
+				'VISA'   => _x( 'Visa', 'credit card type', 'sv-wc-plugin-framework' ),
+				'MC'     => _x( 'MasterCard', 'credit card type', 'sv-wc-plugin-framework' )
+				'AMEX'   => _x( 'American Express', 'credit card type', 'sv-wc-plugin-framework' ),
+				'DISC'   => _x( 'Discover', 'credit card type', 'sv-wc-plugin-framework' ),
+				'DINERS' => _x( 'Diners', 'credit card type', 'sv-wc-plugin-framework' ),
+				'JCB'    => _x( 'JCB', 'credit card type', 'sv-wc-plugin-framework' ),
 			);
 
 		}
@@ -2372,8 +2369,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		assert( $this->supports_tokenization() );
 
 		$form_fields['tokenization'] = array(
-			'title'   => _x( 'Tokenization', 'Supports tokenization', $this->text_domain ),
-			'label'   => _x( 'Allow customers to securely save their payment details for future checkout.', 'Supports tokenization', $this->text_domain ),
+			// translators: http://www.cybersource.com/products/payment_security/payment_tokenization/ and https://en.wikipedia.org/wiki/Tokenization_(data_security)
+			'title'   => __( 'Tokenization', 'sv-wc-plugin-framework' ),
+			'label'   => __( 'Allow customers to securely save their payment details for future checkout.', 'sv-wc-plugin-framework' ),
 			'type'    => 'checkbox',
 			'default' => 'no',
 		);
@@ -2655,22 +2653,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns the parent plugin object
 	 *
 	 * @since 1.0.0
-	 * @return SV_WC_Payment_Gateway the parent plugin object
+	 * @return \SV_WC_Payment_Gateway_Plugin the parent plugin object
 	 */
 	public function get_plugin() {
 		return $this->plugin;
-	}
-
-
-	/**
-	 * Get the text domain for the gateway
-	 *
-	 * @since 3.1.2-2
-	 * @return string
-	 */
-	public function get_text_domain() {
-
-		return $this->text_domain;
 	}
 
 
@@ -2786,7 +2772,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// default set of environments consists of 'production'
 		if ( ! isset( $this->environments ) ) {
-			$this->environments = array( self::ENVIRONMENT_PRODUCTION => _x( 'Production', 'Supports environments', $this->text_domain ) );
+			// translators: https://www.skyverge.com/for-translators-environments/
+			$this->environments = array( self::ENVIRONMENT_PRODUCTION => _x( 'Production', 'software environment', 'sv-wc-plugin-framework' ) );
 		}
 
 		return $this->environments;

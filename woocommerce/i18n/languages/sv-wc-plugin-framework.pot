@@ -1,0 +1,1226 @@
+# Copyright (C) 2015 
+# This file is distributed under the same license as the  package.
+msgid ""
+msgstr ""
+"Project-Id-Version: SkyVerge WooCommerce Plugin Framework 4.0.0-beta\n"
+"Report-Msgid-Bugs-To: https://support.woothemes.com/hc/\n"
+"POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2015-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: class-sv-wc-admin-notice-handler.php:194
+#. translators: this is an action that dismisses a message
+msgid "Dismiss"
+msgstr ""
+
+#: class-sv-wc-framework-bootstrap.php:234
+msgid ""
+"The following plugins are inactive because they require a newer version to "
+"function properly:"
+msgstr ""
+
+#: class-sv-wc-framework-bootstrap.php:234
+msgid ""
+"The following plugin is inactive because it requires a newer version to "
+"function properly:"
+msgstr ""
+
+#: class-sv-wc-framework-bootstrap.php:241
+#. translators: %1$s - <a> tag, %2$s - </a> tag
+msgid "Please %1$supdate%2$s"
+msgstr ""
+
+#: class-sv-wc-framework-bootstrap.php:247
+msgid ""
+"The following plugins are inactive because they require a newer version of "
+"WooCommerce:"
+msgstr ""
+
+#: class-sv-wc-framework-bootstrap.php:247
+msgid ""
+"The following plugin is inactive because it requires a newer version of "
+"WooCommerce:"
+msgstr ""
+
+#: class-sv-wc-framework-bootstrap.php:252
+#. translators: %1$s - plugin name, %2$s - WooCommerce version number
+msgid "%1$s requires WooCommerce %2$s or newer"
+msgstr ""
+
+#: class-sv-wc-framework-bootstrap.php:256
+#. translators: %1$s - <a> tag, %2$s - </a> tag
+msgid "Please %1$supdate WooCommerce%2$s"
+msgstr ""
+
+#: class-sv-wc-plugin.php:188
+#. translators: %s - plugin name
+msgid "You cannot clone instances of %s."
+msgstr ""
+
+#: class-sv-wc-plugin.php:198
+#. translators: %s - plugin name
+msgid "You cannot unserialize instances of %s."
+msgstr ""
+
+#: class-sv-wc-plugin.php:334
+#. translators: %1$s - plugin name, %2$s - a PHP extension/comma-separated list
+#. of PHP extensions
+msgid ""
+"%1$s requires the %2$s PHP extension to function. Contact your host or "
+"server administrator to configure and install the missing extension."
+msgid_plural ""
+"%1$s requires the following PHP extensions to function: %2$s. Contact your "
+"host or server administrator to configure and install the missing "
+"extensions."
+msgstr[0] ""
+msgstr[1] ""
+
+#: class-sv-wc-plugin.php:355
+#. translators: %1$s - plugin name, %2$s - a PHP function/comma-separated list
+#. of PHP functions
+msgid ""
+"%1$s requires the %2$s PHP function to exist.  Contact your host or server "
+"administrator to configure and install the missing function."
+msgid_plural ""
+"%1$s requires the following PHP functions to exist: %2$s.  Contact your "
+"host or server administrator to configure and install the missing functions."
+msgstr[0] ""
+msgstr[1] ""
+
+#: class-sv-wc-plugin.php:391
+#. translators: Docs as in Documentation
+msgid "Docs"
+msgstr ""
+
+#: class-sv-wc-plugin.php:646
+msgid "Configure"
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:123
+#. translators: %s - payment gateway title
+msgid "%s Customer Details"
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:234
+#. translators: %s - environment name (production/test)
+msgid "Customer ID (%s)"
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:234
+msgid "Customer ID"
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:237
+#. translators: %s - environment name (production/test -
+#. https:www.skyverge.com/for-translators-environments/)
+msgid ""
+"The gateway customer ID for the user in the %s environment. Only edit this "
+"if necessary."
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:237
+msgid "The gateway customer ID for the user. Only edit this if necessary."
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:305
+#. translators: %s - environment name (production/test). Payment Token - as in
+#. a specific entity used to make payments, such as a specific credit card,
+#. e-check account, bank account, etc.
+msgid "%s Payment Tokens"
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:305
+msgid "Payment Tokens"
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:310
+#. translators: Payment Token as in a specific entity used to make payments,
+#. such as a specific credit card, e-check account, bank account, etc.
+msgid "This customer has no saved payment tokens"
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:319
+#. translators: %1$s - credit card type (mastercard, visa, ...), %2$s - last 4
+#. numbers of the card, %3$s - card expiry date
+msgid "Default card"
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:320
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:410
+msgid "Delete"
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:332
+#. translators: Payment Token as in a specific entity used to make payments,
+#. such as a specific credit card, e-check account, bank account, etc.
+msgid "Add a Payment Token"
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:334
+msgid "Token"
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:337
+msgid "Card Type"
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:348
+msgid "Last Four"
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:349
+msgid "Expiry Date (01/%s)"
+msgstr ""
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:377
+msgid ""
+"Are you sure you wish to do this? Change will not be finalized until you "
+"click \"Update\""
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:93
+msgid "An error occurred, please try again or try an alternate form of payment"
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:94
+msgid ""
+"We cannot process your order with the payment information that you "
+"provided. Please use a different payment account or an alternate payment "
+"method."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:95
+msgid ""
+"This order is being placed on hold for review. Please contact us to "
+"complete the transaction."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:100
+msgid ""
+"This order is being placed on hold for review due to an incorrect card "
+"verification number.  You may contact the store to complete the transaction."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:101
+msgid "The card verification number is invalid, please try again."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:102
+msgid "Please enter your card verification number and try again."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:105
+msgid ""
+"That card type is not accepted, please use an alternate card or other form "
+"of payment."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:106
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:110
+msgid ""
+"The card type is invalid or does not correlate with the credit card number. "
+" Please try again or use an alternate card or other form of payment."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:107
+msgid "Please select the card type and try again."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:111
+msgid "The card number is invalid, please re-enter and try again."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:112
+msgid "Please enter your card number and try again."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:115
+msgid "The card expiration date is invalid, please re-enter and try again."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:116
+msgid "The card expiration month is invalid, please re-enter and try again."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:117
+msgid "The card expiration year is invalid, please re-enter and try again."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:118
+msgid "Please enter your card expiration date and try again."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:121
+msgid "The bank routing number is invalid, please re-enter and try again."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:122
+msgid "The bank account number is invalid, please re-enter and try again."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:125
+msgid ""
+"The provided card is expired, please use an alternate card or other form of "
+"payment."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:126
+msgid ""
+"The provided card was declined, please use an alternate card or other form "
+"of payment."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:127
+msgid ""
+"Insufficient funds in account, please use an alternate card or other form "
+"of payment."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:128
+msgid ""
+"The card is inactivate or not authorized for card-not-present transactions, "
+"please use an alternate card or other form of payment."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:129
+msgid ""
+"The credit limit for the card has been reached, please use an alternate "
+"card or other form of payment."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:130
+msgid "The card verification number does not match. Please re-enter and try again."
+msgstr ""
+
+#: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:131
+msgid ""
+"The provided address does not match the billing address for cardholder. "
+"Please verify the address and try again."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:117
+msgid ""
+"Payment error, please try another payment method or contact us to complete "
+"your transaction."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:200
+#: payment-gateway/class-sv-wc-payment-gateway.php:524
+msgid "Card expiration date is invalid"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:224
+#: payment-gateway/class-sv-wc-payment-gateway.php:517
+msgid "Card number is missing"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:230
+#: payment-gateway/class-sv-wc-payment-gateway.php:520
+msgid "Card number is invalid (wrong length)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:235
+#: payment-gateway/class-sv-wc-payment-gateway.php:519
+msgid "Card number is invalid (only digits allowed)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:240
+#: payment-gateway/class-sv-wc-payment-gateway.php:518
+msgid "Card number is invalid"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:265
+#: payment-gateway/class-sv-wc-payment-gateway.php:521
+msgid "Card security code is missing"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:272
+#: payment-gateway/class-sv-wc-payment-gateway.php:522
+msgid "Card security code is invalid (only digits are allowed)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:278
+#: payment-gateway/class-sv-wc-payment-gateway.php:523
+msgid "Card security code is invalid (must be 3 or 4 digits)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:307
+#: payment-gateway/class-sv-wc-payment-gateway.php:533
+msgid "Routing Number is missing"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:314
+#: payment-gateway/class-sv-wc-payment-gateway.php:534
+msgid "Routing Number is invalid (only digits are allowed)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:320
+#: payment-gateway/class-sv-wc-payment-gateway.php:535
+msgid "Routing number is invalid (must be 9 digits)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:329
+#: payment-gateway/class-sv-wc-payment-gateway.php:530
+msgid "Account Number is missing"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:336
+#: payment-gateway/class-sv-wc-payment-gateway.php:531
+msgid "Account Number is invalid (only digits are allowed)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:342
+#: payment-gateway/class-sv-wc-payment-gateway.php:532
+msgid "Account number is invalid (must be between 5 and 17 digits)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:349
+#: payment-gateway/class-sv-wc-payment-gateway.php:529
+msgid "Drivers license number is invalid"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:355
+#: payment-gateway/class-sv-wc-payment-gateway.php:525
+msgid "Check Number is invalid (only digits are allowed)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:594
+#. translators: %1$s - site title, %2$s - order number. Definitions: Capture as
+#. in capture funds from a credit card.
+msgid "%1$s - Capture for Order %2$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:620
+#. translators: %1$s - payment method title, %2$s - payment account type
+#. (savings/checking) (may or may not be available), %3$s - last four digits of
+#. the account
+msgid "%1$s Check Transaction Approved: %2$s account ending in %3$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:625
+#. translators: %s - check number
+msgid "Check number %s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:630
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:691
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:810
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1581
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:581
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:618
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:646
+#: payment-gateway/class-sv-wc-payment-gateway.php:1376
+#: payment-gateway/class-sv-wc-payment-gateway.php:1597
+#. translators: %s - transaction ID
+msgid "(Transaction ID %s)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:679
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:569
+#. translators: %1$s - payment method title, %2$s - environment ("Test"), %3$s
+#. - transaction type (authorization/charge), %4$s - card type (mastercard,
+#. visa, ...), %5$s - last four digits of the card, %6$s - expiry date
+msgid "%1$s %2$s %3$s Approved: %4$s ending in %5$s (expires %6$s)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:739
+#. translators: %s - failure message
+msgid "Tokenization Request Failed: %s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:750
+#. translators: %1$s - payment method title, %2$s - failure message
+msgid "%1$s Tokenization Request Failed: %2$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:771
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1598
+#. translators: This is a message describing that the transaction in question
+#. only performed a credit card authorization and did not capture any funds.
+msgid "Authorization only transaction"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:803
+#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. etc), %2$s - transaction amount. Definitions: Capture, as in capture funds
+#. from a credit card.
+msgid "%1$s Capture of %2$s Approved"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:831
+#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. etc), %2$s - transaction amount, %3$s - transaction status message.
+#. Definitions: Capture, as in capture funds from a credit card.
+msgid "%1$s Capture Failed: %2$s - %3$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:847
+#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. etc), %2$s - failure message. Definitions: "capture" as in capturing funds
+#. from a credit card.
+msgid "%1$s Capture Failed: %2$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1120
+#. translators: %s - a formatted subscription charge amount, such as $1,000
+msgid "%s Subscription Renewal Approved"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1133
+msgid "Subscription Renewal: Payment Token or User ID is missing/invalid."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1159
+#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. etc), %2$s - transaction type (authorization/charge), %3$s - card type
+#. (mastercard, visa, ...), %4$s - last four digits of the card, %5$s - card
+#. expiry date
+msgid ""
+"%1$s %2$s Subscription Renewal Payment Approved: %3$s ending in %4$s "
+"(expires %5$s)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1170
+#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. etc), %2$s - account type (checking/savings - may or may not be available),
+#. %3$s - last four digits of the account
+msgid ""
+"%1$s Check Subscription Renewal Payment Approved: %2$s account ending in "
+"%3$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1304
+#. translators: %1$s - payment type (MasterCard, Visa, eCheck, Bank Account,
+#. etc), %2$s - last four digits for the payment method (credit card, checkings
+#. account, etc)
+msgid "Via %1$s ending in %2$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1508
+#. translators: payment type (MasterCard, Visa, eCheck, Bank Account, etc),
+#. %2$s - failure message
+msgid "%1$s Pre-Order Tokenization attempt failed (%2$s)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1533
+#. translators: %1$s: site title, %2$s: order number. Release - as in when the
+#. pre-order is released/fulfilled.
+msgid "%1$s - Pre-Order Release Payment for Order %2$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1537
+msgid "Payment token missing/invalid."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1563
+#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. etc), %2$s - transaction type (authorzation/charge), %3$s - credit card type
+#. (mastercard, visa, ...), %4$s - last for digits of the the card, %5$s - card
+#. expiry date
+msgid ""
+"%1$s %2$s Pre-Order Release Payment Approved: %3$s ending in %4$s (expires "
+"%5$s)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1575
+#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. etc), %2$s - e-check account type (Savings Account, Checking Account), %3$s
+#. - last four digits of the account
+msgid "%1$s eCheck Pre-Order Release Payment Approved: %2$s ending in %3$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1617
+#. Translators: %s - failure message
+msgid "Pre-Order Release Payment Failed: %s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1703
+#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. etc), %2$s - payment method name (mastercard, bank account, etc), %3$s -
+#. last four digits of the card/account, %4$s - card/account expiry date
+msgid "%1$s Payment Method Saved: %2$s ending in %3$s (expires %4$s)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1712
+#. translators: %1$s - payment gateway title (such as Cybersouce, Netbilling,
+#. etc), %2$s - account type (cheking/savings - may or may not be available),
+#. %3$s - last four digits of the account
+msgid "%1$s eCheck Payment Method Saved: %2$s account ending in %3$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1733
+#: payment-gateway/class-sv-wc-payment-gateway.php:1718
+#. translators: %1$s - payment request response status code, %2$s - payment
+#. request response status message
+#. translators: %1$s - status code, %2$s - status message
+msgid "Status code %1$s: %2$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1736
+#: payment-gateway/class-sv-wc-payment-gateway.php:1721
+#. translators: %s - payment request response status code
+#. translators: %s - status code
+msgid "Status code: %s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1739
+#: payment-gateway/class-sv-wc-payment-gateway.php:1724
+#. translators: %s - payment request response status message
+#. translators: %s - status message
+msgid "Status message: %s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1741
+msgid "Unknown Error"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1746
+#: payment-gateway/class-sv-wc-payment-gateway.php:1729
+msgid "Transaction ID %s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:2372
+#. translators: %s - failure message. Payment method as in a specific credit
+#. card, e-check or bank account
+msgid "Oops, adding your new payment method failed: %s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:2408
+#. translators: Payment method as in a specific credit card. Placeholders: %1$s
+#. - card type (visa, mastercard, ...), %2$s - last four digits of the card,
+#. %3$s - card expiry date
+msgid "Nice! New payment method added: %1$s ending in %2$s (expires %3$s)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:2418
+#. translators: Payment method as in a specific e-check account. Placeholders:
+#. %1$s - account type (checking/savings), %2$s - last four digits of the
+#. account
+msgid "Nice! New payment method added: %1$s account ending in %2$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:2425
+#. translators: Payment method as in a specific credit card, e-check or bank
+#. account
+msgid "Nice! New payment method added."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:2505
+#. translators: %1$s - site title, %2$s - customer email. Payment method as in
+#. a specific credit card, e-check or bank account
+msgid "%1$s - Add Payment Method for %2$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-helper.php:153
+msgid "PayPal"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-helper.php:154
+msgid "Checking Account"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-helper.php:155
+msgid "Savings Account"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-helper.php:156
+msgid "Credit / Debit Card"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-helper.php:157
+msgid "Bank Account"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:233
+msgid "Thank you for your order. We are now redirecting you to complete payment."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:258
+msgid "Thank you for your order, please click the button below to pay."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:261
+msgid "Pay Now"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:263
+#. translators: Order as in e-commerce
+msgid "Cancel Order"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:335
+#. translators: IPN: https:en.wikipedia.org/wiki/Instant_payment_notification,
+#. %s: payment gateway title (such as Authorize.net, Braintree, etc)
+msgid "IPN processing error: %s duplicate transaction received"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:404
+#. translators: %s - payment gateway title (such as Authorize.net, Braintree,
+#. etc)
+msgid "%s duplicate transaction received"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:603
+#. translators: %1$s - payment method title, %2$s - environment ("Test"), %3$s
+#. - card type (mastercard, visa, ...), %4$s - last four digits of the card
+msgid "%1$s %2$s Transaction Approved: %3$s ending in %4$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:613
+#. translators: %s - check number
+msgid "(check number %s)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:639
+#. translators: %1$s - payment method title, %2$s - environment ("Test")
+msgid "%1$s %2$s Transaction Approved"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:97
+#. translators: Payment method as in a specific credit card, e-check or bank
+#. account
+msgid "Are you sure you want to delete this payment method?"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:185
+#. translators: Payment method as in a specific credit card, e-check or bank
+#. account
+msgid "You do not have any saved payment methods."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:203
+#. translators: Payment method as in a specific credit card, e-check or bank
+#. account
+msgid "My Payment Methods"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:211
+#. translators: Payment method as in a specific credit card, e-check or bank
+#. account
+msgid "Add New Payment Method"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:270
+msgid "Method"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:271
+msgid "Expires"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:292
+msgid "Credit/Debit Cards"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:298
+msgid "Bank Accounts"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:366
+#. translators: N/A is used in the context where an expiry date is not
+#. applicable (for example, a bank account - as opposed to a credit card)
+msgid "N/A"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:399
+#. translators: Set a payment method as the default option
+msgid "Make Default"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:448
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:611
+#. translators: %s - last four digits of a card/account
+#. translators: %s - last four digits of card/account
+msgid "ending in %s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:454
+msgid "(default)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:485
+msgid "Oops, you took too long, please try again."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:498
+msgid "There was an error with your request, please try again."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:511
+#. translators: Payment method as in a specific credit card, e-check or bank
+#. account
+msgid "Error removing payment method"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:516
+#. translators: Payment method as in a specific credit card, e-check or bank
+#. account
+msgid "Payment method deleted."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:526
+#. translators: Payment method as in a specific credit card, e-check or bank
+#. account
+msgid "Default payment method updated."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:293
+msgid "Card Number"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:306
+msgid "Expiration (MM/YY)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:309
+msgid "MM / YY"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:321
+msgid "Card Security Code"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:324
+msgid "CSC"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:358
+msgid "Where do I find this?"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:364
+#. translators: e-check routing number, HTML form field label,
+#. https:en.wikipedia.org/wiki/Routing_transit_number
+msgid "Routing Number"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:378
+#. translators: e-check account number, HTML form field label
+msgid "Account Number"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:391
+#. translators: e-check account type, HTML form field label
+msgid "Account Type"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:438
+#. translators: Test mode refers to the current software environment
+msgid "TEST MODE ENABLED"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:526
+#. translators: Payment method as in a specific credit card, e-check or bank
+#. account
+msgid "Manage Payment Methods"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:618
+#. translators: %s - expiry date
+msgid "(expires %s)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:654
+msgid "Use a new card"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:654
+msgid "Use a new bank account"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:693
+#. translators: account as in customer's account on the e-commerce site
+msgid "Securely Save to Account"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:315
+#. translators: %s - plugin name
+msgid ""
+"%s: WooCommerce is not being forced over SSL; your customer's payment data "
+"may be at risk."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:370
+#. translators: %1$s - plugin name, %2$s - a currency/comma-separated list of
+#. currencies, %3$s - <a> tag, %4$s - </a> tag
+msgid ""
+"%1$s accepts payment in %2$s only. %3$sConfigure%4$s WooCommerce to accept "
+"%2$s to enable this gateway for checkout."
+msgid_plural ""
+"%1$s accepts payment in one of %2$s only. %3$sConfigure%4$s WooCommerce to "
+"accept one of %2$s to enable this gateway for checkout."
+msgstr[0] ""
+msgstr[1] ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:409
+#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. etc), %2$s - <a> tag, %3$s - </a> tag
+msgid ""
+"%1$s is inactive for subscription transactions. Please %2$senable "
+"tokenization%3$s to activate %1$s for Subscriptions."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:425
+#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. etc), %2$s - <a> tag, %3$s - </a> tag
+msgid ""
+"%1$s is inactive for pre-order transactions. Please %2$senable "
+"tokenization%3$s to activate %1$s for Pre-Orders."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:651
+#. translators: verb, as in "Capture credit card charge". Used when an amount
+#. has been pre-authorized before, but funds have not yet been captured (taken)
+#. from the card. Capturing the charge will take the money from the credit card
+#. and put it in the merchant's pockets.
+msgid "Capture Charge"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:526
+msgid "Check Number is missing"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:527
+msgid "Drivers license state is missing"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:528
+msgid "Drivers license number is missing"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:551
+msgid "Continue"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:551
+msgid "Place order"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:574
+msgid "Thank you for your order."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:653
+msgid "Credit Card"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:655
+msgid "eCheck"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:671
+msgid "Pay securely using your credit card."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:673
+msgid "Pay securely using your checking account."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:690
+msgid "Enable / Disable"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:691
+msgid "Enable this gateway"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:697
+msgid "Title"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:699
+msgid "Payment method title that the customer will see during checkout."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:704
+msgid "Description"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:706
+msgid "Payment method description that the customer will see during checkout."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:749
+msgid "Detailed Decline Messages"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:751
+msgid ""
+"Check to enable detailed decline messages to the customer during checkout "
+"when possible, rather than a generic decline message."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:758
+msgid "Debug Mode"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:761
+#. translators: %1$s - <a> tag, %2$s - </a> tag
+msgid ""
+"Show Detailed Error Messages and API requests/responses on the checkout "
+"page and/or save them to the %1$sdebug log%2$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:764
+msgid "Off"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:765
+msgid "Show on Checkout Page"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:766
+msgid "Save to Log"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:767
+msgid "Both"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:813
+#. translators: environment as in a software environment (test/production)
+msgid "Environment"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:816
+msgid "Select the gateway environment to use for transactions."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:865
+msgid "Share connection settings"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:867
+msgid "Use connection/authentication settings from other gateway"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:870
+msgid "Disabled because the other gateway is using these settings"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:887
+msgid "Card Verification (CSC)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:888
+msgid "Display the Card Security Code (CV2) field on checkout"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1182
+#. translators: %1$s - site title, %2$s - order number
+msgid "%1$s - Order %2$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1315
+#. translators: %1$s - site title, %2$s - order number
+msgid "%1$s - Refund for Order %2$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1369
+#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. etc), %2$s - a monetary amount
+msgid "%1$s Refund in the amount of %2$s approved."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1396
+#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. etc), %2$s - error code, %3$s - error message
+msgid "%1$s Refund Failed: %2$s - %3$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1404
+#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. etc), %2$s - error message
+msgid "%1$s Refund Failed: %2$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1424
+#. translators: %s - payment gateway title (such as Authorize.net, Braintree,
+#. etc)
+msgid "%s Order completely refunded."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1477
+msgid ""
+"Oops, you cannot partially void this order. Please use the full order "
+"amount."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1561
+#. translators: %1$s - payment gateway title, %2$s - error code, %3$s - error
+#. message. Void as in to void an order.
+msgid "%1$s Void Failed: %2$s - %3$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1569
+#. translators: %1$s - payment gateway title, %2$s - error message. Void as in
+#. to void an order.
+msgid "%1$s Void Failed: %2$s"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1590
+#. translators: %1$s - payment gateway title, %2$s - a monetary amount. Void as
+#. in to void an order.
+msgid "%1$s Void in the amount of %2$s approved."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1697
+msgid "#"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1827
+#. translators: %1$s - payment gateway title, %2$s - message (probably reason
+#. for the transaction being held for review)
+msgid "%1$s Transaction Held for Review (%2$s)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1844
+msgid ""
+"Your order has been received and is being reviewed. Thank you for your "
+"business."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1888
+#. translators: %1$s - payment gateway title, %2$s - error message
+msgid "%1$s Payment Failed (%2$s)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1905
+msgid "An error occurred, please try again or try an alternate form of payment."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:1922
+#. translators: %1$s - payment gateway title, %2$s - message/error
+msgid "%1$s Transaction Cancelled (%2$s)"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2141
+msgid "Transaction Type"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2143
+msgid ""
+"Select how transactions should be processed. Charge submits all "
+"transactions for settlement, Authorization simply authorizes the order "
+"total for capture later."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2290
+msgid "Accepted Card Types"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2292
+msgid "Select which card types you accept."
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2373
+#. translators:
+#. http:www.cybersource.com/products/payment_security/payment_tokenization/ and
+#. https:en.wikipedia.org/wiki/Tokenization_(data_security)
+msgid "Tokenization"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2374
+msgid "Allow customers to securely save their payment details for future checkout."
+msgstr ""
+
+#: class-sv-wc-plugin.php:396
+msgctxt "noun"
+msgid "Support"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:681
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:571
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:605
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:641
+msgctxt "noun, software environment"
+msgid "Test"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:682
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1161
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1565
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:561
+#: payment-gateway/class-sv-wc-payment-gateway.php:2147
+msgctxt "credit card transaction type"
+msgid "Authorization"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:682
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1161
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:1565
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:563
+#: payment-gateway/class-sv-wc-payment-gateway.php:2146
+msgctxt "noun, credit card transaction type"
+msgid "Charge"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-helper.php:148
+#: payment-gateway/class-sv-wc-payment-gateway.php:2318
+msgctxt "credit card type"
+msgid "MasterCard"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-helper.php:149
+#: payment-gateway/class-sv-wc-payment-gateway.php:2319
+msgctxt "credit card type"
+msgid "American Express"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-helper.php:150
+#: payment-gateway/class-sv-wc-payment-gateway.php:2320
+msgctxt "credit card type"
+msgid "Discover"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-helper.php:151
+#: payment-gateway/class-sv-wc-payment-gateway.php:2322
+msgctxt "credit card type"
+msgid "JCB"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-helper.php:152
+msgctxt "credit card type"
+msgid "CarteBleue"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2317
+msgctxt "credit card type"
+msgid "Visa"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2321
+msgctxt "credit card type"
+msgid "Diners"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-helper.php:158
+msgctxt "payment method type"
+msgid "Account"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:399
+#. translators: http:www.investopedia.com/terms/c/checkingaccount.asp
+msgctxt "account type"
+msgid "Checking"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:401
+msgctxt "account type"
+msgid "Savings"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:584
+msgctxt "Supports capture charge"
+msgid "Capture Charge"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:2776
+#. translators: https:www.skyverge.com/for-translators-environments/
+msgctxt "software environment"
+msgid "Production"
+msgstr ""

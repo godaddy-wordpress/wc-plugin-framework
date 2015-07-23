@@ -1,6 +1,6 @@
 <?php
 /**
- * WooCommerce Payment Gateway Framework
+ * WooCommerce Plugin Framework
  *
  * This source file is subject to the GNU General Public License v3.0
  * that is bundled with this package in the file license.txt.
@@ -16,31 +16,14 @@
  * versions in the future. If you wish to customize the plugin for your
  * needs please refer to http://www.skyverge.com
  *
- * @package   SkyVerge/WooCommerce/Payment-Gateway/API
+ * @package   SkyVerge/WooCommerce
  * @author    SkyVerge
  * @copyright Copyright (c) 2013-2015, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
-if ( ! interface_exists( 'SV_WC_Payment_Gateway_API_Customer_Response' ) ) :
-
-	/**
-	 * WooCommerce Direct Payment Gateway API Customer Response
-	 */
-	interface SV_WC_Payment_Gateway_API_Customer_Response extends SV_WC_Payment_Gateway_API_Response {
-
-
-		/**
-		 * Returns the customer ID
-		 *
-		 * @since 4.0.0-beta
-		 * @return string customer ID returned by the gateway
-		 */
-		public function get_customer_id();
-
-
-	}
-
-endif;  // interface exists check
+/**
+ * The sole purpose of this file is to support WordPress i18n tools to
+ * extract gettext messages from the framework files. For some reason,
+ * a root-level entry file is required for it to work.
+ */

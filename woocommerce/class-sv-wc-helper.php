@@ -197,7 +197,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * pattern definitions from http://www.regular-expressions.info/unicode.html
 		 *
-		 * @since 3.1.2-2
+		 * @since 4.0.0-beta
 		 * @param string $string
 		 * @return mixed
 		 */
@@ -417,9 +417,9 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 				$product = $order->get_product_from_item( $item );
 
 				// get meta + format it
-				$item_meta = new WC_Order_Item_Meta( $item['item_meta'] );
+				$item_meta = new WC_Order_Item_Meta( $item );
 
-				$item_meta = SV_WC_Plugin_Compatibility::get_formatted_item_meta( $item_meta );
+				$item_meta = $item_meta->get_formatted();
 
 				if ( ! empty( $item_meta ) ) {
 
@@ -555,7 +555,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *       data-action="wc_cart_notices_json_search_product_categories"
 		 *       data-nonce="<?php echo wp_create_nonce( 'search-categories' ); ?>"
 		 *       data-request_data = "<?php echo esc_attr( json_encode( array( 'field_name' => 'something_exciting', 'default' => 'default_label' ) ) ) ?>"
-		 *       data-placeholder="<?php _e( 'Search for a category&hellip;', WC_Cart_Notices::TEXT_DOMAIN ) ?>"
+		 *       data-placeholder="<?php _e( 'Search for a category&hellip;', 'wc-cart-notices' ) ?>"
 		 *       data-allow_clear="true"
 		 *       data-selected="<?php
 		 *          $json_ids    = array();
@@ -719,12 +719,63 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		/**
 		 * Gets the full URL to the log file for a given $handle
 		 *
-		 * @since 3.1.2-1
+		 * @since 4.0.0-beta
 		 * @param string $handle log handle
 		 * @return string URL to the WC log file identified by $handle
 		 */
 		public static function get_wc_log_file_url( $handle ) {
 			return admin_url( sprintf( 'admin.php?page=wc-status&tab=logs&log_file=%s-%s-log', $handle, sanitize_file_name( wp_hash( $handle ) ) ) );
+		}
+
+
+		/**
+		 * Gettext `__()` wrapper for framework-translated strings
+		 *
+		 * Warning! This function should only be used if an existing
+		 * translation from the framework is to be used. It should
+		 * never be called for plugin-specific or untranslated strings!
+		 * Untranslated = not registered via string literal.
+		 *
+		 * @since 3.0.0
+		 * @param string $text
+		 */
+		public static function f__( $text ) {
+
+			return __( $text, 'sv-wc-plugin-framework' );
+		}
+
+
+		/**
+		 * Gettext `_e()` wrapper for framework-translated strings
+		 *
+		 * Warning! This function should only be used if an existing
+		 * translation from the framework is to be used. It should
+		 * never be called for plugin-specific or untranslated strings!
+		 * Untranslated = not registered via string literal.
+		 *
+		 * @since 3.0.0
+		 * @param string $text
+		 */
+		public static function f_e( $text ) {
+
+			return _e( $text, 'sv-wc-plugin-framework' );
+		}
+
+
+		/**
+		 * Gettext `_x()` wrapper for framework-translated strings
+		 *
+		 * Warning! This function should only be used if an existing
+		 * translation from the framework is to be used. It should
+		 * never be called for plugin-specific or untranslated strings!
+		 * Untranslated = not registered via string literal.
+		 *
+		 * @since 3.0.0
+		 * @param string $text
+		 */
+		public static function f_x( $text, $context ) {
+
+			return _x( $text, $context, 'sv-wc-plugin-framework' );
 		}
 
 
