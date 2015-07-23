@@ -1529,7 +1529,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$order = $this->get_order( $order->id );
 
 			// order description
-			// translators: %1$s: site title, %2$s: order number
+			// translators: %1$s: site title, %2$s: order number. Release - as in when the pre-order is released/fulfilled.
 			$order->description = sprintf( __( '%1$s - Pre-Order Release Payment for Order %2$s', 'sv-wc-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
 
 			// token is required

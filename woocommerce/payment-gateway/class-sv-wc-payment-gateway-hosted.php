@@ -600,7 +600,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		// credit card order note
 		$message = sprintf(
 			// translators: %1$s - payment method title, %2$s - environment ("Test"), %3$s - card type (mastercard, visa, ...), %4$s - last four digits of the card
-			__( '%1$ss %2$s Transaction Approved: %3$s ending in %4$s', 'sv-wc-plugin-framework' ),
+			__( '%1$s %2$s Transaction Approved: %3$s ending in %4$s', 'sv-wc-plugin-framework' ),
 			$this->get_method_title(),
 			$this->is_test_environment() ? _x( 'Test', 'noun, software environment', 'sv-wc-plugin-framework' ) : '',
 			SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_account_type() ? $response->get_account_type() : 'bank' ) ),

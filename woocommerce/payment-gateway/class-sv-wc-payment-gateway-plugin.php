@@ -366,16 +366,17 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 			/* translators: [Plugin name] accepts payments in [currency/list of currencies] only */
 			$message = sprintf(
-				// translators: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - a url
+				// translators: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
 				_n(
-					'%1$s accepts payment in %2$s only. <a href="%3$s">Configure</a> WooCommerce to accept %1$s to enable this gateway for checkout.',
-					'%1$s accepts payment in one of %2$s only. <a href="%3$s">Configure</a> WooCommerce to accept one of %1$s to enable this gateway for checkout.',
+					'%1$s accepts payment in %2$s only. %3$sConfigure%4$s WooCommerce to accept %2$s to enable this gateway for checkout.',
+					'%1$s accepts payment in one of %2$s only. %3$sConfigure%4$s WooCommerce to accept one of %2$s to enable this gateway for checkout.',
 					count( $accepted_currencies ),
 					'sv-wc-plugin-framework'
 				),
 				$name,
 				'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
-				$this->get_general_configuration_url()
+				'<a href="' . $this->get_general_configuration_url() . '">',
+				'</a>',
 			);
 
 			$this->get_admin_notice_handler()->add_admin_notice( $message, 'accepted-currency' . $suffix );
@@ -403,9 +404,13 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				// subscriptions
 				if ( $this->is_subscriptions_active() && $gateway->is_enabled() && $gateway->supports( SV_WC_Payment_Gateway_Direct::FEATURE_SUBSCRIPTIONS ) && $tokenization_supported_but_not_enabled ) {
 
-					// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - a url
-					$message = sprintf( __( '%1$s is inactive for subscription transactions. Please <a href="%2$s">enable tokenization</a> to activate %1$s for Subscriptions.', 'sv-wc-plugin-framework' ),
-						$gateway->get_method_title(), $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) );
+					// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
+					$message = sprintf(
+						__( '%1$s is inactive for subscription transactions. Please %2$senable tokenization%3$s to activate %1$s for Subscriptions.', 'sv-wc-plugin-framework' ),
+						$gateway->get_method_title(),
+						'<a href="' . $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) . '">',
+						'</a>'
+					);
 
 					// add notice -- allow it to be dismissed even on the settings page as the admin may not want to use subscriptions with a particular gateway
 					$this->get_admin_notice_handler()->add_admin_notice( $message, 'subscriptions-tokenization-' . $gateway->get_id(), array( 'always_show_on_settings' => false ) );
@@ -415,9 +420,13 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				// pre-orders
 				if ( $this->is_pre_orders_active() && $gateway->is_enabled() && $gateway->supports( SV_WC_Payment_Gateway_Direct::FEATURE_PRE_ORDERS ) && $tokenization_supported_but_not_enabled ) {
 
-					// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - a url
-					$message = sprintf( __( '%1$s is inactive for pre-order transactions. Please <a href="%2$s">enable tokenization</a> to activate %1$s for Pre-Orders.', 'sv-wc-plugin-framework' ),
-						$gateway->get_method_title(), $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) );
+					// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
+					$message = sprintf(
+						__( '%1$s is inactive for pre-order transactions. Please %2$senable tokenization%3$s to activate %1$s for Pre-Orders.', 'sv-wc-plugin-framework' ),
+						$gateway->get_method_title(),
+						'<a href="' . $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) . '">',
+						'</a>'
+					);
 
 					// add notice -- allow it to be dismissed even on the settings page as the admin may not want to use pre-orders with a particular gateway
 					$this->get_admin_notice_handler()->add_admin_notice( $message, 'pre-orders-tokenization-' . $gateway->get_id(), array( 'always_show_on_settings' => false ) );

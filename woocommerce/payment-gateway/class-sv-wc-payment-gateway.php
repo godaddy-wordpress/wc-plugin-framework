@@ -757,8 +757,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->form_fields['debug_mode'] = array(
 			'title'   => __( 'Debug Mode', 'sv-wc-plugin-framework' ),
 			'type'    => 'select',
-			// translators: %s - log file location url
-			'desc'    => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the <a href="%s">debug log</a>', 'sv-wc-plugin-framework' ), SV_WC_Helper::get_wc_log_file_url( $this->get_id() ) ),
+			// translators: %1$s - <a> tag, %2$s - </a> tag
+			'desc'    => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the %1$sdebug log%2$s', 'sv-wc-plugin-framework' ), '<a href="' . SV_WC_Helper::get_wc_log_file_url( $this->get_id() ) . '">', '</a>' ),
 			'default' => self::DEBUG_MODE_OFF,
 			'options' => array(
 				self::DEBUG_MODE_OFF      => __( 'Off', 'Debug mode off', 'sv-wc-plugin-framework' ),

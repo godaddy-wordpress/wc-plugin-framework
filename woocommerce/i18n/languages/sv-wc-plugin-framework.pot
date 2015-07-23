@@ -29,28 +29,31 @@ msgid ""
 "function properly:"
 msgstr ""
 
-#: class-sv-wc-framework-bootstrap.php:240
-msgid "Please %supdate%s"
+#: class-sv-wc-framework-bootstrap.php:241
+#. translators: %1$s - <a> tag, %2$s - </a> tag
+msgid "Please %1$supdate%2$s"
 msgstr ""
 
-#: class-sv-wc-framework-bootstrap.php:246
+#: class-sv-wc-framework-bootstrap.php:247
 msgid ""
 "The following plugins are inactive because they require a newer version of "
 "WooCommerce:"
 msgstr ""
 
-#: class-sv-wc-framework-bootstrap.php:246
+#: class-sv-wc-framework-bootstrap.php:247
 msgid ""
 "The following plugin is inactive because it requires a newer version of "
 "WooCommerce:"
 msgstr ""
 
-#: class-sv-wc-framework-bootstrap.php:249
-msgid "%s requires WooCommerce %s or newer"
+#: class-sv-wc-framework-bootstrap.php:252
+#. translators: %1$s - plugin name, %2$s - WooCommerce version number
+msgid "%1$s requires WooCommerce %2$s or newer"
 msgstr ""
 
-#: class-sv-wc-framework-bootstrap.php:252
-msgid "Please %supdate WooCommerce%s"
+#: class-sv-wc-framework-bootstrap.php:256
+#. translators: %1$s - <a> tag, %2$s - </a> tag
+msgid "Please %1$supdate WooCommerce%2$s"
 msgstr ""
 
 #: class-sv-wc-plugin.php:188
@@ -504,7 +507,8 @@ msgid "%1$s Pre-Order Tokenization attempt failed (%2$s)"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:1533
-#. translators: %1$s: site title, %2$s: order number
+#. translators: %1$s: site title, %2$s: order number. Release - as in when the
+#. pre-order is released/fulfilled.
 msgid "%1$s - Pre-Order Release Payment for Order %2$s"
 msgstr ""
 
@@ -663,7 +667,7 @@ msgstr ""
 #: payment-gateway/class-sv-wc-payment-gateway-hosted.php:603
 #. translators: %1$s - payment method title, %2$s - environment ("Test"), %3$s
 #. - card type (mastercard, visa, ...), %4$s - last four digits of the card
-msgid "%1$ss %2$s Transaction Approved: %3$s ending in %4$s"
+msgid "%1$s %2$s Transaction Approved: %3$s ending in %4$s"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-hosted.php:613
@@ -842,33 +846,33 @@ msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-plugin.php:370
 #. translators: %1$s - plugin name, %2$s - a currency/comma-separated list of
-#. currencies, %3$s - a url
+#. currencies, %3$s - <a> tag, %4$s - </a> tag
 msgid ""
-"%1$s accepts payment in %2$s only. <a href=\"%3$s\">Configure</a> "
-"WooCommerce to accept %1$s to enable this gateway for checkout."
+"%1$s accepts payment in %2$s only. %3$sConfigure%4$s WooCommerce to accept "
+"%2$s to enable this gateway for checkout."
 msgid_plural ""
-"%1$s accepts payment in one of %2$s only. <a href=\"%3$s\">Configure</a> "
-"WooCommerce to accept one of %1$s to enable this gateway for checkout."
+"%1$s accepts payment in one of %2$s only. %3$sConfigure%4$s WooCommerce to "
+"accept one of %2$s to enable this gateway for checkout."
 msgstr[0] ""
 msgstr[1] ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:407
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:409
 #. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
-#. etc), %2$s - a url
+#. etc), %2$s - <a> tag, %3$s - </a> tag
 msgid ""
-"%1$s is inactive for subscription transactions. Please <a "
-"href=\"%2$s\">enable tokenization</a> to activate %1$s for Subscriptions."
+"%1$s is inactive for subscription transactions. Please %2$senable "
+"tokenization%3$s to activate %1$s for Subscriptions."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:419
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:425
 #. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
-#. etc), %2$s - a url
+#. etc), %2$s - <a> tag, %3$s - </a> tag
 msgid ""
-"%1$s is inactive for pre-order transactions. Please <a href=\"%2$s\">enable "
-"tokenization</a> to activate %1$s for Pre-Orders."
+"%1$s is inactive for pre-order transactions. Please %2$senable "
+"tokenization%3$s to activate %1$s for Pre-Orders."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:642
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:651
 #. translators: verb, as in "Capture credit card charge". Used when an amount
 #. has been pre-authorized before, but funds have not yet been captured (taken)
 #. from the card. Capturing the charge will take the money from the credit card
@@ -955,10 +959,10 @@ msgid "Debug Mode"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway.php:761
-#. translators: %s - log file location url
+#. translators: %1$s - <a> tag, %2$s - </a> tag
 msgid ""
 "Show Detailed Error Messages and API requests/responses on the checkout "
-"page and/or save them to the <a href=\"%s\">debug log</a>"
+"page and/or save them to the %1$sdebug log%2$s"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway.php:764
@@ -1210,7 +1214,7 @@ msgctxt "account type"
 msgid "Savings"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:575
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:584
 msgctxt "Supports capture charge"
 msgid "Capture Charge"
 msgstr ""

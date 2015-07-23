@@ -237,7 +237,8 @@ class SV_WC_Framework_Bootstrap {
 				printf( '<li>%s</li>', $plugin['plugin_name'] );
 			}
 
-			echo '</ul><p>' . printf( __( "Please %supdate%s", 'sv-wc-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
+			// translators: %1$s - <a> tag, %2$s - </a> tag
+			echo '</ul><p>' . printf( __( 'Please %1$supdate%2$s', 'sv-wc-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
 		}
 
 		// must update WC notice
@@ -246,10 +247,13 @@ class SV_WC_Framework_Bootstrap {
 			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_wc_version_plugins ) > 1 ? __( 'The following plugins are inactive because they require a newer version of WooCommerce:', 'sv-wc-plugin-framework' ) : __( 'The following plugin is inactive because it requires a newer version of WooCommerce:', 'sv-wc-plugin-framework' ) );
 
 			foreach ( $this->incompatible_wc_version_plugins as $plugin ) {
-				echo '<li>' . sprintf( __( '%s requires WooCommerce %s or newer', 'sv-wc-plugin-framework' ), $plugin['plugin_name'], $plugin['args']['minimum_wc_version'] ) . '</li>';
+
+				// translators: %1$s - plugin name, %2$s - WooCommerce version number
+				echo '<li>' . sprintf( __( '%1$s requires WooCommerce %2$s or newer', 'sv-wc-plugin-framework' ), $plugin['plugin_name'], $plugin['args']['minimum_wc_version'] ) . '</li>';
 			}
 
-			echo '</ul><p>' . printf( __( "Please %supdate WooCommerce%s", 'sv-wc-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
+			// translators: %1$s - <a> tag, %2$s - </a> tag
+			echo '</ul><p>' . printf( __( 'Please %1$supdate WooCommerce%2$s', 'sv-wc-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
 		}
 	}
 

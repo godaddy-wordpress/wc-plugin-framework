@@ -523,7 +523,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		$html = sprintf( '<a class="button" style="float:right;" href="%s">%s</a>',
 			esc_url( SV_WC_Plugin_Compatibility::wc_get_page_permalink( 'myaccount' ) . '#wc-' . $this->get_gateway()->get_plugin()->get_id_dasherized() . '-my-payment-methods' ),
 			// translators: Payment method as in a specific credit card, e-check or bank account
-			wp_kses_post( apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_manage_payment_methods_text', __( "Manage Payment Methods", 'sv-wc-plugin-framework' ) ) )
+			wp_kses_post( apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_manage_payment_methods_text', __( 'Manage Payment Methods', 'sv-wc-plugin-framework' ) ) )
 		);
 
 		/**
