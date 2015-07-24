@@ -10,6 +10,7 @@
  * Tweak - The order status for voided orders is now "cancelled" rather than "refunded"
  * Tweak - Improved support for REST API development
  * Tweak - Framework bootstrap now gives the option to easily deactivate backwards incompatible plugins, rather than only an instruction to update older plugins
+ * Tweak - Framework bootstrap option to declare minimum required WordPress version
  * Misc - WooCommerce 2.4 compatibility
 
 2015.03.17 - version 3.1.2

@@ -68,6 +68,7 @@ if ( ! class_exists( 'SV_WC_Framework_Bootstrap' ) ) :
  * + `is_payment_gateway` - Set to true if this is a payment gateway, to load the payment gateway framework files
  * + `backwards_compatible` - Set to a version number to declare backwards compatibility support from that version number (and hence no support for earlier versions).
  * + `minimum_wc_version` - Set to a version number to require a minimum WooCommerce version for the given plugin
+ * + `minimum_wp_version` - Set to a version number to require a minimum WordPress version for the given plugin
  *
  * ### Backwards Compatibility
  *
@@ -115,6 +116,9 @@ class SV_WC_Framework_Bootstrap {
 
 	/** @var array of plugins that require a newer version of WC */
 	protected $incompatible_wc_version_plugins = array();
+
+	/** @var array of plugins that require a newer version of WP */
+	protected $incompatible_wp_version_plugins = array();
 
 
 	/**
@@ -208,6 +212,15 @@ class SV_WC_Framework_Bootstrap {
 				continue;
 			}
 
+			// if a plugin defines a minimum WP version which is not met, render a notice and skip loading the plugin
+			if ( ! empty( $plugin['args']['minimum_wp_version'] ) && version_compare( get_bloginfo( 'version' ), $plugin['args']['minimum_wp_version'], '<' ) ) {
+
+				$this->incompatible_wp_version_plugins[] = $plugin;
+
+				// next plugin
+				continue;
+			}
+
 			// add this plugin to the active list
 			if ( ! in_array( $plugin, $this->active_plugins ) ) {
 				$this->active_plugins[] = $plugin;
@@ -223,7 +236,7 @@ class SV_WC_Framework_Bootstrap {
 		}
 
 		// render update notices
-		if ( ( $this->incompatible_framework_plugins || $this->incompatible_wc_version_plugins ) && is_admin() && ! defined( 'DOING_AJAX' ) && ! has_action( 'admin_notices', array( $this, 'render_update_notices' ) ) ) {
+		if ( ( $this->incompatible_framework_plugins || $this->incompatible_wc_version_plugins || $this->incompatible_wp_version_plugins ) && is_admin() && ! defined( 'DOING_AJAX' ) && ! has_action( 'admin_notices', array( $this, 'render_update_notices' ) ) ) {
 
 			add_action( 'admin_notices', array( $this, 'render_update_notices' ) );
 		}
@@ -339,6 +352,18 @@ class SV_WC_Framework_Bootstrap {
 			}
 
 			echo '</ul><p>Please <a href="' . admin_url( 'update-core.php' ) . '">update WooCommerce&nbsp;&raquo;</a></p></div>';
+		}
+
+		// must update WP notice
+		if ( ! empty( $this->incompatible_wp_version_plugins ) ) {
+
+			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_wp_version_plugins ) > 1 ? 'The following plugins are inactive because they require a newer version of WordPress:' : 'The following plugin is inactive because it requires a newer version of WordPress:' );
+
+			foreach ( $this->incompatible_wp_version_plugins as $plugin ) {
+				printf( '<li>%s requires WordPress %s or newer</li>', $plugin['plugin_name'], $plugin['args']['minimum_wp_version'] );
+			}
+
+			echo '</ul><p>Please <a href="' . admin_url( 'update-core.php' ) . '">update WordPress&nbsp;&raquo;</a></p></div>';
 		}
 	}
 
