@@ -97,6 +97,9 @@ abstract class SV_WC_Plugin {
 	/** @var string plugin id */
 	private $id;
 
+	/** @var string plugin text domain */
+	protected $text_domain;
+
 	/** @var string version number */
 	private $version;
 
@@ -132,16 +135,20 @@ abstract class SV_WC_Plugin {
 	 *
 	 * Child plugin classes may add their own optional arguments
 	 *
+	 * TODO: $text_domain is deprecated, remove argument on next breaking release
+	 *
 	 * @since 2.0.0
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
+	 * @param string $text_domain the plugin text domain
 	 * @param array $args optional plugin arguments
 	 */
-	public function __construct( $id, $version, $args = array() ) {
+	public function __construct( $id, $version, $text_domain, $args = array() ) {
 
 		// required params
 		$this->id          = $id;
 		$this->version     = $version;
+		$this->text_domain = $text_domain;
 
 		if ( isset( $args['dependencies'] ) )                $this->dependencies = $args['dependencies'];
 
@@ -828,6 +835,18 @@ abstract class SV_WC_Plugin {
 		}
 
 		return $this->message_handler = new SV_WP_Admin_Message_Handler( $this->get_id() );
+	}
+
+
+	/**
+	 * Returns the plugin's text domain
+	 *
+	 * @since 4.0.0-beta
+	 * @return string text domain
+	 */
+	public function get_text_domain() {
+
+		return $this->text_domain;
 	}
 
 

@@ -99,15 +99,18 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * + `currencies` -  array of currency codes this gateway is allowed for, defaults to all
 	 * + `supports` - array named features that this gateway supports, including 'tokenization', 'transaction_link', 'customer_id', 'capture_charge'
 	 *
+	 * TODO: $text_domain is deprecated, remove argument on next breaking release
+	 *
 	 * @since 1.0.0
 	 * @see SV_WC_Plugin::__construct()
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
+	 * @param string $text_domain the plugin text domain
 	 * @param array $args plugin arguments
 	 */
-	public function __construct( $id, $version, $args ) {
+	public function __construct( $id, $version, $text_domain, $args ) {
 
-		parent::__construct( $id, $version, $args );
+		parent::__construct( $id, $version, $text_domain, $args );
 
 		// optional parameters: the supported gateways
 		if ( isset( $args['gateways'] ) ) {

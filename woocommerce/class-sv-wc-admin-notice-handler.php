@@ -41,6 +41,9 @@ class SV_WC_Admin_Notice_Handler {
 	/** @var SV_WC_Plugin the plugin */
 	private $plugin;
 
+	/** @var string plugin text domain */
+	protected $text_domain;
+
 	/** @var array associative array of id to notice text */
 	private $admin_notices = array();
 
@@ -54,11 +57,14 @@ class SV_WC_Admin_Notice_Handler {
 	/**
 	 * Initialize and setup the Admin Notice Handler
 	 *
+	 * TODO: $text_domain is deprecated, remove argument on next breaking release
+	 *
 	 * @since 3.0.0
 	 */
-	public function __construct( $plugin ) {
+	public function __construct( $plugin, $text_domain ) {
 
 		$this->plugin      = $plugin;
+		$this->text_domain = $text_domain;
 
 		// render any admin notices, delayed notices, and
 		add_action( 'admin_notices', array( $this, 'render_admin_notices'         ), 15 );
