@@ -416,8 +416,10 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 				$product = $order->get_product_from_item( $item );
 
+				$meta = SV_WC_Plugin_Compatibility::is_wc_version_gte_2_4() ? $item : $item['item_meta'];
+
 				// get meta + format it
-				$item_meta = new WC_Order_Item_Meta( $item );
+				$item_meta = new WC_Order_Item_Meta( $meta );
 
 				$item_meta = $item_meta->get_formatted();
 
