@@ -491,7 +491,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 1.0.0
 	 * @see SV_WC_Payment_Gateway::get_order()
-	 * @param int $order_id order ID being processed
+	 * @param int|\WC_Order $order_id order ID being processed
 	 * @return WC_Order object with payment and transaction information attached
 	 */
 	protected function get_order( $order_id ) {
@@ -2450,8 +2450,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function get_order_for_add_payment_method() {
 
+		$order = new WC_Order( 0 );
+
 		// mock order, as all gateway API implementations require an order object for tokenization
-		$order = $this->get_order( 0 );
+		$order = $this->get_order( $order );
 
 		$user = get_userdata( get_current_user_id() );
 

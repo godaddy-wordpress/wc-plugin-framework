@@ -1161,8 +1161,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * The returned order is expected to be used in a transaction request.
 	 *
 	 * @since 1.0.0
-	 * @param int|WC_Order $order the order or order ID being processed
-	 * @return WC_Order object with payment and transaction information attached
+	 * @param int|\WC_Order $order the order or order ID being processed
+	 * @return \WC_Order object with payment and transaction information attached
 	 */
 	protected function get_order( $order ) {
 
