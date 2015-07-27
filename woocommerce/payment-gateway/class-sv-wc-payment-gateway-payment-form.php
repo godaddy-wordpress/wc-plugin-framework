@@ -774,8 +774,10 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 */
 	public function render_saved_payment_methods() {
 
+		$is_add_new_payment_method_page = $this->get_gateway()->supports_add_payment_method() && is_add_payment_method_page();
+
 		// tokenization forced check to prevent rendering this on the "add new payment method" screen
-		if ( $this->has_tokens() && ! $this->tokenization_forced() ) {
+		if ( $this->has_tokens() && ! $is_add_new_payment_method_page ) {
 			echo $this->get_saved_payment_methods_html();
 		}
 	}
