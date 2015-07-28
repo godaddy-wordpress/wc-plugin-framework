@@ -389,7 +389,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * and adds a notice if a gateway supports the integration *and* tokenization,
 	 * but tokenization is not enabled
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 */
 	protected function add_integration_requires_tokenization_notices() {
 
@@ -916,7 +916,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Returns the gateway for a given token
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @param string|int $user_id the user ID associated with the token
 	 * @param string $token the token string
 	 * @return SV_WC_Payment_Gateway|null gateway if found, null otherwise
@@ -993,7 +993,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Returns the loaded payment gateway framework __FILE__
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return string
 	 */
 	public function get_payment_gateway_framework_file() {
@@ -1008,7 +1008,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * This is the highest version payment gateway framework that was loaded by
 	 * the bootstrap.
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return string
 	 */
 	public function get_payment_gateway_framework_path() {
@@ -1021,7 +1021,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns the absolute path to the loaded payment gateway framework image
 	 * directory, without a trailing slash
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return string relative path to framework image directory
 	 */
 	public function get_payment_gateway_framework_assets_path() {
@@ -1033,7 +1033,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Returns the loaded payment gateway framework assets URL, without a trailing slash
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return string
 	 */
 	public function get_payment_gateway_framework_assets_url() {

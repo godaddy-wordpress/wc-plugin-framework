@@ -84,12 +84,12 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * Use the standard WordPress/WooCommerce `is_*` methods when adding the notice
  * to control which pages it does (or does not) display on.
  *
- * @version 4.0.0-beta
+ * @version 4.0.0
  */
 abstract class SV_WC_Plugin {
 
 	/** Plugin Framework Version */
-	const VERSION = '4.0.0-beta';
+	const VERSION = '4.0.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -692,8 +692,8 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the support URL, used for the 'Support' plugin action link
 	 *
-	 * @since 4.0.0-beta
-	 * @return string review url
+	 * @since 4.0.0
+	 * @return string support url
 	 */
 	public function get_support_url() {
 
@@ -751,7 +751,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Returns the loaded framework __FILE__
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return string
 	 */
 	public function get_framework_file() {
@@ -764,7 +764,7 @@ abstract class SV_WC_Plugin {
 	 * Returns the loaded framework path, without trailing slash. Ths is the highest
 	 * version framework that was loaded by the bootstrap.
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return string
 	 */
 	public function get_framework_path() {
@@ -777,7 +777,7 @@ abstract class SV_WC_Plugin {
 	 * Returns the absolute path to the loaded framework image directory, without a
 	 * trailing slash
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return string
 	 */
 	public function get_framework_assets_path() {
@@ -789,7 +789,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Returns the loaded framework assets URL without a trailing slash
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return string
 	 */
 	public function get_framework_assets_url() {
@@ -819,7 +819,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Returns the plugin's text domain
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return string text domain
 	 */
 	public function get_text_domain() {

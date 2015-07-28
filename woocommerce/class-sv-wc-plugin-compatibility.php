@@ -51,7 +51,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * @link https://github.com/woothemes/woocommerce/pull/7438
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @param string $page page - myaccount, edit_address, shop, cart, checkout, pay, view_order, terms
 	 * @return string
 	 */
@@ -145,7 +145,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns true if the installed version of WooCommerce is 2.4 or greater
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return boolean true if the installed version of WooCommerce is 2.3 or greater
 	 */
 	public static function is_wc_version_gte_2_4() {
@@ -156,7 +156,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns true if the installed version of WooCommerce is less than 2.4
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return boolean true if the installed version of WooCommerce is less than 2.4
 	 */
 	public static function is_wc_version_lt_2_4() {

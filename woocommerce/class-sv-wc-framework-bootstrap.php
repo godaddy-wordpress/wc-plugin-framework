@@ -255,7 +255,7 @@ class SV_WC_Framework_Bootstrap {
 	 * the admin isn't ready to upgrade older plugins yet needs them to still
 	 * function (e.g. a payment gateway)
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 */
 	public function maybe_deactivate_framework_plugins() {
 
@@ -291,7 +291,7 @@ class SV_WC_Framework_Bootstrap {
 	 * Render a notice with a count of the backwards incompatible frameworked
 	 * plugins that were deactivated
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 */
 	public function render_deactivation_notice() {
 		echo '<div class="updated"><p>';
@@ -382,7 +382,7 @@ class SV_WC_Framework_Bootstrap {
 	 * to use, you should first check that this method exists, or if you really
 	 * need to check for WooCommerce being active, define your own method.
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return boolean true if the WooCommerce plugin is installed and active
 	 */
 	public static function is_woocommerce_active() {

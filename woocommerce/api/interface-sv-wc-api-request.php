@@ -35,7 +35,7 @@ interface SV_WC_API_Request {
 	/**
 	 * Returns the method for this request: one of HEAD, GET, PUT, PATCH, POST, DELETE
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return string the request method, or null to use the API default
 	 */
 	public function get_method();
@@ -44,7 +44,7 @@ interface SV_WC_API_Request {
 	/**
 	 * Returns the request path
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return string the request path, or '' if none
 	 */
 	public function get_path();

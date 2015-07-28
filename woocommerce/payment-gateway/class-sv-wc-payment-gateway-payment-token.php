@@ -83,7 +83,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * Returns the payment token string
 	 *
 	 * @since 1.0.0
-	 * @deprecated since 4.0.0-beta
+	 * @deprecated since 4.0.0
 	 * @return string payment token string
 	 */
 	public function get_token() {
@@ -95,7 +95,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Returns the payment token string
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return string payment token string
 	 */
 	public function get_id() {
@@ -144,7 +144,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * Returns true if this payment token represents an eCheck
 	 *
 	 * @since 1.0.0
-	 * @deprecated since 4.0.0-beta
+	 * @deprecated since 4.0.0
 	 * @return boolean true if this payment token represents an eCheck
 	 */
 	public function is_check() {
@@ -156,7 +156,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Returns true if this payment token represents an eCheck
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @return boolean true if this payment token represents an eCheck
 	 */
 	public function is_echeck() {
@@ -196,7 +196,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * Credit Card gateway only
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @param string $card_type
 	 */
 	public function set_card_type( $card_type ) {
@@ -209,7 +209,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * Determine the credit card type from the full account number
 	 *
 	 * @since 1.0.0
-	 * @deprecated since 4.0.0-beta in favor of SV_WC_Payment_Gateway_Helper::card_type_from_account_number()
+	 * @deprecated since 4.0.0 in favor of SV_WC_Payment_Gateway_Helper::card_type_from_account_number()
 	 * @param string $account_number the credit card account number
 	 * @return string the credit card type
 	 */
@@ -238,7 +238,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * eCheck gateway only
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @param string $account_type
 	 */
 	public function set_account_type( $account_type ) {
@@ -281,7 +281,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Set the account last four
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @param string $last_four
 	 */
 	public function set_last_four( $last_four ) {
@@ -306,7 +306,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Set the expiration month
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @param string $month
 	 */
 	public function set_exp_month( $month ) {
@@ -331,7 +331,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Set the expiration year
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.0.0
 	 * @param string $year
 	 */
 	public function set_exp_year( $year ) {

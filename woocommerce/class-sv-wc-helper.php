@@ -197,7 +197,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * pattern definitions from http://www.regular-expressions.info/unicode.html
 		 *
-		 * @since 4.0.0-beta
+		 * @since 4.0.0
 		 * @param string $string
 		 * @return mixed
 		 */
@@ -721,7 +721,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		/**
 		 * Gets the full URL to the log file for a given $handle
 		 *
-		 * @since 4.0.0-beta
+		 * @since 4.0.0
 		 * @param string $handle log handle
 		 * @return string URL to the WC log file identified by $handle
 		 */
