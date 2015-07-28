@@ -30,7 +30,7 @@ if ( ! class_exists( 'SV_WC_API_REST_Request' ) ) :
 /**
  * Base REST API Request class
  *
- * @since 3.1.2-1
+ * @since 4.0.0
  */
 class SV_WC_API_REST_Request implements SV_WC_API_Request {
 
@@ -48,7 +48,7 @@ class SV_WC_API_REST_Request implements SV_WC_API_Request {
 	/**
 	 * Construct REST request object
 	 *
-	 * @since 3.1.2-1
+	 * @since 4.0.0
 	 * @param string $method the request method, one of HEAD, GET, PUT, PATCH, POST, DELETE
 	 * @param string $path optional request path
 	 * @param array $params optional associative array of request parameters
@@ -66,7 +66,7 @@ class SV_WC_API_REST_Request implements SV_WC_API_Request {
 	/**
 	 * Returns the method for this request: one of HEAD, GET, PUT, PATCH, POST, DELETE
 	 *
-	 * @since 3.1.2-1
+	 * @since 4.0.0
 	 * @see SV_WC_API_Request::get_method()
 	 * @return string the request method
 	 */
@@ -78,7 +78,7 @@ class SV_WC_API_REST_Request implements SV_WC_API_Request {
 	/**
 	 * Returns the request path
 	 *
-	 * @since 3.1.2-1
+	 * @since 4.0.0
 	 * @see SV_WC_API_Request::get_path()
 	 * @return string the request path
 	 */
@@ -90,11 +90,29 @@ class SV_WC_API_REST_Request implements SV_WC_API_Request {
 	/**
 	 * Returns the request params, if any
 	 *
-	 * @since 3.1.2-1
+	 * @since 4.0.0
 	 * @return array the request params
 	 */
 	public function get_params() {
 		return $this->params;
+	}
+
+
+	/**
+	 * Returns the request params, url encoded
+	 *
+	 * @since 4.0.0
+	 * @see SV_WC_API_REST_Request::get_params()
+	 * @return array the request params, url encoded
+	 */
+	public function get_encoded_params() {
+
+		$encoded_params = array();
+		foreach ( $this->get_params() as $key => $value ) {
+			$encoded_params[ $key ] = urlencode( $value );
+		}
+
+		return $encoded_params;
 	}
 
 
@@ -104,13 +122,14 @@ class SV_WC_API_REST_Request implements SV_WC_API_Request {
 	/**
 	 * Returns the string representation of this request
 	 *
-	 * @since 3.1.2-1
+	 * @since 4.0.0
 	 * @see SV_WC_API_Request::to_string()
 	 * @return string request
 	 */
 	public function to_string() {
+
 		// URL encode params
-		return build_query( $this->get_params() );
+		return build_query( $this->get_encoded_params() );
 	}
 
 
@@ -118,7 +137,7 @@ class SV_WC_API_REST_Request implements SV_WC_API_Request {
 	 * Returns the string representation of this request with any and all
 	 * sensitive elements masked or removed
 	 *
-	 * @since 3.1.2-1
+	 * @since 4.0.0
 	 * @see SV_WC_API_Request::to_string_safe()
 	 * @return string the request, safe for logging/displaying
 	 */

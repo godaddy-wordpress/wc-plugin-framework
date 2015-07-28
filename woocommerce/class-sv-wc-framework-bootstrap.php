@@ -68,6 +68,7 @@ if ( ! class_exists( 'SV_WC_Framework_Bootstrap' ) ) :
  * + `is_payment_gateway` - Set to true if this is a payment gateway, to load the payment gateway framework files
  * + `backwards_compatible` - Set to a version number to declare backwards compatibility support from that version number (and hence no support for earlier versions).
  * + `minimum_wc_version` - Set to a version number to require a minimum WooCommerce version for the given plugin
+ * + `minimum_wp_version` - Set to a version number to require a minimum WordPress version for the given plugin
  *
  * ### Backwards Compatibility
  *
@@ -107,11 +108,17 @@ class SV_WC_Framework_Bootstrap {
 	/** @var array registered framework plugins */
 	protected $registered_plugins = array();
 
+	/** @var array registered and active framework plugins */
+	protected $active_plugins = array();
+
 	/** @var array of plugins that need to be updated due to an outdated framework */
 	protected $incompatible_framework_plugins = array();
 
 	/** @var array of plugins that require a newer version of WC */
 	protected $incompatible_wc_version_plugins = array();
+
+	/** @var array of plugins that require a newer version of WP */
+	protected $incompatible_wp_version_plugins = array();
 
 
 	/**
@@ -123,6 +130,9 @@ class SV_WC_Framework_Bootstrap {
 
 		// load framework plugins once all plugins are loaded
 		add_action( 'plugins_loaded', array( $this, 'load_framework_plugins' ) );
+
+		// deactivate backwards-incompatible framework plugins if the admin isn't ready to upgrade old plugins
+		add_action( 'admin_init', array( $this, 'maybe_deactivate_framework_plugins' ) );
 	}
 
 
@@ -175,6 +185,11 @@ class SV_WC_Framework_Bootstrap {
 			if ( ! class_exists( 'SV_WC_Plugin' ) ) {
 				require_once( $this->get_plugin_path( $plugin['path'] ) . '/lib/skyverge/woocommerce/class-sv-wc-plugin.php' );
 				$loaded_framework = $plugin;
+
+				// the loaded plugin is always considered active (for the
+				// purposes of handling conflicts between this and other plugins
+				// with incompatible framework versions)
+				$this->active_plugins[] = $plugin;
 			}
 
 			// if the loaded version of the framework has a backwards compatibility requirement
@@ -188,13 +203,27 @@ class SV_WC_Framework_Bootstrap {
 				continue;
 			}
 
-			// if a plugin defines a minimum WC version, render a notice and skip loading the plugin
+			// if a plugin defines a minimum WC version which is not met, render a notice and skip loading the plugin
 			if ( ! empty( $plugin['args']['minimum_wc_version'] ) && version_compare( $this->get_wc_version(), $plugin['args']['minimum_wc_version'], '<' ) ) {
 
 				$this->incompatible_wc_version_plugins[] = $plugin;
 
 				// next plugin
 				continue;
+			}
+
+			// if a plugin defines a minimum WP version which is not met, render a notice and skip loading the plugin
+			if ( ! empty( $plugin['args']['minimum_wp_version'] ) && version_compare( get_bloginfo( 'version' ), $plugin['args']['minimum_wp_version'], '<' ) ) {
+
+				$this->incompatible_wp_version_plugins[] = $plugin;
+
+				// next plugin
+				continue;
+			}
+
+			// add this plugin to the active list
+			if ( ! in_array( $plugin, $this->active_plugins ) ) {
+				$this->active_plugins[] = $plugin;
 			}
 
 			// load the first found (highest versioned) payment gateway framework class, as needed
@@ -207,7 +236,7 @@ class SV_WC_Framework_Bootstrap {
 		}
 
 		// render update notices
-		if ( ( $this->incompatible_framework_plugins || $this->incompatible_wc_version_plugins ) && is_admin() && ! defined( 'DOING_AJAX' ) && ! has_action( 'admin_notices', array( $this, 'render_update_notices' ) ) ) {
+		if ( ( $this->incompatible_framework_plugins || $this->incompatible_wc_version_plugins || $this->incompatible_wp_version_plugins ) && is_admin() && ! defined( 'DOING_AJAX' ) && ! has_action( 'admin_notices', array( $this, 'render_update_notices' ) ) ) {
 
 			add_action( 'admin_notices', array( $this, 'render_update_notices' ) );
 		}
@@ -221,7 +250,61 @@ class SV_WC_Framework_Bootstrap {
 
 
 	/**
+	 * Deactivate backwards-incompatible framework plugins, which will allow
+	 * plugins with an older version of the framework to be active. Useful when
+	 * the admin isn't ready to upgrade older plugins yet needs them to still
+	 * function (e.g. a payment gateway)
+	 *
+	 * @since 4.0.0
+	 */
+	public function maybe_deactivate_framework_plugins() {
+
+		if ( isset( $_GET['sv_wc_framework_deactivate_newer'] ) ) {
+			if ( 'yes' == $_GET['sv_wc_framework_deactivate_newer'] ) {
+
+				// don't want to just deactivate all active plugins willy-nilly if there's no incompatible plugins
+				if ( count( $this->incompatible_framework_plugins ) == 0 ) {
+					return;
+				}
+
+				$plugins = array();
+
+				foreach ( $this->active_plugins as $plugin ) {
+					$plugins[] = plugin_basename( $plugin['path'] );
+				}
+
+				// deactivate all "active" frameworked plugins, these will be the newest, backwards-incompatible ones
+				deactivate_plugins( $plugins );
+
+				// redirect to the inactive plugin admin page, with a message indicating the number of plugins deactivated
+				wp_redirect( admin_url( 'plugins.php?plugin_status=inactive&sv_wc_framework_deactivate_newer=' . count( $plugins ) ) );
+				exit;
+			} else {
+				// we're on the inactive plugin page and we've deactivated one or more plugins
+				add_action( 'admin_notices', array( $this, 'render_deactivation_notice' ) );
+			}
+		}
+	}
+
+
+	/**
+	 * Render a notice with a count of the backwards incompatible frameworked
+	 * plugins that were deactivated
+	 *
+	 * @since 4.0.0
+	 */
+	public function render_deactivation_notice() {
+		echo '<div class="updated"><p>';
+		echo $_GET['sv_wc_framework_deactivate_newer'] > 1 ?
+			sprintf( 'Deactivated %d plugins', $_GET['sv_wc_framework_deactivate_newer'] ) :
+			'Deactivated one plugin';
+		echo '</p></div>';
+	}
+
+
+	/**
 	 * Render a notice to update any plugins with incompatible framework
+	 * versions, or incompatiblities with the current WooCommerce or WordPress
 	 * versions
 	 *
 	 * Note that no localization is available because there's no text domain
@@ -234,13 +317,29 @@ class SV_WC_Framework_Bootstrap {
 		// must update plugin notice
 		if ( ! empty( $this->incompatible_framework_plugins ) ) {
 
-			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_framework_plugins ) > 1 ? 'The following plugins are inactive because they require a newer version to function properly:' : 'The following plugin is inactive because it requires a newer version to function properly:' );
+			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_framework_plugins ) > 1 ? 'The following plugins are inactive because they require a newer version to function:' : 'The following plugin is inactive because it requires a newer version to function:' );
 
 			foreach ( $this->incompatible_framework_plugins as $plugin ) {
 				printf( '<li>%s</li>', $plugin['plugin_name'] );
 			}
 
-			echo '</ul><p>Please <a href="' . admin_url( 'update-core.php' ) . '">update&nbsp;&raquo;</a></p></div>';
+			echo '</ul>';
+			echo '<p>' .
+				sprintf(
+					count( $this->incompatible_framework_plugins ) > 1
+						? 'To reactivate these plugins, please %supdate now (recommended)%s %sor%s %sdeactivate the following%s:'
+						: 'To reactivate this plugin, please %supdate now (recommended)%s %sor%s %sdeactivate the following%s:',
+					'<a href="' . admin_url( 'update-core.php' ) . '">', '</a>',
+					'<em>', '</em>',
+					'<a href="' . admin_url( 'plugins.php?sv_wc_framework_deactivate_newer=yes' ) . '">', '</a>'
+				) . '</p>';
+			echo '<ul>';
+			foreach ( $this->active_plugins as $plugin ) {
+				printf( '<li>%s</li>', $plugin['plugin_name'] );
+			}
+			echo '</ul>';
+			echo '</div>';
+
 		}
 
 		// must update WC notice
@@ -254,6 +353,18 @@ class SV_WC_Framework_Bootstrap {
 
 			echo '</ul><p>Please <a href="' . admin_url( 'update-core.php' ) . '">update WooCommerce&nbsp;&raquo;</a></p></div>';
 		}
+
+		// must update WP notice
+		if ( ! empty( $this->incompatible_wp_version_plugins ) ) {
+
+			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_wp_version_plugins ) > 1 ? 'The following plugins are inactive because they require a newer version of WordPress:' : 'The following plugin is inactive because it requires a newer version of WordPress:' );
+
+			foreach ( $this->incompatible_wp_version_plugins as $plugin ) {
+				printf( '<li>%s requires WordPress %s or newer</li>', $plugin['plugin_name'], $plugin['args']['minimum_wp_version'] );
+			}
+
+			echo '</ul><p>Please <a href="' . admin_url( 'update-core.php' ) . '">update WordPress&nbsp;&raquo;</a></p></div>';
+		}
 	}
 
 
@@ -265,7 +376,13 @@ class SV_WC_Framework_Bootstrap {
 	 * frameworked plugins that are listed on wordpress.org and thus don't have
 	 * access to the Woo Helper functions bundled with WooThemes-listed plugins.
 	 *
-	 * @since 3.1.2-2
+	 * Notice: For now you can't rely on this method being available, since the
+	 * bootstrap class is the only piece of the framework which is loaded
+	 * simply according to the lexical order of plugin directories. Therefore
+	 * to use, you should first check that this method exists, or if you really
+	 * need to check for WooCommerce being active, define your own method.
+	 *
+	 * @since 4.0.0
 	 * @return boolean true if the WooCommerce plugin is installed and active
 	 */
 	public static function is_woocommerce_active() {

@@ -128,7 +128,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		if ( $this->use_form_post() ) {
 			// the checkout pay page
-			$order = SV_WC_Plugin_Compatibility::wc_get_order( $order_id );
+			$order = wc_get_order( $order_id );
 			return $order->get_checkout_payment_url( true );
 		} else {
 
@@ -230,8 +230,8 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		// attempt to automatically submit the form and redirect
 		wc_enqueue_js('
-			$( "body" ).block( {
-					message: "<img src=\"' . esc_url( $this->get_plugin()->get_plugin_url() . '/' . $this->get_plugin()->get_framework_image_path() . 'ajax-loader.gif' ) . '\" alt=\"Redirecting&hellip;\" style=\"float:left; margin-right: 10px;\" />' . __( 'Thank you for your order. We are now redirecting you to complete payment.', $this->text_domain ) . '",
+			$( document.body ).block( {
+					message: "<img src=\"' . esc_url( $this->get_plugin()->get_framework_assets_url() . '/images/ajax-loader.gif' ) . '\" alt=\"Redirecting&hellip;\" style=\"float:left; margin-right: 10px;\" />' . __( 'Thank you for your order. We are now redirecting you to complete payment.', $this->text_domain ) . '",
 					overlayCSS: {
 						background: "#fff",
 						opacity: 0.6
@@ -340,9 +340,9 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			if ( $this->process_transaction_response( $order, $response ) ) {
 
-				if ( SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) ) {
+				if ( $order->has_status( 'on-hold' ) ) {
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
-				} elseif ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'cancelled' ) ) {
+				} elseif ( ! $order->has_status( 'cancelled' ) ) {
 					$order->payment_complete(); // mark order as having received payment
 				}
 			}
@@ -408,9 +408,9 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			if ( $this->process_transaction_response( $order, $response ) ) {
 
-				if ( SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) ) {
+				if ( $order->has_status( 'on-hold' ) ) {
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
-				} elseif ( ! SV_WC_Plugin_Compatibility::order_has_status( $order, 'cancelled' ) ) {
+				} elseif ( ! $order->has_status( 'cancelled' ) ) {
 					$order->payment_complete(); // mark order as having received payment
 				}
 

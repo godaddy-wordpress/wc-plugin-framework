@@ -80,9 +80,6 @@ abstract class SV_WC_API_Base {
 	/**
 	 * Perform the request and return the parsed response
 	 *
-	 * TODO: during next backwards-incompatible framework update, the try/catch
-	 * block should catch SV_WC_Plugin_Exception for maximum flexibility
-	 *
 	 * @since 2.2.0
 	 * @param object $request class instance which implements \SV_WC_API_Request
 	 * @throws Exception
@@ -110,7 +107,7 @@ abstract class SV_WC_API_Base {
 			// parse & validate response
 			$response = $this->handle_response( $response );
 
-		} catch ( SV_WC_API_Exception $e ) {
+		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			// alert other actors that a request has been made
 			$this->broadcast_request();
@@ -133,7 +130,7 @@ abstract class SV_WC_API_Base {
 	 * @return array|WP_Error
 	 */
 	protected function do_remote_request( $request_uri, $request_args ) {
-		return wp_remote_request( $request_uri, $request_args );
+		return wp_safe_remote_request( $request_uri, $request_args );
 	}
 
 

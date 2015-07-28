@@ -1,3 +1,10 @@
 /.settings
 /.project
 *.zip
+.sass-cache*
+
+# NPM packages used by Grunt.js
+/node_modules
+
+# NPM debug log
+npm-debug.log

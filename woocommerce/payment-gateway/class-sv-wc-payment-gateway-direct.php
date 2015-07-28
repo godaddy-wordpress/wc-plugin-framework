@@ -427,7 +427,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		try {
 
 			// registered customer checkout (already logged in or creating account at checkout)
-			if ( $this->supports_tokenization() && 0 != SV_WC_Plugin_Compatibility::get_order_user_id( $order ) && $this->should_tokenize_payment_method() &&
+			if ( $this->supports_tokenization() && 0 != $order->get_user_id() && $this->should_tokenize_payment_method() &&
 				( 0 == $order->payment_total || $this->tokenize_before_sale() ) ) {
 				$order = $this->create_payment_token( $order );
 			}
@@ -442,7 +442,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					$this->add_transaction_data( $order );
 				}
 
-				if ( SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) ) {
+				if ( $order->has_status( 'on-hold' ) ) {
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
 				} else {
 					$order->payment_complete(); // mark order as having received payment
@@ -491,7 +491,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 1.0.0
 	 * @see SV_WC_Payment_Gateway::get_order()
-	 * @param int $order_id order ID being processed
+	 * @param int|\WC_Order $order_id order ID being processed
 	 * @return WC_Order object with payment and transaction information attached
 	 */
 	protected function get_order( $order_id ) {
@@ -541,7 +541,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} elseif ( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 			// paying with tokenized payment method (we've already verified that this token exists in the validate_fields method)
-			$token = $this->get_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) );
+			$token = $this->get_payment_token( $order->get_user_id(), SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) );
 
 			$order->payment->token          = $token->get_token();
 			$order->payment->account_number = $token->get_last_four();
@@ -566,7 +566,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			}
 
 			// make this the new default payment token
-			$this->set_default_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $token );
+			$this->set_default_payment_token( $order->get_user_id(), $token );
 		}
 
 		// allow other actors to modify the order object
@@ -666,7 +666,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( ! empty( $order->payment->card_type ) ) {
 				$card_type = $order->payment->card_type;
 			} elseif ( $first_four = substr( $order->payment->account_number, 0, 4 ) ) {
-				$card_type = SV_WC_Payment_Gateway_Payment_Token::type_from_account_number( $first_four );
+				$card_type = SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $first_four );
 			} else {
 				$card_type = 'card';
 			}
@@ -719,7 +719,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// handle the response
 		if ( $response->transaction_approved() || $response->transaction_held() ) {
 
-			if ( $this->supports_tokenization() && 0 != SV_WC_Plugin_Compatibility::get_order_user_id( $order ) && $this->should_tokenize_payment_method() &&
+			if ( $this->supports_tokenization() && 0 != $order->get_user_id() && $this->should_tokenize_payment_method() &&
 				( $order->payment_total > 0 && ( $this->tokenize_with_sale() || $this->tokenize_after_sale() ) ) ) {
 
 				try {
@@ -1049,12 +1049,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$order->customer_id = $this->get_order_meta( $order->id, 'customer_id' );
 
 		// ensure the payment token is still valid
-		if ( ! $this->has_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $order->payment->token ) ) {
+		if ( ! $this->has_payment_token( $order->get_user_id(), $order->payment->token ) ) {
 			$order->payment->token = null;
 		} else {
 
 			// get the token object
-			$token = $this->get_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $order->payment->token );
+			$token = $this->get_payment_token( $order->get_user_id(), $order->payment->token );
 
 			if ( ! isset( $order->payment->account_number ) || ! $order->payment->account_number )
 				$order->payment->account_number = $token->get_last_four();
@@ -1118,12 +1118,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$order->payment_total = number_format( (double) $amount_to_charge, 2, '.', '' );
 
 			// required
-			if ( ! $order->payment->token || ! SV_WC_Plugin_Compatibility::get_order_user_id( $order ) ) {
+			if ( ! $order->payment->token || ! $order->get_user_id() ) {
 				throw new SV_WC_Payment_Gateway_Exception( 'Subscription Renewal: Payment Token or User ID is missing/invalid.' );
 			}
 
 			// get the token, we've already verified it's good
-			$token = $this->get_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $order->payment->token );
+			$token = $this->get_payment_token( $order->get_user_id(), $order->payment->token );
 
 			// perform the transaction
 			if ( $this->is_credit_card_gateway() ) {
@@ -1284,7 +1284,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( $this->get_id() !== $order->recurring_payment_method )
 			return $payment_method_to_display;
 
-		$token = $this->get_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $this->get_order_meta( $order->id, 'payment_token' ) );
+		$token = $this->get_payment_token( $order->get_user_id(), $this->get_order_meta( $order->id, 'payment_token' ) );
 
 		if ( is_object( $token )  )
 			$payment_method_to_display = sprintf( _x( 'Via %s ending in %s', 'Supports direct payment method subscriptions', $this->text_domain ), $token->get_type_full(), $token->get_last_four() );
@@ -1387,7 +1387,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order ) ) {
 
 			// normally a guest user wouldn't be assigned a customer id, but for a pre-order requiring tokenization, it might be
-			if ( 0 == SV_WC_Plugin_Compatibility::get_order_user_id( $order ) && false !== ( $customer_id = $this->get_guest_customer_id( $order ) ) )
+			if ( 0 == $order->get_user_id() && false !== ( $customer_id = $this->get_guest_customer_id( $order ) ) )
 				$order->customer_id = $customer_id;
 
 		} elseif ( WC_Pre_Orders_Order::order_has_payment_token( $order ) ) {
@@ -1401,7 +1401,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$order->customer_id = $this->get_order_meta( $order->id, 'customer_id' );
 
 			// verify that this customer still has the token tied to this order.
-			if ( ! $this->has_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $order->payment->token ) ) {
+			if ( ! $this->has_payment_token( $order->get_user_id(), $order->payment->token ) ) {
 
 				$order->payment->token = null;
 
@@ -1411,7 +1411,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				//  most up-to-date data, while the meta attached to the order is a second best
 
 				// for a guest transaction with a gateway that doesn't support "tokenization get" this will return null and the token data will be pulled from the order meta
-				$token = $this->get_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $order->payment->token );
+				$token = $this->get_payment_token( $order->get_user_id(), $order->payment->token );
 
 				// account last four
 				$order->payment->account_number = $token && $token->get_last_four() ? $token->get_last_four() : $this->get_order_meta( $order->id, 'account_four' );
@@ -1673,8 +1673,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			}
 
 			// set the token to the user account
-			if ( SV_WC_Plugin_Compatibility::get_order_user_id( $order ) ) {
-				$this->add_payment_token( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $token, $environment_id );
+			if ( $order->get_user_id() ) {
+				$this->add_payment_token( $order->get_user_id(), $token, $environment_id );
 			}
 
 			// order note based on gateway type
@@ -1700,7 +1700,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$this->add_transaction_data( $order, $response );
 
 			// clear any cached tokens
-			if ( $transient_key = $this->get_payment_tokens_transient_key( SV_WC_Plugin_Compatibility::get_order_user_id( $order ) ) ) {
+			if ( $transient_key = $this->get_payment_tokens_transient_key( $order->get_user_id() ) ) {
 				delete_transient( $transient_key );
 			}
 
@@ -1901,7 +1901,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 *
 		 * Fired when payment tokens have been completely loaded.
 		 *
-		 * @since 3.1.2-2
+		 * @since 4.0.0
 		 * @param array $tokens array of SV_WC_Payment_Gateway_Payment_Tokens
 		 * @param \SV_WC_Payment_Gateway_Direct direct gateway class instance
 		 */
@@ -1915,7 +1915,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Merge remote token data with local tokens, sometimes local tokens can provide
 	 * additional detail that's not provided remotely
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0
 	 * @param array $local_tokens local tokens
 	 * @param array $remote_tokens remote tokens
 	 * @return array associative array of string token to SV_WC_Payment_Gateway_Payment_Token objects
@@ -1958,7 +1958,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * See Authorize.net CIM for an example implementation.
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0
 	 * @return array associative array of string token to SV_WC_Payment_Gateway_Payment_Token objects
 	 */
 	protected function get_payment_token_merge_attributes() {
@@ -1973,7 +1973,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * Payment token transients can be disabled by using the filter below.
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0
 	 * @param string|int $user_id
 	 * @return string transient key
 	 */
@@ -1996,7 +1996,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 *
 		 * filter responsibly!
 		 *
-		 * @since 3.1.2-2
+		 * @since 4.0.0
 		 * @param string $key transient key (must be 45 chars or less)
 		 * @param \SV_WC_Payment_Gateway_Direct $this direct gateway class instance
 		 */
@@ -2009,9 +2009,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * TODO: ideally the transient would make use of actions to clear itself
 	 * as needed (e.g. when customer IDs are updated/removed), but for now it's
-	 * only cleared when the tokens are updated.
+	 * only cleared when the tokens are updated. @MR July 2015
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0
 	 * @param int|string $user_id
 	 */
 	public function clear_payment_tokens_transient( $user_id ) {
@@ -2077,7 +2077,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Update a single token by persisting it to user meta
 	 *
-	 * @since since 3.1.2-2
+	 * @since since 4.0.0
 	 * @param int $user_id WP user ID
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token to update
 	 * @param string $environment_id optional environment id, defaults to plugin current environment
@@ -2315,7 +2315,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Returns true if the gateway supports the add payment method feature
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0
 	 * @return boolean true if the gateway supports add payment method feature
 	 */
 	public function supports_add_payment_method() {
@@ -2328,7 +2328,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * stubbed in the WC_Payment_Gateway abstract class, but is called if the
 	 * gateway declares support for it.
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0
 	 */
 	public function add_payment_method() {
 
@@ -2351,7 +2351,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		SV_WC_Helper::wc_add_notice( $result['message'], $result['success'] ? 'success' : 'error' );
 
 		// redirect to my account on success, or back to Add Payment Method screen on failure so user can try again
-		wp_safe_redirect( $result['success'] ? get_permalink( wc_get_page_id( 'myaccount' ) ) : wc_get_endpoint_url( 'add-payment-method' ) );
+		wp_safe_redirect( $result['success'] ? SV_WC_Plugin_Compatibility::wc_get_page_permalink( 'myaccount' ) : wc_get_endpoint_url( 'add-payment-method' ) );
 
 		exit();
 	}
@@ -2361,7 +2361,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Perform the transaction to add the customer's payment method to their
 	 * account
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0
 	 * @return array result with success/error message and request status (success/failure)
 	 */
 	protected function do_add_payment_method_transaction( WC_Order $order ) {
@@ -2427,7 +2427,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 * user is redirected back to the My Account page or remains on the add
 		 * new payment method screen
 		 *
-		 * @since 3.1.2-2
+		 * @since 4.0.0
 		 * @param array $result {
 		 *   @type string $message notice message to render
 		 *   @type bool $success true to redirect to my account, false to stay on page
@@ -2445,13 +2445,15 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * a mock order is generated as there is no actual order associated with the
 	 * request.
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0
 	 * @return WC_Order generated order object
 	 */
 	protected function get_order_for_add_payment_method() {
 
+		$order = new WC_Order( 0 );
+
 		// mock order, as all gateway API implementations require an order object for tokenization
-		$order = $this->get_order( 0 );
+		$order = $this->get_order( $order );
 
 		$user = get_userdata( get_current_user_id() );
 
@@ -2486,7 +2488,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Add customer data as part of the add payment method transaction, primarily
 	 * customer ID
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0
 	 * @param WC_Order $order mock order
 	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response
 	 */
@@ -2519,7 +2521,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * + transaction date
 	 * + transaction environment
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0
 	 * @param \SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response
 	 */
 	protected function add_add_payment_method_transaction_data( $response ) {
@@ -2549,7 +2551,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Allow gateway implementations to add additional data to the data saved
 	 * during the add payment method transaction
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0
 	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response create payment token response
 	 * @return array
 	 */

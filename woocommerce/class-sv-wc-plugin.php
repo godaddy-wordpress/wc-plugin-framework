@@ -84,12 +84,12 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * Use the standard WordPress/WooCommerce `is_*` methods when adding the notice
  * to control which pages it does (or does not) display on.
  *
- * @version 3.1.2-2
+ * @version 4.0.0
  */
 abstract class SV_WC_Plugin {
 
 	/** Plugin Framework Version */
-	const VERSION = '3.1.2-2';
+	const VERSION = '4.0.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -162,7 +162,7 @@ abstract class SV_WC_Plugin {
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
 
 			// admin message handler
-			require_once( 'class-sv-wp-admin-message-handler.php' );
+			require_once( $this->get_framework_path() . '/class-sv-wp-admin-message-handler.php' );
 
 			// render any admin notices, delayed notices, and
 			add_action( 'admin_notices', array( $this, 'add_admin_notices'            ), 10 );
@@ -239,25 +239,27 @@ abstract class SV_WC_Plugin {
 	 */
 	private function includes() {
 
+		$framework_path = $this->get_framework_path();
+
 		// common exception class
-		require_once( 'class-sv-wc-plugin-exception.php' );
+		require_once(  $framework_path . '/class-sv-wc-plugin-exception.php' );
 
 		// common utility methods
-		require_once( 'class-sv-wc-helper.php' );
+		require_once( $framework_path . '/class-sv-wc-helper.php' );
 
 		// backwards compatibility for older WC versions
-		require_once( 'class-sv-wc-plugin-compatibility.php' );
+		require_once( $framework_path . '/class-sv-wc-plugin-compatibility.php' );
 
 		if ( is_admin() ) {
 			// load admin notice handler
-			require_once( 'class-sv-wc-admin-notice-handler.php' );
+			require_once( $framework_path . '/class-sv-wc-admin-notice-handler.php' );
 		}
 
 		// generic API base
-		require_once( 'api/class-sv-wc-api-exception.php' );
-		require_once( 'api/class-sv-wc-api-base.php' );
-		require_once( 'api/interface-sv-wc-api-request.php' );
-		require_once( 'api/interface-sv-wc-api-response.php' );
+		require_once( $framework_path . '/api/class-sv-wc-api-exception.php' );
+		require_once( $framework_path . '/api/class-sv-wc-api-base.php' );
+		require_once( $framework_path . '/api/interface-sv-wc-api-request.php' );
+		require_once( $framework_path . '/api/interface-sv-wc-api-response.php' );
 	}
 
 
@@ -374,12 +376,9 @@ abstract class SV_WC_Plugin {
 			$custom_actions['docs'] = sprintf( '<a href="%s">%s</a>', $this->get_documentation_url(), __( 'Docs', $this->text_domain ) );
 		}
 
-		// support url
-		$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', 'http://support.woothemes.com/', __( 'Support', $this->text_domain ) );
-
-		// optional review link
-		if ( $this->get_review_url() ) {
-			$custom_actions['review'] = sprintf( '<a href="%s">%s</a>', $this->get_review_url(), __( 'Write a Review', $this->text_domain ) );
+		// support url if any
+		if ( $this->get_support_url() ) {
+			$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', $this->get_support_url(), __( 'Support', $this->text_domain ) );
 		}
 
 		// add the links to the front of the actions list
@@ -679,41 +678,26 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Gets the plugin documentation url, which defaults to:
-	 * http://docs.woothemes.com/document/woocommerce-{dasherized plugin id}/
+	 * Gets the plugin documentation url, used for the 'Docs' plugin action
 	 *
 	 * @since 2.0.0
 	 * @return string documentation URL
 	 */
 	public function get_documentation_url() {
 
-		return 'http://docs.woothemes.com/document/woocommerce-' . $this->get_id_dasherized() . '/';
+		return null;
 	}
 
 
 	/**
-	 * Gets the plugin review URL, which defaults to:
-	 * {product page url}#tab-reviews
+	 * Gets the support URL, used for the 'Support' plugin action link
 	 *
-	 * @since 2.0.0
-	 * @return string review url
+	 * @since 4.0.0
+	 * @return string support url
 	 */
-	public function get_review_url() {
+	public function get_support_url() {
 
-		return $this->get_product_page_url() . '#review_form';
-	}
-
-
-	/**
-	 * Gets the skyverge.com product page URL, which defaults to:
-	 * http://www.skyverge.com/product/{dasherized plugin id}/
-	 *
-	 * @since 2.0.0
-	 * @return string skyverge.com product page url
-	 */
-	public function get_product_page_url() {
-
-		return 'http://www.skyverge.com/product/woocommerce-' . $this->get_id_dasherized() . '/';
+		return null;
 	}
 
 
@@ -752,7 +736,7 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Returns the woocommerce uploads path, sans trailing slash.  Oddly WooCommerce
+	 * Returns the woocommerce uploads path, without trailing slash.  Oddly WooCommerce
 	 * core does not provide a way to get this
 	 *
 	 * @since 2.0.0
@@ -765,14 +749,52 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Returns the relative path to the framework image directory, with a
+	 * Returns the loaded framework __FILE__
+	 *
+	 * @since 4.0.0
+	 * @return string
+	 */
+	public function get_framework_file() {
+
+		return __FILE__;
+	}
+
+
+	/**
+	 * Returns the loaded framework path, without trailing slash. Ths is the highest
+	 * version framework that was loaded by the bootstrap.
+	 *
+	 * @since 4.0.0
+	 * @return string
+	 */
+	public function get_framework_path() {
+
+		return untrailingslashit( plugin_dir_path( $this->get_framework_file() ) );
+	}
+
+
+	/**
+	 * Returns the absolute path to the loaded framework image directory, without a
 	 * trailing slash
 	 *
-	 * @since 2.0.0
-	 * @return string relative path to framework image directory
+	 * @since 4.0.0
+	 * @return string
 	 */
-	public function get_framework_image_path() {
-		return 'lib/skyverge/woocommerce/assets/images/';
+	public function get_framework_assets_path() {
+
+		return $this->get_framework_path() . '/assets';
+	}
+
+
+	/**
+	 * Returns the loaded framework assets URL without a trailing slash
+	 *
+	 * @since 4.0.0
+	 * @return string
+	 */
+	public function get_framework_assets_url() {
+
+		return untrailingslashit( plugins_url( '/assets', $this->get_framework_file() ) );
 	}
 
 
@@ -797,7 +819,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Returns the plugin's text domain
 	 *
-	 * @since 3.1.2-2
+	 * @since 4.0.0
 	 * @return string text domain
 	 */
 	public function get_text_domain() {

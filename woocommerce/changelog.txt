@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2015.nn.nn - version 3.1.2-2
+2015.07.27 - version 4.0.0
  * Feature - Standardized payment gateway form
  * Feature - Add new payment method feature
  * Feature - Standardized & unified My Payment Methods table
@@ -9,6 +9,9 @@
  * Tweak - Payment gateway token support now allows for merging local data with remote data, and caching results in a transient
  * Tweak - The order status for voided orders is now "cancelled" rather than "refunded"
  * Tweak - Improved support for REST API development
+ * Tweak - Framework bootstrap now gives the option to easily deactivate backwards incompatible plugins, rather than only an instruction to update older plugins
+ * Tweak - Framework bootstrap option to declare minimum required WordPress version
+ * Misc - WooCommerce 2.4 compatibility
 
 2015.03.17 - version 3.1.2
  * Fix - JS variable `wc_select_params` undefined in WC 2.3.6+

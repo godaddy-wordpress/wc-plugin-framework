@@ -197,7 +197,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * pattern definitions from http://www.regular-expressions.info/unicode.html
 		 *
-		 * @since 3.1.2-2
+		 * @since 4.0.0
 		 * @param string $string
 		 * @return mixed
 		 */
@@ -416,10 +416,12 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 				$product = $order->get_product_from_item( $item );
 
-				// get meta + format it
-				$item_meta = new WC_Order_Item_Meta( $item['item_meta'] );
+				$meta = SV_WC_Plugin_Compatibility::is_wc_version_gte_2_4() ? $item : $item['item_meta'];
 
-				$item_meta = SV_WC_Plugin_Compatibility::get_formatted_item_meta( $item_meta );
+				// get meta + format it
+				$item_meta = new WC_Order_Item_Meta( $meta );
+
+				$item_meta = $item_meta->get_formatted();
 
 				if ( ! empty( $item_meta ) ) {
 
@@ -719,7 +721,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		/**
 		 * Gets the full URL to the log file for a given $handle
 		 *
-		 * @since 3.1.2-1
+		 * @since 4.0.0
 		 * @param string $handle log handle
 		 * @return string URL to the WC log file identified by $handle
 		 */
