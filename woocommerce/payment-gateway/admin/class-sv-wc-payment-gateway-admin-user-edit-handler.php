@@ -46,9 +46,6 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 	/** @var SV_WC_Plugin the plugin */
 	private $plugin;
 
-	/** @var string plugin text domain */
-	protected $text_domain;
-
 	/** @var boolean used to limit the Admin User Edit handler javascript to one instance no matter how many active framework gateways */
 	private static $user_profile_tokenization_js_rendered = false;
 
@@ -60,10 +57,9 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 	 *
 	 * @since 3.0.0
 	 */
-	public function __construct( $plugin, $text_domain ) {
+	public function __construct( $plugin ) {
 
 		$this->plugin      = $plugin;
-		$this->text_domain = $text_domain;
 
 		// Admin
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {

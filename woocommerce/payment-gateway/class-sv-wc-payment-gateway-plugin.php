@@ -699,7 +699,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			return $this->admin_user_edit_handler;
 		}
 
-		return $this->admin_user_edit_handler = new SV_WC_Payment_Gateway_Admin_User_Edit_Handler( $this, 'sv-wc-plugin-framework' );
+		return $this->admin_user_edit_handler = new SV_WC_Payment_Gateway_Admin_User_Edit_Handler( $this );
 	}
 
 
