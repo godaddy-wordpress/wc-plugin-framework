@@ -214,7 +214,7 @@ abstract class SV_WC_Plugin {
 	public function load_translations() {
 
 		// Load framework text domain
-		load_plugin_textdomain( 'sv-wc-plugin-framework', false, dirname( plugin_basename( $this->get_file() ) ) . '/lib/skyverge/woocommerce/i18n/languages' );
+		load_plugin_textdomain( 'sv-wc-plugin-framework', false, dirname( plugin_basename( $this->get_framework_file() ) ) . '/i18n/languages' );
 
 		// Load plugin text domain
 		$this->load_translation();
