@@ -192,7 +192,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function __clone() {
 		// translators: %s - plugin name
-		_doing_it_wrong( __FUNCTION__, sprintf( __( 'You cannot clone instances of %s.', 'sv-wc-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
+		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot clone instances of %s.', 'sv-wc-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
 	}
 
 	/**
@@ -202,7 +202,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function __wakeup() {
 		// translators: %s - plugin name
-		_doing_it_wrong( __FUNCTION__, sprintf( __( 'You cannot unserialize instances of %s.', 'sv-wc-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
+		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot unserialize instances of %s.', 'sv-wc-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
 	}
 
 
@@ -338,7 +338,7 @@ abstract class SV_WC_Plugin {
 
 			$message = sprintf(
 				// translators: %1$s - plugin name, %2$s - a PHP extension/comma-separated list of PHP extensions
-				_n(
+				esc_html_n(
 					'%1$s requires the %2$s PHP extension to function. Contact your host or server administrator to configure and install the missing extension.',
 					'%1$s requires the following PHP extensions to function: %2$s. Contact your host or server administrator to configure and install the missing extensions.',
 					count( $missing_extensions ),
@@ -359,7 +359,7 @@ abstract class SV_WC_Plugin {
 
 			$message = sprintf(
 				// translators: %1$s - plugin name, %2$s - a PHP function/comma-separated list of PHP functions
-				_n(
+				esc_html_n(
 					'%1$s requires the %2$s PHP function to exist.  Contact your host or server administrator to configure and install the missing function.',
 					'%1$s requires the following PHP functions to exist: %2$s.  Contact your host or server administrator to configure and install the missing functions.',
 					count( $missing_functions ),
@@ -395,12 +395,12 @@ abstract class SV_WC_Plugin {
 		// documentation url if any
 		if ( $this->get_documentation_url() ) {
 			// translators: Docs as in Documentation
-			$custom_actions['docs'] = sprintf( '<a href="%s">%s</a>', $this->get_documentation_url(), __( 'Docs', 'sv-wc-plugin-framework' ) );
+			$custom_actions['docs'] = sprintf( '<a href="%s">%s</a>', $this->get_documentation_url(), esc_html__( 'Docs', 'sv-wc-plugin-framework' ) );
 		}
 
 		// support url if any
 		if ( $this->get_support_url() ) {
-			$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', $this->get_support_url(), _x( 'Support', 'noun', 'sv-wc-plugin-framework' ) );
+			$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', $this->get_support_url(), esc_html_x( 'Support', 'noun', 'sv-wc-plugin-framework' ) );
 		}
 
 		// add the links to the front of the actions list
@@ -650,7 +650,7 @@ abstract class SV_WC_Plugin {
 		$settings_url = $this->get_settings_url( $plugin_id );
 
 		if ( $settings_url ) {
-			return sprintf( '<a href="%s">%s</a>', $settings_url, __( 'Configure', 'sv-wc-plugin-framework' ) );
+			return sprintf( '<a href="%s">%s</a>', $settings_url, esc_html__( 'Configure', 'sv-wc-plugin-framework' ) );
 		}
 
 		// no settings

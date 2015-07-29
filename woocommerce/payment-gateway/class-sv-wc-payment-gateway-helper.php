@@ -145,17 +145,17 @@ class SV_WC_Payment_Gateway_Helper {
 		// special cases
 		switch ( $type ) {
 
-			case 'mc':         $name = _x( 'MasterCard', 'credit card type', 'sv-wc-plugin-framework' );          break;
-			case 'amex':       $name = _x( 'American Express', 'credit card type', 'sv-wc-plugin-framework' );    break;
-			case 'disc':       $name = _x( 'Discover', 'credit card type', 'sv-wc-plugin-framework' );            break;
-			case 'jcb':        $name = _x( 'JCB', 'credit card type', 'sv-wc-plugin-framework' );                 break;
-			case 'cartebleue': $name = _x( 'CarteBleue', 'credit card type', 'sv-wc-plugin-framework' );          break;
-			case 'paypal':     $name = __( 'PayPal', 'sv-wc-plugin-framework' );                                  break;
-			case 'checking':   $name = __( 'Checking Account', 'sv-wc-plugin-framework' );                        break;
-			case 'savings':    $name = __( 'Savings Account', 'sv-wc-plugin-framework' );                         break;
-			case 'card':       $name = __( 'Credit / Debit Card', 'sv-wc-plugin-framework' );                     break;
-			case 'bank':       $name = __( 'Bank Account', 'sv-wc-plugin-framework' );                            break;
-			case '':           $name = _x( 'Account', 'payment method type', 'sv-wc-plugin-framework' );          break;
+			case 'mc':         $name = esc_html_x( 'MasterCard', 'credit card type', 'sv-wc-plugin-framework' );          break;
+			case 'amex':       $name = esc_html_x( 'American Express', 'credit card type', 'sv-wc-plugin-framework' );    break;
+			case 'disc':       $name = esc_html_x( 'Discover', 'credit card type', 'sv-wc-plugin-framework' );            break;
+			case 'jcb':        $name = esc_html_x( 'JCB', 'credit card type', 'sv-wc-plugin-framework' );                 break;
+			case 'cartebleue': $name = esc_html_x( 'CarteBleue', 'credit card type', 'sv-wc-plugin-framework' );          break;
+			case 'paypal':     $name = esc_html__( 'PayPal', 'sv-wc-plugin-framework' );                                  break;
+			case 'checking':   $name = esc_html__( 'Checking Account', 'sv-wc-plugin-framework' );                        break;
+			case 'savings':    $name = esc_html__( 'Savings Account', 'sv-wc-plugin-framework' );                         break;
+			case 'card':       $name = esc_html__( 'Credit / Debit Card', 'sv-wc-plugin-framework' );                     break;
+			case 'bank':       $name = esc_html__( 'Bank Account', 'sv-wc-plugin-framework' );                            break;
+			case '':           $name = esc_html_x( 'Account', 'payment method type', 'sv-wc-plugin-framework' );          break;
 		}
 
 		// default: replace dashes with spaces and uppercase all words

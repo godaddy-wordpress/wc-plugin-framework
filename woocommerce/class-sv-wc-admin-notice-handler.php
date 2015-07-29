@@ -191,7 +191,7 @@ class SV_WC_Admin_Notice_Handler {
 		if ( isset( $params['dismissible'] ) && $params['dismissible'] && ( ! isset( $params['always_show_on_settings'] ) || ! $params['always_show_on_settings'] || ! $this->get_plugin()->is_plugin_settings() ) ) {
 
 			// translators: this is an action that dismisses a message
-			$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-notice-dismiss" data-message-id="%s" style="float: right;">%s</a>', $message_id, __( 'Dismiss', 'sv-wc-plugin-framework' ) );
+			$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-notice-dismiss" data-message-id="%s" style="float: right;">%s</a>', $message_id, esc_html__( 'Dismiss', 'sv-wc-plugin-framework' ) );
 		}
 
 		$class = isset( $params['notice_class'] ) ? $params['notice_class'] : 'error';

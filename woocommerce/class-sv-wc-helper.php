@@ -555,7 +555,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *       data-action="wc_cart_notices_json_search_product_categories"
 		 *       data-nonce="<?php echo wp_create_nonce( 'search-categories' ); ?>"
 		 *       data-request_data = "<?php echo esc_attr( json_encode( array( 'field_name' => 'something_exciting', 'default' => 'default_label' ) ) ) ?>"
-		 *       data-placeholder="<?php _e( 'Search for a category&hellip;', 'wc-cart-notices' ) ?>"
+		 *       data-placeholder="<?php esc_attr_e( 'Search for a category&hellip;', 'wc-cart-notices' ) ?>"
 		 *       data-allow_clear="true"
 		 *       data-selected="<?php
 		 *          $json_ids    = array();
@@ -741,7 +741,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function f__( $text ) {
 
-			return __( $text, 'sv-wc-plugin-framework' );
+			return esc_html__( $text, 'sv-wc-plugin-framework' );
 		}
 
 
@@ -758,7 +758,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function f_e( $text ) {
 
-			return _e( $text, 'sv-wc-plugin-framework' );
+			return esc_html_e( $text, 'sv-wc-plugin-framework' );
 		}
 
 
@@ -775,7 +775,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function f_x( $text, $context ) {
 
-			return _x( $text, $context, 'sv-wc-plugin-framework' );
+			return esc_html_x( $text, $context, 'sv-wc-plugin-framework' );
 		}
 
 

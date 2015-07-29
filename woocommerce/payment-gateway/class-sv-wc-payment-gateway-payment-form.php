@@ -290,7 +290,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		$fields = array(
 			'card-number' => array(
 				'type'              => 'text',
-				'label'             => __( 'Card Number', 'sv-wc-plugin-framework' ),
+				'label'             => esc_html__( 'Card Number', 'sv-wc-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
 				'placeholder'       => '•••• •••• •••• ••••',
@@ -303,10 +303,10 @@ class SV_WC_Payment_Gateway_Payment_Form {
 			),
 			'card-expiry' => array(
 				'type'              => 'text',
-				'label'             => __( 'Expiration (MM/YY)', 'sv-wc-plugin-framework' ),
+				'label'             => esc_html__( 'Expiration (MM/YY)', 'sv-wc-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-expiry',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-expiry',
-				'placeholder'       => __( 'MM / YY', 'sv-wc-plugin-framework' ),
+				'placeholder'       => esc_html__( 'MM / YY', 'sv-wc-plugin-framework' ),
 				'required'          => true,
 				'class'             => array( 'form-row-first' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-expiry' ),
@@ -318,10 +318,10 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		if ( $this->get_gateway()->csc_enabled() ) {
 			$fields['card-csc']    = array(
 				'type'              => 'text',
-				'label'             => __( 'Card Security Code', 'sv-wc-plugin-framework' ),
+				'label'             => esc_html__( 'Card Security Code', 'sv-wc-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
-				'placeholder'       => __( 'CSC', 'sv-wc-plugin-framework' ),
+				'placeholder'       => esc_html__( 'CSC', 'sv-wc-plugin-framework' ),
 				'required'          => true,
 				'class'             => array( 'form-row-last' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-csc' ),
@@ -361,7 +361,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 			'routing-number' => array(
 				'type'              => 'text',
 				// translators: e-check routing number, HTML form field label, https://en.wikipedia.org/wiki/Routing_transit_number
-				'label'             => __( 'Routing Number', 'sv-wc-plugin-framework' ) . $check_hint,
+				'label'             => esc_html__( 'Routing Number', 'sv-wc-plugin-framework' ) . $check_hint,
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-routing-number',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-routing-number',
 				'placeholder'       => '•••••••••',
@@ -375,7 +375,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 			'account-number' => array(
 				'type'              => 'text',
 				// translators: e-check account number, HTML form field label
-				'label'             => __( 'Account Number', 'sv-wc-plugin-framework' ) . $check_hint,
+				'label'             => esc_html__( 'Account Number', 'sv-wc-plugin-framework' ) . $check_hint,
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
 				'required'          => true,
@@ -388,7 +388,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 			'account-type'   => array(
 				'type'              => 'select',
 				// translators: e-check account type, HTML form field label
-				'label'             => __( 'Account Type', 'sv-wc-plugin-framework' ),
+				'label'             => esc_html__( 'Account Type', 'sv-wc-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-type',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-type',
 				'required'          => true,
@@ -396,9 +396,9 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				'input_class'       => array( 'js-sv-wc-payment-gateway-echeck-form-input js-sv-wc-payment-gateway-echeck-form-account-type' ),
 				'options'           => array(
 					// translators: http://www.investopedia.com/terms/c/checkingaccount.asp
-					'checking' => _x( 'Checking', 'account type', 'sv-wc-plugin-framework' ),
+					'checking' => esc_html_x( 'Checking', 'account type', 'sv-wc-plugin-framework' ),
 					// http://www.investopedia.com/terms/s/savingsaccount.asp
-					'savings'  => _x( 'Savings',  'account type', 'sv-wc-plugin-framework' ),
+					'savings'  => esc_html_x( 'Savings',  'account type', 'sv-wc-plugin-framework' ),
 				),
 				'custom_attributes' => array(),
 				'value'             => 'checking',
@@ -435,7 +435,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 		if ( $this->get_gateway()->is_test_environment() ) {
 			// translators: Test mode refers to the current software environment
-			echo '<p>' . __( 'TEST MODE ENABLED', 'sv-wc-plugin-framework' ) . '</p>';
+			echo '<p>' . esc_html__( 'TEST MODE ENABLED', 'sv-wc-plugin-framework' ) . '</p>';
 		}
 
 		/**
@@ -523,7 +523,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		$html = sprintf( '<a class="button" style="float:right;" href="%s">%s</a>',
 			esc_url( SV_WC_Plugin_Compatibility::wc_get_page_permalink( 'myaccount' ) . '#wc-' . $this->get_gateway()->get_plugin()->get_id_dasherized() . '-my-payment-methods' ),
 			// translators: Payment method as in a specific credit card, e-check or bank account
-			wp_kses_post( apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_manage_payment_methods_text', __( 'Manage Payment Methods', 'sv-wc-plugin-framework' ) ) )
+			wp_kses_post( apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_manage_payment_methods_text', esc_html__( 'Manage Payment Methods', 'sv-wc-plugin-framework' ) ) )
 		);
 
 		/**
@@ -690,7 +690,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				$html .= '<p class="form-row">';
 				$html .= sprintf( '<input name="wc-%1$s-tokenize-payment-method" id="wc-%1$s-tokenize-payment-method" class="js-sv-wc-tokenize-payment method js-wc-%1$s-tokenize-payment-method" type="checkbox" value="true" style="width:auto;" />', $this->get_gateway()->get_id_dasherized() );
 				// translators: account as in customer's account on the e-commerce site
-				$html .= sprintf( '<label for="wc-%s-tokenize-payment-method" style="display:inline;">%s</label>', $this->get_gateway()->get_id_dasherized(), apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_tokenize_payment_method_text', __( 'Securely Save to Account', 'sv-wc-plugin-framework' ) ) );
+				$html .= sprintf( '<label for="wc-%s-tokenize-payment-method" style="display:inline;">%s</label>', $this->get_gateway()->get_id_dasherized(), apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_tokenize_payment_method_text', esc_html__( 'Securely Save to Account', 'sv-wc-plugin-framework' ) ) );
 				$html .= '</p><div class="clear"></div>';
 			}
 		}
