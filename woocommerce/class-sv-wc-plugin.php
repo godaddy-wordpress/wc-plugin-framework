@@ -586,7 +586,7 @@ abstract class SV_WC_Plugin {
 			return $this->admin_notice_handler;
 		}
 
-		return $this->admin_notice_handler = new SV_WC_Admin_Notice_Handler( $this, 'sv-wc-plugin-framework' );
+		return $this->admin_notice_handler = new SV_WC_Admin_Notice_Handler( $this );
 	}
 
 
