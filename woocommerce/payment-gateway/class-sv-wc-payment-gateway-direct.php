@@ -136,7 +136,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			}
 		}
 		
-		return true;
+		// no more validation to perform. Return the parent method's outcome.
+		return $is_valid;
+
 	}
 
 
