@@ -1,6 +1,5 @@
 /.settings
 /.project
-*.zip
 .sass-cache*
 
 # NPM packages used by Grunt.js

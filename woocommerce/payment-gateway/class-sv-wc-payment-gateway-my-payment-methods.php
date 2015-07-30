@@ -94,7 +94,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		if ( $this->has_tokens ) {
 			wc_enqueue_js( '
 			$( ".sv-wc-payment-gateway-payment-method-actions .delete-payment-method" ).on( "click", function( e ) {
-				if ( ! confirm( "' . esc_js( __( 'Are you sure you want to delete this payment method?', $this->get_plugin()->get_text_domain() ) ) . '" ) ) {
+				if ( ! confirm( "' . esc_js( /* translators: Payment method as in a specific credit card, e-check or bank account */ esc_html__( 'Are you sure you want to delete this payment method?', 'sv-wc-plugin-framework' ) ) . '" ) ) {
 					e.preventDefault();
 				}
 			} );
@@ -181,7 +181,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	protected function get_no_payment_methods_html() {
 
-		$html = '<p>' . apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_no_payment_methods_text', esc_html__( 'You do not have any saved payment methods.', $this->get_plugin()->get_text_domain() ), $this ) . '</p>';
+		// translators: Payment method as in a specific credit card, e-check or bank account
+		$html = '<p>' . apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_no_payment_methods_text', esc_html__( 'You do not have any saved payment methods.', 'sv-wc-plugin-framework' ), $this ) . '</p>';
 
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_no_payment_methods_html', $html, $this );
 	}
@@ -198,14 +199,16 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	protected function get_table_title_html() {
 
-		$title = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_title', __( 'My Payment Methods', $this->get_plugin()->get_text_domain() ), $this );
+		// translators: Payment method as in a specific credit card, e-check or bank account
+		$title = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_title', esc_html__( 'My Payment Methods', 'sv-wc-plugin-framework' ), $this );
 
 		$html = '<div class="sv-wc-payment-gateway-my-payment-methods-table-title">';
 
 		$html .= sprintf( '<h2 id="wc-%s-my-payment-methods">%s</h2>', $this->get_plugin()->get_id_dasherized(), esc_html( $title ) );
 
 		if ( $this->supports_add_payment_method() ) {
-			$html .= sprintf( '<a class="button sv-wc-payment-gateway-my-payment-methods-add-payment-method-button dashicons-before dashicons-plus-alt" href="%s">%s</a>', esc_url( wc_get_endpoint_url( 'add-payment-method' ) ), esc_html_x( 'Add New Payment Method', 'Supports add new payment method feature', $this->get_plugin()->get_text_domain() ) );
+			// translators: Payment method as in a specific credit card, e-check or bank account
+			$html .= sprintf( '<a class="button sv-wc-payment-gateway-my-payment-methods-add-payment-method-button dashicons-before dashicons-plus-alt" href="%s">%s</a>', esc_url( wc_get_endpoint_url( 'add-payment-method' ) ), esc_html__( 'Add New Payment Method', 'sv-wc-plugin-framework' ) );
 		}
 
 		$html .= '</div>';
@@ -264,8 +267,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	protected function get_table_headers() {
 
 		$headers = array(
-			'title'   => __( 'Method', $this->get_plugin()->get_text_domain() ),
-			'expiry'  => __( 'Expires', $this->get_plugin()->get_text_domain() ),
+			'title'   => esc_html__( 'Method', 'sv-wc-plugin-framework' ),
+			'expiry'  => esc_html__( 'Expires', 'sv-wc-plugin-framework' ),
 			'actions' => '&nbsp;'
 		);
 
@@ -286,13 +289,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		if ( $this->credit_card_tokens && $this->echeck_tokens ) {
 
 			$html .= sprintf( '<tr class="sv-wc-payment-gateway-my-payment-methods-type-divider wc-%s-my-payment-methods-type-divider"><td colspan="%d">%s</td><tr>',
-				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ), count( $this->get_table_headers() ), esc_html__( 'Credit/Debit Cards', $this->get_plugin()->get_text_domain() )
+				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ), count( $this->get_table_headers() ), esc_html__( 'Credit/Debit Cards', 'sv-wc-plugin-framework' )
 			);
 
 			$html .= $this->get_table_body_row_html( $this->credit_card_tokens );
 
 			$html .= sprintf( '<tr class="sv-wc-payment-gateway-my-payment-methods-type-divider wc-%s-my-payment-methods-type-divider"><td colspan="%d">%s</td><tr>',
-				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ), count( $this->get_table_headers() ), esc_html__( 'Bank Accounts', $this->get_plugin()->get_text_domain() )
+				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ), count( $this->get_table_headers() ), esc_html__( 'Bank Accounts', 'sv-wc-plugin-framework' )
 			);
 
 			$html .= $this->get_table_body_row_html( $this->echeck_tokens );
@@ -359,7 +362,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			$methods[] = array(
 				'title'   => $this->get_payment_method_title( $token ),
-				'expiry'  => $token->get_exp_month() && $token->get_exp_year() ? $token->get_exp_date() : __( 'N/A', $this->get_plugin()->get_text_domain() ),
+				// translators: N/A is used in the context where an expiry date is not applicable (for example, a bank account - as opposed to a credit card)
+				'expiry'  => $token->get_exp_month() && $token->get_exp_year() ? $token->get_exp_date() : esc_html__( 'N/A', 'sv-wc-plugin-framework' ),
 				'actions' => implode( '', $actions ),
 			);
 		}
@@ -391,7 +395,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 					'wc-' . $this->get_plugin()->get_id_dasherized() . '-action' => 'make-default'
 				) ), 'wc-' . $this->get_plugin()->get_id_dasherized() . '-token-action' ),
 				'class' => array( 'make-payment-method-default' ),
-				'name'  => __( 'Make Default', $this->get_plugin()->get_text_domain() )
+				// translators: Set a payment method as the default option
+				'name'  => esc_html__( 'Make Default', 'sv-wc-plugin-framework' )
 			);
 		}
 
@@ -402,7 +407,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 				'wc-' . $this->get_plugin()->get_id_dasherized() . '-action' => 'delete'
 			) ), 'wc-' . $this->get_plugin()->get_id_dasherized() . '-token-action' ),
 			'class' => array( 'delete-payment-method' ),
-			'name'  => __( 'Delete', $this->get_plugin()->get_text_domain() ),
+			'name'  => esc_html__( 'Delete', 'sv-wc-plugin-framework' ),
 		);
 
 
@@ -428,24 +433,25 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		if ( $image_url ) {
 
 			// format like "<Amex logo image> American Express"
-			$title = sprintf( '<img src="%1$s" alt="%2$s" title="%2$s" width="40" height="25" />%3$s', esc_url( $image_url ), esc_attr__( $type, $this->get_plugin()->get_text_domain() ), esc_html__( $type, $this->get_plugin()->get_text_domain() ) );
+			$title = sprintf( '<img src="%1$s" alt="%2$s" title="%2$s" width="40" height="25" />%3$s', esc_url( $image_url ), esc_attr__( $type, 'sv-wc-plugin-framework' ), esc_html__( $type, 'sv-wc-plugin-framework' ) );
 
 		} else {
 
 			// missing payment method image, format like "American Express"
-			$title = esc_html__( $type, $this->get_plugin()->get_text_domain() );
+			$title = esc_html__( $type, 'sv-wc-plugin-framework' );
 		}
 
 		// add "ending in XXXX" if available
 		if ( $last_four ) {
 
-			$title .= '&nbsp;' . sprintf( __( 'ending in %s', $this->get_plugin()->get_text_domain() ), $last_four );
+			// translators: %s - last four digits of a card/account
+			$title .= '&nbsp;' . sprintf( esc_html__( 'ending in %s', 'sv-wc-plugin-framework' ), $last_four );
 		}
 
 		// add "(default)" if token is set as default
 		if ( $token->is_default() ) {
 
-			$title .= ' ' . __( '(default)', $this->get_plugin()->get_text_domain() );
+			$title .= ' ' . esc_html__( '(default)', 'sv-wc-plugin-framework' );
 		}
 
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_title', $title, $token, $this );
@@ -476,7 +482,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			// security check
 			if ( false === wp_verify_nonce( $_GET['_wpnonce'], 'wc-' . $this->get_plugin()->get_id_dasherized() . '-token-action' ) ) {
 
-				SV_WC_Helper::wc_add_notice( _x( 'Oops, you took too long, please try again.', 'Supports my payment method feature', $this->get_plugin()->get_text_domain() ), 'error' );
+				SV_WC_Helper::wc_add_notice( esc_html__( 'Oops, you took too long, please try again.', 'sv-wc-plugin-framework' ), 'error' );
 
 				$this->redirect_to_my_account();
 			}
@@ -489,7 +495,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			// couldn't find an associated gateway for that token
 			if ( ! is_object( $gateway ) ) {
 
-				SV_WC_Helper::wc_add_notice( _x( 'There was an error with your request, please try again.', 'Supports my payment method feature', $this->get_plugin()->get_text_domain() ), 'error' );
+				SV_WC_Helper::wc_add_notice( esc_html__( 'There was an error with your request, please try again.', 'sv-wc-plugin-framework' ), 'error' );
 
 				$this->redirect_to_my_account();
 			}
@@ -501,10 +507,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 					if ( ! $gateway->remove_payment_token( $user_id, $token ) ) {
 
-						SV_WC_Helper::wc_add_notice( _x( 'Error removing payment method', 'Supports my payment method feature', $this->get_plugin()->get_text_domain() ), 'error' );
+						// translators: Payment method as in a specific credit card, e-check or bank account
+						SV_WC_Helper::wc_add_notice( esc_html__( 'Error removing payment method', 'sv-wc-plugin-framework' ), 'error' );
 
 					} else {
-						SV_WC_Helper::wc_add_notice( _x( 'Payment method deleted.', 'Supports my payment method feature', $this->get_plugin()->get_text_domain() ) );
+
+						// translators: Payment method as in a specific credit card, e-check or bank account
+						SV_WC_Helper::wc_add_notice( esc_html__( 'Payment method deleted.', 'sv-wc-plugin-framework' ) );
 					}
 
 				break;
@@ -513,7 +522,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 				case 'make-default':
 					$gateway->set_default_payment_token( $user_id, $token );
 
-					SV_WC_Helper::wc_add_notice( _x( 'Default payment method updated.', 'Supports my payment method feature', $this->get_plugin()->get_text_domain() ) );
+					// translators: Payment method as in a specific credit card, e-check or bank account
+					SV_WC_Helper::wc_add_notice( esc_html__( 'Default payment method updated.', 'sv-wc-plugin-framework' ) );
 				break;
 
 				// custom actions

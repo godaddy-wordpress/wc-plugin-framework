@@ -99,6 +99,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * + `currencies` -  array of currency codes this gateway is allowed for, defaults to all
 	 * + `supports` - array named features that this gateway supports, including 'tokenization', 'transaction_link', 'customer_id', 'capture_charge'
 	 *
+	 * TODO: $text_domain is deprecated, remove argument on next breaking release
+	 *
 	 * @since 1.0.0
 	 * @see SV_WC_Plugin::__construct()
 	 * @param string $id plugin id
@@ -312,7 +314,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 						// SSL check if gateway enabled/production mode
 						if ( 'no' === get_option( 'woocommerce_force_ssl_checkout' ) ) {
 
-							$message = sprintf( _x( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", 'Requires SSL', $this->text_domain ), '<strong>' . $this->get_plugin_name() . '</strong>' );
+							// translators: %s - plugin name
+							$message = sprintf( esc_html__( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", 'sv-wc-plugin-framework' ), '<strong>' . $this->get_plugin_name() . '</strong>' );
 
 							$this->get_admin_notice_handler()->add_admin_notice( $message, 'ssl-required' );
 
@@ -364,18 +367,19 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				$accepted_currencies = $this->get_accepted_currencies();
 			}
 
+			/* translators: [Plugin name] accepts payments in [currency/list of currencies] only */
 			$message = sprintf(
-				_n(
-					'%s accepts payment in %s only.  <a href="%s">Configure</a> WooCommerce to accept %s to enable this gateway for checkout.',
-					'%s accepts payment in one of %s only.  <a href="%s">Configure</a> WooCommerce to accept one of %s to enable this gateway for checkout.',
+				// translators: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
+				esc_html_n(
+					'%1$s accepts payment in %2$s only. %3$sConfigure%4$s WooCommerce to accept %2$s to enable this gateway for checkout.',
+					'%1$s accepts payment in one of %2$s only. %3$sConfigure%4$s WooCommerce to accept one of %2$s to enable this gateway for checkout.',
 					count( $accepted_currencies ),
-					'(Plugin) accepts payments in (currency/currencies) only.',
-					$this->text_domain
+					'sv-wc-plugin-framework'
 				),
 				$name,
 				'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
-				$this->get_general_configuration_url(),
-				'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>'
+				'<a href="' . $this->get_general_configuration_url() . '">',
+				'</a>',
 			);
 
 			$this->get_admin_notice_handler()->add_admin_notice( $message, 'accepted-currency' . $suffix );
@@ -403,8 +407,13 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				// subscriptions
 				if ( $this->is_subscriptions_active() && $gateway->is_enabled() && $gateway->supports( SV_WC_Payment_Gateway_Direct::FEATURE_SUBSCRIPTIONS ) && $tokenization_supported_but_not_enabled ) {
 
-					$message = sprintf( __( '%1$s is inactive for subscription transactions. Please <a href="%2$s">enable tokenization</a> to activate %1$s for Subscriptions.', $this->get_text_domain() ),
-						$gateway->get_method_title(), $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) );
+					// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
+					$message = sprintf(
+						esc_html__( '%1$s is inactive for subscription transactions. Please %2$senable tokenization%3$s to activate %1$s for Subscriptions.', 'sv-wc-plugin-framework' ),
+						$gateway->get_method_title(),
+						'<a href="' . $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) . '">',
+						'</a>'
+					);
 
 					// add notice -- allow it to be dismissed even on the settings page as the admin may not want to use subscriptions with a particular gateway
 					$this->get_admin_notice_handler()->add_admin_notice( $message, 'subscriptions-tokenization-' . $gateway->get_id(), array( 'always_show_on_settings' => false ) );
@@ -414,8 +423,13 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				// pre-orders
 				if ( $this->is_pre_orders_active() && $gateway->is_enabled() && $gateway->supports( SV_WC_Payment_Gateway_Direct::FEATURE_PRE_ORDERS ) && $tokenization_supported_but_not_enabled ) {
 
-					$message = sprintf( __( '%1$s is inactive for pre-order transactions. Please <a href="%2$s">enable tokenization</a> to activate %1$s for Pre-Orders.', $this->get_text_domain() ),
-						$gateway->get_method_title(), $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) );
+					// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
+					$message = sprintf(
+						esc_html__( '%1$s is inactive for pre-order transactions. Please %2$senable tokenization%3$s to activate %1$s for Pre-Orders.', 'sv-wc-plugin-framework' ),
+						$gateway->get_method_title(),
+						'<a href="' . $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) . '">',
+						'</a>'
+					);
 
 					// add notice -- allow it to be dismissed even on the settings page as the admin may not want to use pre-orders with a particular gateway
 					$this->get_admin_notice_handler()->add_admin_notice( $message, 'pre-orders-tokenization-' . $gateway->get_id(), array( 'always_show_on_settings' => false ) );
@@ -570,7 +584,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					jQuery( document ).ready( function ( $ ) {
 						if ( 0 == $( 'select[name^=action] option[value=wc_capture_charge]' ).size() ) {
 							$( 'select[name^=action]' ).append(
-								$( '<option>' ).val( '<?php echo esc_js( 'wc_capture_charge' ); ?>' ).text( '<?php _ex( 'Capture Charge', 'Supports capture charge', $this->text_domain ); ?>' )
+								$( '<option>' ).val( '<?php echo esc_js( 'wc_capture_charge' ); ?>' ).text( '<?php _ex( 'Capture Charge', 'Supports capture charge', 'sv-wc-plugin-framework' ); ?>' )
 							);
 						}
 					});
@@ -636,7 +650,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function add_order_action_charge_action( $actions ) {
 
-		$actions[ 'wc_' . $this->get_id() . '_capture_charge' ] = _x( 'Capture Charge', 'Supports capture charge', $this->text_domain );
+		// translators: verb, as in "Capture credit card charge". Used when an amount has been pre-authorized before, but funds have not yet been captured (taken) from the card. Capturing the charge will take the money from the credit card and put it in the merchant's pockets.
+		$actions[ 'wc_' . $this->get_id() . '_capture_charge' ] = esc_html__( 'Capture Charge', 'sv-wc-plugin-framework' );
 
 		return $actions;
 	}
@@ -684,7 +699,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			return $this->admin_user_edit_handler;
 		}
 
-		return $this->admin_user_edit_handler = new SV_WC_Payment_Gateway_Admin_User_Edit_Handler( $this, $this->text_domain );
+		return $this->admin_user_edit_handler = new SV_WC_Payment_Gateway_Admin_User_Edit_Handler( $this );
 	}
 
 
