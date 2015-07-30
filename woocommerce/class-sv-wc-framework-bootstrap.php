@@ -325,8 +325,8 @@ class SV_WC_Framework_Bootstrap {
 				sprintf(
 					count( $this->incompatible_framework_plugins ) > 1
 						// translators: %1$s - <a> tag, %2$s - </a> tag, %3$s - <em> tag, %4$s - </em> tag, %5$s - <a> tag, %6$s - </a> tag
-						? esc_html__( 'To reactivate these plugins, please %1$ssupdate now (recommended)%2$s %3$sor%4$s %5$sdeactivate the following%6$s:', 'woocommerce-plugin-framework' )
-						: esc_html__( 'To reactivate this plugin, please %1$s%supdate now (recommended)%2$s %3$sor%4$s %5$sdeactivate the following%6$s:', 'woocommerce-plugin-framework' ),
+						? esc_html__( 'To reactivate these plugins, please %1$supdate now (recommended)%2$s %3$sor%4$s %5$sdeactivate the following%6$s:', 'woocommerce-plugin-framework' )
+						: esc_html__( 'To reactivate this plugin, please %1$supdate now (recommended)%2$s %3$sor%4$s %5$sdeactivate the following%6$s:', 'woocommerce-plugin-framework' ),
 					'<a href="' . admin_url( 'update-core.php' ) . '">', '</a>',
 					'<em>', '</em>',
 					'<a href="' . admin_url( 'plugins.php?sv_wc_framework_deactivate_newer=yes' ) . '">', '</a>'

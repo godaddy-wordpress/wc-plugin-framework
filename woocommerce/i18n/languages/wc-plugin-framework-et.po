@@ -1,18 +1,19 @@
 # Copyright (C) 2015
 # This file is distributed under the same license as the  package.
+# Translators:
+# Illimar Tambek <illimar.tambek@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 4.0.0\n"
+"Project-Id-Version: WC Plugin Framework\n"
 "Report-Msgid-Bugs-To: https://support.woothemes.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
-"PO-Revision-Date: 2015-07-29 22:51+0200\n"
-"Last-Translator: Illimar Tambek\n"
-"Language-Team: \n"
-"Language: et\n"
+"PO-Revision-Date: 2015-07-30 18:14+0000\n"
+"Last-Translator: Illimar Tambek <illimar.tambek@gmail.com>\n"
+"Language-Team: Estonian (http://www.transifex.com/projects/p/wc-plugin-framework/language/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.3\n"
+"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. translators: this is an action that dismisses a message
@@ -36,31 +37,27 @@ msgstr "Järgnev plugin ei ole aktiivne ja vajab toimimiseks uuendamist:"
 #. tag, %5$s - <a> tag, %6$s - </a> tag
 #: class-sv-wc-framework-bootstrap.php:328
 msgid ""
-"To reactivate these plugins, please %1$ssupdate now (recommended)%2$s %3$sor"
-"%4$s %5$sdeactivate the following%6$s:"
-msgstr ""
+"To reactivate these plugins, please %1$supdate now (recommended)%2$s "
+"%3$sor%4$s %5$sdeactivate the following%6$s:"
+msgstr "Et neid pluginaid taas sisse lülitada, %1$suuenda palun kohe (soovitatud)%2$s %3$svõi%4$s %5$slülita järgnevad välja%6$s:"
 
 #: class-sv-wc-framework-bootstrap.php:329
 msgid ""
-"To reactivate this plugin, please %1$s%supdate now (recommended)%2$s %3$sor"
-"%4$s %5$sdeactivate the following%6$s:"
-msgstr ""
+"To reactivate this plugin, please %1$supdate now (recommended)%2$s "
+"%3$sor%4$s %5$sdeactivate the following%6$s:"
+msgstr "Et see plugin taas sisse lülitada, %1$suuenda palun kohe (soovitatud)%2$s %3$svõi%4$s %5$slülita järgnevad välja%6$s:"
 
 #: class-sv-wc-framework-bootstrap.php:345
 msgid ""
 "The following plugins are inactive because they require a newer version of "
 "WooCommerce:"
-msgstr ""
-"Järgnevad pluginad ei ole aktiivsed, kuna vajavad korrektselt töötamiseks "
-"uuemat WooCommerce'i versiooni:"
+msgstr "Järgnevad pluginad ei ole aktiivsed, kuna vajavad korrektselt töötamiseks uuemat WooCommerce'i versiooni:"
 
 #: class-sv-wc-framework-bootstrap.php:345
 msgid ""
 "The following plugin is inactive because it requires a newer version of "
 "WooCommerce:"
-msgstr ""
-"Järgnev plugin ei ole aktiivne, kuna vajab korrektselt töötamiseks uuemat "
-"WooCommerce'i versiooni:"
+msgstr "Järgnev plugin ei ole aktiivne, kuna vajab korrektselt töötamiseks uuemat WooCommerce'i versiooni:"
 
 #. translators: %1$s - plugin name, %2$s - WooCommerce version number
 #: class-sv-wc-framework-bootstrap.php:350
@@ -111,15 +108,11 @@ msgstr "Kliendi ID"
 msgid ""
 "The gateway customer ID for the user in the %s environment. Only edit this "
 "if necessary."
-msgstr ""
-"Kasutajale makseviisi poolt määratud kliendi tunnus %s keskkonnas. Muuda "
-"seda ainult siis, kui tõesti vajalik."
+msgstr "Kasutajale makseviisi poolt määratud kliendi tunnus %s keskkonnas. Muuda seda ainult siis, kui tõesti vajalik."
 
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php:239
 msgid "The gateway customer ID for the user. Only edit this if necessary."
-msgstr ""
-"Kasutajale makseviisi poolt määratud kliendi tunnus. Muuda seda ainult siis, "
-"kui tõesti vajalik."
+msgstr "Kasutajale makseviisi poolt määratud kliendi tunnus. Muuda seda ainult siis, kui tõesti vajalik."
 
 #. translators: %s - environment name (production/test). Payment Token - as in
 #. a specific entity used to make payments, such as a specific credit card,
@@ -175,37 +168,30 @@ msgstr "Aegumiskuupäev (01/%s)"
 msgid ""
 "Are you sure you wish to do this? Change will not be finalized until you "
 "click \"Update\""
-msgstr ""
-"Oled kindel, et soovid seda teha? Muudatust ei rakendata enne kui klikid "
-"\"Uuenda\""
+msgstr "Oled kindel, et soovid seda teha? Muudatust ei rakendata enne kui klikid \"Uuenda\""
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:110
-msgid "An error occurred, please try again or try an alternate form of payment"
+msgid ""
+"An error occurred, please try again or try an alternate form of payment"
 msgstr "Esines viga, palun proovi uuesti või kasuta teistsugust makseviisi"
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:111
 msgid ""
-"We cannot process your order with the payment information that you provided. "
-"Please use a different payment account or an alternate payment method."
-msgstr ""
-"Me ei saa sinu tellimust antud makseinfo alusel töödelda. Palun kasuta teist "
-"maksekontot või teistsugust makseviisi."
+"We cannot process your order with the payment information that you provided."
+" Please use a different payment account or an alternate payment method."
+msgstr "Me ei saa sinu tellimust antud makseinfo alusel töödelda. Palun kasuta teist maksekontot või teistsugust makseviisi."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:112
 msgid ""
-"This order is being placed on hold for review. Please contact us to complete "
-"the transaction."
-msgstr ""
-"Tellimus on pandud ülevaatuseks ootele. Tehingu sooritamiseks võta palun "
-"meiega ühendust."
+"This order is being placed on hold for review. Please contact us to complete"
+" the transaction."
+msgstr "Tellimus on pandud ülevaatuseks ootele. Tehingu sooritamiseks võta palun meiega ühendust."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:117
 msgid ""
 "This order is being placed on hold for review due to an incorrect card "
 "verification number.  You may contact the store to complete the transaction."
-msgstr ""
-"Tellimus pandi ootele, kuna kaardi turvakood oli vale. Tehingu "
-"lõpuleviimiseks võid poega ühendust võtta."
+msgstr "Tellimus pandi ootele, kuna kaardi turvakood oli vale. Tehingu lõpuleviimiseks võid poega ühendust võtta."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:118
 msgid "The card verification number is invalid, please try again."
@@ -219,18 +205,14 @@ msgstr "Palun sisesta oma kaardi turvakood ja proovi uuesti."
 msgid ""
 "That card type is not accepted, please use an alternate card or other form "
 "of payment."
-msgstr ""
-"Sellist tüüpi kaarti ei võeta vastu, palun proovi mõnda teist kaarti või "
-"teistsugust makseviisi."
+msgstr "Sellist tüüpi kaarti ei võeta vastu, palun proovi mõnda teist kaarti või teistsugust makseviisi."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:123
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:127
 msgid ""
-"The card type is invalid or does not correlate with the credit card number.  "
-"Please try again or use an alternate card or other form of payment."
-msgstr ""
-"Kaardi tüüp on vigane või ei vasta kaardi numbrile. Palun proovi uuesti, "
-"proovi mõnda teist kaarti või teistsugust makseviisi."
+"The card type is invalid or does not correlate with the credit card number."
+"  Please try again or use an alternate card or other form of payment."
+msgstr "Kaardi tüüp on vigane või ei vasta kaardi numbrile. Palun proovi uuesti, proovi mõnda teist kaarti või teistsugust makseviisi."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:124
 msgid "Please select the card type and try again."
@@ -246,8 +228,7 @@ msgstr "Palun sisesta oma kaardi number ja proovi uuesti."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:132
 msgid "The card expiration date is invalid, please re-enter and try again."
-msgstr ""
-"Kaardi aegumiskuupäev on vale, palun sisesta uuesti ja proovi veelkord."
+msgstr "Kaardi aegumiskuupäev on vale, palun sisesta uuesti ja proovi veelkord."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:133
 msgid "The card expiration month is invalid, please re-enter and try again."
@@ -255,8 +236,7 @@ msgstr "Kaardi aegumise kuu on vale, palun sisesta uuesti ja proovi veelkord."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:134
 msgid "The card expiration year is invalid, please re-enter and try again."
-msgstr ""
-"Kaardi aegumise aasta on vale, palun sisesta uuesti ja proovi veelkord."
+msgstr "Kaardi aegumise aasta on vale, palun sisesta uuesti ja proovi veelkord."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:135
 msgid "Please enter your card expiration date and try again."
@@ -264,53 +244,41 @@ msgstr "Palun sisesta oma kaardi aegumiskuupäev ja proovi uuesti."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:138
 msgid "The bank routing number is invalid, please re-enter and try again."
-msgstr ""
-"Panga suunakood ei ole korrektne, palun sisesta uuesti ja proovi veelkord."
+msgstr "Panga suunakood ei ole korrektne, palun sisesta uuesti ja proovi veelkord."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:139
 msgid "The bank account number is invalid, please re-enter and try again."
-msgstr ""
-"Pangakonto number ei ole korrektne, palun sisesta uuesti ja proovi veelkord."
+msgstr "Pangakonto number ei ole korrektne, palun sisesta uuesti ja proovi veelkord."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:142
 msgid ""
 "The provided card is expired, please use an alternate card or other form of "
 "payment."
-msgstr ""
-"Antud kaart on aegunud, palun kasuta mõnda teist kaarti või teistsugust "
-"makseviisi."
+msgstr "Antud kaart on aegunud, palun kasuta mõnda teist kaarti või teistsugust makseviisi."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:143
 msgid ""
 "The provided card was declined, please use an alternate card or other form "
 "of payment."
-msgstr ""
-"Antud kaart klükati tagasi, palun kasuta mõnda teist kaarti või teistsugust "
-"makseviisi."
+msgstr "Antud kaart klükati tagasi, palun kasuta mõnda teist kaarti või teistsugust makseviisi."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:144
 msgid ""
-"Insufficient funds in account, please use an alternate card or other form of "
-"payment."
-msgstr ""
-"Kontol pole piisavalt vahendeid, palun kasuta mõnda teist kaarti või "
-"teistsugust makseviisi."
+"Insufficient funds in account, please use an alternate card or other form of"
+" payment."
+msgstr "Kontol pole piisavalt vahendeid, palun kasuta mõnda teist kaarti või teistsugust makseviisi."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:145
 msgid ""
 "The card is inactivate or not authorized for card-not-present transactions, "
 "please use an alternate card or other form of payment."
-msgstr ""
-"Antud kaart ei ole aktiveeritud või ei ole sellega internetimaksed lubatud. "
-"Palun kasuta mõnda teist kaarti või teistsugust makseviisi."
+msgstr "Antud kaart ei ole aktiveeritud või ei ole sellega internetimaksed lubatud. Palun kasuta mõnda teist kaarti või teistsugust makseviisi."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:146
 msgid ""
-"The credit limit for the card has been reached, please use an alternate card "
-"or other form of payment."
-msgstr ""
-"Kaardi krediitilimiit on ära kasutatud, palun kasuta mõnda teist kaarti või "
-"teistsugust makseviisi."
+"The credit limit for the card has been reached, please use an alternate card"
+" or other form of payment."
+msgstr "Kaardi krediitilimiit on ära kasutatud, palun kasuta mõnda teist kaarti või teistsugust makseviisi."
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:147
 msgid ""
@@ -321,16 +289,13 @@ msgstr "Kaardi turvakood ei klapi. Palun sisesta uuesti ja proovi veelkord."
 msgid ""
 "The provided address does not match the billing address for cardholder. "
 "Please verify the address and try again."
-msgstr ""
-"Antud aadress ei kattu kaardi omaniku aadressiga. Palun kontrolli, et "
-"sisestaid õige aadressi ning proovi uuesti."
+msgstr "Antud aadress ei kattu kaardi omaniku aadressiga. Palun kontrolli, et sisestaid õige aadressi ning proovi uuesti."
 
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:120
 msgid ""
 "Payment error, please try another payment method or contact us to complete "
 "your transaction."
-msgstr ""
-"Viga maksega, palun proovi teistsugust makseviisi või võta meiega ühendust."
+msgstr "Viga maksega, palun proovi teistsugust makseviisi või võta meiega ühendust."
 
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:203
 #: payment-gateway/class-sv-wc-payment-gateway.php:534
@@ -412,14 +377,16 @@ msgstr "Juhiloa number ei ole korrektne"
 msgid "Check Number is invalid (only digits are allowed)"
 msgstr "Tšeki number ei ole korrektne (lubatud on ainult numbrid)"
 
-#. translators: %1$s - site title, %2$s - order number. Definitions: Capture as
+#. translators: %1$s - site title, %2$s - order number. Definitions: Capture
+#. as
 #. in capture funds from a credit card.
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:597
 msgid "%1$s - Capture for Order %2$s"
 msgstr "%1$s - Tasumine tellimuse %2$s eest"
 
 #. translators: %1$s - payment method title, %2$s - payment account type
-#. (savings/checking) (may or may not be available), %3$s - last four digits of
+#. (savings/checking) (may or may not be available), %3$s - last four digits
+#. of
 #. the account
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:623
 msgid "%1$s Check Transaction Approved: %2$s account ending in %3$s"
@@ -468,21 +435,24 @@ msgstr "%1$s: maksevahendi salvestamise päring ebaõnnestus: %2$s"
 msgid "Authorization only transaction"
 msgstr "Autoriseerimise tehing"
 
-#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. translators: %1$s - payment gateway title (such as Authorize.net,
+#. Braintree,
 #. etc), %2$s - transaction amount. Definitions: Capture, as in capture funds
 #. from a credit card.
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:806
 msgid "%1$s Capture of %2$s Approved"
 msgstr "%1$s: tasumine summas %2$s kinnitatud"
 
-#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. translators: %1$s - payment gateway title (such as Authorize.net,
+#. Braintree,
 #. etc), %2$s - transaction amount, %3$s - transaction status message.
 #. Definitions: Capture, as in capture funds from a credit card.
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:834
 msgid "%1$s Capture Failed: %2$s - %3$s"
 msgstr "%1$s: tasumine ebaõnnestus: %2$s - %3$s"
 
-#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. translators: %1$s - payment gateway title (such as Authorize.net,
+#. Braintree,
 #. etc), %2$s - failure message. Definitions: "capture" as in capturing funds
 #. from a credit card.
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:850
@@ -496,10 +466,10 @@ msgstr "Korduvtellimus summas %s uuendus kinnitatud"
 
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:1136
 msgid "Subscription Renewal: Payment Token or User ID is missing/invalid."
-msgstr ""
-"Korduvtellimuse uuendus: maksevahend või kasutajatunnus on puudu või vigane."
+msgstr "Korduvtellimuse uuendus: maksevahend või kasutajatunnus on puudu või vigane."
 
-#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. translators: %1$s - payment gateway title (such as Authorize.net,
+#. Braintree,
 #. etc), %2$s - transaction type (authorization/charge), %3$s - card type
 #. (mastercard, visa, ...), %4$s - last four digits of the card, %5$s - card
 #. expiry date
@@ -507,22 +477,21 @@ msgstr ""
 msgid ""
 "%1$s %2$s Subscription Renewal Payment Approved: %3$s ending in %4$s "
 "(expires %5$s)"
-msgstr ""
-"%1$s: %2$s korduvtellimuse uuendamise makse kinnitatud: %3$s lõpeb "
-"numbritega %4$s (aegub %5$s)"
+msgstr "%1$s: %2$s korduvtellimuse uuendamise makse kinnitatud: %3$s lõpeb numbritega %4$s (aegub %5$s)"
 
-#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. translators: %1$s - payment gateway title (such as Authorize.net,
+#. Braintree,
 #. etc), %2$s - account type (checking/savings - may or may not be available),
 #. %3$s - last four digits of the account
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:1173
 msgid ""
-"%1$s Check Subscription Renewal Payment Approved: %2$s account ending in %3$s"
-msgstr ""
-"%1$s: tšekiga tasutav korduvtellimuse uuendamise makse kinnitatud: %2$s "
-"konto, lõpeb numbritega %3$s"
+"%1$s Check Subscription Renewal Payment Approved: %2$s account ending in "
+"%3$s"
+msgstr "%1$s: tšekiga tasutav korduvtellimuse uuendamise makse kinnitatud: %2$s konto, lõpeb numbritega %3$s"
 
 #. translators: %1$s - payment type (MasterCard, Visa, eCheck, Bank Account,
-#. etc), %2$s - last four digits for the payment method (credit card, checkings
+#. etc), %2$s - last four digits for the payment method (credit card,
+#. checkings
 #. account, etc)
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:1307
 msgid "Via %1$s ending in %2$s"
@@ -544,47 +513,46 @@ msgstr "%1$s - Eeltellimuse väljastamise makse tellimuse %2$s eest"
 msgid "Payment token missing/invalid."
 msgstr "Maksevahend on puudu või vigane."
 
-#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
-#. etc), %2$s - transaction type (authorzation/charge), %3$s - credit card type
-#. (mastercard, visa, ...), %4$s - last for digits of the the card, %5$s - card
+#. translators: %1$s - payment gateway title (such as Authorize.net,
+#. Braintree,
+#. etc), %2$s - transaction type (authorzation/charge), %3$s - credit card
+#. type
+#. (mastercard, visa, ...), %4$s - last for digits of the the card, %5$s -
+#. card
 #. expiry date
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:1566
 msgid ""
 "%1$s %2$s Pre-Order Release Payment Approved: %3$s ending in %4$s (expires "
 "%5$s)"
-msgstr ""
-"%1$s: %2$s eeltellimuse väljastamise makse vastu kinnitatud: %3$s lõpeb "
-"numbritega %4$s (aegub %5$s)"
+msgstr "%1$s: %2$s eeltellimuse väljastamise makse vastu kinnitatud: %3$s lõpeb numbritega %4$s (aegub %5$s)"
 
-#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. translators: %1$s - payment gateway title (such as Authorize.net,
+#. Braintree,
 #. etc), %2$s - e-check account type (Savings Account, Checking Account), %3$s
 #. - last four digits of the account
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:1578
 msgid "%1$s eCheck Pre-Order Release Payment Approved: %2$s ending in %3$s"
-msgstr ""
-"%1$s: e-tšeki eeltellimuse väljastamise makse kinnitatud: %2$s lõpeb "
-"numbritega %3$s"
+msgstr "%1$s: e-tšeki eeltellimuse väljastamise makse kinnitatud: %2$s lõpeb numbritega %3$s"
 
 #. Translators: %s - failure message
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:1620
 msgid "Pre-Order Release Payment Failed: %s"
 msgstr "Eeltellimuse väljastamise makse ebaõnnestus: %s"
 
-#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. translators: %1$s - payment gateway title (such as Authorize.net,
+#. Braintree,
 #. etc), %2$s - payment method name (mastercard, bank account, etc), %3$s -
 #. last four digits of the card/account, %4$s - card/account expiry date
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:1706
 msgid "%1$s Payment Method Saved: %2$s ending in %3$s (expires %4$s)"
-msgstr ""
-"%1$s: maksevahend salvestatud: %2$s lõpeb numbritega in %3$s (aegub %4$s)"
+msgstr "%1$s: maksevahend salvestatud: %2$s lõpeb numbritega in %3$s (aegub %4$s)"
 
 #. translators: %1$s - payment gateway title (such as Cybersouce, Netbilling,
 #. etc), %2$s - account type (cheking/savings - may or may not be available),
 #. %3$s - last four digits of the account
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:1715
 msgid "%1$s eCheck Payment Method Saved: %2$s account ending in %3$s"
-msgstr ""
-"%1$s: e-tšeki maksevahend salvestatud: %2$s konto, lõpeb numbritega %3$s"
+msgstr "%1$s: e-tšeki maksevahend salvestatud: %2$s konto, lõpeb numbritega %3$s"
 
 #. translators: %1$s - payment request response status code, %2$s - payment
 #. request response status message
@@ -623,13 +591,13 @@ msgstr "Tehingu ID %s"
 msgid "Oops, adding your new payment method failed: %s"
 msgstr "Oih, sinu maksevahendi lisamine ebaõnnestus: %s"
 
-#. translators: Payment method as in a specific credit card. Placeholders: %1$s
+#. translators: Payment method as in a specific credit card. Placeholders:
+#. %1$s
 #. - card type (visa, mastercard, ...), %2$s - last four digits of the card,
 #. %3$s - card expiry date
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:2411
 msgid "Nice! New payment method added: %1$s ending in %2$s (expires %3$s)"
-msgstr ""
-"Lahe! Uus maksevahend lisatud: %1$s, lõpeb numbritega %2$s (aegub %3$s)"
+msgstr "Lahe! Uus maksevahend lisatud: %1$s, lõpeb numbritega %2$s (aegub %3$s)"
 
 #. translators: Payment method as in a specific e-check account. Placeholders:
 #. %1$s - account type (checking/savings), %2$s - last four digits of the
@@ -878,35 +846,31 @@ msgstr "Salvesta turvaliselt oma kontole"
 msgid ""
 "%s: WooCommerce is not being forced over SSL; your customer's payment data "
 "may be at risk."
-msgstr ""
-"%s: WooCommerce'i ei sunnita SSLi kasutama; sinu klientide andmed võivad "
-"olla ohus."
+msgstr "%s: WooCommerce'i ei sunnita SSLi kasutama; sinu klientide andmed võivad olla ohus."
 
-#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. translators: %1$s - payment gateway title (such as Authorize.net,
+#. Braintree,
 #. etc), %2$s - <a> tag, %3$s - </a> tag
 #: payment-gateway/class-sv-wc-payment-gateway-plugin.php:412
 msgid ""
 "%1$s is inactive for subscription transactions. Please %2$senable "
 "tokenization%3$s to activate %1$s for Subscriptions."
-msgstr ""
-"%1$s ei ole korduvtellimuste jaoks kasutatav. Palun %2$slülita "
-"maksevahendite salvestamine%3$s sisse, et aktiveerida %1$s Korduvellimuste "
-"(Subscriptions) jaoks."
+msgstr "%1$s ei ole korduvtellimuste jaoks kasutatav. Palun %2$slülita maksevahendite salvestamine%3$s sisse, et aktiveerida %1$s Korduvellimuste (Subscriptions) jaoks."
 
-#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. translators: %1$s - payment gateway title (such as Authorize.net,
+#. Braintree,
 #. etc), %2$s - <a> tag, %3$s - </a> tag
 #: payment-gateway/class-sv-wc-payment-gateway-plugin.php:428
 msgid ""
-"%1$s is inactive for pre-order transactions. Please %2$senable tokenization"
-"%3$s to activate %1$s for Pre-Orders."
-msgstr ""
-"%1$s ei ole eeltellimuste maksete jaoks kasutatav. Palun %2$slülita "
-"maksevahendite salvestamine%3$s sisse, et aktiveerida %1$s Eeltellimuste "
-"(Pre-Orders) jaoks."
+"%1$s is inactive for pre-order transactions. Please %2$senable "
+"tokenization%3$s to activate %1$s for Pre-Orders."
+msgstr "%1$s ei ole eeltellimuste maksete jaoks kasutatav. Palun %2$slülita maksevahendite salvestamine%3$s sisse, et aktiveerida %1$s Eeltellimuste (Pre-Orders) jaoks."
 
 #. translators: verb, as in "Capture credit card charge". Used when an amount
-#. has been pre-authorized before, but funds have not yet been captured (taken)
-#. from the card. Capturing the charge will take the money from the credit card
+#. has been pre-authorized before, but funds have not yet been captured
+#. (taken)
+#. from the card. Capturing the charge will take the money from the credit
+#. card
 #. and put it in the merchant's pockets.
 #: payment-gateway/class-sv-wc-payment-gateway-plugin.php:654
 msgid "Capture Charge"
@@ -984,9 +948,7 @@ msgstr "Täpsemad maksest keeldumise teated"
 msgid ""
 "Check to enable detailed decline messages to the customer during checkout "
 "when possible, rather than a generic decline message."
-msgstr ""
-"Lülita see valik sisse, kui soovid klientidele üldise maksest keeldumise "
-"teate asemel näidata võimaluse korral täpsemaid põhjusi."
+msgstr "Lülita see valik sisse, kui soovid klientidele üldise maksest keeldumise teate asemel näidata võimaluse korral täpsemaid põhjusi."
 
 #: payment-gateway/class-sv-wc-payment-gateway.php:768
 msgid "Debug Mode"
@@ -995,11 +957,9 @@ msgstr "Veaotsingu režiim"
 #. translators: %1$s - <a> tag, %2$s - </a> tag
 #: payment-gateway/class-sv-wc-payment-gateway.php:771
 msgid ""
-"Show Detailed Error Messages and API requests/responses on the checkout page "
-"and/or save them to the %1$sdebug log%2$s"
-msgstr ""
-"Näita üksikasjalikke veateateud ja API päringuid/vastuseid kassas ja/või "
-"salvesta need %1$slogifaili%2$s"
+"Show Detailed Error Messages and API requests/responses on the checkout page"
+" and/or save them to the %1$sdebug log%2$s"
+msgstr "Näita üksikasjalikke veateateud ja API päringuid/vastuseid kassas ja/või salvesta need %1$slogifaili%2$s"
 
 #: payment-gateway/class-sv-wc-payment-gateway.php:774
 msgid "Off"
@@ -1056,19 +1016,22 @@ msgstr "%1$s - Tellimus %2$s"
 msgid "%1$s - Refund for Order %2$s"
 msgstr "%1$s - Tagasimakse tellimuse %2$s eest"
 
-#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. translators: %1$s - payment gateway title (such as Authorize.net,
+#. Braintree,
 #. etc), %2$s - a monetary amount
 #: payment-gateway/class-sv-wc-payment-gateway.php:1379
 msgid "%1$s Refund in the amount of %2$s approved."
 msgstr "%1$s: tagasimakse summas %2$s kinnitatud."
 
-#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. translators: %1$s - payment gateway title (such as Authorize.net,
+#. Braintree,
 #. etc), %2$s - error code, %3$s - error message
 #: payment-gateway/class-sv-wc-payment-gateway.php:1406
 msgid "%1$s Refund Failed: %2$s - %3$s"
 msgstr "%1$s: tagasimakse ebaõnnestus: %2$s - %3$s"
 
-#. translators: %1$s - payment gateway title (such as Authorize.net, Braintree,
+#. translators: %1$s - payment gateway title (such as Authorize.net,
+#. Braintree,
 #. etc), %2$s - error message
 #: payment-gateway/class-sv-wc-payment-gateway.php:1414
 msgid "%1$s Refund Failed: %2$s"
@@ -1082,10 +1045,9 @@ msgstr "%s: tellimus täielikult tagasi makstud."
 
 #: payment-gateway/class-sv-wc-payment-gateway.php:1487
 msgid ""
-"Oops, you cannot partially void this order. Please use the full order amount."
-msgstr ""
-"Oih, sa ei saa seda tellimust osaliselt tühistada. Palun kasuta tellimuse "
-"täissummat."
+"Oops, you cannot partially void this order. Please use the full order "
+"amount."
+msgstr "Oih, sa ei saa seda tellimust osaliselt tühistada. Palun kasuta tellimuse täissummat."
 
 #. translators: %1$s - payment gateway title, %2$s - error code, %3$s - error
 #. message. Void as in to void an order.
@@ -1099,7 +1061,8 @@ msgstr "%1$s: tühistamine ebaõnnestus: %2$s - %3$s"
 msgid "%1$s Void Failed: %2$s"
 msgstr "%1$s: tühistamine ebaõnnestus: %2$s"
 
-#. translators: %1$s - payment gateway title, %2$s - a monetary amount. Void as
+#. translators: %1$s - payment gateway title, %2$s - a monetary amount. Void
+#. as
 #. in to void an order.
 #: payment-gateway/class-sv-wc-payment-gateway.php:1600
 msgid "%1$s Void in the amount of %2$s approved."
@@ -1115,8 +1078,7 @@ msgstr "%1$s: tehning pandi ülevaatuseks ootele (%2$s)"
 msgid ""
 "Your order has been received and is being reviewed. Thank you for your "
 "business."
-msgstr ""
-"Sinu tellimus on vastu võetud ja on ülevaatamisel. Täname koostöö eest."
+msgstr "Sinu tellimus on vastu võetud ja on ülevaatamisel. Täname koostöö eest."
 
 #. translators: %1$s - payment gateway title, %2$s - error message
 #: payment-gateway/class-sv-wc-payment-gateway.php:1898
@@ -1139,13 +1101,10 @@ msgstr "Tehingu tüüp"
 
 #: payment-gateway/class-sv-wc-payment-gateway.php:2153
 msgid ""
-"Select how transactions should be processed. Charge submits all transactions "
-"for settlement, Authorization simply authorizes the order total for capture "
-"later."
-msgstr ""
-"Vali, kuidas peaks tehinguid töötlema. \"Makse\" saadab kõik tehingud "
-"koheselt tasumisele, \"Autoriseerimine\" lihtsalt autoriseerib tellimuse "
-"summa hilisemaks tasumiseks."
+"Select how transactions should be processed. Charge submits all transactions"
+" for settlement, Authorization simply authorizes the order total for capture"
+" later."
+msgstr "Vali, kuidas peaks tehinguid töötlema. \"Makse\" saadab kõik tehingud koheselt tasumisele, \"Autoriseerimine\" lihtsalt autoriseerib tellimuse summa hilisemaks tasumiseks."
 
 #: payment-gateway/class-sv-wc-payment-gateway.php:2300
 msgid "Accepted Card Types"
@@ -1156,7 +1115,8 @@ msgid "Select which card types you accept."
 msgstr "Vali, millist tüüpi kaarte soovid vastu võtta."
 
 #. translators:
-#. http:www.cybersource.com/products/payment_security/payment_tokenization/ and
+#. http:www.cybersource.com/products/payment_security/payment_tokenization/
+#. and
 #. https:en.wikipedia.org/wiki/Tokenization_(data_security)
 #: payment-gateway/class-sv-wc-payment-gateway.php:2383
 msgid "Tokenization"
@@ -1165,9 +1125,7 @@ msgstr "Maksevahendite salvestamine"
 #: payment-gateway/class-sv-wc-payment-gateway.php:2384
 msgid ""
 "Allow customers to securely save their payment details for future checkout."
-msgstr ""
-"Võimalda klientidel oma makseandmeid edaspidisteks tehinguteks turvaliselt "
-"talletada."
+msgstr "Võimalda klientidel oma makseandmeid edaspidisteks tehinguteks turvaliselt talletada."
 
 #: class-sv-wc-plugin.php:403
 msgctxt "noun"
@@ -1270,53 +1228,3 @@ msgstr "#"
 msgctxt "software environment"
 msgid "Production"
 msgstr "Töö/avalik"
-
-#~ msgid "Please %1$supdate%2$s"
-#~ msgstr "Palun %1$uuenda%2$s"
-
-#~ msgid ""
-#~ "%1$s requires the %2$s PHP extension to function. Contact your host or "
-#~ "server administrator to configure and install the missing extension."
-#~ msgid_plural ""
-#~ "%1$s requires the following PHP extensions to function: %2$s. Contact "
-#~ "your host or server administrator to configure and install the missing "
-#~ "extensions."
-#~ msgstr[0] ""
-#~ "%1$s vajab töötamiseks PHP %2$s laiendust. Puuduva laienduse "
-#~ "paigaldamiseks võta ühendust oma serveri või veebimajutusteenuse "
-#~ "halduriga."
-#~ msgstr[1] ""
-#~ "%1$s vajab töötamiseks järgnevaid PHP laiendusi: %2$s. Puuduvate "
-#~ "laienduste paigaldamiseks võta ühendust oma serveri või "
-#~ "veebimajutusteenuse halduriga."
-
-#~ msgid ""
-#~ "%1$s requires the %2$s PHP function to exist.  Contact your host or "
-#~ "server administrator to configure and install the missing function."
-#~ msgid_plural ""
-#~ "%1$s requires the following PHP functions to exist: %2$s.  Contact your "
-#~ "host or server administrator to configure and install the missing "
-#~ "functions."
-#~ msgstr[0] ""
-#~ "%1$s vajab töötamiseks järgnevat PHP funktsiooni: %2$s. Puuduva "
-#~ "funktsiooni paigaldamiseks võta ühendust oma serveri või "
-#~ "veebimajutusteenuse halduriga."
-#~ msgstr[1] ""
-#~ "%1$s vajab töötamiseks järgnevaid PHP funktsioone: %2$s. Puuduvate "
-#~ "funktsioonide paigaldamiseks võta ühendust oma serveri või "
-#~ "veebimajutusteenuse halduriga."
-
-#~ msgid ""
-#~ "%1$s accepts payment in %2$s only. %3$sConfigure%4$s WooCommerce to "
-#~ "accept %2$s to enable this gateway for checkout."
-#~ msgid_plural ""
-#~ "%1$s accepts payment in one of %2$s only. %3$sConfigure%4$s WooCommerce "
-#~ "to accept one of %2$s to enable this gateway for checkout."
-#~ msgstr[0] ""
-#~ "%1$s võimaldab makseid vastu võtta ainult %2$s vääringus. Selle "
-#~ "makseviisi kasutamiseks %3$sseadista%4$s WooCommerce võtma vastu makseid "
-#~ "%2$s vääringus."
-#~ msgstr[1] ""
-#~ "%1$s võimaldab makseid vastu võtta ainus %2$s ainult vääringutes. Selle "
-#~ "makseviisi kasutamiseks %3$sseadista%4$s WooCommerce võtma vastu vähemalt "
-#~ "ühte järgmistest vääringutest: %2$s."

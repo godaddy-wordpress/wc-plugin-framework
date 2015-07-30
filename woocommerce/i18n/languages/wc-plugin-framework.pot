@@ -33,13 +33,13 @@ msgstr ""
 #. translators: %1$s - <a> tag, %2$s - </a> tag, %3$s - <em> tag, %4$s - </em>
 #. tag, %5$s - <a> tag, %6$s - </a> tag
 msgid ""
-"To reactivate these plugins, please %1$ssupdate now (recommended)%2$s "
+"To reactivate these plugins, please %1$supdate now (recommended)%2$s "
 "%3$sor%4$s %5$sdeactivate the following%6$s:"
 msgstr ""
 
 #: class-sv-wc-framework-bootstrap.php:329
 msgid ""
-"To reactivate this plugin, please %1$s%supdate now (recommended)%2$s "
+"To reactivate this plugin, please %1$supdate now (recommended)%2$s "
 "%3$sor%4$s %5$sdeactivate the following%6$s:"
 msgstr ""
 
