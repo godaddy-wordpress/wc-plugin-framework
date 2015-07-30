@@ -9,7 +9,7 @@ module.exports = function( grunt ) {
 	config.update_translations = {
 		'framework': {
 			options: {
-				potFile: 'woocommerce/i18n/languages/sv-wc-plugin-framework.pot',
+				potFile: 'woocommerce/i18n/languages/wc-plugin-framework.pot',
 			},
 			expand: true,
 			src: [ 'woocommerce/i18n/languages/**.po' ],

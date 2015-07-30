@@ -743,7 +743,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function f__( $text ) {
 
-			return esc_html__( $text, 'sv-wc-plugin-framework' );
+			return esc_html__( $text, 'woocommerce-plugin-framework' );
 		}
 
 
@@ -760,7 +760,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function f_e( $text ) {
 
-			return esc_html_e( $text, 'sv-wc-plugin-framework' );
+			return esc_html_e( $text, 'woocommerce-plugin-framework' );
 		}
 
 
@@ -777,7 +777,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function f_x( $text, $context ) {
 
-			return esc_html_x( $text, $context, 'sv-wc-plugin-framework' );
+			return esc_html_x( $text, $context, 'woocommerce-plugin-framework' );
 		}
 
 

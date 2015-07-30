@@ -233,7 +233,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		// attempt to automatically submit the form and redirect
 		wc_enqueue_js('
 			$( "body" ).block( {
-					message: "<img src=\"' . esc_url( $this->get_plugin()->get_framework_assets_url() . '/images/ajax-loader.gif' ) . '\" alt=\"Redirecting&hellip;\" style=\"float:left; margin-right: 10px;\" />' . esc_html__( 'Thank you for your order. We are now redirecting you to complete payment.', 'sv-wc-plugin-framework' ) . '",
+					message: "<img src=\"' . esc_url( $this->get_plugin()->get_framework_assets_url() . '/images/ajax-loader.gif' ) . '\" alt=\"Redirecting&hellip;\" style=\"float:left; margin-right: 10px;\" />' . esc_html__( 'Thank you for your order. We are now redirecting you to complete payment.', 'woocommerce-plugin-framework' ) . '",
 					overlayCSS: {
 						background: "#fff",
 						opacity: 0.6
@@ -258,12 +258,12 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			$request_arg_fields[] = '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" />';
 		}
 
-		echo '<p>' . esc_html__( 'Thank you for your order, please click the button below to pay.', 'sv-wc-plugin-framework' ) . '</p>' .
+		echo '<p>' . esc_html__( 'Thank you for your order, please click the button below to pay.', 'woocommerce-plugin-framework' ) . '</p>' .
 			'<form action="' . esc_url( $this->get_hosted_pay_page_url( $order ) ) . '" method="post">' .
 				implode( '', $request_arg_fields ) .
-				'<input type="submit" class="button-alt" id="submit_' . $this->get_id() . '_payment_form" value="' . esc_attr__( 'Pay Now', 'sv-wc-plugin-framework' ) . '" />' .
+				'<input type="submit" class="button-alt" id="submit_' . $this->get_id() . '_payment_form" value="' . esc_attr__( 'Pay Now', 'woocommerce-plugin-framework' ) . '" />' .
 				// translators: Order as in e-commerce
-				'<a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . esc_html__( 'Cancel Order', 'sv-wc-plugin-framework' ) . '</a>' .
+				'<a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . esc_html__( 'Cancel Order', 'woocommerce-plugin-framework' ) . '</a>' .
 			'</form>';
 	}
 
@@ -335,7 +335,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				}
 
 				// translators: IPN: https://en.wikipedia.org/wiki/Instant_payment_notification, %s: payment gateway title (such as Authorize.net, Braintree, etc)
-				$order_note = sprintf( esc_html__( 'IPN processing error: %s duplicate transaction received', 'sv-wc-plugin-framework' ), $this->get_method_title() );
+				$order_note = sprintf( esc_html__( 'IPN processing error: %s duplicate transaction received', 'woocommerce-plugin-framework' ), $this->get_method_title() );
 				$order->add_order_note( $order_note );
 
 				status_header( 200 );
@@ -404,7 +404,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				$this->add_debug_message( sprintf( "Order '%s' has already been processed", $order->get_order_number() ), 'error' );
 
 				// translators: %s - payment gateway title (such as Authorize.net, Braintree, etc)
-				$order_note = sprintf( esc_html__( '%s duplicate transaction received', 'sv-wc-plugin-framework' ), $this->get_method_title() );
+				$order_note = sprintf( esc_html__( '%s duplicate transaction received', 'woocommerce-plugin-framework' ), $this->get_method_title() );
 				$order->add_order_note( $order_note );
 
 				// since the order has already been paid for, redirect to the 'thank you' page
@@ -561,17 +561,17 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		$transaction_type = '';
 		if ( $response->is_authorization() ) {
-			$transaction_type = esc_html_x( 'Authorization', 'credit card transaction type', 'sv-wc-plugin-framework' );
+			$transaction_type = esc_html_x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' );
 		} elseif ( $response->is_charge() ) {
-			$transaction_type = esc_html_x( 'Charge', 'noun, credit card transaction type', 'sv-wc-plugin-framework' )
+			$transaction_type = esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' )
 		}
 
 		// credit card order note
 		$message = sprintf(
 			// translators: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...), %5$s - last four digits of the card, %6$s - expiry date
-			esc_html__( '%1$s %2$s %3$s Approved: %4$s ending in %5$s (expires %6$s)', 'sv-wc-plugin-framework' ),
+			esc_html__( '%1$s %2$s %3$s Approved: %4$s ending in %5$s (expires %6$s)', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
-			$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'sv-wc-plugin-framework' ) : '',
+			$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
 			$transaction_type,
 			SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_card_type() ? $response->get_card_type() : 'card' ) ),
 			$last_four,
@@ -581,7 +581,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		// adds the transaction id (if any) to the order note
 		if ( $response->get_transaction_id() ) {
 				// translators: %s - transaction ID
-			$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
+			$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 		}
 
 		$order->add_order_note( $message );
@@ -603,9 +603,9 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		// credit card order note
 		$message = sprintf(
 			// translators: %1$s - payment method title, %2$s - environment ("Test"), %3$s - card type (mastercard, visa, ...), %4$s - last four digits of the card
-			esc_html__( '%1$s %2$s Transaction Approved: %3$s ending in %4$s', 'sv-wc-plugin-framework' ),
+			esc_html__( '%1$s %2$s Transaction Approved: %3$s ending in %4$s', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
-			$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'sv-wc-plugin-framework' ) : '',
+			$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
 			SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_account_type() ? $response->get_account_type() : 'bank' ) ),
 			$last_four
 		);
@@ -613,12 +613,12 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		// adds the check number (if any) to the order note
 		if ( $response->get_check_number() ) {
 			// translators: %s - check number
-			$message .= ' ' . sprintf( esc_html__( '(check number %s)', 'sv-wc-plugin-framework' ), $response->get_check_number() );
+			$message .= ' ' . sprintf( esc_html__( '(check number %s)', 'woocommerce-plugin-framework' ), $response->get_check_number() );
 		}
 
 		// adds the transaction id (if any) to the order note
 		if ( $response->get_transaction_id() ) {
-			$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
+			$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 		}
 
 		$order->add_order_note( $message );
@@ -639,14 +639,14 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		$message = sprintf(
 			// translators: %1$s - payment method title, %2$s - environment ("Test")
 			// oh yess
-			esc_html__( '%1$s %2$s Transaction Approved', 'sv-wc-plugin-framework' ),
+			esc_html__( '%1$s %2$s Transaction Approved', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
-			$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'sv-wc-plugin-framework' ) : '',
+			$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
 		);
 
 		// adds the transaction id (if any) to the order note
 		if ( $response->get_transaction_id() ) {
-			$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'sv-wc-plugin-framework' ), $response->get_transaction_id() );
+			$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 		}
 
 		$order->add_order_note( $message );

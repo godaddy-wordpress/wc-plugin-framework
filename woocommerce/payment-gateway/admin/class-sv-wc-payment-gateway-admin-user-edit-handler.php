@@ -122,7 +122,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 
 			if ( $fields ) {
 				// translators: %s - payment gateway title
-				echo '<h3>' . sprintf( esc_html__( '%s Customer Details', 'sv-wc-plugin-framework' ), $gateway->get_method_title() ) . '</h3>';
+				echo '<h3>' . sprintf( esc_html__( '%s Customer Details', 'woocommerce-plugin-framework' ), $gateway->get_method_title() ) . '</h3>';
 				echo $fields;
 			}
 		}
@@ -233,10 +233,10 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 
 			?>
 				<tr>
-					<th><label for="<?php printf( '_wc_%s_customer_id_%s', $gateway->get_id(), $environment_id ); ?>"><?php echo count( $environments ) > 1 ? /* translators: %s - environment name (production/test) */sprintf( esc_html__( 'Customer ID (%s)', 'sv-wc-plugin-framework' ), $environment_name ) : esc_html__( 'Customer ID', 'sv-wc-plugin-framework' ); ?></label></th>
+					<th><label for="<?php printf( '_wc_%s_customer_id_%s', $gateway->get_id(), $environment_id ); ?>"><?php echo count( $environments ) > 1 ? /* translators: %s - environment name (production/test) */sprintf( esc_html__( 'Customer ID (%s)', 'woocommerce-plugin-framework' ), $environment_name ) : esc_html__( 'Customer ID', 'woocommerce-plugin-framework' ); ?></label></th>
 					<td>
 						<input type="text" name="<?php printf( '_wc_%s_customer_id_%s', $gateway->get_id(), $environment_id ); ?>" value="<?php echo esc_attr( $gateway->get_customer_id( $user->ID, array( 'environment_id' => $environment_id, 'autocreate' => false ) ) ); ?>" class="regular-text" /><br/>
-						<span class="description"><?php echo count( $environments ) > 1 ? /* translators: %s - environment name (production/test - https://www.skyverge.com/for-translators-environments/) */ sprintf( esc_html__( 'The gateway customer ID for the user in the %s environment. Only edit this if necessary.', 'sv-wc-plugin-framework' ), $environment_name ) : esc_html__( 'The gateway customer ID for the user. Only edit this if necessary.', 'sv-wc-plugin-framework' ); ?></span>
+						<span class="description"><?php echo count( $environments ) > 1 ? /* translators: %s - environment name (production/test - https://www.skyverge.com/for-translators-environments/) */ sprintf( esc_html__( 'The gateway customer ID for the user in the %s environment. Only edit this if necessary.', 'woocommerce-plugin-framework' ), $environment_name ) : esc_html__( 'The gateway customer ID for the user. Only edit this if necessary.', 'woocommerce-plugin-framework' ); ?></span>
 					</td>
 				</tr>
 			<?php
@@ -304,12 +304,12 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 
 				<table class="form-table">
 					<tr>
-						<th style="padding-bottom:0px;"><?php echo ( count( $environments ) > 1 ? /* translators: %s - environment name (production/test). Payment Token - as in a specific entity used to make payments, such as a specific credit card, e-check account, bank account, etc. */ sprintf( esc_html__( '%s Payment Tokens', 'sv-wc-plugin-framework' ), $environment_name ) : esc_html__( 'Payment Tokens', 'sv-wc-plugin-framework' ) ); ?></th>
+						<th style="padding-bottom:0px;"><?php echo ( count( $environments ) > 1 ? /* translators: %s - environment name (production/test). Payment Token - as in a specific entity used to make payments, such as a specific credit card, e-check account, bank account, etc. */ sprintf( esc_html__( '%s Payment Tokens', 'woocommerce-plugin-framework' ), $environment_name ) : esc_html__( 'Payment Tokens', 'woocommerce-plugin-framework' ) ); ?></th>
 						<td style="padding-bottom:0px;">
 							<?php
 							if ( empty( $payment_tokens ) ):
 								// translators: Payment Token as in a specific entity used to make payments, such as a specific credit card, e-check account, bank account, etc.
-								echo "<p>" . esc_html__( 'This customer has no saved payment tokens', 'sv-wc-plugin-framework' ) . "</p>";
+								echo "<p>" . esc_html__( 'This customer has no saved payment tokens', 'woocommerce-plugin-framework' ) . "</p>";
 							else:
 								?>
 								<ul style="margin:0;">
@@ -318,8 +318,8 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 
 										?>
 											<li>
-												<?php echo $token->get_token(); ?> (<?php /* translators: %1$s - credit card type (mastercard, visa, ...), %2$s - last 4 numbers of the card, %3$s - card expiry date */ printf( '%1$s ending in %2$s expiring %3$s', $token->get_type_full(), $token->get_last_four(), $token->get_exp_month() . '/' . $token->get_exp_year() ); echo ( $token->is_default() ? ' <strong>' . esc_html__( 'Default card', 'sv-wc-plugin-framework' ) . '</strong>' : '' ); ?>)
-												<a href="#" class="js-sv-wc-payment-token-delete" data-payment_token="<?php echo $token->get_token(); ?>"><?php esc_html_e( 'Delete', 'sv-wc-plugin-framework' ); ?></a>
+												<?php echo $token->get_token(); ?> (<?php /* translators: %1$s - credit card type (mastercard, visa, ...), %2$s - last 4 numbers of the card, %3$s - card expiry date */ printf( '%1$s ending in %2$s expiring %3$s', $token->get_type_full(), $token->get_last_four(), $token->get_exp_month() . '/' . $token->get_exp_year() ); echo ( $token->is_default() ? ' <strong>' . esc_html__( 'Default card', 'woocommerce-plugin-framework' ) . '</strong>' : '' ); ?>)
+												<a href="#" class="js-sv-wc-payment-token-delete" data-payment_token="<?php echo $token->get_token(); ?>"><?php esc_html_e( 'Delete', 'woocommerce-plugin-framework' ); ?></a>
 											</li>
 										<?php
 
@@ -331,12 +331,12 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 					</tr>
 					<tr>
 						<?php // translators: Payment Token as in a specific entity used to make payments, such as a specific credit card, e-check account, bank account, etc. ?>
-						<th style="padding-top:0px;"><?php esc_html_e( 'Add a Payment Token', 'sv-wc-plugin-framework' ); ?></th>
+						<th style="padding-top:0px;"><?php esc_html_e( 'Add a Payment Token', 'woocommerce-plugin-framework' ); ?></th>
 						<td style="padding-top:0px;">
-							<input type="text" name="wc_<?php echo $gateway->get_id(); ?>_payment_token_<?php echo $environment_id; ?>" placeholder="<?php esc_attr_e( 'Token', 'sv-wc-plugin-framework' ); ?>" style="width:145px;" />
+							<input type="text" name="wc_<?php echo $gateway->get_id(); ?>_payment_token_<?php echo $environment_id; ?>" placeholder="<?php esc_attr_e( 'Token', 'woocommerce-plugin-framework' ); ?>" style="width:145px;" />
 							<?php if ( $gateway->supports( SV_WC_Payment_Gateway::FEATURE_CARD_TYPES ) ) : ?>
 								<select name="wc_<?php echo $gateway->get_id(); ?>_payment_token_type_<?php echo $environment_id; ?>">
-									<option value=""><?php esc_html_e( "Card Type", 'sv-wc-plugin-framework' ); ?></option>
+									<option value=""><?php esc_html_e( "Card Type", 'woocommerce-plugin-framework' ); ?></option>
 									<?php
 									foreach ( $gateway->get_card_types() as $card_type ) :
 										$card_type = strtolower( $card_type );
@@ -347,8 +347,8 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 									?>
 								</select>
 							<?php endif; ?>
-							<input type="text" name="wc_<?php echo $gateway->get_id(); ?>_payment_token_last_four_<?php echo $environment_id; ?>" placeholder="<?php printf( esc_attr__( 'Last Four', 'sv-wc-plugin-framework' ), substr( date( 'Y' ) + 1, -2 ) ); ?>" style="width:75px;" />
-							<input type="text" name="wc_<?php echo $gateway->get_id(); ?>_payment_token_exp_date_<?php echo $environment_id; ?>" placeholder="<?php printf( esc_attr__( 'Expiry Date (01/%s)', 'sv-wc-plugin-framework' ), date( 'Y' ) + 1 ); ?>" style="width:155px;" />
+							<input type="text" name="wc_<?php echo $gateway->get_id(); ?>_payment_token_last_four_<?php echo $environment_id; ?>" placeholder="<?php printf( esc_attr__( 'Last Four', 'woocommerce-plugin-framework' ), substr( date( 'Y' ) + 1, -2 ) ); ?>" style="width:75px;" />
+							<input type="text" name="wc_<?php echo $gateway->get_id(); ?>_payment_token_exp_date_<?php echo $environment_id; ?>" placeholder="<?php printf( esc_attr__( 'Expiry Date (01/%s)', 'woocommerce-plugin-framework' ), date( 'Y' ) + 1 ); ?>" style="width:155px;" />
 							<br/>
 							<span class="description"><?php echo apply_filters( 'wc_payment_gateway_' . $gateway->get_id() . '_user_profile_add_token_description', '', $gateway, $user ); ?></span>
 						</td>
@@ -376,7 +376,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 				jQuery( document ).ready( function( $ ) {
 					$( '.js-sv-wc-payment-token-delete' ).click( function() {
 
-						if ( ! confirm( '<?php esc_html_e( 'Are you sure you wish to do this? Change will not be finalized until you click "Update"', 'sv-wc-plugin-framework' ); ?>' ) ) {
+						if ( ! confirm( '<?php esc_html_e( 'Are you sure you wish to do this? Change will not be finalized until you click "Update"', 'woocommerce-plugin-framework' ); ?>' ) ) {
 							return false;
 						}
 

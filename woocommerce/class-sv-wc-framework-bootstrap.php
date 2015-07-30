@@ -314,7 +314,7 @@ class SV_WC_Framework_Bootstrap {
 		// must update plugin notice
 		if ( ! empty( $this->incompatible_framework_plugins ) ) {
 
-			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_framework_plugins ) > 1 ? esc_html__( 'The following plugins are inactive because they require a newer version to function properly:', 'sv-wc-plugin-framework' ) : esc_html__( 'The following plugin is inactive because it requires a newer version to function properly:', 'sv-wc-plugin-framework' ) );
+			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_framework_plugins ) > 1 ? esc_html__( 'The following plugins are inactive because they require a newer version to function properly:', 'woocommerce-plugin-framework' ) : esc_html__( 'The following plugin is inactive because it requires a newer version to function properly:', 'woocommerce-plugin-framework' ) );
 
 			foreach ( $this->incompatible_framework_plugins as $plugin ) {
 				printf( '<li>%s</li>', $plugin['plugin_name'] );
@@ -325,8 +325,8 @@ class SV_WC_Framework_Bootstrap {
 				sprintf(
 					count( $this->incompatible_framework_plugins ) > 1
 						// translators: %1$s - <a> tag, %2$s - </a> tag, %3$s - <em> tag, %4$s - </em> tag, %5$s - <a> tag, %6$s - </a> tag
-						? esc_html__( 'To reactivate these plugins, please %1$ssupdate now (recommended)%2$s %3$sor%4$s %5$sdeactivate the following%6$s:', 'sv-wc-plugin-framework' )
-						: esc_html__( 'To reactivate this plugin, please %1$s%supdate now (recommended)%2$s %3$sor%4$s %5$sdeactivate the following%6$s:', 'sv-wc-plugin-framework' ),
+						? esc_html__( 'To reactivate these plugins, please %1$ssupdate now (recommended)%2$s %3$sor%4$s %5$sdeactivate the following%6$s:', 'woocommerce-plugin-framework' )
+						: esc_html__( 'To reactivate this plugin, please %1$s%supdate now (recommended)%2$s %3$sor%4$s %5$sdeactivate the following%6$s:', 'woocommerce-plugin-framework' ),
 					'<a href="' . admin_url( 'update-core.php' ) . '">', '</a>',
 					'<em>', '</em>',
 					'<a href="' . admin_url( 'plugins.php?sv_wc_framework_deactivate_newer=yes' ) . '">', '</a>'
@@ -342,16 +342,16 @@ class SV_WC_Framework_Bootstrap {
 		// must update WC notice
 		if ( ! empty( $this->incompatible_wc_version_plugins ) ) {
 
-			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_wc_version_plugins ) > 1 ? esc_html__( 'The following plugins are inactive because they require a newer version of WooCommerce:', 'sv-wc-plugin-framework' ) : esc_html__( 'The following plugin is inactive because it requires a newer version of WooCommerce:', 'sv-wc-plugin-framework' ) );
+			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_wc_version_plugins ) > 1 ? esc_html__( 'The following plugins are inactive because they require a newer version of WooCommerce:', 'woocommerce-plugin-framework' ) : esc_html__( 'The following plugin is inactive because it requires a newer version of WooCommerce:', 'woocommerce-plugin-framework' ) );
 
 			foreach ( $this->incompatible_wc_version_plugins as $plugin ) {
 
 				// translators: %1$s - plugin name, %2$s - WooCommerce version number
-				echo '<li>' . sprintf( esc_html__( '%1$s requires WooCommerce %2$s or newer', 'sv-wc-plugin-framework' ), $plugin['plugin_name'], $plugin['args']['minimum_wc_version'] ) . '</li>';
+				echo '<li>' . sprintf( esc_html__( '%1$s requires WooCommerce %2$s or newer', 'woocommerce-plugin-framework' ), $plugin['plugin_name'], $plugin['args']['minimum_wc_version'] ) . '</li>';
 			}
 
 			// translators: %1$s - <a> tag, %2$s - </a> tag
-			echo '</ul><p>' . printf( esc_html__( 'Please %1$supdate WooCommerce%2$s', 'sv-wc-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
+			echo '</ul><p>' . printf( esc_html__( 'Please %1$supdate WooCommerce%2$s', 'woocommerce-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
 		}
 
 		// must update WP notice

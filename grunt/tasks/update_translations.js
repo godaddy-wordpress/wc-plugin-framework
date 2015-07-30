@@ -12,7 +12,7 @@ module.exports = function( grunt ) {
 			f.src.forEach( function ( filepath ) {
 
 				var locale   = filepath.substring( filepath.lastIndexOf( '-' ) + 1, filepath.lastIndexOf( '.' ) ),
-						msgmerge = 'msgmerge ' + filepath + ' ' + options.potFile + ' -U --backup=off';
+						msgmerge = 'msgmerge ' + filepath + ' ' + options.potFile + ' -U --backup=off',
 						msgfmt   = 'msgfmt -o ' + filepath.replace( '.po', '.mo' ) + ' ' + filepath;
 
 				grunt.config( 'shell.msgmerge-' + target + '-' + locale + '.command', msgmerge );
