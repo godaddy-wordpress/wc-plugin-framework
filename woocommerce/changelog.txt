@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2015.nn.nn - version 4.0.0-1
+ * Fix - Fix typo in payment gateway frontend javascript
 2015.07.27 - version 4.0.0
  * Feature - Standardized payment gateway form
  * Feature - Add new payment method feature
