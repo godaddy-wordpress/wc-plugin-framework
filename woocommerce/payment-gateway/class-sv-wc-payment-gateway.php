@@ -1054,7 +1054,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			foreach ( $this->get_card_types() as $card_type ) {
 
 				if ( $url = $this->get_payment_method_image_url( $card_type ) ) {
-					$icon .= sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" width="40" height="25" />', esc_url( $url ), esc_attr( strtolower( $card_type ) ), esc_attr( $this->get_id_dasherized() ) );
+					$icon .= sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" width="40" height="25" style="width: 40px; height: 25px;" />', esc_url( $url ), esc_attr( strtolower( $card_type ) ), esc_attr( $this->get_id_dasherized() ) );
 				}
 			}
 		}
@@ -1063,7 +1063,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( ! $icon && $this->is_echeck_gateway() ) {
 
 			if ( $url = $this->get_payment_method_image_url( 'echeck' ) ) {
-				$icon .= sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" width="40" height="25" />', esc_url( $url ), esc_attr( 'echeck' ), esc_attr( $this->get_id_dasherized() ) );
+				$icon .= sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" width="40" height="25" style="width: 40px; height: 25px;" />', esc_url( $url ), esc_attr( 'echeck' ), esc_attr( $this->get_id_dasherized() ) );
 			}
 		}
 
