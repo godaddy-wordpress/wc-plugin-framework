@@ -20,6 +20,7 @@ module.exports = function( grunt ) {
 
 	// Set folder templates
 	gruntConfig.dirs = {
+		lang: 'woocommerce/i18n/languages',
 		general: {
 			css: 'woocommerce/assets/css',
 			js: 'woocommerce/assets/js'
@@ -53,7 +54,16 @@ module.exports = function( grunt ) {
 	grunt.initConfig( gruntConfig );
 
 	// Load custom tasks
-	grunt.loadTasks( 'grunt/tasks/' );
+	// Disabled, because there are no custom tasks yet. Enable when needed :)
+	// grunt.loadTasks( 'grunt/tasks/' );
+
+	// Register update_translations task
+	grunt.registerTask( 'update_translations', [
+		'makepot',
+		'shell:transifex_push',
+		'shell:transifex_pull',
+		'potomo'
+	] );
 
 	// Register default task
 	grunt.registerTask( 'default', [
@@ -61,7 +71,6 @@ module.exports = function( grunt ) {
 		'uglify',
 		'sass',
 		'makepot',
-		'update_translations',
 		'clean'
 	] );
 

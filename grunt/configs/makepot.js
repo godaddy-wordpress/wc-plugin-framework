@@ -23,7 +23,8 @@ module.exports = function( grunt ) {
 					return pot;
 				}, // jshint ignore:line
 				type: 'wp-plugin',
-				updateTimestamp: false
+				updateTimestamp: false,
+				updatePoFiles: true,
 			}
 		}
 	};
