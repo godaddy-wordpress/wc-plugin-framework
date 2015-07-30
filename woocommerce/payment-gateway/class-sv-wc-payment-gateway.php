@@ -1818,9 +1818,24 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		$order_note = sprintf( __( '%s Transaction Held for Review (%s)', $this->text_domain ), $this->get_method_title(), $message );
 
+		/**
+		 * Order Held Order Status Filter.
+		 *
+		 * Actors may use this to change the order status that is used when an order
+		 * status should be marked as held. Held orders are usually a result of an
+		 * authorize-only transaction.
+		 *
+		 * @since 4.0.0-1
+		 * @param string $order_status 'on-hold' by default
+		 * @param \WC_Order $order WC order
+		 * @param \SV_WC_Payment_Gateway_API_Response $response instance
+		 * @param \SV_WC_Payment_Gateway $this gateway instance
+		 */
+		$order_status = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_order_held_order_status', 'on-hold', $order, $response, $this );
+
 		// mark order as held
-		if ( ! $order->has_status( 'on-hold' ) ) {
-			$order->update_status( 'on-hold', $order_note );
+		if ( ! $order->has_status( $order_status ) ) {
+			$order->update_status( $order_status, $order_note );
 		} else {
 			$order->add_order_note( $order_note );
 		}
@@ -1854,7 +1869,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function maybe_render_held_order_received_text( $text, $order ) {
 
-		if ( $order && $order->has_status( 'on-hold') && isset( WC()->session->held_order_received_text ) ) {
+		if ( $order && $order->has_status( 'on-hold' ) && isset( WC()->session->held_order_received_text ) ) {
 
 			$text = WC()->session->held_order_received_text;
 
