@@ -1825,7 +1825,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		 * status should be marked as held. Held orders are usually a result of an
 		 * authorize-only transaction.
 		 *
-		 * @since 4.0.0-1
+		 * @since 4.0.1
 		 * @param string $order_status 'on-hold' by default
 		 * @param \WC_Order $order WC order
 		 * @param \SV_WC_Payment_Gateway_API_Response $response instance
