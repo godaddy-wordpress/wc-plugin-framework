@@ -379,7 +379,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				$name,
 				'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
 				'<a href="' . $this->get_general_configuration_url() . '">',
-				'</a>',
+				'</a>'
 			);
 
 			$this->get_admin_notice_handler()->add_admin_notice( $message, 'accepted-currency' . $suffix );
