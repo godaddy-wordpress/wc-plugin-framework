@@ -14,15 +14,15 @@ module.exports = function( grunt ) {
 			files: [
 				{
 					expand: true,
-					cwd: 'woocommerce/payment-gateway/assets/css/admin/',
-					dest: 'woocommerce/payment-gateway/assets/css/admin/',
+					cwd: '<%= dirs.gateway.css %>/admin/',
+					dest: '<%= dirs.gateway.css %>/admin/',
 					src: ['*.scss', '!_*.scss'],
 					ext: '.min.css'
 				},
 				{
 					expand: true,
-					cwd: 'woocommerce/payment-gateway/assets/css/frontend/',
-					dest: 'woocommerce/payment-gateway/assets/css/frontend/',
+					cwd: '<%= dirs.gateway.css %>/frontend/',
+					dest: '<%= dirs.gateway.css %>/frontend/',
 					src: ['*.scss', '!_*.scss'],
 					ext: '.min.css'
 				}

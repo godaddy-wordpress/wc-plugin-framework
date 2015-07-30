@@ -13,15 +13,15 @@ module.exports = function( grunt ) {
 			files: [
 				{
 					expand: true,
-					cwd: 'woocommerce/payment-gateway/assets/js/admin/',
-					dest: 'woocommerce/payment-gateway/assets/js/admin/',
+					cwd: '<%= dirs.gateway.js %>/admin/',
+					dest: '<%= dirs.gateway.js %>/admin/',
 					src: '*.coffee',
 					ext: '.min.js'
 				},
 				{
 					expand: true,
-					cwd: 'woocommerce/payment-gateway/assets/js/frontend/',
-					dest: 'woocommerce/payment-gateway/assets/js/frontend/',
+					cwd: '<%= dirs.gateway.js %>/frontend/',
+					dest: '<%= dirs.gateway.js %>/frontend/',
 					src: '*.coffee',
 					ext: '.min.js'
 				}
