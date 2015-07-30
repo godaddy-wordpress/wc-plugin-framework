@@ -1819,7 +1819,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order_note = sprintf( __( '%s Transaction Held for Review (%s)', $this->text_domain ), $this->get_method_title(), $message );
 
 		/**
-		 * Order Held Order Status Filter.
+		 * Held Order Status Filter.
 		 *
 		 * Actors may use this to change the order status that is used when an order
 		 * status should be marked as held. Held orders are usually a result of an
@@ -1831,7 +1831,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		 * @param \SV_WC_Payment_Gateway_API_Response $response instance
 		 * @param \SV_WC_Payment_Gateway $this gateway instance
 		 */
-		$order_status = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_order_held_order_status', 'on-hold', $order, $response, $this );
+		$order_status = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_held_order_status', 'on-hold', $order, $response, $this );
 
 		// mark order as held
 		if ( ! $order->has_status( $order_status ) ) {
