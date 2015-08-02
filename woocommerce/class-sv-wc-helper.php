@@ -61,7 +61,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 			} else {
 
-				return 0 === strpos( self::str_to_ascii( $haystack ), self::str_to_ascii( $needle ) );
+				return 0 === strpos( self::str_to_ascii( $haystack ), self::str_to_ascii( $needle ) ); // @codeCoverageIgnore
 			}
 		}
 
