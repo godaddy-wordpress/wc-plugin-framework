@@ -1,4 +1,4 @@
-# WooCommerce Plugin Framework
+# WooCommerce Plugin Framework [![Build Status](https://travis-ci.org/skyverge/wc-plugin-framework.svg?branch=testing)](https://travis-ci.org/skyverge/wc-plugin-framework) [![Coverage Status](https://coveralls.io/repos/skyverge/wc-plugin-framework/badge.svg?branch=master&service=github)](https://coveralls.io/github/skyverge/wc-plugin-framework?branch=master)
 
 This is a SkyVerge library module: a full featured WooCommerce Plugin Framework
 
