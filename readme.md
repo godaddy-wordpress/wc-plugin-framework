@@ -1,4 +1,4 @@
-# WooCommerce Plugin Framework
+# WooCommerce Plugin Framework [![Build Status](https://travis-ci.org/skyverge/wc-plugin-framework.svg?branch=testing)](https://travis-ci.org/skyverge/wc-plugin-framework) [![Coverage Status](https://coveralls.io/repos/skyverge/wc-plugin-framework/badge.svg?branch=master&service=github)](https://coveralls.io/github/skyverge/wc-plugin-framework?branch=master)
 
 This is a SkyVerge library module: a full featured WooCommerce Plugin Framework
 
@@ -64,9 +64,3 @@ $api->create_product( 'widget', '122' );
 $product = $api->get_product( 'widget' );
 echo $product->sku;
 ```
-
-## Known Issues
-
-### Subscriptions Authorize-only Renewal
-
-Subscription renewals placed with the gateway configured to "authorize" only will be marked as processing/completed by WooCommerce Subscriptions, rather than on-hold as when typically placing an authorize-only transaction.  Doesn't appear to be much we can do about it as this is built into WooCommerce Subscriptions.
