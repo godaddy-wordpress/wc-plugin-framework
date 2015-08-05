@@ -259,7 +259,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		echo '<p>' . __( 'Thank you for your order, please click the button below to pay.', $this->text_domain ) . '</p>' .
 			'<form action="' . esc_url( $this->get_hosted_pay_page_url( $order ) ) . '" method="post">' .
 				implode( '', $request_arg_fields ) .
-				'<input type="submit" class="button-alt" id="submit_' . $this->get_id() . '_payment_form" value="' . __( 'Pay Now', $this->text_domain ) . '" />' .
+				'<input type="submit" class="button alt button-alt" id="submit_' . $this->get_id() . '_payment_form" value="' . __( 'Pay Now', $this->text_domain ) . '" />' .
 				'<a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . __( 'Cancel Order', $this->text_domain ) . '</a>' .
 			'</form>';
 	}
