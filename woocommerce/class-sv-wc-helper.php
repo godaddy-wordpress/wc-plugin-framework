@@ -738,7 +738,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * never be called for plugin-specific or untranslated strings!
 		 * Untranslated = not registered via string literal.
 		 *
-		 * @since 3.0.0
+		 * @since 4.1.0
 		 * @param string $text
 		 */
 		public static function f__( $text ) {
@@ -755,7 +755,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * never be called for plugin-specific or untranslated strings!
 		 * Untranslated = not registered via string literal.
 		 *
-		 * @since 3.0.0
+		 * @since 4.1.0
 		 * @param string $text
 		 */
 		public static function f_e( $text ) {
@@ -772,7 +772,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * never be called for plugin-specific or untranslated strings!
 		 * Untranslated = not registered via string literal.
 		 *
-		 * @since 3.0.0
+		 * @since 4.1.0
 		 * @param string $text
 		 */
 		public static function f_x( $text, $context ) {
