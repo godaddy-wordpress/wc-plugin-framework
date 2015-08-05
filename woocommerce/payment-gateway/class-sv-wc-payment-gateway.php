@@ -242,7 +242,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	private $available_card_types;
 
 	/** @var array optional array of currency codes this gateway is allowed for */
-	private $currencies;
+	protected $currencies;
 
 	/** @var string configuration option: the transaction environment, one of $this->environments keys */
 	private $environment;
@@ -2506,11 +2506,34 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
+	 * Get payment currency, either from current order or WC settings
+	 *
+	 * @since 4.1.0
+	 * @return string three-letter currency code
+	 */
+	protected function get_payment_currency() {
+
+		$currency = get_woocommerce_currency();
+		$order_id = $this->get_checkout_pay_page_order_id();
+
+		// Gets currency for the current order, that is about to be paid for
+		if ( $order_id ) {
+
+			$order    = wc_get_order( $order_id );
+			$currency = $order->get_order_currency();
+		}
+
+		return $currency;
+	}
+
+
+	/**
 	 * Returns true if $currency is accepted by this gateway
 	 *
 	 * @since 2.1.0
 	 * @param string $currency optional three-letter currency code, defaults to
-	 *        currently configured WooCommerce currency
+	 *        order currency (if available) or currently configured WooCommerce
+	 *        currency
 	 * @return boolean true if $currency is accepted, false otherwise
 	 */
 	public function currency_is_accepted( $currency = null ) {
@@ -2520,12 +2543,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			return true;
 		}
 
-		// default to currently configured currency
+		// default to order/WC currency
 		if ( is_null( $currency ) ) {
-			$currency = get_woocommerce_currency();
+			$currency = $this->get_payment_currency();
 		}
 
-		return in_array( get_woocommerce_currency(), $this->currencies );
+		return in_array( $currency, $this->currencies );
 	}
 
 
