@@ -60,8 +60,8 @@ module.exports = function( grunt ) {
 	// Register update_translations task
 	grunt.registerTask( 'update_translations', [
 		'makepot',
-		'shell:transifex_push',
-		'shell:transifex_pull',
+		'shell:tx_push',
+		'shell:tx_pull',
 		'potomo'
 	] );
 

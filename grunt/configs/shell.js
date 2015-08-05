@@ -8,12 +8,12 @@ module.exports = function( grunt ) {
   // messages from the POT file and compiles them to MO files.
   config.shell = {
 
-    transifex_push: {
-      command: 'tx push -s -t'
+    tx_push: {
+      command: 'tx push -s'
     },
 
-    transifex_pull: {
-      command: 'tx pull'
+    tx_pull: {
+      command: 'tx pull -a'
     },
 
   };
