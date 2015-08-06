@@ -1,9 +1,20 @@
+# IDEs
 /.settings
 /.project
-.sass-cache*
+/.idea
 
 # NPM packages used by Grunt.js
 /node_modules
 
 # NPM debug log
 npm-debug.log
+
+# Composer
+/vendor
+
+# PHPUnit
+/tmp
+
+# Misc
+*.zip
+.sass-cache*

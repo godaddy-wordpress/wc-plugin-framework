@@ -261,7 +261,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		echo '<p>' . esc_html__( 'Thank you for your order, please click the button below to pay.', 'woocommerce-plugin-framework' ) . '</p>' .
 			'<form action="' . esc_url( $this->get_hosted_pay_page_url( $order ) ) . '" method="post">' .
 				implode( '', $request_arg_fields ) .
-				'<input type="submit" class="button-alt" id="submit_' . $this->get_id() . '_payment_form" value="' . esc_attr__( 'Pay Now', 'woocommerce-plugin-framework' ) . '" />' .
+				'<input type="submit" class="button alt button-alt" id="submit_' . $this->get_id() . '_payment_form" value="' . esc_attr__( 'Pay Now', 'woocommerce-plugin-framework' ) . '" />' .
 				// translators: Order as in e-commerce
 				'<a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . esc_html__( 'Cancel Order', 'woocommerce-plugin-framework' ) . '</a>' .
 			'</form>';

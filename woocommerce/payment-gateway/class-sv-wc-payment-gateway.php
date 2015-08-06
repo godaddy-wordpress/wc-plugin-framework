@@ -1058,7 +1058,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			foreach ( $this->get_card_types() as $card_type ) {
 
 				if ( $url = $this->get_payment_method_image_url( $card_type ) ) {
-					$icon .= sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" width="40" height="25" />', esc_url( $url ), esc_attr( strtolower( $card_type ) ), esc_attr( $this->get_id_dasherized() ) );
+					$icon .= sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" width="40" height="25" style="width: 40px; height: 25px;" />', esc_url( $url ), esc_attr( strtolower( $card_type ) ), esc_attr( $this->get_id_dasherized() ) );
 				}
 			}
 		}
@@ -1067,7 +1067,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( ! $icon && $this->is_echeck_gateway() ) {
 
 			if ( $url = $this->get_payment_method_image_url( 'echeck' ) ) {
-				$icon .= sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" width="40" height="25" />', esc_url( $url ), esc_attr( 'echeck' ), esc_attr( $this->get_id_dasherized() ) );
+				$icon .= sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" width="40" height="25" style="width: 40px; height: 25px;" />', esc_url( $url ), esc_attr( 'echeck' ), esc_attr( $this->get_id_dasherized() ) );
 			}
 		}
 
@@ -1836,9 +1836,24 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// translators: %1$s - payment gateway title, %2$s - message (probably reason for the transaction being held for review)
 		$order_note = sprintf( esc_html__( '%1$s Transaction Held for Review (%2$s)', 'woocommerce-plugin-framework' ), $this->get_method_title(), $message );
 
+		/**
+		 * Held Order Status Filter.
+		 *
+		 * Actors may use this to change the order status that is used when an order
+		 * status should be marked as held. Held orders are usually a result of an
+		 * authorize-only transaction.
+		 *
+		 * @since 4.0.1
+		 * @param string $order_status 'on-hold' by default
+		 * @param \WC_Order $order WC order
+		 * @param \SV_WC_Payment_Gateway_API_Response $response instance
+		 * @param \SV_WC_Payment_Gateway $this gateway instance
+		 */
+		$order_status = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_held_order_status', 'on-hold', $order, $response, $this );
+
 		// mark order as held
-		if ( ! $order->has_status( 'on-hold' ) ) {
-			$order->update_status( 'on-hold', $order_note );
+		if ( ! $order->has_status( $order_status ) ) {
+			$order->update_status( $order_status, $order_note );
 		} else {
 			$order->add_order_note( $order_note );
 		}
@@ -1872,7 +1887,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function maybe_render_held_order_received_text( $text, $order ) {
 
-		if ( $order && $order->has_status( 'on-hold') && isset( WC()->session->held_order_received_text ) ) {
+		if ( $order && $order->has_status( 'on-hold' ) && isset( WC()->session->held_order_received_text ) ) {
 
 			$text = WC()->session->held_order_received_text;
 

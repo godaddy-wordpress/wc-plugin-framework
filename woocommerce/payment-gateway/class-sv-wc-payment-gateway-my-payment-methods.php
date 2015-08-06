@@ -121,7 +121,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
 
-			if ( ! $gateway->is_available() || ! $gateway->tokenization_enabled() ) {
+			if ( ! $gateway->is_available() || ! ( $gateway->supports_tokenization() && $gateway->tokenization_enabled() ) ) {
 				continue;
 			}
 

@@ -133,7 +133,7 @@ jQuery( document ).ready ($) ->
 			# bail when already processing
 			return false if @form.is( '.processing' )
 
-			tokenized_payment_method_selected = @payment_fields.find( '.js-wc-payment-gateway-payment-token:checked' ).val()
+			tokenized_payment_method_selected = @payment_fields.find( '.js-sv-wc-payment-gateway-payment-token:checked' ).val()
 
 			# don't validate fields if a saved payment method is being used
 			return true if tokenized_payment_method_selected
