@@ -682,6 +682,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		} elseif ( $this->is_echeck_gateway() ) {
 			return esc_html__( 'Pay securely using your checking account.', 'woocommerce-plugin-framework' );
 		}
+		
+		return '';
 	}
 
 
