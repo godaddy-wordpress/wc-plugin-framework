@@ -664,6 +664,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		} elseif ( $this->is_echeck_gateway() ) {
 			return esc_html__( 'eCheck', 'woocommerce-plugin-framework' );
 		}
+		
+		return '';
 	}
 
 
