@@ -1,5 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2015.nn.nn - version 4.0.1-1
+ * Fix - Fix assert() warnings with certain gateway configurations on the My Account page
+ * Tweak - Add specific width/height styling for payment method icons
+
 2015.07.29 - version 4.0.1
  * Fix - Fix typo in payment gateway frontend javascript
  * Tweak - Add inline style for payment gateway icons
