@@ -365,7 +365,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->has_fields = true;
 
 		// default icon filter  @see WC_Payment_Gateway::$icon
-		$this->icon = apply_filters( 'wc_' + $this->get_id() + '_icon', '' );
+		$this->icon = apply_filters( 'wc_' . $this->get_id() . '_icon', '' );
 
 		// Load the form fields
 		$this->init_form_fields();
@@ -775,10 +775,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			'desc'    => sprintf( esc_html__( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the %1$sdebug log%2$s', 'woocommerce-plugin-framework' ), '<a href="' . SV_WC_Helper::get_wc_log_file_url( $this->get_id() ) . '">', '</a>' ),
 			'default' => self::DEBUG_MODE_OFF,
 			'options' => array(
-				self::DEBUG_MODE_OFF      => esc_html__( 'Off', 'Debug mode off', 'woocommerce-plugin-framework' ),
+				self::DEBUG_MODE_OFF      => esc_html__( 'Off', 'woocommerce-plugin-framework' ),
 				self::DEBUG_MODE_CHECKOUT => esc_html__( 'Show on Checkout Page', 'woocommerce-plugin-framework' ),
 				self::DEBUG_MODE_LOG      => esc_html__( 'Save to Log', 'woocommerce-plugin-framework' ),
-				self::DEBUG_MODE_BOTH     => esc_html__( 'Both', 'Debug mode both show on checkout and log', 'woocommerce-plugin-framework' )
+				// translators: show debugging information on both checkout page and in the log
+				self::DEBUG_MODE_BOTH     => esc_html__( 'Both', 'woocommerce-plugin-framework' )
 			),
 		);
 
@@ -1833,7 +1834,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @param WC_Order $order the order
 	 * @param string $message a message to display within the order note
-	 * @param SV_WC_Payment_Gateway_API_Response optional $response the transaction response object
+	 * @param SV_WC_Payment_Gateway_API_Response $response optional, the transaction response object
 	 */
 	protected function mark_order_as_held( $order, $message, $response = null ) {
 
@@ -1862,7 +1863,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$order->add_order_note( $order_note );
 		}
 
-		$this->add_debug_message( $message, 'message', true );
+		$this->add_debug_message( $message, 'message' );
 
 		// user message
 		$user_message = '';
