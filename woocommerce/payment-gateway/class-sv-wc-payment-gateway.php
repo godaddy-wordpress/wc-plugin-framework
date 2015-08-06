@@ -680,6 +680,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		} elseif ( $this->is_echeck_gateway() ) {
 			return _x( 'Pay securely using your checking account.', 'Supports cheque', $this->text_domain );
 		}
+		
+		return '';
 	}
 
 
