@@ -563,7 +563,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		if ( $response->is_authorization() ) {
 			$transaction_type = esc_html_x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' );
 		} elseif ( $response->is_charge() ) {
-			$transaction_type = esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' )
+			$transaction_type = esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' );
 		}
 
 		// credit card order note
@@ -641,7 +641,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			// oh yess
 			esc_html__( '%1$s %2$s Transaction Approved', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
-			$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
+			$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : ''
 		);
 
 		// adds the transaction id (if any) to the order note

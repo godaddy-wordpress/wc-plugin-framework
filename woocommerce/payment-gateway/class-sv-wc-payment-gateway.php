@@ -664,7 +664,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		} elseif ( $this->is_echeck_gateway() ) {
 			return esc_html__( 'eCheck', 'woocommerce-plugin-framework' );
 		}
-		
+
 		return '';
 	}
 
@@ -684,7 +684,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		} elseif ( $this->is_echeck_gateway() ) {
 			return esc_html__( 'Pay securely using your checking account.', 'woocommerce-plugin-framework' );
 		}
-		
+
 		return '';
 	}
 
@@ -2344,7 +2344,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 			$this->available_card_types = array(
 				'VISA'   => esc_html_x( 'Visa', 'credit card type', 'woocommerce-plugin-framework' ),
-				'MC'     => esc_html_x( 'MasterCard', 'credit card type', 'woocommerce-plugin-framework' )
+				'MC'     => esc_html_x( 'MasterCard', 'credit card type', 'woocommerce-plugin-framework' ),
 				'AMEX'   => esc_html_x( 'American Express', 'credit card type', 'woocommerce-plugin-framework' ),
 				'DISC'   => esc_html_x( 'Discover', 'credit card type', 'woocommerce-plugin-framework' ),
 				'DINERS' => esc_html_x( 'Diners', 'credit card type', 'woocommerce-plugin-framework' ),
