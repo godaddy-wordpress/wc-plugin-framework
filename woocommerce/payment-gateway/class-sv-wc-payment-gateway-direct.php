@@ -415,11 +415,14 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @see WC_Payment_Gateway::process_payment()
 	 * @param int|string $order_id
+	 * @return array associative array with members 'result' and 'redirect'
 	 */
 	public function process_payment( $order_id ) {
 
+		$default = parent::process_payment( $order_id );
+
 		// give other actors an opportunity to intercept and implement the process_payment() call for this transaction
-		if ( true !== ( $result = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_process_payment', true, $order_id, $this ) ) ) {
+		if ( is_array( $result = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_process_payment', true, $order_id, $this ) ) ) {
 			return $result;
 		}
 
@@ -463,6 +466,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$this->mark_order_as_failed( $order, $e->getMessage() );
 
 		}
+
+		return $default;
 	}
 
 
