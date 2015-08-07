@@ -338,7 +338,7 @@ abstract class SV_WC_Plugin {
 
 			$message = sprintf(
 				// translators: %1$s - plugin name, %2$s - a PHP extension/comma-separated list of PHP extensions
-				esc_html_n(
+				_n(
 					'%1$s requires the %2$s PHP extension to function. Contact your host or server administrator to configure and install the missing extension.',
 					'%1$s requires the following PHP extensions to function: %2$s. Contact your host or server administrator to configure and install the missing extensions.',
 					count( $missing_extensions ),
@@ -359,7 +359,7 @@ abstract class SV_WC_Plugin {
 
 			$message = sprintf(
 				// translators: %1$s - plugin name, %2$s - a PHP function/comma-separated list of PHP functions
-				esc_html_n(
+				_n(
 					'%1$s requires the %2$s PHP function to exist.  Contact your host or server administrator to configure and install the missing function.',
 					'%1$s requires the following PHP functions to exist: %2$s.  Contact your host or server administrator to configure and install the missing functions.',
 					count( $missing_functions ),
