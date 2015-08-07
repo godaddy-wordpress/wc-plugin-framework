@@ -137,7 +137,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				return $this->$method_name( $is_valid );
 			}
 		}
-		
+
 		// no more validation to perform. Return the parent method's outcome.
 		return $is_valid;
 
@@ -487,8 +487,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * $order->payment->routing_number - account routing number (check transactions only)
 	 * $order->payment->account_type   - optional type of account one of 'checking' or 'savings' if type is 'check'
 	 * $order->payment->card_type      - optional card type, ie one of 'visa', etc
-	 * $order->payment->exp_month      - the credit card expiration month (for credit card gateways)
-	 * $order->payment->exp_year       - the credit card expiration year (for credit card gateways)
+	 * $order->payment->exp_month      - the 2 digit credit card expiration month (for credit card gateways), e.g. 07
+	 * $order->payment->exp_year       - the 2 digit credit card expiration year (for credit card gateways), e.g. 17
 	 * $order->payment->csc            - the card security code (for credit card gateways)
 	 * $order->payment->check_number   - optional check number (check transactions only)
 	 * $order->payment->drivers_license_number - optional driver license number (check transactions only)
@@ -573,11 +573,15 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				// echeck specific attributes
 				$order->payment->account_type = $token->get_account_type();
-
 			}
 
 			// make this the new default payment token
 			$this->set_default_payment_token( $order->get_user_id(), $token );
+		}
+
+		// standardize expiration date year to 2 digits
+		if ( ! empty( $order->payment->exp_year ) && 4 === strlen( $order->payment->exp_year ) ) {
+			$order->payment->exp_year = substr( $order->payment->exp_year, 2 );
 		}
 
 		// allow other actors to modify the order object

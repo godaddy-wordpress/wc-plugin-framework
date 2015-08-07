@@ -641,7 +641,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		);
 
 		if ( $this->is_test_environment() ) {
-			$defaults['expiry'] = '01/' . ( date( 'Y' ) + 1 );
+			$defaults['expiry'] = '01/' . ( date( 'y' ) + 1 );
 			$defaults['csc'] = '123';
 		}
 
