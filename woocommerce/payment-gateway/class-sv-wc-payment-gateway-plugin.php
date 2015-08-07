@@ -509,7 +509,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		// since a capture results in an update to the post object (by updating
 		// the paid date) we need to unhook the meta box save action, otherwise we
 		// can get boomeranged and change the status back to on-hold
-		remove_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Data::save', 40, 2 );
+		remove_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Data::save', 40 );
 
 		// perform the capture
 		$gateway->do_credit_card_capture( $order );

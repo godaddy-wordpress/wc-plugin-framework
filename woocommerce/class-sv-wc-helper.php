@@ -760,7 +760,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function f_e( $text ) {
 
-			return esc_html_e( $text, 'woocommerce-plugin-framework' );
+			esc_html_e( $text, 'woocommerce-plugin-framework' );
 		}
 
 

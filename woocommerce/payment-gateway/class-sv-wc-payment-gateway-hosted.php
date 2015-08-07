@@ -716,8 +716,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				$request['uri'],
 				$request['body']
 			),
-			'message',
-			true
+			'message'
 		);
 	}
 

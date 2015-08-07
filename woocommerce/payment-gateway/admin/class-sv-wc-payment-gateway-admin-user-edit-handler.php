@@ -304,8 +304,8 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 
 				<table class="form-table">
 					<tr>
-						<th style="padding-bottom:0px;"><?php echo ( count( $environments ) > 1 ? /* translators: %s - environment name (production/test). Payment Token - as in a specific entity used to make payments, such as a specific credit card, e-check account, bank account, etc. */ sprintf( esc_html__( '%s Payment Tokens', 'woocommerce-plugin-framework' ), $environment_name ) : esc_html__( 'Payment Tokens', 'woocommerce-plugin-framework' ) ); ?></th>
-						<td style="padding-bottom:0px;">
+						<th style="padding-bottom: 0;"><?php echo ( count( $environments ) > 1 ? /* translators: %s - environment name (production/test). Payment Token - as in a specific entity used to make payments, such as a specific credit card, e-check account, bank account, etc. */ sprintf( esc_html__( '%s Payment Tokens', 'woocommerce-plugin-framework' ), $environment_name ) : esc_html__( 'Payment Tokens', 'woocommerce-plugin-framework' ) ); ?></th>
+						<td style="padding-bottom: 0;">
 							<?php
 							if ( empty( $payment_tokens ) ):
 								// translators: Payment Token as in a specific entity used to make payments, such as a specific credit card, e-check account, bank account, etc.
@@ -331,8 +331,8 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 					</tr>
 					<tr>
 						<?php // translators: Payment Token as in a specific entity used to make payments, such as a specific credit card, e-check account, bank account, etc. ?>
-						<th style="padding-top:0px;"><?php esc_html_e( 'Add a Payment Token', 'woocommerce-plugin-framework' ); ?></th>
-						<td style="padding-top:0px;">
+						<th style="padding-top: 0;"><?php esc_html_e( 'Add a Payment Token', 'woocommerce-plugin-framework' ); ?></th>
+						<td style="padding-top: 0;">
 							<input type="text" name="wc_<?php echo $gateway->get_id(); ?>_payment_token_<?php echo $environment_id; ?>" placeholder="<?php esc_attr_e( 'Token', 'woocommerce-plugin-framework' ); ?>" style="width:145px;" />
 							<?php if ( $gateway->supports( SV_WC_Payment_Gateway::FEATURE_CARD_TYPES ) ) : ?>
 								<select name="wc_<?php echo $gateway->get_id(); ?>_payment_token_type_<?php echo $environment_id; ?>">

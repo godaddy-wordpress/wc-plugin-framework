@@ -1787,7 +1787,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 *
 	 * @since 1.0.0
 	 * @param WC_Order $order the order object
-	 * @param SV_WC_Payment_Gateway_API_Customer_Response $response the transaction response
+	 * @param \SV_WC_Payment_Gateway_API_Customer_Response $response the transaction response
 	 */
 	protected function add_payment_gateway_transaction_data( $order, $response ) {
 		// Optional method
