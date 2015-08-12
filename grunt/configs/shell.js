@@ -9,11 +9,17 @@ module.exports = function( grunt ) {
   config.shell = {
 
     tx_push: {
-      command: 'tx push -s'
+      options: {
+        failOnError: false,
+      },
+      command: 'tx push -s --skip'
     },
 
     tx_pull: {
-      command: 'tx pull -a'
+      options: {
+        failOnError: false,
+      },
+      command: 'tx pull -a --skip '
     },
 
   };
