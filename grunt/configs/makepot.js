@@ -12,11 +12,11 @@ module.exports = function( grunt ) {
 				cwd: 'woocommerce',
 				domainPath: 'i18n/languages',
 				exclude: [],
-				potFilename: 'wc-plugin-framework.pot',
+				potFilename: '<%= pkg.name %>.pot',
 				mainFile: 'index.php',
 				potHeaders: {
 					'report-msgid-bugs-to': 'https://support.woothemes.com/hc/',
-					'project-id-version': 'WooCommerce Plugin Framework <%= pkg.version %>',
+					'project-id-version': '<%= pkg.title %> <%= pkg.version %>',
 				},
 				processPot: function( pot ) {
 					delete pot.headers['x-generator'];

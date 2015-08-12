@@ -54,8 +54,7 @@ module.exports = function( grunt ) {
 	grunt.initConfig( gruntConfig );
 
 	// Load custom tasks
-	// Disabled, because there are no custom tasks yet. Enable when needed :)
-	// grunt.loadTasks( 'grunt/tasks/' );
+	grunt.loadTasks( 'grunt/tasks/' );
 
 	// Register update_translations task
 	grunt.registerTask( 'update_translations', [
@@ -65,12 +64,22 @@ module.exports = function( grunt ) {
 		'potomo'
 	] );
 
+	// Register build task
+	grunt.registerTask( 'build', [
+		'coffee',
+		'uglify',
+		'sass',
+		'update_translations',
+		'clean'
+	] );
+
 	// Register default task
 	grunt.registerTask( 'default', [
 		'coffee',
 		'uglify',
 		'sass',
 		'makepot',
+		'shell:tx_push',
 		'clean'
 	] );
 
