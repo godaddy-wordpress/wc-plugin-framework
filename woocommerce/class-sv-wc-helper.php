@@ -494,7 +494,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * Get the count of notices added, either for all notices (default) or for one
  		 * particular notice type specified by $notice_type.
 		 *
-		 * WC notice funtions are not available in the admin
+		 * WC notice functions are not available in the admin
 		 *
 		 * @since 3.0.2
 		 * @param string $notice_type The name of the notice type - either error, success or notice. [optional]
@@ -513,7 +513,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		/**
 		 * Add and store a notice.
 		 *
-		 * WC notice funtions are not available in the admin
+		 * WC notice functions are not available in the admin
 		 *
 		 * @since 3.0.2
 		 * @param string $message The text to display in the notice.
@@ -530,7 +530,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		/**
 		 * Print a single notice immediately
 		 *
-		 * WC notice funtions are not available in the admin
+		 * WC notice functions are not available in the admin
 		 *
 		 * @since 3.0.2
 		 * @param string $message The text to display in the notice.
@@ -571,8 +571,8 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *       value="<?php echo implode( ',', array_keys( $json_ids ) ); ?>" />
 		 *
 		 * - `data-selected` can be a json encoded associative array like Array( 'key' => 'value' )
-		 * - `value` should be a comma-seperated list of selected keys
-		 * - `data-request_data` can be used to pass any additonal data to the AJAX request
+		 * - `value` should be a comma-separated list of selected keys
+		 * - `data-request_data` can be used to pass any additional data to the AJAX request
 		 *
 		 * @since 3.1.0
 		 */
