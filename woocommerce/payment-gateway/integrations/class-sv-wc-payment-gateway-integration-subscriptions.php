@@ -477,8 +477,8 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			throw new Exception( sprintf( __( '%s is required.', $this->get_gateway()->get_text_domain() ), $meta['post_meta'][ $prefix . 'payment_token' ]['label'] ) );
 		}
 
-		// customer ID
-		if ( empty( $meta['post_meta'][ $prefix . 'customer_id' ]['value'] ) ) {
+		// customer ID - optional for some gateways so check if it's set first
+		if ( isset( $meta['post_meta'][ $prefix . 'customer_id'] ) && empty( $meta['post_meta'][ $prefix . 'customer_id' ]['value'] ) ) {
 			throw new Exception( sprintf( __( '%s is required.', $this->get_gateway()->get_text_domain() ), $meta['post_meta'][ $prefix . 'customer_id' ]['label'] ) );
 		}
 	}
