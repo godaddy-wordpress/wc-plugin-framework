@@ -52,7 +52,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 	/**
 	 * Adds support for pre-orders by hooking in some necessary actions
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.1-2
 	 */
 	public function add_support() {
 
@@ -75,7 +75,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 	/**
 	 * Force tokenization for pre-orders
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.1-2
 	 * @see SV_WC_Payment_Gateway::tokenization_forced()
 	 * @param boolean $force_tokenization whether tokenization should be forced
 	 * @return boolean true if tokenization should be forced, false otherwise
@@ -107,7 +107,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 	/**
 	 * Adds pre-orders data to the order object.  Filtered onto SV_WC_Payment_Gateway::get_order()
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.1-2
 	 * @see SV_WC_Payment_Gateway::get_order()
 	 * @param WC_Order $order the order
 	 * @return WC_Order the orders
@@ -180,7 +180,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 	 * Handle the pre-order initial payment/tokenization, or defer back to the normal payment
 	 * processing flow
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.1-2
 	 * @see SV_WC_Payment_Gateway::process_payment()
 	 * @param boolean $result the result of this pre-order payment process
 	 * @param int $order_id the order identifier
@@ -234,7 +234,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 	/**
 	 * Process a pre-order payment when the pre-order is released
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.1-2
 	 * @param \WC_Order $order original order containing the pre-order
 	 */
 	public function process_release_payment( $order ) {
