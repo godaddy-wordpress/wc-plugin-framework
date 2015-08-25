@@ -1184,7 +1184,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// payment type (credit_card/check/etc)
 		$order->payment->type = str_replace( '-', '_', $this->get_payment_type() );
 
-		$order->description = sprintf( _x( '%s - Order %s', 'Order description', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+		$order->description = sprintf( _x( '%s - Order %s', 'Order description', $this->text_domain ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() );
 
 		$order = $this->get_order_with_unique_transaction_ref( $order );
 

@@ -214,7 +214,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function get_order( $order ) {
 
-		$order->description = sprintf( esc_html__( '%1$s - Subscription Renewal Order %2$s', $this->get_gateway()->get_text_domain() ), get_bloginfo( 'name' ), $order->get_order_number() );
+		$order->description = sprintf( esc_html__( '%1$s - Subscription Renewal Order %2$s', $this->get_gateway()->get_text_domain() ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() );
 
 		// override the payment total with the amount to charge given by Subscriptions
 		$order->payment_total = $this->renewal_payment_total;
