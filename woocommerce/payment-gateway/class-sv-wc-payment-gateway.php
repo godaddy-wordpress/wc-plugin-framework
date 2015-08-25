@@ -2752,6 +2752,27 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
+	 * Remove support for the named feature or features
+	 *
+	 * @since 4.0.1-2
+	 * @param string|array $feature feature name or names not supported by this gateway
+	 */
+	public function remove_support( $feature ) {
+
+		if ( ! is_array( $feature ) ) {
+			$feature = array( $feature );
+		}
+
+		foreach ( $feature as $name ) {
+
+			unset( $this->supports[ array_search( $name, $this->supports ) ] );
+
+			do_action( 'wc_payment_gateway_' . $this->get_id() . '_removed_support_' . str_replace( '-', '_', $name ), $this, $name );
+		}
+	}
+
+
+	/**
 	 * Set all features supported
 	 *
 	 * @since 1.0.0
