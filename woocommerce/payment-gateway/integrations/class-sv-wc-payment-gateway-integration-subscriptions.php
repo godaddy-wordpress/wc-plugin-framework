@@ -99,6 +99,11 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			// don't copy over order-specific meta to the new WC_Subscription object during upgrade to 2.0.x
 			add_filter( 'wcs_upgrade_subscription_meta_to_copy', array( $this, 'do_not_copy_order_meta_during_upgrade' ) );
 
+			// allow concrete gateways to define additional order-specific meta keys to exclude
+			if ( is_callable( array( $this->get_gateway(), 'subscriptions_get_excluded_order_meta_keys' ) ) ) {
+				add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_subscriptions_order_specific_meta_keys', array( $this->get_gateway(), 'subscriptions_get_excluded_order_meta_keys' ) );
+			}
+
 			/* Admin Change Payment Method support */
 
 			// framework defaults - payment_token and customer_id
