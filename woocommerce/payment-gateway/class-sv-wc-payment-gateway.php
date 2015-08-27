@@ -1853,7 +1853,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$user_message = __( 'Your order has been received and is being reviewed.  Thank you for your business.', $this->text_domain );
 		}
 
-		WC()->session->held_order_received_text = $user_message;
+		if ( isset( WC()->session ) ) {
+			WC()->session->held_order_received_text = $user_message;
+		}
 	}
 
 
