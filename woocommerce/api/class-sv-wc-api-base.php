@@ -296,7 +296,7 @@ abstract class SV_WC_API_Base {
 		 * @param string $uri current request URI
 		 * @param \SV_WC_API_Base class instance
 		 */
-		return apply_filters( 'wc_' . $this->get_api_id() . '_request_uri', $uri, $this );
+		return apply_filters( 'wc_' . $this->get_api_id() . '_api_request_uri', $uri, $this );
 	}
 
 
