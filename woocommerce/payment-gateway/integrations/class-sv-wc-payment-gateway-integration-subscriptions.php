@@ -198,6 +198,16 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		// set payment total so it can override the default in get_order()
 		$this->renewal_payment_total = SV_WC_Helper::number_format( $amount_to_charge );
 
+		$token = $this->get_gateway()->get_order_meta( $order->id, 'payment_token' );
+
+		// payment token must be present and valid
+		if ( empty( $token ) || ! $this->get_gateway()->has_payment_token( $order->get_user_id(), $token ) ) {
+
+			$this->get_gateway()->mark_order_as_failed( $order, __( 'Subscription Renewal: payment token is missing/invalid.', $this->get_gateway()->get_text_domain() ) );
+
+			return;
+		}
+
 		// add subscriptions data to the order object prior to processing the payment
 		add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_get_order', array( $this, 'get_order' ) );
 
@@ -226,17 +236,6 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		// set payment token
 		$order->payment->token = $this->get_gateway()->get_order_meta( $order->id, 'payment_token' );
-
-		// payment token must be present and valid
-		if ( empty( $order->payment->token ) || ! $this->get_gateway()->has_payment_token( $order->get_user_id(), $order->payment->token ) ) {
-
-			$this->get_gateway()->mark_order_as_failed( $order, __( 'Subscription Renewal: payment token is missing/invalid.', $this->get_gateway()->get_text_domain() ) );
-
-			// don't process the renewal payment
-			add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_process_payment', '__return_false' );
-
-			return $order;
-		}
 
 		// use customer ID from renewal order, not user meta so the admin can update the customer ID for a subscription if needed
 		$order->customer_id = $this->get_gateway()->get_order_meta( $order->id, 'customer_id' );
