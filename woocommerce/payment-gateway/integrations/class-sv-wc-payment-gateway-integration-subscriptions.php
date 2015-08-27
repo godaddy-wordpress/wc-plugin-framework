@@ -238,7 +238,12 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		$order->payment->token = $this->get_gateway()->get_order_meta( $order->id, 'payment_token' );
 
 		// use customer ID from renewal order, not user meta so the admin can update the customer ID for a subscription if needed
-		$order->customer_id = $this->get_gateway()->get_order_meta( $order->id, 'customer_id' );
+		$customer_id = $this->get_gateway()->get_order_meta( $order->id, 'customer_id' );
+
+		// only if a customer ID exists in order meta, otherwise this will default to the previously set value from user meta
+		if ( ! empty( $customer_id ) ) {
+			$order->customer_id = $customer_id;
+		}
 
 		// get the token object
 		$token = $this->get_gateway()->get_payment_token( $order->get_user_id(), $order->payment->token );
