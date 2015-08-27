@@ -31,13 +31,15 @@ if ( ! class_exists( 'SV_WC_Plugin_Compatibility' ) ) :
  *
  * The unfortunate purpose of this class is to provide a single point of
  * compatibility functions for dealing with supporting multiple versions
- * of WooCommerce.
+ * of WooCommerce and various extensions.
  *
  * The expected procedure is to remove methods from this class, using the
  * latest ones directly in code, as support for older versions of WooCommerce
  * are dropped.
  *
- * Current Compatibility: 2.2.x - 2.4.x
+ * Current Compatibility
+ * + Core 2.2.x - 2.4.x
+ * + Subscriptions 1.5.x - 2.0.x
  *
  * @since 2.0.0
  */
@@ -173,6 +175,35 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function is_wc_version_gt( $version ) {
 		return self::get_wc_version() && version_compare( self::get_wc_version(), $version, '>' );
+	}
+
+
+	/** Subscriptions *********************************************************/
+
+
+	/**
+	 * Returns true if the installed version of WooCommerce Subscriptions is
+	 * 2.0.0 or greater
+	 *
+	 * @since 4.1.0
+	 * @return boolean
+	 */
+	public static function is_wc_subscriptions_version_gte_2_0() {
+
+		return self::get_wc_subscriptions_version() && version_compare( self::get_wc_subscriptions_version(), '2.0-beta-1', '>=' );
+	}
+
+
+	/**
+	 * Helper method to get the version of the currently installed WooCommerce
+	 * Subscriptions
+	 *
+	 * @since 4.1.0
+	 * @return string woocommerce version number or null
+	 */
+	protected static function get_wc_subscriptions_version() {
+
+		return class_exists( 'WC_Subscriptions' ) && ! empty( WC_Subscriptions::$version ) ? WC_Subscriptions::$version : null;
 	}
 
 

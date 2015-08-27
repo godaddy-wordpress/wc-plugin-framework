@@ -147,6 +147,13 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				add_action( 'admin_footer-edit.php', array( $this, 'maybe_add_capture_charge_bulk_order_action' ) );
 				add_action( 'load-edit.php',         array( $this, 'process_capture_charge_bulk_order_action' ) );
 			}
+
+			if ( $this->is_subscriptions_active() ) {
+
+				// filter the payment gateway table on the checkout settings screen to indicate if a gateway can support Subscriptions but requires tokenization to be enabled
+				add_action( 'admin_print_styles-woocommerce_page_wc-settings', array( $this, 'subscriptions_add_renewal_support_status_inline_style' ) );
+				add_filter( 'woocommerce_payment_gateways_renewal_support_status_html', array( $this, 'subscriptions_maybe_edit_renewal_support_status' ), 10, 2 );
+			}
 		}
 
 		// Add classes to WC Payment Methods
@@ -214,8 +221,21 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( $payment_gateway_framework_path . '/api/class-sv-wc-payment-gateway-api-response-message-helper.php' );
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-helper.php' );
 
+		// integrations
+		require_once( $payment_gateway_framework_path . '/integrations/abstract-sv-wc-payment-gateway-integration.php' );
+
+		// subscriptions
+		if ( $this->is_subscriptions_active() ) {
+			require_once( $payment_gateway_framework_path . '/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php' );
+		}
+
+		// pre-orders
+		if ( $this->is_pre_orders_active() ) {
+			require_once( $payment_gateway_framework_path . '/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php' );
+		}
+
+		// admin user edit handler
 		if ( is_admin() ) {
-			// load admin notice handler
 			require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php' );
 			$this->get_admin_user_edit_handler();
 		}
@@ -244,6 +264,36 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/** Admin methods ******************************************************/
+
+
+	/**
+	 * Return the plugin action links.  This will only be called if the plugin
+	 * is active.
+	 *
+	 * @since 1.0.0
+	 * @see SV_WC_Plugin::plugin_action_links()
+	 * @param array $actions associative array of action names to anchor tags
+	 * @return array associative array of plugin action links
+	 */
+	public function plugin_action_links( $actions ) {
+
+		$actions = parent::plugin_action_links( $actions );
+
+		// remove the configure plugin link if it exists, since we'll be adding a link per available gateway
+		if ( isset( $actions['configure'] ) ) {
+			unset( $actions['configure'] );
+		}
+
+		// a configure link per gateway
+		$custom_actions = array();
+
+		foreach ( $this->get_gateway_ids() as $gateway_id ) {
+			$custom_actions[ 'configure_' . $gateway_id ] = $this->get_settings_link( $gateway_id );
+		}
+
+		// add the links to the front of the actions list
+		return array_merge( $custom_actions, $actions );
+	}
 
 
 	/**
@@ -384,6 +434,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	}
 
 
+	/** Integration methods ***************************************************/
+
+
 	/**
 	 * Checks if a supported integration is activated (Subscriptions or Pre-Orders)
 	 * and adds a notice if a gateway supports the integration *and* tokenization,
@@ -401,18 +454,17 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				$tokenization_supported_but_not_enabled = $gateway->supports_tokenization() && ! $gateway->tokenization_enabled();
 
 				// subscriptions
-				if ( $this->is_subscriptions_active() && $gateway->is_enabled() && $gateway->supports( SV_WC_Payment_Gateway_Direct::FEATURE_SUBSCRIPTIONS ) && $tokenization_supported_but_not_enabled ) {
+				if ( $this->is_subscriptions_active() && $gateway->is_enabled() && $tokenization_supported_but_not_enabled ) {
 
 					$message = sprintf( __( '%1$s is inactive for subscription transactions. Please <a href="%2$s">enable tokenization</a> to activate %1$s for Subscriptions.', $this->get_text_domain() ),
 						$gateway->get_method_title(), $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) );
 
 					// add notice -- allow it to be dismissed even on the settings page as the admin may not want to use subscriptions with a particular gateway
 					$this->get_admin_notice_handler()->add_admin_notice( $message, 'subscriptions-tokenization-' . $gateway->get_id(), array( 'always_show_on_settings' => false ) );
-
 				}
 
 				// pre-orders
-				if ( $this->is_pre_orders_active() && $gateway->is_enabled() && $gateway->supports( SV_WC_Payment_Gateway_Direct::FEATURE_PRE_ORDERS ) && $tokenization_supported_but_not_enabled ) {
+				if ( $this->is_pre_orders_active() && $gateway->is_enabled() && $tokenization_supported_but_not_enabled ) {
 
 					$message = sprintf( __( '%1$s is inactive for pre-order transactions. Please <a href="%2$s">enable tokenization</a> to activate %1$s for Pre-Orders.', $this->get_text_domain() ),
 						$gateway->get_method_title(), $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) );
@@ -426,32 +478,45 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Return the plugin action links.  This will only be called if the plugin
-	 * is active.
+	 * Edit the Subscriptions automatic renewal payments support column content
+	 * when a gateway supports subscriptions (via tokenization) but tokenization
+	 * is not enabled
 	 *
-	 * @since 1.0.0
-	 * @see SV_WC_Plugin::plugin_action_links()
-	 * @param array $actions associative array of action names to anchor tags
-	 * @return array associative array of plugin action links
+	 * @since 4.1.0
+	 * @param string $html column content
+	 * @param \WC_Payment_Gateway|\SV_WC_Payment_Gateway $gateway payment gateway being checked for support
+	 * @return string html
 	 */
-	public function plugin_action_links( $actions ) {
+	public function subscriptions_maybe_edit_renewal_support_status( $html, $gateway ) {
 
-		$actions = parent::plugin_action_links( $actions );
-
-		// remove the configure plugin link if it exists, since we'll be adding a link per available gateway
-		if ( isset( $actions['configure'] ) ) {
-			unset( $actions['configure'] );
+		// only for our gateways
+		if ( ! in_array( $gateway->id, $this->get_gateway_ids() ) ) {
+			return $html;
 		}
 
-		// a configure link per gateway
-		$custom_actions = array();
+		if ( $gateway->is_enabled() && $gateway->supports_tokenization() && ! $gateway->tokenization_enabled() ) {
 
-		foreach ( $this->get_gateway_ids() as $gateway_id ) {
-			$custom_actions[ 'configure_' . $gateway_id ] = $this->get_settings_link( $gateway_id );
+			$tool_tip = esc_attr__( 'You must enable tokenization for this gateway in order to support automatic renewal payments with the WooCommerce Subscriptions extension.', $this->get_text_domain() );
+			$status   = esc_html__( 'Inactive', $this->get_text_domain() );
+
+			$html = sprintf( '<a href="%1$s"><span class="sv-wc-payment-gateway-renewal-status-inactive tips" data-tip="%2$s">%3$s</span></a>',
+						esc_url( SV_WC_Payment_Gateway_Helper::get_payment_gateway_configuration_url( $this->get_gateway_class_name( $gateway->get_id() ) ) ),
+						$tool_tip, $status );
 		}
 
-		// add the links to the front of the actions list
-		return array_merge( $custom_actions, $actions );
+		return $html;
+	}
+
+
+	/**
+	 * Add some inline CSS to render the failed order status icon for the
+	 * automatic renewal payment support status column
+	 *
+	 * @since 4.1.0
+	 */
+	public function subscriptions_add_renewal_support_status_inline_style() {
+
+		wp_add_inline_style( 'woocommerce_admin_styles', '.sv-wc-payment-gateway-renewal-status-inactive{font-size:1.4em;display:block;text-indent:-9999px;position:relative;height:1em;width:1em;cursor:pointer}.sv-wc-payment-gateway-renewal-status-inactive:before{line-height:1;margin:0;position:absolute;width:100%;height:100%;content:"\e016";color:#ffba00;font-family:WooCommerce;speak:none;font-weight:400;font-variant:normal;text-transform:none;-webkit-font-smoothing:antialiased;text-indent:0;top:0;left:0;text-align:center}' );
 	}
 
 

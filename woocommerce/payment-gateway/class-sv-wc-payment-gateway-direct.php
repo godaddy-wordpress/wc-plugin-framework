@@ -37,17 +37,17 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/** Add new payment method feature */
 	const FEATURE_ADD_PAYMENT_METHOD = 'add_payment_method';
 
-	/** Subscriptions feature */
-	const FEATURE_SUBSCRIPTIONS = 'subscriptions';
+	/** Subscriptions integration ID */
+	const INTEGRATION_SUBSCRIPTIONS = 'subscriptions';
 
-	/** Subscription payment method change feature */
-	const FEATURE_SUBSCRIPTION_PAYMENT_METHOD_CHANGE = 'subscription_payment_method_change';
-
-	/** Pre-orders feature */
-	const FEATURE_PRE_ORDERS = 'pre-orders';
+	/** Pre-orders integration ID */
+	const INTEGRATION_PRE_ORDERS = 'pre_orders';
 
 	/** @var array array of cached user id to array of SV_WC_Payment_Gateway_Payment_Token token objects */
 	protected $tokens;
+
+	/** @var array of SV_WC_Payment_Gateway_Integration objects for Subscriptions, Pre-Orders, etc. */
+	protected $integrations;
 
 
 	/**
@@ -67,30 +67,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// parent constructor
 		parent::__construct( $id, $plugin, $text_domain, $args );
 
-		// watch for subscriptions support
-		if ( $this->get_plugin()->is_subscriptions_active() ) {
-
-			$subscription_support_hook               = 'wc_payment_gateway_' . $this->get_id() . '_supports_' . self::FEATURE_SUBSCRIPTIONS;
-			$subscription_payment_method_change_hook = 'wc_payment_gateway_' . $this->get_id() . '_supports_' . self::FEATURE_SUBSCRIPTION_PAYMENT_METHOD_CHANGE;
-
-			if ( ! has_action( $subscription_support_hook ) ) {
-				add_action( $subscription_support_hook, array( $this, 'add_subscriptions_support' ) );
-			}
-
-			if ( ! has_action( $subscription_payment_method_change_hook ) ) {
-				add_action( $subscription_payment_method_change_hook, array( $this, 'add_subscription_payment_method_change_support' ) );
-			}
-		}
-
-		// watch for pre-orders support
-		if ( $this->get_plugin()->is_pre_orders_active() ) {
-
-			$pre_orders_support_hook = 'wc_payment_gateway_' . $this->get_id() . '_supports_' . str_replace( '-', '_', self::FEATURE_PRE_ORDERS );
-
-			if ( ! has_action( $pre_orders_support_hook ) ) {
-				add_action( $pre_orders_support_hook, array( $this, 'add_pre_orders_support' ) );
-			}
-		}
+		$this->init_integrations();
 	}
 
 
@@ -448,7 +425,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					$order->payment_complete(); // mark order as having received payment
 				}
 
-				WC()->cart->empty_cart();
+				// process_payment() can sometimes be called in an admin-context
+				if ( isset( WC()->cart ) ) {
+					WC()->cart->empty_cart();
+				}
+
+				do_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_processed', $order, $this );
 
 				return array(
 					'result'   => 'success',
@@ -494,7 +476,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param int|\WC_Order $order_id order ID being processed
 	 * @return WC_Order object with payment and transaction information attached
 	 */
-	protected function get_order( $order_id ) {
+	public function get_order( $order_id ) {
 
 		$order = parent::get_order( $order_id );
 
@@ -628,6 +610,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports direct cheque', $this->text_domain ), $response->get_transaction_id() );
 			}
 
+			$message = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_check_transaction_approved_order_note', $message, $order, $response, $this );
+
 			$order->add_order_note( $message );
 
 		}
@@ -686,6 +670,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( $response->get_transaction_id() ) {
 				$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports direct credit card', $this->text_domain ), $response->get_transaction_id() );
 			}
+
+			$message = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_credit_card_transaction_approved_order_note', $message, $order, $response, $this );
 
 			$order->add_order_note( $message );
 
@@ -854,7 +840,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response|null $response optional transaction response
 	 */
-	protected function add_transaction_data( $order, $response = null ) {
+	public function add_transaction_data( $order, $response = null ) {
 
 		// add parent transaction data
 		parent::add_transaction_data( $order, $response );
@@ -946,661 +932,144 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	}
 
 
-	/** Subscriptions feature ******************************************************/
+	/** Integrations Feature **************************************************/
 
 
 	/**
-	 * Returns true if this gateway with its current configuration supports subscriptions
+	 * Initialize supported integrations
+	 *
+	 * @since 4.1.0
+	 */
+	public function init_integrations() {
+
+		if ( $this->supports_subscriptions() ) {
+			$this->integrations[ self::INTEGRATION_SUBSCRIPTIONS ] = $this->build_subscriptions_integration();
+		}
+
+		if ( $this->supports_pre_orders() ) {
+			$this->integrations[ self::INTEGRATION_PRE_ORDERS ] = $this->build_pre_orders_integration();
+		}
+
+		do_action( 'wc_payment_gateway_' . $this->get_id() . '_init_integrations', $this );
+	}
+
+
+	/**
+	 * Return an array of available integration objects
+	 *
+	 * @since 4.1.0
+	 * @return array
+	 */
+	public function get_integrations() {
+
+		return $this->integrations;
+	}
+
+
+	/**
+	 * Get the integration object for the given ID
+	 *
+	 * @since 4.1.0
+	 * @param string $id the integration ID, e.g. subscriptions
+	 * @return \SV_WC_Payment_Gateway_Integration|null
+	 */
+	public function get_integration( $id ) {
+
+		return isset( $this->integrations[ $id ] ) ? $this->integrations[ $id ] : null;
+	}
+
+
+	/**
+	 * A factory method to build and return the Subscriptions class instance.
+	 * Concrete classes can override this method to return a custom
+	 * implementation.
+	 *
+	 * @since 4.1.0
+	 * @return \SV_WC_Payment_Gateway_Integration_Subscriptions
+	 */
+	protected function build_subscriptions_integration() {
+
+		return new SV_WC_Payment_Gateway_Integration_Subscriptions( $this );
+	}
+
+
+	/**
+	 * Get the Subscriptions integration class instance
+	 *
+	 * @since 4.1.0
+	 * @return \SV_WC_Payment_Gateway_Integration_Subscriptions|null
+	 */
+	public function get_subscriptions_integration() {
+
+		return isset( $this->integrations[ self::INTEGRATION_SUBSCRIPTIONS ] ) ? $this->integrations[ self::INTEGRATION_SUBSCRIPTIONS ] : null;
+	}
+
+
+	/**
+	 * A factory method to build and return the Pre-Orders class instance.
+	 * Concrete classes can override this method to return a custom
+	 * implementation.
+	 *
+	 * @since 4.1.0
+	 * @return \SV_WC_Payment_Gateway_Integration_Pre_Orders
+	 */
+	protected function build_pre_orders_integration() {
+
+		return new SV_WC_Payment_Gateway_Integration_Pre_Orders( $this );
+	}
+
+
+	/**
+	 * Get the Pre-Orders integration class instance
+	 *
+	 * @since 4.1.0
+	 * @return \SV_WC_Payment_Gateway_Integration_Pre_Orders|null
+	 */
+	public function get_pre_orders_integration() {
+
+		return isset( $this->integrations[ self::INTEGRATION_PRE_ORDERS ] ) ? $this->integrations[ self::INTEGRATION_PRE_ORDERS ] : null;
+	}
+
+
+	/**
+	 * A gateway supports Subscriptions if all of the following are true:
+	 *
+	 * + Subscriptions is active
+	 * + tokenization is supported
+	 * + tokenization is enabled
+	 *
+	 * Concrete gateways can override this to conditionally support Subscriptions
+	 * based on certain settings (e.g. only when CSC is not required, etc.)
 	 *
 	 * @since 1.0.0
 	 * @return boolean true if the gateway supports subscriptions
 	 */
 	public function supports_subscriptions() {
-		return $this->supports( self::FEATURE_SUBSCRIPTIONS ) && $this->supports_tokenization() && $this->tokenization_enabled();
+
+		return $this->get_plugin()->is_subscriptions_active() && $this->supports_tokenization() && $this->tokenization_enabled();
 	}
 
 
 	/**
-	 * Adds support for subscriptions by hooking in some necessary actions
+	 * A gateway supports Pre-Orders if all of the following are true:
 	 *
-	 * @since 1.0.0
-	 */
-	public function add_subscriptions_support() {
-
-		// bail if subscriptions are not supported by this gateway or its current configuration
-		if ( ! $this->supports_subscriptions() ) {
-			// note: no longer throwing an exception due to a weird race condition with multiple instances
-			// of this class, with action callbacks getting mixed up, and stale data causing problems
-			return;
-		}
-
-		// force tokenization when needed
-		add_filter( 'wc_payment_gateway_' . $this->get_id() . '_tokenization_forced', array( $this, 'subscriptions_tokenization_forced' ) );
-
-		// add subscriptions data to the order object
-		add_filter( 'wc_payment_gateway_' . $this->get_id() . '_get_order', array( $this, 'subscriptions_get_order' ) );
-
-		// process scheduled subscription payments
-		add_action( 'scheduled_subscription_payment_' . $this->get_id(), array( $this, 'process_subscription_renewal_payment' ), 10, 3 );
-
-		// prevent unnecessary order meta from polluting parent renewal orders
-		add_filter( 'woocommerce_subscriptions_renewal_order_meta_query', array( $this, 'remove_subscription_renewal_order_meta' ), 10, 4 );
-
-		// display the current payment method used for a subscription in the "My Subscriptions" table
-		add_filter( 'woocommerce_my_subscriptions_recurring_payment_method', array( $this, 'maybe_render_subscription_payment_method' ), 10, 3 );
-	}
-
-
-	/**
-	 * Force tokenization for subscriptions, this can be forced either during checkout
-	 * or when the payment method for a subscription is being changed
+	 * + Pre-Orders is active
+	 * + tokenization is supported
+	 * + tokenization is enabled
 	 *
-	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::tokenization_forced()
-	 * @param bool $force_tokenization whether tokenization should be forced
-	 * @return bool true if tokenization should be forced, false otherwise
-	 */
-	public function subscriptions_tokenization_forced( $force_tokenization ) {
-
-		// pay page with subscription?
-		$pay_page_subscription = false;
-		if ( $this->is_pay_page_gateway() ) {
-
-			$order_id = $this->get_checkout_pay_page_order_id();
-
-			if ( $order_id ) {
-				$pay_page_subscription = WC_Subscriptions_Order::order_contains_subscription( $order_id );
-			}
-
-		}
-
-		if ( WC_Subscriptions_Cart::cart_contains_subscription() ||
-			WC_Subscriptions_Change_Payment_Gateway::$is_request_to_change_payment ||
-			$pay_page_subscription ) {
-			$force_tokenization = true;
-		}
-
-		return $force_tokenization;
-	}
-
-
-	/**
-	 * Adds subscriptions data to the order object
-	 *
-	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::get_order()
-	 * @param WC_Order $order the order
-	 * @return WC_Order the orders
-	 */
-	public function subscriptions_get_order( $order ) {
-
-		// bail if the gateway doesn't support subscriptions or the order doesn't contain a subscription
-		if ( ! $this->supports_subscriptions() || ! WC_Subscriptions_Order::order_contains_subscription( $order->id ) )
-			return $order;
-
-		// subscriptions total, ensuring that we have a decimal point, even if it's 1.00
-		$order->payment_total = number_format( (double) WC_Subscriptions_Order::get_total_initial_payment( $order ), 2, '.', '' );
-
-		// load any required members that we might not have
-		if ( ! isset( $order->payment->token ) || ! $order->payment->token )
-			$order->payment->token = $this->get_order_meta( $order->id, 'payment_token' );
-
-		if ( ! isset( $order->customer_id ) || ! $order->customer_id )
-			$order->customer_id = $this->get_order_meta( $order->id, 'customer_id' );
-
-		// ensure the payment token is still valid
-		if ( ! $this->has_payment_token( $order->get_user_id(), $order->payment->token ) ) {
-			$order->payment->token = null;
-		} else {
-
-			// get the token object
-			$token = $this->get_payment_token( $order->get_user_id(), $order->payment->token );
-
-			if ( ! isset( $order->payment->account_number ) || ! $order->payment->account_number )
-				$order->payment->account_number = $token->get_last_four();
-
-			if ( $this->is_credit_card_gateway() ) {
-
-				// credit card token
-
-				if ( ! isset( $order->payment->card_type ) || ! $order->payment->card_type )
-					$order->payment->card_type = $token->get_card_type();
-
-				if ( ! isset( $order->payment->exp_month ) || ! $order->payment->exp_month )
-					$order->payment->exp_month = $token->get_exp_month();
-
-				if ( ! isset( $order->payment->exp_year ) || ! $order->payment->exp_year )
-					$order->payment->exp_year = $token->get_exp_year();
-
-			} elseif ( $this->is_echeck_gateway() ) {
-
-				// check token
-
-				if ( ! isset( $order->payment->account_type ) || ! $order->payment->account_type )
-					$order->payment->account_type = $token->get_account_type();
-
-			}
-
-		}
-
-		return $order;
-	}
-
-
-	/**
-	 * Process subscription renewal
-	 *
-	 * @since 1.0.0
-	 * @param float $amount_to_charge subscription amount to charge, could include multiple renewals if they've previously failed and the admin has enabled it
-	 * @param WC_Order $order original order containing the subscription
-	 * @param int $product_id the subscription product id
-	 */
-	public function process_subscription_renewal_payment( $amount_to_charge, $order, $product_id ) {
-
-		try {
-
-			// set order defaults
-			$order = $this->get_order( $order->id );
-
-			// zero-dollar subscription renewal.  weird, but apparently it happens
-			if ( 0 == $amount_to_charge ) {
-
-				// add order note
-				$order->add_order_note( sprintf( _x( '%s0 Subscription Renewal Approved', 'Supports direct credit card subscriptions', $this->text_domain ), get_woocommerce_currency_symbol() ) );
-
-				// update subscription
-				WC_Subscriptions_Manager::process_subscription_payments_on_order( $order, $product_id );
-
-				return;
-			}
-
-			// set the amount to charge, ensuring that we have a decimal point, even if it's 1.00
-			$order->payment_total = number_format( (double) $amount_to_charge, 2, '.', '' );
-
-			// required
-			if ( ! $order->payment->token || ! $order->get_user_id() ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Subscription Renewal: Payment Token or User ID is missing/invalid.' );
-			}
-
-			// get the token, we've already verified it's good
-			$token = $this->get_payment_token( $order->get_user_id(), $order->payment->token );
-
-			// perform the transaction
-			if ( $this->is_credit_card_gateway() ) {
-
-				if ( $this->perform_credit_card_charge() ) {
-					$response = $this->get_api()->credit_card_charge( $order );
-				} else {
-					$response = $this->get_api()->credit_card_authorization( $order );
-				}
-
-			} elseif ( $this->is_echeck_gateway() ) {
-				$response = $this->get_api()->check_debit( $order );
-			}
-
-			// check for success
-			if ( $response->transaction_approved() ) {
-
-				// order note based on gateway type
-				if ( $this->is_credit_card_gateway() ) {
-					$message = sprintf(
-						_x( '%s %s Subscription Renewal Payment Approved: %s ending in %s (expires %s)', 'Supports direct credit card subscriptions', $this->text_domain ),
-						$this->get_method_title(),
-						$this->perform_credit_card_authorization() ? 'Authorization' : 'Charge',
-						$token->get_card_type() ? $token->get_type_full() : 'card',
-						$token->get_last_four(),
-						$token->get_exp_month() . '/' . $token->get_exp_year()
-					);
-				} elseif ( $this->is_echeck_gateway() ) {
-
-					// there may or may not be an account type (checking/savings) available, which is fine
-					$message = sprintf( _x( '%s Check Subscription Renewal Payment Approved: %s account ending in %s', 'Supports direct cheque subscriptions', $this->text_domain ), $this->get_method_title(), $token->get_account_type(), $token->get_last_four() );
-				}
-
-				// add order note
-				$order->add_order_note( $message );
-
-				// update subscription
-				WC_Subscriptions_Manager::process_subscription_payments_on_order( $order, $product_id );
-
-			} else {
-
-				// failure
-				throw new SV_WC_Payment_Gateway_Exception( sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
-			}
-
-		} catch ( SV_WC_Plugin_Exception $e ) {
-
-			$this->mark_order_as_failed( $order, $e->getMessage() );
-
-			// update subscription
-			WC_Subscriptions_Manager::process_subscription_payment_failure_on_order( $order, $product_id );
-		}
-	}
-
-
-	/**
-	 * Don't copy over gateway-specific order meta when creating a parent renewal order.
-	 *
-	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::get_remove_subscription_renewal_order_meta_fragment()
-	 * @param array $order_meta_query MySQL query for pulling the metadata
-	 * @param int $original_order_id Post ID of the order being used to purchased the subscription being renewed
-	 * @param int $renewal_order_id Post ID of the order created for renewing the subscription
-	 * @param string $new_order_role The role the renewal order is taking, one of 'parent' or 'child'
-	 * @return string MySQL meta query for pulling the metadata, excluding data added by this gateway
-	 */
-	public function remove_subscription_renewal_order_meta( $order_meta_query, $original_order_id, $renewal_order_id, $new_order_role ) {
-
-		// all required and optional
-		if ( 'parent' == $new_order_role ) {
-			$order_meta_query .= $this->get_remove_subscription_renewal_order_meta(
-				array(
-					$this->get_order_meta_prefix() . 'trans_id',
-					$this->get_order_meta_prefix() . 'trans_date',
-					$this->get_order_meta_prefix() . 'payment_token',
-					$this->get_order_meta_prefix() . 'account_four',
-					$this->get_order_meta_prefix() . 'card_expiry_date',
-					$this->get_order_meta_prefix() . 'card_type',
-					$this->get_order_meta_prefix() . 'authorization_code',
-					$this->get_order_meta_prefix() . 'auth_can_be_captured',
-					$this->get_order_meta_prefix() . 'charge_captured',
-					$this->get_order_meta_prefix() . 'capture_trans_id',
-					$this->get_order_meta_prefix() . 'account_type',
-					$this->get_order_meta_prefix() . 'check_number',
-					$this->get_order_meta_prefix() . 'environment',
-					$this->get_order_meta_prefix() . 'customer_id',
-					$this->get_order_meta_prefix() . 'retry_count',
-				)
-			);
-		}
-
-		return $order_meta_query;
-	}
-
-
-	/**
-	 * Returns the query fragment to remove the given subscription renewal order meta
-	 *
-	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::remove_subscription_renewal_order_meta()
-	 * @param array $meta_names array of string meta names to remove
-	 * @return string query fragment
-	 */
-	protected function get_remove_subscription_renewal_order_meta_fragment( $meta_names ) {
-
-		return " AND `meta_key` NOT IN ( '" . join( "', '", $meta_names ) . "' )";
-	}
-
-
-	/**
-	 * Adds support for subscriptions by hooking in some necessary actions
-	 *
-	 * @since 1.0.0
-	 */
-	public function add_subscription_payment_method_change_support() {
-
-		// bail if subscriptions or subscription payment method changes are not supported by this gateway or its current configuration
-		if ( ! $this->supports_subscriptions() || ! $this->supports( self::FEATURE_SUBSCRIPTION_PAYMENT_METHOD_CHANGE ) ) {
-			return;
-		}
-
-		// update the customer/token ID on the original order when making payment for a failed automatic renewal order
-		add_action( 'woocommerce_subscriptions_changed_failing_payment_method_' . $this->get_id(), array( $this, 'update_failing_payment_method' ), 10, 2 );
-	}
-
-
-	/**
-	 * Update the payment token and optional customer ID for a subscription after a customer
-	 * uses this gateway to successfully complete the payment for an automatic
-	 * renewal payment which had previously failed.
-	 *
-	 * @since 1.0.0
-	 * @param WC_Order $original_order the original order in which the subscription was purchased.
-	 * @param WC_Order $renewal_order the order which recorded the successful payment (to make up for the failed automatic payment).
-	 */
-	public function update_failing_payment_method( WC_Order $original_order, WC_Order $renewal_order ) {
-
-		if ( $this->get_order_meta( $renewal_order->id, 'customer_id' ) ) {
-			$this->update_order_meta( $original_order->id, 'customer_id',   $this->get_order_meta( $renewal_order->id, 'customer_id' ) );
-		}
-
-		$this->update_order_meta( $original_order->id, 'payment_token', $this->get_order_meta( $renewal_order->id, 'payment_token' ) );
-	}
-
-
-	/**
-	 * Render the payment method used for a subscription in the "My Subscriptions" table
-	 *
-	 * @since 1.0.0
-	 * @param string $payment_method_to_display the default payment method text to display
-	 * @param array $subscription_details the subscription details
-	 * @param WC_Order $order the order containing the subscription
-	 * @return string the subscription payment method
-	 */
-	public function maybe_render_subscription_payment_method( $payment_method_to_display, $subscription_details, WC_Order $order ) {
-
-		// bail for other payment methods
-		if ( $this->get_id() !== $order->recurring_payment_method )
-			return $payment_method_to_display;
-
-		$token = $this->get_payment_token( $order->get_user_id(), $this->get_order_meta( $order->id, 'payment_token' ) );
-
-		if ( is_object( $token )  )
-			$payment_method_to_display = sprintf( _x( 'Via %s ending in %s', 'Supports direct payment method subscriptions', $this->text_domain ), $token->get_type_full(), $token->get_last_four() );
-
-		return $payment_method_to_display;
-	}
-
-
-	/** Pre-Orders feature ******************************************************/
-
-
-	/**
-	 * Returns true if this gateway with its current configuration supports pre-orders
+	 * Concrete gateways can override this to conditionally support Pre-Orders
+	 * based on certain settings (e.g. only when CSC is not required, etc.)
 	 *
 	 * @since 1.0.0
 	 * @return boolean true if the gateway supports pre-orders
 	 */
 	public function supports_pre_orders() {
 
-		return $this->supports( self::FEATURE_PRE_ORDERS ) && $this->supports_tokenization() && $this->tokenization_enabled();
-
+		return $this->get_plugin()->is_pre_orders_active() && $this->supports_tokenization() && $this->tokenization_enabled();
 	}
 
 
-	/**
-	 * Adds support for pre-orders by hooking in some necessary actions
-	 *
-	 * @since 1.0.0
-	 */
-	public function add_pre_orders_support() {
-
-		// bail
-		if ( ! $this->supports_pre_orders() ) {
-			return;
-		}
-
-		// force tokenization when needed
-		add_filter( 'wc_payment_gateway_' . $this->get_id() . '_tokenization_forced', array( $this, 'pre_orders_tokenization_forced' ) );
-
-		// add pre-orders data to the order object
-		add_filter( 'wc_payment_gateway_' . $this->get_id() . '_get_order', array( $this, 'pre_orders_get_order' ) );
-
-		// process pre-order initial payment as needed
-		add_filter( 'wc_payment_gateway_' . $this->get_id() . '_process_payment', array( $this, 'process_pre_order_payment' ), 10, 2 );
-
-		// process batch pre-order payments
-		add_action( 'wc_pre_orders_process_pre_order_completion_payment_' . $this->get_id(), array( $this, 'process_pre_order_release_payment' ) );
-
-	}
-
-	/**
-	 * Force tokenization for pre-orders
-	 *
-	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::tokenization_forced()
-	 * @param boolean $force_tokenization whether tokenization should be forced
-	 * @return boolean true if tokenization should be forced, false otherwise
-	 */
-	public function pre_orders_tokenization_forced( $force_tokenization ) {
-
-		// pay page with pre-order?
-		$pay_page_pre_order = false;
-		if ( $this->is_pay_page_gateway() ) {
-
-			$order_id  = $this->get_checkout_pay_page_order_id();
-
-			if ( $order_id ) {
-				$pay_page_pre_order = WC_Pre_Orders_Order::order_contains_pre_order( $order_id ) && WC_Pre_Orders_Product::product_is_charged_upon_release( WC_Pre_Orders_Order::get_pre_order_product( $order_id ) );
-			}
-
-		}
-
-		if ( ( WC_Pre_Orders_Cart::cart_contains_pre_order() && WC_Pre_Orders_Product::product_is_charged_upon_release( WC_Pre_Orders_Cart::get_pre_order_product() ) ) ||
-			$pay_page_pre_order ) {
-
-			// always tokenize the card for pre-orders that are charged upon release
-			$force_tokenization = true;
-
-		}
-
-		return $force_tokenization;
-
-	}
-
-
-	/**
-	 * Adds pre-orders data to the order object.  Filtered onto SV_WC_Payment_Gateway::get_order()
-	 *
-	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::get_order()
-	 * @param WC_Order $order the order
-	 * @return WC_Order the orders
-	 */
-	public function pre_orders_get_order( $order ) {
-
-		// bail if order doesn't contain a pre-order
-		if ( ! WC_Pre_Orders_Order::order_contains_pre_order( $order ) )
-			return $order;
-
-		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order ) ) {
-
-			// normally a guest user wouldn't be assigned a customer id, but for a pre-order requiring tokenization, it might be
-			if ( 0 == $order->get_user_id() && false !== ( $customer_id = $this->get_guest_customer_id( $order ) ) )
-				$order->customer_id = $customer_id;
-
-		} elseif ( WC_Pre_Orders_Order::order_has_payment_token( $order ) ) {
-
-			// if this is a pre-order release payment with a tokenized payment method, get the payment token to complete the order
-
-			// retrieve the payment token
-			$order->payment->token = $this->get_order_meta( $order->id, 'payment_token' );
-
-			// retrieve the optional customer id
-			$order->customer_id = $this->get_order_meta( $order->id, 'customer_id' );
-
-			// verify that this customer still has the token tied to this order.
-			if ( ! $this->has_payment_token( $order->get_user_id(), $order->payment->token ) ) {
-
-				$order->payment->token = null;
-
-			} else {
-				// Push expected payment data into the order, from the payment token when possible,
-				//  or from the order object otherwise.  The theory is that the token will have the
-				//  most up-to-date data, while the meta attached to the order is a second best
-
-				// for a guest transaction with a gateway that doesn't support "tokenization get" this will return null and the token data will be pulled from the order meta
-				$token = $this->get_payment_token( $order->get_user_id(), $order->payment->token );
-
-				// account last four
-				$order->payment->account_number = $token && $token->get_last_four() ? $token->get_last_four() : $this->get_order_meta( $order->id, 'account_four' );
-
-				if ( $this->is_credit_card_gateway() ) {
-
-					$order->payment->card_type = $token && $token->get_card_type() ? $token->get_card_type() : $this->get_order_meta( $order->id, 'card_type' );
-
-					if ( $token && $token->get_exp_month() && $token->get_exp_year() ) {
-						$order->payment->exp_month  = $token->get_exp_month();
-						$order->payment->exp_year   = $token->get_exp_year();
-					} else {
-						list( $exp_year, $exp_month ) = explode( '-', $this->get_order_meta( $order->id, 'card_expiry_date' ) );
-						$order->payment->exp_month  = $exp_month;
-						$order->payment->exp_year   = $exp_year;
-					}
-
-				} elseif ( $this->is_echeck_gateway() ) {
-
-					// set the account type if available (checking/savings)
-					$order->payment->account_type = $token && $token->get_account_type ? $token->get_account_type() : $this->get_order_meta( $order->id, 'account_type' );
-				}
-			}
-		}
-
-		return $order;
-	}
-
-
-	/**
-	 * Handle the pre-order initial payment/tokenization, or defer back to the normal payment
-	 * processing flow
-	 *
-	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::process_payment()
-	 * @param boolean $result the result of this pre-order payment process
-	 * @param int $order_id the order identifier
-	 * @return true|array true to process this payment as a regular transaction, otherwise
-	 *         return an array containing keys 'result' and 'redirect'
-	 */
-	public function process_pre_order_payment( $result, $order_id ) {
-
-		assert( $this->supports_pre_orders() );
-
-		if ( WC_Pre_Orders_Order::order_contains_pre_order( $order_id ) &&
-			WC_Pre_Orders_Order::order_requires_payment_tokenization( $order_id ) ) {
-
-			$order = $this->get_order( $order_id );
-
-			try {
-
-				// using an existing tokenized payment method
-				if ( isset( $order->payment->token ) && $order->payment->token ) {
-
-					// save the tokenized card info for completing the pre-order in the future
-					$this->add_transaction_data( $order );
-
-				} else {
-
-					// otherwise tokenize the payment method
-					$order = $this->create_payment_token( $order );
-				}
-
-				// mark order as pre-ordered / reduce order stock
-				WC_Pre_Orders_Order::mark_order_as_pre_ordered( $order );
-
-				// empty cart
-				WC()->cart->empty_cart();
-
-				// redirect to thank you page
-				return array(
-					'result'   => 'success',
-					'redirect' => $this->get_return_url( $order ),
-				);
-
-			} catch( SV_WC_Payment_Gateway_Exception $e ) {
-
-				$this->mark_order_as_failed( $order, sprintf( _x( 'Pre-Order Tokenization attempt failed (%s)', 'Supports direct payment method pre-orders', $this->text_domain ), $this->get_method_title(), $e->getMessage() ) );
-
-			}
-		}
-
-		// processing regular product
-		return $result;
-	}
-
-
-	/**
-	 * Process a pre-order payment when the pre-order is released
-	 *
-	 * @since 1.0.0
-	 * @param WC_Order $order original order containing the pre-order
-	 */
-	public function process_pre_order_release_payment( $order ) {
-
-		try {
-
-			// set order defaults
-			$order = $this->get_order( $order->id );
-
-			// order description
-			$order->description = sprintf( _x( '%s - Pre-Order Release Payment for Order %s', 'Supports direct payment method pre-orders', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
-
-			// token is required
-			if ( ! $order->payment->token ) {
-				throw new SV_WC_Payment_Gateway_Exception( _x( 'Payment token missing/invalid.', 'Supports direct payment method pre-orders', $this->text_domain ) );
-			}
-
-			// perform the transaction
-			if ( $this->is_credit_card_gateway() ) {
-
-				if ( $this->perform_credit_card_charge() ) {
-					$response = $this->get_api()->credit_card_charge( $order );
-				} else {
-					$response = $this->get_api()->credit_card_authorization( $order );
-				}
-
-			} elseif ( $this->is_echeck_gateway() ) {
-				$response = $this->get_api()->check_debit( $order );
-			}
-
-			// success! update order record
-			if ( $response->transaction_approved() ) {
-
-				$last_four = substr( $order->payment->account_number, -4 );
-
-				// order note based on gateway type
-				if ( $this->is_credit_card_gateway() ) {
-
-					$message = sprintf(
-						_x( '%s %s Pre-Order Release Payment Approved: %s ending in %s (expires %s)', 'Supports direct payment method pre-orders', $this->text_domain ),
-						$this->get_method_title(),
-						$this->perform_credit_card_authorization() ? 'Authorization' : 'Charge',
-						SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( ! empty( $order->payment->card_type ) ? $order->payment->card_type : 'card' ) ),
-						$last_four,
-						$order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 )
-					);
-
-				} elseif ( $this->is_echeck_gateway() ) {
-
-					// account type (checking/savings) may or may not be available, which is fine
-					$message = sprintf( _x( '%s eCheck Pre-Order Release Payment Approved: %s ending in %s', 'Supports direct payment method pre-orders', $this->text_domain ), $this->get_method_title(), SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( ! empty( $order->payment->account_type ) ? $order->payment->account_type : 'bank' ) ), $last_four );
-
-				}
-
-				// adds the transaction id (if any) to the order note
-				if ( $response->get_transaction_id() ) {
-					$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports direct payment method pre-orders', $this->text_domain ), $response->get_transaction_id() );
-				}
-
-				$order->add_order_note( $message );
-			}
-
-			if ( $response->transaction_approved() || $response->transaction_held() ) {
-
-				// add the standard transaction data
-				$this->add_transaction_data( $order, $response );
-
-				// allow the concrete class to add any gateway-specific transaction data to the order
-				$this->add_payment_gateway_transaction_data( $order, $response );
-
-				// if the transaction was held (ie fraud validation failure) mark it as such
-				if ( $response->transaction_held() || ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
-
-					$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? _x( 'Authorization only transaction', 'Supports direct payment method pre-orders', $this->text_domain ) : $response->get_status_message(), $response );
-					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
-
-				} else {
-					// otherwise complete the order
-					$order->payment_complete();
-				}
-
-			} else {
-
-				// failure
-				throw new SV_WC_Payment_Gateway_Exception( sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
-
-			}
-
-		} catch ( SV_WC_Plugin_Exception $e ) {
-
-			// Mark order as failed
-			$this->mark_order_as_failed( $order, sprintf( _x( 'Pre-Order Release Payment Failed: %s', 'Supports direct payment method pre-orders', $this->text_domain ), $e->getMessage() ) );
-
-		}
-	}
-
-
-	/** Tokenization feature ******************************************************/
+	/** Tokenization feature **************************************************/
 
 
 	/**
@@ -1642,7 +1111,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @return WC_Order the order object
 	 * @throws SV_WC_Payment_Gateway_Exception on network error or request error
 	 */
-	protected function create_payment_token( $order, $response = null, $environment_id = null ) {
+	public function create_payment_token( $order, $response = null, $environment_id = null ) {
 
 		assert( $this->supports_tokenization() );
 

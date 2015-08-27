@@ -281,8 +281,22 @@ abstract class SV_WC_API_Base {
 	 * @return string
 	 */
 	protected function get_request_uri() {
+
 		// API base request URI + any request-specific path
-		return $this->request_uri . ( $this->get_request() ? $this->get_request()->get_path() : '' );
+		$uri = $this->request_uri . ( $this->get_request() ? $this->get_request()->get_path() : '' );
+
+		/**
+		 * Request URI Filter.
+		 *
+		 * Allow actors to filter the request URI. Note that child classes can override
+		 * this method, which means this filter may be invoked prior to the overridden
+		 * method.
+		 *
+		 * @since 4.1.0
+		 * @param string $uri current request URI
+		 * @param \SV_WC_API_Base class instance
+		 */
+		return apply_filters( 'wc_' . $this->get_api_id() . '_api_request_uri', $uri, $this );
 	}
 
 
@@ -314,9 +328,9 @@ abstract class SV_WC_API_Base {
 		 * child classes can override this method, which means this filter may
 		 * not be invoked, or may be invoked prior to the overridden method
 		 *
+		 * @since 2.2.0
 		 * @param array $args request arguments
 		 * @param \SV_WC_API_Base class instance
-		 * @since 2.2.0
 		 */
 		return apply_filters( 'wc_' . $this->get_api_id() . '_http_request_args', $args, $this );
 	}
