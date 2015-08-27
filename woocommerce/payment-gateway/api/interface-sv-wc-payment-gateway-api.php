@@ -180,7 +180,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * Returns the most recent request object
 	 *
 	 * @since 1.0.0
-	 * @return SV_WC_Payment_Gateway_API_Request the most recent request object
+	 * @return \SV_WC_Payment_Gateway_API_Request the most recent request object
 	 */
 	public function get_request();
 
@@ -189,9 +189,19 @@ interface SV_WC_Payment_Gateway_API {
 	 * Returns the most recent response object
 	 *
 	 * @since 1.0.0
-	 * @return SV_WC_Payment_Gateway_API_Response the most recent response object
+	 * @return \SV_WC_Payment_Gateway_API_Response the most recent response object
 	 */
 	public function get_response();
+
+
+	/**
+	 * Returns the WC_Order object associated with the request, if any
+	 *
+	 * @since 4.0.1-2
+	 * @return \WC_Order
+	 */
+	public function get_order();
+
 
 }
 
