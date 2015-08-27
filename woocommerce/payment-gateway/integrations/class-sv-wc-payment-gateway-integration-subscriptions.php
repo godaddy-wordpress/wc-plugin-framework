@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Integration_Subscriptions' ) ) :
 /**
  * Subscriptions Integration
  *
- * @since 4.0.1-2
+ * @since 4.1.0
  */
 class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gateway_Integration {
 
@@ -41,7 +41,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Bootstrap class
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param \SV_WC_Payment_Gateway_Direct $gateway
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Direct $gateway ) {
@@ -56,7 +56,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Adds support for subscriptions by hooking in some necessary actions
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 */
 	public function add_support() {
 
@@ -131,7 +131,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * Force tokenization for subscriptions, this can be forced either during checkout
 	 * or when the payment method for a subscription is being changed
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @see SV_WC_Payment_Gateway::tokenization_forced()
 	 * @param bool $force_tokenization whether tokenization should be forced
 	 * @return bool true if tokenization should be forced, false otherwise
@@ -165,7 +165,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * this is primarily used for the payment token and customer ID which are then
 	 * copied over to a renewal order prior to payment processing.
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param \WC_Order $order order
 	 */
 	public function save_payment_meta( $order ) {
@@ -189,7 +189,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Process a subscription renewal payment
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param float $amount_to_charge subscription amount to charge, could include multiple renewals if they've previously failed and the admin has enabled it
 	 * @param \WC_Order $order original order containing the subscription
 	 */
@@ -222,7 +222,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * + renewal payment total
 	 * + token and associated data (last four, type, etc)
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @see SV_WC_Payment_Gateway_Direct::get_order()
 	 * @param \WC_Order $order renewal order
 	 * @return \WC_Order renewal order with payment token data set
@@ -269,7 +269,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * copied during the upgrade (see do_not_copy_order_meta_during_upgrade()), so
 	 * this method is more of a fallback in case meta accidentially is copied.
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param array $order_meta order meta to copy
 	 * @return array
 	 */
@@ -293,7 +293,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * upgrade to 2.0.x. This only allows the `payment_token` and `customer_id`
 	 * meta to be copied.
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param array $order_meta order meta to copy
 	 * @return array
 	 */
@@ -316,7 +316,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * thus some order-specific meta is added that is undesirable to have copied
 	 * over to renewal orders.
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param array $result process_payment() result, unused
 	 * @param \WC_Subscription $subscription subscription object
 	 * @return array
@@ -343,7 +343,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * uses this gateway to successfully complete the payment for an automatic
 	 * renewal payment which had previously failed.
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param \WC_Subscription $subscription subscription being updated
 	 * @param \WC_Order $renewal_order order which recorded the successful payment (to make up for the failed automatic payment).
 	 */
@@ -361,7 +361,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * Get the order-specific meta keys that should not be copied to the WC_Subscription
 	 * object during upgrade to 2.0.x or during change payment method actions
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @return array
 	 */
 	protected function get_order_specific_meta_keys() {
@@ -394,7 +394,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		 * to the WC_Subscriptions object during renewal payments, the
 		 * change payment method action, or the upgrade to 2.0.x.
 		 *
-		 * @since 4.0.1-2
+		 * @since 4.1.0
 		 * @param array $keys meta keys, with gateway order meta prefix included
 		 * @param \SV_WC_Payment_Gateway_Integration_Subscriptions $this subscriptions integration class instance
 		 */
@@ -405,7 +405,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Render the payment method used for a subscription in the "My Subscriptions" table
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param string $payment_method_to_display the default payment method text to display
 	 * @param \WC_Subscription $subscription
 	 * @return string the subscription payment method
@@ -432,7 +432,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * payments so that store managers can manually set up automatic recurring
 	 * payments for a customer via the Edit Subscriptions screen in 2.0.x
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param array $meta associative array of meta data required for automatic payments
 	 * @param \WC_Subscription $subscription subscription object
 	 * @return array
@@ -463,7 +463,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * payments so that store managers can manually set up automatic recurring
 	 * payments for a customer via the Edit Subscriptions screen in 2.0.x
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param array $meta associative array of meta data required for automatic payments
 	 * @throws Exception if payment token or customer ID is missing or blank
 	 */
@@ -489,7 +489,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Adds support for subscriptions 1.5.x
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 */
 	public function add_support_1_5() {
 
@@ -519,7 +519,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * Force tokenization for subscriptions, this can be forced either during checkout
 	 * or when the payment method for a subscription is being changed
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @see SV_WC_Payment_Gateway::tokenization_forced()
 	 * @param bool $force_tokenization whether tokenization should be forced
 	 * @return bool true if tokenization should be forced, false otherwise
@@ -551,7 +551,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Adds subscriptions data to the order object
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @see SV_WC_Payment_Gateway::get_order()
 	 * @param WC_Order $order the order
 	 * @return WC_Order the orders
@@ -617,7 +617,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Process subscription renewal
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param float $amount_to_charge subscription amount to charge, could include multiple renewals if they've previously failed and the admin has enabled it
 	 * @param WC_Order $order original order containing the subscription
 	 * @param int $product_id the subscription product id
@@ -714,7 +714,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Don't copy over gateway-specific order meta when creating a parent renewal order.
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @see SV_WC_Payment_Gateway::get_remove_subscription_renewal_order_meta_fragment()
 	 * @param array $order_meta_query MySQL query for pulling the metadata
 	 * @param int $original_order_id Post ID of the order being used to purchased the subscription being renewed
@@ -754,7 +754,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Returns the query fragment to remove the given subscription renewal order meta
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @see SV_WC_Payment_Gateway::remove_subscription_renewal_order_meta()
 	 * @param array $meta_names array of string meta names to remove
 	 * @return string query fragment
@@ -770,7 +770,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * uses this gateway to successfully complete the payment for an automatic
 	 * renewal payment which had previously failed.
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param WC_Order $original_order the original order in which the subscription was purchased.
 	 * @param WC_Order $renewal_order the order which recorded the successful payment (to make up for the failed automatic payment).
 	 */
@@ -787,7 +787,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Render the payment method used for a subscription in the "My Subscriptions" table
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param string $payment_method_to_display the default payment method text to display
 	 * @param array $subscription_details the subscription details
 	 * @param WC_Order $order the order containing the subscription

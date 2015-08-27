@@ -482,7 +482,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * when a gateway supports subscriptions (via tokenization) but tokenization
 	 * is not enabled
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param string $html column content
 	 * @param \WC_Payment_Gateway|\SV_WC_Payment_Gateway $gateway payment gateway being checked for support
 	 * @return string html
@@ -512,7 +512,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Add some inline CSS to render the failed order status icon for the
 	 * automatic renewal payment support status column
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 */
 	public function subscriptions_add_renewal_support_status_inline_style() {
 

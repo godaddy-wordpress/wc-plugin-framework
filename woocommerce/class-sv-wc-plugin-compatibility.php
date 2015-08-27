@@ -185,7 +185,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Returns true if the installed version of WooCommerce Subscriptions is
 	 * 2.0.0 or greater
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @return boolean
 	 */
 	public static function is_wc_subscriptions_version_gte_2_0() {
@@ -198,7 +198,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Helper method to get the version of the currently installed WooCommerce
 	 * Subscriptions
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @return string woocommerce version number or null
 	 */
 	protected static function get_wc_subscriptions_version() {

@@ -197,7 +197,7 @@ interface SV_WC_Payment_Gateway_API {
 	/**
 	 * Returns the WC_Order object associated with the request, if any
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @return \WC_Order
 	 */
 	public function get_order();

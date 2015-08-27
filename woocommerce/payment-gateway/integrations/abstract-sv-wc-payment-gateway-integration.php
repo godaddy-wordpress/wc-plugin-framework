@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Integration' ) ) :
 /**
  * Abstract Integration
  *
- * @since 4.0.1-2
+ * @since 4.1.0
  */
 abstract class SV_WC_Payment_Gateway_Integration {
 
@@ -41,7 +41,7 @@ abstract class SV_WC_Payment_Gateway_Integration {
 	/**
 	 * Boostrap class
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param \SV_WC_Payment_Gateway_Direct $gateway direct gateway instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Direct $gateway ) {
@@ -53,7 +53,7 @@ abstract class SV_WC_Payment_Gateway_Integration {
 	/**
 	 * Return the gateway for the integration
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @return \SV_WC_Payment_Gateway_Direct
 	 */
 	public function get_gateway() {

@@ -938,7 +938,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Initialize supported integrations
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 */
 	public function init_integrations() {
 
@@ -957,7 +957,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Return an array of available integration objects
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @return array
 	 */
 	public function get_integrations() {
@@ -969,7 +969,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Get the integration object for the given ID
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @param string $id the integration ID, e.g. subscriptions
 	 * @return \SV_WC_Payment_Gateway_Integration|null
 	 */
@@ -984,7 +984,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Concrete classes can override this method to return a custom
 	 * implementation.
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @return \SV_WC_Payment_Gateway_Integration_Subscriptions
 	 */
 	protected function build_subscriptions_integration() {
@@ -996,7 +996,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Get the Subscriptions integration class instance
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @return \SV_WC_Payment_Gateway_Integration_Subscriptions|null
 	 */
 	public function get_subscriptions_integration() {
@@ -1010,7 +1010,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Concrete classes can override this method to return a custom
 	 * implementation.
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @return \SV_WC_Payment_Gateway_Integration_Pre_Orders
 	 */
 	protected function build_pre_orders_integration() {
@@ -1022,7 +1022,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Get the Pre-Orders integration class instance
 	 *
-	 * @since 4.0.1-2
+	 * @since 4.1.0
 	 * @return \SV_WC_Payment_Gateway_Integration_Pre_Orders|null
 	 */
 	public function get_pre_orders_integration() {

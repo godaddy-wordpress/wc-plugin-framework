@@ -292,7 +292,7 @@ abstract class SV_WC_API_Base {
 		 * this method, which means this filter may be invoked prior to the overridden
 		 * method.
 		 *
-		 * @since 4.0.1-2
+		 * @since 4.1.0
 		 * @param string $uri current request URI
 		 * @param \SV_WC_API_Base class instance
 		 */
