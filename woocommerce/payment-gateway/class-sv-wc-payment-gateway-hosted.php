@@ -498,7 +498,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response|null $response optional transaction response
 	 */
-	protected function add_transaction_data( $order, $response = null ) {
+	public function add_transaction_data( $order, $response = null ) {
 
 		// add parent transaction data
 		parent::add_transaction_data( $order, $response );

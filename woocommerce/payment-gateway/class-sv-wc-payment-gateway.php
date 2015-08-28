@@ -1173,7 +1173,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param int|\WC_Order $order the order or order ID being processed
 	 * @return \WC_Order object with payment and transaction information attached
 	 */
-	protected function get_order( $order ) {
+	public function get_order( $order ) {
 
 		if ( is_numeric( $order ) ) {
 			$order = wc_get_order( $order );
@@ -1194,7 +1194,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order->payment->type = str_replace( '-', '_', $this->get_payment_type() );
 
 		// translators: %1$s - site title, %2$s - order number
-		$order->description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+		$order->description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() );
 
 		$order = $this->get_order_with_unique_transaction_ref( $order );
 
@@ -1433,7 +1433,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 3.1.0
 	 * @param WC_Order $order order object
 	 */
-	protected function mark_order_as_refunded( $order ) {
+	public function mark_order_as_refunded( $order ) {
 
 		// translators: %s - payment gateway title (such as Authorize.net, Braintree, etc)
 		$order_note = sprintf( esc_html__( '%s Order completely refunded.', 'woocommerce-plugin-framework' ), $this->get_method_title() );
@@ -1598,7 +1598,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 3.1.0
 	 * @param WC_Order $order order object
 	 */
-	protected function mark_order_as_voided( $order, $response ) {
+	public function mark_order_as_voided( $order, $response ) {
 
 		$message = sprintf(
 			// translators: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order.
@@ -1757,7 +1757,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response|null $response optional transaction response
 	 */
-	protected function add_transaction_data( $order, $response = null ) {
+	public function add_transaction_data( $order, $response = null ) {
 
 		// transaction id if available
 		if ( $response && $response->get_transaction_id() ) {
@@ -1779,6 +1779,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( $this->supports_customer_id() ) {
 			$this->add_customer_data( $order, $response );
 		}
+
+		do_action( 'wc_payment_gateway_' . $this->get_id() . '_add_transaction_data', $order, $response, $this );
 	}
 
 
@@ -1789,7 +1791,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param WC_Order $order the order object
 	 * @param \SV_WC_Payment_Gateway_API_Customer_Response $response the transaction response
 	 */
-	protected function add_payment_gateway_transaction_data( $order, $response ) {
+	public function add_payment_gateway_transaction_data( $order, $response ) {
 		// Optional method
 	}
 
@@ -1836,7 +1838,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param string $message a message to display within the order note
 	 * @param SV_WC_Payment_Gateway_API_Response $response optional, the transaction response object
 	 */
-	protected function mark_order_as_held( $order, $message, $response = null ) {
+	public function mark_order_as_held( $order, $message, $response = null ) {
 
 		// translators: %1$s - payment gateway title, %2$s - message (probably reason for the transaction being held for review)
 		$order_note = sprintf( esc_html__( '%1$s Transaction Held for Review (%2$s)', 'woocommerce-plugin-framework' ), $this->get_method_title(), $message );
@@ -1874,7 +1876,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$user_message = esc_html__( 'Your order has been received and is being reviewed. Thank you for your business.', 'woocommerce-plugin-framework' );
 		}
 
-		WC()->session->held_order_received_text = $user_message;
+		if ( isset( WC()->session ) ) {
+			WC()->session->held_order_received_text = $user_message;
+		}
 	}
 
 
@@ -1911,7 +1915,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param string $error_message a message to display inside the "Payment Failed" order note
 	 * @param SV_WC_Payment_Gateway_API_Response optional $response the transaction response object
 	 */
-	protected function mark_order_as_failed( $order, $error_message, $response = null ) {
+	public function mark_order_as_failed( $order, $error_message, $response = null ) {
 
 		// translators: Order Note: [Payment method] Payment failed [error]
 		// translators: %1$s - payment gateway title, %2$s - error message
@@ -1946,7 +1950,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param string $error_message a message to display inside the "Payment Cancelled" order note
 	 * @param SV_WC_Payment_Gateway_API_Response optional $response the transaction response object
 	 */
-	protected function mark_order_as_cancelled( $order, $message, $response = null ) {
+	public function mark_order_as_cancelled( $order, $message, $response = null ) {
 
 		// translators: %1$s - payment gateway title, %2$s - message/error
 		$order_note = sprintf( esc_html__( '%1$s Transaction Cancelled (%2$s)', 'woocommerce-plugin-framework' ), $this->get_method_title(), $message );
@@ -2612,7 +2616,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param bool $unique
 	 * @return bool|int
 	 */
-	protected function add_order_meta( $order_id, $key, $value, $unique = false ) {
+	public function add_order_meta( $order_id, $key, $value, $unique = false ) {
 
 		return add_post_meta( $order_id, $this->get_order_meta_prefix() . $key, $value, $unique );
 	}
@@ -2628,7 +2632,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param string $key meta key
 	 * @return mixed
 	 */
-	protected function get_order_meta( $order_id, $key ) {
+	public function get_order_meta( $order_id, $key ) {
 
 		return get_post_meta( $order_id, $this->get_order_meta_prefix() . $key, true );
 	}
@@ -2643,7 +2647,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param mixed $value meta value
 	 * @return bool|int
 	 */
-	protected function update_order_meta( $order_id, $key, $value ) {
+	public function update_order_meta( $order_id, $key, $value ) {
 
 		return update_post_meta( $order_id, $this->get_order_meta_prefix() . $key, $value );
 	}
@@ -2657,7 +2661,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param string $key meta key
 	 * @return bool
 	 */
-	protected function delete_order_meta( $order_id, $key ) {
+	public function delete_order_meta( $order_id, $key ) {
 		return delete_post_meta( $order_id, $this->get_order_meta_prefix() . $key );
 	}
 
@@ -2670,7 +2674,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @since 2.2.0
 	 * @return string
 	 */
-	protected function get_order_meta_prefix() {
+	public function get_order_meta_prefix() {
 		return '_wc_' . $this->get_id() . '_';
 	}
 
@@ -2795,6 +2799,27 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 				do_action( 'wc_payment_gateway_' . $this->get_id() . '_supports_' . str_replace( '-', '_', $name ), $this, $name );
 			}
 
+		}
+	}
+
+
+	/**
+	 * Remove support for the named feature or features
+	 *
+	 * @since 4.1.0
+	 * @param string|array $feature feature name or names not supported by this gateway
+	 */
+	public function remove_support( $feature ) {
+
+		if ( ! is_array( $feature ) ) {
+			$feature = array( $feature );
+		}
+
+		foreach ( $feature as $name ) {
+
+			unset( $this->supports[ array_search( $name, $this->supports ) ] );
+
+			do_action( 'wc_payment_gateway_' . $this->get_id() . '_removed_support_' . str_replace( '-', '_', $name ), $this, $name );
 		}
 	}
 
