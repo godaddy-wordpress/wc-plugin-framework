@@ -82,7 +82,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			add_action( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_add_transaction_data', array( $this, 'save_payment_meta' ), 10, 2 );
 
 			// process renewal payments
-			add_action( 'woocommerce_scheduled_subscription_payment_' . $this->get_gateway()->get_id(), array( $this, 'process_renewal_payment' ), 10, 3 );
+			add_action( 'woocommerce_scheduled_subscription_payment_' . $this->get_gateway()->get_id(), array( $this, 'process_renewal_payment' ), 10, 2 );
 
 			// update the customer/token ID on the subscription when updating a previously failing payment method
 			add_action( 'woocommerce_subscription_failing_payment_method_updated_' . $this->get_gateway()->get_id(), array( $this, 'update_failing_payment_method' ), 10, 2 );
@@ -272,7 +272,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * object. Generally the subscription object should not have any order-specific
 	 * meta (aside from `payment_token` and `customer_id`) as they are not
 	 * copied during the upgrade (see do_not_copy_order_meta_during_upgrade()), so
-	 * this method is more of a fallback in case meta accidentially is copied.
+	 * this method is more of a fallback in case meta accidentally is copied.
 	 *
 	 * @since 4.1.0
 	 * @param array $order_meta order meta to copy
