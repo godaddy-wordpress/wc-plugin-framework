@@ -596,7 +596,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		if ( $image_url ) {
 
 			// format like "<Amex logo image> American Express"
-			$title = sprintf( '<img src="%1$s" alt="%2$s" title="%2$s" width="30" height="20" />%3$s', esc_url( $image_url ), esc_attr__( $type, 'woocommerce-plugin-framework' ), esc_html__( $type, 'woocommerce-plugin-framework' ) );
+			$title = sprintf( '<img src="%1$s" alt="%2$s" title="%2$s" width="30" height="20" style="width: 30px; height: 20px;" />%3$s', esc_url( $image_url ), esc_attr__( $type, 'woocommerce-plugin-framework' ), esc_html__( $type, 'woocommerce-plugin-framework' ) );
 
 		} else {
 
