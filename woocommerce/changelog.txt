@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2015.09.09 - version 4.1.1
+ * Fix - For Subscriptions 1.5, don't mark the original order as failed when a renewal payment fails
+
 2015.08.27 - version 4.1.0
  * Feature - WooCommerce Subscriptions 2.0 Support
  * Tweak - Add specific width/height styling for payment method icons
