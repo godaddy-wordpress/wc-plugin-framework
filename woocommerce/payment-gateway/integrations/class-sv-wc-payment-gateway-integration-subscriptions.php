@@ -708,7 +708,8 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		} catch ( SV_WC_Plugin_Exception $e ) {
 
-			$this->get_gateway()->mark_order_as_failed( $order, $e->getMessage() );
+			// don't mark the order as failed, Subscriptions will handle marking the renewal order as failed
+			$order->add_order_note( sprintf( _x( '%s Renewal Payment Failed (%s)', $this->get_gateway()->get_text_domain() ), $this->get_gateway()->get_method_title(), $e->getMessage() ) );
 
 			// update subscription
 			WC_Subscriptions_Manager::process_subscription_payment_failure_on_order( $order, $product_id );
