@@ -108,8 +108,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			return $this->validate_check_fields( $is_valid );
 		} else {
 			$method_name = 'validate_' . str_replace( '-', '_', strtolower( $this->get_payment_type() ) ) . '_fields';
-			if ( method_exists( $this, $method_name ) ) {
-				$this->$method_name( $is_valid );
+			if ( is_callable( array( $this, $method_name ) ) ) {
+				return $this->$method_name( $is_valid );
 			}
 		}
 	}
