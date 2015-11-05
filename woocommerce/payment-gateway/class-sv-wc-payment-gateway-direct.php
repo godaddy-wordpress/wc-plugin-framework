@@ -1161,24 +1161,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$this->add_payment_token( $order->get_user_id(), $token, $environment_id );
 			}
 
-			// order note based on gateway type
-			if ( $this->is_credit_card_gateway() ) {
-				$message = sprintf( _x( '%s Payment Method Saved: %s ending in %s (expires %s)', 'Supports direct credit card tokenization', $this->text_domain ),
-					$this->get_method_title(),
-					$token->get_type_full(),
-					$token->get_last_four(),
-					$token->get_exp_date()
-				);
-			} elseif ( $this->is_echeck_gateway() ) {
-				// account type (checking/savings) may or may not be available, which is fine
-				$message = sprintf( _x( '%s eCheck Payment Method Saved: %s account ending in %s', 'Supports direct cheque tokenization', $this->text_domain ),
-					$this->get_method_title(),
-					$token->get_account_type(),
-					$token->get_last_four()
-				);
-			}
-
-			$order->add_order_note( $message );
+			$order->add_order_note( $this->get_saved_payment_token_order_note( $token ) );
 
 			// add the standard transaction data
 			$this->add_transaction_data( $order, $response );
@@ -1209,6 +1192,38 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		return $order;
+	}
+
+
+	/**
+	 * Get the order note message when a customer saves their payment method
+	 * to their account
+	 *
+	 * @since 4.1.3-1
+	 * @param \SV_WC_Payment_Gateway_Payment_Token $token the payment token being saved
+	 * @return string
+	 */
+	protected function get_saved_payment_token_order_note( $token ) {
+
+		$message = '';
+
+		if ( $this->is_credit_card_gateway() ) {
+			$message = sprintf( _x( '%s Payment Method Saved: %s ending in %s (expires %s)', 'Supports direct credit card tokenization', $this->text_domain ),
+				$this->get_method_title(),
+				$token->get_type_full(),
+				$token->get_last_four(),
+				$token->get_exp_date()
+			);
+		} elseif ( $this->is_echeck_gateway() ) {
+			// account type (checking/savings) may or may not be available, which is fine
+			$message = sprintf( _x( '%s eCheck Payment Method Saved: %s account ending in %s', 'Supports direct cheque tokenization', $this->text_domain ),
+				$this->get_method_title(),
+				$token->get_account_type(),
+				$token->get_last_four()
+			);
+		}
+
+		return $message;
 	}
 
 
@@ -1891,7 +1906,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} else {
 
 			if ( $response->get_status_code() && $response->get_status_message() ) {
-				$message = sprintf( 'Status codes %s: %s', $response->get_status_code(), $response->get_status_message() );
+				$message = sprintf( 'Status code %s: %s', $response->get_status_code(), $response->get_status_message() );
 			} elseif ( $response->get_status_code() ) {
 				$message = sprintf( 'Status code: %s', $response->get_status_code() );
 			} elseif ( $response->get_status_message() ) {
