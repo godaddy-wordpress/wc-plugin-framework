@@ -561,7 +561,14 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * instance for use in credit card capture transactions.  Standard information
 	 * can include:
 	 *
-	 * $order->capture_total - the capture total
+	 * $order->capture->amount - amount to capture (partial captures are not supported by the framework yet)
+	 * $order->capture->description - capture description
+	 * $order->capture->trans_id - transaction ID for the order being captured
+	 *
+	 * included for backwards compat (4.1 and earlier)
+	 *
+	 * $order->capture_total
+	 * $order->description
 	 *
 	 * @since 2.0.0
 	 * @param WC_Order $order order being processed
@@ -569,11 +576,19 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function get_order_for_capture( $order ) {
 
-		// set capture total here so it can be modified later as needed prior to capture
-		$order->capture_total = number_format( $order->get_total(), 2, '.', '' );
+		if ( is_numeric( $order ) ) {
+			$order = wc_get_order( $order );
+		}
 
-		// capture-specific order description
-		$order->description = sprintf( _x( '%s - Capture for Order %s', 'Capture order description', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+		// add capture info
+		$order->capture = new stdClass();
+		$order->capture->amount = SV_WC_Helper::number_format( $order->get_total() );
+		$order->capture->description = sprintf( __( '%s - Capture for Order %s', $this->get_text_domain() ), wp_specialchars_decode( get_bloginfo( 'name' ) ), $order->get_order_number() );
+		$order->capture->trans_id = $this->get_order_meta( $order->id, 'trans_id' );
+
+		// backwards compat for 4.1 and earlier
+		$order->capture_total = $order->capture->amount;
+		$order->description   = $order->capture->description;
 
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_capture', $order, $this );
 	}
