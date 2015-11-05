@@ -621,7 +621,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Get the payment form class instance
 	 *
-	 * @since 4.2.0
+	 * @since 4.1.2
 	 * @return \SV_WC_Payment_Gateway_Payment_Form
 	 */
 	public function get_payment_form_instance() {

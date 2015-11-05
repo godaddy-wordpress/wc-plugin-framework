@@ -1199,7 +1199,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Get the order note message when a customer saves their payment method
 	 * to their account
 	 *
-	 * @since 4.1.3-1
+	 * @since 4.1.2
 	 * @param \SV_WC_Payment_Gateway_Payment_Token $token the payment token being saved
 	 * @return string
 	 */
