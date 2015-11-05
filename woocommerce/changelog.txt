@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2015.nn.nn - version 4.1.1-1
+ * Tweak - Misc Payment Gateway framework improvements
 
 2015.09.09 - version 4.1.1
  * Fix - For Subscriptions 1.5, don't mark the original order as failed when a renewal payment fails
