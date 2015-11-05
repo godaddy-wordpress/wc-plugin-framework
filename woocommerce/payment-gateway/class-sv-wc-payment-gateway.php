@@ -609,14 +609,24 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( $this->supports_payment_form() ) {
 
-			$form = new SV_WC_Payment_Gateway_Payment_Form( $this );
-
-			$form->render();
+			$this->get_payment_form_instance()->render();
 
 		} else {
 
 			parent::payment_fields();
 		}
+	}
+
+
+	/**
+	 * Get the payment form class instance
+	 *
+	 * @since 4.2.0
+	 * @return \SV_WC_Payment_Gateway_Payment_Form
+	 */
+	public function get_payment_form_instance() {
+
+		return new SV_WC_Payment_Gateway_Payment_Form( $this );
 	}
 
 
