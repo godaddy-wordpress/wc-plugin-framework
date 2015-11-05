@@ -561,7 +561,14 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * instance for use in credit card capture transactions.  Standard information
 	 * can include:
 	 *
-	 * $order->capture_total - the capture total
+	 * $order->capture->amount - amount to capture (partial captures are not supported by the framework yet)
+	 * $order->capture->description - capture description
+	 * $order->capture->trans_id - transaction ID for the order being captured
+	 *
+	 * included for backwards compat (4.1 and earlier)
+	 *
+	 * $order->capture_total
+	 * $order->description
 	 *
 	 * @since 2.0.0
 	 * @param WC_Order $order order being processed
@@ -569,11 +576,19 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function get_order_for_capture( $order ) {
 
-		// set capture total here so it can be modified later as needed prior to capture
-		$order->capture_total = number_format( $order->get_total(), 2, '.', '' );
+		if ( is_numeric( $order ) ) {
+			$order = wc_get_order( $order );
+		}
 
-		// capture-specific order description
-		$order->description = sprintf( _x( '%s - Capture for Order %s', 'Capture order description', $this->text_domain ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+		// add capture info
+		$order->capture = new stdClass();
+		$order->capture->amount = SV_WC_Helper::number_format( $order->get_total() );
+		$order->capture->description = sprintf( __( '%s - Capture for Order %s', $this->get_text_domain() ), wp_specialchars_decode( get_bloginfo( 'name' ) ), $order->get_order_number() );
+		$order->capture->trans_id = $this->get_order_meta( $order->id, 'trans_id' );
+
+		// backwards compat for 4.1 and earlier
+		$order->capture_total = $order->capture->amount;
+		$order->description   = $order->capture->description;
 
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_capture', $order, $this );
 	}
@@ -1146,24 +1161,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$this->add_payment_token( $order->get_user_id(), $token, $environment_id );
 			}
 
-			// order note based on gateway type
-			if ( $this->is_credit_card_gateway() ) {
-				$message = sprintf( _x( '%s Payment Method Saved: %s ending in %s (expires %s)', 'Supports direct credit card tokenization', $this->text_domain ),
-					$this->get_method_title(),
-					$token->get_type_full(),
-					$token->get_last_four(),
-					$token->get_exp_date()
-				);
-			} elseif ( $this->is_echeck_gateway() ) {
-				// account type (checking/savings) may or may not be available, which is fine
-				$message = sprintf( _x( '%s eCheck Payment Method Saved: %s account ending in %s', 'Supports direct cheque tokenization', $this->text_domain ),
-					$this->get_method_title(),
-					$token->get_account_type(),
-					$token->get_last_four()
-				);
-			}
-
-			$order->add_order_note( $message );
+			$order->add_order_note( $this->get_saved_payment_token_order_note( $token ) );
 
 			// add the standard transaction data
 			$this->add_transaction_data( $order, $response );
@@ -1194,6 +1192,38 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		return $order;
+	}
+
+
+	/**
+	 * Get the order note message when a customer saves their payment method
+	 * to their account
+	 *
+	 * @since 4.1.2
+	 * @param \SV_WC_Payment_Gateway_Payment_Token $token the payment token being saved
+	 * @return string
+	 */
+	protected function get_saved_payment_token_order_note( $token ) {
+
+		$message = '';
+
+		if ( $this->is_credit_card_gateway() ) {
+			$message = sprintf( _x( '%s Payment Method Saved: %s ending in %s (expires %s)', 'Supports direct credit card tokenization', $this->text_domain ),
+				$this->get_method_title(),
+				$token->get_type_full(),
+				$token->get_last_four(),
+				$token->get_exp_date()
+			);
+		} elseif ( $this->is_echeck_gateway() ) {
+			// account type (checking/savings) may or may not be available, which is fine
+			$message = sprintf( _x( '%s eCheck Payment Method Saved: %s account ending in %s', 'Supports direct cheque tokenization', $this->text_domain ),
+				$this->get_method_title(),
+				$token->get_account_type(),
+				$token->get_last_four()
+			);
+		}
+
+		return $message;
 	}
 
 
@@ -1876,7 +1906,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} else {
 
 			if ( $response->get_status_code() && $response->get_status_message() ) {
-				$message = sprintf( 'Status codes %s: %s', $response->get_status_code(), $response->get_status_message() );
+				$message = sprintf( 'Status code %s: %s', $response->get_status_code(), $response->get_status_message() );
 			} elseif ( $response->get_status_code() ) {
 				$message = sprintf( 'Status code: %s', $response->get_status_code() );
 			} elseif ( $response->get_status_message() ) {
@@ -1920,6 +1950,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	protected function get_order_for_add_payment_method() {
 
 		$order = new WC_Order( 0 );
+
+		// default to base store currency
+		$order->order_currency = get_woocommerce_currency();
 
 		// mock order, as all gateway API implementations require an order object for tokenization
 		$order = $this->get_order( $order );

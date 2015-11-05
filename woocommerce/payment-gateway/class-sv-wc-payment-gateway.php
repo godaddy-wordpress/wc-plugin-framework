@@ -609,14 +609,24 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( $this->supports_payment_form() ) {
 
-			$form = new SV_WC_Payment_Gateway_Payment_Form( $this );
-
-			$form->render();
+			$this->get_payment_form_instance()->render();
 
 		} else {
 
 			parent::payment_fields();
 		}
+	}
+
+
+	/**
+	 * Get the payment form class instance
+	 *
+	 * @since 4.1.2
+	 * @return \SV_WC_Payment_Gateway_Payment_Form
+	 */
+	public function get_payment_form_instance() {
+
+		return new SV_WC_Payment_Gateway_Payment_Form( $this );
 	}
 
 
@@ -737,6 +747,30 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$this->form_fields = $this->add_tokenization_form_fields( $this->form_fields );
 		}
 
+		// add "detailed customer decline messages" option if the feature is supported
+		if ( $this->supports( self::FEATURE_DETAILED_CUSTOMER_DECLINE_MESSAGES ) ) {
+			$this->form_fields['enable_customer_decline_messages'] = array(
+				'title'   => __( 'Detailed Decline Messages', $this->text_domain ),
+				'type'    => 'checkbox',
+				'label'   => __( 'Check to enable detailed decline messages to the customer during checkout when possible, rather than a generic decline message.', $this->text_domain ),
+				'default' => 'no',
+			);
+		}
+
+		// debug mode
+		$this->form_fields['debug_mode'] = array(
+			'title'   => __( 'Debug Mode', $this->text_domain ),
+			'type'    => 'select',
+			'desc'    => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the <a href="%s">debug log</a>', $this->text_domain ), SV_WC_Helper::get_wc_log_file_url( $this->get_id() ) ),
+			'default' => self::DEBUG_MODE_OFF,
+			'options' => array(
+				self::DEBUG_MODE_OFF      => _x( 'Off', 'Debug mode off', $this->text_domain ),
+				self::DEBUG_MODE_CHECKOUT => __( 'Show on Checkout Page', $this->text_domain ),
+				self::DEBUG_MODE_LOG      => __( 'Save to Log', $this->text_domain ),
+				self::DEBUG_MODE_BOTH     => _x( 'Both', 'Debug mode both show on checkout and log', $this->text_domain )
+			),
+		);
+
 		// if there is more than just the production environment available
 		if ( count( $this->get_environments() ) > 1 ) {
 			$this->form_fields = $this->add_environment_form_fields( $this->form_fields );
@@ -750,30 +784,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// add unique method fields added by concrete gateway class
 		$gateway_form_fields = $this->get_method_form_fields();
 		$this->form_fields = array_merge( $this->form_fields, $gateway_form_fields );
-
-		// add "detailed customer decline messages" option if the feature is supported
-		if ( $this->supports( self::FEATURE_DETAILED_CUSTOMER_DECLINE_MESSAGES ) ) {
-			$this->form_fields['enable_customer_decline_messages'] = array(
-				'title'   => __( 'Detailed Decline Messages', $this->text_domain ),
-				'type'    => 'checkbox',
-				'label'   => __( 'Check to enable detailed decline messages to the customer during checkout when possible, rather than a generic decline message.', $this->text_domain ),
-				'default' => 'no',
-			);
-		}
-
-		// add any common bottom fields
-		$this->form_fields['debug_mode'] = array(
-			'title'   => __( 'Debug Mode', $this->text_domain ),
-			'type'    => 'select',
-			'desc'    => sprintf( __( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the <a href="%s">debug log</a>', $this->text_domain ), SV_WC_Helper::get_wc_log_file_url( $this->get_id() ) ),
-			'default' => self::DEBUG_MODE_OFF,
-			'options' => array(
-				self::DEBUG_MODE_OFF      => _x( 'Off', 'Debug mode off', $this->text_domain ),
-				self::DEBUG_MODE_CHECKOUT => __( 'Show on Checkout Page', $this->text_domain ),
-				self::DEBUG_MODE_LOG      => __( 'Save to Log', $this->text_domain ),
-				self::DEBUG_MODE_BOTH     => _x( 'Both', 'Debug mode both show on checkout and log', $this->text_domain )
-			),
-		);
 
 		// add the special 'shared-settings-field' class name to any shared settings fields
 		foreach ( $this->shared_settings as $field_name ) {
@@ -865,6 +875,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 				}
 			}
 		}
+
+		$form_fields['connection_settings'] = array(
+			'title' => esc_html__( 'Connection Settings', $this->text_domain ),
+			'type'  => 'title',
+		);
 
 		// disable the field if the sibling gateway is already inheriting settings
 		$form_fields['inherit_settings'] = array(
@@ -1101,7 +1116,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			break;
 
 			case 'paypal':
-				$image_type = 'paypal-1';
+				$image_type = 'paypal';
 			break;
 
 			case 'visa debit':
