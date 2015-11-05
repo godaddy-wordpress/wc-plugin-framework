@@ -823,8 +823,21 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	public function render_payment_fields() {
 
 		foreach ( $this->get_payment_fields() as $field ) {
-			woocommerce_form_field( $field['name'], $field, $field['value'] );
+			$this->render_payment_field( $field );
 		}
+	}
+
+
+	/**
+	 * Render the payment, a simple wrapper around woocommerce_form_field() to
+	 * make it more convenient for concrete gateways to override form output
+	 *
+	 * @since 4.1.1-1
+	 * @param array $field
+	 */
+	protected function render_payment_field( $field ) {
+
+		woocommerce_form_field( $field['name'], $field, $field['value'] );
 	}
 
 
