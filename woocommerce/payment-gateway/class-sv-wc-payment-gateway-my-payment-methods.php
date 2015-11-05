@@ -385,7 +385,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		// make default
 		if ( ! $token->is_default() ) {
 
-			$actions[] = array(
+			$actions['make_default'] = array(
 				'url'   => wp_nonce_url( add_query_arg( array(
 					'wc-' . $this->get_plugin()->get_id_dasherized() . '-token'  => $token->get_token(),
 					'wc-' . $this->get_plugin()->get_id_dasherized() . '-action' => 'make-default'
@@ -396,7 +396,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		}
 
 		// delete
-		$actions[] = array(
+		$actions['delete'] = array(
 			'url'   => wp_nonce_url( add_query_arg( array(
 				'wc-' . $this->get_plugin()->get_id_dasherized() . '-token'  => $token->get_token(),
 				'wc-' . $this->get_plugin()->get_id_dasherized() . '-action' => 'delete'
@@ -404,7 +404,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			'class' => array( 'delete-payment-method' ),
 			'name'  => __( 'Delete', $this->get_plugin()->get_text_domain() ),
 		);
-
 
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_actions', $actions, $token, $this );
 	}
