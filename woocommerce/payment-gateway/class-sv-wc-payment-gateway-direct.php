@@ -1951,6 +1951,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		$order = new WC_Order( 0 );
 
+		// default to base store currency
+		$order->order_currency = get_woocommerce_currency();
+
 		// mock order, as all gateway API implementations require an order object for tokenization
 		$order = $this->get_order( $order );
 
