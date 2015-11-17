@@ -892,7 +892,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 			'csc_required'  => $this->get_gateway()->csc_enabled(),
 		), $this );
 
-		wc_enqueue_js( sprintf( 'window.wc_%s_payment_form_handler = new SV_WC_Payment_Form_Handler( %s );', esc_js( $this->get_gateway()->get_id() ), json_encode( $args ) ) );
+		printf( '<script type="text/javascript">window.wc_%s_payment_form_handler = new SV_WC_Payment_Form_Handler( %s );</script>', esc_js( $this->get_gateway()->get_id() ), json_encode( $args ) );
 	}
 
 
