@@ -418,6 +418,11 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 				$meta = SV_WC_Plugin_Compatibility::is_wc_version_gte_2_4() ? $item : $item['item_meta'];
 
+				$item_desc = array();
+
+				// add SKU to description
+				$item_desc[] = is_callable( array( $product, 'get_sku') ) && $product->get_sku() ? sprintf( 'SKU: %s', $product->get_sku() ) : null;
+
 				// get meta + format it
 				$item_meta = new WC_Order_Item_Meta( $meta );
 
@@ -425,19 +430,15 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 				if ( ! empty( $item_meta ) ) {
 
-					$item_desc = array();
-
 					foreach ( $item_meta as $meta ) {
 						$item_desc[] = sprintf( '%s: %s', $meta['label'], $meta['value'] );
 					}
 
 					$item_desc = implode( ', ', $item_desc );
 
-				} else {
-
-					// default description to SKU
-					$item_desc = is_callable( array( $product, 'get_sku') ) && $product->get_sku() ? sprintf( 'SKU: %s', $product->get_sku() ) : null;
 				}
+
+				$item_desc = implode( ', ', $item_desc );
 
 				$line_item->id          = $id;
 				$line_item->name        = htmlentities( $item['name'], ENT_QUOTES, 'UTF-8', false );
