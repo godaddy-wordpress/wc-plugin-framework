@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2015.nn.nn - version 4.2.0-beta
+ * Coming soon...
+
 2015.nn.nn - version 4.1.0-1
  * Tweak - Add specific width/height styling for saved payment method icons on the checkout page
 
