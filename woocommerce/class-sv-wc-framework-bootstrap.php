@@ -251,7 +251,7 @@ class SV_WC_Framework_Bootstrap {
 		// must update plugin notice
 		if ( ! empty( $this->incompatible_framework_plugins ) ) {
 
-			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_framework_plugins ) > 1 ? esc_html__( 'The following plugins are inactive because they require a newer version to function properly:', 'woocommerce-plugin-framework' ) : esc_html__( 'The following plugin is inactive because it requires a newer version to function properly:', 'woocommerce-plugin-framework' ) );
+			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_framework_plugins ) > 1 ? esc_html__( 'The following plugins are inactive because they are out of date and require a newer version to function properly:', 'woocommerce-plugin-framework' ) : esc_html__( 'The following plugin is inactive because it is out of date and requires a newer version to function properly:', 'woocommerce-plugin-framework' ) );
 
 			foreach ( $this->incompatible_framework_plugins as $plugin ) {
 				printf( '<li>%s</li>', $plugin['plugin_name'] );
