@@ -53,13 +53,12 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 	/**
 	 * Initialize and setup the Admin User Edit Handler
 	 *
-	 * TODO: $text_domain is deprecated, remove argument on next breaking release
-	 *
+	 * @param \SV_WC_Payment_Gateway_Plugin $plugin
 	 * @since 3.0.0
 	 */
 	public function __construct( $plugin ) {
 
-		$this->plugin      = $plugin;
+		$this->plugin = $plugin;
 
 		// Admin
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {

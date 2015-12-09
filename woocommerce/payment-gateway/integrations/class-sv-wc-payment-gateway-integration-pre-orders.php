@@ -222,7 +222,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 
 			} catch( SV_WC_Payment_Gateway_Exception $e ) {
 
-				$this->get_gateway()->mark_order_as_failed( $order, sprintf( _x( 'Pre-Order Tokenization attempt failed (%s)', 'Supports direct payment method pre-orders', $this->get_gateway()->get_text_domain() ), $this->get_gateway()->get_method_title(), $e->getMessage() ) );
+				$this->get_gateway()->mark_order_as_failed( $order, sprintf( __( 'Pre-Order Tokenization attempt failed (%s)', 'woocommerce-plugin-framework' ), $this->get_gateway()->get_method_title(), $e->getMessage() ) );
 			}
 		}
 
@@ -245,11 +245,11 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 			$order = $this->get_gateway()->get_order( $order->id );
 
 			// order description
-			$order->description = sprintf( _x( '%s - Pre-Order Release Payment for Order %s', 'Supports direct payment method pre-orders', $this->get_gateway()->get_text_domain() ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+			$order->description = sprintf( __( '%s - Pre-Order Release Payment for Order %s', 'woocommerce-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
 
 			// token is required
 			if ( ! $order->payment->token ) {
-				throw new SV_WC_Payment_Gateway_Exception( _x( 'Payment token missing/invalid.', 'Supports direct payment method pre-orders', $this->get_gateway()->get_text_domain() ) );
+				throw new SV_WC_Payment_Gateway_Exception( __( 'Payment token missing/invalid.', 'woocommerce-plugin-framework' ) );
 			}
 
 			// perform the transaction
@@ -274,7 +274,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 				if ( $this->get_gateway()->is_credit_card_gateway() ) {
 
 					$message = sprintf(
-						_x( '%s %s Pre-Order Release Payment Approved: %s ending in %s (expires %s)', 'Supports direct payment method pre-orders', $this->get_gateway()->get_text_domain() ),
+						__( '%s %s Pre-Order Release Payment Approved: %s ending in %s (expires %s)', 'woocommerce-plugin-framework' ),
 						$this->get_gateway()->get_method_title(),
 						$this->get_gateway()->perform_credit_card_authorization() ? 'Authorization' : 'Charge',
 						SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( ! empty( $order->payment->card_type ) ? $order->payment->card_type : 'card' ) ),
@@ -285,13 +285,13 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 				} elseif ( $this->get_gateway()->is_echeck_gateway() ) {
 
 					// account type (checking/savings) may or may not be available, which is fine
-					$message = sprintf( _x( '%s eCheck Pre-Order Release Payment Approved: %s ending in %s', 'Supports direct payment method pre-orders', $this->get_gateway()->get_text_domain() ), $this->get_gateway()->get_method_title(), SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( ! empty( $order->payment->account_type ) ? $order->payment->account_type : 'bank' ) ), $last_four );
+					$message = sprintf( __( '%s eCheck Pre-Order Release Payment Approved: %s ending in %s', 'woocommerce-plugin-framework' ), $this->get_gateway()->get_method_title(), SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( ! empty( $order->payment->account_type ) ? $order->payment->account_type : 'bank' ) ), $last_four );
 
 				}
 
 				// adds the transaction id (if any) to the order note
 				if ( $response->get_transaction_id() ) {
-					$message .= ' ' . sprintf( _x( '(Transaction ID %s)', 'Supports direct payment method pre-orders', $this->get_gateway()->get_text_domain() ), $response->get_transaction_id() );
+					$message .= ' ' . sprintf( __( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 				}
 
 				$order->add_order_note( $message );
@@ -308,7 +308,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 				// if the transaction was held (ie fraud validation failure) mark it as such
 				if ( $response->transaction_held() || ( $this->get_gateway()->supports( SV_WC_Payment_Gateway::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->get_gateway()->perform_credit_card_authorization() ) ) {
 
-					$this->get_gateway()->mark_order_as_held( $order, $this->get_gateway()->supports( SV_WC_Payment_Gateway::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->get_gateway()->perform_credit_card_authorization() ? _x( 'Authorization only transaction', 'Supports direct payment method pre-orders', $this->get_gateway()->get_text_domain() ) : $response->get_status_message(), $response );
+					$this->get_gateway()->mark_order_as_held( $order, $this->get_gateway()->supports( SV_WC_Payment_Gateway::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->get_gateway()->perform_credit_card_authorization() ? __( 'Authorization only transaction', 'woocommerce-plugin-framework' ) : $response->get_status_message(), $response );
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
 
 				} else {
@@ -326,7 +326,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			// Mark order as failed
-			$this->get_gateway()->mark_order_as_failed( $order, sprintf( _x( 'Pre-Order Release Payment Failed: %s', 'Supports direct payment method pre-orders', $this->get_gateway()->get_text_domain() ), $e->getMessage() ) );
+			$this->get_gateway()->mark_order_as_failed( $order, sprintf( __( 'Pre-Order Release Payment Failed: %s', 'woocommerce-plugin-framework' ) ), $e->getMessage() );
 
 		}
 	}

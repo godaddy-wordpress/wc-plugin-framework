@@ -47,9 +47,6 @@ abstract class SV_WC_Plugin {
 	/** @var string plugin id */
 	private $id;
 
-	/** @var string plugin text domain */
-	protected $text_domain;
-
 	/** @var string version number */
 	private $version;
 
@@ -85,20 +82,16 @@ abstract class SV_WC_Plugin {
 	 *
 	 * Child plugin classes may add their own optional arguments
 	 *
-	 * TODO: $text_domain is deprecated, remove argument on next breaking release
-	 *
 	 * @since 2.0.0
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
-	 * @param string $text_domain the plugin text domain
 	 * @param array $args optional plugin arguments
 	 */
-	public function __construct( $id, $version, $text_domain, $args = array() ) {
+	public function __construct( $id, $version, $args = array() ) {
 
 		// required params
 		$this->id          = $id;
 		$this->version     = $version;
-		$this->text_domain = $text_domain;
 
 		if ( isset( $args['dependencies'] ) )                $this->dependencies = $args['dependencies'];
 
@@ -172,15 +165,7 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Load plugin text domain.  This implementation should look simply like:
-	 *
-	 * *load_plugin_textdomain*( 'text-domain-string', false, dirname( plugin_basename( $this->get_file() ) ) . '/i18n/languages' );
-	 *
-	 * *'s used to avoid errors from stupid Codestyling Localization
-	 *
-	 * Note that the actual text domain string should be used, and not a
-	 * variable or constant, otherwise localization plugins (Codestyling) will
-	 * not be able to detect the localization directory.
+	 * Load plugin text domain
 	 *
 	 * @since 1.0.0
 	 */
@@ -785,18 +770,6 @@ abstract class SV_WC_Plugin {
 		}
 
 		return $this->message_handler = new SV_WP_Admin_Message_Handler( $this->get_id() );
-	}
-
-
-	/**
-	 * Returns the plugin's text domain
-	 *
-	 * @since 4.0.0
-	 * @return string text domain
-	 */
-	public function get_text_domain() {
-
-		return $this->text_domain;
 	}
 
 

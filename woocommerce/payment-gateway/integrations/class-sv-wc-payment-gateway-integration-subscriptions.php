@@ -203,7 +203,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		// payment token must be present and valid
 		if ( empty( $token ) || ! $this->get_gateway()->has_payment_token( $order->get_user_id(), $token ) ) {
 
-			$this->get_gateway()->mark_order_as_failed( $order, __( 'Subscription Renewal: payment token is missing/invalid.', $this->get_gateway()->get_text_domain() ) );
+			$this->get_gateway()->mark_order_as_failed( $order, __( 'Subscription Renewal: payment token is missing/invalid.', 'woocommerce-plugin-framework' ) );
 
 			return;
 		}
@@ -229,7 +229,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function get_order( $order ) {
 
-		$order->description = sprintf( esc_html__( '%1$s - Subscription Renewal Order %2$s', $this->get_gateway()->get_text_domain() ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() );
+		$order->description = sprintf( esc_html__( '%1$s - Subscription Renewal Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() );
 
 		// override the payment total with the amount to charge given by Subscriptions
 		$order->payment_total = $this->renewal_payment_total;
@@ -425,7 +425,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		$token = $this->get_gateway()->get_payment_token( $subscription->get_user_id(), $this->get_gateway()->get_order_meta( $subscription->id, 'payment_token' ) );
 
 		if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
-			$payment_method_to_display = sprintf( _x( 'Via %s ending in %s', 'Supports direct payment method subscriptions', $this->get_gateway()->get_text_domain() ), $token->get_type_full(), $token->get_last_four() );
+			$payment_method_to_display = sprintf( __( 'Via %s ending in %s', 'woocommerce-plugin-framework' ), $token->get_type_full(), $token->get_last_four() );
 		}
 
 		return $payment_method_to_display;
@@ -450,11 +450,11 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			'post_meta' => array(
 				$prefix . 'payment_token' => array(
 					'value' => $this->get_gateway()->get_order_meta( $subscription->id, 'payment_token' ),
-					'label' => __( 'Payment Token', $this->get_gateway()->get_text_domain() ),
+					'label' => __( 'Payment Token', 'woocommerce-plugin-framework' ),
 				),
 				$prefix . 'customer_id'   => array(
 					'value' => $this->get_gateway()->get_order_meta( $subscription->id, 'customer_id' ),
-					'label' => __( 'Customer ID', $this->get_gateway()->get_text_domain() ),
+					'label' => __( 'Customer ID', 'woocommerce-plugin-framework' ),
 				),
 			)
 		);
@@ -478,12 +478,12 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		// payment token
 		if ( empty( $meta['post_meta'][ $prefix . 'payment_token' ]['value'] ) ) {
-			throw new Exception( sprintf( __( '%s is required.', $this->get_gateway()->get_text_domain() ), $meta['post_meta'][ $prefix . 'payment_token' ]['label'] ) );
+			throw new Exception( sprintf( __( '%s is required.', 'woocommerce-plugin-framework' ), $meta['post_meta'][ $prefix . 'payment_token' ]['label'] ) );
 		}
 
 		// customer ID - optional for some gateways so check if it's set first
 		if ( isset( $meta['post_meta'][ $prefix . 'customer_id'] ) && empty( $meta['post_meta'][ $prefix . 'customer_id' ]['value'] ) ) {
-			throw new Exception( sprintf( __( '%s is required.', $this->get_gateway()->get_text_domain() ), $meta['post_meta'][ $prefix . 'customer_id' ]['label'] ) );
+			throw new Exception( sprintf( __( '%s is required.', 'woocommerce-plugin-framework' ), $meta['post_meta'][ $prefix . 'customer_id' ]['label'] ) );
 		}
 	}
 
@@ -638,7 +638,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			if ( 0 == $amount_to_charge ) {
 
 				// add order note
-				$order->add_order_note( sprintf( _x( '%s0 Subscription Renewal Approved', 'Supports direct credit card subscriptions', $this->get_gateway()->get_text_domain() ), get_woocommerce_currency_symbol() ) );
+				$order->add_order_note( sprintf( __( '%s0 Subscription Renewal Approved', 'woocommerce-plugin-framework' ), get_woocommerce_currency_symbol() ) );
 
 				// update subscription
 				WC_Subscriptions_Manager::process_subscription_payments_on_order( $order, $product_id );
@@ -676,7 +676,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 				// order note based on gateway type
 				if ( $this->get_gateway()->is_credit_card_gateway() ) {
 					$message = sprintf(
-						_x( '%s %s Subscription Renewal Payment Approved: %s ending in %s (expires %s)', 'Supports direct credit card subscriptions', $this->get_gateway()->get_text_domain() ),
+						_x( '%s %s Subscription Renewal Payment Approved: %s ending in %s (expires %s)', 'woocommerce-plugin-framework' ),
 						$this->get_gateway()->get_method_title(),
 						$this->get_gateway()->perform_credit_card_authorization() ? 'Authorization' : 'Charge',
 						$token->get_card_type() ? $token->get_type_full() : 'card',
@@ -686,7 +686,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 				} elseif ( $this->get_gateway()->is_echeck_gateway() ) {
 
 					// there may or may not be an account type (checking/savings) available, which is fine
-					$message = sprintf( _x( '%s Check Subscription Renewal Payment Approved: %s account ending in %s', 'Supports direct cheque subscriptions', $this->get_gateway()->get_text_domain() ), $this->get_gateway()->get_method_title(), $token->get_account_type(), $token->get_last_four() );
+					$message = sprintf( __( '%s Check Subscription Renewal Payment Approved: %s account ending in %s', 'woocommerce-plugin-framework' ), $this->get_gateway()->get_method_title(), $token->get_account_type(), $token->get_last_four() );
 				}
 
 				// add order note
@@ -808,7 +808,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		$token = $this->get_gateway()->get_payment_token( $order->get_user_id(), $this->get_gateway()->get_order_meta( $order->id, 'payment_token' ) );
 
 		if ( is_object( $token ) ) {
-			$payment_method_to_display = sprintf( _x( 'Via %s ending in %s', 'Supports direct payment method subscriptions', $this->get_gateway()->get_text_domain() ), $token->get_type_full(), $token->get_last_four() );
+			$payment_method_to_display = sprintf( __( 'Via %s ending in %s', 'woocommerce-plugin-framework' ), $token->get_type_full(), $token->get_last_four() );
 		}
 
 		return $payment_method_to_display;

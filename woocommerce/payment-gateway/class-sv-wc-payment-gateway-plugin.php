@@ -99,18 +99,15 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * + `currencies` -  array of currency codes this gateway is allowed for, defaults to all
 	 * + `supports` - array named features that this gateway supports, including 'tokenization', 'transaction_link', 'customer_id', 'capture_charge'
 	 *
-	 * TODO: $text_domain is deprecated, remove argument on next breaking release
-	 *
 	 * @since 1.0.0
 	 * @see SV_WC_Plugin::__construct()
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
-	 * @param string $text_domain the plugin text domain
 	 * @param array $args plugin arguments
 	 */
-	public function __construct( $id, $version, $text_domain, $args ) {
+	public function __construct( $id, $version, $args ) {
 
-		parent::__construct( $id, $version, $text_domain, $args );
+		parent::__construct( $id, $version, $args );
 
 		// optional parameters: the supported gateways
 		if ( isset( $args['gateways'] ) ) {
@@ -510,8 +507,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		if ( $gateway->is_enabled() && $gateway->supports_tokenization() && ! $gateway->tokenization_enabled() ) {
 
-			$tool_tip = esc_attr__( 'You must enable tokenization for this gateway in order to support automatic renewal payments with the WooCommerce Subscriptions extension.', $this->get_text_domain() );
-			$status   = esc_html__( 'Inactive', $this->get_text_domain() );
+			$tool_tip = esc_attr__( 'You must enable tokenization for this gateway in order to support automatic renewal payments with the WooCommerce Subscriptions extension.', 'woocommerce-plugin-framework' );
+			$status   = esc_html__( 'Inactive', 'woocommerce-plugin-framework' );
 
 			$html = sprintf( '<a href="%1$s"><span class="sv-wc-payment-gateway-renewal-status-inactive tips" data-tip="%2$s">%3$s</span></a>',
 						esc_url( SV_WC_Payment_Gateway_Helper::get_payment_gateway_configuration_url( $this->get_gateway_class_name( $gateway->get_id() ) ) ),
@@ -649,7 +646,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					jQuery( document ).ready( function ( $ ) {
 						if ( 0 == $( 'select[name^=action] option[value=wc_capture_charge]' ).size() ) {
 							$( 'select[name^=action]' ).append(
-								$( '<option>' ).val( '<?php echo esc_js( 'wc_capture_charge' ); ?>' ).text( '<?php _ex( 'Capture Charge', 'Supports capture charge', 'woocommerce-plugin-framework' ); ?>' )
+								$( '<option>' ).val( '<?php echo esc_js( 'wc_capture_charge' ); ?>' ).text( '<?php _e( 'Capture Charge', 'woocommerce-plugin-framework' ); ?>' )
 							);
 						}
 					});
