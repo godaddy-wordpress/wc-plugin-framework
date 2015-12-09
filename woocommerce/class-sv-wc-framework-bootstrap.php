@@ -34,69 +34,6 @@ if ( ! class_exists( 'SV_WC_Framework_Bootstrap' ) ) :
  * framework of the activated framework plugins, and then initialize any
  * compatible framework plugins.
  *
- * ## Usage
- *
- * To use, simply load this class and add a call like the following to the top
- * of your main plugin file:
- *
- * <code>
- * // Required library classss
- * if ( ! class_exists( 'SV_WC_Framework_Bootstrap' ) ) {
- *   require_once( 'lib/skyverge/woocommerce/class-sv-wc-framework-bootstrap.php' );
- * }
- *
- * SV_WC_Framework_Bootstrap::instance()->register_plugin( '2.2.0', esc_html__( 'WooCommerce My Plugin', 'woocommerce-my-plugin' ), __FILE__, 'init_woocommerce_my_plugin', array( 'minimum_wc_version' => '2.2' ) );
- *
- * ...
- *
- * function init_woocommerce_my_plugin() {
- *   declare and instantiate the plugin class...
- * </code>
- *
- * Where the first argument is the framework version of the plugin, the next
- * argument is the plugin name, the next argument is the plugin file, and the
- * final argument is an initialization callback.
- *
- * The initialization callback should declare the plugin main class file and
- * instantiate.
- *
- * ### Optional Parameters
- *
- * The `register_plugin()` call also supports an optional associative array of
- * arguments.  Currently supported arguments are:
- *
- * + `is_payment_gateway` - Set to true if this is a payment gateway, to load the payment gateway framework files
- * + `backwards_compatible` - Set to a version number to declare backwards compatibility support from that version number (and hence no support for earlier versions).
- * + `minimum_wc_version` - Set to a version number to require a minimum WooCommerce version for the given plugin
- * + `minimum_wp_version` - Set to a version number to require a minimum WordPress version for the given plugin
- *
- * ### Backwards Compatibility
- *
- * By architecting framework releases to be compatible with previous versions
- * we buy ourselves a lot of flexibility in terms of releasing individual
- * plugins with updated versions of the framework, so this should be the goal
- * whenever reasonable.
- *
- * If a breaking change is required (for instance changing the visibility of a
- * method from `protected` to `public`), backwards compatibility support can be
- * specified with the `backwards_compatible` optional parameter described in the
- * previous section.  Any framework plugin that does not meet or exceed this backwards
- * compatible version will not be initialized, and an admin error notice
- * requiring an update will be rendered.
- *
- * If the current release of the framework changes the declared backwards
- * compatibility then *all* framework plugins must be released with this
- * version or better, so that customers can update and use the plugins.
- *
- * ### Action Considerations
- *
- * Because the frameworked plugins aren't actually instantiated until after the
- * `plugins_loaded` action, that plus any actions that are fired before it are
- * ineligible for frameworked plugins to hook onto (this includes `woocommerce_loaded`).
- * Framework plugins that need to hook onto these actions may instead use the
- * `sv_wc_framework_plugins_loaded` action which is fired after all framework
- * plugins are loaded.
- *
  * @since 2.0.0
  */
 class SV_WC_Framework_Bootstrap {

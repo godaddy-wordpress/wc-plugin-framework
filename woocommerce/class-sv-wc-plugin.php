@@ -34,56 +34,6 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * ## Usage
- *
- * Extend this class and implement the following abstract methods:
- *
- * + `get_file()` - the implementation should be: <code>return __FILE__;</code>
- * + `get_plugin_name()` - returns the plugin name (implemented this way so it can be localized)
- * + `load_translation()` - load the plugin text domain
- *
- * Optional Methods to Override:
- *
- * + `is_plugin_settings()` - if the plugin has an admin settings page you can return true when on it
- * + `get_settings_url()` - return the plugin admin settings URL, if any
- *
- * ### Admin Notices
- *
- * Admin notices, can be displayed by calling the `SV_WC_Admin_Notice_Handler::add_admin_notice()`
- * instance method.  Notices default to dismissible unless on the plugin
- * settings page, in which case they are always displayed.
- *
- * Two methods are defined in this class for convenience when adding notices:
- *
- * + `add_admin_notices()` - Use this for notices that don't depend on settings.  A missing PHP extension is a good example
- * + `add_delayed_admin_notices()` - Use this for notices that might depend on a setting first being saved.  A currency requirement for a payment gateway is a good example
- *
- * The notices functionality is implemented by the `SV_WC_Admin_Notice_Handler`
- * class instance, which can be retrieved by calling `get_admin_notice_handler()`
- * on this plugin.  Note that this method can easily be overridden by a concrete
- * plugin implementation, in order to return a specific subclass of the admin
- * notice handler.
- *
- * `SV_WC_Admin_Notice_Handler` includes some convenience methods:
- *
- * + `add_admin_notice()` - Conditionally add an admin notice for display.
- * + `should_display_notice()` - Returns true if message has not been dismissed, or currently on the plugin settings page
- * + `is_message_dismissed()` - Returns true if message has been dismissed
- *
- * Use the optional parameters for the `add_admin_notice()` call to more finely
- * control the behavior of the notice.  The default behavior is to display the
- * notice everywhere with a "dismiss" link, except for the plugin settings page
- * (if any) where the notice is always displayed, with no "dismiss".
- *
- * To add a notice that can be dismissed from the plugin settings, use:
- * `always_show_on_settings => false`
- *
- * To add a notice that can not be dismissed from anywhere, use:
- * `dismissible` => false
- *
- * Use the standard WordPress/WooCommerce `is_*` methods when adding the notice
- * to control which pages it does (or does not) display on.
- *
  * @version 4.2.0-beta
  */
 abstract class SV_WC_Plugin {
