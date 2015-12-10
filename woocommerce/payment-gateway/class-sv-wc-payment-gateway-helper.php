@@ -163,6 +163,15 @@ class SV_WC_Payment_Gateway_Helper {
 			$name = ucwords( str_replace( '-', ' ', $type ) );
 		}
 
+		/**
+		 * Payment Gateway Type to Name Filter.
+		 *
+		 * Allow actors to modify the name returned given a payment type.
+		 *
+		 * @since 4.0.0
+		 * @param string $name nice payment type name, e.g. American Express
+		 * @param string $type payment type, e.g. amex
+		 */
 		return apply_filters( 'wc_payment_gateway_payment_type_to_name', $name, $type );
 	}
 

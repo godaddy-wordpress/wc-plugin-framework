@@ -520,9 +520,18 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 */
 	protected function get_manage_payment_methods_button_html() {
 
+		/**
+		 * Payment Form Manage Payment Methods Button Text Filter.
+		 *
+		 * Allow actors to modify the "manage payment methods" button text rendered
+		 * on the checkout page.
+		 *
+		 * @since 4.0.0
+		 * @param string $button_text button text
+		 */
 		$html = sprintf( '<a class="button" style="float:right;" href="%s">%s</a>',
 			esc_url( SV_WC_Plugin_Compatibility::wc_get_page_permalink( 'myaccount' ) . '#wc-' . $this->get_gateway()->get_plugin()->get_id_dasherized() . '-my-payment-methods' ),
-			// translators: Payment method as in a specific credit card, e-check or bank account
+			// translators: Payment method as in a specific credit card, eCheck or bank account
 			wp_kses_post( apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_manage_payment_methods_text', esc_html__( 'Manage Payment Methods', 'woocommerce-plugin-framework' ) ) )
 		);
 
@@ -689,7 +698,17 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 				$html .= '<p class="form-row">';
 				$html .= sprintf( '<input name="wc-%1$s-tokenize-payment-method" id="wc-%1$s-tokenize-payment-method" class="js-sv-wc-tokenize-payment method js-wc-%1$s-tokenize-payment-method" type="checkbox" value="true" style="width:auto;" />', $this->get_gateway()->get_id_dasherized() );
-				// translators: account as in customer's account on the e-commerce site
+
+				/**
+				 * Payment Form Tokenize Payment Method Checkbox Text Filter.
+				 *
+				 * Allow actors to modify the "securely save to account" checkbox
+				 * text rendered on the payment form on the checkout page.
+				 *
+				 * @since 4.0.0
+				 * @param string $checkbox_text checkbox text
+				 */
+				// translators: account as in customer's account on the eCommerce site
 				$html .= sprintf( '<label for="wc-%s-tokenize-payment-method" style="display:inline;">%s</label>', $this->get_gateway()->get_id_dasherized(), apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_tokenize_payment_method_text', esc_html__( 'Securely Save to Account', 'woocommerce-plugin-framework' ) ) );
 				$html .= '</p><div class="clear"></div>';
 			}

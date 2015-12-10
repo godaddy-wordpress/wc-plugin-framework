@@ -347,6 +347,15 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// some gateways (particularly those that don't support the payment form feature) have their own frontend JS
 		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . '.min.js' ) ) {
 
+			/**
+			 * Concrete Payment Gateway JS URL
+			 *
+			 * Allow actors to modify the URL used when loading a concrete
+			 * payment gateway's javascript.
+			 *
+			 * @since 2.0.0
+			 * @param string $url JS asset URL
+			 */
 			$script_src = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_javascript_url', $this->get_plugin()->get_plugin_url() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . '.min.js' );
 
 			wp_enqueue_script( 'wc-' . $this->get_plugin()->get_id_dasherized(), $script_src, array(), $this->get_plugin()->get_version(), true );
@@ -357,6 +366,15 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// maybe localize error messages
 		if ( $localized_script_handle ) {
 
+			/**
+			 * Payment Gateway Localized JS Script Params Filter.
+			 *
+			 * Allow actors to modify the localized script params passed to the
+			 * frontend for the concrete payment gateway's JS.
+			 *
+			 * @since 2.2.0
+			 * @param $params array
+			 */
 			$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() . '_js_localize_script_params', $this->get_js_localize_script_params() );
 
 			wp_localize_script( $localized_script_handle, $this->get_plugin()->get_id() . '_params', $params );
@@ -436,6 +454,15 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		$text = $this->is_hosted_gateway() ? esc_html__( 'Continue', 'woocommerce-plugin-framework' ) : esc_html__( 'Place order', 'woocommerce-plugin-framework' );
 
+		/**
+		 * Payment Gateway Place Order Button Text Filter.
+		 *
+		 * Allow actors to modify the "place order" button text.
+		 *
+		 * @since 4.0.0
+		 * @param string $text button text
+		 * @param \SV_WC_Payment_Gateway $this instance
+		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_order_button_text', $text, $this );
 	}
 
@@ -897,6 +924,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$is_available = false;
 		}
 
+		/**
+		 * Payment Gateway Is Available Filter.
+		 *
+		 * Allow actors to modify whether the gateway is available or not.
+		 *
+		 * @since 1.0.0
+		 * @param bool $is_available
+		 */
 		return apply_filters( 'wc_gateway_' . $this->get_id() . '_is_available', $is_available );
 	}
 
@@ -952,6 +987,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			}
 		}
 
+		/* This filter is documented in WC core */
 		return apply_filters( 'woocommerce_gateway_icon', $icon, $this->get_id() );
 	}
 
@@ -1011,7 +1047,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			}
 		}
 
-		// support fallback to PNG
+		/**
+		 * Payment Gateway Fallback to PNG Filter.
+		 *
+		 * Allow actors to enable the use of PNGs over SVGs for payment icon images.
+		 *
+		 * @since 4.0.0
+		 * @param bool $use_svg true by default, false to use PNGs
+		 */
 		$image_extension = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_use_svg', true ) ? '.svg' : '.png';
 
 		// first, is the card image available within the plugin?
@@ -1208,6 +1251,15 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// almost all gateways require the original transaction ID, so include it by default
 		$order->refund->trans_id = $this->get_order_meta( $order->id, 'trans_id' );
 
+		/**
+		 * Payment Gateway Get Order For Refund Filter.
+		 *
+		 * Allow actors to modify the order object used for refund transactions.
+		 *
+		 * @since 3.1.0
+		 * @param \WC_Order $order order object
+		 * @param \SV_WC_Payment_Gateway $this instance
+		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_refund', $order, $this );
 	}
 
@@ -2234,7 +2286,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		}
 
-		// return the default card types
+		/**
+		 * Payment Gateway Available Card Types Filter.
+		 *
+		 * Allow actors to modify the available card types.
+		 *
+		 * @since 1.0.0
+		 * @param array $available_card_types
+		 */
 		return apply_filters( 'wc_' . $this->get_id() . '_available_card_types', $this->available_card_types );
 	}
 

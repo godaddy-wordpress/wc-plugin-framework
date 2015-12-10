@@ -181,9 +181,29 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	protected function get_no_payment_methods_html() {
 
-		// translators: Payment method as in a specific credit card, e-check or bank account
+		/**
+		 * My Payment Methods Table No Methods Text Filter.
+		 *
+		 * Allow actors to modify the text shown when no saved payment methods are
+		 * present.
+		 *
+		 * @since 4.0.0
+		 * @param string $message no methods text
+		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 */
+		// translators: Payment method as in a specific credit card, eCheck or bank account
 		$html = '<p>' . apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_no_payment_methods_text', esc_html__( 'You do not have any saved payment methods.', 'woocommerce-plugin-framework' ), $this ) . '</p>';
 
+		/**
+		 * My Payment Methods Table No Methods HTML Filter.
+		 *
+		 * Allow actors to modify the HTML used when no saved payment methods are
+		 * present.
+		 *
+		 * @since 4.0.0
+		 * @param string $html no methods HTML
+		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_no_payment_methods_html', $html, $this );
 	}
 
@@ -199,7 +219,16 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	protected function get_table_title_html() {
 
-		// translators: Payment method as in a specific credit card, e-check or bank account
+		/**
+		 * My Payment Methods Table Table Heading Text Filter.
+		 *
+		 * Allow actors to modify the my payment methods table heading text.
+		 *
+		 * @since 4.0.0
+		 * @param string $message table heading text
+		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 */
+		// translators: Payment method as in a specific credit card, eCheck or bank account
 		$title = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_title', esc_html__( 'My Payment Methods', 'woocommerce-plugin-framework' ), $this );
 
 		$html = '<div class="sv-wc-payment-gateway-my-payment-methods-table-title">';
@@ -213,6 +242,15 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		$html .= '</div>';
 
+		/**
+		 * My Payment Methods Table Title HTML Filter.
+		 *
+		 * Allow actors to modify the table title HTML.
+		 *
+		 * @since 4.0.0
+		 * @param string $html table title HTML
+		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_title_html', $html, $this );
 	}
 
@@ -233,6 +271,15 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		$html .= '</table>';
 
+		/**
+		 * My Payment Methods Table HTML Filter.
+		 *
+		 * Allow actors to modify the table HTML.
+		 *
+		 * @since 4.0.0
+		 * @param string $html table HTML
+		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_html', $html, $this );
 	}
 
@@ -254,6 +301,15 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		$html .= '</tr></thead>';
 
+		/**
+		 * My Payment Methods Table Head HTML Filter.
+		 *
+		 * Allow actors to modify the table head HTML.
+		 *
+		 * @since 4.0.0
+		 * @param string $html table head HTML
+		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_head_html', $html, $this );
 	}
 
@@ -272,6 +328,19 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			'actions' => '&nbsp;'
 		);
 
+		/**
+		 * My Payment Methods Table Headers Filter.
+		 *
+		 * Allow actors to modify the table headers.
+		 *
+		 * @since 4.0.0
+		 * @param array $headers table headers {
+		 *     @type string $title
+		 *     @type string $expiry
+		 *     @type string $actions
+		 * }
+		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_headers', $headers, $this );
 	}
 
@@ -307,6 +376,15 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		$html .= '</tbody>';
 
+		/**
+		 * My Payment Methods Table Body HTML Filter.
+		 *
+		 * Allow actors to modify the table body HTML.
+		 *
+		 * @since 4.0.0
+		 * @param string $html table body HTML
+		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_body_html', $html, $this );
 	}
 
@@ -336,6 +414,16 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			$html .= '</tr>';
 		}
 
+		/**
+		 * My Payment Methods Table Row HTML Filter.
+		 *
+		 * Allow actors to modify the table row HTML.
+		 *
+		 * @since 4.0.0
+		 * @param string $html table row HTML
+		 * @param array $tokens simple array of SV_WC_Payment_Gateway_Payment_Token objects
+		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_row_html', $html, $tokens, $this );
 	}
 
@@ -368,6 +456,20 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			);
 		}
 
+		/**
+		 * My Payment Methods Table Body Row Data Filter.
+		 *
+		 * Allow actors to modify the table body row data.
+		 *
+		 * @since 4.0.0
+		 * @param array $methods {
+		 *     @type string $title payment method title
+		 *     @type string $expiry payment method expiry
+		 *     @type string $actions actions for payment method
+		 * }
+		 * @param array $tokens simple array of SV_WC_Payment_Gateway_Payment_Token objects
+		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_body_row_data', $methods, $this->tokens, $this );
 	}
 
@@ -410,7 +512,20 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			'name'  => esc_html__( 'Delete', 'woocommerce-plugin-framework' ),
 		);
 
-
+		/**
+		 * My Payment Methods Table Method Actions Filter.
+		 *
+		 * Allow actors to modify the table method actions.
+		 *
+		 * @since 4.0.0
+		 * @param $actions array {
+		 *     @type string $url action URL
+		 *     @type string $class action button class
+		 *     @type string $name action button name
+		 * }
+		 * @param \SV_WC_Payment_Gateway_Payment_Token $token
+		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_actions', $actions, $token, $this );
 	}
 
@@ -454,6 +569,16 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			$title .= ' ' . esc_html__( '(default)', 'woocommerce-plugin-framework' );
 		}
 
+		/**
+		 * My Payment Methods Table Method Title Filter.
+		 *
+		 * Allow actors to modify the table method title.
+		 *
+		 * @since 4.0.0
+		 * @param string $title payment method title
+		 * @param \SV_WC_Payment_Gateway_Payment_Token $token token object
+		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_title', $title, $token, $this );
 	}
 

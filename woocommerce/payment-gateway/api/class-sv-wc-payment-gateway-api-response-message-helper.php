@@ -131,6 +131,18 @@ class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 			case 'avs_mismatch':         $message = esc_html__( 'The provided address does not match the billing address for cardholder. Please verify the address and try again.', 'woocommerce-plugin-framework' ); break;
 		}
 
+		/**
+		 * Payment Gateway API Response User Message Filter.
+		 *
+		 * Allow actors to modify the error message returned to a user when a transaction
+		 * has encountered an error and the admin has enabled the "show detailed
+		 * decline messages" setting
+		 *
+		 * @since 2.2.0
+		 * @param string $message message to show to user
+		 * @param string $message_id machine code for the message, e.g. card_expired
+		 * @param \SV_WC_Payment_Gateway_API_Response_Message_Helper $this instance
+		 */
 		return apply_filters( 'wc_payment_gateway_transaction_response_user_message', $message, $message_id, $this );
 	}
 

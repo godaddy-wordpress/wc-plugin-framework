@@ -399,7 +399,18 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		$default = parent::process_payment( $order_id );
 
-		// give other actors an opportunity to intercept and implement the process_payment() call for this transaction
+		/**
+		 * Direct Gateway Process Payment Filter.
+		 *
+		 * Allow actors to intercept and implement the process_payment() call for
+		 * this transaction. Return an array value from this filter will return it
+		 * directly to the checkout processing code and skip this method entirely.
+		 *
+		 * @since 1.0.0
+		 * @param bool $result default true
+		 * @param int|string $order_id order ID for the payment
+		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 */
 		if ( is_array( $result = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_process_payment', true, $order_id, $this ) ) ) {
 			return $result;
 		}
@@ -563,7 +574,15 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$order->payment->exp_year = substr( $order->payment->exp_year, 2 );
 		}
 
-		// allow other actors to modify the order object
+		/**
+		 * Direct Gateway Get Order Filter.
+		 *
+		 * Allow actors to modify the order object.
+		 *
+		 * @since 1.0.0
+		 * @param \WC_Order $order order object
+		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order', $order, $this );
 	}
 
@@ -588,6 +607,15 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// translators: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card.
 		$order->description = sprintf( esc_html__( '%1$s - Capture for Order %2$s', 'woocommerce-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
 
+		/**
+		 * Direct Gateway Capture Get Order Filter.
+		 *
+		 * Allow actors to modify the order object used for performing charge captures.
+		 *
+		 * @since 2.0.0
+		 * @param \WC_Order $order order object
+		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_capture', $order, $this );
 	}
 
@@ -625,6 +653,18 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 			}
 
+			/**
+			 * Direct Gateway eCheck Transaction Approved Order Note Filter.
+			 *
+			 * Allow actors to modify the order note added when an eCheck transaction
+			 * is approved.
+			 *
+			 * @since 4.1.0
+			 * @param string $message order note
+			 * @param \WC_Order $order order object
+			 * @param \SV_WC_Payment_Gateway_API_Response $response transaction response
+			 * @param \SV_WC_Payment_Gateway_Direct $this instance
+			 */
 			$message = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_check_transaction_approved_order_note', $message, $order, $response, $this );
 
 			$order->add_order_note( $message );
@@ -688,6 +728,18 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 			}
 
+			/**
+			 * Direct Gateway Credit Card Transaction Approved Order Note Filter.
+			 *
+			 * Allow actors to modify the order note added when a Credit Card transaction
+			 * is approved.
+			 *
+			 * @since 4.1.0
+			 * @param string $message order note
+			 * @param \WC_Order $order order object
+			 * @param \SV_WC_Payment_Gateway_API_Response $response transaction response
+			 * @param \SV_WC_Payment_Gateway_Direct $this instance
+			 */
 			$message = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_credit_card_transaction_approved_order_note', $message, $order, $response, $this );
 
 			$order->add_order_note( $message );
@@ -1238,6 +1290,17 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		assert( $this->supports_tokenization() );
 
 		// otherwise generally no need to force tokenization
+
+		/**
+		 * Direct Gateway Tokenization Forced Filter.
+		 *
+		 * Allow actors to indicate that tokenization should be forced for the current
+		 * checkout.
+		 *
+		 * @since 1.0.0
+		 * @param bool $force true to force tokenization, false otherwise
+		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_tokenization_forced', false, $this );
 	}
 
@@ -1255,7 +1318,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		assert( $this->supports_tokenization() );
 
 		return SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-tokenize-payment-method' ) && ! SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' );
-
 	}
 
 
@@ -1981,7 +2043,16 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// force zero amount
 		$order->payment_total = '0.00';
 
-		// allow other actors to modify the order object
+		/**
+		 * Direct Gateway Get Order for Add Payment Method Filter.
+		 *
+		 * Allow actors to modify the order object used for an add payment method
+		 * transaction.
+		 *
+		 * @since 4.0.0
+		 * @param \WC_Order $order order object
+		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_add_payment_method', $order, $this );
 	}
 
