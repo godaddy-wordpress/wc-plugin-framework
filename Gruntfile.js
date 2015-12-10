@@ -11,21 +11,24 @@ module.exports = function( grunt ) {
 	var _    = require( 'underscore' );
 	var path = require( 'path' );
 
-	// Set plugin slug option
-	//grunt.option( 'plugin-slug', path.basename( process.cwd() ) );
-
 	var gruntConfig = {};
 
 	// options
 	gruntConfig.options = {};
 
+	gruntConfig.pkg = grunt.file.readJSON( 'package.json' ),
+
 	// Set folder templates
 	gruntConfig.dirs = {
-		css: 'assets/css',
-		js: 'assets/js',
-		images: 'assets/images',
-		fonts: 'assets/fonts',
-		build: 'build'
+		lang: 'woocommerce/i18n/languages',
+		general: {
+			css: 'woocommerce/assets/css',
+			js: 'woocommerce/assets/js'
+		},
+		gateway : {
+			css: 'woocommerce/payment-gateway/assets/css',
+			js: 'woocommerce/payment-gateway/assets/js'
+		}
 	};
 
 	function loadConfig( filepath ) {
@@ -50,11 +53,34 @@ module.exports = function( grunt ) {
 	// Init Grunt
 	grunt.initConfig( gruntConfig );
 
-	// Register Tasks
+	// Load custom tasks
+	grunt.loadTasks( 'grunt/tasks/' );
+
+	// Register update_translations task
+	grunt.registerTask( 'update_translations', [
+		'makepot',
+		'shell:tx_push',
+		'shell:tx_pull',
+		'potomo'
+	] );
+
+	// Register build task
+	grunt.registerTask( 'build', [
+		'coffee',
+		'uglify',
+		'sass',
+		'update_translations',
+		'clean'
+	] );
+
+	// Register default task
 	grunt.registerTask( 'default', [
 		'coffee',
 		'uglify',
 		'sass',
+		'makepot',
+		'shell:tx_push',
 		'clean'
 	] );
+
 };

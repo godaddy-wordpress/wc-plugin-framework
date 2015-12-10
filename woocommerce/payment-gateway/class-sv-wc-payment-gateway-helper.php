@@ -145,17 +145,17 @@ class SV_WC_Payment_Gateway_Helper {
 		// special cases
 		switch ( $type ) {
 
-			case 'mc':         $name = 'MasterCard';          break;
-			case 'amex':       $name = 'American Express';    break;
-			case 'disc':       $name = 'Discover';            break;
-			case 'jcb':        $name = 'JCB';                 break;
-			case 'cartebleue': $name = 'CarteBleue';          break;
-			case 'paypal':     $name = 'PayPal';              break;
-			case 'checking':   $name = 'Checking Account';    break;
-			case 'savings':    $name = 'Savings Account';     break;
-			case 'card':       $name = 'Credit / Debit Card'; break;
-			case 'bank':       $name = 'Bank Account';        break;
-			case '':           $name = 'Account';             break;
+			case 'mc':         $name = esc_html_x( 'MasterCard', 'credit card type', 'woocommerce-plugin-framework' );          break;
+			case 'amex':       $name = esc_html_x( 'American Express', 'credit card type', 'woocommerce-plugin-framework' );    break;
+			case 'disc':       $name = esc_html_x( 'Discover', 'credit card type', 'woocommerce-plugin-framework' );            break;
+			case 'jcb':        $name = esc_html_x( 'JCB', 'credit card type', 'woocommerce-plugin-framework' );                 break;
+			case 'cartebleue': $name = esc_html_x( 'CarteBleue', 'credit card type', 'woocommerce-plugin-framework' );          break;
+			case 'paypal':     $name = esc_html__( 'PayPal', 'woocommerce-plugin-framework' );                                  break;
+			case 'checking':   $name = esc_html__( 'Checking Account', 'woocommerce-plugin-framework' );                        break;
+			case 'savings':    $name = esc_html__( 'Savings Account', 'woocommerce-plugin-framework' );                         break;
+			case 'card':       $name = esc_html__( 'Credit / Debit Card', 'woocommerce-plugin-framework' );                     break;
+			case 'bank':       $name = esc_html__( 'Bank Account', 'woocommerce-plugin-framework' );                            break;
+			case '':           $name = esc_html_x( 'Account', 'payment method type', 'woocommerce-plugin-framework' );          break;
 		}
 
 		// default: replace dashes with spaces and uppercase all words
@@ -163,6 +163,15 @@ class SV_WC_Payment_Gateway_Helper {
 			$name = ucwords( str_replace( '-', ' ', $type ) );
 		}
 
+		/**
+		 * Payment Gateway Type to Name Filter.
+		 *
+		 * Allow actors to modify the name returned given a payment type.
+		 *
+		 * @since 4.0.0
+		 * @param string $name nice payment type name, e.g. American Express
+		 * @param string $type payment type, e.g. amex
+		 */
 		return apply_filters( 'wc_payment_gateway_payment_type_to_name', $name, $type );
 	}
 

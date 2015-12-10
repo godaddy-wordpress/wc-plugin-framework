@@ -41,9 +41,6 @@ class SV_WC_Admin_Notice_Handler {
 	/** @var SV_WC_Plugin the plugin */
 	private $plugin;
 
-	/** @var string plugin text domain */
-	protected $text_domain;
-
 	/** @var array associative array of id to notice text */
 	private $admin_notices = array();
 
@@ -59,10 +56,9 @@ class SV_WC_Admin_Notice_Handler {
 	 *
 	 * @since 3.0.0
 	 */
-	public function __construct( $plugin, $text_domain ) {
+	public function __construct( $plugin ) {
 
 		$this->plugin      = $plugin;
-		$this->text_domain = $text_domain;
 
 		// render any admin notices, delayed notices, and
 		add_action( 'admin_notices', array( $this, 'render_admin_notices'         ), 15 );
@@ -193,7 +189,9 @@ class SV_WC_Admin_Notice_Handler {
 
 		// dismissible link if the notice is dismissible and it's not always shown on the settings page, or we're on the settings page
 		if ( isset( $params['dismissible'] ) && $params['dismissible'] && ( ! isset( $params['always_show_on_settings'] ) || ! $params['always_show_on_settings'] || ! $this->get_plugin()->is_plugin_settings() ) ) {
-			$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-notice-dismiss" data-message-id="%s" style="float: right;">%s</a>', $message_id, __( 'Dismiss', $this->text_domain ) );
+
+			// translators: this is an action that dismisses a message
+			$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-notice-dismiss" data-message-id="%s" style="float: right;">%s</a>', $message_id, esc_html__( 'Dismiss', 'woocommerce-plugin-framework' ) );
 		}
 
 		$class = isset( $params['notice_class'] ) ? $params['notice_class'] : 'error';
@@ -263,6 +261,15 @@ class SV_WC_Admin_Notice_Handler {
 
 		update_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', $dismissed_notices );
 
+		/**
+		 * Admin Notice Dismissed Action.
+		 *
+		 * Fired when a user dismisses an admin notice.
+		 *
+		 * @since 3.0.0
+		 * @param string $message_id notice identifier
+		 * @param string|int $user_id
+		 */
 		do_action( 'wc_' . $this->get_plugin()->get_id(). '_dismiss_notice', $message_id, $user_id );
 	}
 

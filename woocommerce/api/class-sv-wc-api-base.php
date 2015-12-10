@@ -251,6 +251,29 @@ abstract class SV_WC_API_Base {
 			'body'    => $this->get_sanitized_response_body() ? $this->get_sanitized_response_body() : $this->get_raw_response_body(),
 		);
 
+		/**
+		 * API Base Request Performed Action.
+		 *
+		 * Fired when an API request is performed via this base class. Plugins can
+		 * hook into this to log request/response data.
+		 *
+		 * @since 2.2.0
+		 * @param array $request_data {
+		 *     @type string $method request method, e.g. POST
+		 *     @type string $uri request URI
+		 *     @type string $user-agent
+		 *     @type string $headers request headers
+		 *     @type string $body request body
+		 *     @type string $duration in seconds
+		 * }
+		 * @param array $response data {
+		 *     @type string $code response HTTP code
+		 *     @type string $message response message
+		 *     @type string $headers response HTTP headers
+		 *     @type string $body response body
+		 * }
+		 * @param \SV_WC_API_Base $this instance
+		 */
 		do_action( 'wc_' . $this->get_api_id() . '_api_request_performed', $request_data, $response_data, $this );
 	}
 

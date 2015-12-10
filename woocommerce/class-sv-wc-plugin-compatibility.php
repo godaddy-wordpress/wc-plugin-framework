@@ -67,6 +67,7 @@ class SV_WC_Plugin_Compatibility {
 
 			$permalink = get_permalink( wc_get_page_id( $page ) );
 
+			/* This filter is documented in WC core */
 			return apply_filters( 'woocommerce_get_' . $page . '_page_permalink', $permalink );
 		}
 	}
@@ -99,6 +100,7 @@ class SV_WC_Plugin_Compatibility {
 				$cancel_endpoint = trailingslashit( $cancel_endpoint );
 			}
 
+			/* This filter is documented in WC core */
 			return apply_filters( 'woocommerce_get_cancel_order_url_raw', add_query_arg( array(
 				'cancel_order' => 'true',
 				'order'        => $order->order_key,

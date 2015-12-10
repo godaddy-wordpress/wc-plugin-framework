@@ -1,5 +1,10 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2015.nn.nn - version 4.2.0-alpha
+ * Feature - Greatly improved compatibility with multi-language/translation plugins
+ * Misc - Switched to using a separate text domain for the framework strings - 'woocommerce-plugin-framework'
+ * Misc - WooCommerce 2.5 Compatibility
+
 2015.11.05 - version 4.1.2
  * Tweak - Misc Payment Gateway framework improvements
 

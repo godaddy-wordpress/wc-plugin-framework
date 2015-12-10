@@ -558,7 +558,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *       data-action="wc_cart_notices_json_search_product_categories"
 		 *       data-nonce="<?php echo wp_create_nonce( 'search-categories' ); ?>"
 		 *       data-request_data = "<?php echo esc_attr( json_encode( array( 'field_name' => 'something_exciting', 'default' => 'default_label' ) ) ) ?>"
-		 *       data-placeholder="<?php _e( 'Search for a category&hellip;', WC_Cart_Notices::TEXT_DOMAIN ) ?>"
+		 *       data-placeholder="<?php esc_attr_e( 'Search for a category&hellip;', 'wc-cart-notices' ) ?>"
 		 *       data-allow_clear="true"
 		 *       data-selected="<?php
 		 *          $json_ids    = array();
@@ -714,6 +714,13 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 				wc_enqueue_js( $javascript );
 
+				/**
+				 * WC Select2 Ajax Rendered Action.
+				 *
+				 * Fired when an Ajax select2 is rendered.
+				 *
+				 * @since 3.1.0
+				 */
 				do_action( 'sv_wc_select2_ajax_rendered' );
 			}
 		}
@@ -728,6 +735,57 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function get_wc_log_file_url( $handle ) {
 			return admin_url( sprintf( 'admin.php?page=wc-status&tab=logs&log_file=%s-%s-log', $handle, sanitize_file_name( wp_hash( $handle ) ) ) );
+		}
+
+
+		/**
+		 * Gettext `__()` wrapper for framework-translated strings
+		 *
+		 * Warning! This function should only be used if an existing
+		 * translation from the framework is to be used. It should
+		 * never be called for plugin-specific or untranslated strings!
+		 * Untranslated = not registered via string literal.
+		 *
+		 * @since 4.1.0
+		 * @param string $text
+		 */
+		public static function f__( $text ) {
+
+			return esc_html__( $text, 'woocommerce-plugin-framework' );
+		}
+
+
+		/**
+		 * Gettext `_e()` wrapper for framework-translated strings
+		 *
+		 * Warning! This function should only be used if an existing
+		 * translation from the framework is to be used. It should
+		 * never be called for plugin-specific or untranslated strings!
+		 * Untranslated = not registered via string literal.
+		 *
+		 * @since 4.1.0
+		 * @param string $text
+		 */
+		public static function f_e( $text ) {
+
+			esc_html_e( $text, 'woocommerce-plugin-framework' );
+		}
+
+
+		/**
+		 * Gettext `_x()` wrapper for framework-translated strings
+		 *
+		 * Warning! This function should only be used if an existing
+		 * translation from the framework is to be used. It should
+		 * never be called for plugin-specific or untranslated strings!
+		 * Untranslated = not registered via string literal.
+		 *
+		 * @since 4.1.0
+		 * @param string $text
+		 */
+		public static function f_x( $text, $context ) {
+
+			return esc_html_x( $text, $context, 'woocommerce-plugin-framework' );
 		}
 
 

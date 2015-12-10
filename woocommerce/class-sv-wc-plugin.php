@@ -34,71 +34,19 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * ## Usage
- *
- * Extend this class and implement the following abstract methods:
- *
- * + `get_file()` - the implementation should be: <code>return __FILE__;</code>
- * + `get_plugin_name()` - returns the plugin name (implemented this way so it can be localized)
- * + `load_translation()` - load the plugin text domain
- *
- * Optional Methods to Override:
- *
- * + `is_plugin_settings()` - if the plugin has an admin settings page you can return true when on it
- * + `get_settings_url()` - return the plugin admin settings URL, if any
- *
- * ### Admin Notices
- *
- * Admin notices, can be displayed by calling the `SV_WC_Admin_Notice_Handler::add_admin_notice()`
- * instance method.  Notices default to dismissible unless on the plugin
- * settings page, in which case they are always displayed.
- *
- * Two methods are defined in this class for convenience when adding notices:
- *
- * + `add_admin_notices()` - Use this for notices that don't depend on settings.  A missing PHP extension is a good example
- * + `add_delayed_admin_notices()` - Use this for notices that might depend on a setting first being saved.  A currency requirement for a payment gateway is a good example
- *
- * The notices functionality is implemented by the `SV_WC_Admin_Notice_Handler`
- * class instance, which can be retrieved by calling `get_admin_notice_handler()`
- * on this plugin.  Note that this method can easily be overridden by a concrete
- * plugin implementation, in order to return a specific subclass of the admin
- * notice handler.
- *
- * `SV_WC_Admin_Notice_Handler` includes some convenience methods:
- *
- * + `add_admin_notice()` - Conditionally add an admin notice for display.
- * + `should_display_notice()` - Returns true if message has not been dismissed, or currently on the plugin settings page
- * + `is_message_dismissed()` - Returns true if message has been dismissed
- *
- * Use the optional parameters for the `add_admin_notice()` call to more finely
- * control the behavior of the notice.  The default behavior is to display the
- * notice everywhere with a "dismiss" link, except for the plugin settings page
- * (if any) where the notice is always displayed, with no "dismiss".
- *
- * To add a notice that can be dismissed from the plugin settings, use:
- * `always_show_on_settings => false`
- *
- * To add a notice that can not be dismissed from anywhere, use:
- * `dismissible` => false
- *
- * Use the standard WordPress/WooCommerce `is_*` methods when adding the notice
- * to control which pages it does (or does not) display on.
- *
- * @version 4.1.2
+ * @version 4.2.0-alpha
  */
 abstract class SV_WC_Plugin {
 
+
 	/** Plugin Framework Version */
-	const VERSION = '4.1.2';
+	const VERSION = '4.2.0-alpha';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
 
 	/** @var string plugin id */
 	private $id;
-
-	/** @var string plugin text domain */
-	protected $text_domain;
 
 	/** @var string version number */
 	private $version;
@@ -138,15 +86,13 @@ abstract class SV_WC_Plugin {
 	 * @since 2.0.0
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
-	 * @param string $text_domain the plugin text domain
 	 * @param array $args optional plugin arguments
 	 */
-	public function __construct( $id, $version, $text_domain, $args = array() ) {
+	public function __construct( $id, $version, $args = array() ) {
 
 		// required params
 		$this->id          = $id;
 		$this->version     = $version;
-		$this->text_domain = $text_domain;
 
 		if ( isset( $args['dependencies'] ) )                $this->dependencies = $args['dependencies'];
 
@@ -179,7 +125,7 @@ abstract class SV_WC_Plugin {
 		$this->add_api_request_logging();
 
 		// Load translation files
-		add_action( 'init', array( $this, 'load_translation' ) );
+		add_action( 'init', array( $this, 'load_translations' ) );
 	}
 
 
@@ -189,7 +135,8 @@ abstract class SV_WC_Plugin {
 	 * @since 3.1.0
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, sprintf( __( 'You cannot clone instances of %s.', $this->text_domain ), $this->get_plugin_name() ), '3.1.0' );
+		// translators: %s - plugin name
+		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot clone instances of %s.', 'woocommerce-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
 	}
 
 	/**
@@ -198,20 +145,28 @@ abstract class SV_WC_Plugin {
 	 * @since 3.1.0
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, sprintf( __( 'You cannot unserialize instances of %s.', $this->text_domain ), $this->get_plugin_name() ), '3.1.0' );
+		// translators: %s - plugin name
+		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot unserialize instances of %s.', 'woocommerce-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
 	}
 
 
 	/**
-	 * Load plugin text domain.  This implementation should look simply like:
+	 * Load plugin & framework text domains
 	 *
-	 * *load_plugin_textdomain*( 'text-domain-string', false, dirname( plugin_basename( $this->get_file() ) ) . '/i18n/languages' );
-	 *
-	 * *'s used to avoid errors from stupid Codestyling Localization
-	 *
-	 * Note that the actual text domain string should be used, and not a
-	 * variable or constant, otherwise localization plugins (Codestyling) will
-	 * not be able to detect the localization directory.
+	 * @since 4.0.0-beta
+	 */
+	public function load_translations() {
+
+		// Load framework text domain
+		load_plugin_textdomain( 'woocommerce-plugin-framework', false, dirname( plugin_basename( $this->get_framework_file() ) ) . '/i18n/languages' );
+
+		// Load plugin text domain
+		$this->load_translation();
+	}
+
+
+	/**
+	 * Load plugin text domain
 	 *
 	 * @since 1.0.0
 	 */
@@ -318,11 +273,12 @@ abstract class SV_WC_Plugin {
 		if ( count( $missing_extensions ) > 0 ) {
 
 			$message = sprintf(
+				// translators: %1$s - plugin name, %2$s - a PHP extension/comma-separated list of PHP extensions
 				_n(
-					'%s requires the %s PHP extension to function.  Contact your host or server administrator to configure and install the missing extension.',
-					'%s requires the following PHP extensions to function: %s.  Contact your host or server administrator to configure and install the missing extensions.',
+					'%1$s requires the %2$s PHP extension to function. Contact your host or server administrator to configure and install the missing extension.',
+					'%1$s requires the following PHP extensions to function: %2$s. Contact your host or server administrator to configure and install the missing extensions.',
 					count( $missing_extensions ),
-					$this->text_domain
+					'woocommerce-plugin-framework'
 				),
 				$this->get_plugin_name(),
 				'<strong>' . implode( ', ', $missing_extensions ) . '</strong>'
@@ -338,11 +294,12 @@ abstract class SV_WC_Plugin {
 		if ( count( $missing_functions ) > 0 ) {
 
 			$message = sprintf(
+				// translators: %1$s - plugin name, %2$s - a PHP function/comma-separated list of PHP functions
 				_n(
-					'%s requires the %s PHP function to exist.  Contact your host or server administrator to configure and install the missing function.',
-					'%s requires the following PHP functions to exist: %s.  Contact your host or server administrator to configure and install the missing functions.',
+					'%1$s requires the %2$s PHP function to exist.  Contact your host or server administrator to configure and install the missing function.',
+					'%1$s requires the following PHP functions to exist: %2$s.  Contact your host or server administrator to configure and install the missing functions.',
 					count( $missing_functions ),
-					$this->text_domain
+					'woocommerce-plugin-framework'
 				),
 				$this->get_plugin_name(),
 				'<strong>' . implode( ', ', $missing_functions ) . '</strong>'
@@ -373,12 +330,13 @@ abstract class SV_WC_Plugin {
 
 		// documentation url if any
 		if ( $this->get_documentation_url() ) {
-			$custom_actions['docs'] = sprintf( '<a href="%s">%s</a>', $this->get_documentation_url(), __( 'Docs', $this->text_domain ) );
+			// translators: Docs as in Documentation
+			$custom_actions['docs'] = sprintf( '<a href="%s">%s</a>', $this->get_documentation_url(), esc_html__( 'Docs', 'woocommerce-plugin-framework' ) );
 		}
 
 		// support url if any
 		if ( $this->get_support_url() ) {
-			$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', $this->get_support_url(), __( 'Support', $this->text_domain ) );
+			$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', $this->get_support_url(), esc_html_x( 'Support', 'noun', 'woocommerce-plugin-framework' ) );
 		}
 
 		// add the links to the front of the actions list
@@ -564,7 +522,7 @@ abstract class SV_WC_Plugin {
 			return $this->admin_notice_handler;
 		}
 
-		return $this->admin_notice_handler = new SV_WC_Admin_Notice_Handler( $this, $this->text_domain );
+		return $this->admin_notice_handler = new SV_WC_Admin_Notice_Handler( $this );
 	}
 
 
@@ -628,7 +586,7 @@ abstract class SV_WC_Plugin {
 		$settings_url = $this->get_settings_url( $plugin_id );
 
 		if ( $settings_url ) {
-			return sprintf( '<a href="%s">%s</a>', $settings_url, __( 'Configure', $this->text_domain ) );
+			return sprintf( '<a href="%s">%s</a>', $settings_url, esc_html__( 'Configure', 'woocommerce-plugin-framework' ) );
 		}
 
 		// no settings
@@ -817,18 +775,6 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Returns the plugin's text domain
-	 *
-	 * @since 4.0.0
-	 * @return string text domain
-	 */
-	public function get_text_domain() {
-
-		return $this->text_domain;
-	}
-
-
-	/**
 	 * Helper function to determine whether a plugin is active
 	 *
 	 * @since 2.0.0
@@ -840,7 +786,7 @@ abstract class SV_WC_Plugin {
 		$active_plugins = (array) get_option( 'active_plugins', array() );
 
 		if ( is_multisite() ) {
-			$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
+			$active_plugins = array_merge( $active_plugins, array_keys( get_site_option( 'active_sitewide_plugins', array() ) ) );
 		}
 
 		$plugin_filenames = array();

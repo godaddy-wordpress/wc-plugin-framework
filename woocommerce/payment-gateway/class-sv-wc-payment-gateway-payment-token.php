@@ -88,6 +88,8 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	public function get_token() {
 
+		_deprecated_function( 'SV_WC_Payment_Gateway_Payment_Token::get_token()', '4.0.0', 'SV_WC_Payment_Gateway_Payment_Token::get_id()' );
+
 		return $this->get_id();
 	}
 

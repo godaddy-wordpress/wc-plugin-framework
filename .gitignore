@@ -1,6 +1,7 @@
 # IDEs
 /.settings
 /.project
+/.idea
 
 # NPM packages used by Grunt.js
 /node_modules
