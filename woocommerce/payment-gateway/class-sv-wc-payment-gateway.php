@@ -789,7 +789,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		$form_fields['connection_settings'] = array(
-			'title' => esc_html__( 'Connection Settings', $this->text_domain ),
+			'title' => esc_html__( 'Connection Settings', 'woocommerce-plugin-framework' ),
 			'type'  => 'title',
 		);
 
