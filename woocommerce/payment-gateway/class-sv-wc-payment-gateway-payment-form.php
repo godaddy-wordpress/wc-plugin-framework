@@ -697,7 +697,20 @@ class SV_WC_Payment_Gateway_Payment_Form {
 			} else {
 
 				$html .= '<p class="form-row">';
-				$html .= sprintf( '<input name="wc-%1$s-tokenize-payment-method" id="wc-%1$s-tokenize-payment-method" class="js-sv-wc-tokenize-payment method js-wc-%1$s-tokenize-payment-method" type="checkbox" value="true" style="width:auto;" />', $this->get_gateway()->get_id_dasherized() );
+
+				/**
+				 * Payment Form Default Tokenize Payment Method Checkbox to Checked Filter.
+				 *
+				 * Allow actors to default the tokenize payment method checkbox state to
+				 * checked.
+				 *
+				 * @since 4.2.0-beta
+				 * @param bool $checked default false, set to true to change the checkbox state to checked
+				 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+				 */
+				$checked = apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_default_tokenize_payment_method_checkbox_to_checked', false, $this );
+
+				$html .= sprintf( '<input name="wc-%1$s-tokenize-payment-method" id="wc-%1$s-tokenize-payment-method" class="js-sv-wc-tokenize-payment method js-wc-%1$s-tokenize-payment-method" type="checkbox" value="true" style="width:auto;" %2$s/>', $this->get_gateway()->get_id_dasherized(), $checked ? 'checked="checked" ' : '' );
 
 				/**
 				 * Payment Form Tokenize Payment Method Checkbox Text Filter.
