@@ -447,6 +447,15 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					WC()->cart->empty_cart();
 				}
 
+				/**
+				 * Payment Gateway Payment Processed Action.
+				 *
+				 * Fired when a payment is processed for an order.
+				 *
+				 * @since 4.1.0
+				 * @param \WC_Order $order order object
+				 * @param \SV_WC_Payment_Gateway_Direct $this instance
+				 */
 				do_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_processed', $order, $this );
 
 				return array(
@@ -1025,6 +1034,15 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$this->integrations[ self::INTEGRATION_PRE_ORDERS ] = $this->build_pre_orders_integration();
 		}
 
+		/**
+		 * Payment Gateway Integrations Initialized Action.
+		 *
+		 * Fired when integrations (Subscriptons/Pre-Orders) have been loaded and
+		 * initialized.
+		 *
+		 * @since 4.1.0
+		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 */
 		do_action( 'wc_payment_gateway_' . $this->get_id() . '_init_integrations', $this );
 	}
 

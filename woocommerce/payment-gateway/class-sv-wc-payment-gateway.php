@@ -1708,6 +1708,17 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$this->add_customer_data( $order, $response );
 		}
 
+		/**
+		 * Payment Gateway Add Transaction Data Action.
+		 *
+		 * Fired after a transaction is processed and provides actors a way to add additional
+		 * transactional data to an order given the transaction response object.
+		 *
+		 * @since 4.1.0
+		 * @param \WC_Order $order order object
+		 * @param \SV_WC_Payment_Gateway_API_Response|null $response transaction response
+		 * @param \SV_WC_Payment_Gateway $this instance
+		 */
 		do_action( 'wc_payment_gateway_' . $this->get_id() . '_add_transaction_data', $order, $response, $this );
 	}
 
@@ -2718,7 +2729,16 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 				$this->supports[] = $name;
 
-				// allow other actors (including ourselves) to take action when support is declared
+				/**
+				 * Payment Gateway Add Support Action.
+				 *
+				 * Fired when declaring support for a specific gateway feature. Allows other actors
+				 * (including ourselves) to take action when support is declared.
+				 *
+				 * @since 1.0.0
+				 * @param \SV_WC_Payment_Gateway $this instance
+				 * @param string $name of supported feature being added
+				 */
 				do_action( 'wc_payment_gateway_' . $this->get_id() . '_supports_' . str_replace( '-', '_', $name ), $this, $name );
 			}
 
@@ -2742,6 +2762,16 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 			unset( $this->supports[ array_search( $name, $this->supports ) ] );
 
+			/**
+			 * Payment Gateway Remove Support Action.
+			 *
+			 * Fired when removing support for a specific gateway feature. Allows other actors
+			 * (including ourselves) to take action when support is removed.
+			 *
+			 * @since 4.1.0
+			 * @param \SV_WC_Payment_Gateway $this instance
+			 * @param string $name of supported feature being removed
+			 */
 			do_action( 'wc_payment_gateway_' . $this->get_id() . '_removed_support_' . str_replace( '-', '_', $name ), $this, $name );
 		}
 	}

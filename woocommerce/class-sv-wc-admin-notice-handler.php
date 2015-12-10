@@ -261,6 +261,15 @@ class SV_WC_Admin_Notice_Handler {
 
 		update_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', $dismissed_notices );
 
+		/**
+		 * Admin Notice Dismissed Action.
+		 *
+		 * Fired when a user dismisses an admin notice.
+		 *
+		 * @since 3.0.0
+		 * @param string $message_id notice identifier
+		 * @param string|int $user_id
+		 */
 		do_action( 'wc_' . $this->get_plugin()->get_id(). '_dismiss_notice', $message_id, $user_id );
 	}
 

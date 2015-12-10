@@ -158,10 +158,26 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			echo $this->get_table_title_html();
 
+			/**
+			 * Before My Payment Methods Table Action.
+			 *
+			 * Fired before the My Payment Methods table HTML is rendered.
+			 *
+			 * @since 4.0.0
+			 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+			 */
 			do_action( 'wc_' . $this->get_plugin()->get_id() . '_before_my_payment_method_table', $this );
 
 			echo $this->get_table_html();
 
+			/**
+			 * After My Payment Methods Table Action.
+			 *
+			 * Fired after the My Payment Methods table HTML is rendered.
+			 *
+			 * @since 4.0.0
+			 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+			 */
 			do_action( 'wc_' . $this->get_plugin()->get_id() . '_after_my_payment_method_table', $this );
 
 		} else {
@@ -653,6 +669,15 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 				// custom actions
 				default:
+
+					/**
+					 * My Payment Methods Custom Action.
+					 *
+					 * Fired when a custom action is requested for a payment method (e.g. other than delete/make default)
+					 *
+					 * @since 4.0.0
+					 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+					 */
 					do_action( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_action_' . sanitize_title( $action ), $this );
 				break;
 			}

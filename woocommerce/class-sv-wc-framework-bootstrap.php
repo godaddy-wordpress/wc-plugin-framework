@@ -178,7 +178,15 @@ class SV_WC_Framework_Bootstrap {
 			add_action( 'admin_notices', array( $this, 'render_update_notices' ) );
 		}
 
-		// frameworked plugins can hook onto this action rather than 'plugins_loaded'/'woocommerce_loaded' when necessary
+		/**
+		 * WC Plugin Framework Plugins Loaded Action.
+		 *
+		 * Fired when all frameworked plugins are loaded. Frameworked plugins can
+		 * hook into this action rather than `plugins_loaded`/`woocommerce_loaded`
+		 * as needed.
+		 *
+		 * @since 2.0.0
+		 */
 		do_action( 'sv_wc_framework_plugins_loaded' );
 	}
 

@@ -713,6 +713,13 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 				wc_enqueue_js( $javascript );
 
+				/**
+				 * WC Select2 Ajax Rendered Action.
+				 *
+				 * Fired when an Ajax select2 is rendered.
+				 *
+				 * @since 3.1.0
+				 */
 				do_action( 'sv_wc_select2_ajax_rendered' );
 			}
 		}
