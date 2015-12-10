@@ -1962,7 +1962,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		SV_WC_Helper::wc_add_notice( $result['message'], $result['success'] ? 'success' : 'error' );
 
 		// redirect to my account on success, or back to Add Payment Method screen on failure so user can try again
-		wp_safe_redirect( $result['success'] ? SV_WC_Plugin_Compatibility::wc_get_page_permalink( 'myaccount' ) : wc_get_endpoint_url( 'add-payment-method' ) );
+		wp_safe_redirect( $result['success'] ? wc_get_page_permalink( 'myaccount' ) : wc_get_endpoint_url( 'add-payment-method' ) );
 
 		exit();
 	}
