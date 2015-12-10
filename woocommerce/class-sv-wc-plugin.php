@@ -858,6 +858,24 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Helper method to install default settings for a plugin
+	 *
+	 * @since 4.2.0-beta
+	 * @param array $settings array of settings in format required by WC_Admin_Settings
+	 */
+	public function install_default_settings( array $settings ) {
+
+		foreach ( $settings as $setting ) {
+
+			if ( isset( $setting['id'] ) && isset( $setting['default'] ) ) {
+
+				update_option( $setting['id'], $setting['default'] );
+			}
+		}
+	}
+
+
+	/**
 	 * Plugin install method.  Perform any installation tasks here
 	 *
 	 * @since 2.0.0
