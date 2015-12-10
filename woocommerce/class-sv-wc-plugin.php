@@ -119,6 +119,10 @@ abstract class SV_WC_Plugin {
 
 			// defer until WP/WC has fully loaded
 			add_action( 'wp_loaded', array( $this, 'do_install' ) );
+
+			// register activation/deactivation hooks for convenience
+			register_activation_hook(   $this->get_file(), array( $this, 'activate' ) );
+			register_deactivation_hook( $this->get_file(), array( $this, 'deactivate' ) );
 		}
 
 		// automatically log HTTP requests from SV_WC_API_Base
@@ -870,6 +874,27 @@ abstract class SV_WC_Plugin {
 	 * @param string $installed_version the currently installed version
 	 */
 	protected function upgrade( $installed_version ) {
+		// stub
+	}
+
+
+	/**
+	 * Plugin activated method. Perform any activation tasks here.
+	 * Note that this _does not_ run during upgrades.
+	 *
+	 * @since 4.2.0-beta
+	 */
+	public function activate() {
+		// stub
+	}
+
+
+	/**
+	 * Plugin deactivation method. Perform any deactivation tasks here.
+	 *
+	 * @since 4.2.0-beta
+	 */
+	public function deactivate() {
 		// stub
 	}
 
