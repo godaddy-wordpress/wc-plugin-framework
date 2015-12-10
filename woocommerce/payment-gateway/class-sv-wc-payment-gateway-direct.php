@@ -533,7 +533,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// paying with tokenized payment method (we've already verified that this token exists in the validate_fields method)
 			$token = $this->get_payment_token( $order->get_user_id(), SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) );
 
-			$order->payment->token          = $token->get_token();
+			$order->payment->token          = $token->get_id();
 			$order->payment->account_number = $token->get_last_four();
 			$order->payment->last_four      = $token->get_last_four();
 
@@ -1152,7 +1152,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// add the token to the order object for processing
 			$token                 = $response->get_payment_token();
-			$order->payment->token = $token->get_token();
+			$order->payment->token = $token->get_id();
 
 			// for credit card transactions add the card type, if known (some gateways return the credit card type as part of the response, others may require it as part of the request, and still others it may never be known)
 			if ( $this->is_credit_card_gateway() && $token->get_card_type() ) {
@@ -1363,8 +1363,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				}
 
 				// mark the corresponding token from the API as the default one
-				if ( $default_token && $default_token->is_default() && isset( $this->tokens[ $environment_id ][ $user_id ][ $default_token->get_token() ] ) ) {
-					$this->tokens[ $environment_id ][ $user_id ][ $default_token->get_token() ]->set_default( true );
+				if ( $default_token && $default_token->is_default() && isset( $this->tokens[ $environment_id ][ $user_id ][ $default_token->get_id() ] ) ) {
+					$this->tokens[ $environment_id ][ $user_id ][ $default_token->get_id() ]->set_default( true );
 				}
 
 				// merge local token data with remote data, sometimes local data is more robust
@@ -1421,7 +1421,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		foreach ( $remote_tokens as &$remote_token ) {
 
-			$remote_token_id = $remote_token->get_token();
+			$remote_token_id = $remote_token->get_id();
 
 			// bail if the remote token doesn't exist locally
 			if ( ! isset( $local_tokens[ $remote_token_id ] ) ) {
@@ -1618,7 +1618,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		if ( is_object( $token ) ) {
-			$token = $token->get_token();
+			$token = $token->get_id();
 		}
 
 		// this is sort of a weird edge case: verifying a token exists for a guest customer
@@ -1664,7 +1664,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		// add the new token
-		$tokens[ $token->get_token() ] = $token;
+		$tokens[ $token->get_id() ] = $token;
 
 		// persist the updated tokens
 		return $this->update_payment_tokens( $user_id, $tokens, $environment_id );
@@ -1704,7 +1704,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			try {
 
-				$response = $this->get_api()->remove_tokenized_payment_method( $token->get_token(), $this->get_customer_id( $user_id, array( 'environment_id' => $environment_id ) ) );
+				$response = $this->get_api()->remove_tokenized_payment_method( $token->get_id(), $this->get_customer_id( $user_id, array( 'environment_id' => $environment_id ) ) );
 
 				if ( ! $response->transaction_approved() ) {
 					return false;
@@ -1721,7 +1721,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// get existing tokens
 		$tokens = $this->get_payment_tokens( $user_id, array( 'environment_id' => $environment_id ) );
 
-		unset( $tokens[ $token->get_token() ] );
+		unset( $tokens[ $token->get_id() ] );
 
 		// if the deleted card was the default one, make another one the new default
 		if ( $token->is_default() ) {
@@ -1770,7 +1770,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// mark $token as the only active
 		foreach ( $tokens as $key => $_token ) {
 
-			if ( $token->get_token() == $_token->get_token() ) {
+			if ( $token->get_id() == $_token->get_id() ) {
 				$tokens[ $key ]->set_default( true );
 			} else {
 				$tokens[ $key ]->set_default( false );

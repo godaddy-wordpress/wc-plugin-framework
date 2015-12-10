@@ -121,7 +121,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				}
 
 				// set token
-				$tokens[ $token->get_token() ] = $token;
+				$tokens[ $token->get_id() ] = $token;
 
 				// don't force new payment method if an existing token is default
 				if ( $token->is_default() ) {
@@ -553,12 +553,12 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		// input
 		$html = sprintf( '<input type="radio" id="wc-%1$s-payment-token-%2$s" name="wc-%1$s-payment-token" class="js-sv-wc-payment-gateway-payment-token js-wc-%1$s-payment-token" style="width:auto;" value="%2$s" %3$s/>',
 			esc_attr( $this->get_gateway()->get_id_dasherized() ),
-			esc_attr( $token->get_token() ),
+			esc_attr( $token->get_id() ),
 			checked( $token->is_default(), true, false )
 		);
 
 		// label
-		$html .= sprintf( '<label class="sv-wc-payment-gateway-payment-form-saved-payment-method" for="wc-%s-payment-token-%s">', esc_attr( $this->get_gateway()->get_id_dasherized() ), esc_attr( $token->get_token() ) );
+		$html .= sprintf( '<label class="sv-wc-payment-gateway-payment-form-saved-payment-method" for="wc-%s-payment-token-%s">', esc_attr( $this->get_gateway()->get_id_dasherized() ), esc_attr( $token->get_id() ) );
 
 		// title
 		$html .= $this->get_saved_payment_method_title( $token );

@@ -128,17 +128,17 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			foreach ( $gateway->get_payment_tokens( get_current_user_id() ) as $token ) {
 
 				// prevent duplicates, as some gateways will return all tokens in each each gateway
-				if ( isset( $this->credit_card_tokens[ $token->get_token() ] ) ||  isset( $this->echeck_tokens[ $token->get_token() ] ) ) {
+				if ( isset( $this->credit_card_tokens[ $token->get_id() ] ) ||  isset( $this->echeck_tokens[ $token->get_id() ] ) ) {
 					continue;
 				}
 
 				if ( $token->is_credit_card() ) {
 
-					$this->credit_card_tokens[ $token->get_token() ] = $token;
+					$this->credit_card_tokens[ $token->get_id() ] = $token;
 
 				} elseif ( $token->is_check() ) {
 
-					$this->echeck_tokens[ $token->get_token() ] = $token;
+					$this->echeck_tokens[ $token->get_id() ] = $token;
 				}
 			}
 		}
@@ -391,7 +391,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			$actions[] = array(
 				'url'   => wp_nonce_url( add_query_arg( array(
-					'wc-' . $this->get_plugin()->get_id_dasherized() . '-token'  => $token->get_token(),
+					'wc-' . $this->get_plugin()->get_id_dasherized() . '-token'  => $token->get_id(),
 					'wc-' . $this->get_plugin()->get_id_dasherized() . '-action' => 'make-default'
 				) ), 'wc-' . $this->get_plugin()->get_id_dasherized() . '-token-action' ),
 				'class' => array( 'make-payment-method-default' ),
@@ -403,7 +403,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		// delete
 		$actions[] = array(
 			'url'   => wp_nonce_url( add_query_arg( array(
-				'wc-' . $this->get_plugin()->get_id_dasherized() . '-token'  => $token->get_token(),
+				'wc-' . $this->get_plugin()->get_id_dasherized() . '-token'  => $token->get_id(),
 				'wc-' . $this->get_plugin()->get_id_dasherized() . '-action' => 'delete'
 			) ), 'wc-' . $this->get_plugin()->get_id_dasherized() . '-token-action' ),
 			'class' => array( 'delete-payment-method' ),

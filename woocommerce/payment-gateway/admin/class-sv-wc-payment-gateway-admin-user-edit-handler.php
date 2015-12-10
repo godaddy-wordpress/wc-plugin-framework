@@ -317,8 +317,8 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 
 										?>
 											<li>
-												<?php echo $token->get_token(); ?> (<?php /* translators: %1$s - credit card type (mastercard, visa, ...), %2$s - last 4 numbers of the card, %3$s - card expiry date */ printf( '%1$s ending in %2$s expiring %3$s', $token->get_type_full(), $token->get_last_four(), $token->get_exp_month() . '/' . $token->get_exp_year() ); echo ( $token->is_default() ? ' <strong>' . esc_html__( 'Default card', 'woocommerce-plugin-framework' ) . '</strong>' : '' ); ?>)
-												<a href="#" class="js-sv-wc-payment-token-delete" data-payment_token="<?php echo $token->get_token(); ?>"><?php esc_html_e( 'Delete', 'woocommerce-plugin-framework' ); ?></a>
+												<?php echo esc_html( $token->get_id() ); ?> (<?php /* translators: %1$s - credit card type (mastercard, visa, ...), %2$s - last 4 numbers of the card, %3$s - card expiry date */ printf( '%1$s ending in %2$s expiring %3$s', $token->get_type_full(), $token->get_last_four(), $token->get_exp_month() . '/' . $token->get_exp_year() ); echo ( $token->is_default() ? ' <strong>' . esc_html__( 'Default card', 'woocommerce-plugin-framework' ) . '</strong>' : '' ); ?>)
+												<a href="#" class="js-sv-wc-payment-token-delete" data-payment_token="<?php echo esc_attr( $token->get_id() ); ?>"><?php esc_html_e( 'Delete', 'woocommerce-plugin-framework' ); ?></a>
 											</li>
 										<?php
 
