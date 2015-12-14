@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2015, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -157,7 +157,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Load plugin & framework text domains
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.2.0-beta
 	 */
 	public function load_translations() {
 
