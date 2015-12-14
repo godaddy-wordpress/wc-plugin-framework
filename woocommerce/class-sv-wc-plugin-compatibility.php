@@ -69,6 +69,31 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Backports wc_help_tip() to WC 2.4/2.3
+	 *
+	 * @link https://github.com/woothemes/woocommerce/pull/9417
+	 *
+	 * @since 4.2.0-beta
+	 * @param string $tip help tip content, HTML allowed if $has_html is true
+	 * @param bool $has_html false by default, true to indicate tip content has HTML
+	 * @return string help tip HTML, a <span> in WC 2.5, <img> in WC 2.4/2.3
+	 */
+	public static function wc_help_tip( $tip, $has_html = false ) {
+
+		if ( self::is_wc_version_gte_2_5() ) {
+
+			return wc_help_tip( $tip, $has_html );
+
+		} else {
+
+			$tip = $has_html ? wc_sanitize_tooltip( $tip ) : esc_attr( $tip );
+
+			return sprintf( '<img class="help_tip" data-tip="%1$s" src="%2$s" height="16" width="16" />', $tip, esc_url( WC()->plugin_url() ) . '/assets/images/help.png' );
+		}
+	}
+
+
+	/**
 	 * Helper method to get the version of the currently installed WooCommerce
 	 *
 	 * @since 3.0.0
