@@ -355,7 +355,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 		$defaults = $this->get_gateway()->get_payment_method_defaults();
 
-		$check_hint = sprintf( '<img title="%s" class="js-sv-wc-payment-gateway-echeck-form-check-hint" src="%s" width="16" height="16" />', esc_attr__( 'Where do I find this?', 'woocommerce-plugin-framework' ), esc_url( WC()->plugin_url() . '/assets/images/help.png' ) );
+		$check_hint = SV_WC_Plugin_Compatibility::wc_help_tip( __( 'Where do I find this?', 'woocommerce-plugin-framework' ) );
 
 		$fields = array(
 			'routing-number' => array(
