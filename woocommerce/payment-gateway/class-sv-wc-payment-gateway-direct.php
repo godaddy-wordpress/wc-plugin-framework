@@ -467,6 +467,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			$this->mark_order_as_failed( $order, $e->getMessage() );
 
+			return array(
+				'result'  => 'failure',
+				'message' => $e->getMessage(),
+			);
 		}
 
 		return $default;
