@@ -2279,7 +2279,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			'type'     => 'multiselect',
 			'desc_tip' => esc_html__( 'Select which card types you accept.', 'woocommerce-plugin-framework' ),
 			'default'  => array_keys( $this->get_available_card_types() ),
-			'class'    => 'wc-enhanced-select chosen_select',
+			'class'    => 'wc-enhanced-select',
 			'css'      => 'width: 350px;',
 			'options'  => $this->get_available_card_types(),
 		);
