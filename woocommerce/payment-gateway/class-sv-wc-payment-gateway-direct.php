@@ -626,7 +626,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// add capture info
 		$order->capture = new stdClass();
 		$order->capture->amount = SV_WC_Helper::number_format( $order->get_total() );
-		// translators: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card.
+		/* translators: Placeholders: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card. */
 		$order->capture->description = sprintf( esc_html__( '%1$s - Capture for Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( get_bloginfo( 'name' ) ), $order->get_order_number() );
 		$order->capture->trans_id = $this->get_order_meta( $order->id, 'trans_id' );
 
@@ -666,12 +666,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$last_four = substr( $order->payment->account_number, -4 );
 
 			// check order note. there may not be an account_type available, but that's fine
-			// translators: %1$s - payment method title, %2$s - payment account type (savings/checking) (may or may not be available), %3$s - last four digits of the account
+			/* translators: Placeholders: %1$s - payment method title, %2$s - payment account type (savings/checking) (may or may not be available), %3$s - last four digits of the account */
 			$message = sprintf( esc_html__( '%1$s Check Transaction Approved: %2$s account ending in %3$s', 'woocommerce-plugin-framework' ), $this->get_method_title(), $order->payment->account_type, $last_four );
 
 			// optional check number
 			if ( ! empty( $order->payment->check_number ) ) {
-				// translators: %s - check number
+				/* translators: Placeholders: %s - check number */
 				$message .= '. ' . sprintf( esc_html__( 'Check number %s', 'woocommerce-plugin-framework' ), $order->payment->check_number );
 			}
 
@@ -739,7 +739,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// credit card order note
 			$message = sprintf(
-				// translators: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...), %5$s - last four digits of the card, %6$s - expiry date
+				/* translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...), %5$s - last four digits of the card, %6$s - expiry date */
 				esc_html__( '%1$s %2$s %3$s Approved: %4$s ending in %5$s (expires %6$s)', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
@@ -751,7 +751,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// adds the transaction id (if any) to the order note
 			if ( $response->get_transaction_id() ) {
-				// translators: %s - transaction ID
+				/* translators: Placeholders: %s - transaction ID */
 				$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 			}
 
@@ -813,7 +813,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 						// transaction has already been successful, but we've encountered an issue with the post-tokenization, add an order note to that effect and continue on
 						$message = sprintf(
-							// translators: %s - failure message
+							/* translators: Placeholders: %s - failure message */
 							esc_html__( 'Tokenization Request Failed: %s', 'woocommerce-plugin-framework' ),
 							$e->getMessage()
 						);
@@ -824,7 +824,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 						// transaction has already been successful, but we've encountered an issue with the post-tokenization, add an order note to that effect and continue on
 						$message = sprintf(
-							// translators: %1$s - payment method title, %2$s - failure message
+							/* translators: Placeholders: %1$s - payment method title, %2$s - failure message */
 							esc_html__( '%1$s Tokenization Request Failed: %2$s', 'woocommerce-plugin-framework' ),
 							$this->get_method_title(),
 							$e->getMessage()
@@ -845,7 +845,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// TODO: consider checking whether the response *was* an authorization, rather than blanket-assuming it was because of the settings.  There are times when an auth will be used rather than charge, ie when performing in-plugin AVS handling (moneris)
 			if ( $response->transaction_held() || ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
 				// TODO: need to make this more flexible, and not force the message to 'Authorization only transaction' for auth transactions (re moneris efraud handling)
-				// translators: This is a message describing that the transaction in question only performed a credit card authorization and did not capture any funds.
+				/* translators: This is a message describing that the transaction in question only performed a credit card authorization and did not capture any funds. */
 				$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? esc_html__( 'Authorization only transaction', 'woocommerce-plugin-framework' ) : $response->get_status_message(), $response );
 			}
 
@@ -877,7 +877,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( $response->transaction_approved() ) {
 
 				$message = sprintf(
-					// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount. Definitions: Capture, as in capture funds from a credit card.
+					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount. Definitions: Capture, as in capture funds from a credit card. */
 					esc_html__( '%1$s Capture of %2$s Approved', 'woocommerce-plugin-framework' ),
 					$this->get_method_title(),
 					get_woocommerce_currency_symbol() . wc_format_decimal( $order->capture_total )
@@ -905,7 +905,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			} else {
 
 				$message = sprintf(
-					// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount, %3$s - transaction status message. Definitions: Capture, as in capture funds from a credit card.
+					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount, %3$s - transaction status message. Definitions: Capture, as in capture funds from a credit card. */
 					esc_html__( '%1$s Capture Failed: %2$s - %3$s', 'woocommerce-plugin-framework' ),
 					$this->get_method_title(),
 					$response->get_status_code(),
@@ -921,7 +921,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			$message = sprintf(
-				// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - failure message. Definitions: "capture" as in capturing funds from a credit card.
+				/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - failure message. Definitions: "capture" as in capturing funds from a credit card. */
 				esc_html__( '%1$s Capture Failed: %2$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$e->getMessage()
@@ -1270,13 +1270,13 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} else {
 
 			if ( $response->get_status_code() && $response->get_status_message() ) {
-				// translators: %1$s - payment request response status code, %2$s - payment request response status message
+				/* translators: Placeholders: %1$s - payment request response status code, %2$s - payment request response status message */
 				$message = sprintf( esc_html__( 'Status code %1$s: %2$s', 'woocommerce-plugin-framework' ), $response->get_status_code(), $response->get_status_message() );
 			} elseif ( $response->get_status_code() ) {
-				// translators: %s - payment request response status code
+				/* translators: Placeholders: %s - payment request response status code */
 				$message = sprintf( esc_html__( 'Status code: %s', 'woocommerce-plugin-framework' ), $response->get_status_code() );
 			} elseif ( $response->get_status_message() ) {
-				// translators: %s - payment request response status message
+				/* translators: Placeholders: %s - payment request response status message */
 				$message = sprintf( esc_html__( 'Status message: %s', 'woocommerce-plugin-framework' ), $response->get_status_message() );
 			} else {
 				$message = esc_html__( 'Unknown Error', 'woocommerce-plugin-framework' );
@@ -1309,7 +1309,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// order note based on gateway type
 		if ( $this->is_credit_card_gateway() ) {
 
-			// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - payment method name (mastercard, bank account, etc), %3$s - last four digits of the card/account, %4$s - card/account expiry date
+			/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - payment method name (mastercard, bank account, etc), %3$s - last four digits of the card/account, %4$s - card/account expiry date */
 			$message = sprintf( __( '%1$s Payment Method Saved: %2$s ending in %3$s (expires %4$s)', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$token->get_type_full(),
@@ -1320,7 +1320,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} elseif ( $this->is_echeck_gateway() ) {
 
 			// account type (checking/savings) may or may not be available, which is fine
-			// translators: %1$s - payment gateway title (such as CyberSouce, NETbilling, etc), %2$s - account type (checking/savings - may or may not be available), %3$s - last four digits of the account
+			/* translators: Placeholders: %1$s - payment gateway title (such as CyberSouce, NETbilling, etc), %2$s - account type (checking/savings - may or may not be available), %3$s - last four digits of the account */
 			$message = sprintf( __( '%1$s eCheck Payment Method Saved: %2$s account ending in %3$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$token->get_account_type(),
@@ -1957,7 +1957,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			$result = array(
-				// translators: %s - failure message. Payment method as in a specific credit card, e-check or bank account
+				/* translators: Placeholders: %s - failure message. Payment method as in a specific credit card, e-check or bank account */
 				'message' => sprintf( esc_html__( 'Oops, adding your new payment method failed: %s', 'woocommerce-plugin-framework' ), $e->getMessage() ),
 				'success' => false,
 			);
@@ -1993,7 +1993,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// order note based on gateway type
 			if ( $this->is_credit_card_gateway() ) {
 
-				// translators: Payment method as in a specific credit card. Placeholders: %1$s - card type (visa, mastercard, ...), %2$s - last four digits of the card, %3$s - card expiry date
+				/* translators: Payment method as in a specific credit card. Placeholders: %1$s - card type (visa, mastercard, ...), %2$s - last four digits of the card, %3$s - card expiry date */
 				$message = sprintf( esc_html__( 'Nice! New payment method added: %1$s ending in %2$s (expires %3$s)', 'woocommerce-plugin-framework' ),
 					$token->get_type_full(),
 					$token->get_last_four(),
@@ -2003,14 +2003,14 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			} elseif ( $this->is_echeck_gateway() ) {
 
 				// account type (checking/savings) may or may not be available, which is fine
-				// translators: Payment method as in a specific e-check account. Placeholders: %1$s - account type (checking/savings), %2$s - last four digits of the account
+				/* translators: Payment method as in a specific e-check account. Placeholders: %1$s - account type (checking/savings), %2$s - last four digits of the account */
 				$message = sprintf( esc_html__( 'Nice! New payment method added: %1$s account ending in %2$s', 'woocommerce-plugin-framework' ),
 					$token->get_account_type(),
 					$token->get_last_four()
 				);
 
 			} else {
-				// translators: Payment method as in a specific credit card, e-check or bank account
+				/* translators: Payment method as in a specific credit card, e-check or bank account */
 				$message = esc_html__( 'Nice! New payment method added.', 'woocommerce-plugin-framework' );
 			}
 
@@ -2095,7 +2095,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// other default info
 		$order->customer_id = $this->get_customer_id( $order->customer_user );
-		// translators: %1$s - site title, %2$s - customer email. Payment method as in a specific credit card, e-check or bank account
+		/* translators: Placeholders: %1$s - site title, %2$s - customer email. Payment method as in a specific credit card, e-check or bank account */
 		$order->description = sprintf( esc_html__( '%1$s - Add Payment Method for %2$s', 'woocommerce-plugin-framework' ), sanitize_text_field( get_bloginfo( 'name' ) ), $order->billing_email );
 
 		// force zero amount

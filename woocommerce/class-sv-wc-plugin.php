@@ -139,7 +139,7 @@ abstract class SV_WC_Plugin {
 	 * @since 3.1.0
 	 */
 	public function __clone() {
-		// translators: %s - plugin name
+		/* translators: Placeholders: %s - plugin name */
 		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot clone instances of %s.', 'woocommerce-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
 	}
 
@@ -149,7 +149,7 @@ abstract class SV_WC_Plugin {
 	 * @since 3.1.0
 	 */
 	public function __wakeup() {
-		// translators: %s - plugin name
+		/* translators: Placeholders: %s - plugin name */
 		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot unserialize instances of %s.', 'woocommerce-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
 	}
 
@@ -277,7 +277,7 @@ abstract class SV_WC_Plugin {
 		if ( count( $missing_extensions ) > 0 ) {
 
 			$message = sprintf(
-				// translators: %1$s - plugin name, %2$s - a PHP extension/comma-separated list of PHP extensions
+				/* translators: Placeholders: %1$s - plugin name, %2$s - a PHP extension/comma-separated list of PHP extensions */
 				_n(
 					'%1$s requires the %2$s PHP extension to function. Contact your host or server administrator to configure and install the missing extension.',
 					'%1$s requires the following PHP extensions to function: %2$s. Contact your host or server administrator to configure and install the missing extensions.',
@@ -298,7 +298,7 @@ abstract class SV_WC_Plugin {
 		if ( count( $missing_functions ) > 0 ) {
 
 			$message = sprintf(
-				// translators: %1$s - plugin name, %2$s - a PHP function/comma-separated list of PHP functions
+				/* translators: Placeholders: %1$s - plugin name, %2$s - a PHP function/comma-separated list of PHP functions */
 				_n(
 					'%1$s requires the %2$s PHP function to exist.  Contact your host or server administrator to configure and install the missing function.',
 					'%1$s requires the following PHP functions to exist: %2$s.  Contact your host or server administrator to configure and install the missing functions.',
@@ -334,7 +334,7 @@ abstract class SV_WC_Plugin {
 
 		// documentation url if any
 		if ( $this->get_documentation_url() ) {
-			// translators: Docs as in Documentation
+			/* translators: Docs as in Documentation */
 			$custom_actions['docs'] = sprintf( '<a href="%s">%s</a>', $this->get_documentation_url(), esc_html__( 'Docs', 'woocommerce-plugin-framework' ) );
 		}
 

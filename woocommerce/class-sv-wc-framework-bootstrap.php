@@ -269,8 +269,9 @@ class SV_WC_Framework_Bootstrap {
 			echo '<p>' .
 				sprintf(
 					count( $this->incompatible_framework_plugins ) > 1
-						// translators: %1$s - <a> tag, %2$s - </a> tag, %3$s - <em> tag, %4$s - </em> tag, %5$s - <a> tag, %6$s - </a> tag
+						/* translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag, %3$s - <em> tag, %4$s - </em> tag, %5$s - <a> tag, %6$s - </a> tag */
 						? esc_html__( 'To reactivate these plugins, please %1$supdate now (recommended)%2$s %3$sor%4$s %5$sdeactivate the following%6$s:', 'woocommerce-plugin-framework' )
+						/* translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag, %3$s - <em> tag, %4$s - </em> tag, %5$s - <a> tag, %6$s - </a> tag */
 						: esc_html__( 'To reactivate this plugin, please %1$supdate now (recommended)%2$s %3$sor%4$s %5$sdeactivate the following%6$s:', 'woocommerce-plugin-framework' ),
 					'<a href="' . admin_url( 'update-core.php' ) . '">', '</a>',
 					'<em>', '</em>',
@@ -291,11 +292,11 @@ class SV_WC_Framework_Bootstrap {
 
 			foreach ( $this->incompatible_wc_version_plugins as $plugin ) {
 
-				// translators: %1$s - plugin name, %2$s - WooCommerce version number
+				/* translators: Placeholders: %1$s - plugin name, %2$s - WooCommerce version number */
 				echo '<li>' . sprintf( esc_html__( '%1$s requires WooCommerce %2$s or newer', 'woocommerce-plugin-framework' ), $plugin['plugin_name'], $plugin['args']['minimum_wc_version'] ) . '</li>';
 			}
 
-			// translators: %1$s - <a> tag, %2$s - </a> tag
+			/* translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag */
 			echo '</ul><p>' . printf( esc_html__( 'Please %1$supdate WooCommerce%2$s', 'woocommerce-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
 		}
 
