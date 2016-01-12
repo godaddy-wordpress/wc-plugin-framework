@@ -236,17 +236,48 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/** My Payment Methods methods ***********************************/
 
 
+	/**
+	 * Instantiates the My Payment Methods table class instance when a user is
+	 * logged in on an account page and tokenization is enabled for at least
+	 * one of the active gateways
+	 *
+	 * @since 4.0.0
+	 */
 	public function maybe_init_my_payment_methods() {
 
-		if ( is_account_page() && is_user_logged_in() ) {
+		if ( is_account_page() && is_user_logged_in() && $this->tokenization_enabled() ) {
 
 			$this->my_payment_methods = $this->get_my_payment_methods_instance();
 		}
 	}
 
+
 	/**
+	 * Returns true if tokenization is supported and enabled for at least one
+	 * active gateway
 	 *
-	 * @return SV_WC_Payment_Gateway_My_Payment_Methods
+	 * @since 4.2.0-beta
+	 * @return bool
+	 */
+	public function tokenization_enabled() {
+
+		foreach ( $this->get_gateways() as $gateway ) {
+
+			if ( $gateway->is_enabled() && $gateway->supports_tokenization() && $gateway->tokenization_enabled() ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+	/**
+	 * Returns the My Payment Methods table instance, overrideable by concrete
+	 * gateway plugins to return a custom instance as needed
+	 *
+	 * @since 4.0.0
+	 * @return \SV_WC_Payment_Gateway_My_Payment_Methods
 	 */
 	protected function get_my_payment_methods_instance() {
 
