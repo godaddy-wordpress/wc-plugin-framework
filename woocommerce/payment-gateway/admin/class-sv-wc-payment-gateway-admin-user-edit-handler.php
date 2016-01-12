@@ -61,7 +61,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 		$this->plugin = $plugin;
 
 		// Admin
-		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+		if ( is_admin() && ! is_ajax() ) {
 
 			// show the editable customer profile fields
 			add_action( 'show_user_profile', array( $this, 'add_user_profile_fields' ) );

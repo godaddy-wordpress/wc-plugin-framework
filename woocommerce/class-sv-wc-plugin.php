@@ -105,7 +105,7 @@ abstract class SV_WC_Plugin {
 		$this->includes();
 
 		// Admin
-		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+		if ( is_admin() && ! is_ajax() ) {
 
 			// admin message handler
 			require_once( $this->get_framework_path() . '/class-sv-wp-admin-message-handler.php' );
