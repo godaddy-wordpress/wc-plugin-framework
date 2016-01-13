@@ -19,12 +19,13 @@ class Plugin extends Test_Case {
 
 	public function test_clone() {
 
-		\WP_Mock::wpFunction( '_doing_it_wrong', array(
+		Mock::wpFunction( '_doing_it_wrong', array(
 			'args' => array( '__clone', '*', '*' ),
 			'return' => function() { echo "foo"; },
 		) );
 
-		\WP_Mock::wpPassthruFunction( '__' );
+		Mock::wpPassthruFunction( '__' );
+		Mock::wpPassthruFunction( 'esc_html__' );
 
 		clone $this->plugin();
 
@@ -116,6 +117,9 @@ MSG;
 		Mock::wpFunction( 'has_action', array(
 			'return' => true,
 		) );
+
+		Mock::wpPassthruFunction( 'register_activation_hook' );
+		Mock::wpPassthruFunction( 'register_deactivation_hook' );
 
 		$args = array(
 			'mock',

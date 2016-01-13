@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2015, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -190,7 +190,7 @@ class SV_WC_Admin_Notice_Handler {
 		// dismissible link if the notice is dismissible and it's not always shown on the settings page, or we're on the settings page
 		if ( isset( $params['dismissible'] ) && $params['dismissible'] && ( ! isset( $params['always_show_on_settings'] ) || ! $params['always_show_on_settings'] || ! $this->get_plugin()->is_plugin_settings() ) ) {
 
-			// translators: this is an action that dismisses a message
+			/* translators: this is an action that dismisses a message */
 			$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-notice-dismiss" data-message-id="%s" style="float: right;">%s</a>', $message_id, esc_html__( 'Dismiss', 'woocommerce-plugin-framework' ) );
 		}
 

@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2015, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -360,7 +360,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		$fields = array(
 			'routing-number' => array(
 				'type'              => 'text',
-				// translators: e-check routing number, HTML form field label, https://en.wikipedia.org/wiki/Routing_transit_number
+				/* translators: e-check routing number, HTML form field label, https://en.wikipedia.org/wiki/Routing_transit_number */
 				'label'             => esc_html__( 'Routing Number', 'woocommerce-plugin-framework' ) . $check_hint,
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-routing-number',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-routing-number',
@@ -374,7 +374,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 			),
 			'account-number' => array(
 				'type'              => 'text',
-				// translators: e-check account number, HTML form field label
+				/* translators: e-check account number, HTML form field label */
 				'label'             => esc_html__( 'Account Number', 'woocommerce-plugin-framework' ) . $check_hint,
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
@@ -387,7 +387,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 			),
 			'account-type'   => array(
 				'type'              => 'select',
-				// translators: e-check account type, HTML form field label
+				/* translators: e-check account type, HTML form field label */
 				'label'             => esc_html__( 'Account Type', 'woocommerce-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-type',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-type',
@@ -395,9 +395,9 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				'class'             => array( 'form-row-wide' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-echeck-form-input js-sv-wc-payment-gateway-echeck-form-account-type' ),
 				'options'           => array(
-					// translators: http://www.investopedia.com/terms/c/checkingaccount.asp
+					/* translators: http://www.investopedia.com/terms/c/checkingaccount.asp  */
 					'checking' => esc_html_x( 'Checking', 'account type', 'woocommerce-plugin-framework' ),
-					// http://www.investopedia.com/terms/s/savingsaccount.asp
+					/* translators: http://www.investopedia.com/terms/s/savingsaccount.asp  */
 					'savings'  => esc_html_x( 'Savings',  'account type', 'woocommerce-plugin-framework' ),
 				),
 				'custom_attributes' => array(),
@@ -434,7 +434,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		}
 
 		if ( $this->get_gateway()->is_test_environment() ) {
-			// translators: Test mode refers to the current software environment
+			/* translators: Test mode refers to the current software environment */
 			echo '<p>' . esc_html__( 'TEST MODE ENABLED', 'woocommerce-plugin-framework' ) . '</p>';
 		}
 
@@ -530,8 +530,8 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * @param string $button_text button text
 		 */
 		$html = sprintf( '<a class="button" style="float:right;" href="%s">%s</a>',
-			esc_url( SV_WC_Plugin_Compatibility::wc_get_page_permalink( 'myaccount' ) . '#wc-' . $this->get_gateway()->get_plugin()->get_id_dasherized() . '-my-payment-methods' ),
-			// translators: Payment method as in a specific credit card, eCheck or bank account
+			esc_url( wc_get_page_permalink( 'myaccount' ) . '#wc-' . $this->get_gateway()->get_plugin()->get_id_dasherized() . '-my-payment-methods' ),
+			/* translators: Payment method as in a specific credit card, eCheck or bank account */
 			wp_kses_post( apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_manage_payment_methods_text', esc_html__( 'Manage Payment Methods', 'woocommerce-plugin-framework' ) ) )
 		);
 
@@ -616,14 +616,14 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		// add "ending in XXXX" if available
 		if ( $last_four ) {
 
-			// translators: %s - last four digits of card/account
+			/* translators: Placeholders: %s - last four digits of card/account */
 			$title .= '&nbsp;' . sprintf( esc_html__( 'ending in %s', 'woocommerce-plugin-framework' ), $last_four );
 		}
 
 		// add "(expires MM/YY)" if available
 		if ( $token->get_exp_month() && $token->get_exp_year() ) {
 
-			// translators: %s - expiry date
+			/* translators: Placeholders: %s - expiry date */
 			$title .= ' ' . sprintf( esc_html__( '(expires %s)', 'woocommerce-plugin-framework' ), $token->get_exp_date() );
 		}
 
@@ -704,7 +704,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				 * Allow actors to default the tokenize payment method checkbox state to
 				 * checked.
 				 *
-				 * @since 4.2.0-beta
+				 * @since 4.2.0
 				 * @param bool $checked default false, set to true to change the checkbox state to checked
 				 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 				 */
@@ -721,7 +721,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				 * @since 4.0.0
 				 * @param string $checkbox_text checkbox text
 				 */
-				// translators: account as in customer's account on the eCommerce site
+				/* translators: account as in customer's account on the eCommerce site */
 				$html .= sprintf( '<label for="wc-%s-tokenize-payment-method" style="display:inline;">%s</label>', $this->get_gateway()->get_id_dasherized(), apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_tokenize_payment_method_text', esc_html__( 'Securely Save to Account', 'woocommerce-plugin-framework' ) ) );
 				$html .= '</p><div class="clear"></div>';
 			}

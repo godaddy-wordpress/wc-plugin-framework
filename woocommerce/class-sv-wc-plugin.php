@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2015, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -34,13 +34,13 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 4.2.0-alpha
+ * @version 4.2.0
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '4.2.0-alpha';
+	const VERSION = '4.2.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -105,7 +105,7 @@ abstract class SV_WC_Plugin {
 		$this->includes();
 
 		// Admin
-		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+		if ( is_admin() && ! is_ajax() ) {
 
 			// admin message handler
 			require_once( $this->get_framework_path() . '/class-sv-wp-admin-message-handler.php' );
@@ -119,6 +119,10 @@ abstract class SV_WC_Plugin {
 
 			// defer until WP/WC has fully loaded
 			add_action( 'wp_loaded', array( $this, 'do_install' ) );
+
+			// register activation/deactivation hooks for convenience
+			register_activation_hook(   $this->get_file(), array( $this, 'activate' ) );
+			register_deactivation_hook( $this->get_file(), array( $this, 'deactivate' ) );
 		}
 
 		// automatically log HTTP requests from SV_WC_API_Base
@@ -135,7 +139,7 @@ abstract class SV_WC_Plugin {
 	 * @since 3.1.0
 	 */
 	public function __clone() {
-		// translators: %s - plugin name
+		/* translators: Placeholders: %s - plugin name */
 		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot clone instances of %s.', 'woocommerce-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
 	}
 
@@ -145,7 +149,7 @@ abstract class SV_WC_Plugin {
 	 * @since 3.1.0
 	 */
 	public function __wakeup() {
-		// translators: %s - plugin name
+		/* translators: Placeholders: %s - plugin name */
 		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot unserialize instances of %s.', 'woocommerce-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
 	}
 
@@ -153,7 +157,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Load plugin & framework text domains
 	 *
-	 * @since 4.0.0-beta
+	 * @since 4.2.0
 	 */
 	public function load_translations() {
 
@@ -273,7 +277,7 @@ abstract class SV_WC_Plugin {
 		if ( count( $missing_extensions ) > 0 ) {
 
 			$message = sprintf(
-				// translators: %1$s - plugin name, %2$s - a PHP extension/comma-separated list of PHP extensions
+				/* translators: Placeholders: %1$s - plugin name, %2$s - a PHP extension/comma-separated list of PHP extensions */
 				_n(
 					'%1$s requires the %2$s PHP extension to function. Contact your host or server administrator to configure and install the missing extension.',
 					'%1$s requires the following PHP extensions to function: %2$s. Contact your host or server administrator to configure and install the missing extensions.',
@@ -294,7 +298,7 @@ abstract class SV_WC_Plugin {
 		if ( count( $missing_functions ) > 0 ) {
 
 			$message = sprintf(
-				// translators: %1$s - plugin name, %2$s - a PHP function/comma-separated list of PHP functions
+				/* translators: Placeholders: %1$s - plugin name, %2$s - a PHP function/comma-separated list of PHP functions */
 				_n(
 					'%1$s requires the %2$s PHP function to exist.  Contact your host or server administrator to configure and install the missing function.',
 					'%1$s requires the following PHP functions to exist: %2$s.  Contact your host or server administrator to configure and install the missing functions.',
@@ -330,7 +334,7 @@ abstract class SV_WC_Plugin {
 
 		// documentation url if any
 		if ( $this->get_documentation_url() ) {
-			// translators: Docs as in Documentation
+			/* translators: Docs as in Documentation */
 			$custom_actions['docs'] = sprintf( '<a href="%s">%s</a>', $this->get_documentation_url(), esc_html__( 'Docs', 'woocommerce-plugin-framework' ) );
 		}
 
@@ -460,7 +464,22 @@ abstract class SV_WC_Plugin {
 		}
 
 		$this->logger->add( $log_id, $message );
+	}
 
+
+	/**
+	 * Require and instantiate a class
+	 *
+	 * @since 4.2.0
+	 * @param string $local_path path to class file in plugin, e.g. '/includes/class-wc-foo.php'
+	 * @param string $class_name class to instantiate
+	 * @return object instantiated class instance
+	 */
+	public function load_class( $local_path, $class_name ) {
+
+		require_once( $this->get_plugin_path() . $local_path );
+
+		return new $class_name;
 	}
 
 
@@ -839,6 +858,24 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Helper method to install default settings for a plugin
+	 *
+	 * @since 4.2.0
+	 * @param array $settings array of settings in format required by WC_Admin_Settings
+	 */
+	public function install_default_settings( array $settings ) {
+
+		foreach ( $settings as $setting ) {
+
+			if ( isset( $setting['id'] ) && isset( $setting['default'] ) ) {
+
+				update_option( $setting['id'], $setting['default'] );
+			}
+		}
+	}
+
+
+	/**
 	 * Plugin install method.  Perform any installation tasks here
 	 *
 	 * @since 2.0.0
@@ -855,6 +892,27 @@ abstract class SV_WC_Plugin {
 	 * @param string $installed_version the currently installed version
 	 */
 	protected function upgrade( $installed_version ) {
+		// stub
+	}
+
+
+	/**
+	 * Plugin activated method. Perform any activation tasks here.
+	 * Note that this _does not_ run during upgrades.
+	 *
+	 * @since 4.2.0
+	 */
+	public function activate() {
+		// stub
+	}
+
+
+	/**
+	 * Plugin deactivation method. Perform any deactivation tasks here.
+	 *
+	 * @since 4.2.0
+	 */
+	public function deactivate() {
 		// stub
 	}
 

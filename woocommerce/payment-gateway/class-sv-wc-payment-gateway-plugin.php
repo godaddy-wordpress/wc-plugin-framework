@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2015, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -134,7 +134,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		}
 
 		// Admin
-		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+		if ( is_admin() && ! is_ajax() ) {
 
 			if ( $this->supports( self::FEATURE_CAPTURE_CHARGE ) ) {
 
@@ -169,15 +169,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function load_gateways( $gateways ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_3() ) {
-
-				$gateways = array_merge( $gateways, $this->get_gateways() );
-		} else {
-
-				$gateways = array_merge( $gateways, $this->get_gateway_class_names() );
-		}
-
-		return $gateways;
+		return array_merge( $gateways, $this->get_gateways() );
 	}
 
 
@@ -244,17 +236,48 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/** My Payment Methods methods ***********************************/
 
 
+	/**
+	 * Instantiates the My Payment Methods table class instance when a user is
+	 * logged in on an account page and tokenization is enabled for at least
+	 * one of the active gateways
+	 *
+	 * @since 4.0.0
+	 */
 	public function maybe_init_my_payment_methods() {
 
-		if ( is_account_page() && is_user_logged_in() ) {
+		if ( is_account_page() && is_user_logged_in() && $this->tokenization_enabled() ) {
 
 			$this->my_payment_methods = $this->get_my_payment_methods_instance();
 		}
 	}
 
+
 	/**
+	 * Returns true if tokenization is supported and enabled for at least one
+	 * active gateway
 	 *
-	 * @return SV_WC_Payment_Gateway_My_Payment_Methods
+	 * @since 4.2.0
+	 * @return bool
+	 */
+	public function tokenization_enabled() {
+
+		foreach ( $this->get_gateways() as $gateway ) {
+
+			if ( $gateway->is_enabled() && $gateway->supports_tokenization() && $gateway->tokenization_enabled() ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+	/**
+	 * Returns the My Payment Methods table instance, overrideable by concrete
+	 * gateway plugins to return a custom instance as needed
+	 *
+	 * @since 4.0.0
+	 * @return \SV_WC_Payment_Gateway_My_Payment_Methods
 	 */
 	protected function get_my_payment_methods_instance() {
 
@@ -361,7 +384,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 						// SSL check if gateway enabled/production mode
 						if ( 'no' === get_option( 'woocommerce_force_ssl_checkout' ) ) {
 
-							// translators: %s - plugin name
+							/* translators: Placeholders: %s - plugin name */
 							$message = sprintf( esc_html__( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", 'woocommerce-plugin-framework' ), '<strong>' . $this->get_plugin_name() . '</strong>' );
 
 							$this->get_admin_notice_handler()->add_admin_notice( $message, 'ssl-required' );
@@ -416,7 +439,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 			/* translators: [Plugin name] accepts payments in [currency/list of currencies] only */
 			$message = sprintf(
-				// translators: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
+				/* translators: Placeholders: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag */
 				_n(
 					'%1$s accepts payment in %2$s only. %3$sConfigure%4$s WooCommerce to accept %2$s to enable this gateway for checkout.',
 					'%1$s accepts payment in one of %2$s only. %3$sConfigure%4$s WooCommerce to accept one of %2$s to enable this gateway for checkout.',
@@ -457,7 +480,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				// subscriptions
 				if ( $this->is_subscriptions_active() && $gateway->is_enabled() && $tokenization_supported_but_not_enabled ) {
 
-					// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
+					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag */
 					$message = sprintf(
 						esc_html__( '%1$s is inactive for subscription transactions. Please %2$senable tokenization%3$s to activate %1$s for Subscriptions.', 'woocommerce-plugin-framework' ),
 						$gateway->get_method_title(),
@@ -472,7 +495,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				// pre-orders
 				if ( $this->is_pre_orders_active() && $gateway->is_enabled() && $tokenization_supported_but_not_enabled ) {
 
-					// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
+					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag */
 					$message = sprintf(
 						esc_html__( '%1$s is inactive for pre-order transactions. Please %2$senable tokenization%3$s to activate %1$s for Pre-Orders.', 'woocommerce-plugin-framework' ),
 						$gateway->get_method_title(),
@@ -712,7 +735,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function add_order_action_charge_action( $actions ) {
 
-		// translators: verb, as in "Capture credit card charge". Used when an amount has been pre-authorized before, but funds have not yet been captured (taken) from the card. Capturing the charge will take the money from the credit card and put it in the merchant's pockets.
+		/* translators: verb, as in "Capture credit card charge".
+		 Used when an amount has been pre-authorized before, but funds have not yet been captured (taken) from the card.
+		 Capturing the charge will take the money from the credit card and put it in the merchant's pockets. */
 		$actions[ 'wc_' . $this->get_id() . '_capture_charge' ] = esc_html__( 'Capture Charge', 'woocommerce-plugin-framework' );
 
 		return $actions;

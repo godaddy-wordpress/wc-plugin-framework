@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2015, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -207,7 +207,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 * @param string $message no methods text
 		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
-		// translators: Payment method as in a specific credit card, eCheck or bank account
+		/* translators: Payment method as in a specific credit card, eCheck or bank account */
 		$html = '<p>' . apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_no_payment_methods_text', esc_html__( 'You do not have any saved payment methods.', 'woocommerce-plugin-framework' ), $this ) . '</p>';
 
 		/**
@@ -244,7 +244,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 * @param string $message table heading text
 		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
-		// translators: Payment method as in a specific credit card, eCheck or bank account
+		/* translators: Payment method as in a specific credit card, eCheck or bank account */
 		$title = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_title', esc_html__( 'My Payment Methods', 'woocommerce-plugin-framework' ), $this );
 
 		$html = '<div class="sv-wc-payment-gateway-my-payment-methods-table-title">';
@@ -252,7 +252,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$html .= sprintf( '<h2 id="wc-%s-my-payment-methods">%s</h2>', $this->get_plugin()->get_id_dasherized(), esc_html( $title ) );
 
 		if ( $this->supports_add_payment_method() ) {
-			// translators: Payment method as in a specific credit card, e-check or bank account
+			/* translators: Payment method as in a specific credit card, e-check or bank account */
 			$html .= sprintf( '<a class="button sv-wc-payment-gateway-my-payment-methods-add-payment-method-button dashicons-before dashicons-plus-alt" href="%s">%s</a>', esc_url( wc_get_endpoint_url( 'add-payment-method' ) ), esc_html__( 'Add New Payment Method', 'woocommerce-plugin-framework' ) );
 		}
 
@@ -466,7 +466,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			$methods[] = array(
 				'title'   => $this->get_payment_method_title( $token ),
-				// translators: N/A is used in the context where an expiry date is not applicable (for example, a bank account - as opposed to a credit card)
+				/* translators: N/A is used in the context where an expiry date is not applicable (for example, a bank account - as opposed to a credit card) */
 				'expiry'  => $token->get_exp_month() && $token->get_exp_year() ? $token->get_exp_date() : esc_html__( 'N/A', 'woocommerce-plugin-framework' ),
 				'actions' => implode( '', $actions ),
 			);
@@ -513,7 +513,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 					'wc-' . $this->get_plugin()->get_id_dasherized() . '-action' => 'make-default'
 				) ), 'wc-' . $this->get_plugin()->get_id_dasherized() . '-token-action' ),
 				'class' => array( 'make-payment-method-default' ),
-				// translators: Set a payment method as the default option
+				/* translators: Set a payment method as the default option */
 				'name'  => esc_html__( 'Make Default', 'woocommerce-plugin-framework' )
 			);
 		}
@@ -575,7 +575,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		// add "ending in XXXX" if available
 		if ( $last_four ) {
 
-			// translators: %s - last four digits of a card/account
+			/* translators: %s - last four digits of a card/account */
 			$title .= '&nbsp;' . sprintf( esc_html__( 'ending in %s', 'woocommerce-plugin-framework' ), $last_four );
 		}
 
@@ -648,12 +648,12 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 					if ( ! $gateway->remove_payment_token( $user_id, $token ) ) {
 
-						// translators: Payment method as in a specific credit card, e-check or bank account
+						/* translators: Payment method as in a specific credit card, e-check or bank account */
 						SV_WC_Helper::wc_add_notice( esc_html__( 'Error removing payment method', 'woocommerce-plugin-framework' ), 'error' );
 
 					} else {
 
-						// translators: Payment method as in a specific credit card, e-check or bank account
+						/* translators: Payment method as in a specific credit card, e-check or bank account */
 						SV_WC_Helper::wc_add_notice( esc_html__( 'Payment method deleted.', 'woocommerce-plugin-framework' ) );
 					}
 
@@ -663,7 +663,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 				case 'make-default':
 					$gateway->set_default_payment_token( $user_id, $token );
 
-					// translators: Payment method as in a specific credit card, e-check or bank account
+					/* translators: Payment method as in a specific credit card, e-check or bank account */
 					SV_WC_Helper::wc_add_notice( esc_html__( 'Default payment method updated.', 'woocommerce-plugin-framework' ) );
 				break;
 
@@ -694,7 +694,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	protected function redirect_to_my_account() {
 
-		wp_redirect( SV_WC_Plugin_Compatibility::wc_get_page_permalink( 'myaccount' ) );
+		wp_redirect( wc_get_page_permalink( 'myaccount' ) );
 		exit;
 	}
 

@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2015, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -670,14 +670,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$this->form_fields['debug_mode'] = array(
 			'title'   => esc_html__( 'Debug Mode', 'woocommerce-plugin-framework' ),
 			'type'    => 'select',
-			// translators: %1$s - <a> tag, %2$s - </a> tag
+			/* translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag */
 			'desc'    => sprintf( esc_html__( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the %1$sdebug log%2$s', 'woocommerce-plugin-framework' ), '<a href="' . SV_WC_Helper::get_wc_log_file_url( $this->get_id() ) . '">', '</a>' ),
 			'default' => self::DEBUG_MODE_OFF,
 			'options' => array(
 				self::DEBUG_MODE_OFF      => esc_html__( 'Off', 'woocommerce-plugin-framework' ),
 				self::DEBUG_MODE_CHECKOUT => esc_html__( 'Show on Checkout Page', 'woocommerce-plugin-framework' ),
 				self::DEBUG_MODE_LOG      => esc_html__( 'Save to Log', 'woocommerce-plugin-framework' ),
-				// translators: show debugging information on both checkout page and in the log
+				/* translators: show debugging information on both checkout page and in the log */
 				self::DEBUG_MODE_BOTH     => esc_html__( 'Both', 'woocommerce-plugin-framework' )
 			),
 		);
@@ -737,7 +737,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function add_environment_form_fields( $form_fields ) {
 
 		$form_fields['environment'] = array(
-			// translators: environment as in a software environment (test/production)
+			/* translators: environment as in a software environment (test/production) */
 			'title'    => esc_html__( 'Environment', 'woocommerce-plugin-framework' ),
 			'type'     => 'select',
 			'default'  => key( $this->get_environments() ),  // default to first defined environment
@@ -789,7 +789,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		$form_fields['connection_settings'] = array(
-			'title' => esc_html__( 'Connection Settings', $this->text_domain ),
+			'title' => esc_html__( 'Connection Settings', 'woocommerce-plugin-framework' ),
 			'type'  => 'title',
 		);
 
@@ -1127,7 +1127,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// payment type (credit_card/check/etc)
 		$order->payment->type = str_replace( '-', '_', $this->get_payment_type() );
 
-		// translators: %1$s - site title, %2$s - order number
+		/* translators: Placeholders: %1$s - site title, %2$s - order number */
 		$order->description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() );
 
 		$order = $this->get_order_with_unique_transaction_ref( $order );
@@ -1260,7 +1260,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order->refund = new stdClass();
 		$order->refund->amount = number_format( $amount, 2, '.', '' );
 
-		// translators: %1$s - site title, %2$s - order number
+		/* translators: Placeholders: %1$s - site title, %2$s - order number */
 		$order->refund->reason = $reason ? $reason : sprintf( esc_html__( '%1$s - Refund for Order %2$s', 'woocommerce-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
 
 		// almost all gateways require the original transaction ID, so include it by default
@@ -1323,7 +1323,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function add_refund_order_note( WC_Order $order, $response ) {
 
 		$message = sprintf(
-			// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - a monetary amount
+			/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - a monetary amount */
 			esc_html__( '%1$s Refund in the amount of %2$s approved.', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
 			wc_price( $order->refund->amount, array( 'currency' => $order->get_order_currency() ) )
@@ -1350,7 +1350,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( $error_code ) {
 			$message = sprintf(
-				// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error code, %3$s - error message
+				/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error code, %3$s - error message */
 				esc_html__( '%1$s Refund Failed: %2$s - %3$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$error_code,
@@ -1358,7 +1358,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			);
 		} else {
 			$message = sprintf(
-				// translators: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error message
+				/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error message */
 				esc_html__( '%1$s Refund Failed: %2$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$error_message
@@ -1378,7 +1378,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function mark_order_as_refunded( $order ) {
 
-		// translators: %s - payment gateway title (such as Authorize.net, Braintree, etc)
+		/* translators: Placeholders: %s - payment gateway title (such as Authorize.net, Braintree, etc) */
 		$order_note = sprintf( esc_html__( '%s Order completely refunded.', 'woocommerce-plugin-framework' ), $this->get_method_title() );
 
 		// Mark order as refunded if not already set
@@ -1515,7 +1515,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( $error_code ) {
 			$message = sprintf(
-				// translators: %1$s - payment gateway title, %2$s - error code, %3$s - error message. Void as in to void an order.
+				/* translators: Placeholders: %1$s - payment gateway title, %2$s - error code, %3$s - error message. Void as in to void an order. */
 				esc_html__( '%1$s Void Failed: %2$s - %3$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$error_code,
@@ -1523,7 +1523,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			);
 		} else {
 			$message = sprintf(
-				// translators: %1$s - payment gateway title, %2$s - error message. Void as in to void an order.
+				/* translators: Placeholders: %1$s - payment gateway title, %2$s - error message. Void as in to void an order. */
 				esc_html__( '%1$s Void Failed: %2$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$error_message
@@ -1544,7 +1544,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	public function mark_order_as_voided( $order, $response ) {
 
 		$message = sprintf(
-			// translators: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order.
+			/* translators: Placeholders: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order. */
 			esc_html__( '%1$s Void in the amount of %2$s approved.', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
 			wc_price( $order->refund->amount, array( 'currency' => $order->get_order_currency() ) )
@@ -1672,13 +1672,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// build the order note with what data we have
 		if ( $response->get_status_code() && $response->get_status_message() ) {
-			// translators: %1$s - status code, %2$s - status message
+			/* translators: Placeholders: %1$s - status code, %2$s - status message */
 			$order_note = sprintf( esc_html__( 'Status code %1$s: %2$s', 'woocommerce-plugin-framework' ), $response->get_status_code(), $response->get_status_message() );
 		} elseif ( $response->get_status_code() ) {
-			// translators: %s - status code
+			/* translators: Placeholders: %s - status code */
 			$order_note = sprintf( esc_html__( 'Status code: %s', 'woocommerce-plugin-framework' ), $response->get_status_code() );
 		} elseif ( $response->get_status_message() ) {
-			// translators: %s - status message
+			/* translators: Placeholders; %s - status message */
 			$order_note = sprintf( esc_html__( 'Status message: %s', 'woocommerce-plugin-framework' ), $response->get_status_message() );
 		}
 
@@ -1794,7 +1794,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function mark_order_as_held( $order, $message, $response = null ) {
 
-		// translators: %1$s - payment gateway title, %2$s - message (probably reason for the transaction being held for review)
+		/* translators: Placeholders: %1$s - payment gateway title, %2$s - message (probably reason for the transaction being held for review) */
 		$order_note = sprintf( esc_html__( '%1$s Transaction Held for Review (%2$s)', 'woocommerce-plugin-framework' ), $this->get_method_title(), $message );
 
 		/**
@@ -1871,8 +1871,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function mark_order_as_failed( $order, $error_message, $response = null ) {
 
-		// translators: Order Note: [Payment method] Payment failed [error]
-		// translators: %1$s - payment gateway title, %2$s - error message
+		/* translators: Placeholders: %1$s - payment gateway title, %2$s - error message; e.g. Order Note: [Payment method] Payment failed [error] */
 		$order_note = sprintf( esc_html__( '%1$s Payment Failed (%2$s)', 'woocommerce-plugin-framework' ), $this->get_method_title(), $error_message );
 
 		// Mark order as failed if not already set, otherwise, make sure we add the order note so we can detect when someone fails to check out multiple times
@@ -1906,7 +1905,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function mark_order_as_cancelled( $order, $message, $response = null ) {
 
-		// translators: %1$s - payment gateway title, %2$s - message/error
+		/* translators: Placeholders: %1$s - payment gateway title, %2$s - message/error */
 		$order_note = sprintf( esc_html__( '%1$s Transaction Cancelled (%2$s)', 'woocommerce-plugin-framework' ), $this->get_method_title(), $message );
 
 		// Mark order as cancelled if not already set
@@ -2279,7 +2278,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			'type'     => 'multiselect',
 			'desc_tip' => esc_html__( 'Select which card types you accept.', 'woocommerce-plugin-framework' ),
 			'default'  => array_keys( $this->get_available_card_types() ),
-			'class'    => 'wc-enhanced-select chosen_select',
+			'class'    => 'wc-enhanced-select',
 			'css'      => 'width: 350px;',
 			'options'  => $this->get_available_card_types(),
 		);
@@ -2364,7 +2363,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		assert( $this->supports_tokenization() );
 
 		$form_fields['tokenization'] = array(
-			// translators: http://www.cybersource.com/products/payment_security/payment_tokenization/ and https://en.wikipedia.org/wiki/Tokenization_(data_security)
+			/* translators: http://www.cybersource.com/products/payment_security/payment_tokenization/ and https://en.wikipedia.org/wiki/Tokenization_(data_security) */
 			'title'   => esc_html__( 'Tokenization', 'woocommerce-plugin-framework' ),
 			'label'   => esc_html__( 'Allow customers to securely save their payment details for future checkout.', 'woocommerce-plugin-framework' ),
 			'type'    => 'checkbox',
@@ -2475,7 +2474,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// add debug message to woocommerce->errors/messages if checkout or both is enabled, the admin/Ajax check ensures capture charge transactions aren't logged as notices to the front end
-		if ( ( $this->debug_checkout() || ( 'error' === $type && $this->is_test_environment() ) ) && ( ! is_admin() || defined( 'DOING_AJAX' ) ) ) {
+		if ( ( $this->debug_checkout() || ( 'error' === $type && $this->is_test_environment() ) ) && ( ! is_admin() || is_ajax() ) ) {
 
 			if ( 'message' === $type ) {
 
@@ -2830,7 +2829,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// default set of environments consists of 'production'
 		if ( ! isset( $this->environments ) ) {
-			// translators: https://www.skyverge.com/for-translators-environments/
+			/* translators: https://www.skyverge.com/for-translators-environments/  */
 			$this->environments = array( self::ENVIRONMENT_PRODUCTION => esc_html_x( 'Production', 'software environment', 'woocommerce-plugin-framework' ) );
 		}
 

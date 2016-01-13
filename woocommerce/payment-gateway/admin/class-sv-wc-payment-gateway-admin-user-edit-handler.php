@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2015, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -61,7 +61,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 		$this->plugin = $plugin;
 
 		// Admin
-		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+		if ( is_admin() && ! is_ajax() ) {
 
 			// show the editable customer profile fields
 			add_action( 'show_user_profile', array( $this, 'add_user_profile_fields' ) );
@@ -120,7 +120,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 			$fields = ob_get_clean();
 
 			if ( $fields ) {
-				// translators: %s - payment gateway title
+				/* translators: Placeholders: %s - payment gateway title */
 				echo '<h3>' . sprintf( esc_html__( '%s Customer Details', 'woocommerce-plugin-framework' ), $gateway->get_method_title() ) . '</h3>';
 				echo $fields;
 			}
@@ -307,7 +307,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 						<td style="padding-bottom: 0;">
 							<?php
 							if ( empty( $payment_tokens ) ):
-								// translators: Payment Token as in a specific entity used to make payments, such as a specific credit card, e-check account, bank account, etc.
+								/* translators: Payment Token as in a specific entity used to make payments, such as a specific credit card, e-check account, bank account, etc. */
 								echo "<p>" . esc_html__( 'This customer has no saved payment tokens', 'woocommerce-plugin-framework' ) . "</p>";
 							else:
 								?>
@@ -329,13 +329,13 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 						</td>
 					</tr>
 					<tr>
-						<?php // translators: Payment Token as in a specific entity used to make payments, such as a specific credit card, e-check account, bank account, etc. ?>
+						<?php /* translators: Payment Token as in a specific entity used to make payments, such as a specific credit card, e-check account, bank account, etc.  */ ?>
 						<th style="padding-top: 0;"><?php esc_html_e( 'Add a Payment Token', 'woocommerce-plugin-framework' ); ?></th>
 						<td style="padding-top: 0;">
 							<input type="text" name="wc_<?php echo $gateway->get_id(); ?>_payment_token_<?php echo $environment_id; ?>" placeholder="<?php esc_attr_e( 'Token', 'woocommerce-plugin-framework' ); ?>" style="width:145px;" />
 							<?php if ( $gateway->supports( SV_WC_Payment_Gateway::FEATURE_CARD_TYPES ) ) : ?>
 								<select name="wc_<?php echo $gateway->get_id(); ?>_payment_token_type_<?php echo $environment_id; ?>">
-									<option value=""><?php esc_html_e( "Card Type", 'woocommerce-plugin-framework' ); ?></option>
+									<option value=""><?php esc_html_e( 'Card Type', 'woocommerce-plugin-framework' ); ?></option>
 									<?php
 									foreach ( $gateway->get_card_types() as $card_type ) :
 										$card_type = strtolower( $card_type );

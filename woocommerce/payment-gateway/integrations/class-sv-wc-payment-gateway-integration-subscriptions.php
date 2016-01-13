@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2015, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -709,7 +709,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			// don't mark the order as failed, Subscriptions will handle marking the renewal order as failed
-			$order->add_order_note( sprintf( _x( '%s Renewal Payment Failed (%s)', $this->get_gateway()->get_text_domain() ), $this->get_gateway()->get_method_title(), $e->getMessage() ) );
+			$order->add_order_note( sprintf( _x( '%s Renewal Payment Failed (%s)', 'woocommerce-plugin-framework' ), $this->get_gateway()->get_method_title(), $e->getMessage() ) );
 
 			// update subscription
 			WC_Subscriptions_Manager::process_subscription_payment_failure_on_order( $order, $product_id );
