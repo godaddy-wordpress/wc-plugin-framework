@@ -704,7 +704,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				 * Allow actors to default the tokenize payment method checkbox state to
 				 * checked.
 				 *
-				 * @since 4.2.0-beta
+				 * @since 4.2.0
 				 * @param bool $checked default false, set to true to change the checkbox state to checked
 				 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 				 */

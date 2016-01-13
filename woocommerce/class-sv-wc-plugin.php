@@ -34,13 +34,13 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 4.2.0-beta
+ * @version 4.2.0
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '4.2.0-beta';
+	const VERSION = '4.2.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -157,7 +157,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Load plugin & framework text domains
 	 *
-	 * @since 4.2.0-beta
+	 * @since 4.2.0
 	 */
 	public function load_translations() {
 
@@ -470,7 +470,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Require and instantiate a class
 	 *
-	 * @since 4.2.0-beta
+	 * @since 4.2.0
 	 * @param string $local_path path to class file in plugin, e.g. '/includes/class-wc-foo.php'
 	 * @param string $class_name class to instantiate
 	 * @return object instantiated class instance
@@ -860,7 +860,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Helper method to install default settings for a plugin
 	 *
-	 * @since 4.2.0-beta
+	 * @since 4.2.0
 	 * @param array $settings array of settings in format required by WC_Admin_Settings
 	 */
 	public function install_default_settings( array $settings ) {
@@ -900,7 +900,7 @@ abstract class SV_WC_Plugin {
 	 * Plugin activated method. Perform any activation tasks here.
 	 * Note that this _does not_ run during upgrades.
 	 *
-	 * @since 4.2.0-beta
+	 * @since 4.2.0
 	 */
 	public function activate() {
 		// stub
@@ -910,7 +910,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Plugin deactivation method. Perform any deactivation tasks here.
 	 *
-	 * @since 4.2.0-beta
+	 * @since 4.2.0
 	 */
 	public function deactivate() {
 		// stub

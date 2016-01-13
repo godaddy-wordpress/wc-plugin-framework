@@ -804,7 +804,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * 1) given USA, returns US
 		 * 2) given US, returns USA
 		 *
-		 * @since 4.2.0-beta
+		 * @since 4.2.0
 		 * @param string $code ISO-3166-alpha-2 or ISO-3166-alpha-3 country code
 		 * @return string country code
 		 */

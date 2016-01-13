@@ -256,7 +256,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns true if tokenization is supported and enabled for at least one
 	 * active gateway
 	 *
-	 * @since 4.2.0-beta
+	 * @since 4.2.0
 	 * @return bool
 	 */
 	public function tokenization_enabled() {

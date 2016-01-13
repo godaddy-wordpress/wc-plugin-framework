@@ -51,7 +51,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * @link https://github.com/woothemes/woocommerce/pull/9765
 	 *
-	 * @since 4.2.0-beta
+	 * @since 4.2.0
 	 * @param \WC_Product $product product object
 	 * @return string|int product ID
 	 */
@@ -73,7 +73,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * @link https://github.com/woothemes/woocommerce/pull/9417
 	 *
-	 * @since 4.2.0-beta
+	 * @since 4.2.0
 	 * @param string $tip help tip content, HTML allowed if $has_html is true
 	 * @param bool $has_html false by default, true to indicate tip content has HTML
 	 * @return string help tip HTML, a <span> in WC 2.5, <img> in WC 2.4/2.3
@@ -130,7 +130,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns true if the installed version of WooCommerce is 2.5 or greater
 	 *
-	 * @since 4.2.0-beta
+	 * @since 4.2.0
 	 * @return boolean true if the installed version of WooCommerce is 2.5 or greater
 	 */
 	public static function is_wc_version_gte_2_5() {
@@ -141,7 +141,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Returns true if the installed version of WooCommerce is less than 2.5
 	 *
-	 * @since 4.2.0-beta
+	 * @since 4.2.0
 	 * @return boolean true if the installed version of WooCommerce is less than 2.5
 	 */
 	public static function is_wc_version_lt_2_5() {
