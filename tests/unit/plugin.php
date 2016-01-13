@@ -121,6 +121,8 @@ MSG;
 		Mock::wpPassthruFunction( 'register_activation_hook' );
 		Mock::wpPassthruFunction( 'register_deactivation_hook' );
 
+		Mock::wpFunction( 'is_ajax', array( 'return' => false ) );
+
 		$args = array(
 			'mock',
 			'7.7.7',
