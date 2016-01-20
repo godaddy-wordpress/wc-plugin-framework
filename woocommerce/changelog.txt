@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2016.01.20 - version 4.2.1
+ * Fix - Fix `implode()` warnings in `SV_WC_Helper::get_order_line_items()`
+
 2016.01.13 - version 4.2.0
  * Feature - Greatly improved compatibility with multi-language/translation plugins
  * Misc - Switched to using a separate text domain for the framework strings - 'woocommerce-plugin-framework'
