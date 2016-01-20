@@ -433,9 +433,6 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 					foreach ( $item_meta as $meta ) {
 						$item_desc[] = sprintf( '%s: %s', $meta['label'], $meta['value'] );
 					}
-
-					$item_desc = implode( ', ', $item_desc );
-
 				}
 
 				$item_desc = implode( ', ', $item_desc );
