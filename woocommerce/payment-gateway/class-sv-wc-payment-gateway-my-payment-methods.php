@@ -90,15 +90,15 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		wp_enqueue_style( 'dashicons' );
 
-		// // Add confirm javascript when deleting payment methods
+		// Add confirm javascript when deleting payment methods
 		if ( $this->has_tokens ) {
 			wc_enqueue_js( '
-			$( ".sv-wc-payment-gateway-payment-method-actions .delete-payment-method" ).on( "click", function( e ) {
-				if ( ! confirm( "' . esc_js( /* translators: Payment method as in a specific credit card, e-check or bank account */ esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ) ) . '" ) ) {
-					e.preventDefault();
-				}
-			} );
-		' );
+				$( ".wc-' . $this->get_plugin()->get_id_dasherized() . '-payment-method-actions .delete-payment-method" ).on( "click", function( e ) {
+					if ( ! confirm( "' . esc_js( /* translators: Payment method as in a specific credit card, e-check or bank account */ esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ) ) . '" ) ) {
+						e.preventDefault();
+					}
+				} );
+			' );
 		}
 	}
 

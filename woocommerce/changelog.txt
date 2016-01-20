@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2016.nn.nn - version 4.2.0-1
+ * Fix - Fix double confirm messages when deleting a payment method in certain cases
 
 2016.01.13 - version 4.2.0
  * Feature - Greatly improved compatibility with multi-language/translation plugins
