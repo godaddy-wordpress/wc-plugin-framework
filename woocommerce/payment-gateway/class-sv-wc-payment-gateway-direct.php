@@ -95,6 +95,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					$is_valid = false;
 				}
 
+				// Check the CSC if enabled
+				if ( $this->csc_enabled() && $this->is_credit_card_gateway() ) {
+					$is_valid = $this->validate_csc( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' ) ) && $is_valid;
+				}
+
 				// no more validation to perform
 				return $is_valid;
 			}
