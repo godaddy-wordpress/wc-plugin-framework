@@ -47,6 +47,44 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Backports wc_site_is_https() to 2.4.12 and earlier.
+	 *
+	 * @since  4.2.0-1
+	 * @return bool
+	 */
+	public static function wc_site_is_https() {
+
+		if ( self::is_wc_version_gt( '2.4.12' ) ) {
+
+			return wc_site_is_https();
+
+		} else {
+
+			return strstr( get_option( 'home' ), 'https:' );
+		}
+	}
+
+
+	/**
+	 * Backports wc_checkout_is_https() to 2.4.x and earlier.
+	 *
+	 * @since  4.2.0-1
+	 * @return bool
+	 */
+	public static function wc_checkout_is_https() {
+
+		if ( self::is_wc_version_gte_2_5() ) {
+
+			return wc_checkout_is_https();
+
+		} else {
+
+			return self::wc_site_is_https() || 'yes' === get_option( 'woocommerce_force_ssl_checkout' ) || class_exists( 'WordPressHTTPS' ) || strstr( wc_get_page_permalink( 'checkout' ), 'https:' );
+		}
+	}
+
+
+	/**
 	 * Backports WC_Product::get_id() method to 2.4.x and earlier
 	 *
 	 * @link https://github.com/woothemes/woocommerce/pull/9765
