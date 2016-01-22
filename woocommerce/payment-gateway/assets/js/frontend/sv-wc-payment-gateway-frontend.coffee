@@ -20,7 +20,7 @@ jQuery( document ).ready ($) ->
 		#   id_dasherized - gateway ID dasherized
 		#   plugin_id - plugin ID
 		#   type - gateway type, either `credit-card` or `echeck`
-		#   requires_csc - true if the gateway requires the CSC field to be displayed
+		#   csc_required - true if the gateway requires the CSC field to be displayed
 		#
 		# Returns SV_WC_Payment_Form_Handler instance
 		constructor: (args) ->
@@ -133,10 +133,7 @@ jQuery( document ).ready ($) ->
 			# bail when already processing
 			return false if @form.is( '.processing' )
 
-			tokenized_payment_method_selected = @payment_fields.find( '.js-sv-wc-payment-gateway-payment-token:checked' ).val()
-
-			# don't validate fields if a saved payment method is being used
-			return true if tokenized_payment_method_selected
+			@saved_payment_method_selected = @payment_fields.find( '.js-sv-wc-payment-gateway-payment-token:checked' ).val()
 
 			# type-specific validation
 			if @type is 'credit-card'
@@ -180,27 +177,12 @@ jQuery( document ).ready ($) ->
 		#
 		# Return boolean, true if credit card info is valid, false otherwise
 		validate_card_data: ->
+
 			errors = []
 
-			account_number = @payment_fields.find( '.js-sv-wc-payment-gateway-credit-card-form-account-number' ).val()
-			expiry         = $.payment.cardExpiryVal( @payment_fields.find( '.js-sv-wc-payment-gateway-credit-card-form-expiry' ).val() )
-			csc            = @payment_fields.find( '.js-sv-wc-payment-gateway-credit-card-form-csc' ).val() # optional element
+			csc = @payment_fields.find( '.js-sv-wc-payment-gateway-credit-card-form-csc' ).val()
 
-			# replace any dashes or spaces in the card number
-			account_number = account_number.replace( /-|\s/g, '' )
-
-			# validate card number
-			if not account_number
-				errors.push( @params.card_number_missing )
-			else
-				errors.push( @params.card_number_length_invalid ) if account_number.length < 12 || account_number.length > 19
-				errors.push( @params.card_number_digits_invalid ) if /\D/.test( account_number )
-				errors.push( @params.card_number_invalid ) unless $.payment.validateCardNumber( account_number ) # performs luhn check
-
-			# validate expiration date
-			errors.push( @params.card_exp_date_invalid ) unless $.payment.validateCardExpiry( expiry ) # validates future date
-
-			# validate CSC if present
+			# always validate the CSC if present
 			if csc?
 
 				if not csc
@@ -208,6 +190,26 @@ jQuery( document ).ready ($) ->
 				else
 					errors.push( @params.cvv_digits_invalid ) if /\D/.test( csc )
 					errors.push( @params.cvv_length_invalid ) if csc.length < 3 || csc.length > 4
+
+			# Only validate the other CC fields if necessary
+			if not @saved_payment_method_selected
+
+				account_number = @payment_fields.find( '.js-sv-wc-payment-gateway-credit-card-form-account-number' ).val()
+				expiry         = $.payment.cardExpiryVal( @payment_fields.find( '.js-sv-wc-payment-gateway-credit-card-form-expiry' ).val() )
+
+				# replace any dashes or spaces in the card number
+				account_number = account_number.replace( /-|\s/g, '' )
+
+				# validate card number
+				if not account_number
+					errors.push( @params.card_number_missing )
+				else
+					errors.push( @params.card_number_length_invalid ) if account_number.length < 12 || account_number.length > 19
+					errors.push( @params.card_number_digits_invalid ) if /\D/.test( account_number )
+					errors.push( @params.card_number_invalid ) unless $.payment.validateCardNumber( account_number ) # performs luhn check
+
+				# validate expiration date
+				errors.push( @params.card_exp_date_invalid ) unless $.payment.validateCardExpiry( expiry ) # validates future date
 
 			if errors.length > 0
 				this.render_errors( errors )
@@ -222,6 +224,9 @@ jQuery( document ).ready ($) ->
 		#
 		# Return boolean, true if eCheck info is valid, false otherwise
 		validate_account_data: ->
+
+			return true if @saved_payment_method_selected
+
 			errors = []
 
 			routing_number = @payment_fields.find('.js-sv-wc-payment-gateway-echeck-form-routing-number').val()
