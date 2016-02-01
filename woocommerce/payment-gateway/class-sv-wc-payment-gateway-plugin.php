@@ -387,7 +387,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 							/* translators: Placeholders: %s - plugin name */
 							$message = sprintf( esc_html__( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", 'woocommerce-plugin-framework' ), '<strong>' . $this->get_plugin_name() . '</strong>' );
 
-							$this->get_admin_notice_handler()->add_admin_notice( $message, 'ssl-required' );
+							$this->get_admin_notice_handler()->add_admin_notice( $message, 'ssl-required', array(
+								'notice_class' => 'error',
+							) );
 
 							// just show the message once for plugins with multiple gateway support
 							break;
@@ -452,7 +454,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				'</a>'
 			);
 
-			$this->get_admin_notice_handler()->add_admin_notice( $message, 'accepted-currency' . $suffix );
+			$this->get_admin_notice_handler()->add_admin_notice( $message, 'accepted-currency' . $suffix, array(
+				'notice_class' => 'error',
+			) );
 
 		}
 	}
@@ -489,7 +493,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					);
 
 					// add notice -- allow it to be dismissed even on the settings page as the admin may not want to use subscriptions with a particular gateway
-					$this->get_admin_notice_handler()->add_admin_notice( $message, 'subscriptions-tokenization-' . $gateway->get_id(), array( 'always_show_on_settings' => false ) );
+					$this->get_admin_notice_handler()->add_admin_notice( $message, 'subscriptions-tokenization-' . $gateway->get_id(), array(
+						'always_show_on_settings' => false,
+						'notice_class'            => 'error',
+					) );
 				}
 
 				// pre-orders
@@ -504,7 +511,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					);
 
 					// add notice -- allow it to be dismissed even on the settings page as the admin may not want to use pre-orders with a particular gateway
-					$this->get_admin_notice_handler()->add_admin_notice( $message, 'pre-orders-tokenization-' . $gateway->get_id(), array( 'always_show_on_settings' => false ) );
+					$this->get_admin_notice_handler()->add_admin_notice( $message, 'pre-orders-tokenization-' . $gateway->get_id(), array(
+						'always_show_on_settings' => false,
+						'notice_class'            => 'error',
+					) );
 				}
 			}
 		}

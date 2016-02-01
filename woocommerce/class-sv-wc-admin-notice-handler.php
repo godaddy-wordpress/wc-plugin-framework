@@ -77,16 +77,22 @@ class SV_WC_Admin_Notice_Handler {
 	 * @since 3.0.0
 	 * @param string $message the notice message to display
 	 * @param string $message_id the message id
-	 * @param array $params optional parameters array.  Defaults to array( 'dismissible' => true, 'always_show_on_settings' => true )
+	 * @param array $params {
+	 *     Optional parameters.
+	 *
+	 *     @type bool $dismissible             If the notice should be dismissible
+	 *     @type bool $always_show_on_settings If the notice should be forced to display on the
+	 *                                         plugin settings page, regardless of `$dismissible`.
+	 *     @type string $notice_class          Additional classes for the notice.
+	 * }
 	 */
 	public function add_admin_notice( $message, $message_id, $params = array() ) {
 
-		if ( ! isset( $params['dismissible'] ) ) {
-			$params['dismissible'] = true;
-		}
-		if ( ! isset( $params['always_show_on_settings'] ) ) {
-			$params['always_show_on_settings'] = true;
-		}
+		$params = wp_parse_args( $params, array(
+			'dismissible'             => true,
+			'always_show_on_settings' => true,
+			'notice_class'            => 'updated',
+		) );
 
 		if ( $this->should_display_notice( $message_id, $params ) ) {
 			$this->admin_notices[ $message_id ] = array(
@@ -104,7 +110,13 @@ class SV_WC_Admin_Notice_Handler {
 	 *
 	 * @since 3.0.0
 	 * @param string $message_id the message id
-	 * @param array $params optional parameters array.  Defaults to array( 'dismissible' => true, 'always_show_on_settings' => true, 'notice_class' => 'updated' )
+	 * @param array $params {
+	 *     Optional parameters.
+	 *
+	 *     @type bool $dismissible             If the notice should be dismissible
+	 *     @type bool $always_show_on_settings If the notice should be forced to display on the
+	 *                                         plugin settings page, regardless of `$dismissible`.
+	 * }
 	 */
 	public function should_display_notice( $message_id, $params = array() ) {
 
@@ -112,13 +124,10 @@ class SV_WC_Admin_Notice_Handler {
 			return false;
 		}
 
-		// default to dismissible, always on settings
-		if ( ! isset( $params['dismissible'] ) ) {
-			$params['dismissible'] = true;
-		}
-		if ( ! isset( $params['always_show_on_settings'] ) ) {
-			$params['always_show_on_settings'] = true;
-		}
+		$params = wp_parse_args( $params, array(
+			'dismissible'             => true,
+			'always_show_on_settings' => true,
+		) );
 
 		// if the notice is always shown on the settings page, and we're on the settings page
 		if ( $params['always_show_on_settings'] && $this->get_plugin()->is_plugin_settings() ) {
@@ -181,22 +190,64 @@ class SV_WC_Admin_Notice_Handler {
 	 * @since 3.0.0
 	 * @param string $message the notice message to display
 	 * @param string $message_id the message id
-	 * @param array $params optional parameters array.  Options: 'dismissible', 'is_visible', 'always_show_on_settings', 'notice_class'
+	 * @param array $params {
+	 *     Optional parameters.
+	 *
+	 *     @type bool $dismissible             If the notice should be dismissible
+	 *     @type bool $is_visible              If the notice should be immediately visible
+	 *     @type bool $always_show_on_settings If the notice should be forced to display on the
+	 *                                         plugin settings page, regardless of `$dismissible`.
+	 *     @type string $notice_class          Additional classes for the notice.
+	 * }
 	 */
 	public function render_admin_notice( $message, $message_id, $params = array() ) {
 
-		$dismiss_link = '';
+		$params = wp_parse_args( $params, array(
+			'dismissible'             => true,
+			'is_visible'              => true,
+			'always_show_on_settings' => true,
+			'notice_class'            => 'updated',
+		) );
 
-		// dismissible link if the notice is dismissible and it's not always shown on the settings page, or we're on the settings page
-		if ( isset( $params['dismissible'] ) && $params['dismissible'] && ( ! isset( $params['always_show_on_settings'] ) || ! $params['always_show_on_settings'] || ! $this->get_plugin()->is_plugin_settings() ) ) {
+		$classes = array(
+			'js-wc-plugin-framework-admin-notice',
+			$params['notice_class'],
+		);
 
-			/* translators: this is an action that dismisses a message */
-			$dismiss_link = sprintf( '<a href="#" class="js-wc-plugin-framework-notice-dismiss" data-message-id="%s" style="float: right;">%s</a>', $message_id, esc_html__( 'Dismiss', 'woocommerce-plugin-framework' ) );
+		// Maybe make this notice dismissible.
+		// If WordPress 4.2+, use core's dismissible notice markup.
+		$dismissible = $params['dismissible'] && ( ! $params['always_show_on_settings'] || ! $this->get_plugin()->is_plugin_settings() );
+
+		if ( version_compare( get_bloginfo( 'version' ), '4.2', '>=' ) ) {
+
+			$classes[] = 'notice';
+
+			if ( $dismissible ) {
+				$classes[] = 'is-dismissible';
+			}
+
+		} else {
+
+			if ( $dismissible ) {
+
+				/* translators: this is an action that dismisses a message */
+				$dismiss_link = sprintf(
+					'<a href="#" class="js-wc-plugin-framework-notice-dismiss" style="float: right;">%s</a>',
+					esc_html__( 'Dismiss', 'woocommerce-plugin-framework' )
+				);
+
+				$message .= ' ' . $dismiss_link;
+			}
 		}
 
-		$class = isset( $params['notice_class'] ) ? $params['notice_class'] : 'error';
-
-		echo sprintf( '<div data-plugin-id="' . $this->get_plugin()->get_id() . '" class="' . $class . ' js-wc-plugin-framework-admin-notice"%s><p>%s %s</p></div>', ! isset( $params['is_visible'] ) || ! $params['is_visible'] ? ' style="display:none;"' : '', $message, $dismiss_link );
+		echo sprintf(
+			'<div class="%1$s" data-plugin-id="%2$s" data-message-id="%3$s" %4$s><p>%5$s</p></div>',
+			esc_attr( implode( ' ', $classes ) ),
+			esc_attr( $this->get_plugin()->get_id() ),
+			esc_attr( $message_id ),
+			( ! $params['is_visible'] ) ? 'style="display:none;"' : '',
+			wp_kses_post( $message )
+		);
 	}
 
 
@@ -216,21 +267,45 @@ class SV_WC_Admin_Notice_Handler {
 
 		ob_start();
 		?>
-		// hide notice
-		$( 'a.js-wc-plugin-framework-notice-dismiss' ).click( function() {
+
+		// Log dismissed notices
+		$( '.js-wc-plugin-framework-admin-notice' ).on( 'click.wp-dismiss-notice', '.notice-dismiss', function( e ) {
+
+			var $notice = $( this ).closest( '.js-wc-plugin-framework-admin-notice' );
+
+			log_dismissed_notice(
+				$( $notice ).data( 'plugin-id' ),
+				$( $notice ).data( 'message-id' )
+			);
+
+		} );
+
+		// Log and hide legacy notices
+		$( 'a.js-wc-plugin-framework-notice-dismiss' ).click( function( e ) {
+
+			e.preventDefault();
+
+			var $notice = $( this ).closest( '.js-wc-plugin-framework-admin-notice' );
+
+			log_dismissed_notice(
+				$( $notice ).data( 'plugin-id' ),
+				$( $notice ).data( 'message-id' )
+			);
+
+			$( $notice ).fadeOut();
+
+		} );
+
+		function log_dismissed_notice( pluginID, messageID ) {
 
 			$.get(
 				ajaxurl,
 				{
-					action: 'wc_plugin_framework_' + $( this ).closest( '.js-wc-plugin-framework-admin-notice' ).data( 'plugin-id') + '_dismiss_notice',
-					messageid: $( this ).data( 'message-id' )
+					action:    'wc_plugin_framework_' + pluginID + '_dismiss_notice',
+					messageid: messageID
 				}
 			);
-
-			$( this ).closest( 'div.js-wc-plugin-framework-admin-notice' ).fadeOut();
-
-			return false;
-		} );
+		}
 
 		// move any delayed notices up into position .show();
 		$( '.js-wc-plugin-framework-admin-notice:hidden' ).insertAfter( '.js-wc-plugin-framework-admin-notice-placeholder' ).show();

@@ -288,7 +288,9 @@ abstract class SV_WC_Plugin {
 				'<strong>' . implode( ', ', $missing_extensions ) . '</strong>'
 			);
 
-			$this->get_admin_notice_handler()->add_admin_notice( $message, 'missing-extensions' );
+			$this->get_admin_notice_handler()->add_admin_notice( $message, 'missing-extensions', array(
+				'notice_class' => 'error',
+			) );
 
 		}
 
@@ -309,7 +311,9 @@ abstract class SV_WC_Plugin {
 				'<strong>' . implode( ', ', $missing_functions ) . '</strong>'
 			);
 
-			$this->get_admin_notice_handler()->add_admin_notice( $message, 'missing-functions' );
+			$this->get_admin_notice_handler()->add_admin_notice( $message, 'missing-functions', array(
+				'notice_class' => 'error',
+			) );
 
 		}
 	}
