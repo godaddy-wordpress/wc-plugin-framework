@@ -153,6 +153,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				add_action( 'admin_print_styles-woocommerce_page_wc-settings', array( $this, 'subscriptions_add_renewal_support_status_inline_style' ) );
 				add_filter( 'woocommerce_payment_gateways_renewal_support_status_html', array( $this, 'subscriptions_maybe_edit_renewal_support_status' ), 10, 2 );
 			}
+
+			// Add gateway information to the system status report
+			add_action( 'woocommerce_system_status_report', array( $this, 'add_system_status_information' ) );
 		}
 
 		// Add classes to WC Payment Methods
@@ -751,6 +754,27 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		$actions[ 'wc_' . $this->get_id() . '_capture_charge' ] = esc_html__( 'Capture Charge', 'woocommerce-plugin-framework' );
 
 		return $actions;
+	}
+
+
+	/**
+	 * Add gateway information to the system status report.
+	 *
+	 * @since 4.2.0-1
+	 */
+	public function add_system_status_information() {
+
+		foreach ( $this->get_gateways() as $gateway ) {
+
+			// Skip gateways that aren't enabled
+			if ( ! $gateway->is_enabled() ) {
+				continue;
+			}
+
+			$environment = $gateway->get_environment_name();
+
+			include( $this->get_payment_gateway_framework_path() . '/admin/views/html-admin-gateway-status.php' );
+		}
 	}
 
 

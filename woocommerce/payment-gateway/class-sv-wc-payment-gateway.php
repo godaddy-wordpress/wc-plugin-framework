@@ -2850,6 +2850,23 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
+	 * Get the configured environment's display name.
+	 *
+	 * @since 4.2.0-1
+	 * @return string The configured environment name
+	 */
+	public function get_environment_name() {
+
+		$environments = $this->get_environments();
+
+		$environment_id   = $this->get_environment();
+		$environment_name = ( isset( $environments[ $environment_id ] ) ) ? $environments[ $environment_id ] : $environment_id;
+
+		return $environment_name;
+	}
+
+
+	/**
 	 * Returns true if the current environment is $environment_id
 	 */
 	public function is_environment( $environment_id ) {
