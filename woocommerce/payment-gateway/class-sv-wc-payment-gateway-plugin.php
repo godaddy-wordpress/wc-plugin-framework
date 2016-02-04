@@ -207,9 +207,12 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway.php' );
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-direct.php' );
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-hosted.php' );
-		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-payment-token.php' );
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-payment-form.php' );
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-my-payment-methods.php' );
+
+		// payment tokens
+		require_once( $payment_gateway_framework_path . '/payment-tokens/class-sv-wc-payment-gateway-payment-token.php' );
+		require_once( $payment_gateway_framework_path . '/payment-tokens/class-sv-wc-payment-gateway-payment-tokens.php' );
 
 		// helpers
 		require_once( $payment_gateway_framework_path . '/api/class-sv-wc-payment-gateway-api-response-message-helper.php' );
@@ -1061,7 +1064,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		foreach ( $this->get_gateways() as $gateway ) {
 
-			if ( $gateway->has_payment_token( $user_id, $token ) ) {
+			if ( $gateway->payment_tokens()->user_has_token( $user_id, $token ) ) {
 				return $gateway;
 			}
 		}

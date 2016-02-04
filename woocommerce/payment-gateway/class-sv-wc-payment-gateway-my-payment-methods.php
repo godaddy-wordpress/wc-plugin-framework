@@ -125,7 +125,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 				continue;
 			}
 
-			foreach ( $gateway->get_payment_tokens( get_current_user_id() ) as $token ) {
+			foreach ( $gateway->payment_tokens()->get_tokens( get_current_user_id() ) as $token ) {
 
 				// prevent duplicates, as some gateways will return all tokens in each each gateway
 				if ( isset( $this->credit_card_tokens[ $token->get_id() ] ) ||  isset( $this->echeck_tokens[ $token->get_id() ] ) ) {
@@ -646,7 +646,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 				// handle deletion
 				case 'delete':
 
-					if ( ! $gateway->remove_payment_token( $user_id, $token ) ) {
+					if ( ! $gateway->payment_tokens()->remove_token( $user_id, $token ) ) {
 
 						/* translators: Payment method as in a specific credit card, e-check or bank account */
 						SV_WC_Helper::wc_add_notice( esc_html__( 'Error removing payment method', 'woocommerce-plugin-framework' ), 'error' );
@@ -661,7 +661,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 				// set default payment method
 				case 'make-default':
-					$gateway->set_default_payment_token( $user_id, $token );
+					$gateway->payment_tokens()->set_default_token( $user_id, $token );
 
 					/* translators: Payment method as in a specific credit card, e-check or bank account */
 					SV_WC_Helper::wc_add_notice( esc_html__( 'Default payment method updated.', 'woocommerce-plugin-framework' ) );
