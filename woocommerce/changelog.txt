@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2016.02.08 - version 4.2.2
+ * Fix - Fix handling guest pre-orders
+
 2016.01.20 - version 4.2.1
  * Fix - Fix `implode()` warnings in `SV_WC_Helper::get_order_line_items()`
 
