@@ -1001,7 +1001,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Initialize payment tokens
 	 *
-	 * @since 4.2.0-1
+	 * @since 4.3.0-dev
 	 */
 	protected function init_tokenization() {
 		$this->payment_tokens = new SV_WC_Payment_Gateway_Payment_Tokens( $this );
@@ -1011,7 +1011,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Get the payment tokens handler instance.
 	 *
-	 * @since 4.2.0-1
+	 * @since 4.3.0-dev
 	 * @return \SV_WC_Payment_Gateway_Payment_Tokens
 	 */
 	public function payment_tokens() {

@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Handle the payment token features.
  *
- * @since 4.2.0-1
+ * @since 4.3.0-dev
  */
 class SV_WC_Payment_Gateway_Payment_Tokens {
 
@@ -41,7 +41,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 	/**
 	 * Build the class.
 	 *
-	 * @since 4.2.0-1
+	 * @since 4.3.0-dev
 	 * @param \SV_WC_Payment_Gateway_Direct $gateway The gateway instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Direct $gateway ) {
@@ -57,7 +57,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 	 * gateway.  Concrete classes can override this method to return a custom
 	 * payment token implementation.
 	 *
-	 * @since 4.2.0-1
+	 * @since 4.3.0-dev
 	 * @param string $token payment token
 	 * @param array $data {
 	 *     Payment token data.
@@ -838,7 +838,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 	/**
 	 * Get the gateway instance.
 	 *
-	 * @since 4.2.0-1
+	 * @since 4.3.0-dev
 	 * @return \SV_WC_Payment_Gateway_Direct The gateway instance
 	 */
 	protected function get_gateway() {

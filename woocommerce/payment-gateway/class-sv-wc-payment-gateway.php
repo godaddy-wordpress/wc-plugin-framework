@@ -2852,7 +2852,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Get the configured environment's display name.
 	 *
-	 * @since 4.2.0-1
+	 * @since 4.3.0-dev
 	 * @return string The configured environment name
 	 */
 	public function get_environment_name() {

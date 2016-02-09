@@ -763,7 +763,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Add gateway information to the system status report.
 	 *
-	 * @since 4.2.0-1
+	 * @since 4.3.0-dev
 	 */
 	public function add_system_status_information() {
 
