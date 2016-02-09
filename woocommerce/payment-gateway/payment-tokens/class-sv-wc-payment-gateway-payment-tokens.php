@@ -85,13 +85,13 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 	 * data to the order post record.
 	 *
 	 * @since 1.0.0
-	 * @param WC_Order $order the order object
-	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response optional create payment token response, or null if the tokenize payment method request should be made
-	 * @param string $environment_id optional environment id, defaults to plugin current environment
-	 * @return WC_Order the order object
-	 * @throws SV_WC_Payment_Gateway_Exception on network error or request error
+	 * @param \WC_Order $order The order object
+	 * @param \SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response Optional. Payment token API response, or null if the request should be made
+	 * @param string $environment_id Optional. Environment ID. Default: the current environment.
+	 * @throws \SV_WC_Payment_Gateway_Exception on transaction failure
+	 * @return \WC_Order The order object
 	 */
-	public function create_token( $order, $response = null, $environment_id = null ) {
+	public function create_token( WC_Order $order, $response = null, $environment_id = null ) {
 
 		$gateway = $this->get_gateway();
 
