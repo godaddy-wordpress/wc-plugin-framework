@@ -1,7 +1,16 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2016.nn.nn - version 4.2.0-1
+2016.nn.nn - version 4.3.0-dev
+ * Feature - Add payment gateway environment information to the WooCommerce system status report
+ * Tweak - Support WordPress core dismissible notices
+ * Fix - Properly validate CSC if present for tokenized payment methods
  * Fix - Fix double confirm messages when deleting a payment method in certain cases
+
+2016.02.08 - version 4.2.2
+ * Fix - Fix handling guest pre-orders
+
+2016.01.20 - version 4.2.1
+ * Fix - Fix `implode()` warnings in `SV_WC_Helper::get_order_line_items()`
 
 2016.01.13 - version 4.2.0
  * Feature - Greatly improved compatibility with multi-language/translation plugins
