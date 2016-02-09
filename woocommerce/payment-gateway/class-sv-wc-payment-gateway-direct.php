@@ -153,7 +153,16 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$is_valid = $this->validate_csc( $csc ) && $is_valid;
 		}
 
-		return $is_valid;
+		/**
+		 * Direct Payment Gateway Validate Credit Card Fields Filter.
+		 *
+		 * Allow actors to filter the credit card field validation.
+		 *
+		 * @since 4.2.2-1
+		 * @param bool $is_valid true for validation to pass
+		 * @param \SV_WC_Payment_Gateway_Direct $this direct gateway class instance
+		 */
+		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_validate_credit_card_fields', $is_valid, $this );
 	}
 
 
@@ -343,7 +352,16 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$is_valid = false;
 		}
 
-		return $is_valid;
+		/**
+		 * Direct Payment Gateway Validate eCheck Fields Filter.
+		 *
+		 * Allow actors to filter the eCheck field validation.
+		 *
+		 * @since 4.2.2-1
+		 * @param bool $is_valid true for validation to pass
+		 * @param \SV_WC_Payment_Gateway_Direct $this direct gateway class instance
+		 */
+		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_validate_echeck_fields', $is_valid, $this );
 	}
 
 
