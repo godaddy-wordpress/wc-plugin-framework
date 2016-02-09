@@ -31,6 +31,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class SV_WC_Payment_Gateway_Payment_Tokens {
 
+	/** @var string the gateway environment ID */
+	protected $environment_id;
+
 	/** @var array array of cached user id to array of \SV_WC_Payment_Gateway_Payment_Token token objects */
 	protected $tokens;
 
@@ -44,6 +47,8 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 	public function __construct( SV_WC_Payment_Gateway_Direct $gateway ) {
 
 		$this->gateway = $gateway;
+
+		$this->environment_id = $gateway->get_environment();
 	}
 
 
@@ -92,7 +97,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 
 		// default to current environment
 		if ( is_null( $environment_id ) ) {
-			$environment_id = $gateway->get_environment();
+			$environment_id = $this->get_environment_id();
 		}
 
 		// perform the API request to tokenize the payment method if needed
@@ -171,7 +176,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 
 		// default to current environment
 		if ( is_null( $environment_id ) ) {
-			$environment_id = $this->get_gateway()->get_environment();
+			$environment_id = $this->get_environment_id();
 		}
 
 		// get existing tokens
@@ -206,7 +211,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 
 		// default to current environment
 		if ( is_null( $environment_id ) ) {
-			$environment_id = $this->get_gateway()->get_environment();
+			$environment_id = $this->get_environment_id();
 		}
 
 		$tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
@@ -230,7 +235,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 
 		// default to current environment
 		if ( is_null( $environment_id ) ) {
-			$environment_id = $this->get_gateway()->get_environment();
+			$environment_id = $this->get_environment_id();
 		}
 
 		$tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
@@ -256,7 +261,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 
 		// default to current environment
 		if ( is_null( $environment_id ) ) {
-			$environment_id = $this->get_gateway()->get_environment();
+			$environment_id = $this->get_environment_id();
 		}
 
 		// unknown token?
@@ -320,7 +325,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 
 		// default to current environment
 		if ( is_null( $environment_id ) ) {
-			$environment_id = $this->get_gateway()->get_environment();
+			$environment_id = $this->get_environment_id();
 		}
 
 		// unknown token?
@@ -370,7 +375,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 
 		// default to current environment
 		if ( ! isset( $args['environment_id'] ) ) {
-			$args['environment_id'] = $this->get_gateway()->get_environment();
+			$args['environment_id'] = $this->get_environment_id();
 		}
 
 		if ( ! isset( $args['customer_id'] ) ) {
@@ -487,7 +492,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 
 		// default to current environment
 		if ( is_null( $environment_id ) ) {
-			$environment_id = $this->get_gateway()->get_environment();
+			$environment_id = $this->get_environment_id();
 		}
 
 		// update the local cache
@@ -517,7 +522,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 
 		// default to current environment
 		if ( is_null( $environment_id ) ) {
-			$environment_id = $this->get_gateway()->get_environment();
+			$environment_id = $this->get_environment_id();
 		}
 
 		if ( is_object( $token ) ) {
@@ -697,7 +702,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 		}
 
 		// ex: wc_sv_tokens_<md5 hash of gateway_id, user ID, and environment ID>
-		$key = sprintf( 'wc_sv_tokens_%s', md5( $this->get_gateway()->get_id() . '_' . $user_id . '_' . $this->get_gateway()->get_environment() ) );
+		$key = sprintf( 'wc_sv_tokens_%s', md5( $this->get_gateway()->get_id() . '_' . $user_id . '_' . $this->get_environment_id() ) );
 
 		/**
 		 * Filter payment tokens transient key
@@ -751,7 +756,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 
 		// default to current environment
 		if ( is_null( $environment_id ) ) {
-			$environment_id = $this->get_gateway()->get_environment();
+			$environment_id = $this->get_environment_id();
 		}
 
 		// leading underscore since this will never be displayed to an admin user in its raw form
@@ -816,6 +821,17 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 		}
 
 		return $_tokens;
+	}
+
+
+	/**
+	 * Get the gateway environment ID.
+	 *
+	 * @since 4.3.0-dev
+	 * @return string
+	 */
+	protected function get_environment_id() {
+		return $this->environment_id;
 	}
 
 
