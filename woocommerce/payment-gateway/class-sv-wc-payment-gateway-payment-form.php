@@ -201,7 +201,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 */
 	public function tokenization_forced() {
 
-		$tokenization_forced = $this->get_gateway()->is_direct_gateway() && $this->get_gateway()->payment_tokens()->tokenization_forced();
+		$tokenization_forced = $this->get_gateway()->is_direct_gateway() && $this->get_gateway()->supports_tokenization() && $this->get_gateway()->tokenization_forced();
 
 		// tokenization always "forced" on the add new payment method page
 		if ( $this->get_gateway()->is_direct_gateway() && $this->get_gateway()->supports_add_payment_method() && is_add_payment_method_page() ) {
