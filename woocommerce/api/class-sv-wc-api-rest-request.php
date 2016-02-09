@@ -32,7 +32,7 @@ if ( ! class_exists( 'SV_WC_API_REST_Request' ) ) :
  *
  * @since 4.0.0
  */
-class SV_WC_API_REST_Request implements SV_WC_API_Request {
+class SV_WC_API_REST_Request extends SV_WC_API_JSON_Request {
 
 
 	/** @var string the request method, one of HEAD, GET, PUT, PATCH, POST, DELETE */
@@ -57,75 +57,6 @@ class SV_WC_API_REST_Request implements SV_WC_API_Request {
 		$this->method = $method;
 		$this->path   = $path;
 		$this->params = $params;
-	}
-
-
-	/** Getter Methods ******************************************************/
-
-
-	/**
-	 * Returns the method for this request: one of HEAD, GET, PUT, PATCH, POST, DELETE
-	 *
-	 * @since 4.0.0
-	 * @see SV_WC_API_Request::get_method()
-	 * @return string the request method
-	 */
-	public function get_method() {
-		return $this->method;
-	}
-
-
-	/**
-	 * Returns the request path
-	 *
-	 * @since 4.0.0
-	 * @see SV_WC_API_Request::get_path()
-	 * @return string the request path
-	 */
-	public function get_path() {
-		return $this->path;
-	}
-
-
-	/**
-	 * Returns the request params, if any
-	 *
-	 * @since 4.0.0
-	 * @return array the request params
-	 */
-	public function get_params() {
-		return $this->params;
-	}
-
-
-	/** API Helper Methods ******************************************************/
-
-
-	/**
-	 * Returns the string representation of this request
-	 *
-	 * @since 4.0.0
-	 * @see SV_WC_API_Request::to_string()
-	 * @return string request
-	 */
-	public function to_string() {
-
-		// URL encode params
-		return http_build_query( $this->get_params() );
-	}
-
-
-	/**
-	 * Returns the string representation of this request with any and all
-	 * sensitive elements masked or removed
-	 *
-	 * @since 4.0.0
-	 * @see SV_WC_API_Request::to_string_safe()
-	 * @return string the request, safe for logging/displaying
-	 */
-	public function to_string_safe() {
-
-		return $this->to_string();
 	}
 
 

@@ -220,9 +220,13 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/api/interface-sv-wc-api-request.php' );
 		require_once( $framework_path . '/api/interface-sv-wc-api-response.php' );
 
-		// Specialty XML handling
+		// XML API base
 		require_once( $framework_path . '/api/abstract-sv-wc-api-xml-request.php' );
 		require_once( $framework_path . '/api/abstract-sv-wc-api-xml-response.php' );
+
+		// JSON API base
+		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
+		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
 	}
 
 
