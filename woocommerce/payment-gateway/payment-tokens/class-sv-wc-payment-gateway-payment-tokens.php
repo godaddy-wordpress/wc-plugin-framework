@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) or exit;
 
 /**
  * Handle the payment token features.
@@ -30,6 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 4.3.0-dev
  */
 class SV_WC_Payment_Gateway_Payment_Tokens {
+
 
 	/** @var string the gateway environment ID */
 	protected $environment_id;
@@ -844,4 +845,6 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 	protected function get_gateway() {
 		return $this->gateway;
 	}
+
+
 }

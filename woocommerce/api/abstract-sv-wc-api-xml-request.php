@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_API_XML_Request' ) ) {
+if ( ! class_exists( 'SV_WC_API_XML_Request' ) ) :
 
 /**
  * Base XML API request class.
@@ -32,6 +32,7 @@ if ( ! class_exists( 'SV_WC_API_XML_Request' ) ) {
  * @since 4.3.0-dev
  */
 abstract class SV_WC_API_XML_Request extends XMLWriter implements SV_WC_API_Request {
+
 
 	/** @var string The complete request XML */
 	protected $request_xml;
@@ -128,4 +129,4 @@ abstract class SV_WC_API_XML_Request extends XMLWriter implements SV_WC_API_Requ
 
 }
 
-}
+endif; // class exists check

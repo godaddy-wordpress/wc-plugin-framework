@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_API_XML_Response' ) ) {
+if ( ! class_exists( 'SV_WC_API_XML_Response' ) ) :
 
 /**
  * Base XML API response class.
@@ -94,4 +94,4 @@ abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 
 }
 
-}
+endif; // class exists check
