@@ -104,6 +104,8 @@ abstract class SV_WC_Plugin {
 		// includes that are required to be available at all times
 		$this->includes();
 
+		$this->load_hook_deprecator();
+
 		// Admin
 		if ( is_admin() && ! is_ajax() ) {
 
@@ -227,6 +229,40 @@ abstract class SV_WC_Plugin {
 		// JSON API base
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
+	}
+
+
+	/**
+	 * Load and instantiate the hook deprecator class
+	 *
+	 * @since 4.2.2-1
+	 */
+	private function load_hook_deprecator() {
+
+		require_once( $this->get_framework_path() . '/class-sv-wc-hook-deprecator.php' );
+
+		$this->hook_deprecator = new SV_WC_Hook_Deprecator( $this->get_plugin_name(), $this->get_deprecated_hooks() );
+	}
+
+
+	/**
+	 * Return deprecated/removed hooks. Implementing classes should override this
+	 * and return an array of deprecated/removed hooks in the following format:
+	 *
+	 * $old_hook_name = array {
+	 *   @type string $version version the hook was deprecated/removed in
+	 *   @type bool $removed if present and true, the message will indicate the hook was removed instead of deprecated
+	 *   @type string|bool $replacement if present and a string, the message will indicate the replacement hook to use,
+	 *     otherwise (if bool and false) the message will indicate there is no replacement available.
+	 * }
+	 *
+	 * @since 4.2.2-1
+	 * @return array
+	 */
+	protected function get_deprecated_hooks() {
+
+		// stub method
+		return array();
 	}
 
 
