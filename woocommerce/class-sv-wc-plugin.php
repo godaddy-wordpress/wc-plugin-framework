@@ -235,7 +235,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Load and instantiate the hook deprecator class
 	 *
-	 * @since 4.2.2-1
+	 * @since 4.3.0-dev
 	 */
 	private function load_hook_deprecator() {
 
@@ -256,7 +256,7 @@ abstract class SV_WC_Plugin {
 	 *     otherwise (if bool and false) the message will indicate there is no replacement available.
 	 * }
 	 *
-	 * @since 4.2.2-1
+	 * @since 4.3.0-dev
 	 * @return array
 	 */
 	protected function get_deprecated_hooks() {

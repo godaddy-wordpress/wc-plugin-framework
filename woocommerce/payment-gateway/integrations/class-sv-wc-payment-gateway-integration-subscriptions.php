@@ -201,7 +201,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		$token = $this->get_gateway()->get_order_meta( $order->id, 'payment_token' );
 
 		// payment token must be present and valid
-		if ( empty( $token ) || ! $this->get_gateway()->payment_tokens()->user_has_token( $order->get_user_id(), $token ) ) {
+		if ( empty( $token ) || ! $this->get_gateway()->get_payment_tokens_handler()->user_has_token( $order->get_user_id(), $token ) ) {
 
 			$this->get_gateway()->mark_order_as_failed( $order, __( 'Subscription Renewal: payment token is missing/invalid.', 'woocommerce-plugin-framework' ) );
 
@@ -246,7 +246,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		}
 
 		// get the token object
-		$token = $this->get_gateway()->payment_tokens()->get_token( $order->get_user_id(), $order->payment->token );
+		$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( $order->get_user_id(), $order->payment->token );
 
 		// set token data on the order
 		$order->payment->account_number = $token->get_last_four();
@@ -422,7 +422,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			return $payment_method_to_display;
 		}
 
-		$token = $this->get_gateway()->payment_tokens()->get_token( $subscription->get_user_id(), $this->get_gateway()->get_order_meta( $subscription->id, 'payment_token' ) );
+		$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( $subscription->get_user_id(), $this->get_gateway()->get_order_meta( $subscription->id, 'payment_token' ) );
 
 		if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
 			$payment_method_to_display = sprintf( __( 'Via %s ending in %s', 'woocommerce-plugin-framework' ), $token->get_type_full(), $token->get_last_four() );
@@ -581,12 +581,12 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		}
 
 		// ensure the payment token is still valid
-		if ( ! $this->get_gateway()->payment_tokens()->user_has_token( $order->get_user_id(), $order->payment->token ) ) {
+		if ( ! $this->get_gateway()->get_payment_tokens_handler()->user_has_token( $order->get_user_id(), $order->payment->token ) ) {
 			$order->payment->token = null;
 		} else {
 
 			// get the token object
-			$token = $this->get_gateway()->payment_tokens()->get_token( $order->get_user_id(), $order->payment->token );
+			$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( $order->get_user_id(), $order->payment->token );
 
 			if ( ! isset( $order->payment->account_number ) || ! $order->payment->account_number )
 				$order->payment->account_number = $token->get_last_four();
@@ -655,7 +655,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			}
 
 			// get the token, we've already verified it's good
-			$token = $this->get_gateway()->payment_tokens()->get_token( $order->get_user_id(), $order->payment->token );
+			$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( $order->get_user_id(), $order->payment->token );
 
 			// perform the transaction
 			if ( $this->get_gateway()->is_credit_card_gateway() ) {
@@ -806,7 +806,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			return $payment_method_to_display;
 		}
 
-		$token = $this->get_gateway()->payment_tokens()->get_token( $order->get_user_id(), $this->get_gateway()->get_order_meta( $order->id, 'payment_token' ) );
+		$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( $order->get_user_id(), $this->get_gateway()->get_order_meta( $order->id, 'payment_token' ) );
 
 		if ( is_object( $token ) ) {
 			$payment_method_to_display = sprintf( __( 'Via %s ending in %s', 'woocommerce-plugin-framework' ), $token->get_type_full(), $token->get_last_four() );

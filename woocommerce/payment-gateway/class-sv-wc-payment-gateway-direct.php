@@ -43,8 +43,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/** Pre-orders integration ID */
 	const INTEGRATION_PRE_ORDERS = 'pre_orders';
 
-	/** @var \SV_WC_Payment_Gateway_Payment_Tokens the payment token handler instance */
-	protected $payment_tokens;
+	/** @var \SV_WC_Payment_Gateway_Payment_Tokens_Handler payment tokens handler instance */
+	protected $payment_tokens_handler;
 
 	/** @var array of SV_WC_Payment_Gateway_Integration objects for Subscriptions, Pre-Orders, etc. */
 	protected $integrations;
@@ -66,7 +66,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// parent constructor
 		parent::__construct( $id, $plugin, $args );
 
-		$this->init_tokenization();
+		$this->init_payment_tokens_handler();
 
 		$this->init_integrations();
 	}
@@ -92,7 +92,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 				// unknown token?
-				if ( ! $this->payment_tokens()->user_has_token( get_current_user_id(), SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) ) {
+				if ( ! $this->get_payment_tokens_handler()->user_has_token( get_current_user_id(), SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) ) {
 					SV_WC_Helper::wc_add_notice( esc_html__( 'Payment error, please try another payment method or contact us to complete your transaction.', 'woocommerce-plugin-framework' ), 'error' );
 					$is_valid = false;
 				}
@@ -158,7 +158,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 *
 		 * Allow actors to filter the credit card field validation.
 		 *
-		 * @since 4.2.2-1
+		 * @since 4.3.0-dev
 		 * @param bool $is_valid true for validation to pass
 		 * @param \SV_WC_Payment_Gateway_Direct $this direct gateway class instance
 		 */
@@ -357,7 +357,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 *
 		 * Allow actors to filter the eCheck field validation.
 		 *
-		 * @since 4.2.2-1
+		 * @since 4.3.0-dev
 		 * @param bool $is_valid true for validation to pass
 		 * @param \SV_WC_Payment_Gateway_Direct $this direct gateway class instance
 		 */
@@ -399,9 +399,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		try {
 
 			// registered customer checkout (already logged in or creating account at checkout)
-			if ( $this->supports_tokenization() && 0 != $order->get_user_id() && $this->payment_tokens()->should_tokenize() &&
-				( 0 == $order->payment_total || $this->payment_tokens()->tokenize_before_sale() ) ) {
-				$order = $this->payment_tokens()->create_token( $order );
+			if ( $this->supports_tokenization() && 0 != $order->get_user_id() && $this->get_payment_tokens_handler()->should_tokenize() &&
+				( 0 == $order->payment_total || $this->get_payment_tokens_handler()->tokenize_before_sale() ) ) {
+				$order = $this->get_payment_tokens_handler()->create_token( $order );
 			}
 
 			// payment failures are handled internally by do_transaction()
@@ -533,7 +533,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		} elseif ( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 			// paying with tokenized payment method (we've already verified that this token exists in the validate_fields method)
-			$token = $this->payment_tokens()->get_token( $order->get_user_id(), SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) );
+			$token = $this->get_payment_tokens_handler()->get_token( $order->get_user_id(), SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) );
 
 			$order->payment->token          = $token->get_id();
 			$order->payment->account_number = $token->get_last_four();
@@ -557,7 +557,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			}
 
 			// make this the new default payment token
-			$this->payment_tokens()->set_default_token( $order->get_user_id(), $token );
+			$this->get_payment_tokens_handler()->set_default_token( $order->get_user_id(), $token );
 		}
 
 		// standardize expiration date year to 2 digits
@@ -780,11 +780,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// handle the response
 		if ( $response->transaction_approved() || $response->transaction_held() ) {
 
-			if ( $this->supports_tokenization() && 0 != $order->get_user_id() && $this->payment_tokens()->should_tokenize() &&
-				( $order->payment_total > 0 && ( $this->payment_tokens()->tokenize_with_sale() || $this->payment_tokens()->tokenize_after_sale() ) ) ) {
+			if ( $this->supports_tokenization() && 0 != $order->get_user_id() && $this->get_payment_tokens_handler()->should_tokenize() &&
+				( $order->payment_total > 0 && ( $this->get_payment_tokens_handler()->tokenize_with_sale() || $this->get_payment_tokens_handler()->tokenize_after_sale() ) ) ) {
 
 				try {
-					$order = $this->payment_tokens()->create_token( $order, $response );
+					$order = $this->get_payment_tokens_handler()->create_token( $order, $response );
 				} catch ( SV_WC_Plugin_Exception $e ) {
 
 					// handle the case of a "tokenize-after-sale" request failing by marking the order as on-hold with an explanatory note
@@ -1017,12 +1017,26 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 
 	/**
-	 * Initialize payment tokens
+	 * Initialize payment tokens handler.
 	 *
 	 * @since 4.3.0-dev
 	 */
-	protected function init_tokenization() {
-		$this->payment_tokens = new SV_WC_Payment_Gateway_Payment_Tokens( $this );
+	protected function init_payment_tokens_handler() {
+
+		$this->payment_tokens_handler = $this->build_payment_tokens_handler();
+	}
+
+
+	/**
+	 * Return the Payment Tokens Handler class instance. Concrete classes
+	 * can override this method to return a custom implementation.
+	 *
+	 * @since 4.3.0-dev
+	 * @return \SV_WC_Payment_Gateway_Payment_Tokens_Handler
+	 */
+	protected function build_payment_tokens_handler() {
+
+		return new SV_WC_Payment_Gateway_Payment_Tokens_Handler( $this );
 	}
 
 
@@ -1030,10 +1044,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Get the payment tokens handler instance.
 	 *
 	 * @since 4.3.0-dev
-	 * @return \SV_WC_Payment_Gateway_Payment_Tokens
+	 * @return \SV_WC_Payment_Gateway_Payment_Tokens_Handler
 	 */
-	public function payment_tokens() {
-		return $this->payment_tokens;
+	public function get_payment_tokens_handler() {
+
+		return $this->payment_tokens_handler;
 	}
 
 
@@ -1248,7 +1263,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$token = $response->get_payment_token();
 
 			// set the token to the user account
-			$this->payment_tokens()->add_token( $order->customer_user, $token );
+			$this->get_payment_tokens_handler()->add_token( $order->customer_user, $token );
 
 			// order note based on gateway type
 			if ( $this->is_credit_card_gateway() ) {

@@ -212,7 +212,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// payment tokens
 		require_once( $payment_gateway_framework_path . '/payment-tokens/class-sv-wc-payment-gateway-payment-token.php' );
-		require_once( $payment_gateway_framework_path . '/payment-tokens/class-sv-wc-payment-gateway-payment-tokens.php' );
+		require_once( $payment_gateway_framework_path . '/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php' );
 
 		// helpers
 		require_once( $payment_gateway_framework_path . '/api/class-sv-wc-payment-gateway-api-response-message-helper.php' );
@@ -1058,13 +1058,13 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * @since 4.0.0
 	 * @param string|int $user_id the user ID associated with the token
 	 * @param string $token the token string
-	 * @return SV_WC_Payment_Gateway|null gateway if found, null otherwise
+	 * @return \SV_WC_Payment_Gateway|\SV_WC_Payment_Gateway_Direct|null gateway if found, null otherwise
 	 */
 	public function get_gateway_from_token( $user_id, $token ) {
 
 		foreach ( $this->get_gateways() as $gateway ) {
 
-			if ( $gateway->payment_tokens()->user_has_token( $user_id, $token ) ) {
+			if ( $gateway->get_payment_tokens_handler()->user_has_token( $user_id, $token ) ) {
 				return $gateway;
 			}
 		}

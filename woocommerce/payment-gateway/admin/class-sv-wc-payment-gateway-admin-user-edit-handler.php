@@ -297,7 +297,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 			foreach ( $environments as $environment_id => $environment_name ) :
 
 				// get any payment tokens
-				$payment_tokens = $gateway->payment_tokens()->get_tokens( $user->ID, array( 'environment_id' => $environment_id ) );
+				$payment_tokens = $gateway->get_payment_tokens_handler()->get_tokens( $user->ID, array( 'environment_id' => $environment_id ) );
 
 				?>
 
@@ -410,7 +410,7 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 
 			// see whether we're deleting any
 			foreach ( $delete_payment_tokens as $token ) {
-				$gateway->payment_tokens()->remove_token( $user_id, $token, $environment_id );
+				$gateway->get_payment_tokens_handler()->remove_token( $user_id, $token, $environment_id );
 			}
 
 			// adding a new payment token?
@@ -421,9 +421,9 @@ class SV_WC_Payment_Gateway_Admin_User_Edit_Handler {
 				$exp_date = explode( '/', SV_WC_Helper::get_post( 'wc_' . $gateway->get_id() . '_payment_token_exp_date_' . $environment_id ) );
 
 				// add the new payment token, making it active if this is the first card
-				$gateway->payment_tokens()->add_token(
+				$gateway->get_payment_tokens_handler()->add_token(
 					$user_id,
-					$gateway->payment_tokens()->build_token(
+					$gateway->get_payment_tokens_handler()->build_token(
 						SV_WC_Helper::get_post( $payment_token_name ),
 						array(
 							'type'      => $gateway->is_credit_card_gateway() ? 'credit_card' : 'check',

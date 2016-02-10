@@ -2455,7 +2455,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param string $type how to add the message, options are:
 	 *     'message' (styled as WC message), 'error' (styled as WC Error)
 	 */
-	public function add_debug_message( $message, $type = 'message' ) {
+	protected function add_debug_message( $message, $type = 'message' ) {
 
 		// do nothing when debug mode is off or no message
 		if ( 'off' == $this->debug_off() || ! $message ) {

@@ -136,10 +136,10 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 			$order->customer_id = $this->get_gateway()->get_order_meta( $order->id, 'customer_id' );
 
 			// set token data on order
-			if ( $this->get_gateway()->payment_tokens()->user_has_token( $order->get_user_id(), $order->payment->token ) ) {
+			if ( $this->get_gateway()->get_payment_tokens_handler()->user_has_token( $order->get_user_id(), $order->payment->token ) ) {
 
 				// an existing registered user with a saved payment token
-				$token = $this->get_gateway()->payment_tokens()->get_token( $order->get_user_id(), $order->payment->token );
+				$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( $order->get_user_id(), $order->payment->token );
 
 				// account last four
 				$order->payment->account_number = $token->get_last_four();
@@ -220,7 +220,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 				} else {
 
 					// otherwise tokenize the payment method
-					$order = $this->get_gateway()->payment_tokens()->create_token( $order );
+					$order = $this->get_gateway()->get_payment_tokens_handler()->create_token( $order );
 				}
 
 				// mark order as pre-ordered / reduce order stock

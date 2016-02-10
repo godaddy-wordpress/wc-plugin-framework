@@ -49,7 +49,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	/**
 	 * Setup Class
 	 *
-	 * @param \SV_WC_Payment_Gateway $gateway gateway for form
+	 * @param \SV_WC_Payment_Gateway|\SV_WC_Payment_Gateway_Direct $gateway gateway for form
 	 * @since 4.0.0
 	 */
 	public function __construct( $gateway ) {
@@ -113,7 +113,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 		if ( $this->tokenization_allowed() && is_user_logged_in() ) {
 
-			foreach ( $this->get_gateway()->payment_tokens()->get_tokens( get_current_user_id() ) as $token ) {
+			foreach ( $this->get_gateway()->get_payment_tokens_handler()->get_tokens( get_current_user_id() ) as $token ) {
 
 				// some gateways return all tokens for each gateway, so ensure the token type matches the gateway type
 				if ( ( $this->get_gateway()->is_credit_card_gateway() && $token->is_check() ) || ( $this->get_gateway()->is_echeck_gateway() && $token->is_credit_card() ) ) {
@@ -138,7 +138,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 * Return the gateway for this form
 	 *
 	 * @since 4.0.0
-	 * @return SV_WC_Payment_Gateway
+	 * @return \SV_WC_Payment_Gateway|\SV_WC_Payment_Gateway_Direct
 	 */
 	public function get_gateway() {
 		return $this->gateway;
@@ -201,7 +201,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 */
 	public function tokenization_forced() {
 
-		$tokenization_forced = $this->get_gateway()->is_direct_gateway() && $this->get_gateway()->supports_tokenization() && $this->get_gateway()->tokenization_forced();
+		$tokenization_forced = $this->get_gateway()->is_direct_gateway() && $this->get_gateway()->supports_tokenization() && $this->get_gateway()->get_payment_tokens_handler()->tokenization_forced();
 
 		// tokenization always "forced" on the add new payment method page
 		if ( $this->get_gateway()->is_direct_gateway() && $this->get_gateway()->supports_add_payment_method() && is_add_payment_method_page() ) {

@@ -22,14 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-defined( 'ABSPATH' ) or exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Handle the payment token features.
+ * Handle the payment tokenization related functionality.
  *
  * @since 4.3.0-dev
  */
-class SV_WC_Payment_Gateway_Payment_Tokens {
+class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/** @var string the gateway environment ID */
@@ -424,7 +424,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 
 				// retrieve the payment method tokes from the remote API
 				$response = $this->get_gateway()->get_api()->get_tokenized_payment_methods( $customer_id );
-				$this->tokens[ $environment_id ][ $user_id ] = $response->get_payment_tokens();
+				$this->tokens[ $environment_id ][ $user_id ] = $response->get_get_payment_tokens_handler();
 
 				// check for a default from the persisted set, if any
 				$default_token = null;
@@ -845,6 +845,4 @@ class SV_WC_Payment_Gateway_Payment_Tokens {
 	protected function get_gateway() {
 		return $this->gateway;
 	}
-
-
 }
