@@ -424,7 +424,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 				// retrieve the payment method tokes from the remote API
 				$response = $this->get_gateway()->get_api()->get_tokenized_payment_methods( $customer_id );
-				$this->tokens[ $environment_id ][ $user_id ] = $response->get_get_payment_tokens_handler();
+				$this->tokens[ $environment_id ][ $user_id ] = $response->get_payment_tokens();
 
 				// check for a default from the persisted set, if any
 				$default_token = null;
