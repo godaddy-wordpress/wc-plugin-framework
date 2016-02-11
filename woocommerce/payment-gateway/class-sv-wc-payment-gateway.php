@@ -264,8 +264,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			add_action( 'woocommerce_update_options_payment_gateways_' . $this->get_id(), array( $this, 'process_admin_options' ) );
 		}
 
-		// add gateway.js checkout javascript
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		// Enqueue the necessary scripts & styles
+		if ( $this->is_available() ) {
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		}
 
 		// add API request logging
 		$this->add_api_request_logging();
@@ -311,76 +313,129 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
-	 * Enqueues the required gateway.js library and custom checkout javascript.
-	 * Also localizes payment method validation errors
+	 * Enqueue the necessary scripts & styles.
+	 *
+	 * Loads the payment form script if supported, as well as the concrete gateway plugin's script if
+	 * it exists. Also localizes the gateway plugin for i10n once. Localizes the payment form script
+	 * first, otherwise the concrete gateway's script is localized.
 	 *
 	 * @since 1.0.0
-	 * @return boolean true if the scripts were enqueued, false otherwise
 	 */
 	public function enqueue_scripts() {
 
-		// only load javascript once, if the gateway is available
-		if ( ! $this->is_available() || wp_script_is( 'sv-wc-payment-gateway-frontend', 'enqueued' ) || wp_script_is( 'wc-' . $this->get_plugin()->get_id_dasherized(), 'enqueued' ) ) {
-			return false;
+		// Load the payment form script if supported by the gateway
+		$localized_script = $payment_form_script = $this->load_payment_form_script();
+
+		// Load the concrete plugin's gateway script if it exists
+		$plugin_script = $this->load_plugin_script();
+
+		// Set the plugin script to be localized if it exists and the payment form isn't supported
+		if ( $plugin_script && ! $payment_form_script ) {
+			$localized_script = $plugin_script;
 		}
 
-		$localized_script_handle = '';
+		// Maybe localize the script with the gateway params
+		$this->localize_script( $localized_script );
+	}
 
-		// loaded when:
-		// 1) gateway supports the payment form feature
-		// 2) gateway supports the add payment method feature
-		// 3) plugin supports the my payment methods feature *and* user is on account page
+
+	/**
+	 * Load the payment form script if supported by the gateway.
+	 *
+	 * @since 4.3.0-dev
+	 * @return string The payment form script handle or empty if not supported
+	 */
+	private function load_payment_form_script() {
+
 		if ( $this->supports_payment_form() || $this->supports( 'add_payment_method' ) || ( $this->get_plugin()->supports( 'my_payment_methods' ) && is_account_page() ) ) {
 
-			// jQuery.payment - for credit card validation/formatting
-			wp_enqueue_script( 'jquery-payment' );
+			$handle = 'sv-wc-payment-gateway-frontend';
 
-			// frontend JS
-			wp_enqueue_script( 'sv-wc-payment-gateway-frontend', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-frontend.min.js', array(), SV_WC_Plugin::VERSION, true );
+			// Frontend JS
+			wp_enqueue_script( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
 
-			// frontend CSS
-			wp_enqueue_style( 'sv-wc-payment-gateway-frontend', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-frontend.min.css', array(), SV_WC_Plugin::VERSION );
+			// Frontend CSS
+			wp_enqueue_style( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), SV_WC_Plugin::VERSION );
 
-			$localized_script_handle = 'sv-wc-payment-gateway-frontend';
+			return $handle;
+
+		} else {
+
+			return '';
 		}
+	}
 
-		// some gateways (particularly those that don't support the payment form feature) have their own frontend JS
-		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . '.min.js' ) ) {
+
+	/**
+	 * Load the concrete plugin's gateway script if it exists.
+	 *
+	 * @since 4.3.0-dev
+	 * @return string The plugin script handle or empty if no script is found
+	 */
+	private function load_plugin_script() {
+
+		$handle = 'wc-' . $this->get_plugin()->get_id_dasherized();
+		$path   = $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/' . $handle . '.min.js';
+		$url    = $this->get_plugin()->get_plugin_url() . '/assets/js/frontend/' . $handle . '.min.js';
+
+		if ( is_readable( $path ) ) {
 
 			/**
-			 * Concrete Payment Gateway JS URL
-			 *
-			 * Allow actors to modify the URL used when loading a concrete
-			 * payment gateway's javascript.
+			 * Filter the concrete plugin script URL.
 			 *
 			 * @since 2.0.0
-			 * @param string $url JS asset URL
+			 * @param string $url The script URL
 			 */
-			$script_src = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_javascript_url', $this->get_plugin()->get_plugin_url() . '/assets/js/frontend/wc-' . $this->get_plugin()->get_id_dasherized() . '.min.js' );
+			$url = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_javascript_url', $url );
 
-			wp_enqueue_script( 'wc-' . $this->get_plugin()->get_id_dasherized(), $script_src, array(), $this->get_plugin()->get_version(), true );
+			wp_enqueue_script( $handle, $url, array(), $this->get_plugin()->get_version(), true );
 
-			$localized_script_handle = 'wc-' . $this->get_plugin()->get_id_dasherized();
+			return $handle;
+
+		} else {
+
+			return '';
+		}
+	}
+
+
+	/**
+	 * Localize a script once.
+	 *
+	 * Gateway plugins that have multiple gateways should only have their params localized once.
+	 *
+	 * @since 4.3.0-dev
+	 * @param string $handle The script handle to localize
+	 * @global \WP_Scripts The WordPress scripts object
+	 */
+	private function localize_script( $handle ) {
+
+		// If the script isn't loaded, bail
+		if ( ! wp_script_is( $handle, 'enqueued' ) ) {
+			return;
 		}
 
-		// maybe localize error messages
-		if ( $localized_script_handle ) {
+		global $wp_scripts;
 
-			/**
-			 * Payment Gateway Localized JS Script Params Filter.
-			 *
-			 * Allow actors to modify the localized script params passed to the
-			 * frontend for the concrete payment gateway's JS.
-			 *
-			 * @since 2.2.0
-			 * @param $params array
-			 */
-			$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() . '_js_localize_script_params', $this->get_js_localize_script_params() );
+		$object_name = $this->get_plugin()->get_id() . '_params';
 
-			wp_localize_script( $localized_script_handle, $this->get_plugin()->get_id() . '_params', $params );
+		// If the plugin's JS params already exists in the localized data, bail
+		if ( $wp_scripts instanceof WP_Scripts && strpos( $wp_scripts->get_data( $handle, 'data' ), $object_name ) ) {
+			return;
 		}
 
-		return true;
+		/**
+		 * Payment Gateway Localized JS Script Params Filter.
+		 *
+		 * Allow actors to modify the localized script params passed to the
+		 * frontend for the concrete payment gateway's JS.
+		 *
+		 * @since 2.2.0
+		 * @param $params array
+		 */
+		$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() . '_js_localize_script_params', $this->get_js_localize_script_params() );
+
+		wp_localize_script( $handle, $object_name, $params );
 	}
 
 
