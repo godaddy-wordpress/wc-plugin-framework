@@ -40,6 +40,9 @@ abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 	/** @var SimpleXMLElement XML object */
 	protected $response_xml;
 
+	/** @var array|mixed|object XML data after conversion into an usable object */
+	protected $response_data;
+
 
 	/**
 	 * Build an XML object from the raw response.
@@ -53,6 +56,30 @@ abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 
 		// LIBXML_NOCDATA ensures that any XML fields wrapped in [CDATA] will be included as text nodes
 		$this->response_xml = new SimpleXMLElement( $raw_response_xml, LIBXML_NOCDATA );
+
+		/**
+		 * workaround to convert the horrible data structure that SimpleXMLElement returns
+		 * and provide a nice array of stdClass objects. Note there is some fidelity lost
+		 * in the conversion (such as attributes), but implementing classes can access
+		 * the response_xml member directly to retrieve them as needed.
+		 */
+		$this->response_data = json_decode( json_encode( $this->response_xml ) );
+	}
+
+
+	/**
+	 * Magic method for getting XML element data. Note the response data has
+	 * already been casted into simple data types (string,int,array) and does not
+	 * require further casting in order to use.
+	 *
+	 * @since 4.3.0-dev
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function __get( $key ) {
+
+		// array cast & empty check prevents fataling on empty stdClass objects
+		return isset( $this->response_data->$key ) && ! empty( (array) $this->response_data->$key ) ? $this->response_data->$key : null;
 	}
 
 

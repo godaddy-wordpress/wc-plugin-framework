@@ -31,26 +31,20 @@ if ( ! class_exists( 'SV_WC_API_XML_Request' ) ) :
  *
  * @since 4.3.0-dev
  */
-abstract class SV_WC_API_XML_Request extends XMLWriter implements SV_WC_API_Request {
+abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 
 
-	/** @var string The complete request XML */
+	/** @var array request data */
+	protected $request_data;
+
+	/** @var string root element for XML */
+	protected $root_element;
+
+	/** @var \XMLWriter $xml object */
+	protected $xml;
+
+	/** @var string complete request XML */
 	protected $request_xml;
-
-
-	/**
-	 * Build the request.
-	 *
-	 * @since 4.3.0-dev
-	 */
-	public function __construct() {
-
-		// Create XML document in memory
-		$this->openMemory();
-
-		// Set XML version & encoding
-		$this->startDocument( '1.0', 'UTF-8' );
-	}
 
 
 	/**
@@ -73,20 +67,44 @@ abstract class SV_WC_API_XML_Request extends XMLWriter implements SV_WC_API_Requ
 
 
 	/**
-	 * Get the complete request XML.
+	 * Convert the request data into XML.
 	 *
 	 * @since 4.3.0-dev
 	 * @return string
 	 */
-	public function to_xml() {
+	protected function to_xml() {
 
 		if ( ! empty( $this->request_xml ) ) {
 			return $this->request_xml;
 		}
 
-		$this->endDocument();
+		$this->xml = new XMLWriter();
 
-		return $this->request_xml = $this->outputMemory();
+		// Create XML document in memory
+		$this->xml->openMemory();
+
+		// Set XML version & encoding
+		$this->xml->startDocument( '1.0', 'UTF-8' );
+
+		$request_data = $this->get_request_data();
+
+		SV_WC_Helper::array_to_xml( $this->xml, $this->get_root_element(), $request_data[ $this->get_root_element() ] );
+
+		$this->xml->endDocument();
+
+		return $this->request_xml = $this->xml->outputMemory();
+	}
+
+
+	/**
+	 * Return the request data to be converted to XML
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	public function get_request_data() {
+
+		return $this->request_data;
 	}
 
 
@@ -99,17 +117,7 @@ abstract class SV_WC_API_XML_Request extends XMLWriter implements SV_WC_API_Requ
 	 */
 	public function to_string() {
 
-		$request = $this->to_xml();
-
-		$dom = new DOMDocument();
-
-		// suppress errors for invalid XML syntax issues
-		if ( @$dom->loadXML( $request ) ) {
-			$dom->formatOutput = true;
-			$request = $dom->saveXML();
-		}
-
-		return $request;
+		return $this->to_xml();
 	}
 
 
@@ -123,8 +131,39 @@ abstract class SV_WC_API_XML_Request extends XMLWriter implements SV_WC_API_Requ
 	 */
 	public function to_string_safe() {
 
-		return $this->to_string();
+		return $this->prettify_xml( $this->to_string() );
 	}
+
+
+	/**
+	 * Helper method for making XML pretty, suitable for logging or rendering
+	 *
+	 * @since 4.3.0-dev
+	 * @param string $xml_string ugly XML string
+	 * @return string
+	 */
+	public function prettify_xml( $xml_string ) {
+
+		$dom = new DOMDocument();
+
+		// suppress errors for invalid XML syntax issues
+		if ( @$dom->loadXML( $xml_string ) ) {
+			$dom->formatOutput = true;
+			$xml_string = $dom->saveXML();
+		}
+
+		return $xml_string;
+	}
+
+
+	/**
+	 * Concrete classes must implement this method to return the root element
+	 * for the XML document
+	 *
+	 * @since 4.3.0-dev
+	 * @return string
+	 */
+	abstract protected function get_root_element();
 
 
 }
