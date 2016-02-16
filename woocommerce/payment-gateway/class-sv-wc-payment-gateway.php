@@ -961,25 +961,25 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			// add inline javascript
 			ob_start();
 			?>
-			$( '#woocommerce_<?php echo $this->get_id(); ?>_environment' ).change( function() {
+				$( '#woocommerce_<?php echo $this->get_id(); ?>_environment' ).change( function() {
 
-			// inherit settings from other gateway?
-			var inheritSettings = $( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).is( ':checked' );
+					// inherit settings from other gateway?
+					var inheritSettings = $( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).is( ':checked' );
 
-			var environment = $( this ).val();
+					var environment = $( this ).val();
 
-			// hide all environment-dependant fields
-			$( '.environment-field' ).closest( 'tr' ).hide();
+					// hide all environment-dependant fields
+					$( '.environment-field' ).closest( 'tr' ).hide();
 
-			// show the currently configured environment fields that are not also being hidden as any shared settings
-			var $environmentFields = $( '.' + environment + '-field' );
-			if ( inheritSettings ) {
-			$environmentFields = $environmentFields.not( '.shared-settings-field' );
-			}
+					// show the currently configured environment fields that are not also being hidden as any shared settings
+					var $environmentFields = $( '.' + environment + '-field' );
+					if ( inheritSettings ) {
+						$environmentFields = $environmentFields.not( '.shared-settings-field' );
+					}
 
-			$environmentFields.not( '.hidden' ).closest( 'tr' ).show();
+					$environmentFields.not( '.hidden' ).closest( 'tr' ).show();
 
-			} ).change();
+				} ).change();
 			<?php
 
 			wc_enqueue_js( ob_get_clean() );
@@ -991,21 +991,21 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			// add inline javascript to show/hide any shared settings fields as needed
 			ob_start();
 			?>
-			$( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).change( function() {
+				$( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).change( function() {
 
-			var enabled = $( this ).is( ':checked' );
+					var enabled = $( this ).is( ':checked' );
 
-			if ( enabled ) {
-			$( '.shared-settings-field' ).closest( 'tr' ).hide();
-			} else {
-			// show the fields
-			$( '.shared-settings-field' ).closest( 'tr' ).show();
+					if ( enabled ) {
+						$( '.shared-settings-field' ).closest( 'tr' ).hide();
+					} else {
+						// show the fields
+						$( '.shared-settings-field' ).closest( 'tr' ).show();
 
-			// hide any that may not be available for the currently selected environment
-			$( '#woocommerce_<?php echo $this->get_id(); ?>_environment' ).change();
-			}
+						// hide any that may not be available for the currently selected environment
+						$( '#woocommerce_<?php echo $this->get_id(); ?>_environment' ).change();
+					}
 
-			} ).change();
+				} ).change();
 			<?php
 
 			wc_enqueue_js( ob_get_clean() );
@@ -1464,7 +1464,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( $error_code ) {
 			$message = sprintf(
-			/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error code, %3$s - error message */
+				/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error code, %3$s - error message */
 				esc_html__( '%1$s Refund Failed: %2$s - %3$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$error_code,
@@ -1472,7 +1472,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			);
 		} else {
 			$message = sprintf(
-			/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error message */
+				/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error message */
 				esc_html__( '%1$s Refund Failed: %2$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$error_message
@@ -1629,7 +1629,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( $error_code ) {
 			$message = sprintf(
-			/* translators: Placeholders: %1$s - payment gateway title, %2$s - error code, %3$s - error message. Void as in to void an order. */
+				/* translators: Placeholders: %1$s - payment gateway title, %2$s - error code, %3$s - error message. Void as in to void an order. */
 				esc_html__( '%1$s Void Failed: %2$s - %3$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$error_code,
@@ -1637,7 +1637,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			);
 		} else {
 			$message = sprintf(
-			/* translators: Placeholders: %1$s - payment gateway title, %2$s - error message. Void as in to void an order. */
+				/* translators: Placeholders: %1$s - payment gateway title, %2$s - error message. Void as in to void an order. */
 				esc_html__( '%1$s Void Failed: %2$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$error_message
@@ -1658,7 +1658,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	public function mark_order_as_voided( $order, $response ) {
 
 		$message = sprintf(
-		/* translators: Placeholders: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order. */
+			/* translators: Placeholders: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order. */
 			esc_html__( '%1$s Void in the amount of %2$s approved.', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
 			wc_price( $order->refund->amount, array( 'currency' => $order->get_order_currency() ) )
