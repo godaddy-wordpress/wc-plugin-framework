@@ -586,7 +586,7 @@ abstract class SV_WC_API_Base {
 
 
 	/**
-	 * Set a header request
+	 * Set a request header
 	 *
 	 * @since 2.2.0
 	 * @param string $name header name
@@ -596,6 +596,21 @@ abstract class SV_WC_API_Base {
 	protected function set_request_header( $name, $value ) {
 
 		$this->request_headers[ $name ] = $value;
+	}
+
+
+	/**
+	 * Set multiple request headers at once
+	 *
+	 * @since 4.3.0-dev
+	 * @param array $headers
+	 */
+	protected function set_request_headers( array $headers ) {
+
+		foreach ( $headers as $name => $value ) {
+
+			$this->request_headers[ $name ] = $value;
+		}
 	}
 
 
