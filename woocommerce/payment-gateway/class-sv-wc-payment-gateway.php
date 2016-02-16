@@ -265,9 +265,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// Enqueue the necessary scripts & styles
-		if ( $this->is_available() ) {
-			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		}
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		// add API request logging
 		$this->add_api_request_logging();
@@ -313,102 +311,208 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
-	 * Enqueue the necessary scripts & styles.
-	 *
-	 * Loads the payment form script if supported, as well as the concrete gateway plugin's script if
-	 * it exists. Also localizes the gateway plugin for i10n once. Localizes the payment form script
-	 * first, otherwise the concrete gateway's script is localized.
+	 * Enqueue the necessary scripts & styles for the gateway, including the
+	 * payment form assets (if supported) and any gateway-specific assets.
 	 *
 	 * @since 1.0.0
 	 */
 	public function enqueue_scripts() {
 
-		// Load the payment form script if supported by the gateway
-		$localized_script = $payment_form_script = $this->load_payment_form_script();
-
-		// Load the concrete plugin's gateway script if it exists
-		$plugin_script = $this->load_plugin_script();
-
-		// Set the plugin script to be localized if it exists and the payment form isn't supported
-		if ( $plugin_script && ! $payment_form_script ) {
-			$localized_script = $plugin_script;
+		if ( ! $this->is_available() ) {
+			return;
 		}
 
-		// Maybe localize the script with the gateway params
-		$this->localize_script( $localized_script );
+		// payment form assets
+		if ( $this->supports_payment_form() ) {
+
+			$this->enqueue_payment_form_assets();
+		}
+
+		// gateway-specific assets
+		$this->enqueue_gateway_assets();
 	}
 
 
 	/**
-	 * Load the payment form script if supported by the gateway.
+	 * Enqueue the payment form JS, CSS, and localized
+	 * JS params
 	 *
 	 * @since 4.3.0-dev
-	 * @return string The payment form script handle or empty if not supported
 	 */
-	private function load_payment_form_script() {
+	protected function enqueue_payment_form_assets() {
 
-		if ( $this->supports_payment_form() || $this->supports( 'add_payment_method' ) || ( $this->get_plugin()->supports( 'my_payment_methods' ) && is_account_page() ) ) {
-
-			$handle = 'sv-wc-payment-gateway-frontend';
-
-			// Frontend JS
-			wp_enqueue_script( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
-
-			// Frontend CSS
-			wp_enqueue_style( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), SV_WC_Plugin::VERSION );
-
-			return $handle;
-
-		} else {
-
-			return '';
+		// bail if on my account page and *not* on add payment method page
+		if ( is_account_page() && ! is_add_payment_method_page() ) {
+			return;
 		}
+
+		$handle = 'sv-wc-payment-gateway-payment-form';
+
+		// Frontend JS
+		wp_enqueue_script( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
+
+		// Frontend CSS
+		wp_enqueue_style( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), SV_WC_Plugin::VERSION );
+
+		// localized JS params
+		$this->localize_script( $handle, $this->get_payment_form_js_localized_script_params() );
 	}
 
 
 	/**
-	 * Load the concrete plugin's gateway script if it exists.
+	 * Returns an array of JS script params to localize for the
+	 * payment form JS. Generally used for i18n purposes.
 	 *
 	 * @since 4.3.0-dev
-	 * @return string The plugin script handle or empty if no script is found
+	 * @return array associative array of param name to value
 	 */
-	private function load_plugin_script() {
+	protected function get_payment_form_js_localized_script_params() {
 
-		$handle = 'wc-' . $this->get_plugin()->get_id_dasherized();
-		$path   = $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/' . $handle . '.min.js';
-		$url    = $this->get_plugin()->get_plugin_url() . '/assets/js/frontend/' . $handle . '.min.js';
+		/**
+		 * Payment Form JS Localized Script Params Filter.
+		 *
+		 * Allow actors to modify the JS localized script params for the
+		 * payment form.
+		 *
+		 * @since 4.3.0-dev
+		 * @param array $params
+		 * @return array
+		 */
+		return apply_filters( 'sv_wc_payment_gateway_payment_form_js_localized_script_params', array(
+			'card_number_missing'            => esc_html__( 'Card number is missing', 'woocommerce-plugin-framework' ),
+			'card_number_invalid'            => esc_html__( 'Card number is invalid', 'woocommerce-plugin-framework' ),
+			'card_number_digits_invalid'     => esc_html__( 'Card number is invalid (only digits allowed)', 'woocommerce-plugin-framework' ),
+			'card_number_length_invalid'     => esc_html__( 'Card number is invalid (wrong length)', 'woocommerce-plugin-framework' ),
+			'cvv_missing'                    => esc_html__( 'Card security code is missing', 'woocommerce-plugin-framework' ),
+			'cvv_digits_invalid'             => esc_html__( 'Card security code is invalid (only digits are allowed)', 'woocommerce-plugin-framework' ),
+			'cvv_length_invalid'             => esc_html__( 'Card security code is invalid (must be 3 or 4 digits)', 'woocommerce-plugin-framework' ),
+			'card_exp_date_invalid'          => esc_html__( 'Card expiration date is invalid', 'woocommerce-plugin-framework' ),
+			'check_number_digits_invalid'    => esc_html__( 'Check Number is invalid (only digits are allowed)', 'woocommerce-plugin-framework' ),
+			'check_number_missing'           => esc_html__( 'Check Number is missing', 'woocommerce-plugin-framework' ),
+			'drivers_license_state_missing'  => esc_html__( 'Drivers license state is missing', 'woocommerce-plugin-framework' ),
+			'drivers_license_number_missing' => esc_html__( 'Drivers license number is missing', 'woocommerce-plugin-framework' ),
+			'drivers_license_number_invalid' => esc_html__( 'Drivers license number is invalid', 'woocommerce-plugin-framework' ),
+			'account_number_missing'         => esc_html__( 'Account Number is missing', 'woocommerce-plugin-framework' ),
+			'account_number_invalid'         => esc_html__( 'Account Number is invalid (only digits are allowed)', 'woocommerce-plugin-framework' ),
+			'account_number_length_invalid'  => esc_html__( 'Account number is invalid (must be between 5 and 17 digits)', 'woocommerce-plugin-framework' ),
+			'routing_number_missing'         => esc_html__( 'Routing Number is missing', 'woocommerce-plugin-framework' ),
+			'routing_number_digits_invalid'  => esc_html__( 'Routing Number is invalid (only digits are allowed)', 'woocommerce-plugin-framework' ),
+			'routing_number_length_invalid'  => esc_html__( 'Routing number is invalid (must be 9 digits)', 'woocommerce-plugin-framework' ),
+		) );
+	}
 
-		if ( is_readable( $path ) ) {
+
+	/**
+	 * Enqueue the gateway-specific assets if present, including JS, CSS, and
+	 * localized script params
+	 *
+	 * @since 4.3.0-dev
+	 */
+	protected function enqueue_gateway_assets() {
+
+		$handle = $this->get_gateway_js_handle();
+		$js_path   = $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/' . $handle . '.min.js';
+		$css_path  = $this->get_plugin()->get_plugin_path() . '/assets/css/frontend/' . $handle . '.min.css';
+
+		// JS
+		if ( is_readable( $js_path ) ) {
+
+			$js_url = $this->get_plugin()->get_plugin_url() . '/assets/js/frontend/' . $handle . '.min.js';
 
 			/**
-			 * Filter the concrete plugin script URL.
+			 * Concrete Payment Gateway JS URL
+			 *
+			 * Allow actors to modify the URL used when loading a concrete
+			 * payment gateway's javascript.
 			 *
 			 * @since 2.0.0
-			 * @param string $url The script URL
+			 * @param string $js_url JS asset URL
+			 * @return string
 			 */
-			$url = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_javascript_url', $url );
+			$js_url = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_javascript_url', $js_url );
 
-			wp_enqueue_script( $handle, $url, array(), $this->get_plugin()->get_version(), true );
+			wp_enqueue_script( $handle, $js_url, array(), $this->get_plugin()->get_version(), true );
+		}
 
-			return $handle;
+		// CSS
+		if ( is_readable( $css_path ) ) {
 
-		} else {
+			$css_url = $this->get_plugin()->get_plugin_url() . '/assets/css/frontend/' . $handle . 'min.js';
 
-			return '';
+			/**
+			 * Concrete Payment Gateway CSS URL
+			 *
+			 * Allow actors to modify the URL used when loading a concrete payment
+			 * gateway's CSS.
+			 *
+			 * @since 4.3.0-dev
+			 * @param string $css_url CSS asset URL
+			 * @return string
+			 */
+			$css_url = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_css_url', $css_url );
+
+			wp_enqueue_style( $handle, $css_url, array(), $this->get_plugin()->get_version() );
+		}
+
+		// localized JS script params
+		if ( $params = $this->get_gateway_js_localized_script_params() ) {
+
+			/**
+			 * Payment Gateway Localized JS Script Params Filter.
+			 *
+			 * Allow actors to modify the localized script params passed to the
+			 * frontend for the concrete payment gateway's JS.
+			 *
+			 * @since 2.2.0
+			 * @param $params array
+			 * @return array
+			 */
+			$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() . '_js_localize_script_params', $this->get_gateway_js_localized_script_params() );
+
+			$this->localize_script( $handle, $params );
 		}
 	}
 
 
 	/**
-	 * Localize a script once.
+	 * Return the gateway-specifics JS script handle. This is used for:
 	 *
-	 * Gateway plugins that have multiple gateways should only have their params localized once.
+	 * + enqueuing the script
+	 * + the localized JS script param object name
+	 *
+	 * Defaults to 'wc-<plugin ID dasherized>'.
 	 *
 	 * @since 4.3.0-dev
-	 * @param string $handle The script handle to localize
-	 * @global \WP_Scripts The WordPress scripts object
+	 * @return string
 	 */
-	private function localize_script( $handle ) {
+	protected function get_gateway_js_handle() {
+
+		return 'wc-' . $this->get_plugin()->get_id_dasherized();
+	}
+
+
+	/**
+	 * Returns an array of JS script params to localize for the gateway-specific
+	 * JS. Concrete classes must override this as needed.
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	protected function get_gateway_js_localized_script_params() {
+
+		// stub method
+	}
+
+
+	/**
+	 * Localize a script once. Gateway plugins that have multiple gateways should
+	 * only have their params localized once.
+	 *
+	 * @since 4.3.0-dev
+	 * @param string $handle script handle to localize
+	 * @param array $params script params to localize
+	 */
+	protected function localize_script( $handle, $params ) {
 
 		// If the script isn't loaded, bail
 		if ( ! wp_script_is( $handle, 'enqueued' ) ) {
@@ -417,23 +521,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		global $wp_scripts;
 
-		$object_name = $this->get_plugin()->get_id() . '_params';
+		$object_name = str_replace( '-', '_', $handle ) . '_params';
 
 		// If the plugin's JS params already exists in the localized data, bail
 		if ( $wp_scripts instanceof WP_Scripts && strpos( $wp_scripts->get_data( $handle, 'data' ), $object_name ) ) {
 			return;
 		}
-
-		/**
-		 * Payment Gateway Localized JS Script Params Filter.
-		 *
-		 * Allow actors to modify the localized script params passed to the
-		 * frontend for the concrete payment gateway's JS.
-		 *
-		 * @since 2.2.0
-		 * @param $params array
-		 */
-		$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() . '_js_localize_script_params', $this->get_js_localize_script_params() );
 
 		wp_localize_script( $handle, $object_name, $params );
 	}
@@ -460,40 +553,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		return null;
-	}
-
-
-	/**
-	 * Returns an array of javascript script params to localize for the
-	 * checkout/pay page javascript.  Mostly used for i18n purposes
-	 *
-	 * @since 1.0.0
-	 * @return array associative array of param name to value
-	 */
-	protected function get_js_localize_script_params() {
-
-		return array(
-			'card_number_missing'            => esc_html__( 'Card number is missing', 'woocommerce-plugin-framework' ),
-			'card_number_invalid'            => esc_html__( 'Card number is invalid', 'woocommerce-plugin-framework' ),
-			'card_number_digits_invalid'     => esc_html__( 'Card number is invalid (only digits allowed)', 'woocommerce-plugin-framework' ),
-			'card_number_length_invalid'     => esc_html__( 'Card number is invalid (wrong length)', 'woocommerce-plugin-framework' ),
-			'cvv_missing'                    => esc_html__( 'Card security code is missing', 'woocommerce-plugin-framework' ),
-			'cvv_digits_invalid'             => esc_html__( 'Card security code is invalid (only digits are allowed)', 'woocommerce-plugin-framework' ),
-			'cvv_length_invalid'             => esc_html__( 'Card security code is invalid (must be 3 or 4 digits)', 'woocommerce-plugin-framework' ),
-			'card_exp_date_invalid'          => esc_html__( 'Card expiration date is invalid', 'woocommerce-plugin-framework' ),
-			'check_number_digits_invalid'    => esc_html__( 'Check Number is invalid (only digits are allowed)', 'woocommerce-plugin-framework' ),
-			'check_number_missing'           => esc_html__( 'Check Number is missing', 'woocommerce-plugin-framework' ),
-			'drivers_license_state_missing'  => esc_html__( 'Drivers license state is missing', 'woocommerce-plugin-framework' ),
-			'drivers_license_number_missing' => esc_html__( 'Drivers license number is missing', 'woocommerce-plugin-framework' ),
-			'drivers_license_number_invalid' => esc_html__( 'Drivers license number is invalid', 'woocommerce-plugin-framework' ),
-			'account_number_missing'         => esc_html__( 'Account Number is missing', 'woocommerce-plugin-framework' ),
-			'account_number_invalid'         => esc_html__( 'Account Number is invalid (only digits are allowed)', 'woocommerce-plugin-framework' ),
-			'account_number_length_invalid'  => esc_html__( 'Account number is invalid (must be between 5 and 17 digits)', 'woocommerce-plugin-framework' ),
-			'routing_number_missing'         => esc_html__( 'Routing Number is missing', 'woocommerce-plugin-framework' ),
-			'routing_number_digits_invalid'  => esc_html__( 'Routing Number is invalid (only digits are allowed)', 'woocommerce-plugin-framework' ),
-			'routing_number_length_invalid'  => esc_html__( 'Routing number is invalid (must be 9 digits)', 'woocommerce-plugin-framework' ),
-		);
-
 	}
 
 
@@ -902,25 +961,25 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			// add inline javascript
 			ob_start();
 			?>
-				$( '#woocommerce_<?php echo $this->get_id(); ?>_environment' ).change( function() {
+			$( '#woocommerce_<?php echo $this->get_id(); ?>_environment' ).change( function() {
 
-					// inherit settings from other gateway?
-					var inheritSettings = $( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).is( ':checked' );
+			// inherit settings from other gateway?
+			var inheritSettings = $( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).is( ':checked' );
 
-					var environment = $( this ).val();
+			var environment = $( this ).val();
 
-					// hide all environment-dependant fields
-					$( '.environment-field' ).closest( 'tr' ).hide();
+			// hide all environment-dependant fields
+			$( '.environment-field' ).closest( 'tr' ).hide();
 
-					// show the currently configured environment fields that are not also being hidden as any shared settings
-					var $environmentFields = $( '.' + environment + '-field' );
-					if ( inheritSettings ) {
-						$environmentFields = $environmentFields.not( '.shared-settings-field' );
-					}
+			// show the currently configured environment fields that are not also being hidden as any shared settings
+			var $environmentFields = $( '.' + environment + '-field' );
+			if ( inheritSettings ) {
+			$environmentFields = $environmentFields.not( '.shared-settings-field' );
+			}
 
-					$environmentFields.not( '.hidden' ).closest( 'tr' ).show();
+			$environmentFields.not( '.hidden' ).closest( 'tr' ).show();
 
-				} ).change();
+			} ).change();
 			<?php
 
 			wc_enqueue_js( ob_get_clean() );
@@ -932,21 +991,21 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			// add inline javascript to show/hide any shared settings fields as needed
 			ob_start();
 			?>
-				$( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).change( function() {
+			$( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).change( function() {
 
-					var enabled = $( this ).is( ':checked' );
+			var enabled = $( this ).is( ':checked' );
 
-					if ( enabled ) {
-						$( '.shared-settings-field' ).closest( 'tr' ).hide();
-					} else {
-						// show the fields
-						$( '.shared-settings-field' ).closest( 'tr' ).show();
+			if ( enabled ) {
+			$( '.shared-settings-field' ).closest( 'tr' ).hide();
+			} else {
+			// show the fields
+			$( '.shared-settings-field' ).closest( 'tr' ).show();
 
-						// hide any that may not be available for the currently selected environment
-						$( '#woocommerce_<?php echo $this->get_id(); ?>_environment' ).change();
-					}
+			// hide any that may not be available for the currently selected environment
+			$( '#woocommerce_<?php echo $this->get_id(); ?>_environment' ).change();
+			}
 
-				} ).change();
+			} ).change();
 			<?php
 
 			wc_enqueue_js( ob_get_clean() );
@@ -1405,7 +1464,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( $error_code ) {
 			$message = sprintf(
-				/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error code, %3$s - error message */
+			/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error code, %3$s - error message */
 				esc_html__( '%1$s Refund Failed: %2$s - %3$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$error_code,
@@ -1413,7 +1472,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			);
 		} else {
 			$message = sprintf(
-				/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error message */
+			/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error message */
 				esc_html__( '%1$s Refund Failed: %2$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$error_message
@@ -1570,7 +1629,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( $error_code ) {
 			$message = sprintf(
-				/* translators: Placeholders: %1$s - payment gateway title, %2$s - error code, %3$s - error message. Void as in to void an order. */
+			/* translators: Placeholders: %1$s - payment gateway title, %2$s - error code, %3$s - error message. Void as in to void an order. */
 				esc_html__( '%1$s Void Failed: %2$s - %3$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$error_code,
@@ -1578,7 +1637,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			);
 		} else {
 			$message = sprintf(
-				/* translators: Placeholders: %1$s - payment gateway title, %2$s - error message. Void as in to void an order. */
+			/* translators: Placeholders: %1$s - payment gateway title, %2$s - error message. Void as in to void an order. */
 				esc_html__( '%1$s Void Failed: %2$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$error_message
@@ -1599,7 +1658,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	public function mark_order_as_voided( $order, $response ) {
 
 		$message = sprintf(
-			/* translators: Placeholders: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order. */
+		/* translators: Placeholders: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order. */
 			esc_html__( '%1$s Void in the amount of %2$s approved.', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
 			wc_price( $order->refund->amount, array( 'currency' => $order->get_order_currency() ) )
