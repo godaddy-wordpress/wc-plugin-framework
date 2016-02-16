@@ -1,0 +1,79 @@
+/*
+WooCommerce SkyVerge Payment Gateway Framework My Payment Methods SCSS
+Version 4.3.0-dev
+
+Copyright (c) 2015-2016, SkyVerge, Inc.
+ Licensed under the GNU General Public License v3.0
+http://www.gnu.org/licenses/gpl-3.0.html
+*/
+.sv-wc-payment-gateway-my-payment-methods-table-title {
+	clear: both; // storefront fix
+	margin: 1.5em 0;
+	h2 {
+		display: inline;
+	}
+	a.button {
+		float: right;
+		line-height: 1.5;
+		padding-left: .8em;
+		padding-right: .8em;
+		&:before {
+			margin-right: 5px;
+		}
+	}
+}
+
+table.sv-wc-payment-gateway-my-payment-methods-table {
+	font-size: 0.85em;
+
+	th, td {
+		vertical-align: middle;
+	}
+
+	.button {
+		white-space: nowrap;
+	}
+
+	.sv-wc-payment-gateway-payment-method-title img {
+		width: 40px;
+		height: 25px;
+		vertical-align: middle;
+		margin-right: 1em;
+		display: inline !important;
+	}
+
+	td.sv-wc-payment-gateway-payment-method-actions {
+		text-align: right;
+
+		.button {
+			margin: .125em 0 .125em .25em;
+		}
+	}
+
+	tr.sv-wc-payment-gateway-my-payment-methods-type-divider td {
+		font-weight: 700;
+	}
+}
+
+@media screen and (max-width: 768px) {
+
+	table.sv-wc-payment-gateway-my-payment-methods-table {
+
+		td.sv-wc-payment-gateway-payment-method-actions {
+			text-align: left;
+
+			&:before {
+				display: none;
+			}
+
+			.button {
+				float: none;
+				margin: .125em .25em .125em 0;
+			}
+		}
+
+		tr.sv-wc-payment-gateway-my-payment-methods-type-divider td:before {
+			display: none;
+		}
+	}
+}

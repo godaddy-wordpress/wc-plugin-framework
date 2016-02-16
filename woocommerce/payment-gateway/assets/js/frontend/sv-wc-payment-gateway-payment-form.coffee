@@ -1,6 +1,6 @@
 ###
- WooCommerce SkyVerge Payment Gateway Framework Frontend Javascript
- Version 4.0.0
+ WooCommerce SkyVerge Payment Gateway Framework Payment Form CoffeeScript
+ Version 4.3.0-dev
 
  Copyright (c) 2014-2016, SkyVerge, Inc.
  Licensed under the GNU General Public License v3.0

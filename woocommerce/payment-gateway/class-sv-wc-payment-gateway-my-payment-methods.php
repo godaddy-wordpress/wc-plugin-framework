@@ -88,6 +88,10 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function maybe_enqueue_styles_scripts() {
 
+		$handle = 'sv-wc-payment-gateway-my-payment-methods';
+
+		wp_enqueue_style( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), SV_WC_Plugin::VERSION );
+
 		wp_enqueue_style( 'dashicons' );
 
 		// Add confirm javascript when deleting payment methods
