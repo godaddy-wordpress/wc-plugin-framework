@@ -437,7 +437,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// CSS
 		if ( is_readable( $css_path ) ) {
 
-			$css_url = $this->get_plugin()->get_plugin_url() . '/assets/css/frontend/' . $handle . 'min.js';
+			$css_url = $this->get_plugin()->get_plugin_url() . '/assets/css/frontend/' . $handle . 'min.css';
 
 			/**
 			 * Concrete Payment Gateway CSS URL
