@@ -49,7 +49,7 @@ jQuery( document ).ready ($) ->
 				return
 
 			# localized error messages
-			@params = window[ "#{ @plugin_id }_params" ]
+			@params = window[ "sv_wc_payment_gateway_payment_form_params" ]
 
 			# handle sample check image hint
 			@form.on( 'click', '.js-sv-wc-payment-gateway-echeck-form-check-hint, .js-sv-wc-payment-gateway-echeck-form-sample-check', => this.handle_sample_check_hint() ) if @type is 'echeck'
@@ -135,11 +135,13 @@ jQuery( document ).ready ($) ->
 
 			@saved_payment_method_selected = @payment_fields.find( '.js-sv-wc-payment-gateway-payment-token:checked' ).val()
 
-			# type-specific validation
-			if @type is 'credit-card'
-				return this.validate_card_data()
-			else
-				return this.validate_account_data()
+			# perform internal validations (all fields present & valid, etc)
+			valid = if @type is 'credit-card' then this.validate_card_data() else this.validate_account_data()
+
+			# let gateways perform their own validation prior to form submission
+			handler = $( document.body ).triggerHandler( 'sv_wc_payment_form_valid_payment_data', { payment_form: this } ) isnt false
+
+			return valid && handler
 
 
 		# Public: format card data using jQuery.Payment
