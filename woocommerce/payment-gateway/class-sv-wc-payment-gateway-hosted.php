@@ -193,7 +193,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		// render the appropriate content
 		if ( $this->use_auto_form_post() ) {
-			$this->render_auto_post_form( $order, $request_params );
+			$this->render_auto_post_form( $order, $request_params, $this->get_auto_post_form_args( $order ) );
 		} else {
 			$this->render_pay_page_form( $order, $request_params );
 		}
@@ -224,13 +224,36 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @see SV_WC_Payment_Gateway_Hosted::use_auto_form_post()
 	 * @param WC_Order $order the order object
 	 * @param array $request_params associative array of request parameters
+	 * @param array $args {
+	 *     Optional. The form output arguments.
+	 *
+	 *     @type string $action_url     The form action URL
+	 *     @type string $action_message
+	 * }
 	 */
-	public function render_auto_post_form( $order, $request_params ) {
+	public function render_auto_post_form( WC_Order $order, $request_params, $args = array() ) {
+
+		/**
+		 * Filter the auto post form display arguments.
+		 *
+		 * @since 4.3.0-dev
+		 * @param array $args
+		 */
+		$args = apply_filters( 'wc_' . $this->get_id() . '_auto_post_form_args', $args );
+
+		$args = wp_parse_args( $args, array(
+			'submit_url'     => $this->get_hosted_pay_page_url( $order ),
+			'cancel_url'     => $order->get_cancel_order_url(),
+			'message'        => __( 'Thank you for your order, please click the button below to pay.', 'woocommerce-plugin-framework' ),
+			'thanks_message' => __( 'Thank you for your order. We are now redirecting you to complete payment.', 'woocommerce-plugin-framework' ),
+			'button_text'    => __( 'Pay Now', 'woocommerce-plugin-framework' ),
+			'cancel_text'    => __( 'Cancel Order', 'woocommerce-plugin-framework' ),
+		) );
 
 		// attempt to automatically submit the form and redirect
 		wc_enqueue_js('
 			$( "body" ).block( {
-					message: "<img src=\"' . esc_url( $this->get_plugin()->get_framework_assets_url() . '/images/ajax-loader.gif' ) . '\" alt=\"Redirecting&hellip;\" style=\"float:left; margin-right: 10px;\" />' . esc_html__( 'Thank you for your order. We are now redirecting you to complete payment.', 'woocommerce-plugin-framework' ) . '",
+					message: "<img src=\"' . esc_url( $this->get_plugin()->get_framework_assets_url() . '/images/ajax-loader.gif' ) . '\" alt=\"Redirecting&hellip;\" style=\"float:left; margin-right: 10px;\" />' . esc_html( $args['thanks_message'] ) . '",
 					overlayCSS: {
 						background: "#fff",
 						opacity: 0.6
@@ -249,19 +272,53 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			$( "#submit_' . $this->get_id() . '_payment_form" ).click();
 		');
 
-		$request_arg_fields = array();
+		echo '<p>' . esc_html( $args['message'] ) . '</p>';
+		echo '<form action="' . esc_url( $args['submit_url'] ) . '" method="post">';
+
+			// Output the param inputs
+			echo $this->get_auto_post_form_params_html( $request_params );
+
+			echo '<input type="submit" class="button alt button-alt" id="submit_' . $this->get_id() . '_payment_form" value="' . esc_attr( $args['button_text'] ) . '" />';
+			echo '<a class="button cancel" href="' . esc_url( $args['cancel_url'] ) . '">' . esc_html( $args['cancel_text'] ) . '</a>';
+
+		echo '</form>';
+	}
+
+
+	/**
+	 * Get the auto post form display arguments.
+	 *
+	 * @since 4.3.0-dev
+	 * @see SV_WC_Payment_Gateway_Hosted::render_auto_post_form() for args
+	 * @param \WC_Order $order the order object
+	 * @return array
+	 */
+	protected function get_auto_post_form_args( WC_Order $order ) {
+		return array();
+	}
+
+
+	/**
+	 * Get the auto post form params HTML.
+	 *
+	 * This can be overridden by concrete gateways to support more complex param arrays.
+	 *
+	 * @since 4.3.0-dev
+	 * @param array $request_params The request params
+	 * @return string
+	 */
+	protected function get_auto_post_form_params_html( $request_params = array() ) {
+
+		$html = '';
 
 		foreach ( $request_params as $key => $value ) {
-			$request_arg_fields[] = '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" />';
+
+			foreach ( (array) $value as $field_value ) {
+				$html .= '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $field_value ) . '" />';
+			}
 		}
 
-		echo '<p>' . esc_html__( 'Thank you for your order, please click the button below to pay.', 'woocommerce-plugin-framework' ) . '</p>' .
-			'<form action="' . esc_url( $this->get_hosted_pay_page_url( $order ) ) . '" method="post">' .
-				implode( '', $request_arg_fields ) .
-				'<input type="submit" class="button alt button-alt" id="submit_' . $this->get_id() . '_payment_form" value="' . esc_attr__( 'Pay Now', 'woocommerce-plugin-framework' ) . '" />' .
-				/* translators: Order as in e-commerce */
-				'<a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . esc_html__( 'Cancel Order', 'woocommerce-plugin-framework' ) . '</a>' .
-			'</form>';
+		return $html;
 	}
 
 
