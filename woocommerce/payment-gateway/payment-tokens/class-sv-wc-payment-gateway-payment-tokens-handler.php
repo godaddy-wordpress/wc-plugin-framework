@@ -102,7 +102,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		}
 
 		// perform the API request to tokenize the payment method if needed
-		if ( ! $response || $this->tokenize_after_sale() ) {
+		if ( ! $response || $this->get_gateway()->tokenize_after_sale() ) {
 			$response = $gateway->get_api()->tokenize_payment_method( $order );
 		}
 
@@ -578,52 +578,6 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		 * @param \SV_WC_Payment_Gateway_Direct $this instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_tokenization_forced', false, $this->get_gateway() );
-	}
-
-
-	/**
-	 * Returns true if tokenization takes place prior authorization/charge
-	 * transaction.
-	 *
-	 * Defaults to false but can be overridden by child gateway class
-	 *
-	 * @since 2.1.0
-	 * @return boolean true if there is a tokenization request that is issued
-	 *         before a authorization/charge transaction
-	 */
-	public function tokenize_before_sale() {
-		return false;
-	}
-
-
-	/**
-	 * Returns true if authorization/charge requests also tokenize the payment
-	 * method.  False if this gateway has a separate "tokenize" method which
-	 * is always used.
-	 *
-	 * Defaults to false but can be overridden by child gateway class
-	 *
-	 * @since 2.0.0
-	 * @return boolean true if tokenization is combined with sales, false if
-	 *         there is a special request for tokenization
-	 */
-	public function tokenize_with_sale() {
-		return false;
-	}
-
-
-	/**
-	 * Returns true if tokenization takes place after an authorization/charge
-	 * transaction.
-	 *
-	 * Defaults to false but can be overridden by child gateway class
-	 *
-	 * @since 2.1.0
-	 * @return boolean true if there is a tokenization request that is issued
-	 *         after an authorization/charge transaction
-	 */
-	public function tokenize_after_sale() {
-		return false;
 	}
 
 

@@ -400,7 +400,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// registered customer checkout (already logged in or creating account at checkout)
 			if ( $this->supports_tokenization() && 0 != $order->get_user_id() && $this->get_payment_tokens_handler()->should_tokenize() &&
-				( 0 == $order->payment_total || $this->get_payment_tokens_handler()->tokenize_before_sale() ) ) {
+				( 0 == $order->payment_total || $this->tokenize_before_sale() ) ) {
 				$order = $this->get_payment_tokens_handler()->create_token( $order );
 			}
 
@@ -781,7 +781,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( $response->transaction_approved() || $response->transaction_held() ) {
 
 			if ( $this->supports_tokenization() && 0 != $order->get_user_id() && $this->get_payment_tokens_handler()->should_tokenize() &&
-				( $order->payment_total > 0 && ( $this->get_payment_tokens_handler()->tokenize_with_sale() || $this->get_payment_tokens_handler()->tokenize_after_sale() ) ) ) {
+				( $order->payment_total > 0 && ( $this->tokenize_with_sale() || $this->tokenize_after_sale() ) ) ) {
 
 				try {
 					$order = $this->get_payment_tokens_handler()->create_token( $order, $response );
@@ -1049,6 +1049,52 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	public function get_payment_tokens_handler() {
 
 		return $this->payment_tokens_handler;
+	}
+
+
+	/**
+	 * Returns true if tokenization takes place prior authorization/charge
+	 * transaction.
+	 *
+	 * Defaults to false but can be overridden by child gateway class
+	 *
+	 * @since 2.1.0
+	 * @return boolean true if there is a tokenization request that is issued
+	 *         before a authorization/charge transaction
+	 */
+	public function tokenize_before_sale() {
+		return false;
+	}
+
+
+	/**
+	 * Returns true if authorization/charge requests also tokenize the payment
+	 * method.  False if this gateway has a separate "tokenize" method which
+	 * is always used.
+	 *
+	 * Defaults to false but can be overridden by child gateway class
+	 *
+	 * @since 2.0.0
+	 * @return boolean true if tokenization is combined with sales, false if
+	 *         there is a special request for tokenization
+	 */
+	public function tokenize_with_sale() {
+		return false;
+	}
+
+
+	/**
+	 * Returns true if tokenization takes place after an authorization/charge
+	 * transaction.
+	 *
+	 * Defaults to false but can be overridden by child gateway class
+	 *
+	 * @since 2.1.0
+	 * @return boolean true if there is a tokenization request that is issued
+	 *         after an authorization/charge transaction
+	 */
+	public function tokenize_after_sale() {
+		return false;
 	}
 
 
