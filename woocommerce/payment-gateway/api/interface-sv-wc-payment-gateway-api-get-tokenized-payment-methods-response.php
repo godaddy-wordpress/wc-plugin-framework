@@ -38,7 +38,7 @@ interface SV_WC_Payment_Gateway_API_Get_Tokenized_Payment_Methods_Response exten
 	 * @since 1.0.0
 	 * @return array array of SV_WC_Payment_Gateway_Payment_Token payment tokens, keyed by the token ID
 	 */
-	public function get_get_payment_tokens_handler();
+	public function get_payment_tokens();
 
 
 }
