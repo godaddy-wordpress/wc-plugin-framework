@@ -139,7 +139,7 @@ jQuery( document ).ready ($) ->
 			valid = if @type is 'credit-card' then this.validate_card_data() else this.validate_account_data()
 
 			# let gateways perform their own validation prior to form submission
-			handler = $( document.body ).triggerHandler( 'sv_wc_payment_form_valid_payment_data', { payment_form: this } ) isnt false
+			handler = $( document.body ).triggerHandler( 'sv_wc_payment_form_valid_payment_data', { payment_form: this, passed_validation: valid } ) isnt false
 
 			return valid && handler
 
@@ -333,3 +333,16 @@ jQuery( document ).ready ($) ->
 			$sample_check = @payment_fields.find( '.js-sv-wc-payment-gateway-echeck-form-sample-check' )
 
 			if $sample_check.is( ":visible" ) then $sample_check.slideUp() else $sample_check.slideDown()
+
+
+
+		# Blocks the payment form UI
+		#
+		# @since 3.0.0
+		block_ui: -> @form.block( message: null, overlayCSS: background: '#fff',opacity: 0.6 )
+
+
+		# Unblocks the payment form UI
+		#
+		# @since 3.0.0
+		unblock_ui: -> @form.unblock()
