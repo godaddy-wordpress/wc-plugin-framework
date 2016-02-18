@@ -91,8 +91,7 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 	 */
 	public function to_string() {
 
-		// URL encode params
-		return http_build_query( $this->get_params() );
+		return json_encode( $this->get_params() );
 	}
 
 
