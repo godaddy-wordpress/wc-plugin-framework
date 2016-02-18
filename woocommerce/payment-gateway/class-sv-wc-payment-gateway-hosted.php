@@ -193,7 +193,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		// render the appropriate content
 		if ( $this->use_auto_form_post() ) {
-			$this->render_auto_post_form( $order, $request_params, $this->get_auto_post_form_args( $order ) );
+			$this->render_auto_post_form( $order, $request_params );
 		} else {
 			$this->render_pay_page_form( $order, $request_params );
 		}
@@ -224,31 +224,10 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @see SV_WC_Payment_Gateway_Hosted::use_auto_form_post()
 	 * @param WC_Order $order the order object
 	 * @param array $request_params associative array of request parameters
-	 * @param array $args {
-	 *     Optional. The form output arguments.
-	 *
-	 *     @type string $action_url     The form action URL
-	 *     @type string $action_message
-	 * }
 	 */
-	public function render_auto_post_form( WC_Order $order, $request_params, $args = array() ) {
+	public function render_auto_post_form( WC_Order $order, $request_params ) {
 
-		/**
-		 * Filter the auto post form display arguments.
-		 *
-		 * @since 4.3.0-dev
-		 * @param array $args
-		 */
-		$args = apply_filters( 'wc_' . $this->get_id() . '_auto_post_form_args', $args );
-
-		$args = wp_parse_args( $args, array(
-			'submit_url'     => $this->get_hosted_pay_page_url( $order ),
-			'cancel_url'     => $order->get_cancel_order_url(),
-			'message'        => __( 'Thank you for your order, please click the button below to pay.', 'woocommerce-plugin-framework' ),
-			'thanks_message' => __( 'Thank you for your order. We are now redirecting you to complete payment.', 'woocommerce-plugin-framework' ),
-			'button_text'    => __( 'Pay Now', 'woocommerce-plugin-framework' ),
-			'cancel_text'    => __( 'Cancel Order', 'woocommerce-plugin-framework' ),
-		) );
+		$args = $this->get_auto_post_form_args( $order );
 
 		// attempt to automatically submit the form and redirect
 		wc_enqueue_js('
@@ -294,7 +273,33 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @return array
 	 */
 	protected function get_auto_post_form_args( WC_Order $order ) {
-		return array();
+
+		$args = array(
+			'submit_url'     => $this->get_hosted_pay_page_url( $order ),
+			'cancel_url'     => $order->get_cancel_order_url(),
+			'message'        => __( 'Thank you for your order, please click the button below to pay.', 'woocommerce-plugin-framework' ),
+			'thanks_message' => __( 'Thank you for your order. We are now redirecting you to complete payment.', 'woocommerce-plugin-framework' ),
+			'button_text'    => __( 'Pay Now', 'woocommerce-plugin-framework' ),
+			'cancel_text'    => __( 'Cancel Order', 'woocommerce-plugin-framework' ),
+		);
+
+		/**
+		 * Filter the auto post form display arguments.
+		 *
+		 * @since 4.3.0-dev
+		 * @param array $args {
+		 *     The form display arguments.
+		 *
+		 *     @type string $submit_url     Form submit URL
+		 *     @type string $cancel_url     Cancel payment URL
+		 *     @type string $message        The message before the form
+		 *     @type string $thanks_message The message displayed when the form is submitted
+		 *     @type string $button_text    Submit button text
+		 *     @type string $cancel_text    Cancel link text
+		 * }
+		 * @param \WC_Order $order the order object
+		 */
+		return (array) apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_auto_post_form_args', $args, $order );
 	}
 
 
