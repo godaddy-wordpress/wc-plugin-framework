@@ -616,34 +616,38 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 */
 	protected function do_credit_card_transaction_approved( $order, $response ) {
 
-		$last_four = substr( $response->get_account_number(), -4 );
+		$note = '';
 
-		$transaction_type = '';
-		if ( $response->is_authorization() ) {
-			$transaction_type = esc_html_x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' );
-		} elseif ( $response->is_charge() ) {
-			$transaction_type = esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' );
+		// Add the card type and last four digits, if available
+		if ( $response->get_account_number() ) {
+
+			$note .= ': ' . sprintf(
+				__( '%1$s ending in %2$s', 'woocommerce-plugin-framework' ),
+				SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_card_type() ? $response->get_card_type() : 'card' ) ),
+				substr( $response->get_account_number(), -4 )
+			);
+
+			// Add the expiration date, if available
+			if ( $response->get_exp_month() && $response->get_exp_year() ) {
+				$note .= ' ' . sprintf( __( '(expires %s)', 'woocommerce-plugin-framework' ), $response->get_exp_month() . '/' . substr( $response->get_exp_year(), -2 ) );
+			}
 		}
 
-		// credit card order note
-		$message = sprintf(
-			/* translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...), %5$s - last four digits of the card, %6$s - expiry date */
-			esc_html__( '%1$s %2$s %3$s Approved: %4$s ending in %5$s (expires %6$s)', 'woocommerce-plugin-framework' ),
-			$this->get_method_title(),
-			$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
-			$transaction_type,
-			SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_card_type() ? $response->get_card_type() : 'card' ) ),
-			$last_four,
-			$response->get_exp_month() . '/' . substr( $response->get_exp_year(), -2 )
+		// Set the specific credit card args
+		$note_args = array(
+			'method_type'     => self::PAYMENT_TYPE_CREDIT_CARD,
+			'additional_note' => $note,
+			'transaction_id'  => $response->get_transaction_id(),
 		);
 
-		// adds the transaction id (if any) to the order note
-		if ( $response->get_transaction_id() ) {
-				/* translators: Placeholders: %s - transaction ID */
-			$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
+		// Set the transaction type
+		if ( $response->is_authorization() ) {
+			$note_args['transaction_type'] = _x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' );
+		} elseif ( $response->is_charge() ) {
+			$note_args['transaction_type'] = _x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' );
 		}
 
-		$order->add_order_note( $message );
+		$this->add_transaction_approved_order_note( $order, $note_args );
 	}
 
 
@@ -657,30 +661,28 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 */
 	protected function do_check_transaction_approved( $order, $response ) {
 
-		$last_four = substr( $response->get_account_number(), -4 );
+		$note = '';
 
-		// credit card order note
-		$message = sprintf(
-			/* translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - card type (mastercard, visa, ...), %4$s - last four digits of the card */
-			esc_html__( '%1$s %2$s Transaction Approved: %3$s ending in %4$s', 'woocommerce-plugin-framework' ),
-			$this->get_method_title(),
-			$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
-			SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_account_type() ? $response->get_account_type() : 'bank' ) ),
-			$last_four
-		);
+		// Add the check type and last four digits, if available
+		if ( $response->get_account_number() ) {
 
-		// adds the check number (if any) to the order note
+			$note .= ': ' . sprintf(
+				__( '%1$s ending in %2$s', 'woocommerce-plugin-framework' ),
+				SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_account_type() ? $response->get_account_type() : 'bank' ) ),
+				substr( $response->get_account_number(), -4 )
+			);
+		}
+
+		// Add the check number, if available
 		if ( $response->get_check_number() ) {
-			/* translators: Placeholders: %s - check number */
-			$message .= ' ' . sprintf( esc_html__( '(check number %s)', 'woocommerce-plugin-framework' ), $response->get_check_number() );
+			$note .= ' ' . sprintf( __( '(check number %s)', 'woocommerce-plugin-framework' ), $response->get_check_number() );
 		}
 
-		// adds the transaction id (if any) to the order note
-		if ( $response->get_transaction_id() ) {
-			$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
-		}
-
-		$order->add_order_note( $message );
+		$this->add_transaction_approved_order_note( $order, array(
+			'method_type'     => self::PAYMENT_TYPE_ECHECK,
+			'additional_note' => $note,
+			'transaction_id'  => $response->get_transaction_id(),
+		) );
 	}
 
 
@@ -689,25 +691,84 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * transaction.  This is a generic, default approved handler
 	 *
 	 * @since 2.1.0
-	 * @param WC_Order $order the order
+	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response transaction response
 	 */
 	protected function do_transaction_approved( $order, $response ) {
 
-		// generic approve order note.  This is likely to be overwritten by a concrete payment gateway implementation
-		$message = sprintf(
-			/* translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test") */
-			esc_html__( '%1$s %2$s Transaction Approved', 'woocommerce-plugin-framework' ),
-			$this->get_method_title(),
-			$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : ''
+		// Simply add the generic order note
+		$this->add_transaction_approved_order_note( $order );
+	}
+
+
+	/**
+	 * Add an order note with the approved transaction information.
+	 *
+	 * @since 4.3.0-dev
+	 * @param \WC_Order $order The order object
+	 * @param array $args {
+	 *     Optional. The order note options.
+	 *
+	 *     @type string $method_title     Payment method title
+	 *     @type string $method_type      Payment method type, like credit-card or check
+	 *     @type string $transaction_type Transaction type name for display
+	 *     @type string $environment_name The environment name, like Test
+	 *     @type string $additional_note  Additional text to append to the transaction note
+	 *     @type string $transaction_id   The transaction ID
+	 * }
+	 */
+	protected function add_transaction_approved_order_note( $order, $args = array() ) {
+
+		$args = wp_parse_args( $args, array(
+			'method_title'     => $this->get_method_title(),
+			'method_type'      => '',
+			'transaction_type' => __( 'Transaction', 'woocommerce-plugin-framework' ),
+			'environment_name' => ( $this->is_test_environment() ) ? _x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
+			'additional_note'  => '',
+			'transaction_id'   => '',
+		) );
+
+		// Build the order note
+		$note = sprintf(
+			/* translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge) */
+			__( '%1$s %2$s %3$s Approved', 'woocommerce-plugin-framework' ),
+			$args['method_title'],
+			$args['environment_name'],
+			$args['transaction_type']
 		);
 
-		// adds the transaction id (if any) to the order note
-		if ( $response->get_transaction_id() ) {
-			$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
+		// Add the additional information, if available
+		if ( $args['additional_note'] ) {
+			$note .= $args['additional_note'];
 		}
 
-		$order->add_order_note( $message );
+		// Add the transaction ID, if available
+		if ( $args['transaction_id'] ) {
+			$note .= ' ' . sprintf( __( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $args['transaction_id'] );
+		}
+
+		if ( $args['payment_type'] ) {
+
+			/**
+			 * Filter the note added to an order when a transaction is approved for a specific payment type.
+			 *
+			 * @since 4.3.0-dev
+			 * @param string $note The note text
+			 * @param \WC_Order $order The order object
+			 */
+			$note = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_' . $args['payment_type'] . '_transaction_approved_order_note', $note, $order );
+		}
+
+		/**
+		 * Filter the note added to an order when a transaction is approved.
+		 *
+		 * @since 4.3.0-dev
+		 * @param string $note The note text
+		 * @param \WC_Order $order The order object
+		 */
+		$note = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_transaction_approved_order_note', $note, $order );
+
+		$order->add_order_note( $note );
 	}
 
 
