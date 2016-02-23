@@ -1,4 +1,8 @@
 <?php
+
+// Patchwork must loaded first
+require_once( dirname( dirname( __FILE__ ) ) . '/vendor/antecedent/patchwork/Patchwork.php' );
+
 /**
  * WC Plugin Framework Unit/Integration Tests Bootstrap
  *
@@ -36,7 +40,7 @@ class SV_WC_Plugin_Framework_Tests_Bootstrap {
 		$arg_key = array_search( '--testsuite', $GLOBALS['argv'] ) + 1;
 		$this->test_suite = ( $arg_key > 1 ) ? $GLOBALS['argv'][ $arg_key ] : 'unit';
 
-		// wpMock, etc
+		// wpMock
 		require_once( $this->framework_dir . '/vendor/autoload.php' );
 
 		if ( $this->is_unit_tests() ) {

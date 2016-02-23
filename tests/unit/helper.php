@@ -3,6 +3,7 @@
 namespace SkyVerge\WC_Plugin_Framework\Unit_Tests;
 
 use \WP_Mock as Mock;
+use Patchwork as p;
 
 /**
  * Helper Class Unit Tests
@@ -14,20 +15,79 @@ class Helper extends Test_Case {
 
 
 	/**
-	 * @dataProvider provider_test_str_starts_with_true
+	 * Test str_starts_with() when multibyte functions are *not* enabled
+	 *
+	 * @since 4.3.0-dev
+	 * @dataProvider provider_str_starts_with_ascii
 	 */
-	public function test_str_starts_with_true( $haystack, $needle ) {
+	public function test_str_starts_with_ascii( $asserts_as_true, $haystack, $needle ) {
 
-		$this->assertTrue( \SV_WC_Helper::str_starts_with( $haystack, $needle ) );
+		// force ASCII handling
+		p\redefine( 'SV_WC_Helper::multibyte_loaded', function() { return false; } );
+
+		if ( $asserts_as_true ) {
+			$this->assertTrue( \SV_WC_Helper::str_starts_with( $haystack, $needle ) );
+		} else {
+			$this->assertFalse( \SV_WC_Helper::str_starts_with( $haystack, $needle ) );
+		}
 	}
 
-	/**
-	 *
-	 * @dataProvider provider_test_str_starts_with_false
-	 */
-	public function test_str_starts_with_false( $haystack, $needle ) {
 
-		$this->assertFalse( \SV_WC_Helper::str_starts_with( $haystack, $needle ) );
+	/**
+	 * Data Provider for str_starts_with() ASCII test
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	public function provider_str_starts_with_ascii() {
+
+		return [
+			[ true, 'SkyVerge', 'Sky' ],
+			[ true, 'SkyVerge', '' ], // empty needle
+			[ true, 'SkyVerge', 'ಠ' ],  // empty needle as a result of ASCII replacement
+			[ true, 'ಠ_ಠ', 'ಠ' ], // ASCII for both haystack/needle
+			[ false, 'SkyVerge', 'verge' ],
+			[ false, 'SkyVerge', 'sky' ] // case-sensitivity
+		];
+	}
+
+
+	/**
+	 * Test str_starts_with() when multibyte functions are enabled
+	 *
+	 * @since 4.3.0-dev
+	 * @dataProvider provider_str_starts_with_mb
+	 */
+	public function test_str_starts_with_mb( $asserts_as_true, $haystack, $needle ) {
+
+		if ( ! extension_loaded( 'mbstring' ) ) {
+			$this->markTestSkipped( 'Multibyte string functions are not available, skipping.' );
+		}
+
+		if ( $asserts_as_true ) {
+			$this->assertTrue( \SV_WC_Helper::str_starts_with( $haystack, $needle ) );
+		} else {
+			$this->assertFalse( \SV_WC_Helper::str_starts_with( $haystack, $needle ) );
+		}
+	}
+
+
+	/**
+	 * Data Provider for str_starts_with() multibyte test
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	public function provider_str_starts_with_mb() {
+
+		return [
+			[ true, 'SkyVerge', 'Sky' ],
+			[ true, 'SkyVerge', '' ], // empty needle
+			[ false, 'SkyVerge', 'ಠ' ],  // UTF-8
+			[ true, 'ಠ_ಠ', 'ಠ' ], // UTF-8
+			[ false, 'SkyVerge', 'verge' ],
+			[ false, 'SkyVerge', 'sky' ] // case-sensitivity
+		];
 	}
 
 

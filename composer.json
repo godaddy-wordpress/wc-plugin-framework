@@ -2,6 +2,7 @@
     "require-dev": {
         "10up/wp_mock": "dev-master",
         "phpunit/phpunit": "4.7.*",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
+        "antecedent/patchwork": "1.4.0"
     }
 }
