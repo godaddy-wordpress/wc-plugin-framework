@@ -53,19 +53,36 @@ class Helper extends Test_Case {
 
 
 	/**
-	 * Test wc notice count
+	 * Test SV_WC_Helper::wc_add_notice()
 	 *
 	 * @since 4.3.0-dev
 	 */
 	public function test_wc_add_notice() {
 
-		// mock wc_notice_count() function
+		// mock wc_add_notice() function
 		Mock::wpFunction( 'wc_add_notice', array(
 			'args' => array( 'This is a success message.', 'success' ),
-			'return' => 666,
+			'return' => null,
 		) );
 
 		$this->assertNull( \SV_WC_Helper::wc_add_notice( 'This is a success message.', 'success' ) );
+	}
+
+
+	/**
+	 * Test SV_WC_Helper::wc_print_notice()
+	 *
+	 * @since 4.3.0-dev
+	 */
+	public function test_wc_print_notice() {
+
+		// mock wc_print_notice() function
+		Mock::wpFunction( 'wc_print_notice', array(
+			'args' => array( 'This is a notice message.', 'notice' ),
+			'return' => null,
+		) );
+
+		$this->assertNull( \SV_WC_Helper::wc_print_notice( 'This is a notice message.', 'notice' ) );
 	}
 
 
