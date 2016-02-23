@@ -51,17 +51,23 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function str_starts_with( $haystack, $needle) {
 
-			if ( '' === $needle ) {
-				return true;
-			}
-
 			if ( self::multibyte_loaded() ) {
+
+				if ( '' === $needle ) {
+					return true;
+				}
 
 				return 0 === mb_strpos( $haystack, $needle );
 
 			} else {
 
-				return 0 === strpos( self::str_to_ascii( $haystack ), self::str_to_ascii( $needle ) ); // @codeCoverageIgnore
+				$needle = self::str_to_ascii( $needle );
+
+				if ( '' === $needle ) {
+					return true;
+				}
+
+				return 0 === strpos( self::str_to_ascii( $haystack ), self::str_to_ascii( $needle ) );
 			}
 		}
 
