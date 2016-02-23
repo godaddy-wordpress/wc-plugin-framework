@@ -594,6 +594,9 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function render_select2_ajax() {
 
+			// We won't unit test this because it's mostly JavaScript
+			// @codeCoverageIgnoreStart
+
 			if ( ! did_action( 'sv_wc_select2_ajax_rendered' ) ) {
 
 				$javascript = "( function(){
@@ -738,6 +741,8 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 				 */
 				do_action( 'sv_wc_select2_ajax_rendered' );
 			}
+
+			 // @codeCoverageIgnoreEnd
 		}
 
 
