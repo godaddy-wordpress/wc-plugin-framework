@@ -66,4 +66,26 @@ class Helper extends Test_Case {
 			[ 'SkyVerge', 'sky' ], //case-sensitive
 		];
 	}
+
+
+	/**
+	 * Test \SV_WC_Helper::get_post
+	 */
+	public function test_get_post() {
+
+		$key = 'sv_test_key';
+
+		// Test for an unset key
+		$this->assertEquals( '', \SV_WC_Helper::get_post( $key ) );
+
+		$_POST[ $key ] = 'value';
+
+		// Check that a value is returned
+		$this->assertEquals( 'value', \SV_WC_Helper::get_post( $key ) );
+
+		$_POST[ $key ] = ' untrimmed-value ';
+
+		// Check that the value is trimmed
+		$this->assertEquals( 'untrimmed-value', \SV_WC_Helper::get_post( $key ) );
+	}
 }
