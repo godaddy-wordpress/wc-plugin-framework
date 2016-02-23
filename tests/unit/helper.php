@@ -14,11 +14,17 @@ use Patchwork as p;
 class Helper extends Test_Case {
 
 
+	/** Test string functions *************************************************/
+
+
 	/**
 	 * Test str_starts_with() when multibyte functions are *not* enabled
 	 *
 	 * @since 4.3.0-dev
 	 * @see \SV_WC_Helper::str_starts_with()
+	 * @param bool $asserts_as_true true if data passes true assert, passes false assertion otherwise
+	 * @param string $haystack
+	 * @param string $needle
 	 * @dataProvider provider_str_starts_with_ascii
 	 */
 	public function test_str_starts_with_ascii( $asserts_as_true, $haystack, $needle ) {
@@ -58,6 +64,9 @@ class Helper extends Test_Case {
 	 *
 	 * @since 4.3.0-dev
 	 * @see \SV_WC_Helper::str_starts_with()
+	 * @param bool $asserts_as_true true if data passes true assert, passes false assertion otherwise
+	 * @param string $haystack
+	 * @param string $needle
 	 * @dataProvider provider_str_starts_with_mb
 	 */
 	public function test_str_starts_with_mb( $asserts_as_true, $haystack, $needle ) {
@@ -94,6 +103,91 @@ class Helper extends Test_Case {
 
 
 	/**
+	 * Test str_ends_with() when multibyte functions are *not* enabled
+	 *
+	 * @since 4.3.0-dev
+	 * @see \SV_WC_Helper::str_ends_with()
+	 * @param bool $asserts_as_true true if data passes true assert, passes false assertion otherwise
+	 * @param string $haystack
+	 * @param string $needle
+	 * @dataProvider provider_str_ends_with_ascii
+	 */
+	public function test_str_ends_with_ascii( $asserts_as_true, $haystack, $needle ) {
+
+		// force ASCII handling
+		p\redefine( 'SV_WC_Helper::multibyte_loaded', function() { return false; } );
+
+		if ( $asserts_as_true ) {
+			$this->assertTrue( \SV_WC_Helper::str_ends_with( $haystack, $needle ) );
+		} else {
+			$this->assertFalse( \SV_WC_Helper::str_ends_with( $haystack, $needle ) );
+		}
+	}
+
+
+	/**
+	 * Data Provider for str_ends_with() ASCII test
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	public function provider_str_ends_with_ascii() {
+
+		return [
+			[ true, 'SkyVerge', 'erge' ],
+			[ true, 'SkyVerge', '' ], // empty needle
+			[ false, 'SkyVerge', 'ಠ' ],  // empty needle as a result of ASCII replacement
+			[ false, 'ಠ_ಠ', 'ಠ' ], // ASCII replaced as empty string for both haystack/needle
+			[ false, 'SkyVerge', 'sky' ],
+			[ false, 'SkyVerge', 'verge' ] // case-sensitivity
+		];
+	}
+
+
+	/**
+	 * Test str_ends_with() when multibyte functions are enabled
+	 *
+	 * @since 4.3.0-dev
+	 * @see \SV_WC_Helper::str_ends_with()
+	 * @param bool $asserts_as_true true if data passes true assert, passes false assertion otherwise
+	 * @param string $haystack
+	 * @param string $needle
+	 * @dataProvider provider_str_ends_with_mb
+	 */
+	public function test_str_ends_with_mb( $asserts_as_true, $haystack, $needle ) {
+
+		if ( ! extension_loaded( 'mbstring' ) ) {
+			$this->markTestSkipped( 'Multibyte string functions are not available, skipping.' );
+		}
+
+		if ( $asserts_as_true ) {
+			$this->assertTrue( \SV_WC_Helper::str_ends_with( $haystack, $needle ) );
+		} else {
+			$this->assertFalse( \SV_WC_Helper::str_ends_with( $haystack, $needle ) );
+		}
+	}
+
+
+	/**
+	 * Data Provider for str_ends_with() multibyte test
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	public function provider_str_ends_with_mb() {
+
+		return [
+			[ true, 'SkyVerge', 'erge' ],
+			[ true, 'SkyVerge', '' ], // empty needle
+			[ false, 'SkyVerge', 'ಠ' ],  // UTF-8
+			[ true, 'ಠ_ಠ', 'ಠ' ], // UTF-8
+			[ false, 'SkyVerge', 'sky' ],
+			[ false, 'SkyVerge', 'verge' ] // case-sensitivity
+		];
+	}
+
+
+	/**
 	 * Test \SV_WC_Helper::str_to_ascii()
 	 *
 	 * @see \SV_WC_Helper::str_to_ascii()
@@ -107,7 +201,26 @@ class Helper extends Test_Case {
 
 
 	/**
-	 * Test \SV_WC_Helper::str_to_sane_utf8()
+	 * Data provider for UTF-8 to pure ASCII strings
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	public function provider_test_str_to_ascii() {
+
+		return [
+			[ 'skyverge', 'skyverge' ],
+			[ 'a\bc`1/2*3', 'a\bc`1/2*3' ],
+			[ 'question mark�', 'question mark' ],
+			[ 'poker♠1♣2♥3♦abc', 'poker123abc' ],
+			[ 'one half ½', 'one half ' ], // note the whitespace on the right
+			[ '10¢', '10' ] // that's not a c, that's ¢ as in cent, on some fonts this might not be obvious
+		];
+	}
+
+
+	/**
+	 * Test str_to_sane_utf8()
 	 *
 	 * @see \SV_WC_Helper::str_to_sane_utf8()
 	 * @since 4.3.0-dev
@@ -116,6 +229,25 @@ class Helper extends Test_Case {
 	public function test_str_to_sane_utf8( $string, $utf8 ) {
 
 		$this->assertEquals( \SV_WC_Helper::str_to_sane_utf8( $string ), $utf8 );
+	}
+
+
+	/**
+	 * Data provider for crazy UTF-8 to sane UTF-8 strings
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	public function provider_test_str_to_sane_utf8() {
+
+		return [
+			[ 'إن شاء الله!', 'إن شاء الله!' ], // non-latin UTF-8, but still sane
+			[ 'a\bc`1/2*3', 'a\bc1/2*3' ],
+			[ 'question mark�', 'question mark' ],
+			[ 'poker♠1♣2♥3♦abc', 'poker123abc' ],
+			[ 'one half ½', 'one half ' ], // note the whitespace on the right
+			[ '10¢', '10¢' ] // that's not a c, that's ¢ as in cent, on some fonts this might not be obvious
+		];
 	}
 
 
@@ -406,37 +538,6 @@ MSG;
 
 
 	/**
-	 * Matching initial substrings provider
-	 *
-	 * @since 4.3.0-dev
-	 * @return array
-	 */
-	public function provider_test_str_starts_with_true() {
-
-		return [
-			[ 'SkyVerge', 'Sky' ],
-			[ 'SkyVerge', '' ],
-			[ 'ಠ_ಠ', 'ಠ' ], // UTF-8
-		];
-	}
-
-
-	/**
-	 * Mismatched initial substrings provider
-	 *
-	 * @since 4.3.0-dev
-	 * @return array
-	 */
-	public function provider_test_str_starts_with_false() {
-
-		return [
-			[ 'SkyVerge', 'verge' ],
-			[ 'SkyVerge', 'sky' ], //case-sensitive
-		];
-	}
-
-
-	/**
 	 * Convert Country code provider
 	 *
 	 * @since 4.3.0-dev
@@ -449,42 +550,6 @@ MSG;
 			[ 'ES', 'ESP' ],
 			[ 'ITA', 'IT' ],
 			[ 'ZAF', 'ZA' ],
-		];
-	}
-
-
-	/**
-	 * Provider for ASCII text strings
-	 *
-	 * @since 4.3.0-dev
-	 * @return array
-	 */
-	public function provider_test_str_to_ascii() {
-
-		return [
-			[ 'a\bc`1/2*3', 'a\bc`1/2*3' ],
-			[ 'question mark�', 'question mark' ],
-			[ 'poker♠1♣2♥3♦abc', 'poker123abc' ],
-			[ 'one half ½', 'one half ' ], // note the whitespace on the right
-			[ '10¢', '10' ] // that's not a c, that's ¢ as in cent, on some fonts this might not be obvious
-		];
-	}
-
-
-	/**
-	 * Provider for UTF8 text strings
-	 *
-	 * @since 4.3.0-dev
-	 * @return array
-	 */
-	public function provider_test_str_to_sane_utf8() {
-
-		return [
-			[ 'a\bc`1/2*3', 'a\bc1/2*3' ],
-			[ 'question mark�', 'question mark' ],
-			[ 'poker♠1♣2♥3♦abc', 'poker123abc' ],
-			[ 'one half ½', 'one half ' ], // note the whitespace on the right
-			[ '10¢', '10¢' ] // that's not a c, that's ¢ as in cent, on some fonts this might not be obvious
 		];
 	}
 
