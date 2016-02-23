@@ -2,6 +2,8 @@
 
 namespace SkyVerge\WC_Plugin_Framework\Unit_Tests;
 
+use \WP_Mock as Mock;
+
 /**
  * Helper Class Unit Tests
  *
@@ -26,6 +28,26 @@ class Helper extends Test_Case {
 	public function test_str_starts_with_false( $haystack, $needle ) {
 
 		$this->assertFalse( \SV_WC_Helper::str_starts_with( $haystack, $needle ) );
+	}
+
+	/**
+	 * Test wc notice count
+	 *
+	 * @since 4.3.0-dev
+	 */
+	public function test_wc_notice_count() {
+
+		// test 0 return value if function doens't exist
+		$this->assertEquals( 0, \SV_WC_Helper::wc_notice_count() );
+
+		// mock wc_notice_count() function
+		Mock::wpFunction( 'wc_notice_count', array(
+			'args' => array( 'error' ),
+			'return' => 666,
+		) );
+
+		// test the return value is as expected
+		$this->assertEquals( 666, \SV_WC_Helper::wc_notice_count( 'error' ) );
 	}
 
 	public function provider_test_str_starts_with_true() {
