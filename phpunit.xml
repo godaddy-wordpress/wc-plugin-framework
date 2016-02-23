@@ -7,6 +7,8 @@
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 	verbose="true"
+	printerFile="vendor/whatthejeff/nyancat-phpunit-resultprinter/src/NyanCat/PHPUnit/ResultPrinter.php"
+	printerClass="NyanCat\PHPUnit\ResultPrinter"
 	>
 	<testsuites>
 		<testsuite name="unit">
