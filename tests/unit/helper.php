@@ -38,17 +38,21 @@ class Helper extends Test_Case {
 	 */
 	public function test_wc_notice_count() {
 
+		// set up args
+		$type  = 'error';
+		$count = 666;
+
 		// test 0 return value if function doens't exist
-		$this->assertEquals( 0, \SV_WC_Helper::wc_notice_count() );
+		$this->assertEquals( 0, \SV_WC_Helper::wc_notice_count( $type ) );
 
 		// mock wc_notice_count() function
 		Mock::wpFunction( 'wc_notice_count', array(
-			'args' => array( 'error' ),
-			'return' => 666,
+			'args' => array( $type ),
+			'return' => $count,
 		) );
 
 		// test the return value is as expected
-		$this->assertEquals( 666, \SV_WC_Helper::wc_notice_count( 'error' ) );
+		$this->assertEquals( $count, \SV_WC_Helper::wc_notice_count( $type ) );
 	}
 
 
@@ -59,13 +63,17 @@ class Helper extends Test_Case {
 	 */
 	public function test_wc_add_notice() {
 
+		// set up args
+		$message = 'This is a success message.';
+		$type    = 'success';
+
 		// mock wc_add_notice() function
 		Mock::wpFunction( 'wc_add_notice', array(
-			'args' => array( 'This is a success message.', 'success' ),
+			'args' => array( $message, $type ),
 			'return' => null,
 		) );
 
-		$this->assertNull( \SV_WC_Helper::wc_add_notice( 'This is a success message.', 'success' ) );
+		$this->assertNull( \SV_WC_Helper::wc_add_notice( $message, $type ) );
 	}
 
 
@@ -76,13 +84,17 @@ class Helper extends Test_Case {
 	 */
 	public function test_wc_print_notice() {
 
+		// set up args
+		$message = 'This is a notice message.';
+		$type    = 'notice';
+
 		// mock wc_print_notice() function
 		Mock::wpFunction( 'wc_print_notice', array(
-			'args' => array( 'This is a notice message.', 'notice' ),
+			'args' => array( $message, $type ),
 			'return' => null,
 		) );
 
-		$this->assertNull( \SV_WC_Helper::wc_print_notice( 'This is a notice message.', 'notice' ) );
+		$this->assertNull( \SV_WC_Helper::wc_print_notice( $message, $type ) );
 	}
 
 
