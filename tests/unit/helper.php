@@ -325,8 +325,10 @@ MSG;
 	 */
 	public function test_number_format( $original_number, $formatted_number ) {
 
-		$this->assertTrue( is_numeric( \SV_WC_Helper::number_format( $original_number ) ), true  );
-		$this->assertEquals( \SV_WC_Helper::number_format( $original_number ), $formatted_number );
+		$result = \SV_WC_Helper::number_format( $original_number );
+
+		$this->assertTrue( is_numeric( $result ), true  );
+		$this->assertEquals( $result, $formatted_number );
 	}
 
 
@@ -339,6 +341,13 @@ MSG;
 	public function test_convert_country_code( $input_code, $converted_code ) {
 
 		$this->assertEquals( $converted_code, \SV_WC_Helper::convert_country_code( $input_code )  );
+
+		// 2 digits codes are converted into 3 digits and vice versa
+		if ( 2 === strlen( $input_code ) ) {
+			$this->assertEquals( strlen( $converted_code ), 3 );
+		} elseif ( 3 === strlen( $input_code ) ) {
+			$this->assertEquals( strlen( $converted_code ), 2 );
+		}
 	}
 
 
