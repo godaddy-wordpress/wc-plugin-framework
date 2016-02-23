@@ -40,6 +40,32 @@ class Helper extends Test_Case {
 
 
 	/**
+	 * Test \SV_WC_Helper::str_to_ascii()
+	 *
+	 * @see \SV_WC_Helper::str_to_ascii()
+	 * @since 4.3.0-dev
+	 * @dataProvider provider_test_str_to_ascii
+	 */
+	public function test_str_to_ascii( $string, $ascii ) {
+
+		$this->assertEquals( \SV_WC_Helper::str_to_ascii( $string ), $ascii );
+	}
+
+
+	/**
+	 * Test \SV_WC_Helper::str_to_sane_utf8()
+	 *
+	 * @see \SV_WC_Helper::str_to_sane_utf8()
+	 * @since 4.3.0-dev
+	 * @dataProvider provider_test_str_to_sane_utf8
+	 */
+	public function test_str_to_sane_utf8( $string, $utf8 ) {
+
+		$this->assertEquals( \SV_WC_Helper::str_to_sane_utf8( $string ), $utf8 );
+	}
+
+
+	/**
 	 * Test SV_WC_Helper::wc_notice_count()
 	 *
 	 * @see \SV_WC_Helper::wc_notice_count()
@@ -56,7 +82,7 @@ class Helper extends Test_Case {
 
 		// mock wc_notice_count() function
 		Mock::wpFunction( 'wc_notice_count', array(
-			'args' => array( $type ),
+			'args'   => array( $type ),
 			'return' => $count,
 		) );
 
@@ -79,7 +105,7 @@ class Helper extends Test_Case {
 
 		// mock wc_add_notice() function
 		Mock::wpFunction( 'wc_add_notice', array(
-			'args' => array( $message, $type ),
+			'args'   => array( $message, $type ),
 			'return' => null,
 		) );
 
@@ -101,7 +127,7 @@ class Helper extends Test_Case {
 
 		// mock wc_print_notice() function
 		Mock::wpFunction( 'wc_print_notice', array(
-			'args' => array( $message, $type ),
+			'args'   => array( $message, $type ),
 			'return' => null,
 		) );
 
@@ -130,8 +156,8 @@ class Helper extends Test_Case {
 
 		// mock admin_url() function
 		Mock::wpFunction( 'admin_url', array(
-			'args' => array( $path ),
-			'return' => 'http://skyverge.dev/wp-admin/' . $path,
+			'args'   => array( $path ),
+			'return' => $admin_url . $path,
 		) );
 
 		$this->assertEquals( $admin_url . $path, \SV_WC_Helper::get_wc_log_file_url( $handle ) );
@@ -139,95 +165,72 @@ class Helper extends Test_Case {
 
 
 	/**
-	 * Get an array with matched initial substrings
+	 * Test \SV_WC_Helper::get_post()
 	 *
+	 * @see \SV_WC_Helper::get_post()
 	 * @since 4.3.0-dev
-	 * @return array
 	 */
-	public function provider_test_str_starts_with_true() {
+	public function test_get_post() {
 
-		return [
-			[ 'SkyVerge', 'Sky' ],
-			[ 'SkyVerge', '' ],
-			[ 'ಠ_ಠ', 'ಠ' ], // UTF-8
-		];
+		$key = 'sv_test_key';
+
+		// Test for an unset key
+		$this->assertEquals( '', \SV_WC_Helper::get_post( $key ) );
+
+		$_POST[ $key ] = 'value';
+
+		// Check that a value is returned
+		$this->assertEquals( 'value', \SV_WC_Helper::get_post( $key ) );
+
+		$_POST[ $key ] = ' untrimmed-value ';
+
+		// Check that the value is trimmed
+		$this->assertEquals( 'untrimmed-value', \SV_WC_Helper::get_post( $key ) );
 	}
 
 
 	/**
-	 * Get an array with wrong initial substrings
+	 * Test \SV_WC_Helper::get_request()
 	 *
+	 * @see \SV_WC_Helper::get_request()
 	 * @since 4.3.0-dev
-	 * @return array
+	 * @dataProvider provider_test_get_request_associative_array
 	 */
-	public function provider_test_str_starts_with_false() {
+	public function test_get_request( $request_key, $request_value ) {
 
-		return [
-			[ 'SkyVerge', 'verge' ],
-			[ 'SkyVerge', 'sky' ], //case-sensitive
-		];
+		$_REQUEST[ $request_key ]  = $request_value;
+
+		$this->assertEquals( \SV_WC_Helper::get_request( $request_key ), trim( $request_value ) );
+		$this->assertEquals( \SV_WC_Helper::get_request( 'invalidKey' ), '' );
 	}
 
 
 	/**
-	 * Test \SV_WC_Helper::str_to_ascii()
+	 * Test \SV_WC_Helper::array_insert_after
 	 *
-	 * @see \SV_WC_Helper::str_to_ascii()
+	 * @see \SV_WC_Helper::array_insert_after()
 	 * @since 4.3.0-dev
-	 * @dataProvider provider_test_str_to_ascii
 	 */
-	public function test_str_to_ascii( $string, $ascii ) {
+	public function test_array_insert_after() {
 
-		$this->assertEquals( \SV_WC_Helper::str_to_ascii( $string ), $ascii );
-	}
+		$target_array = array(
+			'1' => 1,
+			'2' => 2,
+			'3' => 3,
+		);
 
+		$added_array = array(
+			'2.5' => 2.5,
+		);
 
-	/**
-	 * Get ASCII text strings
-	 *
-	 * @since 4.3.0-dev
-	 * @return array
-	 */
-	public function provider_test_str_to_ascii() {
+		$insert_point = '2';
 
-		return [
-			[ 'a\bc`1/2*3', 'a\bc`1/2*3' ],
-			[ 'question mark�', 'question mark' ],
-			[ 'poker♠1♣2♥3♦abc', 'poker123abc' ],
-			[ 'one half ½', 'one half ' ], // note the whitespace on the right
-			[ '10¢', '10' ] // that's not a c, that's ¢ as in cent, on some fonts this might not be obvious
-		];
-	}
+		$this->assertArrayHasKey( key( $added_array ), \SV_WC_Helper::array_insert_after( $target_array, $insert_point, $added_array ) );
 
+		// Test a key that doesn't exist
+		$insert_point = 'bad-key';
 
-	/**
-	 * Test \SV_WC_Helper::str_to_sane_utf8()
-	 *
-	 * @see \SV_WC_Helper::str_to_sane_utf8()
-	 * @since 4.3.0-dev
-	 * @dataProvider provider_test_str_to_sane_utf8
-	 */
-	public function test_str_to_sane_utf8( $string, $utf8 ) {
-
-		$this->assertEquals( \SV_WC_Helper::str_to_sane_utf8( $string ), $utf8 );
-	}
-
-
-	/**
-	 * Get UTF8 text strings
-	 *
-	 * @since 4.3.0-dev
-	 * @return array
-	 */
-	public function provider_test_str_to_sane_utf8() {
-
-		return [
-			[ 'a\bc`1/2*3', 'a\bc1/2*3' ],
-			[ 'question mark�', 'question mark' ],
-			[ 'poker♠1♣2♥3♦abc', 'poker123abc' ],
-			[ 'one half ½', 'one half ' ], // note the whitespace on the right
-			[ '10¢', '10¢' ] // that's not a c, that's ¢ as in cent, on some fonts this might not be obvious
-		];
+		$this->assertEquals( $target_array, \SV_WC_Helper::array_insert_after( $target_array, $insert_point, $added_array ) );
 	}
 
 
@@ -274,6 +277,102 @@ MSG;
 
 
 	/**
+	 * Test SV_WC_Helper::convert_country_code()
+	 *
+	 * @dataProvider provider_test_convert_country_code
+	 * @since 4.3.0-dev
+	 */
+	public function test_convert_country_code( $input_code, $converted_code ) {
+
+		$this->assertEquals( $converted_code, \SV_WC_Helper::convert_country_code( $input_code )  );
+	}
+
+
+	/**
+	 * Matching initial substrings provider
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	public function provider_test_str_starts_with_true() {
+
+		return [
+			[ 'SkyVerge', 'Sky' ],
+			[ 'SkyVerge', '' ],
+			[ 'ಠ_ಠ', 'ಠ' ], // UTF-8
+		];
+	}
+
+
+	/**
+	 * Mismatched initial substrings provider
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	public function provider_test_str_starts_with_false() {
+
+		return [
+			[ 'SkyVerge', 'verge' ],
+			[ 'SkyVerge', 'sky' ], //case-sensitive
+		];
+	}
+
+
+	/**
+	 * Convert Country code provider
+	 *
+	 * @since 4.3.0-dev
+	 */
+	public function provider_test_convert_country_code() {
+
+		return [
+			[ 'US', 'USA' ],
+			[ 'CA', 'CAN' ],
+			[ 'ES', 'ESP' ],
+			[ 'ITA', 'IT' ],
+			[ 'ZAF', 'ZA' ],
+		];
+	}
+
+
+	/**
+	 * Provider for ASCII text strings
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	public function provider_test_str_to_ascii() {
+
+		return [
+			[ 'a\bc`1/2*3', 'a\bc`1/2*3' ],
+			[ 'question mark�', 'question mark' ],
+			[ 'poker♠1♣2♥3♦abc', 'poker123abc' ],
+			[ 'one half ½', 'one half ' ], // note the whitespace on the right
+			[ '10¢', '10' ] // that's not a c, that's ¢ as in cent, on some fonts this might not be obvious
+		];
+	}
+
+
+	/**
+	 * Provider for UTF8 text strings
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	public function provider_test_str_to_sane_utf8() {
+
+		return [
+			[ 'a\bc`1/2*3', 'a\bc1/2*3' ],
+			[ 'question mark�', 'question mark' ],
+			[ 'poker♠1♣2♥3♦abc', 'poker123abc' ],
+			[ 'one half ½', 'one half ' ], // note the whitespace on the right
+			[ '10¢', '10¢' ] // that's not a c, that's ¢ as in cent, on some fonts this might not be obvious
+		];
+	}
+
+
+	/**
 	 * Get an array with formatted numbers
 	 *
 	 * @since 4.3.0-dev
@@ -294,23 +393,7 @@ MSG;
 
 
 	/**
-	 * Test \SV_WC_Helper::get_request()
-	 *
-	 * @see \SV_WC_Helper::get_request()
-	 * @since 4.3.0-dev
-	 * @dataProvider provider_test_get_request_associative_array
-	 */
-	public function test_get_request( $request_key, $request_value ) {
-
-		$_REQUEST[ $request_key ]  = $request_value;
-
-		$this->assertEquals( \SV_WC_Helper::get_request( $request_key ), trim( $request_value ) );
-		$this->assertEquals( \SV_WC_Helper::get_request( 'invalidKey' ), '' );
-	}
-
-
-	/**
-	 * Get an associative array with different keys and values
+	 * Provider for an associative array with different keys and values
 	 *
 	 * @since 4.3.0-dev
 	 * @return array
@@ -331,60 +414,6 @@ MSG;
 			'UCKey'       , 'UCValue',
 			'lckey'       , 'lcvalue',
 		] ];
-	}
-
-
-	/**
-	 * Test \SV_WC_Helper::get_post()
-	 *
-	 * @see \SV_WC_Helper::get_post()
-	 * @since 4.3.0-dev
-	 */
-	public function test_get_post() {
-
-		$key = 'sv_test_key';
-
-		// Test for an unset key
-		$this->assertEquals( '', \SV_WC_Helper::get_post( $key ) );
-
-		$_POST[ $key ] = 'value';
-
-		// Check that a value is returned
-		$this->assertEquals( 'value', \SV_WC_Helper::get_post( $key ) );
-
-		$_POST[ $key ] = ' untrimmed-value ';
-
-		// Check that the value is trimmed
-		$this->assertEquals( 'untrimmed-value', \SV_WC_Helper::get_post( $key ) );
-	}
-
-
-	/**
-	 * Test \SV_WC_Helper::array_insert_after
-	 *
-	 * @see \SV_WC_Helper::array_insert_after()
-	 * @since 4.3.0-dev
-	 */
-	public function test_array_insert_after() {
-
-		$target_array = array(
-			'1' => 1,
-			'2' => 2,
-			'3' => 3,
-		);
-
-		$added_array = array(
-			'2.5' => 2.5,
-		);
-
-		$insert_point = '2';
-
-		$this->assertArrayHasKey( key( $added_array ), \SV_WC_Helper::array_insert_after( $target_array, $insert_point, $added_array ) );
-
-		// Test a key that doesn't exist
-		$insert_point = 'bad-key';
-
-		$this->assertEquals( $target_array, \SV_WC_Helper::array_insert_after( $target_array, $insert_point, $added_array ) );
 	}
 
 
