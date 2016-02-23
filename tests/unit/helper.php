@@ -186,4 +186,32 @@ class Helper extends Test_Case {
 		// Check that the value is trimmed
 		$this->assertEquals( 'untrimmed-value', \SV_WC_Helper::get_request( $key ) );
 	}
+
+
+	/**
+	 * Test \SV_WC_Helper::array_insert_after
+	 *
+	 * @since 4.3.0-dev
+	 */
+	public function test_array_insert_after() {
+
+		$target_array = array(
+			'1' => 1,
+			'2' => 2,
+			'3' => 3,
+		);
+
+		$added_array = array(
+			'2.5' => 2.5,
+		);
+
+		$insert_point = '2';
+
+		$this->assertArrayHasKey( key( $added_array ), \SV_WC_Helper::array_insert_after( $target_array, $insert_point, $added_array ) );
+
+		// Test a key that doesn't exist
+		$insert_point = 'bad-key';
+
+		$this->assertEquals( $target_array, \SV_WC_Helper::array_insert_after( $target_array, $insert_point, $added_array ) );
+	}
 }
