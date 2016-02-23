@@ -30,8 +30,9 @@ class Helper extends Test_Case {
 		$this->assertFalse( \SV_WC_Helper::str_starts_with( $haystack, $needle ) );
 	}
 
+
 	/**
-	 * Test wc notice count
+	 * Test SV_WC_Helper::wc_notice_count()
 	 *
 	 * @since 4.3.0-dev
 	 */
@@ -49,6 +50,25 @@ class Helper extends Test_Case {
 		// test the return value is as expected
 		$this->assertEquals( 666, \SV_WC_Helper::wc_notice_count( 'error' ) );
 	}
+
+
+	/**
+	 * Test wc notice count
+	 *
+	 * @since 4.3.0-dev
+	 */
+	public function test_wc_add_notice() {
+
+		// mock wc_notice_count() function
+		Mock::wpFunction( 'wc_add_notice', array(
+			'args' => array( 'This is a success message.', 'success' ),
+			'return' => 666,
+		) );
+
+		$this->assertNull( \SV_WC_Helper::wc_add_notice( 'This is a success message.', 'success' ) );
+	}
+
+
 
 	public function provider_test_str_starts_with_true() {
 
