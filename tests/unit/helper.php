@@ -348,7 +348,13 @@ class Helper extends Test_Case {
 		$xml->openMemory();
 		$xml->startDocument( '1.0', 'UTF-8' );
 
-		\SV_WC_Helper::array_to_xml( $xml, 'foo', array( 'bar' => 'baz' ) );
+		\SV_WC_Helper::array_to_xml( $xml, 'foo', array(
+			array( 'test' ),
+			array( 'bar' => 'baz' ),
+			array( '@attributes' => array(
+				'attribute' => 'value',
+			) ),
+		) );
 
 		$xml->endDocument();
 
@@ -357,7 +363,7 @@ class Helper extends Test_Case {
 		// Mind newlines, empty last line and indentation
 		$expected = <<<MSG
 <?xml version="1.0" encoding="UTF-8"?>
-<foo><bar>baz</bar></foo>
+<foo>test</foo><foo><bar>baz</bar></foo><foo attribute="value"/>
 
 MSG;
 		$this->assertEquals( $output, $expected );
