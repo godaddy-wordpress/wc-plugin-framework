@@ -289,6 +289,54 @@ class Helper extends Test_Case {
 
 
 	/**
+	 * Test SV_WC_Helper::f__
+	 *
+	 * @since 4.3.0-dev
+	 */
+	public function test_f__() {
+
+		$string = 'String';
+
+		Mock::wpPassthruFunction( '__' );
+
+		$this->assertEquals( $string, \SV_WC_Helper::f__( $string ) );
+	}
+
+	/**
+	 * Test SV_WC_Helper::f_x
+	 *
+	 * @since 4.3.0-dev
+	 */
+	public function test_f_x() {
+
+		$string = 'String';
+
+		Mock::wpPassthruFunction( '_x' );
+
+		$this->assertEquals( $string, \SV_WC_Helper::f_x( $string, 'string-context' ) );
+	}
+
+	/*
+	 * Test SV_WC_Helper::f_e
+	 *
+	 * @since 4.3.0-dev
+	 */
+	public function test_f_e() {
+
+		$string = 'String';
+
+		Mock::wpFunction( '_e', array(
+			'args'   => array( $string, '*' ),
+			'return' => function( $string ) { echo $string; },
+		) );
+
+		\SV_WC_Helper::f_e( $string );
+
+		$this->expectOutputString( $string );
+	}
+
+
+	/**
 	 * Test \SV_WC_Helper::array_to_xml()
 	 *
 	 * @see \SV_WC_Helper::array_to_xml()
