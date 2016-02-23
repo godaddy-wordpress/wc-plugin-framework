@@ -47,7 +47,7 @@ class Helper extends Test_Case {
 
 		// mock wc_notice_count() function
 		Mock::wpFunction( 'wc_notice_count', array(
-			'args' => array( $type ),
+			'args'   => array( $type ),
 			'return' => $count,
 		) );
 
@@ -69,7 +69,7 @@ class Helper extends Test_Case {
 
 		// mock wc_add_notice() function
 		Mock::wpFunction( 'wc_add_notice', array(
-			'args' => array( $message, $type ),
+			'args'   => array( $message, $type ),
 			'return' => null,
 		) );
 
@@ -90,7 +90,7 @@ class Helper extends Test_Case {
 
 		// mock wc_print_notice() function
 		Mock::wpFunction( 'wc_print_notice', array(
-			'args' => array( $message, $type ),
+			'args'   => array( $message, $type ),
 			'return' => null,
 		) );
 
@@ -118,11 +118,23 @@ class Helper extends Test_Case {
 
 		// mock admin_url() function
 		Mock::wpFunction( 'admin_url', array(
-			'args' => array( $path ),
-			'return' => 'http://skyverge.dev/wp-admin/' . $path,
+			'args'   => array( $path ),
+			'return' => $admin_url . $path,
 		) );
 
 		$this->assertEquals( $admin_url . $path, \SV_WC_Helper::get_wc_log_file_url( $handle ) );
+	}
+
+
+	/**
+	 * Test SV_WC_Helper::convert_country_code()
+	 *
+	 * @dataProvider provider_test_convert_country_code
+	 * @since 4.3.0-dev
+	 */
+	public function test_convert_country_code( $input_code, $converted_code ) {
+
+		$this->assertEquals( $converted_code, \SV_WC_Helper::convert_country_code( $input_code )  );
 	}
 
 
@@ -140,6 +152,23 @@ class Helper extends Test_Case {
 		return [
 			[ 'SkyVerge', 'verge' ],
 			[ 'SkyVerge', 'sky' ], //case-sensitive
+		];
+	}
+
+
+	/**
+	 * Convert Country code provider
+	 *
+	 * @since 4.3.0-dev
+	 */
+	public function provider_test_convert_country_code() {
+
+		return [
+			[ 'US', 'USA' ],
+			[ 'CA', 'CAN' ],
+			[ 'ES', 'ESP' ],
+			[ 'ITA', 'IT' ],
+			[ 'ZAF', 'ZA' ],
 		];
 	}
 
