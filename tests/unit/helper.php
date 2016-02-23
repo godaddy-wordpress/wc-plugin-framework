@@ -88,4 +88,26 @@ class Helper extends Test_Case {
 		// Check that the value is trimmed
 		$this->assertEquals( 'untrimmed-value', \SV_WC_Helper::get_post( $key ) );
 	}
+
+
+	/**
+	 * Test \SV_WC_Helper::test_get_request
+	 */
+	public function test_get_request() {
+
+		$key = 'sv_test_key';
+
+		// Test for an unset key
+		$this->assertEquals( '', \SV_WC_Helper::get_request( $key ) );
+
+		$_REQUEST[ $key ] = 'value';
+
+		// Check that a value is returned
+		$this->assertEquals( 'value', \SV_WC_Helper::get_request( $key ) );
+
+		$_REQUEST[ $key ] = ' untrimmed-value ';
+
+		// Check that the value is trimmed
+		$this->assertEquals( 'untrimmed-value', \SV_WC_Helper::get_request( $key ) );
+	}
 }
