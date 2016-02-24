@@ -51,8 +51,8 @@ class Helper extends Test_Case {
 		return [
 			[ true, 'SkyVerge', 'Sky' ],
 			[ true, 'SkyVerge', '' ], // empty needle
-			[ true, 'SkyVerge', 'ಠ' ],  // empty needle as a result of ASCII replacement
-			[ true, 'ಠ_ಠ', 'ಠ' ], // ASCII for both haystack/needle
+			[ true, 'SkyVerge', 'µ' ],  // empty needle as a result of ASCII replacement
+			[ true, 'µ_µ', 'µ' ], // ASCII for both haystack/needle
 			[ false, 'SkyVerge', 'verge' ],
 			[ false, 'SkyVerge', 'sky' ] // case-sensitivity
 		];
@@ -94,8 +94,8 @@ class Helper extends Test_Case {
 		return [
 			[ true, 'SkyVerge', 'Sky' ],
 			[ true, 'SkyVerge', '' ], // empty needle
-			[ false, 'SkyVerge', 'ಠ' ],  // UTF-8
-			[ true, 'ಠ_ಠ', 'ಠ' ], // UTF-8
+			[ false, 'SkyVerge', 'µ' ],  // UTF-8
+			[ true, 'µ_µ', 'µ' ], // UTF-8
 			[ false, 'SkyVerge', 'verge' ],
 			[ false, 'SkyVerge', 'sky' ] // case-sensitivity
 		];
@@ -136,8 +136,8 @@ class Helper extends Test_Case {
 		return [
 			[ true, 'SkyVerge', 'erge' ],
 			[ true, 'SkyVerge', '' ], // empty needle
-			[ false, 'SkyVerge', 'ಠ' ],  // empty needle as a result of ASCII replacement
-			[ false, 'ಠ_ಠ', 'ಠ' ], // ASCII replaced as empty string for both haystack/needle
+			[ false, 'SkyVerge', 'µ' ],  // empty needle as a result of ASCII replacement
+			[ false, 'µ_µ', 'µ' ], // ASCII replaced as empty string for both haystack/needle
 			[ false, 'SkyVerge', 'sky' ],
 			[ false, 'SkyVerge', 'verge' ] // case-sensitivity
 		];
@@ -179,8 +179,8 @@ class Helper extends Test_Case {
 		return [
 			[ true, 'SkyVerge', 'erge' ],
 			[ true, 'SkyVerge', '' ], // empty needle
-			[ false, 'SkyVerge', 'ಠ' ],  // UTF-8
-			[ true, 'ಠ_ಠ', 'ಠ' ], // UTF-8
+			[ false, 'SkyVerge', 'µ' ],  // UTF-8
+			[ true, 'µ_µ', 'µ' ], // UTF-8
 			[ false, 'SkyVerge', 'sky' ],
 			[ false, 'SkyVerge', 'verge' ] // case-sensitivity
 		];
