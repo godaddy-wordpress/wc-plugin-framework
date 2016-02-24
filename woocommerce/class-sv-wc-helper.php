@@ -37,6 +37,10 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 	class SV_WC_Helper {
 
 
+		/** encoding used for mb_*() string functions */
+		const MB_ENCODING = 'UTF-8';
+
+
 		/** String manipulation functions (all multi-byte safe) ***************/
 
 		/**
@@ -57,7 +61,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 					return true;
 				}
 
-				return 0 === mb_strpos( $haystack, $needle );
+				return 0 === mb_strpos( $haystack, $needle, 0, self::MB_ENCODING );
 
 			} else {
 
@@ -90,7 +94,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 			if ( self::multibyte_loaded() ) {
 
-				return mb_substr( $haystack, -mb_strlen( $needle ) ) === $needle;
+				return mb_substr( $haystack, -mb_strlen( $needle, self::MB_ENCODING ), null, self::MB_ENCODING ) === $needle;
 
 			} else {
 
@@ -120,7 +124,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 					return false;
 				}
 
-				return false !== mb_strpos( $haystack, $needle );
+				return false !== mb_strpos( $haystack, $needle, 0, self::MB_ENCODING );
 
 			} else {
 
@@ -151,13 +155,13 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 			if ( self::multibyte_loaded() ) {
 
 				// bail if string doesn't need to be truncated
-				if ( mb_strlen( $string ) <= $length ) {
+				if ( mb_strlen( $string, self::MB_ENCODING ) <= $length ) {
 					return $string;
 				}
 
-				$length -= mb_strlen( $omission );
+				$length -= mb_strlen( $omission, self::MB_ENCODING );
 
-				return mb_substr( $string, 0, $length ) . $omission;
+				return mb_substr( $string, 0, $length, self::MB_ENCODING ) . $omission;
 
 			} else {
 
