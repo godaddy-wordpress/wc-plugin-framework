@@ -116,9 +116,19 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 			if ( self::multibyte_loaded() ) {
 
+				if ( '' === $needle ) {
+					return false;
+				}
+
 				return false !== mb_strpos( $haystack, $needle );
 
 			} else {
+
+				$needle = self::str_to_ascii( $needle );
+
+				if ( '' === $needle ) {
+					return false;
+				}
 
 				return false !== strpos( self::str_to_ascii( $haystack ), self::str_to_ascii( $needle ) );
 			}
