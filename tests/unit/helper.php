@@ -336,6 +336,55 @@ class Helper extends Test_Case {
 	}
 
 
+	/**
+	 * Test str_truncate() when multibyte functions are *not* enabled
+	 *
+	 * @since 4.3.0-dev
+	 * @see \SV_WC_Helper::str_truncate()
+	 */
+	public function test_str_truncate_ascii() {
+
+		// force ASCII handling
+		p\redefine( 'SV_WC_Helper::multibyte_loaded', function() { return false; } );
+
+		$the_string = 'The quick brown fox jumps ಠ_ಠ';
+
+		// no truncation needed / non-ASCII removed
+		$this->assertEquals( 'The quick brown fox jumps _', \SV_WC_Helper::str_truncate( $the_string, 30 ) );
+
+		// simple truncation
+		$this->assertEquals( 'The quick brown ...', \SV_WC_Helper::str_truncate( $the_string, 19 ) );
+
+		// custom omission string
+		$this->assertEquals( 'The quick brown fo-', \SV_WC_Helper::str_truncate( $the_string, 19, '-' ) );
+	}
+
+
+	/**
+	 * Test str_truncate() when multibyte functions are enabled
+	 *
+	 * @since 4.3.0-dev
+	 * @see \SV_WC_Helper::str_truncate()
+	 */
+	public function test_str_truncate_mb() {
+
+		if ( ! extension_loaded( 'mbstring' ) ) {
+			$this->markTestSkipped( 'Multibyte string functions are not available, skipping.' );
+		}
+
+		$the_string = 'The quick brown fox jumps ಠ_ಠ';
+
+		// no truncation needed
+		$this->assertEquals( 'The quick brown fox jumps ಠ_ಠ', \SV_WC_Helper::str_truncate( $the_string, 30 ) );
+
+		// simple truncation
+		$this->assertEquals( 'The quick brown ...', \SV_WC_Helper::str_truncate( $the_string, 19 ) );
+
+		// custom omission string
+		$this->assertEquals( 'The quick brown fox jumps ಠ-', \SV_WC_Helper::str_truncate( $the_string, 28, '-' ) );
+	}
+
+
 	/** Test WC notice functions **********************************************/
 
 
