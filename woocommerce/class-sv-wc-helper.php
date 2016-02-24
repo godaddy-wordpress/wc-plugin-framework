@@ -178,20 +178,20 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		/**
 		 * Returns a string with all non-ASCII characters removed. This is useful
 		 * for any string functions that expect only ASCII chars and can't
-		 * safely handle UTF-8
-		 *
-		 * Note: We must do a strict false check on the iconv() output due to a
-		 * bug in PHP/glibc {@link https://bugs.php.net/bug.php?id=63450}
+		 * safely handle UTF-8. Note this only allows ASCII chars in the range
+		 * 33-126 (newlines/carriage returns are stripped)
 		 *
 		 * @since 2.2.0
 		 * @param string $string string to make ASCII
-		 * @return string|null ASCII string or null if error occurred
+		 * @return string
 		 */
 		public static function str_to_ascii( $string ) {
 
-			$ascii = iconv( 'UTF-8', 'ASCII//IGNORE', $string );
+			// strip ASCII chars 32 and under
+			$string = filter_var( $string, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW );
 
-			return false === $ascii ? preg_replace( '/[^a-zA-Z0-9]/', '', $string ) : $ascii;
+			// strip ASCII chars 127 and higher
+			return filter_var( $string, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH );
 		}
 
 
