@@ -618,8 +618,13 @@ class Helper extends Test_Case {
 		$xml->startDocument( '1.0', 'UTF-8' );
 
 		\SV_WC_Helper::array_to_xml( $xml, 'foo', array(
-			array( 'test' ),
-			array( 'bar' => 'baz' ),
+			array( 'value' ),
+			array(
+				'bar' => array(
+					'baz' => 'value'
+				),
+				'baz' => '<invalid-value',
+			),
 			array( '@attributes' => array(
 				'attribute' => 'value',
 			) ),
@@ -627,12 +632,12 @@ class Helper extends Test_Case {
 
 		$xml->endDocument();
 
-		$output   = $xml->outputMemory();
+		$output = $xml->outputMemory();
 
 		// Mind newlines, empty last line and indentation
 		$expected = <<<MSG
 <?xml version="1.0" encoding="UTF-8"?>
-<foo>test</foo><foo><bar>baz</bar></foo><foo attribute="value"/>
+<foo>value</foo><foo><bar><baz>value</baz></bar><baz><![CDATA[<invalid-value]]></baz></foo><foo attribute="value"/>
 
 MSG;
 		$this->assertEquals( $output, $expected );
