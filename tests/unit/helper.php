@@ -252,6 +252,94 @@ class Helper extends Test_Case {
 
 
 	/**
+	 * Test str_exists() when multibyte functions are *not* enabled
+	 *
+	 * @since 4.3.0-dev
+	 * @see \SV_WC_Helper::str_exists()
+	 * @param bool $asserts_as_true true if data passes true assert, passes false assertion otherwise
+	 * @param string $haystack
+	 * @param string $needle
+	 * @dataProvider provider_str_exists_ascii
+	 */
+	public function test_str_exists_ascii( $asserts_as_true, $haystack, $needle ) {
+
+		// force ASCII handling
+		p\redefine( 'SV_WC_Helper::multibyte_loaded', function() { return false; } );
+
+		if ( $asserts_as_true ) {
+			$this->assertTrue( \SV_WC_Helper::str_exists( $haystack, $needle ) );
+		} else {
+			$this->assertFalse( \SV_WC_Helper::str_exists( $haystack, $needle ) );
+		}
+	}
+
+
+	/**
+	 * Data Provider for str_exists() ASCII test
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	public function provider_str_exists_ascii() {
+
+		return [
+			[ true, 'SkyVerge', 'erge' ],
+			[ false, 'SkyVerge', '' ], // empty needle
+			[ false, 'SkyVerge', 'ಠ' ],  // UTF-8
+			[ false, 'ಠ_ಠ', 'ಠ' ], // UTF-8 that does exist in string, but doesn't when forced to ASCII
+			[ false, 'SkyVerge', 'sky' ], // case-sensitivity
+			[ true, 'SkyVerge', 'V' ], // single-char, case-sensitive
+		];
+	}
+
+
+	/**
+	 * Test str_exists() when multibyte functions are enabled
+	 *
+	 * @since 4.3.0-dev
+	 * @see \SV_WC_Helper::str_exists()
+	 * @param bool $asserts_as_true true if data passes true assert, passes false assertion otherwise
+	 * @param string $haystack
+	 * @param string $needle
+	 * @dataProvider provider_str_exists_mb
+	 */
+	public function test_str_exists_mb( $asserts_as_true, $haystack, $needle ) {
+
+		if ( ! extension_loaded( 'mbstring' ) ) {
+			$this->markTestSkipped( 'Multibyte string functions are not available, skipping.' );
+		}
+
+		if ( $asserts_as_true ) {
+			$this->assertTrue( \SV_WC_Helper::str_exists( $haystack, $needle ) );
+		} else {
+			$this->assertFalse( \SV_WC_Helper::str_exists( $haystack, $needle ) );
+		}
+	}
+
+
+	/**
+	 * Data Provider for str_exists() multibyte test
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	public function provider_str_exists_mb() {
+
+		return [
+			[ true, 'SkyVerge', 'erge' ],
+			[ false, 'SkyVerge', '' ], // empty needle
+			[ false, 'SkyVerge', 'ಠ' ],  // UTF-8
+			[ true, 'ಠ_ಠ', 'ಠ' ], // UTF-8 that does exist in string
+			[ false, 'SkyVerge', 'sky' ], // case-sensitivity
+			[ true, 'SkyVerge', 'V' ], // single-char, case-sensitive
+		];
+	}
+
+
+	/** Test WC notice functions **********************************************/
+
+
+	/**
 	 * Test SV_WC_Helper::wc_notice_count()
 	 *
 	 * @see \SV_WC_Helper::wc_notice_count()
