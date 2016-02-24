@@ -600,12 +600,10 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * - `value` should be a comma-separated list of selected keys
 		 * - `data-request_data` can be used to pass any additional data to the AJAX request
 		 *
+		 * @codeCoverageIgnore no need to unit test this since it's mostly JS
 		 * @since 3.1.0
 		 */
 		public static function render_select2_ajax() {
-
-			// We won't unit test this because it's mostly JavaScript
-			// @codeCoverageIgnoreStart
 
 			if ( ! did_action( 'sv_wc_select2_ajax_rendered' ) ) {
 
@@ -751,8 +749,6 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 				 */
 				do_action( 'sv_wc_select2_ajax_rendered' );
 			}
-
-			 // @codeCoverageIgnoreEnd
 		}
 
 
