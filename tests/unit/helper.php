@@ -513,6 +513,24 @@ class Helper extends Test_Case {
 
 
 	/**
+	 * Test \SV_WC_Helper::get_order_line_items()
+	 *
+	 * @see \SV_WC_Helper::get_order_line_items()
+	 * @since 4.3.0-dev
+	 */
+	public function test_get_order_line_items() {
+
+		// Test WC 2.4+
+		p\redefine( 'SV_WC_Plugin_Compatibility::is_wc_version_gte_2_4', function() { return true; } );
+
+		// Create a stub for the SomeClass class.
+		$stub = $this->getMockBuilder( 'WC_Order' )->disableOriginalConstructor()->getMock();
+
+		// Configure the stub.
+		$stub->method( 'get_items' )->willReturn( [ 'foo' => 'bar' ] );
+	}
+
+	/**
 	 * Test \SV_WC_Helper::get_request()
 	 *
 	 * @see \SV_WC_Helper::get_request()
