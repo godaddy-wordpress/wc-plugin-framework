@@ -65,6 +65,7 @@ class SV_WC_Plugin_Framework_Tests_Bootstrap {
 
 		require_once( $this->framework_dir . '/woocommerce/class-sv-wc-plugin.php' );
 		require_once( $this->framework_dir . '/woocommerce/class-sv-wc-helper.php' );
+		require_once( $this->framework_dir . '/woocommerce/class-sv-wc-plugin-compatibility.php' );
 
 
 		echo "Loaded Framework..." . PHP_EOL;

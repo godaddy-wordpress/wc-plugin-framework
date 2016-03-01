@@ -520,15 +520,112 @@ class Helper extends Test_Case {
 	 */
 	public function test_get_order_line_items() {
 
-		// Test WC 2.4+
+
+		$expected_item = new \stdClass();
+		$expected_item->id = 777;
+		$expected_item->name = 'SkyShirt';
+		$expected_item->description = '';
+		$expected_item->quantity = 1;
+		$expected_item->item_total = '99.99';
+		$expected_item->line_total = '99.99';
+		$expected_item->meta = null;
+		$expected_item->product = $this->get_wc_product_mock();
+		$expected_item->item = $this->get_wc_item_data();
+
 		p\redefine( 'SV_WC_Plugin_Compatibility::is_wc_version_gte_2_4', function() { return true; } );
 
-		// Create a stub for the SomeClass class.
-		$stub = $this->getMockBuilder( 'WC_Order' )->disableOriginalConstructor()->getMock();
+		$this->getMockBuilder( 'WC_Order_Item_Meta_Mock' )
+			->setMethods( [ 'get_formatted'] )
+			->setMockClassName( 'WC_Order_Item_Meta' )
+			->getMock()
+			->method( 'get_formatted' )
+			->willReturn( [ 'label' => 'Size', 'value' => 'Large' ] );
 
-		// Configure the stub.
-		$stub->method( 'get_items' )->willReturn( [ 'foo' => 'bar' ] );
+		$actual_line_items = \SV_WC_Helper::get_order_line_items( $this->get_wc_order_mock() );
+
+		$this->assertEquals( [ $expected_item ], $actual_line_items );
+
+		$actual_line_items = current( $actual_line_items );
+
+		$this->assertObjectHasAttribute( 'id', $actual_line_items );
+		$this->assertObjectHasAttribute( 'name', $actual_line_items );
+		$this->assertObjectHasAttribute( 'description', $actual_line_items );
+		$this->assertObjectHasAttribute( 'quantity', $actual_line_items );
+		$this->assertObjectHasAttribute( 'item_total', $actual_line_items );
+		$this->assertObjectHasAttribute( 'line_total', $actual_line_items );
+		$this->assertObjectHasAttribute( 'meta', $actual_line_items );
+		$this->assertObjectHasAttribute( 'product', $actual_line_items );
+		$this->assertObjectHasAttribute( 'item', $actual_line_items );
 	}
+
+
+	/**
+	 * Get a simple mock object for the WC_Order class
+	 *
+	 * @since 4.3.0-dev
+	 * @return \WC_Order mocked order object
+	 */
+	protected function get_wc_order_mock() {
+
+		// create a mock class for WC_Order
+		$order = $this->getMockBuilder( 'WC_Order' )->setMethods( [
+				'get_items',
+				'get_product_from_item',
+				'get_item_total',
+				'get_line_total',
+			] )->getMock();
+
+		// stub WC_Order::get_items()
+		$order->method( 'get_items' )->willReturn( [ 777 => $this->get_wc_item_data() ] );
+
+		// stub WC_Order::get_product_from_item()
+		$order->method( 'get_product_from_item' )->willReturn( $this->get_wc_product_mock() );
+
+		// stub WC_Order::get_item_total()/get_line_total()
+		$order->method( 'get_item_total' )->willReturn( '99.99' );
+		$order->method( 'get_line_total' )->willReturn( '99.99' );
+
+
+		return $order;
+	}
+
+
+	/**
+	 * Get a simple mock object for the WC_Product class
+	 *
+	 * @since 4.3.0-dev
+	 * @return \PHPUnit_Framework_MockObject_Builder_InvocationMocker
+	 */
+	protected function get_wc_product_mock() {
+		return $this->getMockBuilder( 'WC_Product' )->getMock()->method( 'get_sku' )->willReturn( 'SKYSHIRT' );
+	}
+
+
+	/**
+	 * Returns an array of item data that matches the format WC returns item data
+	 * in
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	protected function get_wc_item_data() {
+
+		return [
+			'name'            => 'SkyShirt',
+			'type'            => 'line_item',
+			'item_meta'       => [ 'label' => 'Size', 'value' => 'Large' ],
+			'item_meta_array' => [ ],
+			'qty'             => 1,
+			'tax_class'       => '',
+			'product_id'      => 666,
+			'variation_id'    => 0,
+			'line_subtotal'   => '99.99',
+			'line_total'      => '99.99',
+			'line_tax'        => '0',
+			'line_tax_data'   => '',
+		];
+	}
+
 
 	/**
 	 * Test \SV_WC_Helper::get_request()
