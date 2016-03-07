@@ -60,16 +60,9 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		// parent constructor
 		parent::__construct( $id, $plugin, $args );
 
-		// IPN or redirect-back
-		if ( $this->has_ipn() ) {
-			$api_method_name = 'process_ipn';
-		} else {
-			$api_method_name = 'process_redirect_back';
-		}
-
 		// payment notification listener hook
-		if ( ! has_action( 'woocommerce_api_' . strtolower( get_class( $this ) ), array( $this, $api_method_name ) ) ) {
-			add_action( 'woocommerce_api_' . strtolower( get_class( $this ) ), array( $this, $api_method_name ) );
+		if ( ! has_action( 'woocommerce_api_' . strtolower( get_class( $this ) ), array( $this, 'handle_transaction_response_request' ) ) ) {
+			add_action( 'woocommerce_api_' . strtolower( get_class( $this ) ), array( $this, 'handle_transaction_response_request' ) );
 		}
 	}
 
@@ -355,16 +348,16 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 
 	/**
-	 * Process IPN request
+	 * Handle a payment notification request.
 	 *
-	 * @since 2.1.0
+	 * @since 4.3.0-dev
 	 */
-	public function process_ipn() {
+	public function handle_transaction_response_request() {
 
-		// log the IPN request
+		// log the request
 		$this->log_transaction_response_request( $_REQUEST );
 
-		$response = null;
+		$order = null;
 
 		try {
 
@@ -375,127 +368,48 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			$order = $response->get_order();
 
 			if ( ! $order || ! $order->id ) {
-				// if an order could not be determined, there's not a whole lot
-				// we can do besides logging the issue
 
-				if ( $this->debug_log() ) {
-					$this->get_plugin()->log( sprintf( 'IPN processing error: Could not find order %s', $response->get_order_id() ), $this->get_id() );
-				}
-
-				status_header( 200 );
-				die;
+				throw new SV_WC_Payment_Gateway_Exception( sprintf(
+					__( 'Could not find order %s', 'woocommerce-plugin-framework' ),
+					$response->get_order_id()
+				) );
 			}
 
 			// verify order has not already been completed
 			if ( ! $order->needs_payment() ) {
 
-				if ( $this->debug_log() ) {
-					$this->get_plugin()->log( sprintf( "IPN processing error: Order %s is already paid for.", $order->get_order_number() ), $this->get_id() );
-				}
+				/* translators: Placeholders: %s - payment gateway title (such as Authorize.net, Braintree, etc) */
+				$order->add_order_note( sprintf( esc_html__( '%s duplicate transaction received', 'woocommerce-plugin-framework' ), $this->get_method_title() ) );
 
-				/* translators: IPN: https://en.wikipedia.org/wiki/Instant_payment_notification, %s: payment gateway title (such as Authorize.net, Braintree, etc) */
-				$order_note = sprintf( esc_html__( 'IPN processing error: %s duplicate transaction received', 'woocommerce-plugin-framework' ), $this->get_method_title() );
-				$order->add_order_note( $order_note );
-
-				status_header( 200 );
-				die;
+				throw new SV_WC_Payment_Gateway_Exception( sprintf(
+					__( 'Order %s is already paid for.', 'woocommerce-plugin-framework' ),
+					$order->get_order_number()
+				) );
 			}
 
 			if ( $this->process_transaction_response( $order, $response ) ) {
-
-				if ( $order->has_status( 'on-hold' ) ) {
-					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
-				} elseif ( ! $order->has_status( 'cancelled' ) ) {
-					$order->payment_complete(); // mark order as having received payment
-				}
+				$this->do_successful_transaction_response( $order );
+			} else {
+				$this->do_failed_transaction_response( $order );
 			}
 
-		} catch ( SV_WC_Plugin_Exception $e ) {
-			// failure
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
-			if ( isset( $order ) && $order ) {
+			if ( $order && $order->needs_payment() ) {
 				$this->mark_order_as_failed( $order, $e->getMessage(), $response );
 			}
 
 			if ( $this->debug_log() ) {
-				$this->get_plugin()->log( sprintf( 'IPN processing error: %s', $e->getMessage() ), $this->get_id() );
-			}
-		}
 
-		// reply success
-		status_header( 200 );
-		die;
-	}
-
-
-	/**
-	 * Process redirect back (non-IPN gateway)
-	 *
-	 * @since 2.1.0
-	 */
-	public function process_redirect_back() {
-
-		// log the redirect back request
-		$this->log_transaction_response_request( $_REQUEST );
-
-		$response = null;
-
-		try {
-
-			// get the transaction response object for the current request
-			$response = $this->get_transaction_response( $_REQUEST );
-
-			// get the associated order, or die trying
-			$order = $response->get_order();
-
-			if ( ! $order || ! $order->id ) {
-
-				$this->add_debug_message( sprintf( "Order %s not found", $response->get_order_id() ), 'error' );
-
-				// if an order could not be determined, there's not a whole lot
-				// we can do besides redirecting back to the home page
-				return wp_redirect( get_home_url( null, '' ) );
+				$this->get_plugin()->log(
+					/* translators: Placeholders: %1$s - transaction request type such as IPN or Redirect-back, %2$s - the error message */
+					sprintf( '%1$s processing error: %2$s',
+					( $this->has_ipn() ) ? 'IPN' : 'Redirect-back',
+					$e->getMessage()
+				), $this->get_id() );
 			}
 
-			// check for duplicate order processing
-			if ( ! $order->needs_payment() ) {
-
-				$this->add_debug_message( sprintf( "Order '%s' has already been processed", $order->get_order_number() ), 'error' );
-
-				/* translators: Placeholders: %s - payment gateway title (such as Authorize.net, Braintree, etc) */
-				$order_note = sprintf( esc_html__( '%s duplicate transaction received', 'woocommerce-plugin-framework' ), $this->get_method_title() );
-				$order->add_order_note( $order_note );
-
-				// since the order has already been paid for, redirect to the 'thank you' page
-				return wp_redirect( $this->get_return_url( $order ) );
-			}
-
-			if ( $this->process_transaction_response( $order, $response ) ) {
-
-				if ( $order->has_status( 'on-hold' ) ) {
-					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
-				} elseif ( ! $order->has_status( 'cancelled' ) ) {
-					$order->payment_complete(); // mark order as having received payment
-				}
-
-				// finally, redirect to the 'thank you' page
-				return wp_redirect( $this->get_return_url( $order ) );
-			} else {
-				// failed response, redirect back to pay page
-				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() && ! $this->use_auto_form_post() ) );
-			}
-
-		} catch( SV_WC_Payment_Gateway_Exception $e ) {
-			// failure
-
-			if ( isset( $order ) && $order ) {
-				$this->mark_order_as_failed( $order, $e->getMessage(), $response );
-				return wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() && ! $this->use_auto_form_post() ) );
-			}
-
-			// otherwise, if no order is available, log the issue and redirect to home
-			$this->add_debug_message( 'Redirect-back error: ' . $e->getMessage(), 'error' );
-			return wp_redirect( get_home_url( null, '' ) );
+			$this->do_invalid_transaction_response( $order );
 		}
 	}
 
@@ -510,9 +424,9 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 */
 	protected function process_transaction_response( $order, $response ) {
 
-		// handle the response
 		if ( $response->transaction_approved() || $response->transaction_held() ) {
 
+			// If approved, payment is complete
 			if ( $response->transaction_approved() ) {
 
 				if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
@@ -523,16 +437,20 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 					// generic transaction approved message (likely to be overridden by the concrete gateway implementation)
 					$this->do_transaction_approved( $order, $response );
 				}
+
+				$order->payment_complete();
+
+			// Otherwise, if the transaction was held (ie fraud validation failure) mark it as such and reduce stock
+			} elseif ( $response->transaction_held() ) {
+
+				$this->mark_order_as_held( $order, $response->get_status_message(), $response );
+
+				$order->reduce_order_stock();
 			}
 
 			$this->add_transaction_data( $order, $response );
 
 			$this->add_payment_gateway_transaction_data( $order, $response );
-
-			// if the transaction was held (ie fraud validation failure) mark it as such
-			if ( $response->transaction_held() ) {
-				$this->mark_order_as_held( $order, $response->get_status_message(), $response );
-			}
 
 			return true;
 
@@ -780,6 +698,76 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @return SV_WC_Payment_Gateway_API_Payment_Notification_Response the response object
 	 */
 	abstract protected function get_transaction_response( $request_response_data );
+
+
+	/**
+	 * Handle a successful transaction response.
+	 *
+	 * @since 4.3.0-dev
+	 * @param \WC_Order $order the order object
+	 */
+	protected function do_successful_transaction_response( WC_Order $order ) {
+
+		if ( $this->has_ipn() ) {
+
+			status_header( 200 );
+			die;
+
+		} else {
+
+			wp_redirect( $this->get_return_url( $order ) );
+			exit;
+		}
+	}
+
+
+	/**
+	 * Handle a failed transaction response.
+	 *
+	 * @since 4.3.0-dev
+	 * @param \WC_Order $order the order object
+	 */
+	protected function do_failed_transaction_response( WC_Order $order ) {
+
+		if ( $this->has_ipn() ) {
+
+			status_header( 200 );
+			die;
+
+		} else {
+
+			wp_redirect( $order->get_checkout_payment_url( $this->use_form_post() && ! $this->use_auto_form_post() ) );
+			exit;
+		}
+	}
+
+
+	/**
+	 * Handle an invalid transaction response.
+	 *
+	 * i.e. the order has already been paid or was not found
+	 *
+	 * @since 4.3.0-dev
+	 * @param \WC_Order $order Optional. The order object
+	 */
+	protected function do_invalid_transaction_response( $order = null ) {
+
+		if ( $this->has_ipn() ) {
+
+			status_header( 200 );
+			die();
+
+		} else {
+
+			if ( $order ) {
+				wp_redirect( $this->get_return_url( $order ) );
+				exit;
+			} else {
+				wp_redirect( get_home_url( null, '' ) );
+				exit;
+			}
+		}
+	}
 
 
 	/** Helper methods ******************************************************/
