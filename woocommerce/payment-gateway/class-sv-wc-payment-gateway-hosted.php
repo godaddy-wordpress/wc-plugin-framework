@@ -665,7 +665,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			$note .= ' ' . sprintf( __( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $args['transaction_id'] );
 		}
 
-		if ( $args['payment_type'] ) {
+		if ( $args['method_type'] ) {
 
 			/**
 			 * Filter the note added to an order when a transaction is approved for a specific payment type.
@@ -674,7 +674,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			 * @param string $note The note text
 			 * @param \WC_Order $order The order object
 			 */
-			$note = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_' . $args['payment_type'] . '_transaction_approved_order_note', $note, $order );
+			$note = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_' . $args['method_type'] . '_transaction_approved_order_note', $note, $order );
 		}
 
 		/**
