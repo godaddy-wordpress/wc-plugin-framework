@@ -80,7 +80,7 @@ class SV_WP_Admin_Message_Handler {
 		$this->message_id = $message_id;
 
 		// load any available messages
-		add_action( 'init', array( $this, 'load_messages' ) );
+		$this->load_messages();
 
 		add_filter( 'wp_redirect', array( $this, 'redirect' ), 1, 2 );
 	}
