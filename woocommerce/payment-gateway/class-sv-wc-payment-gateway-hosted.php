@@ -367,31 +367,11 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			// get the associated order, or die trying
 			$order = $response->get_order();
 
-			if ( ! $order || ! $order->id ) {
+			// Validate the response data such as order ID and payment status
+			$this->validate_transaction_response( $order, $response );
 
-				throw new SV_WC_Payment_Gateway_Exception( sprintf(
-					__( 'Could not find order %s', 'woocommerce-plugin-framework' ),
-					$response->get_order_id()
-				) );
-			}
-
-			// verify order has not already been completed
-			if ( ! $order->needs_payment() ) {
-
-				/* translators: Placeholders: %s - payment gateway title (such as Authorize.net, Braintree, etc) */
-				$order->add_order_note( sprintf( esc_html__( '%s duplicate transaction received', 'woocommerce-plugin-framework' ), $this->get_method_title() ) );
-
-				throw new SV_WC_Payment_Gateway_Exception( sprintf(
-					__( 'Order %s is already paid for.', 'woocommerce-plugin-framework' ),
-					$order->get_order_number()
-				) );
-			}
-
-			if ( $this->process_transaction_response( $order, $response ) ) {
-				$this->do_successful_transaction_response( $order );
-			} else {
-				$this->do_failed_transaction_response( $order );
-			}
+			// Handle the order based on the response
+			$this->process_transaction_response( $order, $response );
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
@@ -415,6 +395,39 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 
 	/**
+	 * Validate a transaction response.
+	 *
+	 * @since 4.3.0-dev
+	 * @param \WC_Order $order the order object
+	 * @param \SV_WC_Payment_Gateway_API_Payment_Notification_Response the response object
+	 * @throws \SV_WC_Payment_Gateway_Exception
+	 */
+	protected function validate_transaction_response( $order, $response ) {
+
+		// If the order is invalid, bail
+		if ( ! $order || ! $order->id ) {
+
+			throw new SV_WC_Payment_Gateway_Exception( sprintf(
+				__( 'Could not find order %s', 'woocommerce-plugin-framework' ),
+				$response->get_order_id()
+			) );
+		}
+
+		// If the order has already been completed, bail
+		if ( ! $order->needs_payment() ) {
+
+			/* translators: Placeholders: %s - payment gateway title (such as Authorize.net, Braintree, etc) */
+			$order->add_order_note( sprintf( esc_html__( '%s duplicate transaction received', 'woocommerce-plugin-framework' ), $this->get_method_title() ) );
+
+			throw new SV_WC_Payment_Gateway_Exception( sprintf(
+				__( 'Order %s is already paid for.', 'woocommerce-plugin-framework' ),
+				$order->get_order_number()
+			) );
+		}
+	}
+
+
+	/**
 	 * Process the transaction response for the given order
 	 *
 	 * @since 2.1.0
@@ -426,8 +439,14 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		if ( $response->transaction_approved() || $response->transaction_held() ) {
 
+			// Always add transasaction data to the order for approved and held transactions
+			$this->add_transaction_data( $order, $response );
+			$this->add_payment_gateway_transaction_data( $order, $response );
+
 			// If approved, payment is complete
 			if ( $response->transaction_approved() ) {
+
+				$order->payment_complete();
 
 				if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
 					$this->do_credit_card_transaction_approved( $order, $response );
@@ -438,31 +457,28 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 					$this->do_transaction_approved( $order, $response );
 				}
 
-				$order->payment_complete();
-
 			// Otherwise, if the transaction was held (ie fraud validation failure) mark it as such and reduce stock
 			} elseif ( $response->transaction_held() ) {
 
 				$this->mark_order_as_held( $order, $response->get_status_message(), $response );
 
 				$order->reduce_order_stock();
+
+				$this->do_transaction_held( $order );
 			}
-
-			$this->add_transaction_data( $order, $response );
-
-			$this->add_payment_gateway_transaction_data( $order, $response );
-
-			return true;
 
 		} elseif ( $response->transaction_cancelled() ) {
 
 			$this->mark_order_as_cancelled( $order, $response->get_status_message(), $response );
 
-			return true;
+			$this->do_transaction_cancelled( $order );
 
 		} else { // failure
 
-			return $this->do_transaction_failed_result( $order, $response );
+			// Add the order note and debug info
+			$this->do_transaction_failed_result( $order, $response );
+
+			$this->do_transaction_failed( $order );
 		}
 	}
 
@@ -565,7 +581,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			$note_args['transaction_type'] = _x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' );
 		}
 
-		$this->add_transaction_approved_order_note( $order, $note_args );
+		$this->do_transaction_approved( $order, $note_args );
 	}
 
 
@@ -596,7 +612,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			$note .= ' ' . sprintf( __( '(check number %s)', 'woocommerce-plugin-framework' ), $response->get_check_number() );
 		}
 
-		$this->add_transaction_approved_order_note( $order, array(
+		$this->do_transaction_approved( $order, array(
 			'method_type'     => self::PAYMENT_TYPE_ECHECK,
 			'additional_note' => $note,
 			'transaction_id'  => $response->get_transaction_id(),
@@ -610,12 +626,24 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 2.1.0
 	 * @param WC_Order $order the order object
-	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response transaction response
+	 * @param array $note_args Optional. The order note arguments. @see `SV_WC_Payment_Gateway_Hosted::add_transaction_approved_order_note()`
 	 */
-	protected function do_transaction_approved( $order, $response ) {
+	protected function do_transaction_approved( $order, $note_args = array() ) {
 
-		// Simply add the generic order note
-		$this->add_transaction_approved_order_note( $order );
+		// Add the order note
+		$this->add_transaction_approved_order_note( $order, $note_args );
+
+		// Die or redirect
+		if ( $this->has_ipn() ) {
+
+			status_header( 200 );
+			die;
+
+		} else {
+
+			wp_redirect( $this->get_return_url( $order ) );
+			exit;
+		}
 	}
 
 
@@ -691,22 +719,12 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 
 	/**
-	 * Returns an API response object for the current response request
-	 *
-	 * @since 2.1.0
-	 * @param array $request_response_data the current request response data
-	 * @return SV_WC_Payment_Gateway_API_Payment_Notification_Response the response object
-	 */
-	abstract protected function get_transaction_response( $request_response_data );
-
-
-	/**
-	 * Handle a successful transaction response.
+	 * Handle a held transaction response.
 	 *
 	 * @since 4.3.0-dev
 	 * @param \WC_Order $order the order object
 	 */
-	protected function do_successful_transaction_response( WC_Order $order ) {
+	protected function do_transaction_held( WC_Order $order ) {
 
 		if ( $this->has_ipn() ) {
 
@@ -715,7 +733,28 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		} else {
 
-			wp_redirect( $this->get_return_url( $order ) );
+			wp_redirect( $order->get_return_url() );
+			exit;
+		}
+	}
+
+
+	/**
+	 * Handle a cancelled transaction response.
+	 *
+	 * @since 4.3.0-dev
+	 * @param \WC_Order $order the order object
+	 */
+	protected function do_transaction_cancelled( WC_Order $order ) {
+
+		if ( $this->has_ipn() ) {
+
+			status_header( 200 );
+			die;
+
+		} else {
+
+			wp_redirect( $order->get_cancel_order_url() );
 			exit;
 		}
 	}
@@ -727,7 +766,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @since 4.3.0-dev
 	 * @param \WC_Order $order the order object
 	 */
-	protected function do_failed_transaction_response( WC_Order $order ) {
+	protected function do_transaction_failed( WC_Order $order ) {
 
 		if ( $this->has_ipn() ) {
 
@@ -768,6 +807,16 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			}
 		}
 	}
+
+
+	/**
+	 * Returns an API response object for the current response request
+	 *
+	 * @since 2.1.0
+	 * @param array $request_response_data the current request response data
+	 * @return SV_WC_Payment_Gateway_API_Payment_Notification_Response the response object
+	 */
+	abstract protected function get_transaction_response( $request_response_data );
 
 
 	/** Helper methods ******************************************************/
