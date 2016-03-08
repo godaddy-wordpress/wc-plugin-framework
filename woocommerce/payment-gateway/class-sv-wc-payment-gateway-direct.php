@@ -1414,6 +1414,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$order->$field = $user->$field;
 		}
 
+		// If the user hasn't set a billing email yet, use their user meta
+		if ( ! $order->billing_email ) {
+			$order->billing_email = $user->user_email;
+		}
+
 		// other default info
 		$order->customer_id = $this->get_customer_id( $order->customer_user );
 		/* translators: Placeholders: %1$s - site title, %2$s - customer email. Payment method as in a specific credit card, e-check or bank account */
