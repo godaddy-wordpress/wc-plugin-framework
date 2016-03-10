@@ -72,11 +72,10 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 */
 	public function display( $user_id ) {
 
-		$title  = $this->get_gateway()->get_title();
-		$tokens = $this->get_tokens( $user_id );
+		$title   = $this->get_gateway()->get_title();
+		$tokens  = $this->get_tokens( $user_id );
 
 		$fields     = $this->get_fields();
-		$card_types = $this->get_gateway()->get_card_types();
 		$input_name = $this->get_input_name();
 		$actions    = $this->get_token_actions();
 
@@ -308,19 +307,61 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 */
 	protected function get_fields( $type = '' ) {
 
-		$fields = array(
-			'credit-card' => array(
-				'id'        => __( 'Token ID', 'woocommerce-plugin-framework' ),
-				'card_type' => __( 'Card Type', 'woocommerce-plugin-framework' ),
-				'last_four' => __( 'Last Four', 'woocommerce-plugin-framework' ),
-				'expiry'    => __( 'Expiration', 'woocommerce-plugin-framework' ),
-			),
-			'echeck' => array(
-				'id'           => __( 'Token ID', 'woocommerce-plugin-framework' ),
-				'account_type' => __( 'Account Type', 'woocommerce-plugin-framework' ),
-				'last_four'    => __( 'Last Four', 'woocommerce-plugin-framework' ),
-			),
-		);
+		if ( ! $type ) {
+			$type = $this->get_gateway()->get_payment_type();
+		}
+
+		switch ( $type ) {
+
+			case 'credit-card' :
+
+				// Define the credit card fields
+				$fields = array(
+					'id' => array(
+						'label'       => __( 'Token ID', 'woocommerce-plugin-framework' ),
+						'is_editable' => ! $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods(),
+					),
+					'card_type'   => array(
+						'label'   => __( 'Card Type', 'woocommerce-plugin-framework' ),
+						'type'    => 'select',
+						'options' => $this->get_card_type_options(),
+					),
+					'last_four' => array(
+						'label' => __( 'Last Four', 'woocommerce-plugin-framework' ),
+					),
+					'expiry' => array(
+						'label' => __( 'Expiration', 'woocommerce-plugin-framework' ),
+					),
+				);
+
+			break;
+
+			case 'echeck' :
+
+				// Define the echeck fields
+				$fields = array(
+					'id' => array(
+						'label'       => __( 'Token ID', 'woocommerce-plugin-framework' ),
+						'is_editable' => ! $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods(),
+					),
+					'account_type'   => array(
+						'label'   => __( 'Account Type', 'woocommerce-plugin-framework' ),
+						'type'    => 'select',
+						'options' => array(
+							'checking' => __( 'Checking', 'woocommerce-plugin-framework' ),
+							'savings'  => __( 'Savings', 'woocommerce-plugin-framework' ),
+						),
+					),
+					'last_four' => array(
+						'label' => __( 'Last Four', 'woocommerce-plugin-framework' ),
+					),
+				);
+
+			break;
+
+			default :
+				$fields = array();
+		}
 
 		/**
 		 * Filter the admin token editor fields.
@@ -331,11 +372,25 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		 */
 		$fields = apply_filters( 'sv_wc_payment_gateway_admin_token_editor_fields', $fields, $this->get_gateway() );
 
-		if ( ! $type ) {
-			$type = $this->get_gateway()->get_payment_type();
+		return $fields;
+	}
+
+
+	/**
+	 * Get the credit card type field options.
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	protected function get_card_type_options() {
+
+		$card_types = $this->get_gateway()->get_card_types();
+
+		foreach ( $card_types as $card_type ) {
+			$options[ strtolower( $card_type ) ] = SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type );
 		}
 
-		return ( isset( $fields[ $type ] ) ) ? $fields[ $type ] : array();
+		return $options;
 	}
 
 
