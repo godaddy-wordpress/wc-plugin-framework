@@ -85,6 +85,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/** @var SV_WC_Payment_Gateway_Admin_User_Edit_Handler adds admin user edit payment gateway functionality */
 	private $admin_user_edit_handler;
 
+	/** @var \SV_WC_Payment_Gateway_Admin_User_Handler user handler instance */
+	protected $admin_user_handler;
+
 	/** @var SV_WC_Payment_Gateway_My_Payment_Methods adds My Payment Method functionality */
 	private $my_payment_methods;
 
@@ -231,10 +234,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			require_once( $payment_gateway_framework_path . '/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php' );
 		}
 
-		// admin user edit handler
+		// Admin user handler
 		if ( is_admin() ) {
-			require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-user-edit-handler.php' );
-			$this->get_admin_user_edit_handler();
+			require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-user-handler.php' );
+			require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php' );
+			$this->admin_user_handler = new SV_WC_Payment_Gateway_Admin_User_Handler( $this );
 		}
 	}
 
@@ -813,17 +817,13 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Returns the admin notice handler instance
+	 * Get the admin user handler instance.
 	 *
-	 * @since 3.0.0
+	 * @since 4.3.0-dev
+	 * @return \SV_WC_Payment_Gateway_Admin_User_Handler
 	 */
-	public function get_admin_user_edit_handler() {
-
-		if ( ! is_null( $this->admin_user_edit_handler ) ) {
-			return $this->admin_user_edit_handler;
-		}
-
-		return $this->admin_user_edit_handler = new SV_WC_Payment_Gateway_Admin_User_Edit_Handler( $this );
+	public function get_admin_user_handler() {
+		return $this->admin_user_handler;
 	}
 
 

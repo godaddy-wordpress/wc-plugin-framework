@@ -507,6 +507,21 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	}
 
 
+
+	/** Admin methods *****************************************************************************/
+
+
+	/**
+	 * Get the admin token editor instance.
+	 *
+	 * @since 4.3.0-dev
+	 * @return \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor
+	 */
+	public function get_token_editor() {
+		return new SV_WC_Payment_Gateway_Admin_Payment_Token_Editor( $this->get_gateway() );
+	}
+
+
 	/** Conditional methods ***********************************************************************/
 
 

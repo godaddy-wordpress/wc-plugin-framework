@@ -37,6 +37,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/** Add new payment method feature */
 	const FEATURE_ADD_PAYMENT_METHOD = 'add_payment_method';
 
+	/** Admin token editor feature */
+	const FEATURE_TOKEN_EDITOR = 'token_editor';
+
 	/** Subscriptions integration ID */
 	const INTEGRATION_SUBSCRIPTIONS = 'subscriptions';
 
@@ -1095,6 +1098,17 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function tokenize_after_sale() {
 		return false;
+	}
+
+
+	/**
+	 * Determine if the gateway supports the admin token editor feature.
+	 *
+	 * @since 4.3.0-dev
+	 * @return boolean
+	 */
+	public function supports_token_editor() {
+		return $this->supports( self::FEATURE_TOKEN_EDITOR );
 	}
 
 
