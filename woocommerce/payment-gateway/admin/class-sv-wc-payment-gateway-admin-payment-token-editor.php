@@ -45,8 +45,22 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 		$this->gateway = $gateway;
 
+		// Load the editor scripts and styles
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
+
 		// Remove a token via AJAX
 		add_action( 'wp_ajax_sv_wc_payment_gateway_admin_remove_payment_token', array( $this, 'ajax_remove_token' ) );
+	}
+
+
+	/**
+	 * Load the editor scripts and styles.
+	 *
+	 * @since 4.3.0-dev
+	 */
+	public function enqueue_scripts_styles() {
+
+		wp_enqueue_style( 'sv-wc-payment-gateway-token-editor', $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/admin/sv-wc-payment-gateway-token-editor.css', array(), SV_WC_Plugin::VERSION );
 	}
 
 
@@ -65,7 +79,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		$card_types = $this->get_gateway()->get_card_types();
 		$input_name = $this->get_input_name();
 
-		include( 'views/html-user-payment-token-editor.php' );
+		include( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_path() . '/admin/views/html-user-payment-token-editor.php' );
 
 		$this->output_js();
 	}

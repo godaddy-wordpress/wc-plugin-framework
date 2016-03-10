@@ -23,7 +23,7 @@
  */
 ?>
 
-<div id="wc_payment_gateway_<?php echo esc_attr( $plugin_id ); ?>_user_settings" class="sv_wc_payment_gateway_user_settings">
+<div id="wc_payment_gateway_<?php echo esc_attr( $plugin_id ); ?>_user_settings" class="sv_wc_payment_gateway_user_settings woocommerce">
 
 	<h3><?php echo esc_html( $section_title ); ?></h3>
 

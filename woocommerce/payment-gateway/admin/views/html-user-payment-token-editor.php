@@ -23,95 +23,99 @@
  */
 ?>
 
-<div class="sv_wc_payment_gateway_token_editor">
+<tr>
 
-	<tr>
+	<th><?php echo esc_html( $title ); ?></th>
 
-		<th><?php echo esc_html( $title ); ?></th>
+	<td class="forminp">
 
-		<td>
+		<table class="sv_wc_payment_gateway_token_editor widefat">
 
-			<table class="tokens">
+			<thead>
+				<tr>
 
-				<thead>
-					<tr>
+					<?php // Display a column for each token field
+					foreach ( $fields as $column_id => $column_name ) : ?>
+						<th class="token-<?php echo esc_attr( $column_id ); ?>"><?php echo esc_html( $column_name ); ?></th>
+					<?php endforeach; ?>
 
-						<?php // Display a column for each token field
-						foreach ( $fields as $column_id => $column_name ) : ?>
-							<th class="token-<?php echo esc_attr( $column_id ); ?>"><?php echo esc_html( $column_name ); ?></th>
-						<?php endforeach; ?>
+					<th class="token-default"><?php esc_html_e( 'Default', 'woocommerce-plugin-framework' ); ?></th>
 
-						<th class="token-actions"></th>
+					<th class="token-actions"></th>
 
-					</tr>
-				</thead>
+				</tr>
+			</thead>
 
-				<?php $count = 0; ?>
+			<?php $count = 0; ?>
 
-				<?php foreach ( $tokens as $token_id => $token ) : ?>
+			<?php foreach ( $tokens as $token_id => $token ) : ?>
 
-					<?php $token_input_name = $input_name . '[' . $count . ']'; ?>
+				<?php $token_input_name = $input_name . '[' . $count . ']'; ?>
 
-					<tr class="token">
+				<tr class="token">
 
-						<?php foreach ( $fields as $field_id => $field_label ) : ?>
+					<?php foreach ( $fields as $field_id => $field_label ) : ?>
 
-							<td class="token-<?php echo esc_attr( $field_id ); ?> token-attribute">
+						<td class="token-<?php echo esc_attr( $field_id ); ?> token-attribute">
 
-								<?php if ( 'card_type' === $field_id ) : ?>
+							<?php if ( 'card_type' === $field_id ) : ?>
 
-									<select name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]">
+								<select name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]">
 
-										<option value=""><?php esc_html_e( '-- Select an option --', 'woocommerce-plugin-framework' ); ?></option>
+									<option value=""><?php esc_html_e( '-- Select an option --', 'woocommerce-plugin-framework' ); ?></option>
 
-										<?php $token_card_type = ( isset( $token['card_type'] ) ) ? $token['card_type'] : ''; ?>
+									<?php $token_card_type = ( isset( $token['card_type'] ) ) ? $token['card_type'] : ''; ?>
 
-										<?php foreach ( $card_types as $card_type ) : ?>
-											<option value="<?php echo esc_attr( strtolower( $card_type ) ); ?>" <?php selected( strtolower( $card_type ), $token_card_type ); ?>><?php echo esc_html( SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ) ); ?></option>
-										<?php endforeach; ?>
+									<?php foreach ( $card_types as $card_type ) : ?>
+										<option value="<?php echo esc_attr( strtolower( $card_type ) ); ?>" <?php selected( strtolower( $card_type ), $token_card_type ); ?>><?php echo esc_html( SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ) ); ?></option>
+									<?php endforeach; ?>
 
-									</select>
+								</select>
 
-								<?php elseif ( 'account_type' === $field_id ) : ?>
+							<?php elseif ( 'account_type' === $field_id ) : ?>
 
-									<select name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]">
-										<option value=""><?php esc_html_e( '-- Select an option --', 'woocommerce-plugin-framework' ); ?></option>
-										<option value="checking" <?php selected( 'checking', $token[ $field_id ] ); ?>>
-											<?php echo esc_html_x( 'Checking', 'account type', 'woocommerce-plugin-framework' ); ?>
-										</option>
-										<option value="savings" <?php selected( 'savings', $token[ $field_id ] ); ?>>
-											<?php echo esc_html_x( 'Savings', 'account type', 'woocommerce-plugin-framework' ); ?>
-										</option>
-									</select>
+								<select name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]">
+									<option value=""><?php esc_html_e( '-- Select an option --', 'woocommerce-plugin-framework' ); ?></option>
+									<option value="checking" <?php selected( 'checking', $token[ $field_id ] ); ?>>
+										<?php echo esc_html_x( 'Checking', 'account type', 'woocommerce-plugin-framework' ); ?>
+									</option>
+									<option value="savings" <?php selected( 'savings', $token[ $field_id ] ); ?>>
+										<?php echo esc_html_x( 'Savings', 'account type', 'woocommerce-plugin-framework' ); ?>
+									</option>
+								</select>
 
-								<?php else : ?>
+							<?php else : ?>
 
-									<input name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]" value="<?php echo ( isset( $token[ $field_id ] ) ) ? esc_attr( $token[ $field_id ] ) : ''; ?>" />
+								<input name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]" value="<?php echo ( isset( $token[ $field_id ] ) ) ? esc_attr( $token[ $field_id ] ) : ''; ?>" />
 
-								<?php endif; ?>
+							<?php endif; ?>
 
-							</td>
-
-						<?php endforeach; ?>
-
-						<input name="<?php echo esc_attr( $token_input_name ); ?>[type]" value="<?php echo ( isset( $token['type'] ) ) ? esc_attr( $token['type'] ) : ''; ?>"type="hidden" />
-
-						<td class="token-actions">
-							<button class="sv-wc-payment-gateway-token-action-button button" data-action="remove" data-token-id="<?php echo esc_attr( $token_id ); ?>" data-user-id="<?php echo esc_attr( $user_id ); ?>"><?php esc_html_e( 'Remove', 'woocommerce-plugin-framework' ); ?></button>
 						</td>
 
-					</tr>
+					<?php endforeach; ?>
 
-					<?php $count++; ?>
+					<input name="<?php echo esc_attr( $token_input_name ); ?>[type]" value="<?php echo ( isset( $token['type'] ) ) ? esc_attr( $token['type'] ) : ''; ?>"type="hidden" />
 
-				<?php endforeach; ?>
+					<?php if ( isset( $token['default'] ) ) : ?>
+						<td class="token-default token-attribute"><span class="status-enabled">Yes</span></td>
+					<?php else : ?>
+						<td class="token-default token-attribute">-</td>
+					<?php endif; ?>
 
-			</table>
+					<td class="token-actions">
+						<button class="sv-wc-payment-gateway-token-action-button button" data-action="remove" data-token-id="<?php echo esc_attr( $token_id ); ?>" data-user-id="<?php echo esc_attr( $user_id ); ?>"><?php esc_html_e( 'Remove', 'woocommerce-plugin-framework' ); ?></button>
+					</td>
 
-			<!-- <button class="button"><?php esc_html_e( 'Add New', 'woocommerce-plugin-framework' ); ?></button> -->
+				</tr>
 
-		</td>
+				<?php $count++; ?>
 
-	</tr>
+			<?php endforeach; ?>
 
-</div>
+		</table>
+
+		<!-- <button class="button"><?php esc_html_e( 'Add New', 'woocommerce-plugin-framework' ); ?></button> -->
+
+	</td>
+
+</tr>
