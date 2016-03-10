@@ -46,71 +46,84 @@
 				</tr>
 			</thead>
 
-			<?php $count = 0; ?>
+			<?php if ( ! empty( $tokens ) ) : ?>
 
-			<?php foreach ( $tokens as $token_id => $token ) : ?>
+				<?php $count = 0; ?>
 
-				<?php $token_input_name = $input_name . '[' . $count . ']'; ?>
+				<?php foreach ( $tokens as $token_id => $token ) : ?>
 
-				<tr class="token">
+					<?php $token_input_name = $input_name . '[' . $count . ']'; ?>
 
-					<?php foreach ( $fields as $field_id => $field_label ) : ?>
+					<tr class="token">
 
-						<td class="token-<?php echo esc_attr( $field_id ); ?> token-attribute">
+						<?php foreach ( $fields as $field_id => $field_label ) : ?>
 
-							<?php if ( 'card_type' === $field_id ) : ?>
+							<td class="token-<?php echo esc_attr( $field_id ); ?> token-attribute">
 
-								<select name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]">
+								<?php if ( 'card_type' === $field_id ) : ?>
 
-									<option value=""><?php esc_html_e( '-- Select an option --', 'woocommerce-plugin-framework' ); ?></option>
+									<select name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]">
 
-									<?php $token_card_type = ( isset( $token['card_type'] ) ) ? $token['card_type'] : ''; ?>
+										<option value=""><?php esc_html_e( '-- Select an option --', 'woocommerce-plugin-framework' ); ?></option>
 
-									<?php foreach ( $card_types as $card_type ) : ?>
-										<option value="<?php echo esc_attr( strtolower( $card_type ) ); ?>" <?php selected( strtolower( $card_type ), $token_card_type ); ?>><?php echo esc_html( SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ) ); ?></option>
-									<?php endforeach; ?>
+										<?php $token_card_type = ( isset( $token['card_type'] ) ) ? $token['card_type'] : ''; ?>
 
-								</select>
+										<?php foreach ( $card_types as $card_type ) : ?>
+											<option value="<?php echo esc_attr( strtolower( $card_type ) ); ?>" <?php selected( strtolower( $card_type ), $token_card_type ); ?>><?php echo esc_html( SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ) ); ?></option>
+										<?php endforeach; ?>
 
-							<?php elseif ( 'account_type' === $field_id ) : ?>
+									</select>
 
-								<select name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]">
-									<option value=""><?php esc_html_e( '-- Select an option --', 'woocommerce-plugin-framework' ); ?></option>
-									<option value="checking" <?php selected( 'checking', $token[ $field_id ] ); ?>>
-										<?php echo esc_html_x( 'Checking', 'account type', 'woocommerce-plugin-framework' ); ?>
-									</option>
-									<option value="savings" <?php selected( 'savings', $token[ $field_id ] ); ?>>
-										<?php echo esc_html_x( 'Savings', 'account type', 'woocommerce-plugin-framework' ); ?>
-									</option>
-								</select>
+								<?php elseif ( 'account_type' === $field_id ) : ?>
 
-							<?php else : ?>
+									<select name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]">
+										<option value=""><?php esc_html_e( '-- Select an option --', 'woocommerce-plugin-framework' ); ?></option>
+										<option value="checking" <?php selected( 'checking', $token[ $field_id ] ); ?>>
+											<?php echo esc_html_x( 'Checking', 'account type', 'woocommerce-plugin-framework' ); ?>
+										</option>
+										<option value="savings" <?php selected( 'savings', $token[ $field_id ] ); ?>>
+											<?php echo esc_html_x( 'Savings', 'account type', 'woocommerce-plugin-framework' ); ?>
+										</option>
+									</select>
 
-								<input name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]" value="<?php echo ( isset( $token[ $field_id ] ) ) ? esc_attr( $token[ $field_id ] ) : ''; ?>" />
+								<?php else : ?>
 
-							<?php endif; ?>
+									<input name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]" value="<?php echo ( isset( $token[ $field_id ] ) ) ? esc_attr( $token[ $field_id ] ) : ''; ?>" />
 
+								<?php endif; ?>
+
+							</td>
+
+						<?php endforeach; ?>
+
+						<input name="<?php echo esc_attr( $token_input_name ); ?>[type]" value="<?php echo ( isset( $token['type'] ) ) ? esc_attr( $token['type'] ) : ''; ?>" type="hidden" />
+
+						<?php if ( isset( $token['default'] ) ) : ?>
+							<td class="token-default token-attribute">
+								<span class="status-enabled">Yes</span>
+								<input name="<?php echo esc_attr( $token_input_name ); ?>[default]" value="1" type="hidden" />
+							</td>
+						<?php else : ?>
+							<td class="token-default token-attribute">-</td>
+						<?php endif; ?>
+
+						<td class="token-actions">
+							<button class="sv-wc-payment-gateway-token-action-button button" data-action="remove" data-token-id="<?php echo esc_attr( $token_id ); ?>" data-user-id="<?php echo esc_attr( $user_id ); ?>"><?php esc_html_e( 'Remove', 'woocommerce-plugin-framework' ); ?></button>
 						</td>
 
-					<?php endforeach; ?>
+					</tr>
 
-					<input name="<?php echo esc_attr( $token_input_name ); ?>[type]" value="<?php echo ( isset( $token['type'] ) ) ? esc_attr( $token['type'] ) : ''; ?>"type="hidden" />
+					<?php $count++; ?>
 
-					<?php if ( isset( $token['default'] ) ) : ?>
-						<td class="token-default token-attribute"><span class="status-enabled">Yes</span></td>
-					<?php else : ?>
-						<td class="token-default token-attribute">-</td>
-					<?php endif; ?>
+				<?php endforeach; ?>
 
-					<td class="token-actions">
-						<button class="sv-wc-payment-gateway-token-action-button button" data-action="remove" data-token-id="<?php echo esc_attr( $token_id ); ?>" data-user-id="<?php echo esc_attr( $user_id ); ?>"><?php esc_html_e( 'Remove', 'woocommerce-plugin-framework' ); ?></button>
-					</td>
+			<?php else : ?>
 
+				<tr>
+					<td colspan="<?php echo ( count( $fields ) + 2 ); ?>"><?php esc_html_e( 'No saved payment tokens.', 'woocommerce-plugin-framework' ); ?></td>
 				</tr>
 
-				<?php $count++; ?>
-
-			<?php endforeach; ?>
+			<?php endif; ?>
 
 		</table>
 

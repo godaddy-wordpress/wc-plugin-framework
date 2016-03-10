@@ -281,6 +281,10 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 		$tokens = get_user_meta( $user_id, $this->get_gateway()->get_payment_tokens_handler()->get_user_meta_name( $this->get_gateway()->get_environment() ), true );
 
+		if ( ! $tokens ) {
+			$tokens = array();
+		}
+
 		// Format the expiration date for display
 		foreach( $tokens as $token_id => $token ) {
 
@@ -289,10 +293,6 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 			if ( 'credit_card' === $token['type'] && isset( $token['exp_month'] ) && isset( $token['exp_year'] ) ) {
 				$tokens[ $token_id ]['expiry'] = $token['exp_month'] . '/' . $token['exp_year'];
 			}
-		}
-
-		if ( ! $tokens ) {
-			$tokens = array();
 		}
 
 		return $tokens;
