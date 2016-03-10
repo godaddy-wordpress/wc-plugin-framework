@@ -78,10 +78,9 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 
 		$token_editors = array();
 
-		// Check each gateway for tokenization support
-		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
+		foreach ( $this->get_tokenized_gateways() as $gateway ) {
 
-			if ( ! $gateway->is_enabled() || ! $gateway->tokenization_enabled() || ! $gateway->supports_token_editor() ) {
+			if ( ! $gateway->supports_token_editor() ) {
 				continue;
 			}
 
@@ -192,7 +191,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	 */
 	protected function save_customer_ids( $user_id ) {
 
-		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
+		foreach ( $this->get_tokenized_gateways() as $gateway ) {
 
 			if ( isset( $_POST[ $gateway->get_customer_id_user_meta_name() ] ) ) {
 				$gateway->update_customer_id( $user_id, trim( $_POST[ $gateway->get_customer_id_user_meta_name() ] ) );
@@ -214,7 +213,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 
 		$plugin_title = $environment_name = '';
 
-		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
+		foreach ( $this->get_tokenized_gateways() as $gateway ) {
 
 			// We only need to get one of each
 			if ( $plugin_title && $environment_name ) {
@@ -293,11 +292,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 
 		$fields = array();
 
-		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
-
-			if ( ! $gateway->tokenization_enabled() ) {
-				continue;
-			}
+		foreach ( $this->get_tokenized_gateways() as $gateway ) {
 
 			$meta_key = $gateway->get_customer_id_user_meta_name();
 
@@ -336,18 +331,34 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 
 		$environments = array();
 
-		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
-
-			if ( ! $gateway->tokenization_enabled() ) {
-				continue;
-			}
-
+		foreach ( $this->get_tokenized_gateways() as $gateway ) {
 			$environments[ $gateway->get_environment() ] = $gateway->get_environment_name();
 		}
 
 		$environments = array_unique( $environments );
 
 		return $environments;
+	}
+
+
+	/**
+	 * Get the gateways that support tokenization and are enabled.
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	protected function get_tokenized_gateways() {
+
+		$gateways = array();
+
+		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
+
+			if ( $gateway->is_enabled() && $gateway->supports_tokenization() ) {
+				$gateways[] = $gateway;
+			}
+		}
+
+		return $gateways;
 	}
 
 
@@ -361,7 +372,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	 * @return bool
 	 */
 	protected function is_supported() {
-		return $this->get_plugin()->tokenization_enabled();
+		return 0 < count( $this->get_tokenized_gateways() );
 	}
 
 
