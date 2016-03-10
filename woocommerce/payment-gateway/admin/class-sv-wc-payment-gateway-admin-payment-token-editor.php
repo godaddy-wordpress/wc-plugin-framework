@@ -78,6 +78,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		$fields     = $this->get_fields();
 		$card_types = $this->get_gateway()->get_card_types();
 		$input_name = $this->get_input_name();
+		$actions    = $this->get_token_actions();
 
 		include( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_path() . '/admin/views/html-user-payment-token-editor.php' );
 
@@ -347,6 +348,28 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	protected function get_input_name() {
 
 		return 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_tokens';
+	}
+
+
+	/**
+	 * Get the available token actions.
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	protected function get_token_actions() {
+
+		$actions = array(
+			'remove' => __( 'Remove', 'woocommerce-plugin-framework' ),
+		);
+
+		/**
+		 * Filter the token actions.
+		 *
+		 * @since 4.3.0-dev
+		 * @param array $actions the token actions
+		 */
+		return apply_filters( 'sv_wc_payment_gateway_' . $this->get_gateway()->get_id() . 'token_editor_token_actions', $actions );
 	}
 
 

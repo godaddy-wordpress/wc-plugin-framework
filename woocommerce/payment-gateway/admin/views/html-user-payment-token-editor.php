@@ -107,9 +107,20 @@
 							<td class="token-default token-attribute">-</td>
 						<?php endif; ?>
 
-						<td class="token-actions">
-							<button class="sv-wc-payment-gateway-token-action-button button" data-action="remove" data-token-id="<?php echo esc_attr( $token_id ); ?>" data-user-id="<?php echo esc_attr( $user_id ); ?>"><?php esc_html_e( 'Remove', 'woocommerce-plugin-framework' ); ?></button>
-						</td>
+						<?php // Token actions
+						if ( ! empty( $actions ) ) : ?>
+
+							<td class="token-actions">
+
+								<?php foreach ( $actions as $action => $label ) : ?>
+										<button class="sv-wc-payment-gateway-token-action-button button" data-action="<?php echo esc_attr( $action ); ?>" data-token-id="<?php echo esc_attr( $token_id ); ?>" data-user-id="<?php echo esc_attr( $user_id ); ?>">
+											<?php echo esc_attr( $label ); ?>
+										</button>
+								<?php endforeach; ?>
+
+							</td>
+
+						<?php endif; ?>
 
 					</tr>
 
