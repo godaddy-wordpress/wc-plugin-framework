@@ -63,6 +63,9 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 
 		// Display the token editor markup inside the  profile section
 		add_action( 'sv_wc_payment_gateway_' . $this->get_plugin()->get_id() . '_user_profile', array( $this, 'display_token_editors' ) );
+
+		// Display the customer ID field markup inside the  profile section
+		add_action( 'sv_wc_payment_gateway_' . $this->get_plugin()->get_id() . '_user_profile', array( $this, 'display_customer_id_fields' ) );
 	}
 
 
@@ -95,6 +98,10 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	 */
 	public function add_profile_section( $user ) {
 
+		if ( ! $this->is_supported() ) {
+			return;
+		}
+
 		$user_id             = $user->ID;
 		$plugin_id           = $this->get_plugin()->get_id();
 		$section_title       = $this->get_title();
@@ -119,6 +126,29 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 
 
 	/**
+	 * Display the customer ID field(s).
+	 *
+	 * @since 4.3.0-dev
+	 * @param \WP_User $user the user object
+	 */
+	public function display_customer_id_fields( $user ) {
+
+		if ( ! $this->get_plugin()->supports( 'customer_id' ) ) {
+			return;
+		}
+
+		foreach( $this->get_customer_id_fields( $user->ID ) as $field ) {
+
+			$label = $field['label'];
+			$name  = $field['name'];
+			$value = $field['value'];
+
+			include( $this->get_plugin()->get_payment_gateway_framework_path() . '/admin/views/html-user-profile-field-customer-id.php' );
+		}
+	}
+
+
+	/**
 	 * Save the user profile section fields.
 	 *
 	 * @since 4.3.0-dev
@@ -126,7 +156,17 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	 */
 	public function save_profile_fields( $user_id ) {
 
+		if ( ! $this->is_supported() ) {
+			return;
+		}
+
+		// Save the token data from each token editor
 		$this->save_tokens( $user_id );
+
+		// Save the customer IDs
+		if ( $this->get_plugin()->supports( 'customer_id' ) ) {
+			$this->save_customer_ids( $user_id );
+		}
 	}
 
 
@@ -144,6 +184,23 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	}
 
 
+	/**
+	 * Save the customer IDs.
+	 *
+	 * @since 4.3.0-dev
+	 * @param int $user_id the user ID
+	 */
+	protected function save_customer_ids( $user_id ) {
+
+		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
+
+			if ( isset( $_POST[ $gateway->get_customer_id_user_meta_name() ] ) ) {
+				$gateway->update_customer_id( $user_id, trim( $_POST[ $gateway->get_customer_id_user_meta_name() ] ) );
+			}
+		}
+	}
+
+
 	/** Getter methods ******************************************************/
 
 
@@ -155,30 +212,23 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	 */
 	protected function get_title() {
 
-		$plugin_title     = '';
-		$environment_name = '';
-		$unique           = false;
+		$plugin_title = $environment_name = '';
 
 		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
 
-			if ( ! $plugin_title ) {
-				$plugin_title = $gateway->get_method_title();
+			// We only need to get one of each
+			if ( $plugin_title && $environment_name ) {
+				break;
 			}
 
-			// If the gateway environments differ, then we've got some work to do
-			if ( $environment_name && $gateway->get_environment_name() !== $environment_name ) {
-				$unique = true;
-			} else {
-				$environment_name = $gateway->get_environment_name();
-			}
+			$plugin_title     = $gateway->get_method_title();
+			$environment_name = $gateway->get_environment_name();
 		}
 
 		$title = sprintf( __( '%s Payment Tokens', 'woocommerce-plugin-framework' ), $plugin_title );
 
 		// Append the environment name if the same for each payment method
-		if ( ! $unique ) {
-			$title .= ' ' . sprintf( __( '(%s)', 'woocommerce-plugin-framework' ), $environment_name );
-		}
+		$title .= ( ! $this->has_multiple_environments() ) ? ' ' . sprintf( __( '(%s)', 'woocommerce-plugin-framework' ), $environment_name ) : '';
 
 		/**
 		 * Filter the admin token editor title.
@@ -221,6 +271,86 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	}
 
 
+	/**
+	 * Get the customer ID fields for the plugin's gateways.
+	 *
+	 * In most cases, this will be a single field unless the plugin has multiple gateways and they
+	 * are set to different environments.
+	 *
+	 * @since 4.3.0-dev
+	 * @param int $user_id the user ID
+	 * @return array {
+	 *     The fields data
+	 *
+	 *     @type string $label the field label
+	 *     @type string $name  the input name
+	 *     @type string $value the input value
+	 * }
+	 */
+	protected function get_customer_id_fields( $user_id ) {
+
+		$unique_meta_key = '';
+
+		$fields = array();
+
+		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
+
+			if ( ! $gateway->tokenization_enabled() ) {
+				continue;
+			}
+
+			$meta_key = $gateway->get_customer_id_user_meta_name();
+
+			// If a field with this meta key has already been set, skip this gateway
+			if ( $meta_key === $unique_meta_key ) {
+				continue;
+			}
+
+			$label = __( 'Customer ID', 'woocommerce-plugin-framework' );
+
+			// If the plugin has multiple gateways configured for multiple environments, append the environment name to keep things straight
+			$label .= ( $this->has_multiple_environments() ) ? ' ' . sprintf( __( '(%s)', 'woocommerce-plugin-framework' ), $gateway->get_environment_name() ) : '';
+
+			$fields[] = array(
+				'label' => $label,
+				'name'  => $meta_key,
+				'value' => $gateway->get_customer_id( $user_id, array(
+					'autocreate' => false,
+				) ),
+			);
+
+			$unique_meta_key = $meta_key;
+		}
+
+		return $fields;
+	}
+
+
+	/**
+	 * Get the unique environments between the plugin's gateways.
+	 *
+	 * @since 4.3.0-dev
+	 * @return array the environments in the format `$environment_id => $environment_name`
+	 */
+	protected function get_unique_environments() {
+
+		$environments = array();
+
+		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
+
+			if ( ! $gateway->tokenization_enabled() ) {
+				continue;
+			}
+
+			$environments[ $gateway->get_environment() ] = $gateway->get_environment_name();
+		}
+
+		$environments = array_unique( $environments );
+
+		return $environments;
+	}
+
+
 	/** Conditional methods ******************************************************/
 
 
@@ -231,28 +361,18 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	 * @return bool
 	 */
 	protected function is_supported() {
+		return $this->get_plugin()->tokenization_enabled();
+	}
 
-		$supported = false;
 
-		// Check each gateway for tokenization support
-		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
-
-			// If the gateway is disabled, bail
-			if ( ! $gateway->is_enabled() ) {
-				continue;
-			}
-
-			// If any gateway supports tokenization and/or customer ID, display the settings markup
-			if ( $gateway->supports_tokenization() || $this->get_plugin()->supports( 'customer_id' ) ) {
-
-				$supported = true;
-
-				// Only once per plugin
-				break;
-			}
-		}
-
-		return $supported;
+	/**
+	 * Determine if the plugin has varying environments between its gateways.
+	 *
+	 * @since 4.3.0-dev
+	 * @return bool
+	 */
+	protected function has_multiple_environments() {
+		return 1 < count( $this->get_unique_environments() );
 	}
 
 
