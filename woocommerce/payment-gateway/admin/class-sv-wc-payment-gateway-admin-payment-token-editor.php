@@ -48,8 +48,19 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		// Load the editor scripts and styles
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
 
+		// Display the tokens markup inside the editor
+		add_action( 'sv_wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_tokens', array( $this, 'display_tokens' ) );
+
+		/** AJAX actions **/
+
+		// Get the blank token markup via AJAX
+		add_action( 'wp_ajax_wc_payment_gateway_' . $this->get_gateway()->get_id() . '_admin_get_blank_payment_token', array( $this, 'ajax_get_blank_token' ) );
+
 		// Remove a token via AJAX
-		add_action( 'wp_ajax_sv_wc_payment_gateway_admin_remove_payment_token', array( $this, 'ajax_remove_token' ) );
+		add_action( 'wp_ajax_wc_payment_gateway_' . $this->get_gateway()->get_id() . '_admin_remove_payment_token', array( $this, 'ajax_remove_token' ) );
+
+		// Refresh the tokens via AJAX
+		add_action( 'wp_ajax_wc_payment_gateway_' . $this->get_gateway()->get_id() . '_admin_refresh_payment_tokens', array( $this, 'ajax_refresh_tokens' ) );
 	}
 
 
@@ -60,7 +71,27 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 */
 	public function enqueue_scripts_styles() {
 
+		// Stylesheet
 		wp_enqueue_style( 'sv-wc-payment-gateway-token-editor', $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/admin/sv-wc-payment-gateway-token-editor.css', array(), SV_WC_Plugin::VERSION );
+
+		// Main editor script
+		wp_enqueue_script( 'sv-wc-payment-gateway-token-editor', $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/admin/sv-wc-payment-gateway-token-editor.min.js', array( 'jquery' ), SV_WC_Plugin::VERSION, true );
+
+		wp_localize_script( 'sv-wc-payment-gateway-token-editor', 'wc_payment_gateway_token_editor', array(
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'actions'  => array(
+				'remove_token' => array(
+					'ays'   => __( 'Are you sure you want to remove this token?', 'woocommerce-plugin-framework' ),
+					'nonce' => wp_create_nonce( 'wc_payment_gateway_admin_remove_payment_token' ),
+				),
+				'add_token' => array(
+					'nonce' => wp_create_nonce( 'wc_payment_gateway_admin_get_blank_payment_token' ),
+				),
+				'refresh' => array(
+					'nonce' => wp_create_nonce( 'wc_payment_gateway_admin_refresh_payment_tokens' ),
+				),
+			),
+		) );
 	}
 
 
@@ -72,66 +103,31 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 */
 	public function display( $user_id ) {
 
+		$id      = $this->get_gateway()->get_id();
 		$title   = $this->get_gateway()->get_title();
-		$tokens  = $this->get_tokens( $user_id );
-
-		$fields     = $this->get_fields();
-		$input_name = $this->get_input_name();
-		$actions    = $this->get_token_actions();
+		$columns = $this->get_columns();
+		$actions = $this->get_actions();
 
 		include( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_path() . '/admin/views/html-user-payment-token-editor.php' );
-
-		$this->output_js();
 	}
 
 
 	/**
-	 * Output the inline JS.
+	 * Display the tokens.
 	 *
 	 * @since 4.3.0-dev
+	 * @param int $user_id the user ID
 	 */
-	protected function output_js() {
+	public function display_tokens( $user_id ) {
 
-		// TODO: Just a proof-of-concept to ensure AJAX is compatible with the way this is instantiated.
-		//       Future me will clean this up and move things to their own asset files :) ?>
+		$tokens = $this->get_tokens( $user_id );
+		$type   = $this->get_payment_type();
 
-		<script type="text/javascript">
+		$fields        = $this->get_fields();
+		$input_name    = $this->get_input_name();
+		$token_actions = $this->get_token_actions();
 
-			jQuery( document ).ready( function( $ ) {
-
-				// Remove
-				$( '.sv-wc-payment-gateway-token-action-button[data-action="remove"]' ).click( function( e ) {
-
-					e.preventDefault();
-
-					if ( ! confirm( '<?php esc_html_e( 'Are you sure you wish to do this?', 'woocommerce-plugin-framework' ); ?>' ) ) {
-						return;
-					}
-
-					var row = $( this ).closest( 'tr' );
-
-					var data = {
-						action:   'sv_wc_payment_gateway_admin_remove_payment_token',
-						user_id:  $( this ).data( 'user-id' ),
-						token_id: $( this ).data( 'token-id' ),
-						security: '<?php echo wp_create_nonce( 'sv_wc_payment_gateway_admin_remove_payment_token' ); ?>'
-					};
-
-					$.post( '<?php echo admin_url( 'admin-ajax.php' ); ?>', data, function( response ) {
-
-						if ( true === response.success ) {
-							$( row ).remove();
-						}
-
-					} );
-
-				} );
-
-			} );
-
-		</script>
-
-		<?php
+		include( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_path() . '/admin/views/html-user-payment-token-editor-tokens.php' );
 	}
 
 
@@ -157,7 +153,9 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 				$data = $this->prepare_expiry_date( $data );
 			}
 
-			$built_tokens[ $token_id ] = $this->build_token( $user_id, $token_id, $data );
+			if ( $this->validate_token( $data ) ) {
+				$built_tokens[ $token_id ] = $this->build_token( $user_id, $token_id, $data );
+			}
 		}
 
 		$this->update_tokens( $user_id, $built_tokens );
@@ -169,13 +167,30 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 *
 	 * @since 4.3.0-dev
 	 */
-	public function ajax_add_token() {
+	public function ajax_get_blank_token() {
 
-		check_ajax_referer( 'sv_wc_payment_gateway_admin_add_payment_token', 'security' );
+		check_ajax_referer( 'wc_payment_gateway_admin_get_blank_payment_token', 'security' );
 
-		// TODO: fancy token adding
+		$index = SV_WC_Helper::get_request( 'index' );
 
-		wp_send_json_success();
+		if ( $index ) {
+
+			$fields     = $this->get_fields();
+			$input_name = $this->get_input_name();
+			$type       = $this->get_payment_type();
+
+			ob_start();
+
+			include( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_path() . '/admin/views/html-user-payment-token-editor-blank-token.php' );
+
+			$html = ob_get_clean();
+
+			wp_send_json_success( $html );
+
+		} else {
+
+			wp_send_json_error();
+		}
 	}
 
 
@@ -186,7 +201,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 */
 	public function ajax_remove_token() {
 
-		check_ajax_referer( 'sv_wc_payment_gateway_admin_remove_payment_token', 'security' );
+		check_ajax_referer( 'wc_payment_gateway_admin_remove_payment_token', 'security' );
 
 		$user_id  = SV_WC_Helper::get_request( 'user_id' );
 		$token_id = SV_WC_Helper::get_request( 'token_id' );
@@ -194,6 +209,34 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		if ( $this->remove_token( $user_id, $token_id ) ) {
 			wp_send_json_success();
 		} else {
+			wp_send_json_error();
+		}
+	}
+
+
+	/**
+	 * Refresh the tokens list via AJAX.
+	 *
+	 * @since 4.3.0-dev
+	 */
+	public function ajax_refresh_tokens() {
+
+		check_ajax_referer( 'wc_payment_gateway_admin_refresh_payment_tokens', 'security' );
+
+		$user_id = SV_WC_Helper::get_request( 'user_id' );
+
+		if ( $user_id ) {
+
+			ob_start();
+
+			$this->display_tokens( $user_id );
+
+			$html = ob_get_clean();
+
+			wp_send_json_success( trim( $html ) );
+
+		} else {
+
 			wp_send_json_error();
 		}
 	}
@@ -214,6 +257,20 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	protected function build_token( $user_id, $token_id, $data ) {
 
 		return $this->get_gateway()->get_payment_tokens_handler()->build_token( $token_id, $data );
+	}
+
+
+	/**
+	 * Validate a token's data before saving.
+	 *
+	 * Concrete gateways can override this to provide their own validation.
+	 *
+	 * @since 4.3.0-dev
+	 * @param array $data the token data
+	 * @return bool
+	 */
+	protected function validate_token( $data ) {
+		return true;
 	}
 
 
@@ -300,7 +357,38 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 
 	/**
-	 * Get the admin token editor fields and column names.
+	 * Get the editor columns.
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	protected function get_columns() {
+
+		$fields  = $this->get_fields();
+		$columns = array();
+
+		foreach ( $fields as $field_id => $field ) {
+			$columns[ $field_id ] = isset( $field['label'] ) ? $field['label'] : '';
+		}
+
+		$columns['default'] = __( 'Default', 'woocommerce-plugin-framework' );
+		$columns['actions'] = '';
+
+		/**
+		 * Filter the admin token editor columns.
+		 *
+		 * @since 4.3.0-dev
+		 * @param array $columns
+		 * @param \SV_WC_Payment_Gateway $gateway the payment gateway instance
+		 */
+		$columns = apply_filters( 'sv_wc_payment_gateway_admin_token_editor_columns', $columns, $this->get_gateway() );
+
+		return $columns;
+	}
+
+
+	/**
+	 * Get the editor fields.
 	 *
 	 * @since 4.3.0-dev
 	 * @return array
@@ -377,6 +465,18 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 
 	/**
+	 * Get the token payment type.
+	 *
+	 * @since 4.3.0-dev
+	 * @return string
+	 */
+	protected function get_payment_type() {
+
+		return str_replace( '-', '_', $this->get_gateway()->get_payment_type() );
+	}
+
+
+	/**
 	 * Get the credit card type field options.
 	 *
 	 * @since 4.3.0-dev
@@ -403,6 +503,32 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	protected function get_input_name() {
 
 		return 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_tokens';
+	}
+
+
+	/**
+	 * Get the available editor actions.
+	 *
+	 * @since 4.3.0-dev
+	 * @return array
+	 */
+	protected function get_actions() {
+
+		$actions = array();
+
+		if ( $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods() ) {
+			$actions['refresh'] = __( 'Refresh', 'woocommerce-plugin-framework' );
+		} else {
+			$actions['add-new'] = __( 'Add New', 'woocommerce-plugin-framework' );
+		}
+
+		/**
+		 * Filter the payment token editor actions.
+		 *
+		 * @since 4.3.0-dev
+		 * @param array $actions the actions
+		 */
+		return apply_filters( 'sv_wc_payment_gateway_' . $this->get_gateway()->get_id() . 'token_editor_actions', $actions );
 	}
 
 

@@ -46,3 +46,8 @@ table.sv_wc_payment_gateway_token_editor .token-default .status-enabled {
 table.sv_wc_payment_gateway_token_editor .token-actions {
 	text-align: right;
 }
+
+table.sv_wc_payment_gateway_token_editor .actions {
+	font-weight: normal;
+	text-align: right;
+}
