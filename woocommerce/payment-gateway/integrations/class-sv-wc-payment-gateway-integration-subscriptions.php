@@ -104,6 +104,12 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 				add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_subscriptions_order_specific_meta_keys', array( $this->get_gateway(), 'subscriptions_get_excluded_order_meta_keys' ) );
 			}
 
+			/* My Payment Methods */
+
+			add_filter( 'wc_' . $this->get_gateway()->get_plugin()->get_id() . '_my_payment_methods_table_headers', array( $this, 'add_my_payment_methods_table_header' ), 10, 2 );
+			add_filter( 'wc_' . $this->get_gateway()->get_plugin()->get_id() . '_my_payment_methods_table_body_row_data', array( $this, 'add_my_payment_methods_table_body_row_data' ), 10, 3 );
+			add_filter( 'wc_' . $this->get_gateway()->get_plugin()->get_id() . '_my_payment_methods_table_method_actions', array( $this, 'disable_my_payment_methods_table_method_delete' ), 10, 3 );
+
 			/* Admin Change Payment Method support */
 
 			// framework defaults - payment_token and customer_id
@@ -429,6 +435,134 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		}
 
 		return $payment_method_to_display;
+	}
+
+
+	/**
+	 * Add a subscriptions header to the My Payment Methods table.
+	 *
+	 * @since 4.3.0-dev
+	 * @param array $headers the table headers
+	 * @param \SV_WC_Payment_Gateway_My_Payment_Methods the my payment methods instance
+	 * @return array
+	 */
+	public function add_my_payment_methods_table_header( $headers, $handler ) {
+
+		if ( isset( $headers['subscriptions'] ) ) {
+			return $headers;
+		}
+
+		$new_headers = array();
+
+		foreach ( $headers as $id => $label ) {
+
+			// Add the header before the actions
+			if ( 'actions' === $id ) {
+				$new_headers['subscriptions'] = __( 'Subscriptions', 'woocommerce-plugin-framework' );
+			}
+
+			$new_headers[ $id ] = $label;
+		}
+
+		return $new_headers;
+	}
+
+
+	/**
+	 * Add a subscriptions header to the My Payment Methods table.
+	 *
+	 * @since 4.3.0-dev
+	 * @param array $method the table row data
+	 * @param \SV_WC_Payment_Gateway_Payment_Token $token the payment token
+	 * @param \SV_WC_Payment_Gateway_My_Payment_Methods the my payment methods instance
+	 * @return array
+	 */
+	public function add_my_payment_methods_table_body_row_data( $method, $token, $handler ) {
+
+		// If the subscription data has already been added or this method is for a different gateway, bail
+		if ( isset( $method['subscriptions'] ) || str_replace( '_', '-', $token->get_type() ) !== $this->get_gateway()->get_payment_type() ) {
+			return $method;
+		}
+
+		$subscription_ids = array();
+
+		$new_method = array();
+
+		// Build a link for each subscription
+		foreach ( $this->get_payment_token_subscriptions( get_current_user_id(), $token ) as $subscription ) {
+			$subscription_ids[] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $subscription->get_view_order_url() ), esc_attr( sprintf( _x( '#%s', 'hash before order number', 'woocommerce-plugin-framework' ), $subscription->get_order_number() ) ) );
+		}
+
+		// Add the Subscriptions data before the actions
+		foreach ( $method as $attribute => $value ) {
+
+			if ( 'actions' === $attribute ) {
+				$new_method['subscriptions'] = ( ! empty( $subscription_ids ) ) ? implode( ', ', $subscription_ids ) : __( 'N/A', 'woocommerce-plugin-framework' );
+			}
+
+			$new_method[ $attribute ] = $value;
+		}
+
+		return $new_method;
+	}
+
+
+	/**
+	 * Disable the "Delete" My Payment Methods method action button if there is an associated subscription.
+	 *
+	 * @since 4.3.0-dev
+	 * @param array $actions the token actions
+	 * @param \SV_WC_Payment_Gateway_Payment_Token the token object
+	 * @param \SV_WC_Payment_Gateway_My_Payment_Methods the my payment methods instance
+	 * @return array
+	 */
+	public function disable_my_payment_methods_table_method_delete( $actions, $token, $handler ) {
+
+		$subscriptions = $this->get_payment_token_subscriptions( get_current_user_id(), $token );
+
+		if ( ! empty( $subscriptions ) ) {
+
+			if ( isset( $actions['delete'] ) ) {
+				$actions['delete']['class'][] = 'disabled';
+				$actions['delete']['tip'] = __( 'This payment method is tied to a subscription and cannot be deleted. Please switch the subscription to another method first.', 'woocommerce-plugin-framework' );
+			}
+
+			if ( 1 === count( $subscriptions ) ) {
+				$actions['view-subscription'] = array(
+					'url'  => current( $subscriptions )->get_view_order_url(),
+					'name' => __( 'View Subscription', 'woocommerce-plugin-framework' ),
+				);
+			}
+
+		}
+
+		return $actions;
+	}
+
+
+	/**
+	 * Get the subscriptions tied to a user payment token.
+	 *
+	 * @since 4.3.0-dev
+	 * @param int $user_id the user
+	 * @param \SV_WC_Payment_Gateway_Payment_Token|string the token object or ID
+	 * @return array the subscriptions or an empty array
+	 */
+	protected function get_payment_token_subscriptions( $user_id, $token ) {
+
+		$subscriptions = wcs_get_users_subscriptions( $user_id );
+
+		$token_key = 'wc_' . $this->get_gateway()->get_id() . '_payment_token';
+		$token_id  = ( is_object( $token ) ) ? $token->get_id() : (string) $token;
+
+		foreach ( $subscriptions as $key => $subscription ) {
+
+			if ( $token_id !== $subscription->$token_key ) {
+				unset( $subscriptions[ $key ] );
+			}
+		}
+
+		return $subscriptions;
 	}
 
 
