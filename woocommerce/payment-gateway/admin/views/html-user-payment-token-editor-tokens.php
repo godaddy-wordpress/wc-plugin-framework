@@ -49,7 +49,7 @@
 						<?php $selected = ( isset( $token[ $field_id ] ) ) ? $token[ $field_id ] : ''; ?>
 
 						<?php foreach ( $field['options'] as $value => $label ) : ?>
-							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $selected ); ?>><?php echo esc_attr( $label ); ?></option>
+							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $selected ); ?>><?php echo esc_html( $label ); ?></option>
 						<?php endforeach; ?>
 
 					</select>

@@ -38,7 +38,7 @@
 					<option value=""><?php esc_html_e( '-- Select an option --', 'woocommerce-plugin-framework' ); ?></option>
 
 					<?php foreach ( $field['options'] as $value => $label ) : ?>
-						<option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_attr( $label ); ?></option>
+						<option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $label ); ?></option>
 					<?php endforeach; ?>
 
 				</select>

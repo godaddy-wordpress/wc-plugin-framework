@@ -31,6 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
+
 	/** @var \SV_WC_Payment_Gateway_Direct the gateway object **/
 	protected $gateway;
 
@@ -485,6 +486,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	protected function get_card_type_options() {
 
 		$card_types = $this->get_gateway()->get_card_types();
+		$options    = array();
 
 		foreach ( $card_types as $card_type ) {
 			$options[ strtolower( $card_type ) ] = SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type );

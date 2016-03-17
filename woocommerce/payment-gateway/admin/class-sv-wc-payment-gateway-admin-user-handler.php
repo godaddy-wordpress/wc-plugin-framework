@@ -76,8 +76,6 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	 */
 	public function init_token_editors() {
 
-		$token_editors = array();
-
 		foreach ( $this->get_tokenized_gateways() as $gateway ) {
 
 			if ( ! $gateway->supports_token_editor() ) {
