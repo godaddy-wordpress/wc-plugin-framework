@@ -68,14 +68,9 @@
 
 		<input name="<?php echo esc_attr( $token_input_name ); ?>[type]" value="<?php echo esc_attr( isset( $token['type'] ) ? $token['type'] : '' ); ?>" type="hidden" />
 
-		<?php if ( ! empty( $token['default'] ) ) : ?>
-			<td class="token-default token-attribute">
-				<span class="status-enabled">Yes</span>
-				<input name="<?php echo esc_attr( $token_input_name ); ?>[default]" value="1" type="hidden" />
-			</td>
-		<?php else : ?>
-			<td class="token-default token-attribute">-</td>
-		<?php endif; ?>
+		<td class="token-default token-attribute">
+			<input name="<?php echo esc_attr( $input_name ); ?>_default" value="<?php echo esc_attr( $token_id ); ?>" type="radio" <?php checked( true, $token['default'] ); ?>/>
+		</td>
 
 		<?php // Token actions ?>
 		<td class="token-actions">

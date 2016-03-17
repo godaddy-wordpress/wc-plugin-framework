@@ -73,7 +73,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	public function enqueue_scripts_styles() {
 
 		// Stylesheet
-		wp_enqueue_style( 'sv-wc-payment-gateway-token-editor', $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/admin/sv-wc-payment-gateway-token-editor.css', array(), SV_WC_Plugin::VERSION );
+		wp_enqueue_style( 'sv-wc-payment-gateway-token-editor', $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/admin/sv-wc-payment-gateway-token-editor.min.css', array(), SV_WC_Plugin::VERSION );
 
 		// Main editor script
 		wp_enqueue_script( 'sv-wc-payment-gateway-token-editor', $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/admin/sv-wc-payment-gateway-token-editor.min.js', array( 'jquery' ), SV_WC_Plugin::VERSION, true );
@@ -153,6 +153,9 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 			if ( 'credit_card' === $data['type'] ) {
 				$data = $this->prepare_expiry_date( $data );
 			}
+
+			// Set the default method
+			$data['default'] = $token_id === $_POST[ $this->get_input_name() . '_default' ];
 
 			if ( $this->validate_token( $data ) ) {
 				$built_tokens[ $token_id ] = $this->build_token( $user_id, $token_id, $data );
@@ -347,6 +350,13 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 			if ( 'credit_card' === $token['type'] && isset( $token['exp_month'] ) && isset( $token['exp_year'] ) ) {
 				$tokens[ $token_id ]['expiry'] = $token['exp_month'] . '/' . $token['exp_year'];
+			}
+
+			// Ensure a default is set
+			if ( isset( $token['default'] ) && $token['default'] ) {
+				$tokens[ $token_id ]['default'] = true;
+			} else {
+				$tokens[ $token_id ]['default'] = false;
 			}
 		}
 
