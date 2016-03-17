@@ -419,7 +419,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 						'label' => __( 'Last Four', 'woocommerce-plugin-framework' ),
 					),
 					'expiry' => array(
-						'label' => __( 'Expiration', 'woocommerce-plugin-framework' ),
+						'label' => __( 'Expiration (MM/YY)', 'woocommerce-plugin-framework' ),
 					),
 				);
 

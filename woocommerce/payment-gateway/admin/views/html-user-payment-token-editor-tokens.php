@@ -68,7 +68,7 @@
 
 		<input name="<?php echo esc_attr( $token_input_name ); ?>[type]" value="<?php echo esc_attr( isset( $token['type'] ) ? $token['type'] : '' ); ?>" type="hidden" />
 
-		<?php if ( isset( $token['default'] ) ) : ?>
+		<?php if ( ! empty( $token['default'] ) ) : ?>
 			<td class="token-default token-attribute">
 				<span class="status-enabled">Yes</span>
 				<input name="<?php echo esc_attr( $token_input_name ); ?>[default]" value="1" type="hidden" />
