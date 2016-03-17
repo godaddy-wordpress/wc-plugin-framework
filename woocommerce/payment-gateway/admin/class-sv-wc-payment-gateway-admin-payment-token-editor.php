@@ -521,6 +521,8 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 			$actions['add-new'] = __( 'Add New', 'woocommerce-plugin-framework' );
 		}
 
+		$actions['save'] = __( 'Save', 'woocommerce-plugin-framework' );
+
 		/**
 		 * Filter the payment token editor actions.
 		 *

@@ -68,9 +68,13 @@
 						<th class="actions" colspan="<?php echo count( $columns ); ?>">
 
 							<?php foreach ( $actions as $action => $label ) : ?>
-									<button class="sv-wc-payment-gateway-token-editor-action-button button" data-action="<?php echo esc_attr( $action ); ?>" data-user-id="<?php echo esc_attr( $user_id ); ?>">
+
+									<?php $button_class = 'save' === $action ? 'button-primary' : 'button'; ?>
+
+									<button class="sv-wc-payment-gateway-token-editor-action-button <?php echo sanitize_html_class( $button_class ); ?>" data-action="<?php echo esc_attr( $action ); ?>" data-user-id="<?php echo esc_attr( $user_id ); ?>">
 										<?php echo esc_attr( $label ); ?>
 									</button>
+
 							<?php endforeach; ?>
 
 						</th>
