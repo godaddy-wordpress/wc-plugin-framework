@@ -62,10 +62,10 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 		}
 
 		// Display the token editor markup inside the  profile section
-		add_action( 'sv_wc_payment_gateway_' . $this->get_plugin()->get_id() . '_user_profile', array( $this, 'display_token_editors' ) );
+		add_action( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_user_profile', array( $this, 'display_token_editors' ) );
 
 		// Display the customer ID field markup inside the  profile section
-		add_action( 'sv_wc_payment_gateway_' . $this->get_plugin()->get_id() . '_user_profile', array( $this, 'display_customer_id_fields' ) );
+		add_action( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_user_profile', array( $this, 'display_customer_id_fields' ) );
 	}
 
 

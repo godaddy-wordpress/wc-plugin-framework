@@ -41,7 +41,7 @@
 			 * @since 4.3.0-dev
 			 * @param \WP_User $user the current user object
 			 */
-			do_action( 'sv_wc_payment_gateway_' . $plugin_id . '_user_profile', $user ); ?>
+			do_action( 'wc_payment_gateway_' . $plugin_id . '_user_profile', $user ); ?>
 
 		</tbody>
 

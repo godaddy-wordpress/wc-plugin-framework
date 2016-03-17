@@ -50,7 +50,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
 
 		// Display the tokens markup inside the editor
-		add_action( 'sv_wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_tokens', array( $this, 'display_tokens' ) );
+		add_action( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_tokens', array( $this, 'display_tokens' ) );
 
 		/** AJAX actions **/
 
@@ -399,7 +399,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		 * @param array $columns
 		 * @param \SV_WC_Payment_Gateway $gateway the payment gateway instance
 		 */
-		$columns = apply_filters( 'sv_wc_payment_gateway_admin_token_editor_columns', $columns, $this->get_gateway() );
+		$columns = apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_columns', $columns, $this->get_gateway() );
 
 		return $columns;
 	}
@@ -476,7 +476,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		 * @param array $fields
 		 * @param \SV_WC_Payment_Gateway $gateway the payment gateway instance
 		 */
-		$fields = apply_filters( 'sv_wc_payment_gateway_admin_token_editor_fields', $fields, $this->get_gateway() );
+		$fields = apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_fields', $fields, $this->get_gateway() );
 
 		return $fields;
 	}
@@ -549,7 +549,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		 * @since 4.3.0-dev
 		 * @param array $actions the actions
 		 */
-		return apply_filters( 'sv_wc_payment_gateway_' . $this->get_gateway()->get_id() . 'token_editor_actions', $actions );
+		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_actions', $actions );
 	}
 
 
@@ -571,7 +571,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		 * @since 4.3.0-dev
 		 * @param array $actions the token actions
 		 */
-		return apply_filters( 'sv_wc_payment_gateway_' . $this->get_gateway()->get_id() . 'token_editor_token_actions', $actions );
+		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_token_actions', $actions );
 	}
 
 

@@ -50,7 +50,7 @@
 				 * @since 4.3.0-dev
 				 * @param int $user_id the current user ID
 				 */
-				do_action( 'sv_wc_payment_gateway_' . $id . '_token_editor_tokens', $user_id ); ?>
+				do_action( 'wc_payment_gateway_' . $id . '_token_editor_tokens', $user_id ); ?>
 
 			</tbody>
 
