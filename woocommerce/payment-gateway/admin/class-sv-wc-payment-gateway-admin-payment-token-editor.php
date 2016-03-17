@@ -311,16 +311,13 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 */
 	protected function prepare_expiry_date( $data ) {
 
-		// TODO: more complete sanitization here
-
-		if ( ! $data['expiry'] ) {
+		// expiry date must be present, include a forward slash and be 5 characters (MM/YY)
+		if ( ! $data['expiry'] || ! SV_WC_Helper::str_exists( $data['expiry'], '/' ) || 5 !== strlen( $data['expiry'] ) ) {
+			unset( $data['expiry'] );
 			return $data;
 		}
 
-		$expiry = explode( '/', $data['expiry'] );
-
-		$data['exp_month'] = $expiry[0];
-		$data['exp_year']  = $expiry[1];
+		list( $data['exp_month'], $data['exp_year'] ) = explode( '/', $data['expiry'] );
 
 		unset( $data['expiry'] );
 
@@ -410,7 +407,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 						'label'       => __( 'Token ID', 'woocommerce-plugin-framework' ),
 						'is_editable' => ! $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods(),
 					),
-					'card_type'   => array(
+					'card_type' => array(
 						'label'   => __( 'Card Type', 'woocommerce-plugin-framework' ),
 						'type'    => 'select',
 						'options' => $this->get_card_type_options(),
@@ -418,7 +415,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 					'last_four' => array(
 						'label' => __( 'Last Four', 'woocommerce-plugin-framework' ),
 					),
-					'expiry' => array(
+					'expiry'    => array(
 						'label' => __( 'Expiration (MM/YY)', 'woocommerce-plugin-framework' ),
 					),
 				);
@@ -433,7 +430,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 						'label'       => __( 'Token ID', 'woocommerce-plugin-framework' ),
 						'is_editable' => ! $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods(),
 					),
-					'account_type'   => array(
+					'account_type' => array(
 						'label'   => __( 'Account Type', 'woocommerce-plugin-framework' ),
 						'type'    => 'select',
 						'options' => array(
