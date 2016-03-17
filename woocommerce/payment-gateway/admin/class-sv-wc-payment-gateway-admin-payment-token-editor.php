@@ -157,7 +157,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 			// Set the default method
 			$data['default'] = $token_id === $_POST[ $this->get_input_name() . '_default' ];
 
-			if ( $this->validate_token( $data ) ) {
+			if ( $data = $this->validate_token_data( $token_id, $data ) ) {
 				$built_tokens[ $token_id ] = $this->build_token( $user_id, $token_id, $data );
 			}
 		}
@@ -265,20 +265,6 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 
 	/**
-	 * Validate a token's data before saving.
-	 *
-	 * Concrete gateways can override this to provide their own validation.
-	 *
-	 * @since 4.3.0-dev
-	 * @param array $data the token data
-	 * @return bool
-	 */
-	protected function validate_token( $data ) {
-		return true;
-	}
-
-
-	/**
 	 * Update the user's token data.
 	 *
 	 * @since 4.3.0-dev
@@ -302,6 +288,30 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	protected function remove_token( $user_id, $token_id ) {
 
 		return $this->get_gateway()->get_payment_tokens_handler()->remove_token( $user_id, $token_id, $this->get_gateway()->get_environment() );
+	}
+
+
+	/**
+	 * Validate a token's data before saving.
+	 *
+	 * Concrete gateways can override this to provide their own validation.
+	 *
+	 * @since 4.3.0-dev
+	 * @param array $data the token data
+	 * @return array|bool the validated token data or false if the token should not be saved
+	 */
+	protected function validate_token_data( $token_id, $data ) {
+
+		/**
+		 * Filter the validated token data.
+		 *
+		 * @since 4.3.0-dev
+		 * @param array $data the validated token data
+		 * @param string $token_id the token ID
+		 * @param \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor the token editor instance
+		 * @return array the validated token data
+		 */
+		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_validate_token_data', $data, $token_id, $this );
 	}
 
 
