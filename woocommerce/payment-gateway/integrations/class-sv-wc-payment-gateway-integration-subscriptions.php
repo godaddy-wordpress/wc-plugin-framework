@@ -537,7 +537,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 *
 	 * @since 4.3.0-dev
 	 * @param int $user_id the user
-	 * @param \SV_WC_Payment_Gateway_Payment_Token|string the token object or ID
+	 * @param \SV_WC_Payment_Gateway_Payment_Token the token object
 	 * @return array the subscriptions or an empty array
 	 */
 	protected function get_payment_token_subscriptions( $user_id, $token ) {
@@ -545,11 +545,10 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		$subscriptions = wcs_get_users_subscriptions( $user_id );
 
 		$token_key = 'wc_' . $this->get_gateway()->get_id() . '_payment_token';
-		$token_id  = ( is_object( $token ) ) ? $token->get_id() : (string) $token;
 
 		foreach ( $subscriptions as $key => $subscription ) {
 
-			if ( $token_id !== $subscription->$token_key ) {
+			if ( (string) $token->get_id() !== (string) $subscription->$token_key ) {
 				unset( $subscriptions[ $key ] );
 			}
 		}
