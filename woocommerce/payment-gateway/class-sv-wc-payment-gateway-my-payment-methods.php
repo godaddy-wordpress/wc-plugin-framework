@@ -434,9 +434,18 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			$html .= sprintf( '<tr class="sv-wc-payment-gateway-my-payment-methods-method wc-%s-my-payment-methods-method">', sanitize_html_class( $this->get_plugin()->get_id_dasherized() ) );
 
-			foreach ( $method as $attribute => $value ) {
+			// Display the row data in the order of the headers
+			foreach ( $headers as $attribute => $attribute_title ) {
 
-				$html .= sprintf( '<td class="sv-wc-payment-gateway-payment-method-%1$s wc-%2$s-payment-method-%1$s" data-title="%4$s">%3$s</td>', sanitize_html_class( $attribute ), $this->get_plugin()->get_id_dasherized(), $value, esc_attr( isset( $headers[ $attribute ] ) ? $headers[ $attribute ] : '' ) );
+				$value = isset( $method[ $attribute ] ) ? $method[ $attribute ] : __( 'N/A', 'woocommerce-plugin-framework' );
+
+				$html .= sprintf(
+					'<td class="sv-wc-payment-gateway-payment-method-%1$s wc-%2$s-payment-method-%1$s" data-title="%4$s">%3$s</td>',
+					sanitize_html_class( $attribute ),
+					sanitize_html_class( $this->get_plugin()->get_id_dasherized() ),
+					$value,
+					esc_attr( $attribute_title )
+				);
 			}
 
 			$html .= '</tr>';
@@ -498,10 +507,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		$method = array(
 			'title'   => $this->get_payment_method_title( $token ),
-			/* translators: N/A is used in the context where an expiry date is not applicable (for example, a bank account - as opposed to a credit card) */
-			'expiry'  => $token->get_exp_month() && $token->get_exp_year() ? $token->get_exp_date() : esc_html__( 'N/A', 'woocommerce-plugin-framework' ),
 			'actions' => implode( '', $actions ),
 		);
+
+		// Add the expiration date if applicable
+		if ( $token->get_exp_month() && $token->get_exp_year() ) {
+			$method['expiry'] = esc_html( $token->get_exp_date() );
+		}
 
 		/**
 		 * My Payment Methods Table Body Row Data Filter.

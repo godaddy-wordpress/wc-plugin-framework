@@ -486,24 +486,16 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		$subscription_ids = array();
 
-		$new_method = array();
-
 		// Build a link for each subscription
 		foreach ( $this->get_payment_token_subscriptions( get_current_user_id(), $token ) as $subscription ) {
 			$subscription_ids[] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $subscription->get_view_order_url() ), esc_attr( sprintf( _x( '#%s', 'hash before order number', 'woocommerce-plugin-framework' ), $subscription->get_order_number() ) ) );
 		}
 
-		// Add the Subscriptions data before the actions
-		foreach ( $method as $attribute => $value ) {
-
-			if ( 'actions' === $attribute ) {
-				$new_method['subscriptions'] = ( ! empty( $subscription_ids ) ) ? implode( ', ', $subscription_ids ) : __( 'N/A', 'woocommerce-plugin-framework' );
-			}
-
-			$new_method[ $attribute ] = $value;
+		if ( ! empty( $subscription_ids ) ) {
+			$method['subscriptions'] = implode( ', ', $subscription_ids );
 		}
 
-		return $new_method;
+		return $method;
 	}
 
 
