@@ -462,6 +462,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 					'id' => array(
 						'label'       => __( 'Token ID', 'woocommerce-plugin-framework' ),
 						'is_editable' => ! $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods(),
+						'required'    => true,
 					),
 					'account_type' => array(
 						'label'   => __( 'Account Type', 'woocommerce-plugin-framework' ),
