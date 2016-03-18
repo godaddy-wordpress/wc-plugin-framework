@@ -371,6 +371,9 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 			}
 
 			$tokens[ $token_id ]['default'] = $token->is_default();
+
+			// Parse against the editor field IDs so we don't have to isset throughout the HTML
+			$tokens[ $token_id ] = wp_parse_args( $tokens[ $token_id ], array_fill_keys( array_keys( $this->get_fields() ), '' ) );
 		}
 
 		return $tokens;

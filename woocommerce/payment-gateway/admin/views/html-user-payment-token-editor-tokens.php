@@ -37,8 +37,8 @@
 
 				<?php if ( isset( $field['is_editable'] ) && ! $field['is_editable'] ) : ?>
 
-					<span class="token-<?php echo esc_attr( $field_id ); ?> token-attribute"><?php echo esc_attr( ( isset( $token[ $field_id ] ) ) ? $token[ $field_id ] : '' ); ?></span>
-					<input name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]" value="<?php echo ( isset( $token[ $field_id ] ) ) ? esc_attr( $token[ $field_id ] ) : ''; ?>" type="hidden" />
+					<span class="token-<?php echo esc_attr( $field_id ); ?> token-attribute"><?php echo esc_attr( $token[ $field_id ] ); ?></span>
+					<input name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]" value="<?php echo esc_attr( $token[ $field_id ] ); ?>" type="hidden" />
 
 				<?php elseif ( isset( $field['type'] ) && 'select' === $field['type'] ) : ?>
 
@@ -46,10 +46,8 @@
 
 						<option value=""><?php esc_html_e( '-- Select an option --', 'woocommerce-plugin-framework' ); ?></option>
 
-						<?php $selected = ( isset( $token[ $field_id ] ) ) ? $token[ $field_id ] : ''; ?>
-
 						<?php foreach ( $field['options'] as $value => $label ) : ?>
-							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $selected ); ?>><?php echo esc_html( $label ); ?></option>
+							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $token[ $field_id ] ); ?>><?php echo esc_html( $label ); ?></option>
 						<?php endforeach; ?>
 
 					</select>
@@ -68,7 +66,7 @@
 
 					<input
 						name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]"
-						value="<?php echo ( isset( $token[ $field_id ] ) ) ? esc_attr( $token[ $field_id ] ) : ''; ?>"
+						value="<?php echo esc_attr( $token[ $field_id ] ); ?>"
 						type="text"
 						<?php echo implode( ' ', $attributes ); ?>
 						<?php echo isset( $field['required'] ) ? 'required' : ''; ?>
@@ -79,8 +77,6 @@
 			</td>
 
 		<?php endforeach; ?>
-
-		<?php $token_type = isset( $token['type'] ) ? $token['type'] : ''; ?>
 
 		<input name="<?php echo esc_attr( $token_input_name ); ?>[type]" value="<?php echo esc_attr( isset( $token['type'] ) ? $token['type'] : '' ); ?>" type="hidden" />
 
