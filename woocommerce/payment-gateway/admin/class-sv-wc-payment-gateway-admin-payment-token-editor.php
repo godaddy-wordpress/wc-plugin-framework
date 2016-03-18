@@ -91,6 +91,9 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 				'refresh' => array(
 					'nonce' => wp_create_nonce( 'wc_payment_gateway_admin_refresh_payment_tokens' ),
 				),
+				'save' => array(
+					'error' => __( 'Invalid token data', 'woocommerce-plugin-framework' ),
+				),
 			),
 		) );
 	}
@@ -426,6 +429,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 					'id' => array(
 						'label'       => __( 'Token ID', 'woocommerce-plugin-framework' ),
 						'is_editable' => ! $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods(),
+						'required'    => true,
 					),
 					'card_type' => array(
 						'label'   => __( 'Card Type', 'woocommerce-plugin-framework' ),
@@ -433,10 +437,17 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 						'options' => $this->get_card_type_options(),
 					),
 					'last_four' => array(
-						'label' => __( 'Last Four', 'woocommerce-plugin-framework' ),
+						'label'   => __( 'Last Four', 'woocommerce-plugin-framework' ),
+						'attributes' => array(
+							'pattern' => '[0-9]{4}',
+						),
 					),
 					'expiry'    => array(
 						'label' => __( 'Expiration (MM/YY)', 'woocommerce-plugin-framework' ),
+						'attributes' => array(
+							'placeholder' => 'MM/YY',
+							'pattern'     => '(0[1-9]|1[012])[- /.]\d\d',
+						),
 					),
 				);
 
@@ -459,7 +470,10 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 						),
 					),
 					'last_four' => array(
-						'label' => __( 'Last Four', 'woocommerce-plugin-framework' ),
+						'label'   => __( 'Last Four', 'woocommerce-plugin-framework' ),
+						'attributes' => array(
+							'pattern' => '[0-9]{4}',
+						),
 					),
 				);
 

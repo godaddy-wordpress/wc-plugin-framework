@@ -114,3 +114,42 @@ jQuery( document ).ready ($) ->
 					editor.find( 'tr.no-tokens' ).show()
 
 			editor.unblock()
+
+	# Save the tokens
+	$( 'table.sv_wc_payment_gateway_token_editor' ).on 'click', '.sv-wc-payment-gateway-token-editor-action-button[data-action="save"]', ( e ) ->
+
+		editor      = $( this ).closest( 'table' )
+		actions_row = editor.find( 'tfoot th' )
+
+		editor.block( message: null, overlayCSS: background: '#fff',opacity: 0.6 )
+
+		actions_row.find( '.error, .success' ).remove();
+
+		# Validate the input data
+
+		inputs  = editor.find( 'tbody.tokens tr.token input[type="text"]' )
+		focused = false
+
+		inputs.each ( index ) ->
+
+			$( this ).removeClass( 'error' )
+
+			value    = $( this ).val()
+			required = $( this ).prop( 'required' )
+			pattern  = $( this ).attr( 'pattern' )
+
+			if ( ! required && ! value )
+				return
+
+			if ( ! value.match( pattern ) or ( required and ! value ) )
+
+				e.preventDefault()
+
+				$( this ).addClass( 'error' )
+
+				if ( ! focused )
+					actions_row.prepend( '<span class="error">' + wc_payment_gateway_token_editor.actions.save.error + '</span>' )
+					$( this ).focus()
+					focused = true
+
+				editor.unblock()
