@@ -158,7 +158,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 			}
 
 			// Set the default method
-			$data['default'] = $token_id === $_POST[ $this->get_input_name() . '_default' ];
+			$data['default'] = $token_id === SV_WC_Helper::get_post( $this->get_input_name() . '_default' );
 
 			if ( $data = $this->validate_token_data( $token_id, $data ) ) {
 				$built_tokens[ $token_id ] = $this->build_token( $user_id, $token_id, $data );
