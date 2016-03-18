@@ -350,27 +350,27 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 */
 	protected function get_tokens( $user_id ) {
 
-		$tokens = get_user_meta( $user_id, $this->get_gateway()->get_payment_tokens_handler()->get_user_meta_name( $this->get_gateway()->get_environment() ), true );
+		// Clear any cached tokens
+		$this->get_gateway()->get_payment_tokens_handler()->clear_transient( $user_id );
 
-		if ( ! $tokens ) {
-			$tokens = array();
-		}
+		$stored_tokens = $this->get_gateway()->get_payment_tokens_handler()->get_tokens( $user_id );
+		$tokens        = array();
 
-		// Format the expiration date for display
-		foreach( $tokens as $token_id => $token ) {
+		foreach( $stored_tokens as $token ) {
+
+			$token_id = $token->get_id();
+
+			// Set the token data
+			$tokens[ $token_id ] = $token->to_datastore_format();
 
 			$tokens[ $token_id ]['id'] = $token_id;
 
-			if ( 'credit_card' === $token['type'] && isset( $token['exp_month'] ) && isset( $token['exp_year'] ) ) {
-				$tokens[ $token_id ]['expiry'] = $token['exp_month'] . '/' . $token['exp_year'];
+			// Set the credit card expiration date
+			if ( $token->is_credit_card() ) {
+				$tokens[ $token_id ]['expiry'] = $token->get_exp_month() && $token->get_exp_year() ? $token->get_exp_date() : '';
 			}
 
-			// Ensure a default is set
-			if ( isset( $token['default'] ) && $token['default'] ) {
-				$tokens[ $token_id ]['default'] = true;
-			} else {
-				$tokens[ $token_id ]['default'] = false;
-			}
+			$tokens[ $token_id ]['default'] = $token->is_default();
 		}
 
 		return $tokens;
