@@ -439,7 +439,8 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 					'last_four' => array(
 						'label'   => __( 'Last Four', 'woocommerce-plugin-framework' ),
 						'attributes' => array(
-							'pattern' => '[0-9]{4}',
+							'pattern'   => '[0-9]{4}',
+							'maxlength' => 4,
 						),
 					),
 					'expiry'    => array(
@@ -447,6 +448,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 						'attributes' => array(
 							'placeholder' => 'MM/YY',
 							'pattern'     => '(0[1-9]|1[012])[- /.]\d\d',
+							'maxlength'   => 5,
 						),
 					),
 				);
@@ -472,7 +474,8 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 					'last_four' => array(
 						'label'   => __( 'Last Four', 'woocommerce-plugin-framework' ),
 						'attributes' => array(
-							'pattern' => '[0-9]{4}',
+							'pattern'   => '[0-9]{4}',
+							'maxlength' => 4,
 						),
 					),
 				);
