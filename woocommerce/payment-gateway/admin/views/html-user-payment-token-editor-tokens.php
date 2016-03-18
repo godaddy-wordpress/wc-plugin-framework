@@ -56,7 +56,23 @@
 
 				<?php else : ?>
 
-					<input name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]" value="<?php echo ( isset( $token[ $field_id ] ) ) ? esc_attr( $token[ $field_id ] ) : ''; ?>" type="text" />
+					<?php // Build the input attributes
+					$attributes = array();
+
+					if ( isset( $field['attributes'] ) ) {
+
+						foreach ( $field['attributes'] as $name => $value ) {
+							$attributes[] = esc_attr( $name ) . '="' . esc_attr( $value ) . '"';
+						}
+					}?>
+
+					<input
+						name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]"
+						value="<?php echo ( isset( $token[ $field_id ] ) ) ? esc_attr( $token[ $field_id ] ) : ''; ?>"
+						type="text"
+						<?php echo implode( ' ', $attributes ); ?>
+						<?php echo isset( $field['required'] ) ? 'required' : ''; ?>
+					/>
 
 				<?php endif; ?>
 

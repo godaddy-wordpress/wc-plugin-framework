@@ -45,7 +45,22 @@
 
 			<?php else : ?>
 
-				<input name="<?php echo esc_attr( $input_name ); ?>[<?php echo absint( $index ); ?>][<?php echo esc_attr( $field_id ); ?>]" value="" type="text" />
+				<?php $attributes = array();
+
+				if ( isset( $field['attributes'] ) ) {
+
+					foreach ( $field['attributes'] as $name => $value ) {
+						$attributes[] = esc_attr( $name ) . '="' . esc_attr( $value ) . '"';
+					}
+				}?>
+
+				<input
+					name="<?php echo esc_attr( $input_name ); ?>[<?php echo absint( $index ); ?>][<?php echo esc_attr( $field_id ); ?>]"
+					value=""
+					type="text"
+					<?php echo implode( ' ', $attributes ); ?>
+					<?php echo isset( $field['required'] ) ? 'required' : ''; ?>
+				/>
 
 			<?php endif; ?>
 
