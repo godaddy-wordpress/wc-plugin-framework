@@ -430,9 +430,9 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 				// Define the credit card fields
 				$fields = array(
 					'id' => array(
-						'label'       => __( 'Token ID', 'woocommerce-plugin-framework' ),
-						'is_editable' => ! $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods(),
-						'required'    => true,
+						'label'    => __( 'Token ID', 'woocommerce-plugin-framework' ),
+						'editable' => ! $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods(),
+						'required' => true,
 					),
 					'card_type' => array(
 						'label'   => __( 'Card Type', 'woocommerce-plugin-framework' ),
@@ -463,9 +463,9 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 				// Define the echeck fields
 				$fields = array(
 					'id' => array(
-						'label'       => __( 'Token ID', 'woocommerce-plugin-framework' ),
-						'is_editable' => ! $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods(),
-						'required'    => true,
+						'label'    => __( 'Token ID', 'woocommerce-plugin-framework' ),
+						'editable' => ! $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods(),
+						'required' => true,
 					),
 					'account_type' => array(
 						'label'   => __( 'Account Type', 'woocommerce-plugin-framework' ),
@@ -488,6 +488,18 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 			default :
 				$fields = array();
+		}
+
+		// Parse each field against the defaults
+		foreach ( $fields as $field_id => $field ) {
+
+			$fields[ $field_id ] = wp_parse_args( $field, array(
+				'label'      => '',
+				'type'       => 'text',
+				'attributes' => array(),
+				'editable'   => true,
+				'required'   => false,
+			) );
 		}
 
 		/**
