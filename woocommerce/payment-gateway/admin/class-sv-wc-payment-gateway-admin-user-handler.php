@@ -130,10 +130,6 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	 */
 	public function display_customer_id_fields( $user ) {
 
-		if ( ! $this->get_plugin()->supports( 'customer_id' ) ) {
-			return;
-		}
-
 		foreach( $this->get_customer_id_fields( $user->ID ) as $field ) {
 
 			$label = $field['label'];
@@ -161,9 +157,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 		$this->save_tokens( $user_id );
 
 		// Save the customer IDs
-		if ( $this->get_plugin()->supports( 'customer_id' ) ) {
-			$this->save_customer_ids( $user_id );
-		}
+		$this->save_customer_ids( $user_id );
 	}
 
 
@@ -190,6 +184,10 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	protected function save_customer_ids( $user_id ) {
 
 		foreach ( $this->get_tokenized_gateways() as $gateway ) {
+
+			if ( ! $gateway->supports_customer_id() ) {
+				continue;
+			}
 
 			if ( isset( $_POST[ $gateway->get_customer_id_user_meta_name() ] ) ) {
 				$gateway->update_customer_id( $user_id, trim( $_POST[ $gateway->get_customer_id_user_meta_name() ] ) );
@@ -292,6 +290,10 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 
 		foreach ( $this->get_tokenized_gateways() as $gateway ) {
 
+			if ( ! $gateway->supports_customer_id() ) {
+				continue;
+			}
+
 			$meta_key = $gateway->get_customer_id_user_meta_name();
 
 			// If a field with this meta key has already been set, skip this gateway
@@ -351,7 +353,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 
 		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
 
-			if ( $gateway->is_enabled() && $gateway->supports_tokenization() ) {
+			if ( $gateway->is_enabled() && $gateway->supports_tokenization() && ( $gateway->supports_token_editor() || $gateway->supports_customer_id() ) ) {
 				$gateways[] = $gateway;
 			}
 		}
@@ -370,7 +372,17 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	 * @return bool
 	 */
 	protected function is_supported() {
-		return 0 < count( $this->get_tokenized_gateways() );
+
+		$gateways = $this->get_tokenized_gateways();
+
+		/**
+		 * Filter whether the user profile section should be displayed for this gateway plugin.
+		 *
+		 * @since 4.3.0-dev
+		 * @param bool $display
+		 * @param \SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance
+		 */
+		return apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_display_user_profile', ! empty( $gateways ), $this->get_plugin() );
 	}
 
 
