@@ -38,7 +38,7 @@
 			<?php
 			/** Fire inside the payment gateway user settings section.
 			 *
-			 * @since 4.3.0-dev
+			 * @since 4.3.0-beta
 			 * @param \WP_User $user the current user object
 			 */
 			do_action( 'wc_payment_gateway_' . $plugin_id . '_user_profile', $user ); ?>

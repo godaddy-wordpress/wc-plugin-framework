@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_API_XML_Response' ) ) :
 /**
  * Base XML API response class.
  *
- * @since 4.3.0-dev
+ * @since 4.3.0-beta
  */
 abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 
@@ -47,7 +47,7 @@ abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 	/**
 	 * Build an XML object from the raw response.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @param string $raw_response_xml The raw response XML
 	 */
 	public function __construct( $raw_response_xml ) {
@@ -72,7 +72,7 @@ abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 	 * already been casted into simple data types (string,int,array) and does not
 	 * require further casting in order to use.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @param string $key
 	 * @return mixed
 	 */
@@ -86,7 +86,7 @@ abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 	/**
 	 * Get the string representation of this response.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return string
 	 */
 	public function to_string() {
@@ -109,7 +109,7 @@ abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 	 * Get the string representation of this response with any and all sensitive elements masked
 	 * or removed.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see SV_WC_API_Response::to_string_safe()
 	 * @return string
 	 */

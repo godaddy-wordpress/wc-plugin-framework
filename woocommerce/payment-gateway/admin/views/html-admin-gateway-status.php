@@ -42,7 +42,7 @@
 			 *
 			 * Allow actors to add info the start of the gateway system status section.
 			 *
-			 * @since 4.3.0-dev
+			 * @since 4.3.0-beta
 			 * @param \SV_WC_Payment_Gateway $gateway
 			 */
 			do_action( 'wc_payment_gateway_' . $gateway->get_id() . '_system_status_start', $gateway );
@@ -76,7 +76,7 @@
 			 *
 			 * Allow actors to add info the end of the gateway system status section.
 			 *
-			 * @since 4.3.0-dev
+			 * @since 4.3.0-beta
 			 * @param \SV_WC_Payment_Gateway $gateway
 			 */
 			do_action( 'wc_payment_gateway_' . $gateway->get_id() . '_system_status_end', $gateway );

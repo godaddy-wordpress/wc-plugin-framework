@@ -30,7 +30,7 @@ if ( ! class_exists( 'SV_WC_API_JSON_Response' ) ) :
 /**
  * Base JSON API response class.
  *
- * @since 4.3.0-dev
+ * @since 4.3.0-beta
  */
 abstract class SV_WC_API_JSON_Response implements SV_WC_API_Response {
 
@@ -45,7 +45,7 @@ abstract class SV_WC_API_JSON_Response implements SV_WC_API_Response {
 	/**
 	 * Build the data object from the raw JSON.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @param string $raw_response_json The raw JSON
 	 */
 	public function __construct( $raw_response_json ) {
@@ -59,7 +59,7 @@ abstract class SV_WC_API_JSON_Response implements SV_WC_API_Response {
 	/**
 	 * Magic accessor for response data attributes
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @param string $name The attribute name to get.
 	 * @return mixed The attribute value
 	 */
@@ -73,7 +73,7 @@ abstract class SV_WC_API_JSON_Response implements SV_WC_API_Response {
 	/**
 	 * Get the string representation of this response.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see SV_WC_API_Response::to_string()
 	 * @return string
 	 */
@@ -87,7 +87,7 @@ abstract class SV_WC_API_JSON_Response implements SV_WC_API_Response {
 	 * Get the string representation of this response with any and all sensitive elements masked
 	 * or removed.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see SV_WC_API_Response::to_string_safe()
 	 * @return string
 	 */

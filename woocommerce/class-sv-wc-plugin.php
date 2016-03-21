@@ -34,13 +34,13 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 4.3.0-dev
+ * @version 4.3.0-beta
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '4.3.0-dev';
+	const VERSION = '4.3.0-beta';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -235,7 +235,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Load and instantiate the hook deprecator class
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	private function load_hook_deprecator() {
 
@@ -256,7 +256,7 @@ abstract class SV_WC_Plugin {
 	 *     otherwise (if bool and false) the message will indicate there is no replacement available.
 	 * }
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return array
 	 */
 	protected function get_deprecated_hooks() {

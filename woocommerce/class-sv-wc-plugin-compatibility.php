@@ -49,7 +49,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Backports wc_site_is_https() to 2.4.12 and earlier.
 	 *
-	 * @since  4.3.0-dev
+	 * @since  4.3.0-beta
 	 * @return bool
 	 */
 	public static function wc_site_is_https() {
@@ -68,7 +68,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Backports wc_checkout_is_https() to 2.4.x and earlier.
 	 *
-	 * @since  4.3.0-dev
+	 * @since  4.3.0-beta
 	 * @return bool
 	 */
 	public static function wc_checkout_is_https() {

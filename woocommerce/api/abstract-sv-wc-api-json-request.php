@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_API_JSON_Request' ) ) :
 /**
  * Base JSON API request class.
  *
- * @since 4.3.0-dev
+ * @since 4.3.0-beta
  */
 abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 
@@ -47,7 +47,7 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 	/**
 	 * Get the request method.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see SV_WC_API_Request::get_method()
 	 * @return string
 	 */
@@ -59,7 +59,7 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 	/**
 	 * Get the request path.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see SV_WC_API_Request::get_path()
 	 * @return string
 	 */
@@ -71,7 +71,7 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 	/**
 	 * Get the request parameters.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return array
 	 */
 	public function get_params() {
@@ -85,7 +85,7 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 	/**
 	 * Get the string representation of this request.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see SV_WC_API_Request::to_string()
 	 * @return string
 	 */
@@ -99,7 +99,7 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 	 * Get the string representation of this request with any and all sensitive elements masked
 	 * or removed.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see SV_WC_API_Request::to_string_safe()
 	 * @return string
 	 */

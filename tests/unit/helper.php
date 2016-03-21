@@ -20,7 +20,7 @@ class Helper extends Test_Case {
 	/**
 	 * Test str_starts_with() when multibyte functions are *not* enabled
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see \SV_WC_Helper::str_starts_with()
 	 * @param bool $asserts_as_true true if data passes true assert, passes false assertion otherwise
 	 * @param string $haystack
@@ -43,7 +43,7 @@ class Helper extends Test_Case {
 	/**
 	 * Data Provider for str_starts_with() ASCII test
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return array
 	 */
 	public function provider_str_starts_with_ascii() {
@@ -62,7 +62,7 @@ class Helper extends Test_Case {
 	/**
 	 * Test str_starts_with() when multibyte functions are enabled
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see \SV_WC_Helper::str_starts_with()
 	 * @param bool $asserts_as_true true if data passes true assert, passes false assertion otherwise
 	 * @param string $haystack
@@ -86,7 +86,7 @@ class Helper extends Test_Case {
 	/**
 	 * Data Provider for str_starts_with() multibyte test
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return array
 	 */
 	public function provider_str_starts_with_mb() {
@@ -105,7 +105,7 @@ class Helper extends Test_Case {
 	/**
 	 * Test str_ends_with() when multibyte functions are *not* enabled
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see \SV_WC_Helper::str_ends_with()
 	 * @param bool $asserts_as_true true if data passes true assert, passes false assertion otherwise
 	 * @param string $haystack
@@ -128,7 +128,7 @@ class Helper extends Test_Case {
 	/**
 	 * Data Provider for str_ends_with() ASCII test
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return array
 	 */
 	public function provider_str_ends_with_ascii() {
@@ -147,7 +147,7 @@ class Helper extends Test_Case {
 	/**
 	 * Test str_ends_with() when multibyte functions are enabled
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see \SV_WC_Helper::str_ends_with()
 	 * @param bool $asserts_as_true true if data passes true assert, passes false assertion otherwise
 	 * @param string $haystack
@@ -171,7 +171,7 @@ class Helper extends Test_Case {
 	/**
 	 * Data Provider for str_ends_with() multibyte test
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return array
 	 */
 	public function provider_str_ends_with_mb() {
@@ -191,7 +191,7 @@ class Helper extends Test_Case {
 	 * Test \SV_WC_Helper::str_to_ascii()
 	 *
 	 * @see \SV_WC_Helper::str_to_ascii()
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @dataProvider provider_test_str_to_ascii
 	 */
 	public function test_str_to_ascii( $string, $ascii ) {
@@ -203,7 +203,7 @@ class Helper extends Test_Case {
 	/**
 	 * Data provider for UTF-8 to pure ASCII strings
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return array
 	 */
 	public function provider_test_str_to_ascii() {
@@ -223,7 +223,7 @@ class Helper extends Test_Case {
 	 * Test str_to_sane_utf8()
 	 *
 	 * @see \SV_WC_Helper::str_to_sane_utf8()
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @dataProvider provider_test_str_to_sane_utf8
 	 */
 	public function test_str_to_sane_utf8( $string, $utf8 ) {
@@ -235,7 +235,7 @@ class Helper extends Test_Case {
 	/**
 	 * Data provider for crazy UTF-8 to sane UTF-8 strings
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return array
 	 */
 	public function provider_test_str_to_sane_utf8() {
@@ -254,7 +254,7 @@ class Helper extends Test_Case {
 	/**
 	 * Test str_exists() when multibyte functions are *not* enabled
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see \SV_WC_Helper::str_exists()
 	 * @param bool $asserts_as_true true if data passes true assert, passes false assertion otherwise
 	 * @param string $haystack
@@ -277,7 +277,7 @@ class Helper extends Test_Case {
 	/**
 	 * Data Provider for str_exists() ASCII test
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return array
 	 */
 	public function provider_str_exists_ascii() {
@@ -296,7 +296,7 @@ class Helper extends Test_Case {
 	/**
 	 * Test str_exists() when multibyte functions are enabled
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see \SV_WC_Helper::str_exists()
 	 * @param bool $asserts_as_true true if data passes true assert, passes false assertion otherwise
 	 * @param string $haystack
@@ -320,7 +320,7 @@ class Helper extends Test_Case {
 	/**
 	 * Data Provider for str_exists() multibyte test
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return array
 	 */
 	public function provider_str_exists_mb() {
@@ -339,7 +339,7 @@ class Helper extends Test_Case {
 	/**
 	 * Test str_truncate() when multibyte functions are *not* enabled
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see \SV_WC_Helper::str_truncate()
 	 */
 	public function test_str_truncate_ascii() {
@@ -363,7 +363,7 @@ class Helper extends Test_Case {
 	/**
 	 * Test str_truncate() when multibyte functions are enabled
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @see \SV_WC_Helper::str_truncate()
 	 */
 	public function test_str_truncate_mb() {
@@ -392,7 +392,7 @@ class Helper extends Test_Case {
 	 * Test SV_WC_Helper::wc_notice_count()
 	 *
 	 * @see \SV_WC_Helper::wc_notice_count()
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	public function test_wc_notice_count() {
 
@@ -418,7 +418,7 @@ class Helper extends Test_Case {
 	 * Test SV_WC_Helper::wc_add_notice()
 	 *
 	 * @see \SV_WC_Helper::wc_add_notice()
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	public function test_wc_add_notice() {
 
@@ -440,7 +440,7 @@ class Helper extends Test_Case {
 	 * Test SV_WC_Helper::wc_print_notice()
 	 *
 	 * @see \SV_WC_Helper::wc_print_notice()
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	public function test_wc_print_notice() {
 
@@ -462,7 +462,7 @@ class Helper extends Test_Case {
 	 * Test SV_WC_Helper::get_wc_log_file_url()
 	 *
 	 * @see SV_WC_Helper::get_wc_log_file_url()
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	public function test_get_wc_log_file_url() {
 
@@ -491,7 +491,7 @@ class Helper extends Test_Case {
 	 * Test \SV_WC_Helper::get_post()
 	 *
 	 * @see \SV_WC_Helper::get_post()
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	public function test_get_post() {
 
@@ -516,7 +516,7 @@ class Helper extends Test_Case {
 	 * Test \SV_WC_Helper::get_order_line_items()
 	 *
 	 * @see \SV_WC_Helper::get_order_line_items()
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	public function test_get_order_line_items() {
 
@@ -562,7 +562,7 @@ class Helper extends Test_Case {
 	/**
 	 * Get a simple mock object for the WC_Order class
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return \WC_Order mocked order object
 	 */
 	protected function get_wc_order_mock() {
@@ -593,7 +593,7 @@ class Helper extends Test_Case {
 	/**
 	 * Get a simple mock object for the WC_Product class
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return \PHPUnit_Framework_MockObject_Builder_InvocationMocker
 	 */
 	protected function get_wc_product_mock() {
@@ -605,7 +605,7 @@ class Helper extends Test_Case {
 	 * Returns an array of item data that matches the format WC returns item data
 	 * in
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return array
 	 */
 	protected function get_wc_item_data() {
@@ -631,7 +631,7 @@ class Helper extends Test_Case {
 	 * Test \SV_WC_Helper::get_request()
 	 *
 	 * @see \SV_WC_Helper::get_request()
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @dataProvider provider_test_get_request_associative_array
 	 */
 	public function test_get_request( $request_key, $request_value ) {
@@ -647,7 +647,7 @@ class Helper extends Test_Case {
 	 * Test \SV_WC_Helper::array_insert_after
 	 *
 	 * @see \SV_WC_Helper::array_insert_after()
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	public function test_array_insert_after() {
 
@@ -675,7 +675,7 @@ class Helper extends Test_Case {
 	/**
 	 * Test SV_WC_Helper::f__
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	public function test_f__() {
 
@@ -689,7 +689,7 @@ class Helper extends Test_Case {
 	/**
 	 * Test SV_WC_Helper::f_x
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	public function test_f_x() {
 
@@ -703,7 +703,7 @@ class Helper extends Test_Case {
 	/*
 	 * Test SV_WC_Helper::f_e
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	public function test_f_e() {
 
@@ -724,7 +724,7 @@ class Helper extends Test_Case {
 	 * Test \SV_WC_Helper::array_to_xml()
 	 *
 	 * @see \SV_WC_Helper::array_to_xml()
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	public function test_array_to_xml() {
 
@@ -763,7 +763,7 @@ MSG;
 	 * Test \SV_WC_Helper::number_format()
 	 *
 	 * @see \SV_WC_Helper::number_format()
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @dataProvider provider_test_number_format
 	 */
 	public function test_number_format( $original_number, $formatted_number ) {
@@ -779,7 +779,7 @@ MSG;
 	 * Test SV_WC_Helper::convert_country_code()
 	 *
 	 * @dataProvider provider_test_convert_country_code
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	public function test_convert_country_code( $input_code, $converted_code ) {
 
@@ -797,7 +797,7 @@ MSG;
 	/**
 	 * Convert Country code provider
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	public function provider_test_convert_country_code() {
 
@@ -814,7 +814,7 @@ MSG;
 	/**
 	 * Get an array with formatted numbers
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return array
 	 */
 	public function provider_test_number_format() {
@@ -834,7 +834,7 @@ MSG;
 	/**
 	 * Provider for an associative array with different keys and values
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return array
 	 */
 	public function provider_test_get_request_associative_array() {

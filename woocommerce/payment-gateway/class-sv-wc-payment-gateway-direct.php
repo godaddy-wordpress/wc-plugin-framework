@@ -161,7 +161,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 *
 		 * Allow actors to filter the credit card field validation.
 		 *
-		 * @since 4.3.0-dev
+		 * @since 4.3.0-beta
 		 * @param bool $is_valid true for validation to pass
 		 * @param \SV_WC_Payment_Gateway_Direct $this direct gateway class instance
 		 */
@@ -360,7 +360,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 *
 		 * Allow actors to filter the eCheck field validation.
 		 *
-		 * @since 4.3.0-dev
+		 * @since 4.3.0-beta
 		 * @param bool $is_valid true for validation to pass
 		 * @param \SV_WC_Payment_Gateway_Direct $this direct gateway class instance
 		 */
@@ -1022,7 +1022,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Initialize payment tokens handler.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 */
 	protected function init_payment_tokens_handler() {
 
@@ -1034,7 +1034,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * Return the Payment Tokens Handler class instance. Concrete classes
 	 * can override this method to return a custom implementation.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return \SV_WC_Payment_Gateway_Payment_Tokens_Handler
 	 */
 	protected function build_payment_tokens_handler() {
@@ -1046,7 +1046,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Get the payment tokens handler instance.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return \SV_WC_Payment_Gateway_Payment_Tokens_Handler
 	 */
 	public function get_payment_tokens_handler() {
@@ -1104,7 +1104,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	/**
 	 * Determine if the gateway supports the admin token editor feature.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @return boolean
 	 */
 	public function supports_token_editor() {

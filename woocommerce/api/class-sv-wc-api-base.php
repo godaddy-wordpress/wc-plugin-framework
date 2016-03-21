@@ -602,7 +602,7 @@ abstract class SV_WC_API_Base {
 	/**
 	 * Set multiple request headers at once
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0-beta
 	 * @param array $headers
 	 */
 	protected function set_request_headers( array $headers ) {
