@@ -440,8 +440,10 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 				$item_desc = array();
 
-				// add SKU to description
-				$item_desc[] = is_callable( array( $product, 'get_sku') ) && $product->get_sku() ? sprintf( 'SKU: %s', $product->get_sku() ) : null;
+				// add SKU to description if available
+				if ( is_callable( array( $product, 'get_sku' ) ) && $product->get_sku() ) {
+					$item_desc[] = sprintf( 'SKU: %s', $product->get_sku() );
+				}
 
 				// get meta + format it
 				$item_meta = new WC_Order_Item_Meta( $meta );
