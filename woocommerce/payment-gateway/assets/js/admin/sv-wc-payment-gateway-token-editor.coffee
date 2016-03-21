@@ -138,8 +138,7 @@ jQuery( document ).ready ($) ->
 			required = $( this ).prop( 'required' )
 			pattern  = $( this ).attr( 'pattern' )
 
-			if ( ! required && ! value )
-				return
+			return unless required or value
 
 			if ( ! value.match( pattern ) or ( required and ! value ) )
 
