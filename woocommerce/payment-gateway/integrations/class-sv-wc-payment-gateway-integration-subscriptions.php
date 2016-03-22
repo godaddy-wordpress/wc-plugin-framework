@@ -520,8 +520,11 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			}
 
 			if ( 1 === count( $subscriptions ) ) {
+
+				$subscription = reset( $subscriptions );
+
 				$actions['view-subscription'] = array(
-					'url'  => current( $subscriptions )->get_view_order_url(),
+					'url'  => $subscription->get_view_order_url(),
 					'name' => __( 'View Subscription', 'woocommerce-plugin-framework' ),
 				);
 			}
