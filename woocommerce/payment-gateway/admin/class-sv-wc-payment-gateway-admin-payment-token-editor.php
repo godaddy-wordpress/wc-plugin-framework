@@ -125,13 +125,20 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	public function display_tokens( $user_id ) {
 
 		$tokens = $this->get_tokens( $user_id );
-		$type   = $this->get_payment_type();
 
-		$fields        = $this->get_fields();
-		$input_name    = $this->get_input_name();
-		$token_actions = $this->get_token_actions();
+		$fields     = $this->get_fields();
+		$input_name = $this->get_input_name();
+		$actions    = $this->get_token_actions();
+		$type       = $this->get_payment_type();
 
-		include( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_path() . '/admin/views/html-user-payment-token-editor-tokens.php' );
+		$index = 0;
+
+		foreach ( $tokens as $token ) {
+
+			include( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_path() . '/admin/views/html-user-payment-token-editor-token.php' );
+
+			$index++;
+		}
 	}
 
 
@@ -147,11 +154,15 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 		$built_tokens = array();
 
-		foreach ( $tokens as $token_id => $data ) {
+		foreach ( $tokens as $data ) {
 
 			$token_id = $data['id'];
 
 			unset( $data['id'] );
+
+			if ( ! $token_id ) {
+				continue;
+			}
 
 			if ( 'credit_card' === $data['type'] ) {
 				$data = $this->prepare_expiry_date( $data );
@@ -184,11 +195,18 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 			$fields     = $this->get_fields();
 			$input_name = $this->get_input_name();
+			$actions    = $this->get_token_actions();
 			$type       = $this->get_payment_type();
+			$user_id    = 0;
+
+			$token = array_fill_keys( array_keys( $fields ), '' );
+			$token['id']      = '';
+			$token['expiry']  = '';
+			$token['default'] = false;
 
 			ob_start();
 
-			include( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_path() . '/admin/views/html-user-payment-token-editor-blank-token.php' );
+			include( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_path() . '/admin/views/html-user-payment-token-editor-token.php' );
 
 			$html = ob_get_clean();
 
