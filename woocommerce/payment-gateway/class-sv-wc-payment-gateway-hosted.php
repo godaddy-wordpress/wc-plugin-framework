@@ -655,33 +655,34 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @param array $args {
 	 *     Optional. The order note options.
 	 *
-	 *     @type string $method_title     Payment method title
-	 *     @type string $method_type      Payment method type, like credit-card or check
-	 *     @type string $transaction_type Transaction type name for display
-	 *     @type string $environment_name The environment name, like Test
-	 *     @type string $additional_note  Additional text to append to the transaction note
-	 *     @type string $transaction_id   The transaction ID
+	 *     @type string $method_title       Payment method title
+	 *     @type string $method_type        Payment method type, like credit-card or check
+	 *     @type string $transaction_id     The transaction ID
+	 *     @type string $transaction_type   Transaction type name for display
+	 *     @type string $transaction_result Transaction result for display, like "Approved" or "Completed"
+	 *     @type string $environment_name   The environment name, like Test
+	 *     @type string $additional_note    Additional text to append to the transaction note
 	 * }
 	 */
 	protected function add_transaction_approved_order_note( $order, $args = array() ) {
 
 		$args = wp_parse_args( $args, array(
-			'method_title'     => $this->get_method_title(),
-			'method_type'      => '',
-			'transaction_type' => __( 'Transaction', 'woocommerce-plugin-framework' ),
-			'environment_name' => ( $this->is_test_environment() ) ? _x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
-			'additional_note'  => '',
-			'transaction_id'   => '',
+			'method_title'       => $this->get_method_title(),
+			'method_type'        => '',
+			'transaction_id'     => '',
+			'transaction_type'   => __( 'Transaction', 'woocommerce-plugin-framework' ),
+			'transaction_result' => __( 'Approved', 'woocommerce-plugin-framework' ),
+			'environment_name'   => ( $this->is_test_environment() ) ? _x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
+			'additional_note'    => '',
 		) );
 
 		// Build the order note
-		$note = sprintf(
-			/* translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge) */
-			__( '%1$s %2$s %3$s Approved', 'woocommerce-plugin-framework' ),
+		$note = implode( ' ', array(
 			$args['method_title'],
 			$args['environment_name'],
-			$args['transaction_type']
-		);
+			$args['transaction_type'],
+			$args['transaction_result']
+		) );
 
 		// Add the additional information, if available
 		if ( $args['additional_note'] ) {
