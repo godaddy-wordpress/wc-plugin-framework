@@ -510,15 +510,28 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function disable_my_payment_methods_table_method_delete( $actions, $token, $handler ) {
 
+		$disable_delete = false;
+
 		$subscriptions = $this->get_payment_token_subscriptions( get_current_user_id(), $token );
 
-		if ( ! empty( $subscriptions ) ) {
+		// Check each subscription for the ability to change the payment method
+		foreach ( $subscriptions as $subscription ) {
+
+			if ( $subscription->can_be_updated_to( 'new-payment-method' ) ) {
+				$disable_delete = true;
+				break;
+			}
+		}
+
+		// If at least one can be changed, no deleting for you!
+		if ( $disable_delete ) {
 
 			if ( isset( $actions['delete'] ) ) {
 				$actions['delete']['class'][] = 'disabled';
 				$actions['delete']['tip'] = __( 'This payment method is tied to a subscription and cannot be deleted. Please switch the subscription to another method first.', 'woocommerce-plugin-framework' );
 			}
 
+			// If there is only one subscription, provide a handy link to view it
 			if ( 1 === count( $subscriptions ) ) {
 
 				$subscription = reset( $subscriptions );
