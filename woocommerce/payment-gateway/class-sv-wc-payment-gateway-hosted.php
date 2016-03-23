@@ -453,7 +453,6 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				} elseif ( self::PAYMENT_TYPE_ECHECK == $response->get_payment_type() ) {
 					$this->do_check_transaction_approved( $order, $response );
 				} else {
-					// generic transaction approved message (likely to be overridden by the concrete gateway implementation)
 					$this->do_transaction_approved( $order, $response );
 				}
 
@@ -581,7 +580,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			$note_args['transaction_type'] = _x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' );
 		}
 
-		$this->do_transaction_approved( $order, $note_args );
+		$this->do_transaction_approved( $order, $response, $note_args );
 	}
 
 
@@ -612,7 +611,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			$note .= ' ' . sprintf( __( '(check number %s)', 'woocommerce-plugin-framework' ), $response->get_check_number() );
 		}
 
-		$this->do_transaction_approved( $order, array(
+		$this->do_transaction_approved( $order, $response, array(
 			'method_type'     => self::PAYMENT_TYPE_ECHECK,
 			'additional_note' => $note,
 			'transaction_id'  => $response->get_transaction_id(),
@@ -622,13 +621,14 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 	/**
 	 * Adds an order note, along with anything else required after an approved
-	 * transaction.  This is a generic, default approved handler
+	 * transaction.  This is a generic, default approved handler.
 	 *
 	 * @since 2.1.0
-	 * @param WC_Order $order the order object
+	 * @param \WC_Order $order the order object
+	 * @param \WC_Paytrail_API_Payment_Response $response the response object
 	 * @param array $note_args Optional. The order note arguments. @see `SV_WC_Payment_Gateway_Hosted::add_transaction_approved_order_note()`
 	 */
-	protected function do_transaction_approved( $order, $note_args = array() ) {
+	protected function do_transaction_approved( WC_Order $order, $response, $note_args = array() ) {
 
 		// Add the order note
 		$this->add_transaction_approved_order_note( $order, $note_args );
