@@ -384,12 +384,12 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				$this->get_plugin()->log(
 					/* translators: Placeholders: %1$s - transaction request type such as IPN or Redirect-back, %2$s - the error message */
 					sprintf( '%1$s processing error: %2$s',
-					( $this->has_ipn() ) ? 'IPN' : 'Redirect-back',
+					( $response->is_ipn() ) ? 'IPN' : 'Redirect-back',
 					$e->getMessage()
 				), $this->get_id() );
 			}
 
-			$this->do_invalid_transaction_response( $order );
+			$this->do_invalid_transaction_response( $order, $response );
 		}
 	}
 
@@ -463,21 +463,21 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 				$order->reduce_order_stock();
 
-				$this->do_transaction_held( $order );
+				$this->do_transaction_held( $order, $response );
 			}
 
 		} elseif ( $response->transaction_cancelled() ) {
 
 			$this->mark_order_as_cancelled( $order, $response->get_status_message(), $response );
 
-			$this->do_transaction_cancelled( $order );
+			$this->do_transaction_cancelled( $order, $response );
 
 		} else { // failure
 
 			// Add the order note and debug info
 			$this->do_transaction_failed_result( $order, $response );
 
-			$this->do_transaction_failed( $order );
+			$this->do_transaction_failed( $order, $response );
 		}
 	}
 
@@ -634,7 +634,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		$this->add_transaction_approved_order_note( $order, $note_args );
 
 		// Die or redirect
-		if ( $this->has_ipn() ) {
+		if ( $response->is_ipn() ) {
 
 			status_header( 200 );
 			die;
@@ -724,10 +724,11 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 4.3.0-beta
 	 * @param \WC_Order $order the order object
+	 * @param \SV_WC_Payment_Gateway_API_Payment_Notification_Response $response the response object
 	 */
-	protected function do_transaction_held( WC_Order $order ) {
+	protected function do_transaction_held( WC_Order $order, $response ) {
 
-		if ( $this->has_ipn() ) {
+		if ( $response->is_ipn() ) {
 
 			status_header( 200 );
 			die;
@@ -745,10 +746,11 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 4.3.0-beta
 	 * @param \WC_Order $order the order object
+	 * @param \SV_WC_Payment_Gateway_API_Payment_Notification_Response $response the response object
 	 */
-	protected function do_transaction_cancelled( WC_Order $order ) {
+	protected function do_transaction_cancelled( WC_Order $order, $response ) {
 
-		if ( $this->has_ipn() ) {
+		if ( $response->is_ipn() ) {
 
 			status_header( 200 );
 			die;
@@ -766,10 +768,11 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 4.3.0-beta
 	 * @param \WC_Order $order the order object
+	 * @param \SV_WC_Payment_Gateway_API_Payment_Notification_Response $response the response object
 	 */
-	protected function do_transaction_failed( WC_Order $order ) {
+	protected function do_transaction_failed( WC_Order $order, $response ) {
 
-		if ( $this->has_ipn() ) {
+		if ( $response->is_ipn() ) {
 
 			status_header( 200 );
 			die;
@@ -789,10 +792,11 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 4.3.0-beta
 	 * @param \WC_Order $order Optional. The order object
+	 * @param \SV_WC_Payment_Gateway_API_Payment_Notification_Response $response the response object
 	 */
-	protected function do_invalid_transaction_response( $order = null ) {
+	protected function do_invalid_transaction_response( $order = null, $response ) {
 
-		if ( $this->has_ipn() ) {
+		if ( $response->is_ipn() ) {
 
 			status_header( 200 );
 			die();
@@ -884,8 +888,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @since 2.1.0
 	 * @param array $response the request data
 	 * @param string $message optional message string with a %s to hold the
-	 *        response data.  Defaults to 'IPN Request %s' or 'Redirect-back
-	 *        Request %s' based on the result of `has_ipn()`
+	 *        response data.  Defaults to 'Request %s'
 	 * $response
 	 */
 	public function log_transaction_response_request( $response, $message = null ) {
@@ -895,7 +898,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			// if a message wasn't provided, make our best effort
 			if ( is_null( $message ) ) {
-				$message = ( $this->has_ipn() ? 'IPN' : 'Redirect-back' ) . ' Request: %s';
+				$message = 'Request: %s';
 			}
 
 			$this->get_plugin()->log( sprintf( $message, print_r( $response, true ) ), $this->get_id() );
@@ -945,19 +948,6 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 */
 	public function use_auto_form_post() {
 		return $this->use_form_post() && true;
-	}
-
-
-	/**
-	 * Returns true if this gateway uses an Instant Payment Notification (IPN).
-	 * If not, the transaction results are expected to be found in the redirect
-	 * of the client back to the site.
-	 *
-	 * @since 2.1.0
-	 * @return boolean true if this is a gateway uses an IPN
-	 */
-	public function has_ipn() {
-		return true;
 	}
 
 }

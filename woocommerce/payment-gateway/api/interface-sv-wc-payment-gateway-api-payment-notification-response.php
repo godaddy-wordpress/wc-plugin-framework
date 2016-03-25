@@ -74,6 +74,15 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 	public function get_account_number();
 
 
+	/**
+	 * Determine if this is an IPN response.
+	 *
+	 * @since 4.3.0-dev
+	 * @return bool
+	 */
+	public function is_ipn();
+
+
 }
 
 endif;  // interface exists check
