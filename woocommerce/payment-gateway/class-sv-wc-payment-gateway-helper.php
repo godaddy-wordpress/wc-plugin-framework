@@ -146,8 +146,10 @@ class SV_WC_Payment_Gateway_Helper {
 		switch ( $type ) {
 
 			case 'mc':         $name = esc_html_x( 'MasterCard', 'credit card type', 'woocommerce-plugin-framework' );          break;
+			case 'mastercard': $name = esc_html_x( 'MasterCard', 'credit card type', 'woocommerce-plugin-framework' );          break;
 			case 'amex':       $name = esc_html_x( 'American Express', 'credit card type', 'woocommerce-plugin-framework' );    break;
 			case 'disc':       $name = esc_html_x( 'Discover', 'credit card type', 'woocommerce-plugin-framework' );            break;
+			case 'discover':   $name = esc_html_x( 'Discover', 'credit card type', 'woocommerce-plugin-framework' );            break;
 			case 'jcb':        $name = esc_html_x( 'JCB', 'credit card type', 'woocommerce-plugin-framework' );                 break;
 			case 'cartebleue': $name = esc_html_x( 'CarteBleue', 'credit card type', 'woocommerce-plugin-framework' );          break;
 			case 'paypal':     $name = esc_html__( 'PayPal', 'woocommerce-plugin-framework' );                                  break;
