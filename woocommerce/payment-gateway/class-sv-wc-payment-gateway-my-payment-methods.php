@@ -497,7 +497,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			// Build the button
 			$actions[] = sprintf(
-				( in_array( 'disabled', $classes ) ) ? '<span class="button %2$s" %3$s>%4$s</span>' : '<a href="%1$s" class="button %2$s" %3$s>%4$s</a>',
+				( in_array( 'disabled', $classes ) ) ? '<a class="button %2$s" %3$s>%4$s</a>' : '<a href="%1$s" class="button %2$s" %3$s>%4$s</a>',
 				esc_url( $action['url'] ),
 				implode( ' ', array_map( 'sanitize_html_class', $classes ) ),
 				implode( ' ', $attributes ),
