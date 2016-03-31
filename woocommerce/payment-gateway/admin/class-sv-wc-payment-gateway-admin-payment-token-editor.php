@@ -556,6 +556,11 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		$card_types = $this->get_gateway()->get_card_types();
 		$options    = array();
 
+		// TODO: the gateway card types setting for Discover (`DISC`) doesn't match what most gateway
+		// implementations will use as the token card type (`discover`), so manually add
+		// it for now, until we improve our consistency here @MR 2016-03-31
+		$card_types[] = 'discover';
+
 		foreach ( $card_types as $card_type ) {
 			$options[ strtolower( $card_type ) ] = SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type );
 		}
