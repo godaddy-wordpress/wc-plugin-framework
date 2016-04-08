@@ -104,7 +104,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 				$( ".wc-' . $this->get_plugin()->get_id_dasherized() . '-payment-method-actions .button.tip" ).tipTip();
 
 				$( ".wc-' . $this->get_plugin()->get_id_dasherized() . '-payment-method-actions a.delete-payment-method" ).on( "click", function( e ) {
-					if ( ! confirm( "' . esc_js( /* translators: Payment method as in a specific credit card, e-check or bank account */ esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ) ) . '" ) ) {
+					if ( $( this ).hasClass( "disabled" ) || ! confirm( "' . esc_js( /* translators: Payment method as in a specific credit card, e-check or bank account */ esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ) ) . '" ) ) {
 						e.preventDefault();
 					}
 				} );
