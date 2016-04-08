@@ -113,21 +113,32 @@ class SV_WC_Admin_Notice_Handler {
 	 * @param array $params {
 	 *     Optional parameters.
 	 *
+	 *     @type array $user_capabilities      Additional capabilities that allow to see the notice,
+	 *                                         default, always included to check: `manage_woocommerce`
 	 *     @type bool $dismissible             If the notice should be dismissible
 	 *     @type bool $always_show_on_settings If the notice should be forced to display on the
 	 *                                         plugin settings page, regardless of `$dismissible`.
 	 * }
+	 * @return bool
 	 */
 	public function should_display_notice( $message_id, $params = array() ) {
-
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			return false;
-		}
 
 		$params = wp_parse_args( $params, array(
 			'dismissible'             => true,
 			'always_show_on_settings' => true,
 		) );
+
+		$params['user_capabilities'][] = 'manage_woocommerce';
+		$check_user_capabilities       = array();
+
+		foreach ( $params['user_capabilities'] as $capability ) {
+			$check_user_capabilities[] = current_user_can( $capability );
+		}
+
+		// check if the user has any of the required capabilities
+		if ( ! in_array( true, $check_user_capabilities, true ) ) {
+			return false;
+		}
 
 		// if the notice is always shown on the settings page, and we're on the settings page
 		if ( $params['always_show_on_settings'] && $this->get_plugin()->is_plugin_settings() ) {

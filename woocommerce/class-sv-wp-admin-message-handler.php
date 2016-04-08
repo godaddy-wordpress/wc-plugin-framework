@@ -234,19 +234,30 @@ class SV_WP_Admin_Message_Handler {
 	 * Render the errors and messages.
 	 *
 	 * @since 1.0.0
+	 * @param array $capabilities Any user capabilities to check if the user is allowed to view the messages,
+	 *                            default, always included to check: `manage_woocommerce`
 	 */
-	public function show_messages() {
+	public function show_messages( $capabilities = array() ) {
 
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		$capabilities[]          = 'manage_woocommerce';
+		$check_user_capabilities = array();
+
+		foreach ( $capabilities as $capability ) {
+			$check_user_capabilities[] = current_user_can( $capability );
+		}
+
+		// check if user has at least one capability that allows to see messages
+		if ( ! in_array( true, $check_user_capabilities, true ) ) {
 			return;
 		}
 
-		if ( $this->error_count() > 0 )
-			echo '<div id="wp-admin-message-handler-error" class="error"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_errors() ) . "</strong></li></ul></div>";
+		if ( $this->error_count() > 0 ) {
+			echo '<div id="wp-admin-message-handler-error" class="error"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_errors() ) . '</strong></li></ul></div>';
+		}
 
-		if ( $this->message_count() > 0 )
-			echo '<div id="wp-admin-message-handler-message"  class="updated"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_messages() ) . "</strong></li></ul></div>";
-
+		if ( $this->message_count() > 0 ) {
+			echo '<div id="wp-admin-message-handler-message"  class="updated"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_messages() ) . '</strong></li></ul></div>';
+		}
 	}
 
 
