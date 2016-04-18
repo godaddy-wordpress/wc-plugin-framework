@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Handle the payment tokenization related functionality.
  *
- * @since 4.3.0-beta
+ * @since 4.3.0
  */
 class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
@@ -42,7 +42,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/**
 	 * Build the class.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param \SV_WC_Payment_Gateway_Direct $gateway The gateway instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Direct $gateway ) {
@@ -58,7 +58,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * gateway.  Concrete classes can override this method to return a custom
 	 * payment token implementation.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param string $token payment token
 	 * @param array $data {
 	 *     Payment token data.
@@ -514,7 +514,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/**
 	 * Get the admin token editor instance.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor
 	 */
 	public function get_token_editor() {
@@ -797,7 +797,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/**
 	 * Get the gateway environment ID.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return string
 	 */
 	protected function get_environment_id() {
@@ -808,7 +808,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/**
 	 * Get the gateway instance.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return \SV_WC_Payment_Gateway_Direct The gateway instance
 	 */
 	protected function get_gateway() {

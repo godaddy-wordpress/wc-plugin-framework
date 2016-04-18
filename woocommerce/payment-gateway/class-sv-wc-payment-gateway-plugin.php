@@ -767,7 +767,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Add gateway information to the system status report.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 */
 	public function add_system_status_information() {
 
@@ -819,7 +819,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Get the admin user handler instance.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return \SV_WC_Payment_Gateway_Admin_User_Handler
 	 */
 	public function get_admin_user_handler() {

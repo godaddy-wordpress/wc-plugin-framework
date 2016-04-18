@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_API_XML_Request' ) ) :
 /**
  * Base XML API request class.
  *
- * @since 4.3.0-beta
+ * @since 4.3.0
  */
 abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 
@@ -50,7 +50,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	/**
 	 * Get the method for this request.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 */
 	public function get_method() { }
 
@@ -58,7 +58,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	/**
 	 * Get the path for this request.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return string
 	 */
 	public function get_path() {
@@ -69,7 +69,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	/**
 	 * Convert the request data into XML.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return string
 	 */
 	protected function to_xml() {
@@ -99,7 +99,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	/**
 	 * Return the request data to be converted to XML
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return array
 	 */
 	public function get_request_data() {
@@ -111,7 +111,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	/**
 	 * Get the string representation of this request
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @see SV_WC_API_Request::to_string()
 	 * @return string
 	 */
@@ -125,7 +125,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	 * Get the string representation of this request with any and all sensitive elements masked
 	 * or removed.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @see SV_WC_API_Request::to_string_safe()
 	 * @return string
 	 */
@@ -138,7 +138,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	/**
 	 * Helper method for making XML pretty, suitable for logging or rendering
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param string $xml_string ugly XML string
 	 * @return string
 	 */
@@ -160,7 +160,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	 * Concrete classes must implement this method to return the root element
 	 * for the XML document
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return string
 	 */
 	abstract protected function get_root_element();

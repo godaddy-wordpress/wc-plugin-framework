@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2016.nn.nn - version 4.3.0-beta
+2016.04.18 - version 4.3.0
  * Feature - Revamped admin payment token editor
  * Feature - Prevent deleting subscription payment methods
  * Feature - Add payment gateway environment information to the WooCommerce system status report

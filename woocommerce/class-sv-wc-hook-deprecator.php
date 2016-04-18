@@ -31,7 +31,7 @@ if ( ! class_exists( 'SV_WC_Hook_Deprecator' ) ) :
  *
  * This class handles triggering PHP notices for deprecated and removed hooks
  *
- * @since 4.3.0-beta
+ * @since 4.3.0
  */
 class SV_WC_Hook_Deprecator {
 
@@ -62,7 +62,7 @@ class SV_WC_Hook_Deprecator {
 	 * Trigger a notice when other actors have attached callbacks to hooks that
 	 * are either deprecated or removed. This only runs when WP_DEBUG is on.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 */
 	public function handle_deprecated_hooks() {
 		global $wp_filter;
@@ -90,7 +90,7 @@ class SV_WC_Hook_Deprecator {
 	/**
 	 * Trigger the deprecated/removed notice
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param string $old_hook_name deprecated/removed hook name
 	 * @param array $hook {
 	 *   @type string $version version the hook was deprecated/removed in

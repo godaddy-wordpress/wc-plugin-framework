@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Handle the admin user profile settings.
  *
- * @since 4.3.0-beta
+ * @since 4.3.0
  */
 class SV_WC_Payment_Gateway_Admin_User_Handler {
 
@@ -40,7 +40,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Construct the user handler.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param \SV_WC_Payment_Gateway_Plugin The plugin instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin ) {
@@ -72,7 +72,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Set up a token editor for each gateway.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 */
 	public function init_token_editors() {
 
@@ -90,7 +90,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Display the customer profile settings markup.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param \WP_User $user The user object
 	 */
 	public function add_profile_section( $user ) {
@@ -111,7 +111,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Display the token editor markup.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param \WP_User $user The user object
 	 */
 	public function display_token_editors( $user ) {
@@ -125,7 +125,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Display the customer ID field(s).
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param \WP_User $user the user object
 	 */
 	public function display_customer_id_fields( $user ) {
@@ -144,7 +144,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Save the user profile section fields.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param int $user_id the user ID
 	 */
 	public function save_profile_fields( $user_id ) {
@@ -164,7 +164,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Save the token data from each token editor.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param int $user_id the user ID
 	 */
 	protected function save_tokens( $user_id ) {
@@ -178,7 +178,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Save the customer IDs.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param int $user_id the user ID
 	 */
 	protected function save_customer_ids( $user_id ) {
@@ -202,7 +202,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Get the token editor section title.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return string
 	 */
 	protected function get_title() {
@@ -228,7 +228,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 		/**
 		 * Filter the admin token editor title.
 		 *
-		 * @since 4.3.0-beta
+		 * @since 4.3.0
 		 * @param string $title The section title
 		 * @param \SV_WC_Payment_Gateway_Plugin $plugin The gateway plugin instance
 		 */
@@ -239,7 +239,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Get the token editor section description.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return string
 	 */
 	protected function get_description() {
@@ -247,7 +247,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 		/**
 		 * Filter the admin token editor description.
 		 *
-		 * @since 4.3.0-beta
+		 * @since 4.3.0
 		 * @param string $description The section description
 		 * @param \SV_WC_Payment_Gateway_Plugin $plugin The gateway plugin instance
 		 */
@@ -258,7 +258,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Get the token editor objects.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return array
 	 */
 	protected function get_token_editors() {
@@ -272,7 +272,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	 * In most cases, this will be a single field unless the plugin has multiple gateways and they
 	 * are set to different environments.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param int $user_id the user ID
 	 * @return array {
 	 *     The fields data
@@ -324,7 +324,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Get the unique environments between the plugin's gateways.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return array the environments in the format `$environment_id => $environment_name`
 	 */
 	protected function get_unique_environments() {
@@ -344,7 +344,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Get the gateways that support tokenization and are enabled.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return array
 	 */
 	protected function get_tokenized_gateways() {
@@ -368,7 +368,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Determine if the user profile section is supported by at least one gateway.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return bool
 	 */
 	protected function is_supported() {
@@ -378,7 +378,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 		/**
 		 * Filter whether the user profile section should be displayed for this gateway plugin.
 		 *
-		 * @since 4.3.0-beta
+		 * @since 4.3.0
 		 * @param bool $display
 		 * @param \SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance
 		 */
@@ -389,7 +389,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Determine if the plugin has varying environments between its gateways.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return bool
 	 */
 	protected function has_multiple_environments() {
@@ -400,7 +400,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	/**
 	 * Get the plugin instance.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return \SV_WC_Payment_Gateway_Plugin the plugin instance
 	 */
 	protected function get_plugin() {

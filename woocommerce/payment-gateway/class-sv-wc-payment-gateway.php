@@ -337,7 +337,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Enqueue the payment form JS, CSS, and localized
 	 * JS params
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 */
 	protected function enqueue_payment_form_assets() {
 
@@ -363,7 +363,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns an array of JS script params to localize for the
 	 * payment form JS. Generally used for i18n purposes.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return array associative array of param name to value
 	 */
 	protected function get_payment_form_js_localized_script_params() {
@@ -374,7 +374,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		 * Allow actors to modify the JS localized script params for the
 		 * payment form.
 		 *
-		 * @since 4.3.0-beta
+		 * @since 4.3.0
 		 * @param array $params
 		 * @return array
 		 */
@@ -406,7 +406,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Enqueue the gateway-specific assets if present, including JS, CSS, and
 	 * localized script params
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 */
 	protected function enqueue_gateway_assets() {
 
@@ -445,7 +445,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			 * Allow actors to modify the URL used when loading a concrete payment
 			 * gateway's CSS.
 			 *
-			 * @since 4.3.0-beta
+			 * @since 4.3.0
 			 * @param string $css_url CSS asset URL
 			 * @return string
 			 */
@@ -482,7 +482,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 *
 	 * Defaults to 'wc-<plugin ID dasherized>'.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return string
 	 */
 	protected function get_gateway_js_handle() {
@@ -495,7 +495,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Returns an array of JS script params to localize for the gateway-specific
 	 * JS. Concrete classes must override this as needed.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return array
 	 */
 	protected function get_gateway_js_localized_script_params() {
@@ -508,7 +508,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Localize a script once. Gateway plugins that have multiple gateways should
 	 * only have their params localized once.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param string $handle script handle to localize
 	 * @param array $params script params to localize
 	 */
@@ -2966,7 +2966,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Get the configured environment's display name.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return string The configured environment name
 	 */
 	public function get_environment_name() {

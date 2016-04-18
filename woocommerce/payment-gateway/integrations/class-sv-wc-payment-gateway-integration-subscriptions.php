@@ -441,7 +441,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Add a subscriptions header to the My Payment Methods table.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param array $headers the table headers
 	 * @param \SV_WC_Payment_Gateway_My_Payment_Methods the my payment methods instance
 	 * @return array
@@ -471,7 +471,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Add a subscriptions header to the My Payment Methods table.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param array $method the table row data
 	 * @param \SV_WC_Payment_Gateway_Payment_Token $token the payment token
 	 * @param \SV_WC_Payment_Gateway_My_Payment_Methods the my payment methods instance
@@ -502,7 +502,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Disable the "Delete" My Payment Methods method action button if there is an associated subscription.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param array $actions the token actions
 	 * @param \SV_WC_Payment_Gateway_Payment_Token the token object
 	 * @param \SV_WC_Payment_Gateway_My_Payment_Methods the my payment methods instance
@@ -551,7 +551,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Get the subscriptions tied to a user payment token.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param int $user_id the user
 	 * @param \SV_WC_Payment_Gateway_Payment_Token the token object
 	 * @return array the subscriptions or an empty array

@@ -47,7 +47,7 @@
 				<?php
 				/** Fire inside the payment gateway token editor.
 				 *
-				 * @since 4.3.0-beta
+				 * @since 4.3.0
 				 * @param int $user_id the current user ID
 				 */
 				do_action( 'wc_payment_gateway_' . $id . '_token_editor_tokens', $user_id ); ?>

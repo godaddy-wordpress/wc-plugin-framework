@@ -260,7 +260,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Get the auto post form display arguments.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @see SV_WC_Payment_Gateway_Hosted::render_auto_post_form() for args
 	 * @param \WC_Order $order the order object
 	 * @return array
@@ -279,7 +279,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		/**
 		 * Filter the auto post form display arguments.
 		 *
-		 * @since 4.3.0-beta
+		 * @since 4.3.0
 		 * @param array $args {
 		 *     The form display arguments.
 		 *
@@ -301,7 +301,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * This can be overridden by concrete gateways to support more complex param arrays.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param array $request_params The request params
 	 * @return string
 	 */
@@ -350,7 +350,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Handle a payment notification request.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 */
 	public function handle_transaction_response_request() {
 
@@ -397,7 +397,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Validate a transaction response.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param \WC_Order $order the order object
 	 * @param \SV_WC_Payment_Gateway_API_Payment_Notification_Response the response object
 	 * @throws \SV_WC_Payment_Gateway_Exception
@@ -650,7 +650,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Add an order note with the approved transaction information.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param \WC_Order $order The order object
 	 * @param array $args {
 	 *     Optional. The order note options.
@@ -699,7 +699,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			/**
 			 * Filter the note added to an order when a transaction is approved for a specific payment type.
 			 *
-			 * @since 4.3.0-beta
+			 * @since 4.3.0
 			 * @param string $note The note text
 			 * @param \WC_Order $order The order object
 			 */
@@ -709,7 +709,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		/**
 		 * Filter the note added to an order when a transaction is approved.
 		 *
-		 * @since 4.3.0-beta
+		 * @since 4.3.0
 		 * @param string $note The note text
 		 * @param \WC_Order $order The order object
 		 */
@@ -722,7 +722,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Handle a held transaction response.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param \WC_Order $order the order object
 	 * @param \SV_WC_Payment_Gateway_API_Payment_Notification_Response $response the response object
 	 */
@@ -744,7 +744,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Handle a cancelled transaction response.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param \WC_Order $order the order object
 	 * @param \SV_WC_Payment_Gateway_API_Payment_Notification_Response $response the response object
 	 */
@@ -766,7 +766,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Handle a failed transaction response.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param \WC_Order $order the order object
 	 * @param \SV_WC_Payment_Gateway_API_Payment_Notification_Response $response the response object
 	 */
@@ -790,7 +790,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * i.e. the order has already been paid or was not found
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param \WC_Order $order Optional. The order object
 	 * @param \SV_WC_Payment_Gateway_API_Payment_Notification_Response $response the response object
 	 */

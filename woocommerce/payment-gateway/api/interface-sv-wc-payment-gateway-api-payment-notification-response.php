@@ -77,7 +77,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 	/**
 	 * Determine if this is an IPN response.
 	 *
-	 * @since 4.3.0-dev
+	 * @since 4.3.0
 	 * @return bool
 	 */
 	public function is_ipn();

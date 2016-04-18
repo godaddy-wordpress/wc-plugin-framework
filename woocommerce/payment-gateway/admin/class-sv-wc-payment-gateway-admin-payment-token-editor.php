@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * The token editor.
  *
- * @since 4.3.0-beta
+ * @since 4.3.0
  */
 class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
@@ -39,7 +39,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Construct the editor.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param \SV_WC_Payment_Gateway_Direct the gateway object
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Direct $gateway ) {
@@ -68,7 +68,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Load the editor scripts and styles.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 */
 	public function enqueue_scripts_styles() {
 
@@ -102,7 +102,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Display the token editor.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param int $user_id the user ID
 	 */
 	public function display( $user_id ) {
@@ -119,7 +119,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Display the tokens.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param int $user_id the user ID
 	 */
 	public function display_tokens( $user_id ) {
@@ -145,7 +145,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Save the token editor.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param int $user_id the user ID
 	 */
 	public function save( $user_id ) {
@@ -183,7 +183,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Add a token via AJAX.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 */
 	public function ajax_get_blank_token() {
 
@@ -222,7 +222,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Remove a token via AJAX.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 */
 	public function ajax_remove_token() {
 
@@ -242,7 +242,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Refresh the tokens list via AJAX.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 */
 	public function ajax_refresh_tokens() {
 
@@ -273,7 +273,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 * This method allows concrete gateways to add special token data.
 	 * See Authorize.net CIM for an example.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param int $user_id the user ID
 	 * @param string $token_id the token ID
 	 * @param array $data the token data
@@ -288,7 +288,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Update the user's token data.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param int $user_id the user ID
 	 * @param array the token objects
 	 */
@@ -301,7 +301,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Remove a specific token.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param int $user_id the user ID
 	 * @param string $token_id the token ID
 	 * @return bool whether the token was successfully removed
@@ -317,7 +317,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 *
 	 * Concrete gateways can override this to provide their own validation.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param array $data the token data
 	 * @return array|bool the validated token data or false if the token should not be saved
 	 */
@@ -326,7 +326,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		/**
 		 * Filter the validated token data.
 		 *
-		 * @since 4.3.0-beta
+		 * @since 4.3.0
 		 * @param array $data the validated token data
 		 * @param string $token_id the token ID
 		 * @param \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor the token editor instance
@@ -339,7 +339,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Correctly format a credit card expiration date for storage.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param array $data
 	 * @return array
 	 */
@@ -362,7 +362,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Get the stored tokens for a user.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @param int $user_id the user ID
 	 * @return array the tokens in db format
 	 */
@@ -401,7 +401,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Get the editor columns.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return array
 	 */
 	protected function get_columns() {
@@ -419,7 +419,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		/**
 		 * Filter the admin token editor columns.
 		 *
-		 * @since 4.3.0-beta
+		 * @since 4.3.0
 		 * @param array $columns
 		 * @param \SV_WC_Payment_Gateway $gateway the payment gateway instance
 		 */
@@ -432,7 +432,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Get the editor fields.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return array
 	 */
 	protected function get_fields( $type = '' ) {
@@ -523,7 +523,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		/**
 		 * Filter the admin token editor fields.
 		 *
-		 * @since 4.3.0-beta
+		 * @since 4.3.0
 		 * @param array $fields
 		 * @param \SV_WC_Payment_Gateway $gateway the payment gateway instance
 		 */
@@ -536,7 +536,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Get the token payment type.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return string
 	 */
 	protected function get_payment_type() {
@@ -548,7 +548,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Get the credit card type field options.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return array
 	 */
 	protected function get_card_type_options() {
@@ -575,7 +575,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Get the HTML name for the token fields.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return string
 	 */
 	protected function get_input_name() {
@@ -587,7 +587,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Get the available editor actions.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return array
 	 */
 	protected function get_actions() {
@@ -605,7 +605,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		/**
 		 * Filter the payment token editor actions.
 		 *
-		 * @since 4.3.0-beta
+		 * @since 4.3.0
 		 * @param array $actions the actions
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_actions', $actions );
@@ -615,7 +615,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Get the available token actions.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return array
 	 */
 	protected function get_token_actions() {
@@ -627,7 +627,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		/**
 		 * Filter the token actions.
 		 *
-		 * @since 4.3.0-beta
+		 * @since 4.3.0
 		 * @param array $actions the token actions
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_token_actions', $actions );
@@ -637,7 +637,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Get the gateway object.
 	 *
-	 * @since 4.3.0-beta
+	 * @since 4.3.0
 	 * @return \SV_WC_Payment_Gateway_Direct the gateway object
 	 */
 	protected function get_gateway() {
