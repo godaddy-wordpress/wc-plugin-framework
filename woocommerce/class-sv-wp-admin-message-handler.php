@@ -80,7 +80,7 @@ class SV_WP_Admin_Message_Handler {
 		$this->message_id = $message_id;
 
 		// load any available messages
-		add_action( 'init', array( $this, 'load_messages' ) );
+		$this->load_messages();
 
 		add_filter( 'wp_redirect', array( $this, 'redirect' ), 1, 2 );
 	}
@@ -234,19 +234,40 @@ class SV_WP_Admin_Message_Handler {
 	 * Render the errors and messages.
 	 *
 	 * @since 1.0.0
+	 * @param array $params {
+	 *     Optional parameters.
+	 *
+	 *     @type array $capabilities Any user capabilities to check if the user is allowed to view the messages,
+	 *                               default: `manage_woocommerce`
+	 * }
 	 */
-	public function show_messages() {
+	public function show_messages( $params = array() ) {
 
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		$params = wp_parse_args( array(
+			'capabilities' => array(
+				'manage_woocommerce',
+			),
+		), $params );
+
+		$check_user_capabilities = array();
+
+		// check if user has at least one capability that allows to see messages
+		foreach ( $params['capabilities'] as $capability ) {
+			$check_user_capabilities[] = current_user_can( $capability );
+		}
+
+		// bail out if user has no minimum capabilities to see messages
+		if ( ! in_array( true, $check_user_capabilities, true ) ) {
 			return;
 		}
 
-		if ( $this->error_count() > 0 )
-			echo '<div id="wp-admin-message-handler-error" class="error"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_errors() ) . "</strong></li></ul></div>";
+		if ( $this->error_count() > 0 ) {
+			echo '<div id="wp-admin-message-handler-error" class="error"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_errors() ) . '</strong></li></ul></div>';
+		}
 
-		if ( $this->message_count() > 0 )
-			echo '<div id="wp-admin-message-handler-message"  class="updated"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_messages() ) . "</strong></li></ul></div>";
-
+		if ( $this->message_count() > 0 ) {
+			echo '<div id="wp-admin-message-handler-message"  class="updated"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_messages() ) . '</strong></li></ul></div>';
+		}
 	}
 
 

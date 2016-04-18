@@ -12,7 +12,7 @@ module.exports = function( grunt ) {
 				cwd: 'woocommerce',
 				domainPath: 'i18n/languages',
 				exclude: [],
-				potFilename: '<%= pkg.name %>.pot',
+				potFilename: 'woocommerce-plugin-framework.pot',
 				mainFile: 'index.php',
 				potHeaders: {
 					'report-msgid-bugs-to': 'https://support.woothemes.com/hc/',

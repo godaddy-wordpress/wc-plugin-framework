@@ -1,0 +1,113 @@
+/*
+WooCommerce SkyVerge Payment Gateway Framework Payment Form SCSS
+Version 4.3.0-beta
+
+Copyright (c) 2015-2016, SkyVerge, Inc.
+ Licensed under the GNU General Public License v3.0
+http://www.gnu.org/licenses/gpl-3.0.html
+*/
+
+// checkout, Order > Pay, and Add Payment Method pages
+.woocommerce-checkout #payment div.payment_box, #add_payment_method {
+
+	.sv-wc-payment-gateway-payment-form-saved-payment-method {
+		display: inline;
+		img {
+			width: 30px;
+			height: 20px;
+			margin-right: .5em;
+		}
+	}
+
+	// general input styling
+	input.js-sv-wc-payment-gateway-credit-card-form-input[type="text"],
+	input.js-sv-wc-payment-gateway-echeck-form-input[type="text"] {
+		font-size: 1.5em;
+		padding: 8px;
+	}
+
+	// highlight valid credit card inputs
+	input.js-sv-wc-payment-gateway-credit-card-form-input[type="text"] {
+
+		&:focus {
+			box-shadow: 0 0 .1875em #3498db;
+		}
+
+		&.identified {
+			border-color: #69bf29;
+			&:focus {
+				box-shadow: 0 0 .1875em #69bf29;
+			}
+		}
+	}
+
+	// inline credit card input icon
+	input.js-sv-wc-payment-gateway-credit-card-form-account-number {
+
+		background-image: url('../../images/card-cc-plain.svg');
+		background-repeat: no-repeat;
+		background-position: 99%;
+		background-size: 50px 31px;
+
+		&.visa {
+			background-image: url('../../images/card-visa.svg');
+		}
+
+		&.mastercard {
+			background-image: url('../../images/card-mc.svg');
+		}
+
+		&.dinersclub {
+			background-image: url('../../images/card-diners.svg');
+		}
+
+		&.maestro {
+			background-image: url('../../images/card-maestro.svg');
+		}
+
+		&.jcb {
+			background-image: url('../../images/card-jcb.svg');
+		}
+
+		&.amex {
+			background-image: url('../../images/card-amex.svg');
+		}
+
+		&.discover {
+			background-image: url('../../images/card-disc.svg');
+		}
+
+		&.visaelectron {
+			background-image: url('../../images/card-visa-electron.svg');
+		}
+	}
+
+	.js-sv-wc-payment-gateway-echeck-form-check-hint {
+		margin: 0 0 3px 2px;
+		cursor: pointer;
+	}
+
+	.js-sv-wc-payment-gateway-echeck-form-sample-check {
+		margin: 1em;
+		img {
+			min-height: 135px;
+		}
+	}
+}
+
+// add payment method form card images
+#add_payment_method {
+	ul.payment_methods li {
+		list-style-type: none;
+		img {
+			vertical-align: middle;
+			margin: -2px 0 0 .5em;
+			padding: 0;
+			position: relative;
+			box-shadow: none;
+			& + img {
+				margin-left: 2px;
+			}
+		}
+	}
+}

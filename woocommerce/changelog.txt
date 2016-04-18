@@ -1,5 +1,14 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2016.nn.nn - version 4.3.0-beta
+ * Feature - Revamped admin payment token editor
+ * Feature - Prevent deleting subscription payment methods
+ * Feature - Add payment gateway environment information to the WooCommerce system status report
+ * Tweak - Support WordPress core dismissible notices
+ * Tweak - Misc Payment Gateway framework improvements
+ * Fix - Properly validate CSC if present for tokenized payment methods
+ * Fix - Fix double confirm messages when deleting a payment method in certain cases
+
 2016.02.08 - version 4.2.2
  * Fix - Fix handling guest pre-orders
 

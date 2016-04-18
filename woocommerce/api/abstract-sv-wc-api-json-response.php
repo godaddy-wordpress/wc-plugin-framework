@@ -22,47 +22,46 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( 'SV_WC_API_JSON_Response' ) ) :
 
 
 /**
- * API JSON Base Response Class
+ * Base JSON API response class.
  *
- * Useful for API's that return application/json responses
- *
- * @since 4.0.0
- * @see SV_WC_API_Response
+ * @since 4.3.0-beta
  */
-class SV_WC_API_JSON_Response implements SV_WC_API_Response {
+abstract class SV_WC_API_JSON_Response implements SV_WC_API_Response {
 
 
 	/** @var string string representation of this response */
 	protected $raw_response_json;
 
 	/** @var mixed decoded response data */
-	public $response_data;
+	protected $response_data;
 
 
 	/**
-	 * Build a response object from the raw response JSON
+	 * Build the data object from the raw JSON.
 	 *
-	 * @since 4.0.0
-	 * @param string $raw_response_json the raw response JSON
+	 * @since 4.3.0-beta
+	 * @param string $raw_response_json The raw JSON
 	 */
 	public function __construct( $raw_response_json ) {
+
 		$this->raw_response_json = $raw_response_json;
-		$this->response_data     = json_decode( $raw_response_json );
+
+		$this->response_data = json_decode( $raw_response_json );
 	}
 
 
 	/**
 	 * Magic accessor for response data attributes
 	 *
-	 * @since 4.0.0
-	 * @param string $name the attribute name to get
-	 * @return mixed the attribute value
+	 * @since 4.3.0-beta
+	 * @param string $name The attribute name to get.
+	 * @return mixed The attribute value
 	 */
 	public function __get( $name ) {
 
@@ -72,11 +71,11 @@ class SV_WC_API_JSON_Response implements SV_WC_API_Response {
 
 
 	/**
-	 * Returns the string representation of this response
+	 * Get the string representation of this response.
 	 *
-	 * @since 4.0.0
+	 * @since 4.3.0-beta
 	 * @see SV_WC_API_Response::to_string()
-	 * @return string the raw response
+	 * @return string
 	 */
 	public function to_string() {
 
@@ -85,20 +84,19 @@ class SV_WC_API_JSON_Response implements SV_WC_API_Response {
 
 
 	/**
-	 * Returns the string representation of this response with any and all
-	 * sensitive elements masked or removed
+	 * Get the string representation of this response with any and all sensitive elements masked
+	 * or removed.
 	 *
-	 * @since 4.0.0
+	 * @since 4.3.0-beta
 	 * @see SV_WC_API_Response::to_string_safe()
-	 * @return string response safe for logging/displaying
+	 * @return string
 	 */
 	public function to_string_safe() {
 
-		// no sensitive data to mask
 		return $this->to_string();
 	}
 
 
 }
 
-endif;
+endif; // class exists check

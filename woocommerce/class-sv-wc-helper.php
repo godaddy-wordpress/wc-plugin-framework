@@ -37,6 +37,10 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 	class SV_WC_Helper {
 
 
+		/** encoding used for mb_*() string functions */
+		const MB_ENCODING = 'UTF-8';
+
+
 		/** String manipulation functions (all multi-byte safe) ***************/
 
 		/**
@@ -51,17 +55,23 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 */
 		public static function str_starts_with( $haystack, $needle) {
 
-			if ( '' === $needle ) {
-				return true;
-			}
-
 			if ( self::multibyte_loaded() ) {
 
-				return 0 === mb_strpos( $haystack, $needle );
+				if ( '' === $needle ) {
+					return true;
+				}
+
+				return 0 === mb_strpos( $haystack, $needle, 0, self::MB_ENCODING );
 
 			} else {
 
-				return 0 === strpos( self::str_to_ascii( $haystack ), self::str_to_ascii( $needle ) ); // @codeCoverageIgnore
+				$needle = self::str_to_ascii( $needle );
+
+				if ( '' === $needle ) {
+					return true;
+				}
+
+				return 0 === strpos( self::str_to_ascii( $haystack ), self::str_to_ascii( $needle ) );
 			}
 		}
 
@@ -84,7 +94,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 			if ( self::multibyte_loaded() ) {
 
-				return mb_substr( $haystack, -mb_strlen( $needle ) ) === $needle;
+				return mb_substr( $haystack, -mb_strlen( $needle, self::MB_ENCODING ), null, self::MB_ENCODING ) === $needle;
 
 			} else {
 
@@ -110,9 +120,19 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 			if ( self::multibyte_loaded() ) {
 
-				return false !== mb_strpos( $haystack, $needle );
+				if ( '' === $needle ) {
+					return false;
+				}
+
+				return false !== mb_strpos( $haystack, $needle, 0, self::MB_ENCODING );
 
 			} else {
+
+				$needle = self::str_to_ascii( $needle );
+
+				if ( '' === $needle ) {
+					return false;
+				}
 
 				return false !== strpos( self::str_to_ascii( $haystack ), self::str_to_ascii( $needle ) );
 			}
@@ -135,13 +155,13 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 			if ( self::multibyte_loaded() ) {
 
 				// bail if string doesn't need to be truncated
-				if ( mb_strlen( $string ) <= $length ) {
+				if ( mb_strlen( $string, self::MB_ENCODING ) <= $length ) {
 					return $string;
 				}
 
-				$length -= mb_strlen( $omission );
+				$length -= mb_strlen( $omission, self::MB_ENCODING );
 
-				return mb_substr( $string, 0, $length ) . $omission;
+				return mb_substr( $string, 0, $length, self::MB_ENCODING ) . $omission;
 
 			} else {
 
@@ -162,20 +182,20 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		/**
 		 * Returns a string with all non-ASCII characters removed. This is useful
 		 * for any string functions that expect only ASCII chars and can't
-		 * safely handle UTF-8
-		 *
-		 * Note: We must do a strict false check on the iconv() output due to a
-		 * bug in PHP/glibc {@link https://bugs.php.net/bug.php?id=63450}
+		 * safely handle UTF-8. Note this only allows ASCII chars in the range
+		 * 33-126 (newlines/carriage returns are stripped)
 		 *
 		 * @since 2.2.0
 		 * @param string $string string to make ASCII
-		 * @return string|null ASCII string or null if error occurred
+		 * @return string
 		 */
 		public static function str_to_ascii( $string ) {
 
-			$ascii = iconv( 'UTF-8', 'ASCII//IGNORE', $string );
+			// strip ASCII chars 32 and under
+			$string = filter_var( $string, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW );
 
-			return false === $ascii ? preg_replace( '/[^a-zA-Z0-9]/', '', $string ) : $ascii;
+			// strip ASCII chars 127 and higher
+			return filter_var( $string, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH );
 		}
 
 
@@ -420,8 +440,10 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 				$item_desc = array();
 
-				// add SKU to description
-				$item_desc[] = is_callable( array( $product, 'get_sku') ) && $product->get_sku() ? sprintf( 'SKU: %s', $product->get_sku() ) : null;
+				// add SKU to description if available
+				if ( is_callable( array( $product, 'get_sku' ) ) && $product->get_sku() ) {
+					$item_desc[] = sprintf( 'SKU: %s', $product->get_sku() );
+				}
 
 				// get meta + format it
 				$item_meta = new WC_Order_Item_Meta( $meta );
@@ -584,6 +606,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * - `value` should be a comma-separated list of selected keys
 		 * - `data-request_data` can be used to pass any additional data to the AJAX request
 		 *
+		 * @codeCoverageIgnore no need to unit test this since it's mostly JS
 		 * @since 3.1.0
 		 */
 		public static function render_select2_ajax() {

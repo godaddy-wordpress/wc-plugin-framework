@@ -7,8 +7,6 @@
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 	verbose="true"
-	printerFile="vendor/whatthejeff/nyancat-phpunit-resultprinter/src/NyanCat/PHPUnit/ResultPrinter.php"
-	printerClass="NyanCat\PHPUnit\ResultPrinter"
 	>
 	<testsuites>
 		<testsuite name="unit">
@@ -27,6 +25,6 @@
 		</blacklist>
 	</filter>
 	<logging>
-		<log type="coverage-html" target="./tmp/coverage" charset="UTF-8" />
+		<log type="coverage-clover" target="./tmp/clover.xml" charset="UTF-8" />
 	</logging>
 </phpunit>

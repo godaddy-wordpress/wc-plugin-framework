@@ -88,17 +88,27 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function maybe_enqueue_styles_scripts() {
 
+		$handle = 'sv-wc-payment-gateway-my-payment-methods';
+
+		wp_enqueue_style( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), SV_WC_Plugin::VERSION );
+
 		wp_enqueue_style( 'dashicons' );
 
-		// // Add confirm javascript when deleting payment methods
+		// Add confirm javascript when deleting payment methods
 		if ( $this->has_tokens ) {
+
+			wp_enqueue_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', array( 'jquery' ), WC_VERSION, true );
+
 			wc_enqueue_js( '
-			$( ".sv-wc-payment-gateway-payment-method-actions .delete-payment-method" ).on( "click", function( e ) {
-				if ( ! confirm( "' . esc_js( /* translators: Payment method as in a specific credit card, e-check or bank account */ esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ) ) . '" ) ) {
-					e.preventDefault();
-				}
-			} );
-		' );
+
+				$( ".wc-' . $this->get_plugin()->get_id_dasherized() . '-payment-method-actions .button.tip" ).tipTip();
+
+				$( ".wc-' . $this->get_plugin()->get_id_dasherized() . '-payment-method-actions a.delete-payment-method" ).on( "click", function( e ) {
+					if ( $( this ).hasClass( "disabled" ) || ! confirm( "' . esc_js( /* translators: Payment method as in a specific credit card, e-check or bank account */ esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ) ) . '" ) ) {
+						e.preventDefault();
+					}
+				} );
+			' );
 		}
 	}
 
@@ -125,7 +135,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 				continue;
 			}
 
-			foreach ( $gateway->get_payment_tokens( get_current_user_id() ) as $token ) {
+			foreach ( $gateway->get_payment_tokens_handler()->get_tokens( get_current_user_id() ) as $token ) {
 
 				// prevent duplicates, as some gateways will return all tokens in each each gateway
 				if ( isset( $this->credit_card_tokens[ $token->get_id() ] ) ||  isset( $this->echeck_tokens[ $token->get_id() ] ) ) {
@@ -418,13 +428,24 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		// for responsive table data-title attributes
 		$headers = $this->get_table_headers();
 
-		foreach ( $this->get_table_body_row_data( $tokens ) as $method ) {
+		foreach ( $tokens as $token ) {
+
+			$method = $this->get_table_body_row_data( $token );
 
 			$html .= sprintf( '<tr class="sv-wc-payment-gateway-my-payment-methods-method wc-%s-my-payment-methods-method">', sanitize_html_class( $this->get_plugin()->get_id_dasherized() ) );
 
-			foreach ( $method as $attribute => $value ) {
+			// Display the row data in the order of the headers
+			foreach ( $headers as $attribute => $attribute_title ) {
 
-				$html .= sprintf( '<td class="sv-wc-payment-gateway-payment-method-%1$s wc-%2$s-payment-method-%1$s" data-title="%4$s">%3$s</td>', sanitize_html_class( $attribute ), $this->get_plugin()->get_id_dasherized(), $value, esc_attr( isset( $headers[ $attribute ] ) ? $headers[ $attribute ] : '' ) );
+				$value = isset( $method[ $attribute ] ) ? $method[ $attribute ] : __( 'N/A', 'woocommerce-plugin-framework' );
+
+				$html .= sprintf(
+					'<td class="sv-wc-payment-gateway-payment-method-%1$s wc-%2$s-payment-method-%1$s" data-title="%4$s">%3$s</td>',
+					sanitize_html_class( $attribute ),
+					sanitize_html_class( $this->get_plugin()->get_id_dasherized() ),
+					$value,
+					esc_attr( $attribute_title )
+				);
 			}
 
 			$html .= '</tr>';
@@ -445,31 +466,53 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Return the payment method data for a given set of tokens
+	 * Return the payment method data for a given token
 	 *
 	 * @since 4.0.0
-	 * @param array $tokens array of tokens
+	 * @param \SV_WC_Payment_Gateway_Payment_Token the token object
 	 * @return array payment method data suitable for HTML output
 	 */
-	protected function get_table_body_row_data( $tokens ) {
+	protected function get_table_body_row_data( $token ) {
 
-		$methods = array();
+		$actions = array();
 
-		foreach ( $tokens as $token ) {
+		foreach ( $this->get_payment_method_actions( $token ) as $action ) {
 
-			$actions = array();
+			$classes    = isset( $action['class'] ) ? (array) $action['class'] : array();
+			$attributes = array();
 
-			foreach ( $this->get_payment_method_actions( $token ) as $action ) {
+			// If the action has a tooltip set
+			if ( isset( $action['tip'] ) && $action['tip'] ) {
 
-				$actions[] = sprintf( '<a href="%s" class="button %s">%s</a>', esc_url( $action['url'] ), implode( ' ', array_map( 'sanitize_html_class', (array) $action['class'] ) ), esc_html( $action['name'] ) );
+				$classes[] = 'tip';
+
+				$attributes['title'] = $action['tip'];
 			}
 
-			$methods[] = array(
-				'title'   => $this->get_payment_method_title( $token ),
-				/* translators: N/A is used in the context where an expiry date is not applicable (for example, a bank account - as opposed to a credit card) */
-				'expiry'  => $token->get_exp_month() && $token->get_exp_year() ? $token->get_exp_date() : esc_html__( 'N/A', 'woocommerce-plugin-framework' ),
-				'actions' => implode( '', $actions ),
+			// Build the attributes
+			foreach ( $attributes as $attribute => $value ) {
+				$attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $value ) . '"';
+				unset( $attributes[ $attribute ] );
+			}
+
+			// Build the button
+			$actions[] = sprintf(
+				( in_array( 'disabled', $classes ) ) ? '<a class="button %2$s" %3$s>%4$s</a>' : '<a href="%1$s" class="button %2$s" %3$s>%4$s</a>',
+				esc_url( $action['url'] ),
+				implode( ' ', array_map( 'sanitize_html_class', $classes ) ),
+				implode( ' ', $attributes ),
+				esc_html( $action['name'] )
 			);
+		}
+
+		$method = array(
+			'title'   => $this->get_payment_method_title( $token ),
+			'actions' => implode( '', $actions ),
+		);
+
+		// Add the expiration date if applicable
+		if ( $token->get_exp_month() && $token->get_exp_year() ) {
+			$method['expiry'] = esc_html( $token->get_exp_date() );
 		}
 
 		/**
@@ -483,10 +526,10 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 *     @type string $expiry payment method expiry
 		 *     @type string $actions actions for payment method
 		 * }
-		 * @param array $tokens simple array of SV_WC_Payment_Gateway_Payment_Token objects
+		 * @param array $token simple array of SV_WC_Payment_Gateway_Payment_Token objects
 		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_body_row_data', $methods, $this->tokens, $this );
+		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_body_row_data', $method, $token, $this );
 	}
 
 
@@ -646,7 +689,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 				// handle deletion
 				case 'delete':
 
-					if ( ! $gateway->remove_payment_token( $user_id, $token ) ) {
+					if ( ! $gateway->get_payment_tokens_handler()->remove_token( $user_id, $token ) ) {
 
 						/* translators: Payment method as in a specific credit card, e-check or bank account */
 						SV_WC_Helper::wc_add_notice( esc_html__( 'Error removing payment method', 'woocommerce-plugin-framework' ), 'error' );
@@ -661,7 +704,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 				// set default payment method
 				case 'make-default':
-					$gateway->set_default_payment_token( $user_id, $token );
+					$gateway->get_payment_tokens_handler()->set_default_token( $user_id, $token );
 
 					/* translators: Payment method as in a specific credit card, e-check or bank account */
 					SV_WC_Helper::wc_add_notice( esc_html__( 'Default payment method updated.', 'woocommerce-plugin-framework' ) );
@@ -704,7 +747,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * using filters
 	 *
 	 * @since 4.0.0
-	 * @return SV_WC_Payment_Gateway_Plugin
+	 * @return \SV_WC_Payment_Gateway_Plugin
 	 */
 	public function get_plugin() {
 		return $this->plugin;

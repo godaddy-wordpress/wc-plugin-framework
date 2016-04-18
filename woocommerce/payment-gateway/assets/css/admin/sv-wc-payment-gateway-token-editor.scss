@@ -1,0 +1,52 @@
+/*
+WooCommerce SkyVerge Payment Gateway Framework Token Editor SCSS
+Version 4.3.0-beta
+
+Copyright (c) 2016, SkyVerge, Inc.
+ Licensed under the GNU General Public License v3.0
+http://www.gnu.org/licenses/gpl-3.0.html
+*/
+table.sv_wc_payment_gateway_token_editor {
+
+	width: auto;
+
+	th {
+		padding: 9px 7px!important;
+		vertical-align: middle;
+	}
+
+	td {
+		vertical-align: middle;
+		padding: 10px 7px;
+		line-height: 2em;
+	}
+
+	tr:nth-child(odd) td {
+		background: #f9f9f9;
+	}
+
+	tr.token input.error {
+		border-color: #a00;
+	}
+
+	// "Default" column
+	.token-default {
+		text-align: center;
+	}
+
+	// "Actions" column
+	.token-actions {
+		text-align: right;
+	}
+
+	.actions {
+		font-weight: normal;
+		text-align: right;
+
+		.error {
+			color: #a00;
+			padding-right: 10px;
+			font-weight: bold;
+		}
+	}
+}

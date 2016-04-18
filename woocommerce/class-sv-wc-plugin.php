@@ -34,13 +34,13 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 4.2.2
+ * @version 4.3.0-beta
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '4.2.2';
+	const VERSION = '4.3.0-beta';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -103,6 +103,8 @@ abstract class SV_WC_Plugin {
 
 		// includes that are required to be available at all times
 		$this->includes();
+
+		$this->load_hook_deprecator();
 
 		// Admin
 		if ( is_admin() && ! is_ajax() ) {
@@ -219,6 +221,48 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/api/class-sv-wc-api-base.php' );
 		require_once( $framework_path . '/api/interface-sv-wc-api-request.php' );
 		require_once( $framework_path . '/api/interface-sv-wc-api-response.php' );
+
+		// XML API base
+		require_once( $framework_path . '/api/abstract-sv-wc-api-xml-request.php' );
+		require_once( $framework_path . '/api/abstract-sv-wc-api-xml-response.php' );
+
+		// JSON API base
+		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
+		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
+	}
+
+
+	/**
+	 * Load and instantiate the hook deprecator class
+	 *
+	 * @since 4.3.0-beta
+	 */
+	private function load_hook_deprecator() {
+
+		require_once( $this->get_framework_path() . '/class-sv-wc-hook-deprecator.php' );
+
+		$this->hook_deprecator = new SV_WC_Hook_Deprecator( $this->get_plugin_name(), $this->get_deprecated_hooks() );
+	}
+
+
+	/**
+	 * Return deprecated/removed hooks. Implementing classes should override this
+	 * and return an array of deprecated/removed hooks in the following format:
+	 *
+	 * $old_hook_name = array {
+	 *   @type string $version version the hook was deprecated/removed in
+	 *   @type bool $removed if present and true, the message will indicate the hook was removed instead of deprecated
+	 *   @type string|bool $replacement if present and a string, the message will indicate the replacement hook to use,
+	 *     otherwise (if bool and false) the message will indicate there is no replacement available.
+	 * }
+	 *
+	 * @since 4.3.0-beta
+	 * @return array
+	 */
+	protected function get_deprecated_hooks() {
+
+		// stub method
+		return array();
 	}
 
 
@@ -288,7 +332,9 @@ abstract class SV_WC_Plugin {
 				'<strong>' . implode( ', ', $missing_extensions ) . '</strong>'
 			);
 
-			$this->get_admin_notice_handler()->add_admin_notice( $message, 'missing-extensions' );
+			$this->get_admin_notice_handler()->add_admin_notice( $message, 'missing-extensions', array(
+				'notice_class' => 'error',
+			) );
 
 		}
 
@@ -309,7 +355,9 @@ abstract class SV_WC_Plugin {
 				'<strong>' . implode( ', ', $missing_functions ) . '</strong>'
 			);
 
-			$this->get_admin_notice_handler()->add_admin_notice( $message, 'missing-functions' );
+			$this->get_admin_notice_handler()->add_admin_notice( $message, 'missing-functions', array(
+				'notice_class' => 'error',
+			) );
 
 		}
 	}
