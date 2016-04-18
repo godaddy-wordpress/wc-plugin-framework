@@ -39,7 +39,7 @@ abstract class SV_WC_API_JSON_Response implements SV_WC_API_Response {
 	protected $raw_response_json;
 
 	/** @var mixed decoded response data */
-	protected $response_data;
+	public $response_data;
 
 
 	/**
