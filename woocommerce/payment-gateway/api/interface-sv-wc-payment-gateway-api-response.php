@@ -85,10 +85,12 @@ interface SV_WC_Payment_Gateway_API_Response extends SV_WC_API_Response {
 	/**
 	 * Returns the payment type: 'credit-card', 'echeck', etc
 	 *
+	 * Intentionally commented out to prevent fatal errors. Possibly re-introduce as part of a larger refactor.
+	 *
 	 * @since 4.3.0
 	 * @return string payment type or null if not available
 	 */
-	public function get_payment_type();
+	// public function get_payment_type();
 
 
 	/**
