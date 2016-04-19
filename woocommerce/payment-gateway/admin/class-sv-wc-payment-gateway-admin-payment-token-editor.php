@@ -108,7 +108,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	public function display( $user_id ) {
 
 		$id      = $this->get_gateway()->get_id();
-		$title   = $this->get_gateway()->get_title();
+		$title   = $this->get_title();
 		$columns = $this->get_columns();
 		$actions = $this->get_actions();
 
@@ -399,6 +399,32 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 
 	/**
+	 * Get the editor title.
+	 *
+	 * @since 4.3.0
+	 * @return string
+	 */
+	protected function get_title() {
+
+		$title = $this->get_gateway()->get_title();
+
+		// Append the environment name if there are multiple
+		if ( $this->get_gateway()->get_plugin()->get_admin_user_handler()->has_multiple_environments() ) {
+			$title .= ' ' . sprintf( __( '(%s)', 'woocommerce-plugin-framework' ), $this->get_gateway()->get_environment_name() );
+		}
+
+		/**
+		 * Filter the token editor name.
+		 *
+		 * @since 4.3.0
+		 * @param string $title the editor title
+		 * @param \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
+		 */
+		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_title', $title, $this );
+	}
+
+
+	/**
 	 * Get the editor columns.
 	 *
 	 * @since 4.3.0
@@ -421,9 +447,9 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		 *
 		 * @since 4.3.0
 		 * @param array $columns
-		 * @param \SV_WC_Payment_Gateway $gateway the payment gateway instance
+		 * @param \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
 		 */
-		$columns = apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_columns', $columns, $this->get_gateway() );
+		$columns = apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_columns', $columns, $this );
 
 		return $columns;
 	}
@@ -525,9 +551,9 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		 *
 		 * @since 4.3.0
 		 * @param array $fields
-		 * @param \SV_WC_Payment_Gateway $gateway the payment gateway instance
+		 * @param \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
 		 */
-		$fields = apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_fields', $fields, $this->get_gateway() );
+		$fields = apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_fields', $fields, $this );
 
 		return $fields;
 	}
@@ -607,8 +633,9 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		 *
 		 * @since 4.3.0
 		 * @param array $actions the actions
+		 * @param \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
 		 */
-		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_actions', $actions );
+		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_actions', $actions, $this );
 	}
 
 
@@ -629,8 +656,9 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		 *
 		 * @since 4.3.0
 		 * @param array $actions the token actions
+		 * @param \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
 		 */
-		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_token_actions', $actions );
+		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_token_actions', $actions, $this );
 	}
 
 

@@ -207,23 +207,9 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	 */
 	protected function get_title() {
 
-		$plugin_title = $environment_name = '';
-
-		foreach ( $this->get_tokenized_gateways() as $gateway ) {
-
-			// We only need to get one of each
-			if ( $plugin_title && $environment_name ) {
-				break;
-			}
-
-			$plugin_title     = $gateway->get_method_title();
-			$environment_name = $gateway->get_environment_name();
-		}
+		$plugin_title = trim( str_replace( 'WooCommerce', '', $this->get_plugin()->get_plugin_name() ) );
 
 		$title = sprintf( __( '%s Payment Tokens', 'woocommerce-plugin-framework' ), $plugin_title );
-
-		// Append the environment name if the same for each payment method
-		$title .= ( ! $this->has_multiple_environments() ) ? ' ' . sprintf( __( '(%s)', 'woocommerce-plugin-framework' ), $environment_name ) : '';
 
 		/**
 		 * Filter the admin token editor title.
@@ -392,7 +378,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	 * @since 4.3.0
 	 * @return bool
 	 */
-	protected function has_multiple_environments() {
+	public function has_multiple_environments() {
 		return 1 < count( $this->get_unique_environments() );
 	}
 
