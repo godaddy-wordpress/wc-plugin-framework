@@ -1938,7 +1938,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( $response && $this->is_detailed_customer_decline_messages_enabled() ) {
 			$user_message = $response->get_user_message();
 		}
-		if ( ! $user_message ) {
+
+		if ( ! $user_message || ( $this->supports_credit_card_authorization() && $this->perform_credit_card_authorization() ) ) {
 			$user_message = esc_html__( 'Your order has been received and is being reviewed. Thank you for your business.', 'woocommerce-plugin-framework' );
 		}
 
