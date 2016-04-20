@@ -80,11 +80,12 @@ abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 
 		if ( ! isset( $this->response_data->$key ) ) {
 			return null;
+		}
 
 		// array cast & empty check prevents fataling on empty stdClass objects
-		$array = (array) $this->response_data->$key );
+		$array = (array) $this->response_data->$key;
 
-		if ( empty( $array ) {
+		if ( empty( $array ) ) {
 			return null;
 		}
 
