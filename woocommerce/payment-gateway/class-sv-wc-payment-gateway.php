@@ -1933,8 +1933,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$order->add_order_note( $order_note );
 		}
 
-		$this->add_debug_message( $message, 'message' );
-
 		// user message
 		$user_message = '';
 		if ( $response && $this->is_detailed_customer_decline_messages_enabled() ) {
