@@ -308,7 +308,7 @@ class SV_WC_Framework_Bootstrap {
 			}
 
 			/* translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag */
-			echo '</ul><p>' . printf( esc_html__( 'Please %1$supdate WooCommerce%2$s', 'woocommerce-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
+			echo '</ul><p>' . sprintf( esc_html__( 'Please %1$supdate WooCommerce%2$s', 'woocommerce-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
 		}
 
 		// must update WP notice
