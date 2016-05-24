@@ -69,6 +69,9 @@ abstract class SV_WC_Plugin {
 	/** @var array string names of required PHP functions */
 	private $function_dependencies = array();
 
+	/** @var string the plugin text domain */
+	private $text_domain;
+
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
 
@@ -97,6 +100,10 @@ abstract class SV_WC_Plugin {
 		if ( isset( $args['dependencies'] ) )                $this->dependencies = $args['dependencies'];
 
 		if ( isset( $args['function_dependencies'] ) )       $this->function_dependencies = $args['function_dependencies'];
+
+		if ( isset( $args['text_domain'] ) ) {
+			$this->text_domain = $args['text_domain'];
+		}
 
 		// include library files after woocommerce is loaded
 		add_action( 'sv_wc_framework_plugins_loaded', array( $this, 'lib_includes' ) );
@@ -163,11 +170,30 @@ abstract class SV_WC_Plugin {
 	 */
 	public function load_translations() {
 
-		// Load framework text domain
-		load_plugin_textdomain( 'woocommerce-plugin-framework', false, dirname( plugin_basename( $this->get_framework_file() ) ) . '/i18n/languages' );
+		// load the framework translation files
+		$framework_domain = 'woocommerce-plugin-framework';
+		$framework_locale = apply_filters( 'plugin_locale', get_locale(), $framework_domain );
 
-		// Load plugin text domain
-		$this->load_translation();
+		load_textdomain( $framework_domain, WP_LANG_DIR . '/' . $framework_domain . '/' . $framework_domain . '-' . $framework_locale . '.mo' );
+
+		load_plugin_textdomain( $framework_domain, false, dirname( plugin_basename( $this->get_framework_file() ) ) . '/i18n/languages' );
+
+		// if this plugin passes along its text domain, load its translation files
+		if ( $this->text_domain ) {
+
+			$domain = $this->text_domain;
+			$locale = apply_filters( 'plugin_locale', get_locale(), $this->text_domain );
+
+			load_textdomain( $domain, WP_LANG_DIR . '/' . $domain . '/' . $domain . '-' . $locale . '.mo' );
+
+			load_plugin_textdomain( $domain, false, dirname( plugin_basename( $this->get_file() ) ) . '/i18n/languages' );
+
+		// otherwise, let it do the work
+		} else {
+
+			// load plugin text domain
+			$this->load_translation();
+		}
 	}
 
 
