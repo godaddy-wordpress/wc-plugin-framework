@@ -125,7 +125,7 @@ class SV_WC_Admin_Notice_Handler {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			return false;
 		}
-		
+
 		$params = wp_parse_args( $params, array(
 			'dismissible'             => true,
 			'always_show_on_settings' => true,
