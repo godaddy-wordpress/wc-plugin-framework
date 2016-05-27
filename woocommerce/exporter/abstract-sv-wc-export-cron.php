@@ -182,7 +182,7 @@ abstract class SV_WC_Export_Cron {
 			'post_type'   => 'shop_order',
 			'post_status' => empty( $order_statuses ) ? 'any' : $order_statuses,
 			'nopaging'    => true,
-			'meta_key'    => "_{$this->prefix}is_exported",
+			'meta_key'    => '_' . $this->get_prefix() . 'is_exported',
 			'meta_value'  => 0
 		), $order_statuses );
 
