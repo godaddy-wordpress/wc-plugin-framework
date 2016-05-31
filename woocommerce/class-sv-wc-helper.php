@@ -53,7 +53,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * @param string $needle
 		 * @return bool
 		 */
-		public static function str_starts_with( $haystack, $needle) {
+		public static function str_starts_with( $haystack, $needle ) {
 
 			if ( self::multibyte_loaded() ) {
 

@@ -76,6 +76,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * @since 4.3.0-1
 	 */
 	public function __construct() {
+
 		parent::__construct();
 
 		$this->cron_hook_identifier     = $this->identifier . '_cron';
@@ -93,10 +94,11 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * @return array|WP_Error
 	 */
 	public function dispatch() {
-		// Schedule the cron healthcheck
+
+		// schedule the cron healthcheck
 		$this->schedule_event();
 
-		// Perform remote post
+		// perform remote post
 		parent::dispatch();
 	}
 
@@ -112,12 +114,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	public function maybe_handle() {
 
 		if ( $this->is_process_running() ) {
-			// Background process already running
+			// background process already running
 			wp_die();
 		}
 
 		if ( $this->is_queue_empty() ) {
-			// No data to process
+			// no data to process
 			wp_die();
 		}
 
@@ -190,15 +192,17 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 */
 	protected function lock_process() {
 
-		$this->start_time = time(); // Set start time of current process
+		// set start time of current process
+		$this->start_time = time();
 
-		$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60; // 1 minute
+		// set lock duration to 1 minute by default
+		$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60;
 
 		/**
 		 * Filter the queue lock time
 		 *
 		 * @since 4.3.0-1
-		 * @param in $lock_duration Lock duration in seconds
+		 * @param $lock_duration Lock duration in seconds
 		 */
 		$lock_duration = apply_filters( "{$this->identifier}_queue_lock_time", $lock_duration );
 
@@ -215,6 +219,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * @return \SV_WP_Background_Job_Handler
 	 */
 	protected function unlock_process() {
+
 		delete_site_transient( "{$this->identifier}_process_lock" );
 
 		return $this;
@@ -254,19 +259,19 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Get memory limit
 	 *
 	 * @since 4.3.0-1
-	 * @return int
+	 * @return int memorty limit in bytes
 	 */
 	protected function get_memory_limit() {
 
 		if ( function_exists( 'ini_get' ) ) {
 			$memory_limit = ini_get( 'memory_limit' );
 		} else {
-			// Sensible default
+			// sensible default
 			$memory_limit = '128M';
 		}
 
 		if ( ! $memory_limit || -1 == $memory_limit ) {
-			// Unlimited, set to 32GB
+			// unlimited, set to 32GB
 			$memory_limit = '32000M';
 		}
 
@@ -286,12 +291,13 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	protected function time_exceeded() {
 
 		/**
-		 * Filter default time limit for background job execution
+		 * Filter default time limit for background job execution, defaults to
+		 * 20 seconds
 		 *
 		 * @since 4.3.0-1
 		 * @param int $time Time in seconds
 		 */
-		$finish = $this->start_time + apply_filters( "{$this->identifier}_default_time_limit", 20 ); // 20 seconds
+		$finish = $this->start_time + apply_filters( "{$this->identifier}_default_time_limit", 20 );
 		$return = false;
 
 		if ( time() >= $finish ) {
@@ -302,7 +308,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 * Filter whether maximum execution time has exceeded or not
 		 *
 		 * @since 4.3.0-1
-		 * @param bool $exceeded
+		 * @param bool $exceeded true if execution time exceeded, false otherwise
 		 */
 		return apply_filters( "{$this->identifier}_time_exceeded", $return );
 	}
@@ -311,7 +317,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Create a background job
 	 *
-	 * Deliciousbrains' versions alternative would be using ->data()->save().
+	 * Delicious Brains' versions alternative would be using ->data()->save().
 	 * Allows passing in job options that are available at item data processing time.
 	 * This allows sharing common options between items without the need to repeat
 	 * the same information for every single item in queue.
@@ -414,7 +420,6 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			$results = get_site_option( "{$this->identifier}_job_{$id}" );
 		}
 
-
 		if ( ! empty( $results ) ) {
 
 			$job = new stdClass();
@@ -442,9 +447,10 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 *
 	 * Process jobs while remaining within server memory and time limit constraints.
 	 *
-		 * @since 4.3.0-1
+	 * @since 4.3.0-1
 	 */
 	protected function handle() {
+
 		$this->lock_process();
 
 		do {
@@ -528,6 +534,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	public function update_job( $job ) {
 
 		if ( ! empty( $job ) ) {
+
 			$job->updated_at = current_time( 'mysql' );
 
 			update_site_option( "{$this->identifier}_job_{$job->id}" , json_encode( $job ) );
@@ -609,7 +616,8 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * @since 4.3.0-1
 	 */
 	protected function complete() {
-		// Unschedule the cron healthcheck
+
+		// unschedule the cron healthcheck
 		$this->clear_scheduled_event();
 	}
 
@@ -632,7 +640,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 */
 		$interval = apply_filters( "{$this->identifier}_cron_interval", $interval );
 
-		// Adds every 5 minutes to the existing schedules.
+		// adds every 5 minutes to the existing schedules.
 		$schedules[ $this->identifier . '_cron_interval' ] = array(
 			'interval' => MINUTE_IN_SECONDS * $interval,
 			'display'  => sprintf( __( 'Every %d Minutes' ), $interval ),
@@ -653,12 +661,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	public function handle_cron_healthcheck() {
 
 		if ( $this->is_process_running() ) {
-			// Background process already running
+			// background process already running
 			exit;
 		}
 
 		if ( $this->is_queue_empty() ) {
-			// No data to process
+			// no data to process
 			$this->clear_scheduled_event();
 			exit;
 		}

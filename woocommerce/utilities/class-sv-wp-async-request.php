@@ -40,7 +40,7 @@ if ( ! class_exists( 'SV_WP_Async_Request' ) ) :
  * @since 4.3.0-1
  */
 
-	abstract class SV_WP_Async_Request {
+abstract class SV_WP_Async_Request {
 
 	/** @var string request prefix */
 	protected $prefix = 'wp';
@@ -61,9 +61,10 @@ if ( ! class_exists( 'SV_WP_Async_Request' ) ) :
 	 * @since 4.3.0-1
 	 */
 	public function __construct() {
+
 		$this->identifier = $this->prefix . '_' . $this->action;
 
-		add_action( 'wp_ajax_' . $this->identifier, array( $this, 'maybe_handle' ) );
+		add_action( 'wp_ajax_' . $this->identifier,        array( $this, 'maybe_handle' ) );
 		add_action( 'wp_ajax_nopriv_' . $this->identifier, array( $this, 'maybe_handle' ) );
 	}
 
@@ -76,6 +77,7 @@ if ( ! class_exists( 'SV_WP_Async_Request' ) ) :
 	 * @return \SV_WP_Async_Request
 	 */
 	public function set_data( $data ) {
+
 		$this->data = $data;
 
 		return $this;
@@ -161,6 +163,7 @@ if ( ! class_exists( 'SV_WP_Async_Request' ) ) :
 	 * @since 4.3.0-1
 	 */
 	public function maybe_handle() {
+
 		check_ajax_referer( $this->identifier, 'nonce' );
 
 		$this->handle();
