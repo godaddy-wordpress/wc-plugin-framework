@@ -17,7 +17,8 @@
  * needs please refer to http://www.skyverge.com
  *
  * @package   SkyVerge/WooCommerce/Utilities
- * @author    SkyVerge
+ * @author    SkyVerge / Delicious Brains
+ * @copyright Copyright (c) 2015-2016 Delicious Brains Inc.
  * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
@@ -39,19 +40,19 @@ if ( ! class_exists( 'SV_WP_Async_Request' ) ) :
  *
  * @since 4.3.0-1
  */
-
 abstract class SV_WP_Async_Request {
+
 
 	/** @var string request prefix */
 	protected $prefix = 'wp';
 
-	 /** @var string request action name */
+	/** @var string request action name */
 	protected $action = 'async_request';
 
-	 /** @var string request identifier */
+	/** @var string request identifier */
 	protected $identifier;
 
-	 /** @var array request data */
+	/** @var array request data */
 	protected $data = array();
 
 
@@ -61,7 +62,6 @@ abstract class SV_WP_Async_Request {
 	 * @since 4.3.0-1
 	 */
 	public function __construct() {
-
 		$this->identifier = $this->prefix . '_' . $this->action;
 
 		add_action( 'wp_ajax_' . $this->identifier,        array( $this, 'maybe_handle' ) );
@@ -77,7 +77,6 @@ abstract class SV_WP_Async_Request {
 	 * @return \SV_WP_Async_Request
 	 */
 	public function set_data( $data ) {
-
 		$this->data = $data;
 
 		return $this;
@@ -95,7 +94,7 @@ abstract class SV_WP_Async_Request {
 		$url  = add_query_arg( $this->get_query_args(), $this->get_query_url() );
 		$args = $this->get_post_args();
 
-		return wp_remote_post( esc_url_raw( $url ), $args );
+		return wp_safe_remote_post( esc_url_raw( $url ), $args );
 	}
 
 
@@ -163,7 +162,6 @@ abstract class SV_WP_Async_Request {
 	 * @since 4.3.0-1
 	 */
 	public function maybe_handle() {
-
 		check_ajax_referer( $this->identifier, 'nonce' );
 
 		$this->handle();
@@ -181,6 +179,7 @@ abstract class SV_WP_Async_Request {
 	 * @since 4.3.0-1
 	 */
 	abstract protected function handle();
+
 
 }
 

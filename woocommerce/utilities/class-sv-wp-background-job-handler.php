@@ -17,7 +17,8 @@
  * needs please refer to http://www.skyverge.com
  *
  * @package   SkyVerge/WooCommerce/Utilities
- * @author    SkyVerge
+ * @author    SkyVerge / Delicious Brains
+ * @copyright Copyright (c) 2015-2016 Delicious Brains Inc.
  * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
@@ -27,13 +28,13 @@ defined( 'ABSPATH' ) or exit;
 if ( ! class_exists( 'SV_WP_Background_Job_Handler' ) ) :
 
 /**
- * SkyVerge Wordpress Background Job Handler class.
+ * SkyVerge WordPress Background Job Handler class
  *
  * Based on the wonderful WP_Background_Process class by deliciousbrains:
  * https://github.com/A5hleyRich/wp-background-processing
  *
  * Subclasses SV_WP_Async_Request. Instead of the concept of `batches` used in
- * the deliciousbrians version, however, this takes a more object-oriented approach
+ * the Delicious Brains' version, however, this takes a more object-oriented approach
  * of background `jobs`, allowing greater control over manipulating job data and
  * processing.
  *
@@ -50,7 +51,6 @@ if ( ! class_exists( 'SV_WP_Background_Job_Handler' ) ) :
  *
  * @since 4.3.0-1
  */
-
 abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 
@@ -66,7 +66,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/** @var string cron hook identifier */
 	protected $cron_hook_identifier;
 
-	/** @var string cron interval idetifier */
+	/** @var string cron interval identifier */
 	protected $cron_interval_identifier;
 
 
@@ -132,7 +132,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 
 	/**
-	 * Check wheter job queue is empty or not
+	 * Check whether job queue is empty or not
 	 *
 	 * @since 4.3.0-1
 	 * @return bool True if queue is empty, false otherwise
@@ -202,7 +202,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 * Filter the queue lock time
 		 *
 		 * @since 4.3.0-1
-		 * @param $lock_duration Lock duration in seconds
+		 * @param int $lock_duration Lock duration in seconds
 		 */
 		$lock_duration = apply_filters( "{$this->identifier}_queue_lock_time", $lock_duration );
 
@@ -259,7 +259,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Get memory limit
 	 *
 	 * @since 4.3.0-1
-	 * @return int memorty limit in bytes
+	 * @return int memory limit in bytes
 	 */
 	protected function get_memory_limit() {
 
@@ -490,7 +490,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 *
 	 * Default implementation is to loop over job data and passing each item to
 	 * the task handler. Subclasses are, however, welcome to override this method
-	 * to create totally different job processigng implementations - see
+	 * to create totally different job processing implementations - see
 	 * WC_CSV_Import_Suite_Background_Import in CSV Import for an example.
 	 *
 	 * @since 4.3.0-1
@@ -534,7 +534,6 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	public function update_job( $job ) {
 
 		if ( ! empty( $job ) ) {
-
 			$job->updated_at = current_time( 'mysql' );
 
 			update_site_option( "{$this->identifier}_job_{$job->id}" , json_encode( $job ) );
@@ -717,6 +716,8 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * @return mixed
 	 */
 	abstract protected function task( $item, $options = null );
+
+
 }
 
 endif;
