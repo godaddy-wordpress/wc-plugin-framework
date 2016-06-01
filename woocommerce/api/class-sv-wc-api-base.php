@@ -676,7 +676,7 @@ abstract class SV_WC_API_Base {
 	 */
 	public function set_tls_1_2_request( $handle, $r, $url ) {
 
-		if ( ! strstr( $url, 'https://' ) ) {
+		if ( ! SV_WC_Helper::str_starts_with( $url, 'https://' ) ) {
 			return;
 		}
 
@@ -684,9 +684,9 @@ abstract class SV_WC_API_Base {
 		$curl_version = $versions['version'];
 
 		// Get the SSL details
-		$ssl         = explode( '/', $versions['ssl_version'] );
-		$ssl_type    = $ssl[0];
-		$ssl_version = substr( $ssl[1], 0, -1 );
+		list( $ssl_type, $ssl_version ) = explode( '/', $versions['ssl_version'] );
+
+		$ssl_version = substr( $ssl_version, 0, -1 );
 
 		// If cURL and/or OpenSSL aren't up to the challenge, bail
 		if ( ! version_compare( $curl_version, '7.34.0', '>=' ) || ( 'OpenSSL' === $ssl_type && ! version_compare( $ssl_version, '1.0.1', '>=' ) ) ) {
@@ -699,6 +699,8 @@ abstract class SV_WC_API_Base {
 
 	/**
 	 * Determine if TLS v1.2 is required for API requests.
+	 *
+	 * Subclasses should override this to return true if TLS v1.2 is required.
 	 *
 	 * @since 4.3.0-1
 	 * @return bool
