@@ -185,7 +185,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Adjust the available gateways in certain cases.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @param array $available_gateways the available payment gateways
 	 * @return array
 	 */
@@ -945,7 +945,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Get a gateway's settings screen section ID.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @param string $gateway_id the gateway ID
 	 * @return string
 	 */

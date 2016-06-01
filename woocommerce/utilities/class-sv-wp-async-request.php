@@ -38,7 +38,7 @@ if ( ! class_exists( 'SV_WP_Async_Request' ) ) :
  *
  * Use SV_WP_Async_Request::set_data() to set request data, instead of ::data().
  *
- * @since 4.3.0-1
+ * @since 4.4.0
  */
 abstract class SV_WP_Async_Request {
 
@@ -59,7 +59,7 @@ abstract class SV_WP_Async_Request {
 	/**
 	 * Initiate a new async request
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 */
 	public function __construct() {
 		$this->identifier = $this->prefix . '_' . $this->action;
@@ -72,7 +72,7 @@ abstract class SV_WP_Async_Request {
 	/**
 	 * Set data used during the async request
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @param array $data
 	 * @return \SV_WP_Async_Request
 	 */
@@ -86,7 +86,7 @@ abstract class SV_WP_Async_Request {
 	/**
 	 * Dispatch the async request
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @return array|WP_Error
 	 */
 	public function dispatch() {
@@ -101,7 +101,7 @@ abstract class SV_WP_Async_Request {
 	/**
 	 * Get query args
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @return array
 	 */
 	protected function get_query_args() {
@@ -120,7 +120,7 @@ abstract class SV_WP_Async_Request {
 	/**
 	 * Get query URL
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @return string
 	 */
 	protected function get_query_url() {
@@ -136,7 +136,7 @@ abstract class SV_WP_Async_Request {
 	/**
 	 * Get post args
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @return array
 	 */
 	protected function get_post_args() {
@@ -159,7 +159,7 @@ abstract class SV_WP_Async_Request {
 	 * Maybe handle
 	 *
 	 * Check for correct nonce and pass to handler.
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 */
 	public function maybe_handle() {
 		check_ajax_referer( $this->identifier, 'nonce' );
@@ -176,7 +176,7 @@ abstract class SV_WP_Async_Request {
 	 * Override this method to perform any actions required
 	 * during the async request.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 */
 	abstract protected function handle();
 

@@ -672,7 +672,7 @@ abstract class SV_WC_API_Base {
 	/**
 	 * Maybe force TLS v1.2 requests.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 */
 	public function set_tls_1_2_request( $handle, $r, $url ) {
 
@@ -702,7 +702,7 @@ abstract class SV_WC_API_Base {
 	 *
 	 * Subclasses should override this to return true if TLS v1.2 is required.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @return bool
 	 */
 	protected function require_tls_1_2() {
