@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
 
@@ -1674,17 +1674,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 			$this->voided_order_message = $message;
 
-			// voids are fully "refunded" so cancel the voided order instead of marking as refunded
-			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_4() ) {
-
-				// filter in WC 2.4+ allows us to skip the "refunded" then "cancelled" transition
-				add_filter( 'woocommerce_order_fully_refunded_status', array( $this, 'maybe_cancel_voided_order' ), 10, 2 );
-
-			} else {
-
-				// WC 2.3/2.2 requires changing the order status to cancelled after it's already been changed to refunded ಠ_ಠ
-				add_action( 'woocommerce_order_refunded', array( $this, 'maybe_cancel_voided_order_2_3' ) );
-			}
+			add_filter( 'woocommerce_order_fully_refunded_status', array( $this, 'maybe_cancel_voided_order' ), 10, 2 );
 
 		} else {
 
@@ -1716,31 +1706,6 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order->add_order_note( $this->voided_order_message );
 
 		return 'cancelled';
-	}
-
-
-	/**
-	 * Maybe change the order status for a voided order to cancelled for WC 2.3/2.2
-	 *
-	 * This must be deferred until the woocommerce_order_refunded, otherwise
-	 * it's changed back to refunded
-	 *
-	 * @TODO: this can be removed once WC 2.4 is required @MR 2015-07-21
-	 *
-	 * @hooked woocommerce_order_refunded action
-	 *
-	 * @see SV_WC_Payment_Gateway::mark_order_as_voided()
-	 * @since 4.0.0
-	 * @param int $order_id order ID
-	 */
-	public function maybe_cancel_voided_order_2_3( $order_id ) {
-
-		if ( ! empty( $this->voided_order_message ) ) {
-
-			$order = wc_get_order( $order_id );
-
-			$order->update_status( 'cancelled', $this->voided_order_message );
-		}
 	}
 
 

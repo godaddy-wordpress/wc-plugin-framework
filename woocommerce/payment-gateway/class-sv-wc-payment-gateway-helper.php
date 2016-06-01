@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( 'SV_WC_Payment_Gateway_Helper' ) ) :
 
@@ -35,40 +35,6 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Helper' ) ) :
  * @since 3.0.0
  */
 class SV_WC_Payment_Gateway_Helper {
-
-
-	/**
-	 * Returns the admin configuration url for the gateway with class name
-	 * $gateway_class_name
-	 *
-	 * Temporary home for this function, until all payment gateways are brought into the frameworked fold
-	 *
-	 * @since 3.0.0
-	 * @param string $gateway_class_name the gateway class name
-	 * @return string admin configuration url for the gateway
-	 */
-	public static function get_payment_gateway_configuration_url( $gateway_class_name ) {
-
-		return admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . strtolower( $gateway_class_name ) );
-	}
-
-
-	/**
-	 * Returns true if the current page is the admin configuration page for the
-	 * gateway with class name $gateway_class_name
-	 *
-	 * Temporary home for this function, until all payment gateways are brought into the frameworked fold
-	 *
-	 * @since 3.0.0
-	 * @param string $gateway_class_name the gateway class name
-	 * @return boolean true if the current page is the admin configuration page for the gateway
-	 */
-	public static function is_payment_gateway_configuration_page( $gateway_class_name ) {
-
-		return 'wc-settings' == SV_WC_Helper::get_request( 'page' ) &&
-			'checkout' == SV_WC_Helper::get_request( 'tab' ) &&
-			strtolower( $gateway_class_name ) == SV_WC_Helper::get_request( 'section' );
-	}
 
 
 	/**

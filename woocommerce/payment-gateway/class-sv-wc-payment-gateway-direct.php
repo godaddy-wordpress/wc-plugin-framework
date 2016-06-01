@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( 'SV_WC_Payment_Gateway_Direct' ) ) :
 
@@ -1300,9 +1300,25 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		SV_WC_Helper::wc_add_notice( $result['message'], $result['success'] ? 'success' : 'error' );
 
-		// redirect to my account on success, or back to Add Payment Method screen on failure so user can try again
-		wp_safe_redirect( $result['success'] ? wc_get_page_permalink( 'myaccount' ) : wc_get_endpoint_url( 'add-payment-method' ) );
+		// if successful, redirect to the newly added method
+		if ( $result['success'] ) {
 
+			// if this is WooCommerce 2.5.5 or older, redirect to the My Account page
+			if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_6() ) {
+
+				$redirect_url = wc_get_page_permalink( 'myaccount' );
+
+			// otherwise, redirect to the Payment Methods page (WC 2.6+)
+			} else {
+				$redirect_url = wc_get_account_endpoint_url( 'payment-methods' );
+			}
+
+		// otherwise, back to the Add Payment Method page
+		} else {
+			$redirect_url = wc_get_endpoint_url( 'add-payment-method' );
+		}
+
+		wp_safe_redirect( $redirect_url );
 		exit();
 	}
 

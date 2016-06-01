@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( 'SV_WC_Framework_Bootstrap' ) ) :
 
@@ -308,7 +308,7 @@ class SV_WC_Framework_Bootstrap {
 			}
 
 			/* translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag */
-			echo '</ul><p>' . printf( esc_html__( 'Please %1$supdate WooCommerce%2$s', 'woocommerce-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
+			echo '</ul><p>' . sprintf( esc_html__( 'Please %1$supdate WooCommerce%2$s', 'woocommerce-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
 		}
 
 		// must update WP notice

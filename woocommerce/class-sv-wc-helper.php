@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
@@ -53,7 +53,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * @param string $needle
 		 * @return bool
 		 */
-		public static function str_starts_with( $haystack, $needle) {
+		public static function str_starts_with( $haystack, $needle ) {
 
 			if ( self::multibyte_loaded() ) {
 
@@ -436,8 +436,6 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 				$product = $order->get_product_from_item( $item );
 
-				$meta = SV_WC_Plugin_Compatibility::is_wc_version_gte_2_4() ? $item : $item['item_meta'];
-
 				$item_desc = array();
 
 				// add SKU to description if available
@@ -446,7 +444,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 				}
 
 				// get meta + format it
-				$item_meta = new WC_Order_Item_Meta( $meta );
+				$item_meta = new WC_Order_Item_Meta( $item );
 
 				$item_meta = $item_meta->get_formatted();
 

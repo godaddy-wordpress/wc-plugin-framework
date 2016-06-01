@@ -23,7 +23,7 @@
  */
 
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( 'SV_WP_Admin_Message_Handler' ) ) :
 

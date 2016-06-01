@@ -1,5 +1,11 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2016.06.01 - version 4.4.0
+ * Feature - Allow bundled framework and plugin translations to be easily overridden
+ * Tweak - Allow plugins extending SV_WC_API_Base to declare TLS v1.2 as a requirement for requests
+ * Misc - Added support for WooCommerce 2.6
+ * Misc - Removed support for WooCommerce 2.3
+
 2016.04.18 - version 4.3.0
  * Feature - Revamped admin payment token editor
  * Feature - Prevent deleting subscription payment methods

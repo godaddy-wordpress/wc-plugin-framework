@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( 'SV_WC_Plugin_Compatibility' ) ) :
 
@@ -38,7 +38,7 @@ if ( ! class_exists( 'SV_WC_Plugin_Compatibility' ) ) :
  * are dropped.
  *
  * Current Compatibility
- * + Core 2.3.6 - 2.5.x
+ * + Core 2.4.13 - 2.6.x
  * + Subscriptions 1.5.x - 2.0.x
  *
  * @since 2.0.0
@@ -47,26 +47,7 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
-	 * Backports wc_site_is_https() to 2.4.12 and earlier.
-	 *
-	 * @since  4.3.0-beta
-	 * @return bool
-	 */
-	public static function wc_site_is_https() {
-
-		if ( self::is_wc_version_gt( '2.4.12' ) ) {
-
-			return wc_site_is_https();
-
-		} else {
-
-			return strstr( get_option( 'home' ), 'https:' );
-		}
-	}
-
-
-	/**
-	 * Backports wc_checkout_is_https() to 2.4.x and earlier.
+	 * Backports wc_checkout_is_https() to 2.4.x
 	 *
 	 * @since  4.3.0-beta
 	 * @return bool
@@ -79,13 +60,13 @@ class SV_WC_Plugin_Compatibility {
 
 		} else {
 
-			return self::wc_site_is_https() || 'yes' === get_option( 'woocommerce_force_ssl_checkout' ) || class_exists( 'WordPressHTTPS' ) || strstr( wc_get_page_permalink( 'checkout' ), 'https:' );
+			return wc_site_is_https() || 'yes' === get_option( 'woocommerce_force_ssl_checkout' ) || class_exists( 'WordPressHTTPS' ) || strstr( wc_get_page_permalink( 'checkout' ), 'https:' );
 		}
 	}
 
 
 	/**
-	 * Backports WC_Product::get_id() method to 2.4.x and earlier
+	 * Backports WC_Product::get_id() method to 2.4.x
 	 *
 	 * @link https://github.com/woothemes/woocommerce/pull/9765
 	 *
@@ -107,14 +88,14 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
-	 * Backports wc_help_tip() to WC 2.4/2.3
+	 * Backports wc_help_tip() to WC 2.4.x
 	 *
 	 * @link https://github.com/woothemes/woocommerce/pull/9417
 	 *
 	 * @since 4.2.0
 	 * @param string $tip help tip content, HTML allowed if $has_html is true
 	 * @param bool $has_html false by default, true to indicate tip content has HTML
-	 * @return string help tip HTML, a <span> in WC 2.5, <img> in WC 2.4/2.3
+	 * @return string help tip HTML, a <span> in WC 2.5, <img> in WC 2.4
 	 */
 	public static function wc_help_tip( $tip, $has_html = false ) {
 
@@ -144,28 +125,6 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
-	 * Returns true if the installed version of WooCommerce is 2.4 or greater
-	 *
-	 * @since 4.0.0
-	 * @return boolean true if the installed version of WooCommerce is 2.3 or greater
-	 */
-	public static function is_wc_version_gte_2_4() {
-		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.4', '>=' );
-	}
-
-
-	/**
-	 * Returns true if the installed version of WooCommerce is less than 2.4
-	 *
-	 * @since 4.0.0
-	 * @return boolean true if the installed version of WooCommerce is less than 2.4
-	 */
-	public static function is_wc_version_lt_2_4() {
-		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.4', '<' );
-	}
-
-
-	/**
 	 * Returns true if the installed version of WooCommerce is 2.5 or greater
 	 *
 	 * @since 4.2.0
@@ -184,6 +143,28 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function is_wc_version_lt_2_5() {
 		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.5', '<' );
+	}
+
+
+	/**
+	 * Returns true if the installed version of WooCommerce is 2.6 or greater
+	 *
+	 * @since 4.4.0
+	 * @return boolean true if the installed version of WooCommerce is 2.6 or greater
+	 */
+	public static function is_wc_version_gte_2_6() {
+		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.6', '>=' );
+	}
+
+
+	/**
+	 * Returns true if the installed version of WooCommerce is less than 2.6
+	 *
+	 * @since 4.4.0
+	 * @return boolean true if the installed version of WooCommerce is less than 2.6
+	 */
+	public static function is_wc_version_lt_2_6() {
+		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.6', '<' );
 	}
 
 	/**

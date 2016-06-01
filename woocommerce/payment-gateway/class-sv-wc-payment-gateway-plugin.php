@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( 'SV_WC_Payment_Gateway_Plugin' ) ) :
 
@@ -163,6 +163,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// Add classes to WC Payment Methods
 		add_filter( 'woocommerce_payment_gateways', array( $this, 'load_gateways' ) );
+
+		// Adjust the available gateways in certain cases
+		add_filter( 'woocommerce_available_payment_gateways', array( $this, 'adjust_available_gateways' ) );
 	}
 
 
@@ -176,6 +179,30 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	public function load_gateways( $gateways ) {
 
 		return array_merge( $gateways, $this->get_gateways() );
+	}
+
+
+	/**
+	 * Adjust the available gateways in certain cases.
+	 *
+	 * @since 4.4.0
+	 * @param array $available_gateways the available payment gateways
+	 * @return array
+	 */
+	public function adjust_available_gateways( $available_gateways ) {
+
+		if ( ! is_add_payment_method_page() ) {
+			return $available_gateways;
+		}
+
+		foreach ( $this->get_gateways() as $gateway ) {
+
+			if ( $gateway->supports_tokenization() && ! $gateway->supports_add_payment_method() ) {
+				unset( $available_gateways[ $gateway->id ] );
+			}
+		}
+
+		return $available_gateways;
 	}
 
 
@@ -338,8 +365,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function is_plugin_settings() {
 
-		foreach ( $this->get_gateway_class_names() as $gateway_class_name ) {
-			if ( $this->is_payment_gateway_configuration_page( $gateway_class_name ) ) {
+		foreach ( $this->get_gateways() as $gateway ) {
+			if ( $this->is_payment_gateway_configuration_page( $gateway->get_id() ) ) {
 				return true;
 			}
 		}
@@ -498,7 +525,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					$message = sprintf(
 						esc_html__( '%1$s is inactive for subscription transactions. Please %2$senable tokenization%3$s to activate %1$s for Subscriptions.', 'woocommerce-plugin-framework' ),
 						$gateway->get_method_title(),
-						'<a href="' . $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) . '">',
+						'<a href="' . $this->get_payment_gateway_configuration_url( $gateway->get_id() ) . '">',
 						'</a>'
 					);
 
@@ -516,7 +543,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					$message = sprintf(
 						esc_html__( '%1$s is inactive for pre-order transactions. Please %2$senable tokenization%3$s to activate %1$s for Pre-Orders.', 'woocommerce-plugin-framework' ),
 						$gateway->get_method_title(),
-						'<a href="' . $this->get_payment_gateway_configuration_url( get_class( $gateway ) ) . '">',
+						'<a href="' . $this->get_payment_gateway_configuration_url( $gateway->get_id() ) . '">',
 						'</a>'
 					);
 
@@ -554,7 +581,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			$status   = esc_html__( 'Inactive', 'woocommerce-plugin-framework' );
 
 			$html = sprintf( '<a href="%1$s"><span class="sv-wc-payment-gateway-renewal-status-inactive tips" data-tip="%2$s">%3$s</span></a>',
-						esc_url( SV_WC_Payment_Gateway_Helper::get_payment_gateway_configuration_url( $this->get_gateway_class_name( $gateway->get_id() ) ) ),
+						esc_url( $this->get_payment_gateway_configuration_url( $gateway->get_id() ) ),
 						$tool_tip, $status );
 		}
 
@@ -883,37 +910,55 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			$gateway_id = key( $this->gateways );
 		}
 
-		return SV_WC_Payment_Gateway_Helper::get_payment_gateway_configuration_url( $this->get_gateway_class_name( $gateway_id ) );
+		return $this->get_payment_gateway_configuration_url( $gateway_id );
 	}
 
 
 	/**
-	 * Returns the admin configuration url for the gateway with class name
-	 * $gateway_class_name
+	 * Returns the admin configuration url for a gateway
 	 *
 	 * @since 3.0.0
-	 * @param string $gateway_class_name the gateway class name
+	 * @param string $gateway_id the gateway ID
 	 * @return string admin configuration url for the gateway
 	 */
-	public function get_payment_gateway_configuration_url( $gateway_class_name ) {
+	public function get_payment_gateway_configuration_url( $gateway_id ) {
 
-		return admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . strtolower( $gateway_class_name ) );
+		return admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $this->get_payment_gateway_configuration_section( $gateway_id ) );
 	}
 
 
 	/**
-	 * Returns true if the current page is the admin configuration page for the
-	 * gateway with class name $gateway_class_name
+	 * Returns true if the current page is the admin configuration page for a gateway
 	 *
 	 * @since 3.0.0
-	 * @param string $gateway_class_name the gateway class name
+	 * @param string $gateway_id the gateway ID
 	 * @return boolean true if the current page is the admin configuration page for the gateway
 	 */
-	public function is_payment_gateway_configuration_page( $gateway_class_name ) {
+	public function is_payment_gateway_configuration_page( $gateway_id ) {
 
 		return isset( $_GET['page'] ) && 'wc-settings' == $_GET['page'] &&
 		isset( $_GET['tab'] ) && 'checkout' == $_GET['tab'] &&
-		isset( $_GET['section'] ) && strtolower( $gateway_class_name ) == $_GET['section'];
+		isset( $_GET['section'] ) && $this->get_payment_gateway_configuration_section( $gateway_id ) == $_GET['section'];
+	}
+
+
+	/**
+	 * Get a gateway's settings screen section ID.
+	 *
+	 * @since 4.4.0
+	 * @param string $gateway_id the gateway ID
+	 * @return string
+	 */
+	public function get_payment_gateway_configuration_section( $gateway_id ) {
+
+		// WC 2.6+ uses the gateway ID instead of class name
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_6() ) {
+			$section = $this->get_gateway_class_name( $gateway_id );
+		} else {
+			$section = $gateway_id;
+		}
+
+		return strtolower( $section );
 	}
 
 

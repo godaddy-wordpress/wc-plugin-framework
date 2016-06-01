@@ -532,8 +532,6 @@ class Helper extends Test_Case {
 		$expected_item->product = $this->get_wc_product_mock();
 		$expected_item->item = $this->get_wc_item_data();
 
-		p\redefine( 'SV_WC_Plugin_Compatibility::is_wc_version_gte_2_4', function() { return true; } );
-
 		$this->getMockBuilder( 'WC_Order_Item_Meta_Mock' )
 			->setMethods( [ 'get_formatted'] )
 			->setMockClassName( 'WC_Order_Item_Meta' )

@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( 'SV_WC_Admin_Notice_Handler' ) ) :
 
@@ -125,7 +125,7 @@ class SV_WC_Admin_Notice_Handler {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			return false;
 		}
-		
+
 		$params = wp_parse_args( $params, array(
 			'dismissible'             => true,
 			'always_show_on_settings' => true,

@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( 'SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
 
@@ -71,7 +71,12 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$this->has_tokens = ! empty( $this->tokens );
 
 		// render the My Payment Methods section
-		add_action( 'woocommerce_after_my_account', array( $this, 'render' ) );
+		// TODO: merge our payment methods data into the core table and remove this in a future version {CW 2016-05-17}
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_6() ) {
+			add_action( 'woocommerce_after_my_account', array( $this, 'render_lt_2_6' ) );
+		} else {
+			add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render' ) );
+		}
 
 		// styles/scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_styles_scripts' ) );
@@ -94,11 +99,18 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		wp_enqueue_style( 'dashicons' );
 
-		// Add confirm javascript when deleting payment methods
+		// if there are tokens to display, add the custom JS
 		if ( $this->has_tokens ) {
+
+			// if there are no WC 2.6+ core tokens, hide the "No saved methods found." notice
+			// TODO: remove this when we fully support the core payment methods table {CW 2016-05-17}
+			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_6() && ! (bool) wc_get_customer_saved_methods_list( get_current_user_id() ) ) {
+				wc_enqueue_js( '$( "table.wc-' . $this->get_plugin()->get_id_dasherized() . '-my-payment-methods" ).prev( ".woocommerce-Message.woocommerce-Message--info" ).hide();' );
+			}
 
 			wp_enqueue_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', array( 'jquery' ), WC_VERSION, true );
 
+			// add confirm javascript when deleting payment methods
 			wc_enqueue_js( '
 
 				$( ".wc-' . $this->get_plugin()->get_id_dasherized() . '-payment-method-actions .button.tip" ).tipTip();
@@ -158,15 +170,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Render the My Payment Methods section
+	 * Render the payment methods table.
 	 *
 	 * @since 4.0.0
 	 */
 	public function render() {
 
 		if ( $this->has_tokens ) {
-
-			echo $this->get_table_title_html();
 
 			/**
 			 * Before My Payment Methods Table Action.
@@ -188,6 +198,29 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			 * @since 4.0.0
 			 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 			 */
+			do_action( 'wc_' . $this->get_plugin()->get_id() . '_after_my_payment_method_table', $this );
+
+		}
+	}
+
+
+	/**
+	 * Render the My Payment Methods section on the My Account page for WC 2.5.5 and older.
+	 *
+	 * @since 4.4.0
+	 */
+	public function render_lt_2_6() {
+
+		if ( $this->has_tokens ) {
+
+			echo $this->get_table_title_html();
+
+			// documented in SV_WC_Payment_Gateway_My_Payment_Methods::render()
+			do_action( 'wc_' . $this->get_plugin()->get_id() . '_before_my_payment_method_table', $this );
+
+			echo $this->get_table_html();
+
+			// documented in SV_WC_Payment_Gateway_My_Payment_Methods::render()
 			do_action( 'wc_' . $this->get_plugin()->get_id() . '_after_my_payment_method_table', $this );
 
 		} else {
@@ -731,13 +764,19 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Redirect back to the My Account page
+	 * Redirect back to the Payment Methods (WC 2.6+) or My Account page
 	 *
 	 * @since 4.0.0
 	 */
 	protected function redirect_to_my_account() {
 
-		wp_redirect( wc_get_page_permalink( 'myaccount' ) );
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_6() ) {
+			$url = wc_get_page_permalink( 'myaccount' );
+		} else {
+			$url = wc_get_account_endpoint_url( 'payment-methods' );
+		}
+
+		wp_redirect( $url );
 		exit;
 	}
 
