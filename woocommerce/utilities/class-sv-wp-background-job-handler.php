@@ -140,16 +140,6 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	protected function is_queue_empty() {
 		global $wpdb;
 
-		$table        = $wpdb->options;
-		$key_column   = 'option_name';
-		$value_column = 'option_value';
-
-		if ( is_multisite() ) {
-			$table        = $wpdb->sitemeta;
-			$key_column   = 'meta_key';
-			$value_column = 'meta_value';
-		}
-
 		$key = $this->identifier . '_job_%';
 
 		// only queued or processing jobs count
@@ -158,9 +148,9 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 		$count = $wpdb->get_var( $wpdb->prepare( "
 			SELECT COUNT(*)
-			FROM {$table}
-			WHERE {$key_column} LIKE %s
-			AND ( {$value_column} LIKE %s OR {$value_column} LIKE %s )
+			FROM {$wpdb->options}
+			WHERE option_name LIKE %s
+			AND ( option_value LIKE %s OR option_value LIKE %s )
 		", $key, $queued, $processing ) );
 
 		return ( $count > 0 ) ? false : true;
@@ -177,7 +167,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * @return bool True if processing is running, false otherwise
 	 */
 	protected function is_process_running() {
-		return (bool) get_site_transient( "{$this->identifier}_process_lock" );
+		return (bool) get_transient( "{$this->identifier}_process_lock" );
 	}
 
 
@@ -206,7 +196,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 */
 		$lock_duration = apply_filters( "{$this->identifier}_queue_lock_time", $lock_duration );
 
-		set_site_transient( "{$this->identifier}_process_lock", microtime(), $lock_duration );
+		set_transient( "{$this->identifier}_process_lock", microtime(), $lock_duration );
 	}
 
 
@@ -220,7 +210,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 */
 	protected function unlock_process() {
 
-		delete_site_transient( "{$this->identifier}_process_lock" );
+		delete_transient( "{$this->identifier}_process_lock" );
 
 		return $this;
 	}
@@ -358,7 +348,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			'status'     => 'queued',
 		), $attrs );
 
-		update_site_option( "{$this->identifier}_job_{$job_id}" , json_encode( $attrs ) );
+		update_option( "{$this->identifier}_job_{$job_id}" , json_encode( $attrs ) );
 
 		$job = new stdClass();
 
@@ -391,33 +381,21 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 		if ( ! $id ) {
 
-			$table        = $wpdb->options;
-			$column       = 'option_name';
-			$key_column   = 'option_id';
-			$value_column = 'option_value';
-
-			if ( is_multisite() ) {
-				$table        = $wpdb->sitemeta;
-				$column       = 'meta_key';
-				$key_column   = 'meta_id';
-				$value_column = 'meta_value';
-			}
-
 			$key        = $this->identifier . '_job_%';
 			$queued     = '%"status":"queued"%';
 			$processing = '%"status":"processing"%';
 
 			$results = $wpdb->get_var( $wpdb->prepare( "
-				SELECT {$value_column}
-				FROM {$table}
-				WHERE {$column} LIKE %s
-				AND ( {$value_column} LIKE %s OR {$value_column} LIKE %s )
-				ORDER BY {$key_column} ASC
+				SELECT option_value
+				FROM {$wpdb->options}
+				WHERE option_name LIKE %s
+				AND ( option_value LIKE %s OR option_value LIKE %s )
+				ORDER BY option_id ASC
 				LIMIT 1
 			", $key, $queued, $processing ) );
 
 		} else {
-			$results = get_site_option( "{$this->identifier}_job_{$id}" );
+			$results = get_option( "{$this->identifier}_job_{$id}" );
 		}
 
 		if ( ! empty( $results ) ) {
@@ -536,7 +514,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		if ( ! empty( $job ) ) {
 			$job->updated_at = current_time( 'mysql' );
 
-			update_site_option( "{$this->identifier}_job_{$job->id}" , json_encode( $job ) );
+			update_option( "{$this->identifier}_job_{$job->id}" , json_encode( $job ) );
 		}
 
 		/**
@@ -562,7 +540,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		$job->status       = 'completed';
 		$job->completed_at = current_time( 'mysql' );
 
-		update_site_option( "{$this->identifier}_job_{$job->id}", json_encode( $job ) );
+		update_option( "{$this->identifier}_job_{$job->id}", json_encode( $job ) );
 
 		/**
 		 * Run when a job is completed
@@ -594,7 +572,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			$job->failure_reason = $reason;
 		}
 
-		update_site_option( "{$this->identifier}_job_{$job->id}", json_encode( $job ) );
+		update_option( "{$this->identifier}_job_{$job->id}", json_encode( $job ) );
 
 		/**
 		 * Run when a job is failed
