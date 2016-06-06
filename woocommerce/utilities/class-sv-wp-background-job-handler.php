@@ -17,7 +17,8 @@
  * needs please refer to http://www.skyverge.com
  *
  * @package   SkyVerge/WooCommerce/Utilities
- * @author    SkyVerge
+ * @author    SkyVerge / Delicious Brains
+ * @copyright Copyright (c) 2015-2016 Delicious Brains Inc.
  * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
@@ -27,13 +28,13 @@ defined( 'ABSPATH' ) or exit;
 if ( ! class_exists( 'SV_WP_Background_Job_Handler' ) ) :
 
 /**
- * SkyVerge Wordpress Background Job Handler class.
+ * SkyVerge WordPress Background Job Handler class
  *
  * Based on the wonderful WP_Background_Process class by deliciousbrains:
  * https://github.com/A5hleyRich/wp-background-processing
  *
  * Subclasses SV_WP_Async_Request. Instead of the concept of `batches` used in
- * the deliciousbrians version, however, this takes a more object-oriented approach
+ * the Delicious Brains' version, however, this takes a more object-oriented approach
  * of background `jobs`, allowing greater control over manipulating job data and
  * processing.
  *
@@ -48,9 +49,8 @@ if ( ! class_exists( 'SV_WP_Background_Job_Handler' ) ) :
  * $job = $background_job_handler->create_job( $order_ids, array( 'send_payment_reminders' => true ) );
  * $background_job_handler->dispatch();
  *
- * @since 4.3.0-1
+ * @since 4.4.0
  */
-
 abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 
@@ -66,16 +66,17 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/** @var string cron hook identifier */
 	protected $cron_hook_identifier;
 
-	/** @var string cron interval idetifier */
+	/** @var string cron interval identifier */
 	protected $cron_interval_identifier;
 
 
 	/**
 	 * Initiate new background job handler
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 */
 	public function __construct() {
+
 		parent::__construct();
 
 		$this->cron_hook_identifier     = $this->identifier . '_cron';
@@ -89,14 +90,15 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Dispatch
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @return array|WP_Error
 	 */
 	public function dispatch() {
-		// Schedule the cron healthcheck
+
+		// schedule the cron healthcheck
 		$this->schedule_event();
 
-		// Perform remote post
+		// perform remote post
 		parent::dispatch();
 	}
 
@@ -107,17 +109,17 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Checks whether data exists within the job queue and that
 	 * the background process is not already running.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 */
 	public function maybe_handle() {
 
 		if ( $this->is_process_running() ) {
-			// Background process already running
+			// background process already running
 			wp_die();
 		}
 
 		if ( $this->is_queue_empty() ) {
-			// No data to process
+			// no data to process
 			wp_die();
 		}
 
@@ -130,23 +132,13 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 
 	/**
-	 * Check wheter job queue is empty or not
+	 * Check whether job queue is empty or not
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @return bool True if queue is empty, false otherwise
 	 */
 	protected function is_queue_empty() {
 		global $wpdb;
-
-		$table        = $wpdb->options;
-		$key_column   = 'option_name';
-		$value_column = 'option_value';
-
-		if ( is_multisite() ) {
-			$table        = $wpdb->sitemeta;
-			$key_column   = 'meta_key';
-			$value_column = 'meta_value';
-		}
 
 		$key = $this->identifier . '_job_%';
 
@@ -156,9 +148,9 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 		$count = $wpdb->get_var( $wpdb->prepare( "
 			SELECT COUNT(*)
-			FROM {$table}
-			WHERE {$key_column} LIKE %s
-			AND ( {$value_column} LIKE %s OR {$value_column} LIKE %s )
+			FROM {$wpdb->options}
+			WHERE option_name LIKE %s
+			AND ( option_value LIKE %s OR option_value LIKE %s )
 		", $key, $queued, $processing ) );
 
 		return ( $count > 0 ) ? false : true;
@@ -171,11 +163,11 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Check whether the current process is already running
 	 * in a background process.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @return bool True if processing is running, false otherwise
 	 */
 	protected function is_process_running() {
-		return (bool) get_site_transient( "{$this->identifier}_process_lock" );
+		return (bool) get_transient( "{$this->identifier}_process_lock" );
 	}
 
 
@@ -186,23 +178,25 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Override if applicable, but the duration should be greater than that
 	 * defined in the time_exceeded() method.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 */
 	protected function lock_process() {
 
-		$this->start_time = time(); // Set start time of current process
+		// set start time of current process
+		$this->start_time = time();
 
-		$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60; // 1 minute
+		// set lock duration to 1 minute by default
+		$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60;
 
 		/**
 		 * Filter the queue lock time
 		 *
-		 * @since 4.3.0-1
-		 * @param in $lock_duration Lock duration in seconds
+		 * @since 4.4.0
+		 * @param int $lock_duration Lock duration in seconds
 		 */
 		$lock_duration = apply_filters( "{$this->identifier}_queue_lock_time", $lock_duration );
 
-		set_site_transient( "{$this->identifier}_process_lock", microtime(), $lock_duration );
+		set_transient( "{$this->identifier}_process_lock", microtime(), $lock_duration );
 	}
 
 
@@ -211,11 +205,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 *
 	 * Unlock the process so that other instances can spawn.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @return \SV_WP_Background_Job_Handler
 	 */
 	protected function unlock_process() {
-		delete_site_transient( "{$this->identifier}_process_lock" );
+
+		delete_transient( "{$this->identifier}_process_lock" );
 
 		return $this;
 	}
@@ -227,7 +222,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Ensures the background job handler process never exceeds 90%
 	 * of the maximum WordPress memory.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @return bool True if exceeded memory limit, false otherwise
 	 */
 	protected function memory_exceeded() {
@@ -243,7 +238,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		/**
 		 * Filter whether memory limit has been exceeded or not
 		 *
-		 * @since 4.3.0-1
+		 * @since 4.4.0
 		 * @param bool $exceeded
 		 */
 		return apply_filters( "{$this->identifier}_memory_exceeded", $return );
@@ -253,20 +248,20 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Get memory limit
 	 *
-	 * @since 4.3.0-1
-	 * @return int
+	 * @since 4.4.0
+	 * @return int memory limit in bytes
 	 */
 	protected function get_memory_limit() {
 
 		if ( function_exists( 'ini_get' ) ) {
 			$memory_limit = ini_get( 'memory_limit' );
 		} else {
-			// Sensible default
+			// sensible default
 			$memory_limit = '128M';
 		}
 
 		if ( ! $memory_limit || -1 == $memory_limit ) {
-			// Unlimited, set to 32GB
+			// unlimited, set to 32GB
 			$memory_limit = '32000M';
 		}
 
@@ -280,18 +275,19 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Ensures the background job handler never exceeds a sensible time limit.
 	 * A timeout limit of 30s is common on shared hosting.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @return bool True, if time limit exceeded, false otherwise
 	 */
 	protected function time_exceeded() {
 
 		/**
-		 * Filter default time limit for background job execution
+		 * Filter default time limit for background job execution, defaults to
+		 * 20 seconds
 		 *
-		 * @since 4.3.0-1
+		 * @since 4.4.0
 		 * @param int $time Time in seconds
 		 */
-		$finish = $this->start_time + apply_filters( "{$this->identifier}_default_time_limit", 20 ); // 20 seconds
+		$finish = $this->start_time + apply_filters( "{$this->identifier}_default_time_limit", 20 );
 		$return = false;
 
 		if ( time() >= $finish ) {
@@ -301,8 +297,8 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		/**
 		 * Filter whether maximum execution time has exceeded or not
 		 *
-		 * @since 4.3.0-1
-		 * @param bool $exceeded
+		 * @since 4.4.0
+		 * @param bool $exceeded true if execution time exceeded, false otherwise
 		 */
 		return apply_filters( "{$this->identifier}_time_exceeded", $return );
 	}
@@ -311,7 +307,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Create a background job
 	 *
-	 * Deliciousbrains' versions alternative would be using ->data()->save().
+	 * Delicious Brains' versions alternative would be using ->data()->save().
 	 * Allows passing in job options that are available at item data processing time.
 	 * This allows sharing common options between items without the need to repeat
 	 * the same information for every single item in queue.
@@ -319,7 +315,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Instead of returning self, returns the job instance, which gives greater
 	 * control over the job.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @param mixed $data Job data. Usually an array of items to process.
 	 * @param array $options Optional. Job options.
 	 * @return object
@@ -336,7 +332,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		/**
 		 * Filter new background job attributes
 		 *
-		 * @since 4.3.0-1
+		 * @since 4.4.0
 		 * @param array $attrs Job attributes
 		 * @param string $id Job ID
 		 */
@@ -352,7 +348,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			'status'     => 'queued',
 		), $attrs );
 
-		update_site_option( "{$this->identifier}_job_{$job_id}" , json_encode( $attrs ) );
+		update_option( "{$this->identifier}_job_{$job_id}" , json_encode( $attrs ) );
 
 		$job = new stdClass();
 
@@ -363,7 +359,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		/**
 		 * Run when a job is created
 		 *
-		 * @since 4.3.0-1
+		 * @since 4.4.0
 		 * @param object $job The created job
 		 */
 		do_action( "{$this->identifier}_job_created", $job );
@@ -375,7 +371,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Get a job (by default the first in the queue)
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @param string $id Optional. Job ID. Will return first job in queue if not
 	 *                   provided.
 	 * @return object|null The found job object or null
@@ -385,35 +381,22 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 		if ( ! $id ) {
 
-			$table        = $wpdb->options;
-			$column       = 'option_name';
-			$key_column   = 'option_id';
-			$value_column = 'option_value';
-
-			if ( is_multisite() ) {
-				$table        = $wpdb->sitemeta;
-				$column       = 'meta_key';
-				$key_column   = 'meta_id';
-				$value_column = 'meta_value';
-			}
-
 			$key        = $this->identifier . '_job_%';
 			$queued     = '%"status":"queued"%';
 			$processing = '%"status":"processing"%';
 
 			$results = $wpdb->get_var( $wpdb->prepare( "
-				SELECT {$value_column}
-				FROM {$table}
-				WHERE {$column} LIKE %s
-				AND ( {$value_column} LIKE %s OR {$value_column} LIKE %s )
-				ORDER BY {$key_column} ASC
+				SELECT option_value
+				FROM {$wpdb->options}
+				WHERE option_name LIKE %s
+				AND ( option_value LIKE %s OR option_value LIKE %s )
+				ORDER BY option_id ASC
 				LIMIT 1
 			", $key, $queued, $processing ) );
 
 		} else {
-			$results = get_site_option( "{$this->identifier}_job_{$id}" );
+			$results = get_option( "{$this->identifier}_job_{$id}" );
 		}
-
 
 		if ( ! empty( $results ) ) {
 
@@ -430,7 +413,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		/**
 		 * Filter job as returned from the database
 		 *
-		 * @since 4.3.0-1
+		 * @since 4.4.0
 		 * @param object $job
 		 */
 		return apply_filters( "{$this->identifier}_returned_job", $job );
@@ -442,9 +425,10 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 *
 	 * Process jobs while remaining within server memory and time limit constraints.
 	 *
-		 * @since 4.3.0-1
+	 * @since 4.4.0
 	 */
 	protected function handle() {
+
 		$this->lock_process();
 
 		do {
@@ -484,10 +468,10 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 *
 	 * Default implementation is to loop over job data and passing each item to
 	 * the task handler. Subclasses are, however, welcome to override this method
-	 * to create totally different job processigng implementations - see
+	 * to create totally different job processing implementations - see
 	 * WC_CSV_Import_Suite_Background_Import in CSV Import for an example.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @param object $job
 	 */
 	protected function process_job( $job ) {
@@ -521,7 +505,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Update job attrs
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @param object $job
 	 * @return $this
 	 */
@@ -530,13 +514,13 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		if ( ! empty( $job ) ) {
 			$job->updated_at = current_time( 'mysql' );
 
-			update_site_option( "{$this->identifier}_job_{$job->id}" , json_encode( $job ) );
+			update_option( "{$this->identifier}_job_{$job->id}" , json_encode( $job ) );
 		}
 
 		/**
 		 * Run when a job is updated
 		 *
-		 * @since 4.3.0-1
+		 * @since 4.4.0
 		 * @param object $job The updated job
 		 */
 		do_action( "{$this->identifier}_job_updated", $job );
@@ -548,7 +532,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Handle job completion
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @param object $job
 	 */
 	public function complete_job( $job ) {
@@ -556,12 +540,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		$job->status       = 'completed';
 		$job->completed_at = current_time( 'mysql' );
 
-		update_site_option( "{$this->identifier}_job_{$job->id}", json_encode( $job ) );
+		update_option( "{$this->identifier}_job_{$job->id}", json_encode( $job ) );
 
 		/**
 		 * Run when a job is completed
 		 *
-		 * @since 4.3.0-1
+		 * @since 4.4.0
 		 * @param object $job The completed job
 		 */
 		do_action( "{$this->identifier}_job_complete", $job );
@@ -575,7 +559,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * provided as a convenience method for subclasses that may call this to
 	 * indicate that a particular job has failed for some reason.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @param object $job
 	 * @param string $reason Optional. Reason for failure.
 	 */
@@ -588,12 +572,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			$job->failure_reason = $reason;
 		}
 
-		update_site_option( "{$this->identifier}_job_{$job->id}", json_encode( $job ) );
+		update_option( "{$this->identifier}_job_{$job->id}", json_encode( $job ) );
 
 		/**
 		 * Run when a job is failed
 		 *
-		 * @since 4.3.0-1
+		 * @since 4.4.0
 		 * @param object $job The failed job
 		 */
 		do_action( "{$this->identifier}_job_failed", $job );
@@ -606,17 +590,18 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Override if applicable, but ensure that the below actions are
 	 * performed, or, call parent::complete().
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 */
 	protected function complete() {
-		// Unschedule the cron healthcheck
+
+		// unschedule the cron healthcheck
 		$this->clear_scheduled_event();
 	}
 
 	/**
 	 * Schedule cron healthcheck
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @param array $schedules
 	 * @return mixed
 	 */
@@ -627,12 +612,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		/**
 		 * Filter cron health check interval
 		 *
-		 * @since 4.3.0-1
+		 * @since 4.4.0
 		 * @param int $interval Interval in minutes
 		 */
 		$interval = apply_filters( "{$this->identifier}_cron_interval", $interval );
 
-		// Adds every 5 minutes to the existing schedules.
+		// adds every 5 minutes to the existing schedules.
 		$schedules[ $this->identifier . '_cron_interval' ] = array(
 			'interval' => MINUTE_IN_SECONDS * $interval,
 			'display'  => sprintf( __( 'Every %d Minutes' ), $interval ),
@@ -648,17 +633,17 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Restart the background process if not already running
 	 * and data exists in the queue.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 */
 	public function handle_cron_healthcheck() {
 
 		if ( $this->is_process_running() ) {
-			// Background process already running
+			// background process already running
 			exit;
 		}
 
 		if ( $this->is_queue_empty() ) {
-			// No data to process
+			// no data to process
 			$this->clear_scheduled_event();
 			exit;
 		}
@@ -670,7 +655,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Schedule cron health check event
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 */
 	protected function schedule_event() {
 
@@ -683,7 +668,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Clear scheduled health check event
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 */
 	protected function clear_scheduled_event() {
 
@@ -703,12 +688,14 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * in the next pass through, or return false to remove the
 	 * item from the job.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @param mixed $item Job data item to iterate over
 	 * @param mixed $options Job options
 	 * @return mixed
 	 */
 	abstract protected function task( $item, $options = null );
+
+
 }
 
 endif;

@@ -96,6 +96,11 @@ abstract class SV_WC_API_Base {
 
 		$start_time = microtime( true );
 
+		// If this API requires TLS v1.2, force it
+		if ( $this->require_tls_1_2() ) {
+			add_action( 'http_api_curl', array( $this, 'set_tls_1_2_request' ), 10, 3 );
+		}
+
 		// perform the request
 		$response = $this->do_remote_request( $this->get_request_uri(), $this->get_request_args() );
 
@@ -661,6 +666,47 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function set_response_handler( $handler ) {
 		$this->response_handler = $handler;
+	}
+
+
+	/**
+	 * Maybe force TLS v1.2 requests.
+	 *
+	 * @since 4.4.0
+	 */
+	public function set_tls_1_2_request( $handle, $r, $url ) {
+
+		if ( ! SV_WC_Helper::str_starts_with( $url, 'https://' ) ) {
+			return;
+		}
+
+		$versions     = curl_version();
+		$curl_version = $versions['version'];
+
+		// Get the SSL details
+		list( $ssl_type, $ssl_version ) = explode( '/', $versions['ssl_version'] );
+
+		$ssl_version = substr( $ssl_version, 0, -1 );
+
+		// If cURL and/or OpenSSL aren't up to the challenge, bail
+		if ( ! version_compare( $curl_version, '7.34.0', '>=' ) || ( 'OpenSSL' === $ssl_type && ! version_compare( $ssl_version, '1.0.1', '>=' ) ) ) {
+			return;
+		}
+
+		curl_setopt( $handle, CURLOPT_SSLVERSION, 6 );
+	}
+
+
+	/**
+	 * Determine if TLS v1.2 is required for API requests.
+	 *
+	 * Subclasses should override this to return true if TLS v1.2 is required.
+	 *
+	 * @since 4.4.0
+	 * @return bool
+	 */
+	protected function require_tls_1_2() {
+		return false;
 	}
 
 

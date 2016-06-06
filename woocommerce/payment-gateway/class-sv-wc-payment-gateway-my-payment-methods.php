@@ -207,7 +207,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Render the My Payment Methods section on the My Account page for WC 2.5.5 and older.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 */
 	public function render_lt_2_6() {
 

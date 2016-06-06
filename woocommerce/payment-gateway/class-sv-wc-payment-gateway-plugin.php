@@ -163,6 +163,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// Add classes to WC Payment Methods
 		add_filter( 'woocommerce_payment_gateways', array( $this, 'load_gateways' ) );
+
+		// Adjust the available gateways in certain cases
+		add_filter( 'woocommerce_available_payment_gateways', array( $this, 'adjust_available_gateways' ) );
 	}
 
 
@@ -176,6 +179,30 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	public function load_gateways( $gateways ) {
 
 		return array_merge( $gateways, $this->get_gateways() );
+	}
+
+
+	/**
+	 * Adjust the available gateways in certain cases.
+	 *
+	 * @since 4.4.0
+	 * @param array $available_gateways the available payment gateways
+	 * @return array
+	 */
+	public function adjust_available_gateways( $available_gateways ) {
+
+		if ( ! is_add_payment_method_page() ) {
+			return $available_gateways;
+		}
+
+		foreach ( $this->get_gateways() as $gateway ) {
+
+			if ( $gateway->supports_tokenization() && ! $gateway->supports_add_payment_method() ) {
+				unset( $available_gateways[ $gateway->id ] );
+			}
+		}
+
+		return $available_gateways;
 	}
 
 
@@ -918,7 +945,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Get a gateway's settings screen section ID.
 	 *
-	 * @since 4.3.0-1
+	 * @since 4.4.0
 	 * @param string $gateway_id the gateway ID
 	 * @return string
 	 */
