@@ -36,30 +36,43 @@ if ( ! class_exists( 'SV_WC_Export_Generator' ) ) :
 abstract class SV_WC_Export_Generator {
 
 
-	/** @var array order IDs or customer IDs */
-	public $ids;
+	/**
+	 * Get file header/document start
+	 *
+	 * Should return appropriate header/start element, such as CSV column names
+	 * or XML wrapper elements, etc.  Return null to skip writing a footer.
+	 *
+	 * @since 4.3.0-1
+	 * @param string $type
+	 * @return string|null
+	 */
+	abstract public function get_header( $type );
 
 
 	/**
-	 * Setup the IDs to export
+	 * Get file footer/document end
+	 *
+	 * Should return appropriate footer/end element, such as closing XML wrapper
+	 * tags. Return null to skip writing a footer.
 	 *
 	 * @since 4.3.0-1
-	 * @param array $ids
-	 * @return \SV_WC_Export_Generator
+	 * @param string $type
+	 * @return string|null
 	 */
-	public function __construct( $ids ) {
-		$this->ids = $ids;
-	}
+	abstract public function get_footer( $type );
 
 
 	/**
 	 * Get output for the provided export type
 	 *
+	 * Return null to skip writing content to the export file.
+	 *
 	 * @since 4.3.0-1
+	 * @param int/array $ids Array of object IDs to get output for
 	 * @param string $type Output type, such as `orders` or `customers`
-	 * @return string
+	 * @return string|null
 	 */
-	abstract public function get_output( $type );
+	abstract public function get_output( $ids, $type );
 
 }
 

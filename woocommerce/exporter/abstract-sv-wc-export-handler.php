@@ -39,49 +39,6 @@ if ( ! class_exists( 'SV_WC_Export_Handler' ) ) :
 abstract class SV_WC_Export_Handler {
 
 
-	/** @var array order IDs or customer IDs to export */
-	public $ids;
-
-	/** @var string file name for export or download */
-	public $filename;
-
-
-	/**
-	 * Initializes the export object from an array of valid order/customer IDs and sets the filename
-	 *
-	 * @since 4.3.0-1
-	 * @param int|array $ids orders/customer IDs to export / download
-	 * @param string $export_type what is being exported, `orders` or `customers`
-	 * @return \SV_WC_Export_Handler
-	 */
-	public function __construct( $ids, $export_type = 'orders' ) {
-
-		// handle single order/customer exports
-		if ( ! is_array( $ids ) ) {
-
-			$ids = array( $ids );
-		}
-
-		$this->export_type = $export_type;
-
-		/**
-		 * Filter the order/customer IDs
-		 *
-		 * @since 3.9.1
-		 * @param array $id, order IDs or customer IDs
-		 * @param \SV_WC_Export_Handler $this, handler instance
-		 */
-
-		// TODO: Question - is it okay to move here (used to be in CSV Export generator constructor) ?
-		// reason to move here: make sure that ids are filtered even before touching the generator,
-		// so that it applies regardless of the generator implementation. {IT 2016-05-26}
-		$this->ids = apply_filters( $this->get_prefix() . 'export_ids', $ids, $this );
-
-		// set file name
-		$this->filename = $this->replace_filename_variables();
-	}
-
-
 	/**
 	 * Exports orders/customers to file and downloads via browser
 	 *
@@ -262,7 +219,7 @@ abstract class SV_WC_Export_Handler {
 	 * @param string $method the export method, `download`, `ftp`, `http_post`, or `email`
 	 * @return object the export method
 	 */
-	private function get_export_method( $method ) {
+	protected function get_export_method( $method ) {
 
 		$prefix    = $this->get_prefix();
 		$base_path = $this->get_plugin()->get_framework_path() . '/exporter/export-methods';
@@ -437,13 +394,13 @@ abstract class SV_WC_Export_Handler {
 	 * @since 4.3.0-1
 	 * @return string filename with variables replaced
 	 */
-	private function replace_filename_variables() {
+	protected function replace_filename_variables( $ids, $export_type ) {
 
 		$prefix               = $this->get_prefix();
-		$pre_replace_filename = get_option( 'orders' == $this->export_type ? "{$prefix}order_filename" : "{$prefix}customer_filename" );
+		$pre_replace_filename = get_option( 'orders' == $export_type ? "{$prefix}order_filename" : "{$prefix}customer_filename" );
 
 		$variables   = array( '%%timestamp%%', '%%order_ids%%' );
-		$replacement = array( date( 'Y_m_d_H_i_s', current_time( 'timestamp' ) ), implode( '-', $this->ids ) );
+		$replacement = array( date( 'Y_m_d_H_i_s', current_time( 'timestamp' ) ), implode( '-', $ids ) );
 
 		$post_replace_filename = str_replace( $variables, $replacement, $pre_replace_filename );
 
@@ -455,7 +412,7 @@ abstract class SV_WC_Export_Handler {
 		 * @param string $pre_replace_filename Filename before replacing variables
 		 * @param array $ids Array of entity (customer or order) IDs being exported
 		 */
-		return apply_filters( $prefix . 'filename', $post_replace_filename, $pre_replace_filename, $this->ids );
+		return apply_filters( $prefix . 'filename', $post_replace_filename, $pre_replace_filename, $ids );
 	}
 
 
