@@ -489,6 +489,9 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 				$job->{$key} = $value;
 			}
 
+			/** This filter is documented above */
+			$job = apply_filters( "{$this->identifier}_returned_job", $job );
+
 			$jobs[] = $job;
 		}
 
