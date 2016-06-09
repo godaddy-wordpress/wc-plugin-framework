@@ -373,7 +373,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 *
 	 * @since 4.4.0
 	 * @param string $id Optional. Job ID. Will return first job in queue if not
-	 *                   provided.
+	 *                   provided. Will not return completed or failed jobs from queue.
 	 * @return object|null The found job object or null
 	 */
 	public function get_job( $id = null ) {
@@ -417,6 +417,85 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 * @param object $job
 		 */
 		return apply_filters( "{$this->identifier}_returned_job", $job );
+	}
+
+
+	/**
+	 * Get jobs
+	 *
+	 * @since 4.4.0-1
+	 * @param array $args {
+	 *     Optional. An array of arguments
+	 *
+	 *     @type string|array $status Job status(es) to include
+	 *     @type string $order ASC or DESC. Defaults to DESC
+	 *     @type string $orderby Field to order by. Defaults to option_id
+	 * }
+	 * @return array|null Found jobs or null if none found
+	 */
+	public function get_jobs( $args = array() ) {
+
+		global $wpdb;
+
+		$args = wp_parse_args( $args, array(
+			'order'   => 'DESC',
+			'orderby' => 'option_id',
+		) );
+
+		$replacements = array( $this->identifier . '_job_%' );
+		$status_query = '';
+
+		// prepare status query
+		if ( ! empty( $args['status'] ) ) {
+
+			$statuses     = (array) $args['status'];
+			$placeholders = array();
+
+			foreach ( $statuses as $status ) {
+
+				$placeholders[] = '%s';
+				$replacements[] = '%"status":"' . sanitize_key( $status ) . '"%';
+			}
+
+			$status_query = 'AND ( option_value LIKE ' . implode( ' OR option_value LIKE ', $placeholders ) . ' )';
+		}
+
+		// prepare sorting vars
+		$order   = sanitize_key( $args['order'] );
+		$orderby = sanitize_key( $args['orderby'] );
+
+		// put it all together now
+		$query = $wpdb->prepare( "
+			SELECT option_value
+			FROM {$wpdb->options}
+			WHERE option_name LIKE %s
+			{$status_query}
+			ORDER BY {$orderby} {$order}
+		", $replacements );
+
+		$results = $wpdb->get_col( $query );
+
+		if ( empty( $results ) ) {
+			return null;
+		}
+
+		$jobs = array();
+
+		foreach ( $results as $result ) {
+
+			$job = new stdClass();
+
+			foreach ( json_decode( $result, true ) as $key => $value ) {
+				$job->{$key} = $value;
+			}
+
+			/** This filter is documented above */
+			$job = apply_filters( "{$this->identifier}_returned_job", $job );
+
+			$jobs[] = $job;
+		}
+
+		return $jobs;
 	}
 
 
@@ -506,16 +585,22 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Update job attrs
 	 *
 	 * @since 4.4.0
-	 * @param object $job
-	 * @return $this
+	 * @param object|string $job Job instance or ID
+	 * @return false on failure
 	 */
 	public function update_job( $job ) {
 
-		if ( ! empty( $job ) ) {
-			$job->updated_at = current_time( 'mysql' );
-
-			update_option( "{$this->identifier}_job_{$job->id}" , json_encode( $job ) );
+		if ( is_string( $job ) ) {
+			$job = $this->get_job( $job_id );
 		}
+
+		if ( ! $job ) {
+			return false;
+		}
+
+		$job->updated_at = current_time( 'mysql' );
+
+		update_option( "{$this->identifier}_job_{$job->id}" , json_encode( $job ) );
 
 		/**
 		 * Run when a job is updated
@@ -524,8 +609,6 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 * @param object $job The updated job
 		 */
 		do_action( "{$this->identifier}_job_updated", $job );
-
-		return $this;
 	}
 
 
@@ -533,9 +616,18 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Handle job completion
 	 *
 	 * @since 4.4.0
-	 * @param object $job
+	 * @param object|string $job Job instance or ID
+	 * @return false on failure
 	 */
 	public function complete_job( $job ) {
+
+		if ( is_string( $job ) ) {
+			$job = $this->get_job( $job_id );
+		}
+
+		if ( ! $job ) {
+			return false;
+		}
 
 		$job->status       = 'completed';
 		$job->completed_at = current_time( 'mysql' );
@@ -560,10 +652,19 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * indicate that a particular job has failed for some reason.
 	 *
 	 * @since 4.4.0
-	 * @param object $job
+	 * @param object|string $job Job instance or ID
 	 * @param string $reason Optional. Reason for failure.
+	 * @return false on failure
 	 */
 	public function fail_job( $job, $reason = '' ) {
+
+		if ( is_string( $job ) ) {
+			$job = $this->get_job( $job_id );
+		}
+
+		if ( ! $job ) {
+			return false;
+		}
 
 		$job->status    = 'failed';
 		$job->failed_at = current_time( 'mysql' );
@@ -581,6 +682,35 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 * @param object $job The failed job
 		 */
 		do_action( "{$this->identifier}_job_failed", $job );
+	}
+
+
+	/**
+	 * Delete a job
+	 *
+	 * @since 4.4.0-1
+	 * @param object|string $job Job instance or ID
+	 * @return false on failure
+	 */
+	public function delete_job( $job ) {
+
+		if ( is_string( $job ) ) {
+			$job = $this->get_job( $job );
+		}
+
+		if ( ! $job ) {
+			return false;
+		}
+
+		delete_option( "{$this->identifier}_job_{$job->id}" );
+
+		/**
+		* Run after a job is deleted
+		*
+		* @since 4.4.0-1
+		* @param object $job The job that was deleted from database
+		*/
+		do_action( "{$this->identifier}_job_deleted", $job );
 	}
 
 
