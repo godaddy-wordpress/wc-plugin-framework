@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2016.nn.nn- version 4.4.0-1
+ * Misc - Add compatibility for WordPress 4.6
+
 2016.06.01 - version 4.4.0
  * Feature - Allow bundled framework and plugin translations to be easily overridden
  * Tweak - Allow plugins extending SV_WC_API_Base to declare TLS v1.2 as a requirement for requests
