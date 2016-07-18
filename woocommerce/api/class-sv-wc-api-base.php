@@ -157,8 +157,16 @@ abstract class SV_WC_API_Base {
 		// set response data
 		$this->response_code     = wp_remote_retrieve_response_code( $response );
 		$this->response_message  = wp_remote_retrieve_response_message( $response );
-		$this->response_headers  = wp_remote_retrieve_headers( $response );
 		$this->raw_response_body = wp_remote_retrieve_body( $response );
+
+		$response_headers = wp_remote_retrieve_headers( $response );
+
+		// WP 4.6+ returns an object
+		if ( is_object( $response_headers ) ) {
+			$response_headers = $response_headers->getAll();
+		}
+
+		$this->response_headers = $response_headers;
 
 		// allow child classes to validate response prior to parsing -- this is useful
 		// for checking HTTP status codes, etc.
