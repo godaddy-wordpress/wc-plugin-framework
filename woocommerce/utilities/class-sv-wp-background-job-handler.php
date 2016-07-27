@@ -46,7 +46,7 @@ if ( ! class_exists( 'SV_WP_Background_Job_Handler' ) ) :
  * # Sample usage:
  *
  * $background_job_handler = new SV_WP_Background_Job_Handler();
- * $job = $background_job_handler->create_job( $order_ids, array( 'send_payment_reminders' => true ) );
+ * $job = $background_job_handler->create_job( $attrs );
  * $background_job_handler->dispatch();
  *
  * @since 4.4.0
@@ -59,6 +59,9 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 	/** @var string async request action */
 	protected $action = 'background_job';
+
+	/** @var string data key */
+	protected $data_key = 'data';
 
 	/** @var int start time of current process */
 	protected $start_time = 0;
@@ -304,11 +307,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	}
 
 
+
 	/**
 	 * Create a background job
 	 *
 	 * Delicious Brains' versions alternative would be using ->data()->save().
-	 * Allows passing in job options that are available at item data processing time.
+	 * Allows passing in any kind of job attributes, which will be available at item data processing time.
 	 * This allows sharing common options between items without the need to repeat
 	 * the same information for every single item in queue.
 	 *
@@ -316,14 +320,13 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * control over the job.
 	 *
 	 * @since 4.4.0
-	 * @param mixed $data Job data. Usually an array of items to process.
-	 * @param array $options Optional. Job options.
-	 * @return object
+	 * @param mixed $attrs Job attributes.
+	 * @return object|null
 	 */
-	public function create_job( $data, $options = null ) {
+	public function create_job( $attrs ) {
 
-		if ( empty( $data ) ) {
-			return;
+		if ( empty( $attrs ) ) {
+			return null;
 		}
 
 		// generate a unique ID for the job
@@ -336,15 +339,13 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 * @param array $attrs Job attributes
 		 * @param string $id Job ID
 		 */
-		$attrs = apply_filters( "{$this->identifier}_new_job_attrs", array(
-			'data'       => $data,
-			'options'    => $options,
-		), $job_id );
+		$attrs = apply_filters( "{$this->identifier}_new_job_attrs", $attrs, $job_id );
 
 		// ensure a few must-have attributes
 		$attrs = wp_parse_args( array(
 			'id'         => $job_id,
 			'created_at' => current_time( 'mysql' ),
+			'created_by' => get_current_user_id(),
 			'status'     => 'queued',
 		), $attrs );
 
@@ -546,36 +547,66 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Process a job
 	 *
 	 * Default implementation is to loop over job data and passing each item to
-	 * the task handler. Subclasses are, however, welcome to override this method
+	 * the item processor. Subclasses are, however, welcome to override this method
 	 * to create totally different job processing implementations - see
 	 * WC_CSV_Import_Suite_Background_Import in CSV Import for an example.
+	 *
+	 * If using the default implementation, the job must have a $data_key property set.
+	 * Subclasses can override the data key, but the contents must be an array which
+	 * the job processor can loop over. By default, the data key is `data`.
+	 *
+	 * If no data is set, the job will completed right away.
 	 *
 	 * @since 4.4.0
 	 * @param object $job
 	 */
 	protected function process_job( $job ) {
 
-		foreach ( $job->data as $key => $value ) {
+		$data_key = $this->data_key;
 
-			// pass the item to task handler
-			$task = $this->task( $value, $job->options );
+		if ( ! isset( $job->{$data_key} ) ) {
+			throw new Exception( sprintf( __( 'Job data key "%s" not set', 'woocommerce-plugin-framework' ), $data_key ) );
+		}
 
-			if ( false !== $task ) {
-				$job->data[ $key ] = $task;
-			} else {
-				unset( $job->data[ $key ] );
-			}
+		if ( ! is_array( $job->{$data_key} ) ) {
+			throw new Exception( sprintf( __( 'Job data key "%s" is not an array', 'woocommerce-plugin-framework' ), $data_key ) );
+		}
 
-			if ( $this->time_exceeded() || $this->memory_exceeded() ) {
+		$data = $job->{$data_key};
+
+		// progress indicates how many items have been processed, it
+		// does NOT indicate the processed item key in any way
+		if ( ! isset( $job->progress ) ) {
+			$job->progress = 0;
+		}
+
+		// skip already processed items
+		if ( $job->progress && ! empty( $data ) ) {
+			$data = array_slice( $data, $job->progress, null, true );
+		}
+
+		// loop over unprocessed items and process them
+		if ( ! empty( $data ) ) {
+
+			foreach ( $data as $item ) {
+
+				// process the item
+				$this->process_item( $item, $job );
+
+				$job->progress++;
+
+				// update job progress
+				$this->update_job( $job );
+
 				// job limits reached
-				break;
+				if ( $this->time_exceeded() || $this->memory_exceeded() ) {
+					break;
+				}
 			}
 		}
 
-		// Update or complete current job
-		if ( ! empty( $job->data ) ) {
-			$this->update_job( $job );
-		} else {
+		// complete current job
+		if ( $job->progress >= count( $job->{$data_key} ) ) {
 			$this->complete_job( $job );
 		}
 	}
@@ -811,21 +842,19 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 
 	/**
-	 * Handle task
+	 * Process an item from job data
 	 *
 	 * Implement this method to perform any actions required on each
-	 * item in job data. Return the modified item for further processing
-	 * in the next pass through, or return false to remove the
-	 * item from the job.
+	 * item in job data.
 	 *
-	 * @since 4.4.0
+	 * @since 4.4.0-1
 	 * @param mixed $item Job data item to iterate over
-	 * @param mixed $options Job options
+	 * @param object $job Job instance
 	 * @return mixed
 	 */
-	abstract protected function task( $item, $options = null );
+	abstract protected function process_item( $item, $job );
 
 
 }
 
-endif;
+endif; // Class exists check
