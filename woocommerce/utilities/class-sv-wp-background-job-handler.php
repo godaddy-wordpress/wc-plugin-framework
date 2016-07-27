@@ -424,7 +424,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Get jobs
 	 *
-	 * @since 4.4.0-1
+	 * @since 4.4.1-1
 	 * @param array $args {
 	 *     Optional. An array of arguments
 	 *
@@ -719,7 +719,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Delete a job
 	 *
-	 * @since 4.4.0-1
+	 * @since 4.4.1-1
 	 * @param object|string $job Job instance or ID
 	 * @return false on failure
 	 */
@@ -738,7 +738,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		/**
 		* Run after a job is deleted
 		*
-		* @since 4.4.0-1
+		* @since 4.4.1-1
 		* @param object $job The job that was deleted from database
 		*/
 		do_action( "{$this->identifier}_job_deleted", $job );
@@ -847,7 +847,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Implement this method to perform any actions required on each
 	 * item in job data.
 	 *
-	 * @since 4.4.0-1
+	 * @since 4.4.1-1
 	 * @param mixed $item Job data item to iterate over
 	 * @param object $job Job instance
 	 * @return mixed
