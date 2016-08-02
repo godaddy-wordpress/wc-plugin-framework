@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2016.nn.nn - version 4.4.1-1
+2016.08.02 - version 4.4.2
  * Tweak - Refactor background job data structure and processing
 
 2016.07.18 - version 4.4.1

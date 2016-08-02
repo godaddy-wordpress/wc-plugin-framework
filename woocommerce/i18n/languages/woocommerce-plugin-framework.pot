@@ -1,8 +1,8 @@
-# Copyright (C) 2016
+# Copyright (C) 2016 
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 4.4.1\n"
+"Project-Id-Version: WooCommerce Plugin Framework 4.4.2\n"
 "Report-Msgid-Bugs-To: https://support.woothemes.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -1164,7 +1164,15 @@ msgstr ""
 msgid "%1$s eCheck Payment Method Saved: %2$s account ending in %3$s"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:623
+#: utilities/class-sv-wp-background-job-handler.php:568
+msgid "Job data key \"%s\" not set"
+msgstr ""
+
+#: utilities/class-sv-wp-background-job-handler.php:572
+msgid "Job data key \"%s\" is not an array"
+msgstr ""
+
+#: utilities/class-sv-wp-background-job-handler.php:784
 msgid "Every %d Minutes"
 msgstr ""
 
