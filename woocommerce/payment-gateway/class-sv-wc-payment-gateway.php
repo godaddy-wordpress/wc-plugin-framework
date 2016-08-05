@@ -1102,8 +1102,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			// display icons for the selected card types
 			foreach ( $this->get_card_types() as $card_type ) {
 
+				$card_type = SV_WC_Payment_Gateway_Helper::normalize_card_type( $card_type );
+
 				if ( $url = $this->get_payment_method_image_url( $card_type ) ) {
-					$icon .= sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" width="40" height="25" style="width: 40px; height: 25px;" />', esc_url( $url ), esc_attr( strtolower( $card_type ) ), esc_attr( $this->get_id_dasherized() ) );
+					$icon .= sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" width="40" height="25" style="width: 40px; height: 25px;" />', esc_url( $url ), esc_attr( $card_type ), esc_attr( $this->get_id_dasherized() ) );
 				}
 			}
 		}
@@ -1135,45 +1137,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		$image_type = strtolower( $type );
 
-		// translate card name to type as needed
-		switch( $image_type ) {
-
-			case 'american express':
-				$image_type = 'amex';
-			break;
-
-			case 'discover':
-				$image_type = 'disc';
-			break;
-
-			case 'mastercard':
-				$image_type = 'mc';
-			break;
-
-			case 'paypal':
-				$image_type = 'paypal';
-			break;
-
-			case 'visa debit':
-				$image_type = 'visa-debit';
-			break;
-
-			case 'visa electron':
-				$image_type = 'visa-electron';
-			break;
-
-			case 'card':
-				$image_type = 'cc-plain';
-			break;
-
-			// default: accept $type as is
-		}
-
-		// use plain card image if type is not known
-		if ( ! $image_type ) {
-			if ( $this->is_credit_card_gateway() ) {
-				$image_type = 'cc-plain';
-			}
+		if ( 'card' === $type ) {
+			$image_type = 'cc-plain';
 		}
 
 		/**

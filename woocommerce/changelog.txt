@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2016.nn.nn - version 4.4.2-1
+ * Tweak - Improve consistency of card type ids
+
 2016.08.02 - version 4.4.2
  * Tweak - Refactor background job data structure and processing
 
