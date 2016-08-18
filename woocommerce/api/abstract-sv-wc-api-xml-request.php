@@ -51,6 +51,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	 * Get the method for this request.
 	 *
 	 * @since 4.3.0
+	 * @see SV_WC_API_Request::get_method()
 	 */
 	public function get_method() { }
 
@@ -59,10 +60,23 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	 * Get the path for this request.
 	 *
 	 * @since 4.3.0
+	 * @see SV_WC_API_Request::get_path()
 	 * @return string
 	 */
 	public function get_path() {
 		return '';
+	}
+
+
+	/**
+	 * Get the request parameters.
+	 *
+	 * @since 4.4.2-1
+	 * @see SV_WC_API_Request::get_params()
+	 * @return array
+	 */
+	public function get_params() {
+		return array();
 	}
 
 

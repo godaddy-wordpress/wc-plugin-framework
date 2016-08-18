@@ -72,6 +72,7 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 	 * Get the request parameters.
 	 *
 	 * @since 4.3.0
+	 * @see SV_WC_API_Request::get_params()
 	 * @return array
 	 */
 	public function get_params() {
