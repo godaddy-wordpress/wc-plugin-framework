@@ -34,13 +34,13 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 4.4.2
+ * @version 4.4.2-1
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '4.4.2';
+	const VERSION = '4.4.2-1';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
