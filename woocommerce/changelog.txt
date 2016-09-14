@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2016.09.14 - version 4.4.3
+ * Fix - Fix an error when processing guest pre-order payments
+
 2016.08.02 - version 4.4.2
  * Tweak - Refactor background job data structure and processing
 
