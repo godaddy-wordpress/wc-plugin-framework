@@ -53,7 +53,7 @@ interface SV_WC_API_Request {
 	/**
 	 * Returns the name-value request parameters (query string), if any
 	 *
-	 * @since 4.4.2-1
+	 * @since 4.5.0-dev
 	 * @return array associative array of request params. Empty array if no params
 	 */
 	public function get_params();
