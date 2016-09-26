@@ -545,15 +545,6 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$token = $token->get_id();
 		}
 
-		// this is sort of a weird edge case: verifying a token exists for a guest customer
-		//  using an API that doesn't support a tokenized payment method query operation.
-		//  We will neither have a user record in the db, nor can we query the API endpoint,
-		//  so just return true
-		// Sample case: Guest pre-order transaction using FirstData
-		if ( ! $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods() && ! $user_id ) {
-			return true;
-		}
-
 		// token exists?
 		return ! is_null( $this->get_token( $user_id, $token, $environment_id ) );
 	}
