@@ -170,39 +170,56 @@ abstract class SV_WC_Plugin {
 	 */
 	public function load_translations() {
 
-		// load the framework translation files
-		$framework_domain = 'woocommerce-plugin-framework';
-		$framework_locale = apply_filters( 'plugin_locale', get_locale(), $framework_domain );
-
-		load_textdomain( $framework_domain, WP_LANG_DIR . '/' . $framework_domain . '/' . $framework_domain . '-' . $framework_locale . '.mo' );
-
-		load_plugin_textdomain( $framework_domain, false, dirname( plugin_basename( $this->get_framework_file() ) ) . '/i18n/languages' );
+		$this->load_framework_textdomain();
 
 		// if this plugin passes along its text domain, load its translation files
 		if ( $this->text_domain ) {
 
-			$domain = $this->text_domain;
-			$locale = apply_filters( 'plugin_locale', get_locale(), $this->text_domain );
+			$this->load_plugin_textdomain();
 
-			load_textdomain( $domain, WP_LANG_DIR . '/' . $domain . '/' . $domain . '-' . $locale . '.mo' );
+		// otherwise, use the backwards compatibile method
+		} elseif ( method_exists( $this, 'load_translation' ) ) {
 
-			load_plugin_textdomain( $domain, false, dirname( plugin_basename( $this->get_file() ) ) . '/i18n/languages' );
-
-		// otherwise, let it do the work
-		} else {
-
-			// load plugin text domain
 			$this->load_translation();
 		}
 	}
 
 
 	/**
-	 * Load plugin text domain
+	 * Loads the framework textdomain.
 	 *
-	 * @since 1.0.0
+	 * @since 4.5.0-dev
 	 */
-	abstract public function load_translation();
+	protected function load_framework_textdomain() {
+		$this->load_textdomain( 'woocommerce-plugin-framework', dirname( plugin_basename( $this->get_framework_file() ) ) );
+	}
+
+
+	/**
+	 * Loads the plugin textdomain.
+	 *
+	 * @since 4.5.0-dev
+	 */
+	protected function load_plugin_textdomain() {
+		$this->load_textdomain( $this->text_domain, dirname( plugin_basename( $this->get_file() ) ) );
+	}
+
+
+	/**
+	 * Loads the plugin textdomain.
+	 *
+	 * @since 4.5.0-dev
+	 * @param string $textdomain the plugin textdomain
+	 * @param string $path the i18n path
+	 */
+	protected function load_textdomain( $textdomain, $path ) {
+
+		$locale = apply_filters( 'plugin_locale', get_locale(), $textdomain );
+
+		load_textdomain( $textdomain, WP_LANG_DIR . '/' . $textdomain . '/' . $textdomain . '-' . $locale . '.mo' );
+
+		load_plugin_textdomain( $textdomain, false, untrailingslashit( $path ) . '/i18n/languages' );
+	}
 
 
 	/**
