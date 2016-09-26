@@ -38,31 +38,31 @@ class SV_WC_Payment_Gateway_Helper {
 
 
 	/** @var string the Visa card type ID **/
-	public static $card_type_visa = 'visa';
+	const CARD_TYPE_VISA = 'visa';
 
 	/** @var string the MasterCard card type ID **/
-	public static $card_type_mastercard = 'mc'; // TODO: switch to 'mastercard' once all plugins are using this variable
+	const CARD_TYPE_MASTERCARD = 'mc'; // TODO: switch to 'mastercard' once all plugins are using this variable
 
 	/** @var string the American Express card type ID **/
-	public static $card_type_amex = 'amex';
+	const CARD_TYPE_AMEX = 'amex';
 
 	/** @var string the Diners Club card type ID **/
-	public static $card_type_dinersclub = 'diners'; // TODO: switch to 'dinersclub' once all plugins are using this variable
+	const CARD_TYPE_DINERSCLUB = 'diners'; // TODO: switch to 'dinersclub' once all plugins are using this variable
 
 	/** @var string the Discover card type ID **/
-	public static $card_type_discover = 'discover';
+	const CARD_TYPE_DISCOVER = 'discover';
 
 	/** @var string the JCB card type ID **/
-	public static $card_type_jcb = 'jcb';
+	const CARD_TYPE_JCB = 'jcb';
 
 	/** @var string the CarteBleue card type ID **/
-	public static $card_type_cartebleue = 'cartebleue';
+	const CARD_TYPE_CARTEBLEUE = 'cartebleue';
 
 	/** @var string the Maestro card type ID **/
-	public static $card_type_maestro = 'maestro';
+	const CARD_TYPE_MAESTRO = 'maestro';
 
 	/** @var string the Laser card type ID **/
-	public static $card_type_laser = 'laser';
+	const CARD_TYPE_LASER = 'laser';
 
 
 	/**
@@ -136,14 +136,14 @@ class SV_WC_Payment_Gateway_Helper {
 
 		// card type regex patterns from https://github.com/stripe/jquery.payment/blob/master/src/jquery.payment.coffee
 		$types = array(
-			self::$card_type_visa       => '/^4/',
-			self::$card_type_mastercard => '/^5[1-5]/',
-			self::$card_type_amex       => '/^3[47]/',
-			self::$card_type_discover   => '/^(6011|65|64[4-9]|622)/',
-			self::$card_type_dinersclub => '/^(36|38|30[0-5])/',
-			self::$card_type_jcb        => '/^35/',
-			self::$card_type_maestro    => '/^(5018|5020|5038|6304|6759|676[1-3])/',
-			self::$card_type_laser      => '/^(6706|6771|6709)/',
+			self::CARD_TYPE_VISA       => '/^4/',
+			self::CARD_TYPE_MASTERCARD => '/^5[1-5]/',
+			self::CARD_TYPE_AMEX       => '/^3[47]/',
+			self::CARD_TYPE_DINERSCLUB => '/^(36|38|30[0-5])/',
+			self::CARD_TYPE_DISCOVER   => '/^(6011|65|64[4-9]|622)/',
+			self::CARD_TYPE_JCB        => '/^35/',
+			self::CARD_TYPE_MAESTRO    => '/^(5018|5020|5038|6304|6759|676[1-3])/',
+			self::CARD_TYPE_LASER      => '/^(6706|6771|6709)/',
 		);
 
 		foreach ( $types as $type => $pattern ) {
@@ -221,39 +221,39 @@ class SV_WC_Payment_Gateway_Helper {
 	public static function get_card_types() {
 
 		return array(
-			self::$card_type_visa => array(
+			self::CARD_TYPE_VISA => array(
 				'name'       => esc_html_x( 'Visa', 'credit card type', 'woocommerce-plugin-framework' ),
 				'variations' => array(),
 			),
-			self::$card_type_mastercard => array(
+			self::CARD_TYPE_MASTERCARD => array(
 				'name'       => esc_html_x( 'MasterCard', 'credit card type', 'woocommerce-plugin-framework' ),
-				'variations' => array( 'mastercard' ), // TODO: switch to 'mc' once $card_type_mastercard is switched to 'mastercard'
+				'variations' => array( 'mastercard' ), // TODO: switch to 'mc' once CARD_TYPE_MASTERCARD is switched to 'mastercard'
 			),
-			self::$card_type_amex => array(
+			self::CARD_TYPE_AMEX => array(
 				'name'       => esc_html_x( 'American Express', 'credit card type', 'woocommerce-plugin-framework' ),
 				'variations' => array(),
 			),
-			self::$card_type_dinersclub => array(
+			self::CARD_TYPE_DINERSCLUB => array(
 				'name'       => esc_html_x( 'Diners Club', 'credit card type', 'woocommerce-plugin-framework' ),
-				'variations' => array( 'dinersclub' ), // TODO: switch to 'diners' once $card_type_dinersclub is switched to 'dinersclub'
+				'variations' => array( 'dinersclub' ), // TODO: switch to 'diners' once CARD_TYPE_DINERSCLUB is switched to 'dinersclub'
 			),
-			self::$card_type_discover => array(
+			self::CARD_TYPE_DISCOVER => array(
 				'name'       => esc_html_x( 'Discover', 'credit card type', 'woocommerce-plugin-framework' ),
 				'variations' => array( 'disc' ),
 			),
-			self::$card_type_jcb => array(
+			self::CARD_TYPE_JCB => array(
 				'name'       => esc_html_x( 'JCB', 'credit card type', 'woocommerce-plugin-framework' ),
 				'variations' => array(),
 			),
-			self::$card_type_cartebleue => array(
+			self::CARD_TYPE_CARTEBLEUE => array(
 				'name'       => esc_html_x( 'CarteBleue', 'credit card type', 'woocommerce-plugin-framework' ),
 				'variations' => array(),
 			),
-			self::$card_type_maestro => array(
+			self::CARD_TYPE_MAESTRO => array(
 				'name'       => esc_html_x( 'Maestro', 'credit card type', 'woocommerce-plugin-framework' ),
 				'variations' => array(),
 			),
-			self::$card_type_laser => array(
+			self::CARD_TYPE_LASER => array(
 				'name'       => esc_html_x( 'Laser', 'credit card type', 'woocommerce-plugin-framework' ),
 				'variations' => array(),
 			),
