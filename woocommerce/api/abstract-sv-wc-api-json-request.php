@@ -43,6 +43,9 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 	/** @var array The request parameters, if any */
 	protected $params = array();
 
+	/** @var array the request data */
+	protected $data = array();
+
 
 	/**
 	 * Get the request method.
@@ -80,6 +83,17 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 	}
 
 
+	/**
+	 * Get the request data.
+	 *
+	 * @since 4.5.0-dev
+	 * @return array
+	 */
+	protected function get_data() {
+		return $this->data;
+	}
+
+
 	/** API Helper Methods ******************************************************/
 
 
@@ -92,9 +106,13 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 	 */
 	public function to_string() {
 
-		$params = $this->get_params();
+		$data = $this->get_data();
 
-		return ! empty( $params ) ? json_encode( $params ) : '';
+		if ( empty( $data ) && ! in_array( strtoupper( $this->get_method() ), array( 'GET', 'HEAD' ) ) ) {
+			$data = $this->get_params();
+		}
+
+		return ! empty( $data ) ? json_encode( $data ) : '';
 	}
 
 
