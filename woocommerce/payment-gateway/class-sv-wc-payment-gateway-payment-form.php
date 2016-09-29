@@ -917,6 +917,18 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 */
 	public function render_js() {
 
+		$args = array(
+			'plugin_id'     => $this->get_gateway()->get_plugin()->get_id(),
+			'id'            => $this->get_gateway()->get_id(),
+			'id_dasherized' => $this->get_gateway()->get_id_dasherized(),
+			'type'          => $this->get_gateway()->get_payment_type(),
+			'csc_required'  => $this->get_gateway()->csc_enabled(),
+		);
+
+		if ( $this->get_gateway()->supports_card_types() ) {
+			$args['enabled_card_types'] = array_map( array( 'SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
+		}
+
 		/**
 		 * Payment Gateway Payment Form JS Arguments Filter.
 		 *
@@ -932,13 +944,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * }
 		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
-		$args = apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_js_args', array(
-			'plugin_id'     => $this->get_gateway()->get_plugin()->get_id(),
-			'id'            => $this->get_gateway()->get_id(),
-			'id_dasherized' => $this->get_gateway()->get_id_dasherized(),
-			'type'          => $this->get_gateway()->get_payment_type(),
-			'csc_required'  => $this->get_gateway()->csc_enabled(),
-		), $this );
+		$args = apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_js_args', $args, $this );
 
 		wc_enqueue_js( sprintf( 'window.wc_%s_payment_form_handler = new SV_WC_Payment_Form_Handler( %s );', esc_js( $this->get_gateway()->get_id() ), json_encode( $args ) ) );
 	}

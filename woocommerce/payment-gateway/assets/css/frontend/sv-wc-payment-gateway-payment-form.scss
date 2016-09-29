@@ -46,7 +46,7 @@ http://www.gnu.org/licenses/gpl-3.0.html
 
 		background-image: url('../../images/card-cc-plain.svg');
 		background-repeat: no-repeat;
-		background-position: 99%;
+		background-position: right 10px center;
 		background-size: 50px 31px;
 
 		&.visa {
@@ -79,6 +79,10 @@ http://www.gnu.org/licenses/gpl-3.0.html
 
 		&.visaelectron {
 			background-image: url('../../images/card-visa-electron.svg');
+		}
+
+		&.invalid-card-type {
+			background-image: url('../../images/card-cc-invalid.svg');
 		}
 	}
 
