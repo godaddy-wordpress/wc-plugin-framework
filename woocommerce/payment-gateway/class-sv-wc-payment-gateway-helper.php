@@ -41,13 +41,13 @@ class SV_WC_Payment_Gateway_Helper {
 	const CARD_TYPE_VISA = 'visa';
 
 	/** @var string the MasterCard card type ID **/
-	const CARD_TYPE_MASTERCARD = 'mc'; // TODO: switch to 'mastercard' once all plugins are using this variable
+	const CARD_TYPE_MASTERCARD = 'mastercard';
 
 	/** @var string the American Express card type ID **/
 	const CARD_TYPE_AMEX = 'amex';
 
 	/** @var string the Diners Club card type ID **/
-	const CARD_TYPE_DINERSCLUB = 'diners'; // TODO: switch to 'dinersclub' once all plugins are using this variable
+	const CARD_TYPE_DINERSCLUB = 'dinersclub';
 
 	/** @var string the Discover card type ID **/
 	const CARD_TYPE_DISCOVER = 'discover';
@@ -136,6 +136,13 @@ class SV_WC_Payment_Gateway_Helper {
 
 		// card type regex patterns from https://github.com/stripe/jquery.payment/blob/master/src/jquery.payment.coffee
 		$types = array(
+
+			// these are kept for backwards compatibility since some gateways check
+			// against this method's returned value.
+			// TODO: remove these once the offending gateways use the below constants {CW 2016-09-29}
+			'mc'     => '/^5[1-5]/',
+			'diners' => '/^(36|38|30[0-5])/',
+
 			self::CARD_TYPE_VISA       => '/^4/',
 			self::CARD_TYPE_MASTERCARD => '/^5[1-5]/',
 			self::CARD_TYPE_AMEX       => '/^3[47]/',
@@ -227,7 +234,7 @@ class SV_WC_Payment_Gateway_Helper {
 			),
 			self::CARD_TYPE_MASTERCARD => array(
 				'name'       => esc_html_x( 'MasterCard', 'credit card type', 'woocommerce-plugin-framework' ),
-				'variations' => array( 'mastercard' ), // TODO: switch to 'mc' once CARD_TYPE_MASTERCARD is switched to 'mastercard'
+				'variations' => array( 'mc' ),
 			),
 			self::CARD_TYPE_AMEX => array(
 				'name'       => esc_html_x( 'American Express', 'credit card type', 'woocommerce-plugin-framework' ),
@@ -235,7 +242,7 @@ class SV_WC_Payment_Gateway_Helper {
 			),
 			self::CARD_TYPE_DINERSCLUB => array(
 				'name'       => esc_html_x( 'Diners Club', 'credit card type', 'woocommerce-plugin-framework' ),
-				'variations' => array( 'dinersclub' ), // TODO: switch to 'diners' once CARD_TYPE_DINERSCLUB is switched to 'dinersclub'
+				'variations' => array( 'diners' ),
 			),
 			self::CARD_TYPE_DISCOVER => array(
 				'name'       => esc_html_x( 'Discover', 'credit card type', 'woocommerce-plugin-framework' ),
