@@ -91,6 +91,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/** Credit Card authorization transaction feature */
 	const FEATURE_CREDIT_CARD_AUTHORIZATION = 'authorization';
 
+	/** Credit Card charge virtual-only orders feature */
+	const FEATURE_CREDIT_CARD_CHARGE_VIRTUAL = 'charge-virtual';
+
 	/** Credit Card capture charge transaction feature */
 	const FEATURE_CREDIT_CARD_CAPTURE = 'capture_charge';
 
@@ -129,6 +132,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 	/** @var string configuration option: the type of transaction, whether purchase or authorization, defaults to 'charge' */
 	private $transaction_type;
+
+	/** @var string configuration option: whether transactions should always be charged if the order is virtual-only, defaults to 'no' */
+	private $charge_virtual_orders;
 
 	/** @var array configuration option: card types to show images for */
 	private $card_types;
@@ -954,6 +960,29 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		?>
 		<style type="text/css">.nowrap { white-space: nowrap; }</style>
 		<?php
+
+		// if transaction types are supported, show/hide the "charge virtual-only" setting
+		if ( isset( $this->form_fields['transaction_type'] ) ) {
+
+			// add inline javascript
+			ob_start();
+			?>
+				$( '#woocommerce_<?php echo $this->get_id(); ?>_transaction_type' ).change( function() {
+
+					var transaction_type = $( this ).val();
+					var hidden_setting   = $( '#woocommerce_<?php echo $this->get_id(); ?>_charge_virtual_orders' ).closest( 'tr' );
+
+					if ( '<?php echo self::TRANSACTION_TYPE_AUTHORIZATION; ?>' === transaction_type ) {
+						$( hidden_setting ).show();
+					} else {
+						$( hidden_setting ).hide();
+					}
+
+				} ).change();
+			<?php
+
+			wc_enqueue_js( ob_get_clean() );
+		}
 
 		// if there's more than one environment include the environment settings switcher code
 		if ( count( $this->get_environments() ) > 1 ) {
@@ -1869,7 +1898,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$user_message = $response->get_user_message();
 		}
 
-		if ( ! $user_message || ( $this->supports_credit_card_authorization() && $this->perform_credit_card_authorization() ) ) {
+		if ( ! $user_message || ( $this->supports_credit_card_authorization() && $this->perform_credit_card_authorization( $order ) ) ) {
 			$user_message = esc_html__( 'Your order has been received and is being reviewed. Thank you for your business.', 'woocommerce-plugin-framework' );
 		}
 
@@ -2145,6 +2174,17 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
+	 * Determines if this is a credit card gateway that supports charging virtual-only orders.
+	 *
+	 * @since 4.5.0-dev
+	 * @return bool
+	 */
+	public function supports_credit_card_charge_virtual() {
+		return $this->is_credit_card_gateway() && $this->supports( self::FEATURE_CREDIT_CARD_CHARGE_VIRTUAL );
+	}
+
+
+	/**
 	 * Returns true if the gateway supports capturing a charge
 	 *
 	 * @since 3.1.0
@@ -2177,6 +2217,16 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 				self::TRANSACTION_TYPE_AUTHORIZATION => esc_html_x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' ),
 			),
 		);
+
+		if ( $this->supports_credit_card_charge_virtual() ) {
+
+			$form_fields['charge_virtual_orders'] = array(
+				'label'       => esc_html__( 'Charge Virtual-Only Orders', 'woocommerce-plugin-framework' ),
+				'type'        => 'checkbox',
+				'description' => esc_html__( 'If the order contains exclusively virtual items, enable this to immediately charge, rather than authorize, the transaction.', 'woocommerce-plugin-framework' ),
+				'default'     => 'no',
+			);
+		}
 
 		return $form_fields;
 	}
@@ -2242,34 +2292,58 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
-	 * Returns true if a credit card charge should be performed, false if an
-	 * authorization should be
+	 * Determines if a credit card transaction should result in a charge.
 	 *
 	 * @since 1.0.0
+	 * @param \WC_Order $order Optional. The order being charged
 	 * @throws Exception
-	 * @return boolean true if a charge should be performed
+	 * @return bool
 	 */
-	public function perform_credit_card_charge() {
+	public function perform_credit_card_charge( WC_Order $order = null ) {
 
 		assert( $this->supports_credit_card_charge() );
 
-		return self::TRANSACTION_TYPE_CHARGE == $this->transaction_type;
+		$perform = self::TRANSACTION_TYPE_CHARGE === $this->transaction_type;
+
+		if ( ! $perform && $order && $this->supports_credit_card_charge_virtual() && 'yes' === $this->charge_virtual_orders ) {
+			$perform = SV_WC_Helper::is_order_virtual( $order );
+		}
+
+		/**
+		 * Filters whether a credit card transaction should result in a charge.
+		 *
+		 * @since 4.5.0-dev
+		 * @param bool $perform whether the transaction should result in a charge
+		 * @param \WC_Order|null $order the order being charged
+		 * @param \SV_WC_Payment_Gateway $gateway the gateway object
+		 */
+		return apply_filters( 'wc_' . $this->get_id() . '_perform_credit_card_charge', $perform, $order, $this );
 	}
 
 
 	/**
-	 * Returns true if a credit card authorization should be performed, false if aa
-	 * charge should be
+	 * Determines if a credit card transaction should result in an authorization.
 	 *
 	 * @since 1.0.0
+	 * @param \WC_Order $order Optional. The order being authorized
 	 * @throws Exception
-	 * @return boolean true if an authorization should be performed
+	 * @return bool
 	 */
-	public function perform_credit_card_authorization() {
+	public function perform_credit_card_authorization( WC_Order $order = null ) {
 
 		assert( $this->supports_credit_card_authorization() );
 
-		return self::TRANSACTION_TYPE_AUTHORIZATION == $this->transaction_type;
+		$perform = self::TRANSACTION_TYPE_AUTHORIZATION === $this->transaction_type && ! $this->perform_credit_card_charge( $order );
+
+		/**
+		 * Filters whether a credit card transaction should result in an authorization.
+		 *
+		 * @since 4.5.0-dev
+		 * @param bool $perform whether the transaction should result in an authorization
+		 * @param \WC_Order|null $order the order being authorized
+		 * @param \SV_WC_Payment_Gateway $gateway the gateway object
+		 */
+		return apply_filters( 'wc_' . $this->get_id() . '_perform_credit_card_authorization', $perform, $order, $this );
 	}
 
 

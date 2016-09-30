@@ -274,7 +274,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 			// perform the transaction
 			if ( $this->get_gateway()->is_credit_card_gateway() ) {
 
-				if ( $this->get_gateway()->perform_credit_card_charge() ) {
+				if ( $this->get_gateway()->perform_credit_card_charge( $order ) ) {
 					$response = $this->get_gateway()->get_api()->credit_card_charge( $order );
 				} else {
 					$response = $this->get_gateway()->get_api()->credit_card_authorization( $order );
@@ -295,7 +295,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 					$message = sprintf(
 							__( '%s %s Pre-Order Release Payment Approved: %s ending in %s (expires %s)', 'woocommerce-plugin-framework' ),
 							$this->get_gateway()->get_method_title(),
-							$this->get_gateway()->perform_credit_card_authorization() ? 'Authorization' : 'Charge',
+							$this->get_gateway()->perform_credit_card_authorization( $order ) ? 'Authorization' : 'Charge',
 							SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( ! empty( $order->payment->card_type ) ? $order->payment->card_type : 'card' ) ),
 							$last_four,
 							( ! empty( $order->payment->exp_month) && ! empty( $order->payment->exp_year ) ? $order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 ) : 'n/a' )
@@ -325,9 +325,9 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 				$this->get_gateway()->add_payment_gateway_transaction_data( $order, $response );
 
 				// if the transaction was held (ie fraud validation failure) mark it as such
-				if ( $response->transaction_held() || ( $this->get_gateway()->supports( SV_WC_Payment_Gateway::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->get_gateway()->perform_credit_card_authorization() ) ) {
+				if ( $response->transaction_held() || ( $this->get_gateway()->supports( SV_WC_Payment_Gateway::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->get_gateway()->perform_credit_card_authorization( $order ) ) ) {
 
-					$this->get_gateway()->mark_order_as_held( $order, $this->get_gateway()->supports( SV_WC_Payment_Gateway::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->get_gateway()->perform_credit_card_authorization() ? __( 'Authorization only transaction', 'woocommerce-plugin-framework' ) : $response->get_status_message(), $response );
+					$this->get_gateway()->mark_order_as_held( $order, $this->get_gateway()->supports( SV_WC_Payment_Gateway::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->get_gateway()->perform_credit_card_authorization( $order ) ? __( 'Authorization only transaction', 'woocommerce-plugin-framework' ) : $response->get_status_message(), $response );
 					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
 
 				} else {

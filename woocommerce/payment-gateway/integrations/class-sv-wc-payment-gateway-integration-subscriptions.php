@@ -801,7 +801,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			// perform the transaction
 			if ( $this->get_gateway()->is_credit_card_gateway() ) {
 
-				if ( $this->get_gateway()->perform_credit_card_charge() ) {
+				if ( $this->get_gateway()->perform_credit_card_charge( $order ) ) {
 					$response = $this->get_gateway()->get_api()->credit_card_charge( $order );
 				} else {
 					$response = $this->get_gateway()->get_api()->credit_card_authorization( $order );
@@ -819,7 +819,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 					$message = sprintf(
 						_x( '%s %s Subscription Renewal Payment Approved: %s ending in %s (expires %s)', 'woocommerce-plugin-framework' ),
 						$this->get_gateway()->get_method_title(),
-						$this->get_gateway()->perform_credit_card_authorization() ? 'Authorization' : 'Charge',
+						$this->get_gateway()->perform_credit_card_authorization( $order ) ? 'Authorization' : 'Charge',
 						$token->get_card_type() ? $token->get_type_full() : 'card',
 						$token->get_last_four(),
 						$token->get_exp_month() . '/' . $token->get_exp_year()

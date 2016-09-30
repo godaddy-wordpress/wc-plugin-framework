@@ -698,7 +698,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	protected function do_credit_card_transaction( $order, $response = null ) {
 
 		if ( is_null( $response ) ) {
-			if ( $this->perform_credit_card_charge() ) {
+			if ( $this->perform_credit_card_charge( $order ) ) {
 				$response = $this->get_api()->credit_card_charge( $order );
 			} else {
 				$response = $this->get_api()->credit_card_authorization( $order );
@@ -725,7 +725,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				esc_html__( '%1$s %2$s %3$s Approved: %4$s ending in %5$s (expires %6$s)', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
-				$this->perform_credit_card_authorization() ? esc_html_x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' ) : esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' ),
+				$this->perform_credit_card_authorization( $order ) ? esc_html_x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' ) : esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' ),
 				SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ),
 				$last_four,
 				$order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 )
@@ -791,7 +791,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				} catch ( SV_WC_Plugin_Exception $e ) {
 
 					// handle the case of a "tokenize-after-sale" request failing by marking the order as on-hold with an explanatory note
-					if ( ! $response->transaction_held() && ! ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
+					if ( ! $response->transaction_held() && ! ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization( $order ) ) ) {
 
 						// transaction has already been successful, but we've encountered an issue with the post-tokenization, add an order note to that effect and continue on
 						$message = sprintf(
@@ -825,10 +825,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// if the transaction was held (ie fraud validation failure) mark it as such
 			// TODO: consider checking whether the response *was* an authorization, rather than blanket-assuming it was because of the settings.  There are times when an auth will be used rather than charge, ie when performing in-plugin AVS handling (moneris)
-			if ( $response->transaction_held() || ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
+			if ( $response->transaction_held() || ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization( $order ) ) ) {
 				// TODO: need to make this more flexible, and not force the message to 'Authorization only transaction' for auth transactions (re moneris efraud handling)
 				/* translators: This is a message describing that the transaction in question only performed a credit card authorization and did not capture any funds. */
-				$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? esc_html__( 'Authorization only transaction', 'woocommerce-plugin-framework' ) : $response->get_status_message(), $response );
+				$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization( $order ) ? esc_html__( 'Authorization only transaction', 'woocommerce-plugin-framework' ) : $response->get_status_message(), $response );
 			}
 
 			return true;
@@ -950,7 +950,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				if ( $order->payment_total > 0 ) {
 					// mark as captured
-					if ( $this->perform_credit_card_charge() ) {
+					if ( $this->perform_credit_card_charge( $order ) ) {
 						$captured = 'yes';
 					} else {
 						$captured = 'no';
