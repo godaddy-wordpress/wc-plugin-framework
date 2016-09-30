@@ -254,11 +254,6 @@ abstract class SV_WC_Plugin {
 		// backwards compatibility for older WC versions
 		require_once( $framework_path . '/class-sv-wc-plugin-compatibility.php' );
 
-		if ( is_admin() ) {
-			// load admin notice handler
-			require_once( $framework_path . '/class-sv-wc-admin-notice-handler.php' );
-		}
-
 		// generic API base
 		require_once( $framework_path . '/api/class-sv-wc-api-exception.php' );
 		require_once( $framework_path . '/api/class-sv-wc-api-base.php' );
@@ -631,6 +626,8 @@ abstract class SV_WC_Plugin {
 		if ( ! is_null( $this->admin_notice_handler ) ) {
 			return $this->admin_notice_handler;
 		}
+
+		require_once( $this->get_framework_path() . '/class-sv-wc-admin-notice-handler.php' );
 
 		return $this->admin_notice_handler = new SV_WC_Admin_Notice_Handler( $this );
 	}
