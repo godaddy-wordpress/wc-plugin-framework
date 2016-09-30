@@ -289,7 +289,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 		$fields = array(
 			'card-number' => array(
-				'type'              => 'text',
+				'type'              => 'tel',
 				'label'             => esc_html__( 'Card Number', 'woocommerce-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
@@ -298,11 +298,14 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				'class'             => array( 'form-row-wide' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-account-number' ),
 				'maxlength'         => 20,
-				'custom_attributes' => array( 'autocomplete' => 'cc-number' ),
-				'value'             => $defaults['account-number'],
+				'custom_attributes' => array(
+					'autocomplete' => 'cc-number',
+					'pattern'      => '[0-9]{13,16}',
+				),
+				'value' => $defaults['account-number'],
 			),
 			'card-expiry' => array(
-				'type'              => 'text',
+				'type'              => 'tel',
 				'label'             => esc_html__( 'Expiration (MM/YY)', 'woocommerce-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-expiry',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-expiry',
@@ -310,14 +313,17 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				'required'          => true,
 				'class'             => array( 'form-row-first' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-expiry' ),
-				'custom_attributes' => array( 'autocomplete' => 'cc-exp' ),
-				'value'             => $defaults['expiry'],
+				'custom_attributes' => array(
+					'autocomplete' => 'cc-exp',
+					'pattern'      => '[0-9]',
+				),
+				'value' => $defaults['expiry'],
 			),
 		);
 
 		if ( $this->get_gateway()->csc_enabled() ) {
 			$fields['card-csc']    = array(
-				'type'              => 'text',
+				'type'              => 'tel',
 				'label'             => esc_html__( 'Card Security Code', 'woocommerce-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
@@ -326,7 +332,10 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				'class'             => array( 'form-row-last' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-csc' ),
 				'maxlength'         => 20,
-				'custom_attributes' => array( 'autocomplete' => 'off' ),
+				'custom_attributes' => array(
+					'autocomplete' => 'off',
+					'pattern'      => '[0-9]{3,4}',
+				),
 				'value'             => $defaults['csc'],
 			);
 		}
@@ -359,7 +368,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 		$fields = array(
 			'routing-number' => array(
-				'type'              => 'text',
+				'type'              => 'tel',
 				/* translators: e-check routing number, HTML form field label, https://en.wikipedia.org/wiki/Routing_transit_number */
 				'label'             => esc_html__( 'Routing Number', 'woocommerce-plugin-framework' ) . $check_hint,
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-routing-number',
@@ -369,11 +378,14 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				'class'             => array( 'form-row-first' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-echeck-form-input js-sv-wc-payment-gateway-echeck-form-routing-number' ),
 				'maxlength'         => 9,
-				'custom_attributes' => array( 'autocomplete' => 'off' ),
+				'custom_attributes' => array(
+					'autocomplete' => 'off',
+					'pattern'      => '[0-9]',
+				),
 				'value'             => $defaults['routing-number'],
 			),
 			'account-number' => array(
-				'type'              => 'text',
+				'type'              => 'tel',
 				/* translators: e-check account number, HTML form field label */
 				'label'             => esc_html__( 'Account Number', 'woocommerce-plugin-framework' ) . $check_hint,
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
@@ -382,7 +394,10 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				'class'             => array( 'form-row-last' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-echeck-form-input js-sv-wc-payment-gateway-echeck-form-account-number' ),
 				'maxlength'         => 17,
-				'custom_attributes' => array( 'autocomplete' => 'off' ),
+				'custom_attributes' => array(
+					'autocomplete' => 'off',
+					'pattern'      => '[0-9]',
+				),
 				'value'             => $defaults['account-number'],
 			),
 			'account-type'   => array(
