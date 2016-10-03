@@ -88,9 +88,9 @@ headers: Array
     [content-type] => application/xml
     [accept] => application/xml
 )
-
 body: <?xml version="1.0" encoding="UTF-8"?><sv></sv>
 duration: 7.77s
+
 MSG;
 
 		$actual_message = $this->plugin()->get_api_log_message( $data );
