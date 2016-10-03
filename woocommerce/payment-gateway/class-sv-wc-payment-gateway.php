@@ -285,31 +285,46 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function load_settings() {
 
-		// Define user set variables
+		// define user set variables
 		foreach ( $this->settings as $setting_key => $setting ) {
 			$this->$setting_key = $setting;
 		}
 
 		// inherit settings from sibling gateway(s)
 		if ( $this->inherit_settings() ) {
+			$this->load_shared_settings();
+		}
+	}
 
-			// get any other sibling gateways
-			$other_gateway_ids = array_diff( $this->get_plugin()->get_gateway_ids(), array( $this->get_id() ) );
 
-			// determine if any sibling gateways have any configured shared settings
-			foreach ( $other_gateway_ids as $other_gateway_id ) {
+	/**
+	 * Loads any shared settings from sibling gateways.
+	 *
+	 * @since 4.5.0-dev
+	 */
+	protected function load_shared_settings() {
 
-				$other_gateway_settings = $this->get_plugin()->get_gateway_settings( $other_gateway_id );
+		// get any other sibling gateways
+		$other_gateway_ids = array_diff( $this->get_plugin()->get_gateway_ids(), array( $this->get_id() ) );
 
-				// if the other gateway isn't also trying to inherit settings...
-				if ( ! isset( $other_gateway_settings['inherit_settings'] ) || 'no' == $other_gateway_settings['inherit_settings'] ) {
+		// determine if any sibling gateways have any configured shared settings
+		foreach ( $other_gateway_ids as $other_gateway_id ) {
 
-					// load the other gateway so we can access the shared settings properly
-					$other_gateway = $this->get_plugin()->get_gateway( $other_gateway_id );
+			$other_gateway_settings = $this->get_plugin()->get_gateway_settings( $other_gateway_id );
 
-					foreach ( $this->shared_settings as $setting_key ) {
-						$this->$setting_key = $other_gateway->$setting_key;
-					}
+			// if the other gateway isn't also trying to inherit settings...
+			if ( ! isset( $other_gateway_settings['inherit_settings'] ) || 'no' === $other_gateway_settings['inherit_settings'] ) {
+
+				// load the other gateway so we can access the shared settings properly
+				$other_gateway = $this->get_plugin()->get_gateway( $other_gateway_id );
+
+				// skip this gateway if it isn't meant to share its settings
+				if ( ! $other_gateway->share_settings() ) {
+					continue;
+				}
+
+				foreach ( $this->shared_settings as $setting_key ) {
+					$this->$setting_key = $other_gateway->$setting_key;
 				}
 			}
 		}
@@ -2819,13 +2834,24 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
-	 * Returns true if settings should be inherited for this gateway
+	 * Determines if the gateway supports sharing settings with sibling gateways.
+	 *
+	 * @since 4.5.0-dev
+	 * @return bool
+	 */
+	public function share_settings() {
+		return true;
+	}
+
+
+	/**
+	 * Determines if settings should be inherited for this gateway.
 	 *
 	 * @since 1.0.0
-	 * @return boolean true if settings should be inherited for this gateway
+	 * @return bool
 	 */
 	public function inherit_settings() {
-		return 'yes' == $this->inherit_settings;
+		return 'yes' === $this->inherit_settings;
 	}
 
 
