@@ -140,11 +140,11 @@ class SV_WC_Payment_Gateway_Helper {
 			// these are kept for backwards compatibility since some gateways check
 			// against this method's returned value.
 			// TODO: remove these once the offending gateways use the below constants {CW 2016-09-29}
-			'mc'     => '/^5[1-5]/',
+			'mc'     => '/^(5[1-5]|2[2-7])/',
 			'diners' => '/^(36|38|30[0-5])/',
 
 			self::CARD_TYPE_VISA       => '/^4/',
-			self::CARD_TYPE_MASTERCARD => '/^5[1-5]/',
+			self::CARD_TYPE_MASTERCARD => '/^(5[1-5]|2[2-7])/',
 			self::CARD_TYPE_AMEX       => '/^3[47]/',
 			self::CARD_TYPE_DINERSCLUB => '/^(36|38|30[0-5])/',
 			self::CARD_TYPE_DISCOVER   => '/^(6011|65|64[4-9]|622)/',
