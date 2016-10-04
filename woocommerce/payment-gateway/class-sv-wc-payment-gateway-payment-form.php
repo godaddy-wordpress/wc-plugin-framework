@@ -322,13 +322,14 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		);
 
 		if ( $this->get_gateway()->csc_enabled() ) {
+
 			$fields['card-csc']    = array(
 				'type'              => 'tel',
 				'label'             => esc_html__( 'Card Security Code', 'woocommerce-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
 				'placeholder'       => esc_html__( 'CSC', 'woocommerce-plugin-framework' ),
-				'required'          => true,
+				'required'          => $this->get_gateway()->csc_required(),
 				'class'             => array( 'form-row-last' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-csc' ),
 				'maxlength'         => 20,
@@ -937,7 +938,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 			'id'            => $this->get_gateway()->get_id(),
 			'id_dasherized' => $this->get_gateway()->get_id_dasherized(),
 			'type'          => $this->get_gateway()->get_payment_type(),
-			'csc_required'  => $this->get_gateway()->csc_enabled(),
+			'csc_required'  => $this->get_gateway()->csc_required(),
 		);
 
 		if ( $this->get_gateway()->supports_card_types() ) {

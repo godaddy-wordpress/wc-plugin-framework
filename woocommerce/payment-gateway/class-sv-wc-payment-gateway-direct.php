@@ -101,7 +101,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				}
 
 				// Check the CSC if enabled
-				if ( $this->csc_enabled() && $this->is_credit_card_gateway() ) {
+				if ( $this->is_credit_card_gateway() && $this->csc_enabled() ) {
 					$is_valid = $this->validate_csc( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' ) ) && $is_valid;
 				}
 
@@ -259,12 +259,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$is_valid = true;
 
 		// validate security code
-		if ( empty( $csc ) ) {
-
-			SV_WC_Helper::wc_add_notice( esc_html__( 'Card security code is missing', 'woocommerce-plugin-framework' ), 'error' );
-			$is_valid = false;
-
-		} else {
+		if ( ! empty( $csc ) ) {
 
 			// digit validation
 			if ( ! ctype_digit( $csc ) ) {
@@ -278,6 +273,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$is_valid = false;
 			}
 
+		} elseif ( $this->csc_required() ) {
+
+			SV_WC_Helper::wc_add_notice( esc_html__( 'Card security code is missing', 'woocommerce-plugin-framework' ), 'error' );
+			$is_valid = false;
 		}
 
 		return $is_valid;
@@ -519,7 +518,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				// add CSC if enabled
 				if ( $this->csc_enabled() ) {
-					$order->payment->csc        = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
+					$order->payment->csc = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
 			} elseif ( $this->is_echeck_gateway() ) {
@@ -550,7 +549,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$order->payment->exp_year  = $token->get_exp_year();
 
 				if ( $this->csc_enabled() ) {
-					$order->payment->csc      = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
+					$order->payment->csc = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
 			} elseif ( $this->is_echeck_gateway() ) {

@@ -196,11 +196,11 @@ jQuery( document ).ready ($) ->
 			# always validate the CSC if present
 			if csc?
 
-				if not csc
-					errors.push( @params.cvv_missing )
-				else
+				if csc
 					errors.push( @params.cvv_digits_invalid ) if /\D/.test( csc )
 					errors.push( @params.cvv_length_invalid ) if csc.length < 3 || csc.length > 4
+				else if @csc_required
+					errors.push( @params.cvv_missing )
 
 			# Only validate the other CC fields if necessary
 			if not @saved_payment_method_selected

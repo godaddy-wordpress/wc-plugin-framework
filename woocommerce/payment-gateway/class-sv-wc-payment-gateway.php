@@ -2823,13 +2823,24 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
-	 * Returns true if the Card Security Code (CVV) field should be used on checkout
+	 * Determines if the Card Security Code (CVV) field should be used at checkout.
 	 *
 	 * @since 1.0.0
-	 * @return boolean true if the Card Security Code field should be used on checkout
+	 * @return bool
 	 */
 	public function csc_enabled() {
-		return 'yes' == $this->enable_csc;
+		return 'yes' === $this->enable_csc;
+	}
+
+
+	/**
+	 * Determines if the Card Security Code (CVV) field should be required at checkout.
+	 *
+	 * @since 4.5.0-dev
+	 * @return bool
+	 */
+	public function csc_required() {
+		return $this->csc_enabled();
 	}
 
 
