@@ -1269,6 +1269,160 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	}
 
 
+	/** Capture feature *******************************************************/
+
+
+	/**
+	 * Perform a credit card capture for an order.
+	 *
+	 * @since 4.5.0-dev
+	 * @param \WC_Order $order the order object
+	 * @return \SV_WC_Payment_Gateway_API_Response|null
+	 */
+	public function do_credit_card_capture( $order ) {
+
+		$order = $this->get_order_for_capture( $order );
+
+		try {
+
+			$response = $this->get_api()->credit_card_capture( $order );
+
+			if ( $response->transaction_approved() ) {
+
+				$message = sprintf(
+					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount. Definitions: Capture, as in capture funds from a credit card. */
+					esc_html__( '%1$s Capture of %2$s Approved', 'woocommerce-plugin-framework' ),
+					$this->get_method_title(),
+					get_woocommerce_currency_symbol() . wc_format_decimal( $order->capture_total )
+				);
+
+				// adds the transaction id (if any) to the order note
+				if ( $response->get_transaction_id() ) {
+					$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
+				}
+
+				$order->add_order_note( $message );
+
+				// prevent stock from being reduced when payment is completed as this is done when the charge was authorized
+				add_filter( 'woocommerce_payment_complete_reduce_order_stock', '__return_false', 100 );
+
+				// complete the order
+				$order->payment_complete();
+
+				// add the standard capture data to the order
+				$this->add_capture_data( $order, $response );
+
+				// let payment gateway implementations add their own data
+				$this->add_payment_gateway_capture_data( $order, $response );
+
+			} else {
+
+				$message = sprintf(
+					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount, %3$s - transaction status message. Definitions: Capture, as in capture funds from a credit card. */
+					esc_html__( '%1$s Capture Failed: %2$s - %3$s', 'woocommerce-plugin-framework' ),
+					$this->get_method_title(),
+					$response->get_status_code(),
+					$response->get_status_message()
+				);
+
+				$order->add_order_note( $message );
+
+			}
+
+			return $response;
+
+		} catch ( SV_WC_Plugin_Exception $e ) {
+
+			$message = sprintf(
+				/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - failure message. Definitions: "capture" as in capturing funds from a credit card. */
+				esc_html__( '%1$s Capture Failed: %2$s', 'woocommerce-plugin-framework' ),
+				$this->get_method_title(),
+				$e->getMessage()
+			);
+
+			$order->add_order_note( $message );
+
+			return null;
+		}
+	}
+
+
+	/**
+	 * Gets an order object with payment data added for use in credit card
+	 * capture transactions. Standard information can include:
+	 *
+	 * $order->capture->amount      - amount to capture (partial captures are not supported by the framework yet)
+	 * $order->capture->description - capture description
+	 * $order->capture->trans_id    - transaction ID for the order being captured
+	 *
+	 * included for backwards compat (4.1 and earlier)
+	 *
+	 * $order->capture_total
+	 * $order->description
+	 *
+	 * @since 4.5.0-dev
+	 * @param \WC_Order|int $order the order being processed
+	 * @return \WC_Order
+	 */
+	protected function get_order_for_capture( $order ) {
+
+		if ( is_numeric( $order ) ) {
+			$order = wc_get_order( $order );
+		}
+
+		// add capture info
+		$order->capture = new stdClass();
+		$order->capture->amount = SV_WC_Helper::number_format( $order->get_total() );
+		/* translators: Placeholders: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card. */
+		$order->capture->description = sprintf( esc_html__( '%1$s - Capture for Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( get_bloginfo( 'name' ) ), $order->get_order_number() );
+		$order->capture->trans_id = $this->get_order_meta( $order->id, 'trans_id' );
+
+		// backwards compat for 4.1 and earlier
+		$order->capture_total = $order->capture->amount;
+		$order->description   = $order->capture->description;
+
+		/**
+		 * Direct Gateway Capture Get Order Filter.
+		 *
+		 * Allow actors to modify the order object used for performing charge captures.
+		 *
+		 * @since 2.0.0
+		 * @param \WC_Order $order order object
+		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 */
+		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_capture', $order, $this );
+	}
+
+
+	/**
+	 * Adds the standard capture data to an order.
+	 *
+	 * @since 4.5.0-dev
+	 * @param \WC_Order $order the order object
+	 * @param \SV_WC_Payment_Gateway_API_Response $response the transaction response
+	 */
+	protected function add_capture_data( $order, $response ) {
+
+		// mark the order as captured
+		$this->update_order_meta( $order->id, 'charge_captured', 'yes' );
+
+		// add capture transaction ID
+		if ( $response && $response->get_transaction_id() ) {
+			$this->update_order_meta( $order->id, 'capture_trans_id', $response->get_transaction_id() );
+		}
+	}
+
+
+	/**
+	 * Adds any gateway-specific data to the order after a capture is performed.
+	 *
+	 * @since 4.5.0-dev
+	 * @param \WC_Order $order the order object
+	 * @param \SV_WC_Payment_Gateway_API_Response $response the transaction response
+	 */
+	protected function add_payment_gateway_capture_data( $order, $response ) { }
+
+
 	/** Refund feature ********************************************************/
 
 
