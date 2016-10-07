@@ -177,7 +177,11 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	public function save_payment_meta( $order ) {
 
 		// a single order can contain multiple subscriptions
-		foreach ( wcs_get_subscriptions_for_order( $order->id ) as $subscription ) {
+		$subscriptions = wcs_get_subscriptions_for_order( $order->id, array(
+			'order_type' => array( 'any' ),
+		) );
+
+		foreach ( $subscriptions as $subscription ) {
 
 			// payment token
 			if ( ! empty( $order->payment->token ) ) {
