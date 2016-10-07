@@ -21,13 +21,16 @@ http://www.gnu.org/licenses/gpl-3.0.html
 
 	// general input styling
 	input.js-sv-wc-payment-gateway-credit-card-form-input[type="tel"],
-	input.js-sv-wc-payment-gateway-echeck-form-input[type="tel"] {
+	input.js-sv-wc-payment-gateway-credit-card-form-input[type="text"],
+	input.js-sv-wc-payment-gateway-echeck-form-input[type="tel"],
+	input.js-sv-wc-payment-gateway-echeck-form-input[type="text"] {
 		font-size: 1.5em;
 		padding: 8px;
 	}
 
 	// highlight valid credit card inputs
-	input.js-sv-wc-payment-gateway-credit-card-form-input[type="tel"] {
+	input.js-sv-wc-payment-gateway-credit-card-form-input[type="tel"],
+	input.js-sv-wc-payment-gateway-credit-card-form-input[type="text"] {
 
 		&:focus {
 			box-shadow: 0 0 .1875em #3498db;

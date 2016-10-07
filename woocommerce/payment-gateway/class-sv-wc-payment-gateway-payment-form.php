@@ -299,13 +299,15 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-account-number' ),
 				'maxlength'         => 20,
 				'custom_attributes' => array(
-					'autocomplete' => 'cc-number',
-					'pattern'      => '[0-9]{13,16}',
+					'autocomplete'   => 'cc-number',
+					'autocorrect'    => 'no',
+					'autocapitalize' => 'no',
+					'spellcheck'     => 'no',
 				),
 				'value' => $defaults['account-number'],
 			),
 			'card-expiry' => array(
-				'type'              => 'tel',
+				'type'              => 'text',
 				'label'             => esc_html__( 'Expiration (MM/YY)', 'woocommerce-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-expiry',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-expiry',
@@ -314,8 +316,10 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				'class'             => array( 'form-row-first' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-expiry' ),
 				'custom_attributes' => array(
-					'autocomplete' => 'cc-exp',
-					'pattern'      => '[0-9]',
+					'autocomplete'   => 'cc-exp',
+					'autocorrect'    => 'no',
+					'autocapitalize' => 'no',
+					'spellcheck'     => 'no',
 				),
 				'value' => $defaults['expiry'],
 			),
@@ -323,7 +327,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 		if ( $this->get_gateway()->csc_enabled() ) {
 
-			$fields['card-csc']    = array(
+			$fields['card-csc'] = array(
 				'type'              => 'tel',
 				'label'             => esc_html__( 'Card Security Code', 'woocommerce-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
@@ -332,12 +336,14 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				'required'          => $this->get_gateway()->csc_required(),
 				'class'             => array( 'form-row-last' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-csc' ),
-				'maxlength'         => 20,
+				'maxlength'         => 4,
 				'custom_attributes' => array(
-					'autocomplete' => 'off',
-					'pattern'      => '[0-9]{3,4}',
+					'autocomplete'   => 'off',
+					'autocorrect'    => 'no',
+					'autocapitalize' => 'no',
+					'spellcheck'     => 'no',
 				),
-				'value'             => $defaults['csc'],
+				'value' => $defaults['csc'],
 			);
 		}
 
@@ -380,8 +386,10 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				'input_class'       => array( 'js-sv-wc-payment-gateway-echeck-form-input js-sv-wc-payment-gateway-echeck-form-routing-number' ),
 				'maxlength'         => 9,
 				'custom_attributes' => array(
-					'autocomplete' => 'off',
-					'pattern'      => '[0-9]',
+					'autocomplete'   => 'off',
+					'autocorrect'    => 'no',
+					'autocapitalize' => 'no',
+					'spellcheck'     => 'no',
 				),
 				'value'             => $defaults['routing-number'],
 			),
@@ -396,8 +404,10 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				'input_class'       => array( 'js-sv-wc-payment-gateway-echeck-form-input js-sv-wc-payment-gateway-echeck-form-account-number' ),
 				'maxlength'         => 17,
 				'custom_attributes' => array(
-					'autocomplete' => 'off',
-					'pattern'      => '[0-9]',
+					'autocomplete'   => 'off',
+					'autocorrect'    => 'no',
+					'autocapitalize' => 'no',
+					'spellcheck'     => 'no',
 				),
 				'value'             => $defaults['account-number'],
 			),
