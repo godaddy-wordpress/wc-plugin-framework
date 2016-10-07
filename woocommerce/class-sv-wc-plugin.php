@@ -77,19 +77,27 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Initialize the plugin
+	 * Initialize the plugin.
 	 *
-	 * Optional args:
-	 *
-	 * + `dependencies` - array string names of required PHP extensions
-	 * + `function_dependencies` - array string names of required PHP functions
-	 *
-	 * Child plugin classes may add their own optional arguments
+	 * Child plugin classes may add their own optional arguments.
 	 *
 	 * @since 2.0.0
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
-	 * @param array $args optional plugin arguments
+	 * @param array $args {
+	 *     optional plugin arguments
+	 *
+	 *     @type string $text_domain the plugin textdomain, used to set up translations
+	 *     @type array  $dependencies {
+	 *          the plugin's PHP dependencies
+	 *
+	 *          $type array $extensions the required PHP extensions
+	 *          $type array $functions  the required PHP functions
+	 *          $type array $settings   the required PHP settings, as `$setting => $value`
+	 *                                  String values are treated with direct
+	 *                                  comparison, integers as minimums
+	 *     }
+	 * }
 	 */
 	public function __construct( $id, $version, $args = array() ) {
 
@@ -97,9 +105,37 @@ abstract class SV_WC_Plugin {
 		$this->id          = $id;
 		$this->version     = $version;
 
-		if ( isset( $args['dependencies'] ) )                $this->dependencies = $args['dependencies'];
+		$default_dependencies = array(
+			'extensions' => array(),
+			'functions'  => array(),
+			'settings'   => array(
+				'suhosin.post.max_array_index_length'    => 256,
+				'suhosin.post.max_totalname_length'      => 65535,
+				'suhosin.post.max_vars'                  => 1024,
+				'suhosin.request.max_array_index_length' => 256,
+				'suhosin.request.max_totalname_length'   => 65535,
+				'suhosin.request.max_vars'               => 1024,
+			),
+		);
 
-		if ( isset( $args['function_dependencies'] ) )       $this->function_dependencies = $args['function_dependencies'];
+		// for backwards compatibility
+		if ( isset( $args['dependencies'][0] ) ) {
+			$args['dependencies'] = array(
+				'extensions' => $args['dependencies'],
+			);
+		}
+
+		// for backwards compatibility
+		if ( empty( $args['dependencies']['functions'] ) && ! empty( $args['function_dependencies'] ) ) {
+			$args['dependencies']['functions'] = $args['function_dependencies'];
+		}
+
+		// override any default settings requirements if the plugin specifies them
+		if ( ! empty( $args['dependencies']['settings'] ) ) {
+			$args['dependencies']['settings'] = array_merge( $default_dependencies['settings'], $args['dependencies']['settings'] );
+		}
+
+		$this->dependencies = wp_parse_args( $args['dependencies'], $default_dependencies );
 
 		if ( isset( $args['text_domain'] ) ) {
 			$this->text_domain = $args['text_domain'];
@@ -139,6 +175,9 @@ abstract class SV_WC_Plugin {
 
 		// Load translation files
 		add_action( 'init', array( $this, 'load_translations' ) );
+
+		// add any PHP incompatibilities to the system status report
+		add_filter( 'woocommerce_debug_posting', array( $this, 'add_system_status_php_information' ) );
 	}
 
 
@@ -354,7 +393,7 @@ abstract class SV_WC_Plugin {
 	protected function add_dependencies_admin_notices() {
 
 		// report any missing extensions
-		$missing_extensions = $this->get_missing_dependencies();
+		$missing_extensions = $this->get_missing_extension_dependencies();
 
 		if ( count( $missing_extensions ) > 0 ) {
 
@@ -491,16 +530,30 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Gets the string name of any required PHP extensions that are not loaded
+	 * Gets the string name of any required PHP extensions that are not loaded.
+	 *
+	 * @deprecated since 4.5.0-dev
 	 *
 	 * @since 2.0.0
 	 * @return array of missing dependencies
 	 */
 	public function get_missing_dependencies() {
 
+		return $this->get_missing_extension_dependencies();
+	}
+
+
+	/**
+	 * Gets the string name of any required PHP extensions that are not loaded
+	 *
+	 * @since 4.5.0-dev
+	 * @return array of missing dependencies
+	 */
+	public function get_missing_extension_dependencies() {
+
 		$missing_extensions = array();
 
-		foreach ( $this->get_dependencies() as $ext ) {
+		foreach ( $this->get_extension_dependencies() as $ext ) {
 
 			if ( ! extension_loaded( $ext ) ) {
 				$missing_extensions[] = $ext;
@@ -529,6 +582,100 @@ abstract class SV_WC_Plugin {
 		}
 
 		return $missing_functions;
+	}
+
+
+	/**
+	 * Gets the string name of any required PHP extensions that are not loaded
+	 *
+	 * @since 4.5.0-dev
+	 * @return array of missing dependencies
+	 */
+	public function get_incompatible_php_settings() {
+
+		$incompatible_settings = array();
+
+		$dependences = $this->get_php_settings_dependencies();
+
+		if ( function_exists( 'ini_get' ) && ! empty( $dependences ) ) {
+
+			foreach ( $dependences as $setting => $expected ) {
+
+				$actual = ini_get( $setting );
+
+				if ( ! $actual ) {
+					continue;
+				}
+
+				if ( is_integer( $expected ) ) {
+
+					// determine if this is a size string, like "10MB"
+					$is_size = ! is_numeric( substr( $actual, -1 ) );
+
+					$actual_num = $is_size ? wc_let_to_num( $actual ) : $actual;
+
+					if ( $actual_num < $expected ) {
+
+						$incompatible_settings[ $setting ] = array(
+							'expected' => $is_size ? size_format( $expected ) : $expected,
+							'actual'   => $is_size ? size_format( $actual_num ) : $actual,
+							'type'     => 'min',
+						);
+					}
+
+				} elseif ( $actual !== $expected ) {
+
+					$incompatible_settings[ $setting ] = array(
+						'expected' => $expected,
+						'actual'   => $actual,
+					);
+				}
+			}
+		}
+
+		return $incompatible_settings;
+	}
+
+
+	/**
+	 * Adds any PHP incompatibilities to the system status report.
+	 *
+	 * @since 4.5.0-dev
+	 */
+	public function add_system_status_php_information( $rows ) {
+
+		foreach ( $this->get_incompatible_php_settings() as $setting => $values ) {
+
+			if ( isset( $values['type'] ) && 'min' === $values['type'] ) {
+
+				// if this setting already has a higher minimum from another plugin, skip it
+				if ( isset( $rows[ $setting ]['expected'] ) && $values['expected'] < $rows[ $setting ]['expected'] ) {
+					continue;
+				}
+
+				$note = __( '%1$s - A minimum of %2$s is required.', 'woocommerce-plugin-framework' );
+
+			} else {
+
+				// if this requirement is already listed, skip it
+				if ( isset( $rows[ $setting ] ) ) {
+					continue;
+				}
+
+				$note = __( 'Set as %1$s - %2$s is required.', 'woocommerce-plugin-framework' );
+			}
+
+			$note = sprintf( $note, $values['actual'], $values['expected'] );
+
+			$rows[ $setting ] = array(
+				'name'     => $setting,
+				'note'     => $note,
+				'success'  => false,
+				'expected' => $values['expected'], // WC doesn't use this, but it's useful for us
+			);
+		}
+
+		return $rows;
 	}
 
 
@@ -656,10 +803,10 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Get the PHP dependencies for extension depending on the gateway being used
+	 * Get the PHP dependencies.
 	 *
 	 * @since 2.0.0
-	 * @return array of required PHP extension names, based on the gateway in use
+	 * @return array
 	 */
 	protected function get_dependencies() {
 		return $this->dependencies;
@@ -667,13 +814,35 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Get the PHP dependencies for functions depending on the gateway being used
+	 * Get the PHP extension dependencies.
+	 *
+	 * @since 4.5.0-dev
+	 * @return array
+	 */
+	protected function get_extension_dependencies() {
+		return $this->dependencies['extensions'];
+	}
+
+
+	/**
+	 * Get the PHP function dependencies.
 	 *
 	 * @since 2.1.0
-	 * @return array of required PHP function names, based on the gateway in use
+	 * @return array
 	 */
 	protected function get_function_dependencies() {
-		return $this->function_dependencies;
+		return $this->dependencies['functions'];
+	}
+
+
+	/**
+	 * Get the PHP settings dependencies.
+	 *
+	 * @since 4.5.0-dev
+	 * @return array
+	 */
+	protected function get_php_settings_dependencies() {
+		return $this->dependencies['settings'];
 	}
 
 
