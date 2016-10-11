@@ -437,6 +437,47 @@ abstract class SV_WC_Plugin {
 			) );
 
 		}
+
+		// if on the settings page, report any incompatible PHP settings
+		if ( $this->is_plugin_settings() || ( ! $this->get_settings_url() && $this->is_general_configuration_page() ) ) {
+
+			$bad_settings = $this->get_incompatible_php_settings();
+
+			if ( count( $bad_settings ) > 0 ) {
+
+				$message = sprintf(
+					/* translators: Placeholders: %s - plugin name */
+					__( '%s may behave unexpectedly because the following PHP configuration settings are required:' ),
+					'<strong>' . $this->get_plugin_name() . '</strong>'
+				);
+
+				$message .= '<ul>';
+
+					foreach ( $bad_settings as $setting => $values ) {
+
+						$setting_message = '<code>' . $setting . ' = ' . $values['expected'] . '</code>';
+
+						if ( ! empty( $values['type'] ) && 'min' === $values['type'] ) {
+
+							$setting_message = sprintf(
+								/** translators: Placeholders: %s - a PHP setting value */
+								__( '%s or higher', 'woocommerce-plugin-framework' ),
+								$setting_message
+							);
+						}
+
+						$message .= '<li>' . $setting_message . '</li>';
+					}
+
+				$message .= '</ul>';
+
+				$message .= __( 'Please contact your hosting provider or server administrator to configure these settings.', 'woocommerce-plugin-framework' );
+
+				$this->get_admin_notice_handler()->add_admin_notice( $message, 'bad-php-configuration', array(
+					'notice_class' => 'error',
+				) );
+			}
+		}
 	}
 
 
