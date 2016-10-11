@@ -471,6 +471,11 @@ abstract class SV_WC_Plugin {
 		$messages[] = isset( $data['uri'] ) && $data['uri'] ? 'Request' : 'Response';
 
 		foreach ( (array) $data as $key => $value ) {
+			
+			if (is_object( $value ) && 'stdClass' != get_class( $value )) {
+				$value = json_decode($value);
+			}
+			
 			$messages[] = sprintf( '%s: %s', $key, is_array( $value ) || ( is_object( $value ) && 'stdClass' == get_class( $value ) ) ? print_r( (array) $value, true ) : $value );
 		}
 
