@@ -82,7 +82,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	/**
 	 * Get the request parameters.
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0-beta
 	 * @return array
 	 */
 	public function get_params() {

@@ -300,7 +300,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Loads any shared settings from sibling gateways.
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0-beta
 	 */
 	protected function load_shared_settings() {
 
@@ -1275,7 +1275,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Perform a credit card capture for an order.
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0-beta
 	 * @param \WC_Order $order the order object
 	 * @return \SV_WC_Payment_Gateway_API_Response|null
 	 */
@@ -1360,7 +1360,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * $order->capture_total
 	 * $order->description
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0-beta
 	 * @param \WC_Order|int $order the order being processed
 	 * @return \WC_Order
 	 */
@@ -1397,7 +1397,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds the standard capture data to an order.
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0-beta
 	 * @param \WC_Order $order the order object
 	 * @param \SV_WC_Payment_Gateway_API_Response $response the transaction response
 	 */
@@ -1416,7 +1416,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds any gateway-specific data to the order after a capture is performed.
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0-beta
 	 * @param \WC_Order $order the order object
 	 * @param \SV_WC_Payment_Gateway_API_Response $response the transaction response
 	 */
@@ -2345,7 +2345,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Determines if this is a credit card gateway that supports charging virtual-only orders.
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0-beta
 	 * @return bool
 	 */
 	public function supports_credit_card_charge_virtual() {
@@ -2481,7 +2481,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		/**
 		 * Filters whether a credit card transaction should result in a charge.
 		 *
-		 * @since 4.5.0-dev
+		 * @since 4.5.0-beta
 		 * @param bool $perform whether the transaction should result in a charge
 		 * @param \WC_Order|null $order the order being charged
 		 * @param \SV_WC_Payment_Gateway $gateway the gateway object
@@ -2507,7 +2507,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		/**
 		 * Filters whether a credit card transaction should result in an authorization.
 		 *
-		 * @since 4.5.0-dev
+		 * @since 4.5.0-beta
 		 * @param bool $perform whether the transaction should result in an authorization
 		 * @param \WC_Order|null $order the order being authorized
 		 * @param \SV_WC_Payment_Gateway $gateway the gateway object
@@ -2990,7 +2990,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Determines if the Card Security Code (CVV) field should be required at checkout.
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0-beta
 	 * @return bool
 	 */
 	public function csc_required() {
@@ -3001,7 +3001,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Determines if the gateway supports sharing settings with sibling gateways.
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0-beta
 	 * @return bool
 	 */
 	public function share_settings() {
