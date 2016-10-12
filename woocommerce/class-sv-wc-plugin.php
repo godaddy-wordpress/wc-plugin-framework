@@ -120,9 +120,14 @@ abstract class SV_WC_Plugin {
 
 		// for backwards compatibility
 		if ( isset( $args['dependencies'][0] ) ) {
+
 			$args['dependencies'] = array(
 				'extensions' => $args['dependencies'],
 			);
+
+		} elseif ( ! isset( $args['dependencies'] ) ) {
+
+			$args['dependencies'] = array();
 		}
 
 		// for backwards compatibility

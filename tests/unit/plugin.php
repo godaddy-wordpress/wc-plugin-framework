@@ -123,13 +123,14 @@ MSG;
 
 		Mock::wpFunction( 'is_ajax', array( 'return' => false ) );
 
+		Mock::wpPassthruFunction( 'wp_parse_args' );
+
 		$args = array(
 			'mock',
 			'7.7.7',
-			'woocommerce-mock',
-			'args' => array(
-				'dependencies'          => 'json',
-				'function_dependencies' => 'ftp_ssl_connect',
+			array(
+				'dependencies'          => array( 'json' ),
+				'function_dependencies' => array( 'ftp_ssl_connect' ),
 			),
 		);
 
