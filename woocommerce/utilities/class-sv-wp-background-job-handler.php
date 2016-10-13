@@ -516,6 +516,9 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			// Get next job in the queue
 			$job = $this->get_job();
 
+			// handle PHP errors from here on out
+			register_shutdown_function( array( $this, 'handle_shutdown' ), $job );
+
 			// Indicate that the job has started processing
 			if ( 'processing' != $job->status ) {
 
@@ -853,6 +856,26 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * @return mixed
 	 */
 	abstract protected function process_item( $item, $job );
+
+
+	/**
+	 * Handles PHP shutdown, say after a fatal error.
+	 *
+	 * @since 4.5.0-dev
+	 * @param object $job the job being processed
+	 */
+	public function handle_shutdown( $job ) {
+
+		$error = error_get_last();
+
+		// if shutting down because of a fatal error, fail the job
+		if ( $error && E_ERROR === $error['type'] ) {
+
+			$this->fail_job( $job, $error['message'] );
+
+			$this->unlock_process();
+		}
+	}
 
 
 }
