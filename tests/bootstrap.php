@@ -69,6 +69,7 @@ class SV_WC_Plugin_Framework_Tests_Bootstrap {
 
 		// payment gateways
 		require_once( $this->framework_dir . '/woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php' );
+		require_once( $this->framework_dir . '/woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php' );
 
 
 		echo "Loaded Framework..." . PHP_EOL;
