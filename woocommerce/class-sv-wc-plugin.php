@@ -105,42 +105,14 @@ abstract class SV_WC_Plugin {
 		$this->id          = $id;
 		$this->version     = $version;
 
-		$default_dependencies = array(
-			'extensions' => array(),
-			'functions'  => array(),
-			'settings'   => array(
-				'suhosin.post.max_array_index_length'    => 256,
-				'suhosin.post.max_totalname_length'      => 65535,
-				'suhosin.post.max_vars'                  => 1024,
-				'suhosin.request.max_array_index_length' => 256,
-				'suhosin.request.max_totalname_length'   => 65535,
-				'suhosin.request.max_vars'               => 1024,
-			),
-		);
+		$dependencies = isset( $args['dependencies'] ) ? $args['dependencies'] : array();
 
 		// for backwards compatibility
-		if ( isset( $args['dependencies'][0] ) ) {
-
-			$args['dependencies'] = array(
-				'extensions' => $args['dependencies'],
-			);
-
-		} elseif ( ! isset( $args['dependencies'] ) ) {
-
-			$args['dependencies'] = array();
+		if ( empty( $dependencies['functions'] ) && ! empty( $args['function_dependencies'] ) ) {
+			$dependencies['functions'] = $args['function_dependencies'];
 		}
 
-		// for backwards compatibility
-		if ( empty( $args['dependencies']['functions'] ) && ! empty( $args['function_dependencies'] ) ) {
-			$args['dependencies']['functions'] = $args['function_dependencies'];
-		}
-
-		// override any default settings requirements if the plugin specifies them
-		if ( ! empty( $args['dependencies']['settings'] ) ) {
-			$args['dependencies']['settings'] = array_merge( $default_dependencies['settings'], $args['dependencies']['settings'] );
-		}
-
-		$this->dependencies = wp_parse_args( $args['dependencies'], $default_dependencies );
+		$this->set_dependencies( $dependencies );
 
 		if ( isset( $args['text_domain'] ) ) {
 			$this->text_domain = $args['text_domain'];
@@ -222,7 +194,7 @@ abstract class SV_WC_Plugin {
 			$this->load_plugin_textdomain();
 
 		// otherwise, use the backwards compatibile method
-		} elseif ( method_exists( $this, 'load_translation' ) ) {
+		} elseif ( is_callable( array( $this, 'load_translation' ) ) ) {
 
 			$this->load_translation();
 		}
@@ -722,6 +694,43 @@ abstract class SV_WC_Plugin {
 		}
 
 		return $rows;
+	}
+
+
+	/**
+	 * Sets the plugin dependencies.
+	 *
+	 * @since 4.5.0-beta
+	 * @param array $dependencies the environment dependencies
+	 */
+	protected function set_dependencies( $dependencies = array() ) {
+
+		$default_dependencies = array(
+			'extensions' => array(),
+			'functions'  => array(),
+			'settings'   => array(
+				'suhosin.post.max_array_index_length'    => 256,
+				'suhosin.post.max_totalname_length'      => 65535,
+				'suhosin.post.max_vars'                  => 1024,
+				'suhosin.request.max_array_index_length' => 256,
+				'suhosin.request.max_totalname_length'   => 65535,
+				'suhosin.request.max_vars'               => 1024,
+			),
+		);
+
+		if ( isset( $dependencies[0] ) ) {
+
+			$dependencies = array(
+				'extensions' => $dependencies,
+			);
+		}
+
+		// override any default settings requirements if the plugin specifies them
+		if ( ! empty( $dependencies['settings'] ) ) {
+			$dependencies['settings'] = array_merge( $default_dependencies['settings'], $dependencies['settings'] );
+		}
+
+		$this->dependencies = wp_parse_args( $dependencies, $default_dependencies );
 	}
 
 

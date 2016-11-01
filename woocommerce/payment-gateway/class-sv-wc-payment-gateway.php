@@ -982,12 +982,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			// add inline javascript
 			ob_start();
 			?>
-				$( '#woocommerce_<?php echo $this->get_id(); ?>_transaction_type' ).change( function() {
+				$( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_transaction_type' ).change( function() {
 
 					var transaction_type = $( this ).val();
 					var hidden_setting   = $( '#woocommerce_<?php echo $this->get_id(); ?>_charge_virtual_orders' ).closest( 'tr' );
 
-					if ( '<?php echo self::TRANSACTION_TYPE_AUTHORIZATION; ?>' === transaction_type ) {
+					if ( '<?php echo esc_js( self::TRANSACTION_TYPE_AUTHORIZATION ); ?>' === transaction_type ) {
 						$( hidden_setting ).show();
 					} else {
 						$( hidden_setting ).hide();
@@ -1005,7 +1005,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			// add inline javascript
 			ob_start();
 			?>
-				$( '#woocommerce_<?php echo $this->get_id(); ?>_environment' ).change( function() {
+				$( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_environment' ).change( function() {
 
 					// inherit settings from other gateway?
 					var inheritSettings = $( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).is( ':checked' );
