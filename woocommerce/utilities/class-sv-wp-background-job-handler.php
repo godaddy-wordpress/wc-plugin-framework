@@ -861,7 +861,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Handles PHP shutdown, say after a fatal error.
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0
 	 * @param object $job the job being processed
 	 */
 	public function handle_shutdown( $job ) {

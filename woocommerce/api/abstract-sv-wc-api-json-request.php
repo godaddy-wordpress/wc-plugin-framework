@@ -86,7 +86,7 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 	/**
 	 * Get the request data.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @return array
 	 */
 	protected function get_data() {

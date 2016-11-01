@@ -93,7 +93,7 @@ class SV_WC_Payment_Gateway_Helper {
 	/**
 	 * Normalize a card type to a standard type ID and account for variations.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @param string $card_type the card type to normalize
 	 * @return string
 	 */
@@ -222,7 +222,7 @@ class SV_WC_Payment_Gateway_Helper {
 	 *     'varations' => array( 'mc' ),
 	 * }
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @return array
 	 */
 	public static function get_card_types() {

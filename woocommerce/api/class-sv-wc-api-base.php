@@ -353,7 +353,7 @@ abstract class SV_WC_API_Base {
 	/**
 	 * Gets the request path.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @return string
 	 */
 	protected function get_request_path() {
@@ -365,7 +365,7 @@ abstract class SV_WC_API_Base {
 	/**
 	 * Gets the request URL query.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @return string
 	 */
 	protected function get_request_query() {
@@ -444,7 +444,7 @@ abstract class SV_WC_API_Base {
 	/**
 	 * Gets the request body.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @return string
 	 */
 	protected function get_request_body() {
@@ -456,7 +456,7 @@ abstract class SV_WC_API_Base {
 	/**
 	 * Gets the sanitized request body, for logging.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @return string
 	 */
 	protected function get_sanitized_request_body() {

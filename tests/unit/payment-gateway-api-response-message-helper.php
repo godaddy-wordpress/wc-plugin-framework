@@ -7,7 +7,7 @@ use \WP_Mock as Mock;
 /**
  * Unit tests for \SV_WC_Payment_Gateway_API_Response_Message_Helper
  *
- * @since 4.5.0-beta
+ * @since 4.5.0
  */
 class Payment_Gateway_API_Response_Message_Helper extends Test_Case {
 
@@ -15,7 +15,7 @@ class Payment_Gateway_API_Response_Message_Helper extends Test_Case {
 	/**
 	 * Tests for \SV_WC_Payment_Gateway_API_Response_Message_Helper::get_user_messages()
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @dataProvider provider_test_get_user_messages
 	 */
 	public function test_get_user_messages( $message_ids, $expected ) {
@@ -31,7 +31,7 @@ class Payment_Gateway_API_Response_Message_Helper extends Test_Case {
 	/**
 	 * Data provider for test_get_user_messages()
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @return array
 	 */
 	public function provider_test_get_user_messages() {
@@ -48,7 +48,7 @@ class Payment_Gateway_API_Response_Message_Helper extends Test_Case {
 	/**
 	 * Tests for \SV_WC_Payment_Gateway_API_Response_Message_Helper::get_user_message()
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @dataProvider provider_test_get_user_message
 	 */
 	public function test_get_user_message( $message_id, $expected ) {
@@ -64,7 +64,7 @@ class Payment_Gateway_API_Response_Message_Helper extends Test_Case {
 	/**
 	 * Data provider for test_get_user_message()
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @return array
 	 */
 	public function provider_test_get_user_message() {

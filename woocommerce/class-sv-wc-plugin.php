@@ -34,13 +34,13 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 4.5.0-beta
+ * @version 4.5.0
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '4.5.0-beta';
+	const VERSION = '4.5.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -204,7 +204,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Loads the framework textdomain.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 */
 	protected function load_framework_textdomain() {
 		$this->load_textdomain( 'woocommerce-plugin-framework', dirname( plugin_basename( $this->get_framework_file() ) ) );
@@ -214,7 +214,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Loads the plugin textdomain.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 */
 	protected function load_plugin_textdomain() {
 		$this->load_textdomain( $this->text_domain, dirname( plugin_basename( $this->get_file() ) ) );
@@ -224,7 +224,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Loads the plugin textdomain.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @param string $textdomain the plugin textdomain
 	 * @param string $path the i18n path
 	 */
@@ -550,7 +550,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the string name of any required PHP extensions that are not loaded.
 	 *
-	 * @deprecated since 4.5.0-beta
+	 * @deprecated since 4.5.0
 	 *
 	 * @since 2.0.0
 	 * @return array of missing dependencies
@@ -564,7 +564,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the string name of any required PHP extensions that are not loaded
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @return array of missing dependencies
 	 */
 	public function get_missing_extension_dependencies() {
@@ -606,7 +606,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the string name of any required PHP extensions that are not loaded
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @return array of missing dependencies
 	 */
 	public function get_incompatible_php_settings() {
@@ -658,7 +658,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Adds any PHP incompatibilities to the system status report.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 */
 	public function add_system_status_php_information( $rows ) {
 
@@ -700,7 +700,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Sets the plugin dependencies.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @param array $dependencies the environment dependencies
 	 */
 	protected function set_dependencies( $dependencies = array() ) {
@@ -871,7 +871,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Get the PHP extension dependencies.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @return array
 	 */
 	protected function get_extension_dependencies() {
@@ -893,7 +893,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Get the PHP settings dependencies.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @return array
 	 */
 	protected function get_php_settings_dependencies() {

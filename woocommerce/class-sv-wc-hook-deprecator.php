@@ -63,7 +63,7 @@ class SV_WC_Hook_Deprecator {
 	/**
 	 * Sets the deprecated hook defaults.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @param array $hook_params the hook parameters
 	 * @return array
 	 */
@@ -82,7 +82,7 @@ class SV_WC_Hook_Deprecator {
 	/**
 	 * Map each deprecated hook to its replacement.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 */
 	protected function map_deprecated_hooks() {
 
@@ -102,7 +102,7 @@ class SV_WC_Hook_Deprecator {
 	 * and checking if any actions/filters are hooked into the old hook. It then runs
 	 * these and applies the data modifications in the new hook.
 	 *
-	 * @since 4.5.0-beta
+	 * @since 4.5.0
 	 * @return mixed
 	 */
 	public function map_deprecated_hook() {

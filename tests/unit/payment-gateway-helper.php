@@ -7,7 +7,7 @@ use \WP_Mock as Mock;
 /**
  * Unit tests for \SV_WC_Payment_Gateway_Helper
  *
- * @since 4.5.0-dev
+ * @since 4.5.0
  */
 class Payment_Gateway_Helper extends Test_Case {
 
@@ -15,7 +15,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	/**
 	 * Test true for \SV_WC_Payment_Gateway_Helper::luhn_check()
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0
 	 */
 	public function test_luhn_check_true() {
 
@@ -26,7 +26,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	/**
 	 * Test false for \SV_WC_Payment_Gateway_Helper::luhn_check()
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0
 	 */
 	public function test_luhn_check_false() {
 
@@ -37,7 +37,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	/**
 	 * Tests for \SV_WC_Payment_Gateway_Helper::normalize_card_type()
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0
 	 * @dataProvider provider_test_normalize_card_type
 	 */
 	public function test_normalize_card_type( $card_type, $expected ) {
@@ -57,7 +57,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	/**
 	 * Data provider for test_normalize_card_type()
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0
 	 * @return array
 	 */
 	public function provider_test_normalize_card_type() {
@@ -74,7 +74,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	/**
 	 * Tests for \SV_WC_Payment_Gateway_Helper::card_type_from_account_number()
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0
 	 * @dataProvider provider_test_card_type_from_account_number
 	 */
 	public function test_card_type_from_account_number( $account_number, $card_type ) {
@@ -86,7 +86,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	/**
 	 * Data provider for test_card_type_from_account_number()
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0
 	 * @return array
 	 */
 	public function provider_test_card_type_from_account_number() {
@@ -108,7 +108,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	/**
 	 * Tests for \SV_WC_Payment_Gateway_Helper::payment_type_to_name()
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0
 	 * @dataProvider provider_test_payment_type_to_name
 	 */
 	public function test_payment_type_to_name( $type, $expected ) {
@@ -135,7 +135,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	/**
 	 * Data provider for test_payment_type_to_name()
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0
 	 * @return array
 	 */
 	public function provider_test_payment_type_to_name() {
@@ -154,7 +154,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	/**
 	 * Tests the returned array structure of \SV_WC_Payment_Gateway_Helper::get_card_types()
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0
 	 */
 	public function test_get_card_types_structure() {
 
@@ -168,7 +168,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	/**
 	 * Tests that \SV_WC_Payment_Gateway_Helper::get_card_types() contains the known types.
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0
 	 * @dataProvider provider_test_get_card_types_roll_call
 	 */
 	public function test_get_card_types_roll_call( $card_type ) {
@@ -180,7 +180,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	/**
 	 * Data provider for test_get_card_types_roll_call()
 	 *
-	 * @since 4.5.0-dev
+	 * @since 4.5.0
 	 * @return array
 	 */
 	public function provider_test_get_card_types_roll_call() {

@@ -477,7 +477,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		/**
 		 * Determines if an order contains only virtual products.
 		 *
-		 * @since 4.5.0-beta
+		 * @since 4.5.0
 		 * @param \WC_Order $order the order object
 		 * @return bool
 		 */
