@@ -230,7 +230,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 */
 	protected function memory_exceeded() {
 
-		$memory_limit   =  $this->get_memory_limit() * 0.9; // 90% of max memory
+		$memory_limit   = $this->get_memory_limit() * 0.9; // 90% of max memory
 		$current_memory = memory_get_usage( true );
 		$return         = false;
 
@@ -625,7 +625,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	public function update_job( $job ) {
 
 		if ( is_string( $job ) ) {
-			$job = $this->get_job( $job_id );
+			$job = $this->get_job( $job );
 		}
 
 		if ( ! $job ) {
@@ -656,7 +656,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	public function complete_job( $job ) {
 
 		if ( is_string( $job ) ) {
-			$job = $this->get_job( $job_id );
+			$job = $this->get_job( $job );
 		}
 
 		if ( ! $job ) {
@@ -693,7 +693,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	public function fail_job( $job, $reason = '' ) {
 
 		if ( is_string( $job ) ) {
-			$job = $this->get_job( $job_id );
+			$job = $this->get_job( $job );
 		}
 
 		if ( ! $job ) {
