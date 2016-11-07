@@ -393,14 +393,6 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function get_request_args() {
 
-		// A note on the 'body' param: we have a somewhat critical limitation in
-		// that methods that support both a request body (e.g. containing an XML string)
-		// as well as query params, may use only the request body. This is the result
-		// of our not distinguishing between the query params and the request body
-		// in the API request interface/abstract classes and should be properly fixed
-		// at some point by making the distinction and including the URL query string
-		// parameters in the get_request_uri() method
-
 		$args = array(
 			'method'      => $this->get_request_method(),
 			'timeout'     => MINUTE_IN_SECONDS,
@@ -449,6 +441,11 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function get_request_body() {
 
+		// GET & HEAD requests don't support a body
+		if ( in_array( strtoupper( $this->get_request_method() ), array( 'GET', 'HEAD' ) ) ) {
+			return '';
+		}
+
 		return ( $this->get_request() && $this->get_request()->to_string() ) ? $this->get_request()->to_string() : '';
 	}
 
@@ -460,6 +457,11 @@ abstract class SV_WC_API_Base {
 	 * @return string
 	 */
 	protected function get_sanitized_request_body() {
+
+		// GET & HEAD requests don't support a body
+		if ( in_array( strtoupper( $this->get_request_method() ), array( 'GET', 'HEAD' ) ) ) {
+			return '';
+		}
 
 		return ( $this->get_request() && $this->get_request()->to_string_safe() ) ? $this->get_request()->to_string_safe() : '';
 	}
