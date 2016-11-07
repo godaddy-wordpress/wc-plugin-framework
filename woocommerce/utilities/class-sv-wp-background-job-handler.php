@@ -102,7 +102,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		$this->schedule_event();
 
 		// perform remote post
-		parent::dispatch();
+		return parent::dispatch();
 	}
 
 
