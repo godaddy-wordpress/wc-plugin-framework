@@ -69,7 +69,9 @@ class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 			$messages[] = $this->get_user_message( $message_id );
 		}
 
-		return implode( ' ', $messages );
+		$messages = implode( ' ', $messages );
+
+		return trim( $messages );
 	}
 
 

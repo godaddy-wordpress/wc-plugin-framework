@@ -37,6 +37,34 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Helper' ) ) :
 class SV_WC_Payment_Gateway_Helper {
 
 
+	/** @var string the Visa card type ID **/
+	const CARD_TYPE_VISA = 'visa';
+
+	/** @var string the MasterCard card type ID **/
+	const CARD_TYPE_MASTERCARD = 'mastercard';
+
+	/** @var string the American Express card type ID **/
+	const CARD_TYPE_AMEX = 'amex';
+
+	/** @var string the Diners Club card type ID **/
+	const CARD_TYPE_DINERSCLUB = 'dinersclub';
+
+	/** @var string the Discover card type ID **/
+	const CARD_TYPE_DISCOVER = 'discover';
+
+	/** @var string the JCB card type ID **/
+	const CARD_TYPE_JCB = 'jcb';
+
+	/** @var string the CarteBleue card type ID **/
+	const CARD_TYPE_CARTEBLEUE = 'cartebleue';
+
+	/** @var string the Maestro card type ID **/
+	const CARD_TYPE_MAESTRO = 'maestro';
+
+	/** @var string the Laser card type ID **/
+	const CARD_TYPE_LASER = 'laser';
+
+
 	/**
 	 * Perform standard luhn check.  Algorithm:
 	 *
@@ -63,6 +91,40 @@ class SV_WC_Payment_Gateway_Helper {
 
 
 	/**
+	 * Normalize a card type to a standard type ID and account for variations.
+	 *
+	 * @since 4.5.0
+	 * @param string $card_type the card type to normalize
+	 * @return string
+	 */
+	public static function normalize_card_type( $card_type ) {
+
+		$card_types = self::get_card_types();
+
+		$card_type = strtolower( $card_type );
+
+		// stop here if the provided card type is already normalized
+		if ( in_array( $card_type, array_keys( $card_types ) ) ) {
+			return $card_type;
+		}
+
+		$variations = wp_list_pluck( $card_types, 'variations' );
+
+		// if the provided card type matches a known variation, return the normalized card type
+		foreach ( $variations as $valid_type => $vars ) {
+
+			if ( in_array( $card_type, $vars ) ) {
+				$card_type = $valid_type;
+				break;
+			}
+		}
+
+		// otherwise, let it through unaltered
+		return $card_type;
+	}
+
+
+	/**
 	 * Determine the credit card type from a given account number (only first 4
 	 * required)
 	 *
@@ -74,14 +136,21 @@ class SV_WC_Payment_Gateway_Helper {
 
 		// card type regex patterns from https://github.com/stripe/jquery.payment/blob/master/src/jquery.payment.coffee
 		$types = array(
-			'visa'     => '/^4/',
-			'mc'       => '/^5[1-5]/',
-			'amex'     => '/^3[47]/',
-			'discover' => '/^(6011|65|64[4-9]|622)/',
-			'diners'   => '/^(36|38|30[0-5])/',
-			'jcb'      => '/^35/',
-			'maestro'  => '/^(5018|5020|5038|6304|6759|676[1-3])/',
-			'laser'    => '/^(6706|6771|6709)/',
+
+			// these are kept for backwards compatibility since some gateways check
+			// against this method's returned value.
+			// TODO: remove these once the offending gateways use the below constants {CW 2016-09-29}
+			'mc'     => '/^(5[1-5]|2[2-7])/',
+			'diners' => '/^(36|38|30[0-5])/',
+
+			self::CARD_TYPE_VISA       => '/^4/',
+			self::CARD_TYPE_MASTERCARD => '/^(5[1-5]|2[2-7])/',
+			self::CARD_TYPE_AMEX       => '/^3[47]/',
+			self::CARD_TYPE_DINERSCLUB => '/^(36|38|30[0-5])/',
+			self::CARD_TYPE_DISCOVER   => '/^(6011|65|64[4-9]|622)/',
+			self::CARD_TYPE_JCB        => '/^35/',
+			self::CARD_TYPE_MAESTRO    => '/^(5018|5020|5038|6304|6759|676[1-3])/',
+			self::CARD_TYPE_LASER      => '/^(6706|6771|6709)/',
 		);
 
 		foreach ( $types as $type => $pattern ) {
@@ -97,37 +166,36 @@ class SV_WC_Payment_Gateway_Helper {
 
 	/**
 	 * Translates a credit card type or bank account name to a full name,
-	 * e.g. 'mc' => 'MasterCard' or 'savings' => 'eCheck'
+	 * e.g. 'mastercard' => 'MasterCard' or 'savings' => 'eCheck'
 	 *
 	 * @since 4.0.0
-	 * @param string $payment_type the card or bank type, ie 'mc', 'amex', 'checking'
-	 * @return string the card or bank account name, ie 'MasterCard', 'American Express', 'Checking Account'
+	 * @param string $payment_type the credit card or bank type, ie 'mastercard', 'amex', 'checking'
+	 * @return string the credit card or bank account name, ie 'MasterCard', 'American Express', 'Checking Account'
 	 */
 	public static function payment_type_to_name( $payment_type ) {
 
 		$name = '';
-		$type = strtolower( $payment_type );
 
-		// special cases
-		switch ( $type ) {
+		// normalize for backwards compatibility with gateways that pass the card type directly from \SV_WC_Payment_Gateway::get_card_types()
+		$type = self::normalize_card_type( $payment_type );
 
-			case 'mc':         $name = esc_html_x( 'MasterCard', 'credit card type', 'woocommerce-plugin-framework' );          break;
-			case 'mastercard': $name = esc_html_x( 'MasterCard', 'credit card type', 'woocommerce-plugin-framework' );          break;
-			case 'amex':       $name = esc_html_x( 'American Express', 'credit card type', 'woocommerce-plugin-framework' );    break;
-			case 'disc':       $name = esc_html_x( 'Discover', 'credit card type', 'woocommerce-plugin-framework' );            break;
-			case 'discover':   $name = esc_html_x( 'Discover', 'credit card type', 'woocommerce-plugin-framework' );            break;
-			case 'jcb':        $name = esc_html_x( 'JCB', 'credit card type', 'woocommerce-plugin-framework' );                 break;
-			case 'cartebleue': $name = esc_html_x( 'CarteBleue', 'credit card type', 'woocommerce-plugin-framework' );          break;
-			case 'paypal':     $name = esc_html__( 'PayPal', 'woocommerce-plugin-framework' );                                  break;
-			case 'checking':   $name = esc_html__( 'Checking Account', 'woocommerce-plugin-framework' );                        break;
-			case 'savings':    $name = esc_html__( 'Savings Account', 'woocommerce-plugin-framework' );                         break;
-			case 'card':       $name = esc_html__( 'Credit / Debit Card', 'woocommerce-plugin-framework' );                     break;
-			case 'bank':       $name = esc_html__( 'Bank Account', 'woocommerce-plugin-framework' );                            break;
-			case '':           $name = esc_html_x( 'Account', 'payment method type', 'woocommerce-plugin-framework' );          break;
-		}
+		// known payment type names, excluding credit cards
+		$payment_types = array(
+			'paypal'   => esc_html__( 'PayPal', 'woocommerce-plugin-framework' ),
+			'checking' => esc_html__( 'Checking Account', 'woocommerce-plugin-framework' ),
+			'savings'  => esc_html__( 'Savings Account', 'woocommerce-plugin-framework' ),
+			'card'     => esc_html__( 'Credit / Debit Card', 'woocommerce-plugin-framework' ),
+			'bank'     => esc_html__( 'Bank Account', 'woocommerce-plugin-framework' ),
+		);
 
-		// default: replace dashes with spaces and uppercase all words
-		if ( ! $name ) {
+		// add the credit card names
+		$payment_types = array_merge( wp_list_pluck( self::get_card_types(), 'name' ), $payment_types );
+
+		if ( isset( $payment_types[ $type ] ) ) {
+			$name = $payment_types[ $type ];
+		} elseif ( '' === $type ) {
+			$name = esc_html_x( 'Account', 'payment method type', 'woocommerce-plugin-framework' );
+		} else {
 			$name = ucwords( str_replace( '-', ' ', $type ) );
 		}
 
@@ -141,6 +209,62 @@ class SV_WC_Payment_Gateway_Helper {
 		 * @param string $type payment type, e.g. amex
 		 */
 		return apply_filters( 'wc_payment_gateway_payment_type_to_name', $name, $type );
+	}
+
+
+	/**
+	 * Get the known card types and their variations.
+	 *
+	 * Returns the card types in the format:
+	 *
+	 * 'mastercard' {
+	 *     'name'      => 'MasterCard',
+	 *     'varations' => array( 'mc' ),
+	 * }
+	 *
+	 * @since 4.5.0
+	 * @return array
+	 */
+	public static function get_card_types() {
+
+		return array(
+			self::CARD_TYPE_VISA => array(
+				'name'       => esc_html_x( 'Visa', 'credit card type', 'woocommerce-plugin-framework' ),
+				'variations' => array(),
+			),
+			self::CARD_TYPE_MASTERCARD => array(
+				'name'       => esc_html_x( 'MasterCard', 'credit card type', 'woocommerce-plugin-framework' ),
+				'variations' => array( 'mc' ),
+			),
+			self::CARD_TYPE_AMEX => array(
+				'name'       => esc_html_x( 'American Express', 'credit card type', 'woocommerce-plugin-framework' ),
+				'variations' => array(),
+			),
+			self::CARD_TYPE_DINERSCLUB => array(
+				'name'       => esc_html_x( 'Diners Club', 'credit card type', 'woocommerce-plugin-framework' ),
+				'variations' => array( 'diners' ),
+			),
+			self::CARD_TYPE_DISCOVER => array(
+				'name'       => esc_html_x( 'Discover', 'credit card type', 'woocommerce-plugin-framework' ),
+				'variations' => array( 'disc' ),
+			),
+			self::CARD_TYPE_JCB => array(
+				'name'       => esc_html_x( 'JCB', 'credit card type', 'woocommerce-plugin-framework' ),
+				'variations' => array(),
+			),
+			self::CARD_TYPE_CARTEBLEUE => array(
+				'name'       => esc_html_x( 'CarteBleue', 'credit card type', 'woocommerce-plugin-framework' ),
+				'variations' => array(),
+			),
+			self::CARD_TYPE_MAESTRO => array(
+				'name'       => esc_html_x( 'Maestro', 'credit card type', 'woocommerce-plugin-framework' ),
+				'variations' => array(),
+			),
+			self::CARD_TYPE_LASER => array(
+				'name'       => esc_html_x( 'Laser', 'credit card type', 'woocommerce-plugin-framework' ),
+				'variations' => array(),
+			),
+		);
 	}
 
 

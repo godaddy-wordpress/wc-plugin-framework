@@ -52,9 +52,82 @@ class SV_WC_Hook_Deprecator {
 	public function __construct( $plugin_name, $hooks ) {
 
 		$this->plugin_name = $plugin_name;
-		$this->hooks       = $hooks;
+		$this->hooks       = array_map( array( $this, 'set_hook_defaults' ), $hooks );
 
-		add_action( 'shutdown', array( $this, 'handle_deprecated_hooks' ), 999 );
+		$this->map_deprecated_hooks();
+
+		add_action( 'shutdown', array( $this, 'trigger_deprecated_errors' ), 999 );
+	}
+
+
+	/**
+	 * Sets the deprecated hook defaults.
+	 *
+	 * @since 4.5.0
+	 * @param array $hook_params the hook parameters
+	 * @return array
+	 */
+	protected function set_hook_defaults( $hook_params ) {
+
+		$defaults = array(
+			'removed'     => false,
+			'map'         => false,
+			'replacement' => '',
+		);
+
+		return wp_parse_args( $hook_params, $defaults );
+	}
+
+
+	/**
+	 * Map each deprecated hook to its replacement.
+	 *
+	 * @since 4.5.0
+	 */
+	protected function map_deprecated_hooks() {
+
+		foreach ( $this->hooks as $old_hook => $hook ) {
+
+			if ( ! empty( $hook['replacement'] ) && $hook['removed'] && $hook['map'] ) {
+				add_filter( $hook['replacement'], array( $this, 'map_deprecated_hook' ), 10, 10 );
+			}
+		}
+	}
+
+
+	/**
+	 * Map a deprecated/renamed hook to a new one.
+	 *
+	 * This method works by hooking into the new, renamed version of the action/filter
+	 * and checking if any actions/filters are hooked into the old hook. It then runs
+	 * these and applies the data modifications in the new hook.
+	 *
+	 * @since 4.5.0
+	 * @return mixed
+	 */
+	public function map_deprecated_hook() {
+
+		$args     = func_get_args();
+		$data     = $args[0];
+		$new_hook = current_filter();
+
+		$new_hooks = wp_list_pluck( $this->hooks, 'replacement' );
+
+		// check if there is a matching old hook for the current hook
+		if ( $old_hook = array_search( $new_hook, $new_hooks ) ) {
+
+			// check if there are any hooks added to the old hook
+			if ( has_filter( $old_hook ) ) {
+
+				// prepend old hook name to the args
+				array_unshift( $args, $old_hook );
+
+				// apply the hooks attached to the old hook to $data
+				$data = call_user_func_array( 'apply_filters', $args );
+			}
+		}
+
+		return $data;
 	}
 
 
@@ -64,7 +137,7 @@ class SV_WC_Hook_Deprecator {
 	 *
 	 * @since 4.3.0
 	 */
-	public function handle_deprecated_hooks() {
+	public function trigger_deprecated_errors() {
 		global $wp_filter;
 
 		// follow WP core behavior for showing deprecated notices and only do so when WP_DEBUG is on
@@ -105,12 +178,12 @@ class SV_WC_Hook_Deprecator {
 		$message = sprintf( '%1$s: action/filter "%2$s" was %3$s in version %4$s. ',
 			$this->plugin_name,
 			$old_hook_name,
-			isset( $hook['removed'] ) && $hook['removed'] ? 'removed' : 'deprecated',
+			$hook['removed'] ? 'removed' : 'deprecated',
 			$hook['version']
 		);
 
 		// e.g. Use "wc_memberships_some_new_hook" instead.
-		$message .= ( isset( $hook['replacement'] ) && false !== $hook['replacement'] ) ? sprintf( 'Use %1$s instead.', $hook['replacement'] ) : 'There is no replacement available.';
+		$message .= ! empty( $hook['replacement'] ) ? sprintf( 'Use %1$s instead.', $hook['replacement'] ) : 'There is no replacement available.';
 
 		// triggers as E_USER_NOTICE
 		trigger_error( $message );

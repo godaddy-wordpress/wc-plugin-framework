@@ -475,6 +475,32 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 
 		/**
+		 * Determines if an order contains only virtual products.
+		 *
+		 * @since 4.5.0
+		 * @param \WC_Order $order the order object
+		 * @return bool
+		 */
+		public static function is_order_virtual( WC_Order $order ) {
+
+			$is_virtual = true;
+
+			foreach ( $order->get_items() as $item ) {
+
+				$product = $order->get_product_from_item( $item );
+
+				// once we've found one non-virtual product we know we're done, break out of the loop
+				if ( ! $product->is_virtual() ) {
+					$is_virtual = false;
+					break;
+				}
+			}
+
+			return $is_virtual;
+		}
+
+
+		/**
 		 * Safely get and trim data from $_POST
 		 *
 		 * @since 3.0.0

@@ -47,19 +47,16 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 
 		$this->plugin = $plugin;
 
-		if ( current_user_can( 'manage_woocommerce' ) ) {
+		// Set up a token editor for each gateway
+		add_action( 'admin_init', array( $this, 'init_token_editors' ) );
 
-			// Set up a token editor for each gateway
-			add_action( 'admin_init', array( $this, 'init_token_editors' ) );
+		// Add the settings section
+		add_action( 'show_user_profile', array( $this, 'add_profile_section' ) );
+		add_action( 'edit_user_profile', array( $this, 'add_profile_section' ) );
 
-			// Add the settings section
-			add_action( 'show_user_profile', array( $this, 'add_profile_section' ) );
-			add_action( 'edit_user_profile', array( $this, 'add_profile_section' ) );
-
-			// Save the settings
-			add_action( 'personal_options_update',  array( $this, 'save_profile_fields' ) );
-			add_action( 'edit_user_profile_update', array( $this, 'save_profile_fields' ) );
-		}
+		// Save the settings
+		add_action( 'personal_options_update',  array( $this, 'save_profile_fields' ) );
+		add_action( 'edit_user_profile_update', array( $this, 'save_profile_fields' ) );
 
 		// Display the token editor markup inside the  profile section
 		add_action( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_user_profile', array( $this, 'display_token_editors' ) );
@@ -95,7 +92,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	 */
 	public function add_profile_section( $user ) {
 
-		if ( ! $this->is_supported() ) {
+		if ( ! $this->is_supported() || ! current_user_can( 'manage_woocommerce' ) ) {
 			return;
 		}
 
@@ -149,7 +146,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	 */
 	public function save_profile_fields( $user_id ) {
 
-		if ( ! $this->is_supported() ) {
+		if ( ! $this->is_supported() || ! current_user_can( 'manage_woocommerce' ) ) {
 			return;
 		}
 

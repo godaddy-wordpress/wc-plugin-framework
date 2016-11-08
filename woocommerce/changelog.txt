@@ -1,5 +1,19 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2016.nn.nn - version 4.5.0
+ * Feature - Mobile-friendly credit card fields using the `tel` input
+ * Feature - Add setting to enable capture for virtual-only orders
+ * Feature - Define minimum php.ini requirements an display a notice when they are not met
+ * Feature - Allow deprecated hooks to be mapped to their replacements
+ * Tweak - Move capture handling to the base gateway class to make it available to hosted gateways
+ * Tweak - Add a "card not accepted" icon when a card number format is not accepted or recognized
+ * Tweak - Add full MasterCard BIN Series 2 support & update the card logo
+ * Tweak - Improve consistency of card type IDs and abbreviations
+ * Tweak - Refactor gateway settings inheritance
+ * Fix - Fix failed renewal payment data not updating for auth-only renewals
+ * Fix - The `load_translation()` method is no longer required for base plugins
+ * Fix - Prevent notices when running alongside bbPress or BuddyPress
+
 2016.09.14 - version 4.4.3
  * Fix - Fix an error when processing guest pre-order payments
 

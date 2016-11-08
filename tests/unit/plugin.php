@@ -88,9 +88,9 @@ headers: Array
     [content-type] => application/xml
     [accept] => application/xml
 )
-
 body: <?xml version="1.0" encoding="UTF-8"?><sv></sv>
 duration: 7.77s
+
 MSG;
 
 		$actual_message = $this->plugin()->get_api_log_message( $data );
@@ -123,13 +123,14 @@ MSG;
 
 		Mock::wpFunction( 'is_ajax', array( 'return' => false ) );
 
+		Mock::wpPassthruFunction( 'wp_parse_args' );
+
 		$args = array(
 			'mock',
 			'7.7.7',
-			'woocommerce-mock',
-			'args' => array(
-				'dependencies'          => 'json',
-				'function_dependencies' => 'ftp_ssl_connect',
+			array(
+				'dependencies'          => array( 'json' ),
+				'function_dependencies' => array( 'ftp_ssl_connect' ),
 			),
 		);
 

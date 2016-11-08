@@ -25,11 +25,12 @@ jQuery( document ).ready ($) ->
 		# Returns SV_WC_Payment_Form_Handler instance
 		constructor: (args) ->
 
-			@id            = args.id
-			@id_dasherized = args.id_dasherized
-			@plugin_id     = args.plugin_id
-			@type          = args.type
-			@csc_required  = args.csc_required
+			@id                 = args.id
+			@id_dasherized      = args.id_dasherized
+			@plugin_id          = args.plugin_id
+			@type               = args.type
+			@csc_required       = args.csc_required
+			@enabled_card_types = args.enabled_card_types
 
 			# which payment form?
 			if $( 'form.checkout' ).length
@@ -161,8 +162,16 @@ jQuery( document ).ready ($) ->
 		# Returns nothing.
 		do_inline_credit_card_validation: ->
 
-			$expiry = $( '.js-sv-wc-payment-gateway-credit-card-form-expiry' )
-			$csc    = $( '.js-sv-wc-payment-gateway-credit-card-form-csc' )
+			$card_number = $( '.js-sv-wc-payment-gateway-credit-card-form-account-number' )
+			$expiry      = $( '.js-sv-wc-payment-gateway-credit-card-form-expiry' )
+			$csc         = $( '.js-sv-wc-payment-gateway-credit-card-form-csc' )
+
+			$card_type = $.payment.cardType( $card_number.val() )
+
+			if $card_type not in @enabled_card_types
+				$card_number.addClass( 'invalid-card-type' )
+			else
+				$card_number.removeClass( 'invalid-card-type' )
 
 			if $.payment.validateCardExpiry( $expiry.payment( 'cardExpiryVal' ) )
 				$expiry.addClass( 'identified' )
@@ -187,11 +196,11 @@ jQuery( document ).ready ($) ->
 			# always validate the CSC if present
 			if csc?
 
-				if not csc
-					errors.push( @params.cvv_missing )
-				else
+				if csc
 					errors.push( @params.cvv_digits_invalid ) if /\D/.test( csc )
 					errors.push( @params.cvv_length_invalid ) if csc.length < 3 || csc.length > 4
+				else if @csc_required
+					errors.push( @params.cvv_missing )
 
 			# Only validate the other CC fields if necessary
 			if not @saved_payment_method_selected

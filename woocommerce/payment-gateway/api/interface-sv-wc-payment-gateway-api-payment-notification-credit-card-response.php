@@ -55,7 +55,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response ex
 
 
 	/**
-	 * Returns the card type, if available, i.e., 'visa', 'mc', etc
+	 * Returns the card type, if available, i.e., 'visa', 'mastercard', etc
 	 *
 	 * @since 2.2.0
 	 * @see SV_WC_Payment_Gateway_Helper::payment_type_to_name()

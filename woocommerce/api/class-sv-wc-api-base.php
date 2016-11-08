@@ -253,7 +253,7 @@ abstract class SV_WC_API_Base {
 			'uri'        => $this->get_request_uri(),
 			'user-agent' => $this->get_request_user_agent(),
 			'headers'    => $this->get_sanitized_request_headers(),
-			'body'       => $this->request->to_string_safe(),
+			'body'       => $this->get_sanitized_request_body(),
 			'duration'   => $this->get_request_duration() . 's', // seconds
 		);
 
@@ -318,8 +318,22 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function get_request_uri() {
 
-		// API base request URI + any request-specific path
-		$uri = $this->request_uri . ( $this->get_request() ? $this->get_request()->get_path() : '' );
+		$uri = $this->request_uri . $this->get_request_path();
+
+		// append any query params to the URL when necessary
+		if ( $query = $this->get_request_query() ) {
+
+			$url_parts = parse_url( $uri );
+
+			// if the URL already has some query params, add to them
+			if ( ! empty( $url_parts['query'] ) ) {
+				$query = '&' . $query;
+			} else {
+				$query = '?' . $query;
+			}
+
+			$uri = untrailingslashit( $uri ) . $query;
+		}
 
 		/**
 		 * Request URI Filter.
@@ -333,6 +347,41 @@ abstract class SV_WC_API_Base {
 		 * @param \SV_WC_API_Base class instance
 		 */
 		return apply_filters( 'wc_' . $this->get_api_id() . '_api_request_uri', $uri, $this );
+	}
+
+
+	/**
+	 * Gets the request path.
+	 *
+	 * @since 4.5.0
+	 * @return string
+	 */
+	protected function get_request_path() {
+
+		return ( $this->get_request() ) ? $this->get_request()->get_path() : '';
+	}
+
+
+	/**
+	 * Gets the request URL query.
+	 *
+	 * @since 4.5.0
+	 * @return string
+	 */
+	protected function get_request_query() {
+
+		$query = '';
+
+		if ( ( $request = $this->get_request() ) && in_array( strtoupper( $this->get_request_method() ), array( 'GET', 'HEAD' ) ) ) {
+
+			$params = (array) ( is_callable( array( $request, 'get_params' ) ) ) ? $request->get_params() : array(); // TODO: remove is_callable() when \SV_WC_API_Request::get_params exists {CW 2016-09-28}
+
+			if ( ! empty( $params ) ) {
+				$query = http_build_query( $params, '', '&' );
+			}
+		}
+
+		return $query;
 	}
 
 
@@ -353,7 +402,7 @@ abstract class SV_WC_API_Base {
 			'blocking'    => true,
 			'user-agent'  => $this->get_request_user_agent(),
 			'headers'     => $this->get_request_headers(),
-			'body'        => $this->get_request()->to_string(),
+			'body'        => $this->get_request_body(),
 			'cookies'     => array(),
 		);
 
@@ -381,6 +430,40 @@ abstract class SV_WC_API_Base {
 	protected function get_request_method() {
 		// if the request object specifies the method to use, use that, otherwise use the API default
 		return $this->get_request() && $this->get_request()->get_method() ? $this->get_request()->get_method() : $this->request_method;
+	}
+
+
+	/**
+	 * Gets the request body.
+	 *
+	 * @since 4.5.0
+	 * @return string
+	 */
+	protected function get_request_body() {
+
+		// GET & HEAD requests don't support a body
+		if ( in_array( strtoupper( $this->get_request_method() ), array( 'GET', 'HEAD' ) ) ) {
+			return '';
+		}
+
+		return ( $this->get_request() && $this->get_request()->to_string() ) ? $this->get_request()->to_string() : '';
+	}
+
+
+	/**
+	 * Gets the sanitized request body, for logging.
+	 *
+	 * @since 4.5.0
+	 * @return string
+	 */
+	protected function get_sanitized_request_body() {
+
+		// GET & HEAD requests don't support a body
+		if ( in_array( strtoupper( $this->get_request_method() ), array( 'GET', 'HEAD' ) ) ) {
+			return '';
+		}
+
+		return ( $this->get_request() && $this->get_request()->to_string_safe() ) ? $this->get_request()->to_string_safe() : '';
 	}
 
 

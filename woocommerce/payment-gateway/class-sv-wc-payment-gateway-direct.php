@@ -101,7 +101,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				}
 
 				// Check the CSC if enabled
-				if ( $this->csc_enabled() && $this->is_credit_card_gateway() ) {
+				if ( $this->is_credit_card_gateway() && $this->csc_enabled() ) {
 					$is_valid = $this->validate_csc( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' ) ) && $is_valid;
 				}
 
@@ -259,12 +259,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$is_valid = true;
 
 		// validate security code
-		if ( empty( $csc ) ) {
-
-			SV_WC_Helper::wc_add_notice( esc_html__( 'Card security code is missing', 'woocommerce-plugin-framework' ), 'error' );
-			$is_valid = false;
-
-		} else {
+		if ( ! empty( $csc ) ) {
 
 			// digit validation
 			if ( ! ctype_digit( $csc ) ) {
@@ -278,6 +273,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$is_valid = false;
 			}
 
+		} elseif ( $this->csc_required() ) {
+
+			SV_WC_Helper::wc_add_notice( esc_html__( 'Card security code is missing', 'woocommerce-plugin-framework' ), 'error' );
+			$is_valid = false;
 		}
 
 		return $is_valid;
@@ -519,7 +518,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				// add CSC if enabled
 				if ( $this->csc_enabled() ) {
-					$order->payment->csc        = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
+					$order->payment->csc = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
 			} elseif ( $this->is_echeck_gateway() ) {
@@ -550,7 +549,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$order->payment->exp_year  = $token->get_exp_year();
 
 				if ( $this->csc_enabled() ) {
-					$order->payment->csc      = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
+					$order->payment->csc = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
 			} elseif ( $this->is_echeck_gateway() ) {
@@ -578,54 +577,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 * @param \SV_WC_Payment_Gateway_Direct $this instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order', $order, $this );
-	}
-
-
-	/**
-	 * Add payment and transaction information as class members of WC_Order
-	 * instance for use in credit card capture transactions.  Standard information
-	 * can include:
-	 *
-	 * $order->capture->amount - amount to capture (partial captures are not supported by the framework yet)
-	 * $order->capture->description - capture description
-	 * $order->capture->trans_id - transaction ID for the order being captured
-	 *
-	 * included for backwards compat (4.1 and earlier)
-	 *
-	 * $order->capture_total
-	 * $order->description
-	 *
-	 * @since 2.0.0
-	 * @param WC_Order $order order being processed
-	 * @return WC_Order object with payment and transaction information attached
-	 */
-	protected function get_order_for_capture( $order ) {
-
-		if ( is_numeric( $order ) ) {
-			$order = wc_get_order( $order );
-		}
-
-		// add capture info
-		$order->capture = new stdClass();
-		$order->capture->amount = SV_WC_Helper::number_format( $order->get_total() );
-		/* translators: Placeholders: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card. */
-		$order->capture->description = sprintf( esc_html__( '%1$s - Capture for Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( get_bloginfo( 'name' ) ), $order->get_order_number() );
-		$order->capture->trans_id = $this->get_order_meta( $order->id, 'trans_id' );
-
-		// backwards compat for 4.1 and earlier
-		$order->capture_total = $order->capture->amount;
-		$order->description   = $order->capture->description;
-
-		/**
-		 * Direct Gateway Capture Get Order Filter.
-		 *
-		 * Allow actors to modify the order object used for performing charge captures.
-		 *
-		 * @since 2.0.0
-		 * @param \WC_Order $order order object
-		 * @param \SV_WC_Payment_Gateway_Direct $this instance
-		 */
-		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_capture', $order, $this );
 	}
 
 
@@ -698,7 +649,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	protected function do_credit_card_transaction( $order, $response = null ) {
 
 		if ( is_null( $response ) ) {
-			if ( $this->perform_credit_card_charge() ) {
+			if ( $this->perform_credit_card_charge( $order ) ) {
 				$response = $this->get_api()->credit_card_charge( $order );
 			} else {
 				$response = $this->get_api()->credit_card_authorization( $order );
@@ -725,7 +676,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				esc_html__( '%1$s %2$s %3$s Approved: %4$s ending in %5$s (expires %6$s)', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
-				$this->perform_credit_card_authorization() ? esc_html_x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' ) : esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' ),
+				$this->perform_credit_card_authorization( $order ) ? esc_html_x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' ) : esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' ),
 				SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ),
 				$last_four,
 				$order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 )
@@ -791,7 +742,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				} catch ( SV_WC_Plugin_Exception $e ) {
 
 					// handle the case of a "tokenize-after-sale" request failing by marking the order as on-hold with an explanatory note
-					if ( ! $response->transaction_held() && ! ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
+					if ( ! $response->transaction_held() && ! ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization( $order ) ) ) {
 
 						// transaction has already been successful, but we've encountered an issue with the post-tokenization, add an order note to that effect and continue on
 						$message = sprintf(
@@ -825,10 +776,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// if the transaction was held (ie fraud validation failure) mark it as such
 			// TODO: consider checking whether the response *was* an authorization, rather than blanket-assuming it was because of the settings.  There are times when an auth will be used rather than charge, ie when performing in-plugin AVS handling (moneris)
-			if ( $response->transaction_held() || ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ) ) {
+			if ( $response->transaction_held() || ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization( $order ) ) ) {
 				// TODO: need to make this more flexible, and not force the message to 'Authorization only transaction' for auth transactions (re moneris efraud handling)
 				/* translators: This is a message describing that the transaction in question only performed a credit card authorization and did not capture any funds. */
-				$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization() ? esc_html__( 'Authorization only transaction', 'woocommerce-plugin-framework' ) : $response->get_status_message(), $response );
+				$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization( $order ) ? esc_html__( 'Authorization only transaction', 'woocommerce-plugin-framework' ) : $response->get_status_message(), $response );
 			}
 
 			return true;
@@ -837,81 +788,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			return $this->do_transaction_failed_result( $order, $response );
 
-		}
-	}
-
-
-	/**
-	 * Perform a credit card capture for the given order
-	 *
-	 * @since 1.0.0
-	 * @param WC_Order $order the order
-	 * @return null|SV_WC_Payment_Gateway_API_Response the response of the capture attempt
-	 */
-	public function do_credit_card_capture( $order ) {
-
-		$order = $this->get_order_for_capture( $order );
-
-		try {
-
-			$response = $this->get_api()->credit_card_capture( $order );
-
-			if ( $response->transaction_approved() ) {
-
-				$message = sprintf(
-					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount. Definitions: Capture, as in capture funds from a credit card. */
-					esc_html__( '%1$s Capture of %2$s Approved', 'woocommerce-plugin-framework' ),
-					$this->get_method_title(),
-					get_woocommerce_currency_symbol() . wc_format_decimal( $order->capture_total )
-				);
-
-				// adds the transaction id (if any) to the order note
-				if ( $response->get_transaction_id() ) {
-					$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
-				}
-
-				$order->add_order_note( $message );
-
-				// prevent stock from being reduced when payment is completed as this is done when the charge was authorized
-				add_filter( 'woocommerce_payment_complete_reduce_order_stock', '__return_false', 100 );
-
-				// complete the order
-				$order->payment_complete();
-
-				// add the standard capture data to the order
-				$this->add_capture_data( $order, $response );
-
-				// let payment gateway implementations add their own data
-				$this->add_payment_gateway_capture_data( $order, $response );
-
-			} else {
-
-				$message = sprintf(
-					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount, %3$s - transaction status message. Definitions: Capture, as in capture funds from a credit card. */
-					esc_html__( '%1$s Capture Failed: %2$s - %3$s', 'woocommerce-plugin-framework' ),
-					$this->get_method_title(),
-					$response->get_status_code(),
-					$response->get_status_message()
-				);
-
-				$order->add_order_note( $message );
-
-			}
-
-			return $response;
-
-		} catch ( SV_WC_Plugin_Exception $e ) {
-
-			$message = sprintf(
-				/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - failure message. Definitions: "capture" as in capturing funds from a credit card. */
-				esc_html__( '%1$s Capture Failed: %2$s', 'woocommerce-plugin-framework' ),
-				$this->get_method_title(),
-				$e->getMessage()
-			);
-
-			$order->add_order_note( $message );
-
-			return null;
 		}
 	}
 
@@ -950,7 +826,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				if ( $order->payment_total > 0 ) {
 					// mark as captured
-					if ( $this->perform_credit_card_charge() ) {
+					if ( $this->perform_credit_card_charge( $order ) ) {
 						$captured = 'yes';
 					} else {
 						$captured = 'no';
@@ -982,37 +858,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$this->update_order_meta( $order->id, 'check_number', $order->payment->check_number );
 			}
 		}
-	}
-
-
-	/**
-	 * Adds the standard capture data to the order
-	 *
-	 * @since 2.0
-	 * @param WC_Order $order the order object
-	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
-	 */
-	protected function add_capture_data( $order, $response ) {
-
-		// mark the order as captured
-		$this->update_order_meta( $order->id, 'charge_captured', 'yes' );
-
-		// add capture transaction ID
-		if ( $response && $response->get_transaction_id() ) {
-			$this->update_order_meta( $order->id, 'capture_trans_id', $response->get_transaction_id() );
-		}
-	}
-
-
-	/**
-	 * Adds any gateway-specific data to the order after a capture is performed
-	 *
-	 * @since 2.0
-	 * @param WC_Order $order the order object
-	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
-	 */
-	protected function add_payment_gateway_capture_data( $order, $response ) {
-		// Optional method
 	}
 
 
