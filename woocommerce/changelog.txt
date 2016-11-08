@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2016.nn.nn - version 4.5.0
+2016.11.07 - version 4.5.0
  * Feature - Mobile-friendly credit card fields using the `tel` input
  * Feature - Add setting to enable capture for virtual-only orders
  * Feature - Define minimum php.ini requirements an display a notice when they are not met
