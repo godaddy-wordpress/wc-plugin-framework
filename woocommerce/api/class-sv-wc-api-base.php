@@ -374,7 +374,7 @@ abstract class SV_WC_API_Base {
 
 		if ( ( $request = $this->get_request() ) && in_array( strtoupper( $this->get_request_method() ), array( 'GET', 'HEAD' ) ) ) {
 
-			$params = (array) ( is_callable( array( $request, 'get_params' ) ) ) ? $request->get_params() : array(); // TODO: remove is_callable() when \SV_WC_API_Request::get_params exists {CW 2016-09-28}
+			$params = is_callable( array( $request, 'get_params' ) ) ? $request->get_params() : array(); // TODO: remove is_callable() when \SV_WC_API_Request::get_params exists {CW 2016-09-28}
 
 			if ( ! empty( $params ) ) {
 				$query = http_build_query( $params, '', '&' );
