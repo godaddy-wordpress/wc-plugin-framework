@@ -91,6 +91,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/** @var SV_WC_Payment_Gateway_My_Payment_Methods adds My Payment Method functionality */
 	private $my_payment_methods;
 
+	/** @var \SV_WC_Payment_Gateway_Apple_Pay the Apple Pay handler instance */
+	private $apple_pay;
+
 
 	/**
 	 * Initialize the plugin
@@ -135,6 +138,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 			add_action( 'wp', array( $this, 'maybe_init_my_payment_methods' ) );
 		}
+
+		// Apple Pay feature
+		add_action( 'init', array( $this, 'maybe_init_apple_pay' ) );
 
 		// Admin
 		if ( is_admin() && ! is_ajax() ) {
@@ -240,6 +246,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-payment-form.php' );
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-my-payment-methods.php' );
 
+		// apple pay
+		require_once( $payment_gateway_framework_path . '/apple-pay/class-sv-wc-payment-gateway-apple-pay.php' );
+
 		// payment tokens
 		require_once( $payment_gateway_framework_path . '/payment-tokens/class-sv-wc-payment-gateway-payment-token.php' );
 		require_once( $payment_gateway_framework_path . '/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php' );
@@ -319,6 +328,55 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	protected function get_my_payment_methods_instance() {
 
 		return new SV_WC_Payment_Gateway_My_Payment_Methods( $this );
+	}
+
+
+	/** Apple Pay *************************************************************/
+
+
+	/**
+	 * Initializes Apple Pay if it's supported.
+	 *
+	 * @since 4.6.0-dev
+	 */
+	public function maybe_init_apple_pay() {
+
+		if ( $this->supports_apple_pay() ) {
+			$this->apple_pay = $this->get_apple_pay_instance();
+		}
+	}
+
+
+	/**
+	 * Gets the Apple Pay handler instance.
+	 *
+	 * @since 4.6.0-dev
+	 * @return \SV_WC_Payment_Gateway_Apple_Pay
+	 */
+	public function get_apple_pay_instance() {
+
+		return new SV_WC_Payment_Gateway_Apple_Pay( $this );
+	}
+
+
+	/**
+	 * Determines if this plugin has any gateways with Apple Pay support.
+	 *
+	 * @since 4.6.0-dev
+	 * @return bool
+	 */
+	public function supports_apple_pay() {
+
+		$is_supported = false;
+
+		foreach ( $this->get_gateways() as $gateway ) {
+
+			if ( $gateway->supports_apple_pay() ) {
+				$is_supported = true;
+			}
+		}
+
+		return $is_supported;
 	}
 
 

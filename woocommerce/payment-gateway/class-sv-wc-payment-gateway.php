@@ -112,6 +112,9 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/** Customer ID feature */
 	const FEATURE_CUSTOMER_ID = 'customer_id';
 
+	/** Apple Pay feature */
+	const FEATURE_APPLE_PAY = 'apple_pay';
+
 	/** @var SV_WC_Payment_Gateway_Plugin the parent plugin class */
 	private $plugin;
 
@@ -694,6 +697,58 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		return $defaults;
+	}
+
+
+	/** Apple Pay Feature *****************************************************/
+
+
+	/**
+	 * Determines whether this gateway supports Apple Pay.
+	 *
+	 * @since 4.6.0-dev
+	 * @return bool
+	 */
+	public function supports_apple_pay() {
+
+		return $this->supports( self::FEATURE_APPLE_PAY );
+	}
+
+
+	/**
+	 * Gets the Apple Pay gateway capabilities.
+	 *
+	 * Gateways should override this if they have more or less capabilities than
+	 * the default. See https://developer.apple.com/reference/applepayjs/paymentrequest/1916123-merchantcapabilities
+	 * for valid values.
+	 *
+	 * @since 4.6.0-dev
+	 * @return array
+	 */
+	public function get_apple_pay_capabilities() {
+
+		return array(
+			'supports3DS',
+			'supportsCredit',
+			'supportsDebit',
+		);
+	}
+
+
+	/**
+	 * Adds the Apple Pay payment data to the order object.
+	 *
+	 * Gateways should override this to see the appropriate values depending on
+	 * how their processing API needs to handle the data.
+	 *
+	 * @since 4.6.0-dev
+	 * @param \WC_Order the order object
+	 * @param object the authorized payment data. see https://developer.apple.com/reference/applepayjs/payment for structure
+	 * @return \WC_Order
+	 */
+	public function add_apple_pay_order_data( $order, $payment_data ) {
+
+		return $order;
 	}
 
 
