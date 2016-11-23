@@ -32,12 +32,24 @@ defined( 'ABSPATH' ) or exit;
 class SV_WC_Payment_Gateway_Apple_Pay_API_Response extends SV_WC_API_JSON_Response {
 
 
+	/**
+	 * Gets the status code.
+	 *
+	 * @since 4.6.0-dev
+	 * @return string
+	 */
 	public function get_status_code() {
 
 		return $this->statusCode;
 	}
 
 
+	/**
+	 * Gets the status message.
+	 *
+	 * @since 4.6.0-dev
+	 * @return string
+	 */
 	public function get_status_message() {
 
 		return $this->statusMessage;

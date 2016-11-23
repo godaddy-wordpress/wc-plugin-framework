@@ -428,7 +428,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 				if ( is_wp_error( $order ) ) {
 
-					throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 522 ) );
+					throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 522 ) );
+
 				} else {
 
 					$order->remove_order_items();
@@ -450,9 +451,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 				} else {
 
-					$order_id = $order->id;
-
-					do_action( 'woocommerce_new_order', $order_id );
+					do_action( 'woocommerce_new_order', $order->id );
 				}
 			}
 
