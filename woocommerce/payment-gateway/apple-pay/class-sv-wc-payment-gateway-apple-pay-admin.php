@@ -130,18 +130,24 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 			array(
 				'title' => __( 'Buy Now', 'woocommerce-plugin-framework' ),
 				'type'  => 'title',
+				'desc'  => sprintf(
+					__( 'The %1$sBuy Now with Apple Pay%2$s button is displayed on single product pages, and is only available for simple products. Use these settings to set an optional tax rate and shipping cost for customers who use Buy Now.', 'woocommerce-plugin-framework' ),
+					'<strong>', '</strong>'
+				),
 			),
 
 			array(
-				'id'      => 'sv_wc_apple_pay_buy_now_tax_rate',
-				'title'   => __( 'Tax Rate', 'woocommerce-plugin-framework' ),
-				'type'    => 'text',
+				'id'       => 'sv_wc_apple_pay_buy_now_tax_rate',
+				'title'    => __( 'Tax Rate', 'woocommerce-plugin-framework' ),
+				'type'     => 'text',
+				'desc_tip' => __( 'The optional tax rate percentage to apply to Buy Now orders.', 'woocommerce-plugin-framework' ),
 			),
 
 			array(
-				'id'      => 'sv_wc_apple_pay_buy_now_shipping_cost',
-				'title'   => __( 'Shipping Cost', 'woocommerce-plugin-framework' ),
-				'type'    => 'text',
+				'id'       => 'sv_wc_apple_pay_buy_now_shipping_cost',
+				'title'    => __( 'Shipping Cost', 'woocommerce-plugin-framework' ),
+				'type'     => 'text',
+				'desc_tip' => __( 'The optional flat-rate shipping cost to add to Buy Now orders.', 'woocommerce-plugin-framework' ),
 			),
 
 			array(
@@ -160,9 +166,15 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 			),
 
 			array(
-				'id'      => 'sv_wc_apple_pay_cert_path',
-				'title'   => __( 'Certificate Path', 'woocommerce-plugin-framework' ),
-				'type'    => 'text',
+				'id'       => 'sv_wc_apple_pay_cert_path',
+				'title'    => __( 'Certificate Path', 'woocommerce-plugin-framework' ),
+				'type'     => 'text',
+				'desc_tip' => 'The full system path to your certificate file from Apple. For security reasons you should store this outside of your web root.',
+				'desc'     => sprintf(
+					/* translators: Placeholders: %s - the server's web root path */
+					__( 'For reference, your current web root path is: %s', 'woocommerce-plugin-framework' ),
+					'<code>' . ABSPATH . '</code>'
+				),
 			),
 
 			array(
