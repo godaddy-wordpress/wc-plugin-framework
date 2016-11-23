@@ -41,8 +41,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/** @var \SV_WC_Payment_Gateway $gateway the gateway instance */
 	protected $gateway;
 
-	protected $payment_data;
-
 
 	/**
 	 * Constructs the class.
@@ -59,10 +57,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		$this->gateway = $this->get_handler()->get_processing_gateway();
 
-		add_action( 'wp', array( $this, 'init' ) );
-
-		#add_action( 'wp_ajax_sv_wc_apple_pay_get_product_payment_request',        array( $this, 'get_product_payment_request' ) );
-		#add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_get_product_payment_request', array( $this, 'get_product_payment_request' ) );
+		if ( $this->get_handler()->is_available() ) {
+			add_action( 'wp', array( $this, 'init' ) );
+		}
 
 		add_action( 'wp_ajax_sv_wc_apple_pay_get_cart_payment_request',        array( $this, 'get_cart_payment_request' ) );
 		add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_get_cart_payment_request', array( $this, 'get_cart_payment_request' ) );
@@ -79,14 +76,10 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 */
 	public function init() {
 
-		if ( ! $this->get_handler()->is_available() ) {
-			return;
-		}
-
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
-		if ( is_product() ) {
-			#$this->init_product();
+		if ( is_product() && 'yes' === get_option( 'sv_wc_apple_pay_single_product' ) ) {
+			$this->init_product();
 		} else if ( is_cart() && 'yes' === get_option( 'sv_wc_apple_pay_cart' ) ) {
 			$this->init_cart();
 		} else if ( is_checkout() && 'yes' === get_option( 'sv_wc_apple_pay_checkout' ) ) {
@@ -166,6 +159,13 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		$product = wc_get_product( get_the_ID() );
 
+		// simple products only, for now
+		if ( ! $product || ! $product->is_type( 'simple' ) ) {
+			return;
+		}
+
+		$payment_request = $this->get_product_payment_request( $product );
+
 		/**
 		 * Filters the Apple Pay product handler args.
 		 *
@@ -173,14 +173,57 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		 * @param array $args
 		 */
 		$args = apply_filters( 'sv_wc_apple_pay_product_handler_args', array(
-			'request_action' => 'sv_wc_apple_pay_get_product_payment_request',
-			'request_nonce'  => wp_create_nonce( 'sv_wc_apple_pay_get_product_payment_request' ),
-			'product_id'     => $product->is_type( 'variable' ) ? 0 : $product->get_id(),
+			'payment_request' => $payment_request,
 		) );
 
 		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Product_Handler(%s);', json_encode( $args ) ) );
 
 		add_action( 'woocommerce_after_add_to_cart_button', array( $this, 'render_button' ) );
+	}
+
+
+	/**
+	 * Gets a single product payment request.
+	 *
+	 * @since 4.6.0-dev
+	 * @param \WC_Product $product the product object
+	 * @return array
+	 */
+	public function get_product_payment_request( WC_Product $product ) {
+
+		$line_items = array(
+			$product->get_id() => array(
+				'name'     => $product->get_title(),
+				'quantity' => 1,
+				'amount'   => $product->get_price(),
+			),
+		);
+
+		$args = array(
+			'shipping_required' => $product->needs_shipping(),
+			'shipping_total'    => 0,
+			'tax_total'         => 0,
+		);
+
+		$shipping_cost = (int) get_option( 'sv_wc_apple_pay_buy_now_shipping_cost', 0 );
+		$tax_rate      = (int) get_option( 'sv_wc_apple_pay_buy_now_tax_rate', 0 );
+
+		if ( $product->needs_shipping() && $shipping_cost ) {
+			$args['shipping_total'] = $shipping_cost;
+		}
+
+		$total = array(
+			'amount' => $product->get_price() + $args['shipping_total'],
+		);
+
+		if ( $tax_rate && wc_tax_enabled() ) {
+
+			$args['tax_total'] = round( $total['amount'] * ( $tax_rate / 100 ), 2 );
+
+			$total['amount'] += $args['tax_total'];
+		}
+
+		return $this->build_payment_request( $total, $line_items, $args );
 	}
 
 
@@ -193,6 +236,10 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * @since 4.6.0-dev
 	 */
 	public function init_cart() {
+
+		if ( $this->get_plugin()->is_subscriptions_active() && WC_Subscriptions_Cart::cart_contains_subscription() ) {
+			return;
+		}
 
 		/**
 		 * Filters the Apple Pay cart handler args.
@@ -239,88 +286,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	}
 
 
-	/**
-	 * Builds a payment request based on WC cart data.
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Cart $cart the cart object
-	 * @return array
-	 */
-	protected function build_cart_payment_request( WC_Cart $cart ) {
-
-		// product line items
-		$line_items = array();
-
-		foreach ( $cart->get_cart() as $cart_item_key => $item ) {
-
-			$line_items[] = array(
-				'name'     => $item['data']->get_title(),
-				'quantity' => $item['quantity'],
-				'amount'   => $item['line_subtotal'],
-			);
-		}
-
-		// TODO: fees?
-
-		// TODO: discounts?
-
-		// order total
-		$total = array(
-			'amount' => $cart->total,
-		);
-
-		// taxes
-		$args = array(
-			'tax_total' => $cart->tax_total + $cart->shipping_tax_total,
-		);
-
-		if ( $cart->needs_shipping() ) {
-
-			// shipping
-			$shipping_packages       = WC()->shipping->get_packages();
-			$chosen_shipping_methods = WC()->session->get( 'chosen_shipping_methods', array() );
-
-			// if shipping methods have already been chosen, simply add the total as a line item
-			// otherwise, we will build the list of options to choose via the Apple Pay card.
-			if ( ! empty( $chosen_shipping_methods ) ) {
-
-				$args['shipping_total'] = $cart->shipping_total;
-
-			} else if ( 1 === count( $shipping_packages ) ) {
-
-				$package = current( $shipping_packages );
-
-				foreach ( $package['rates'] as $rate ) {
-
-					$args['shipping_methods'][] = array(
-						'label'      => $rate->get_label(),
-						'amount'     => $this->format_price( $rate->cost ),
-						'identifier' => $rate->id,
-					);
-				}
-
-			} else {
-
-				throw new SV_WC_Payment_Gateway_Exception( __( 'No shipping totals available.', 'woocommerce-plugin-framework' ) );
-			}
-		}
-
-		$this->get_gateway()->add_debug_message( 'Generating Apple Pay Payment Request' );
-
-		// build it!
-		$request = $this->build_payment_request( $total, $line_items, $args );
-
-		/**
-		 * Filters the Apple Pay cart JS payment request.
-		 *
-		 * @since 4.6.0-dev
-		 * @param array $args the cart JS payment request
-		 * @param \WC_Cart $cart the cart object
-		 */
-		return apply_filters( 'sv_wc_apple_pay_cart_payment_request', $request, $cart );
-	}
-
-
 	/** Checkout functionality ************************************************/
 
 
@@ -330,6 +295,10 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * @since 4.6.0-dev
 	 */
 	public function init_checkout() {
+
+		if ( $this->get_plugin()->is_subscriptions_active() && WC_Subscriptions_Cart::cart_contains_subscription() ) {
+			return;
+		}
 
 		/**
 		 * Filters the Apple Pay checkout handler args.
@@ -377,6 +346,90 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 
 	/**
+	 * Builds a payment request based on WC cart data.
+	 *
+	 * @since 4.6.0-dev
+	 * @param \WC_Cart $cart the cart object
+	 * @return array
+	 */
+	protected function build_cart_payment_request( WC_Cart $cart ) {
+
+		// product line items
+		$line_items = array();
+
+		foreach ( $cart->get_cart() as $cart_item_key => $item ) {
+
+			$line_items[ $item['data']->get_id() ] = array(
+				'name'     => $item['data']->get_title(),
+				'quantity' => $item['quantity'],
+				'amount'   => $item['line_subtotal'],
+			);
+		}
+
+		// TODO: fees?
+
+		// TODO: discounts?
+
+		// order total
+		$total = array(
+			'amount' => $cart->total,
+		);
+
+		// taxes
+		$args = array(
+			'tax_total' => $cart->tax_total + $cart->shipping_tax_total,
+		);
+
+		if ( $cart->needs_shipping() ) {
+
+			$args['shipping_required'] = true;
+
+			// shipping
+			$shipping_packages       = WC()->shipping->get_packages();
+			$chosen_shipping_methods = WC()->session->get( 'chosen_shipping_methods', array() );
+
+			// if shipping methods have already been chosen, simply add the total as a line item
+			// otherwise, we will build the list of options to choose via the Apple Pay card.
+			if ( ! empty( $chosen_shipping_methods ) ) {
+
+				$args['shipping_total'] = $cart->shipping_total;
+
+			} else if ( 1 === count( $shipping_packages ) ) {
+
+				$package = current( $shipping_packages );
+
+				foreach ( $package['rates'] as $rate ) {
+
+					$args['shipping_methods'][] = array(
+						'label'      => $rate->get_label(),
+						'amount'     => $this->format_price( $rate->cost ),
+						'identifier' => $rate->id,
+					);
+				}
+
+			} else {
+
+				throw new SV_WC_Payment_Gateway_Exception( __( 'No shipping totals available.', 'woocommerce-plugin-framework' ) );
+			}
+		}
+
+		$this->get_gateway()->add_debug_message( 'Generating Apple Pay Payment Request' );
+
+		// build it!
+		$request = $this->build_payment_request( $total, $line_items, $args );
+
+		/**
+		 * Filters the Apple Pay cart JS payment request.
+		 *
+		 * @since 4.6.0-dev
+		 * @param array $args the cart JS payment request
+		 * @param \WC_Cart $cart the cart object
+		 */
+		return apply_filters( 'sv_wc_apple_pay_cart_payment_request', $request, $cart );
+	}
+
+
+	/**
 	 * Builds an Apple Pay payment request.
 	 *
 	 * This contains all of the data necessary to complete a payment, including
@@ -390,7 +443,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 *     @type string $amount the total payment amount
 	 * }
 	 * @param array $line_items {
-	 *     The order line items.
+	 *     Optional. The order line items.
 	 *
 	 *     @type string $name the line item name (usually a WC product title)
 	 *     @type string $amount the line subtotal
@@ -405,13 +458,14 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * }
 	 * @return array
 	 */
-	protected function build_payment_request( $total, $line_items, $args = array() ) {
+	protected function build_payment_request( $total, $line_items = array(), $args = array() ) {
 
 		$args = wp_parse_args( $args, array(
 			'currency_code'         => get_woocommerce_currency(),
 			'country_code'          => get_option( 'woocommerce_default_country' ),
 			'merchant_capabilities' => $this->get_handler()->get_capabilities(),
 			'supported_networks'    => $this->get_handler()->get_supported_networks(),
+			'shipping_required'     => false,
 		) );
 
 		// set the base required defaults
@@ -429,7 +483,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		);
 
 		// if a shipping address is required
-		if ( ! empty( $args['shipping_methods'] ) || ! empty( $args['shipping_total'] ) ) {
+		if ( $args['shipping_required'] ) {
 			$request['requiredShippingContactFields'][] = 'postalAddress';
 		}
 
@@ -473,7 +527,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			);
 		}
 
-		$request['lineItems'] = array_values( $line_items );
+		if ( ! empty( $line_items ) ) {
+			$request['lineItems'] = $line_items;
+		}
 
 		$request['total'] = wp_parse_args( $total, array(
 			'label'  => get_bloginfo( 'name', 'display' ),
@@ -481,6 +537,12 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		) );
 
 		$request['total']['amount'] = $this->format_price( $request['total']['amount'] );
+
+		$this->get_handler()->store_payment_request( $request );
+
+		if ( ! empty( $request['lineItems'] ) ) {
+			$request['lineItems'] = array_values( $request['lineItems'] );
+		}
 
 		// log the payment request
 		$this->get_gateway()->add_debug_message( "Apple Pay Payment Request:\n" . print_r( $request, true ) );

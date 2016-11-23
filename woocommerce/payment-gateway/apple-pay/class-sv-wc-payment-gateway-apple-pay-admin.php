@@ -128,6 +128,27 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 			),
 
 			array(
+				'title' => __( 'Buy Now', 'woocommerce-plugin-framework' ),
+				'type'  => 'title',
+			),
+
+			array(
+				'id'      => 'sv_wc_apple_pay_buy_now_tax_rate',
+				'title'   => __( 'Tax Rate', 'woocommerce-plugin-framework' ),
+				'type'    => 'text',
+			),
+
+			array(
+				'id'      => 'sv_wc_apple_pay_buy_now_shipping_cost',
+				'title'   => __( 'Shipping Cost', 'woocommerce-plugin-framework' ),
+				'type'    => 'text',
+			),
+
+			array(
+				'type' => 'sectionend',
+			),
+
+			array(
 				'title' => __( 'Connection Settings', 'woocommerce-plugin-framework' ),
 				'type'  => 'title',
 			),

@@ -132,6 +132,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 */
 	public function process_payment() {
 
+		$type    = SV_WC_Helper::get_post( 'type' );
 		$payment = json_decode( stripslashes( SV_WC_Helper::get_post( 'payment' ) ) );
 
 		try {
@@ -146,7 +147,13 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			$this->get_processing_gateway()->add_debug_message( "Apple Pay Payment Response:\n" . print_r( $payment, true ) );
 
 			// create a new order
-			$order = $this->create_cart_order();
+			if ( 'cart' === $type || 'checkout' === $type ) {
+				$order = $this->create_cart_order();
+			} else if ( 'product' === $type ) {
+				$order = $this->create_product_order();
+			} else {
+				throw new SV_WC_Payment_Gateway_Exception( 'Invalid payment type recieved' );
+			}
 
 			$billing_address = $shipping_address = array();
 
@@ -166,7 +173,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 						'city'       => $payment->billingContact->locality,
 						'state'      => $payment->billingContact->administrativeArea,
 						'postcode'   => $payment->billingContact->postalCode,
-						'country'    => $payment->billingContact->countryCode,
+						'country'    => strtoupper( $payment->billingContact->countryCode ),
 					) );
 				}
 
@@ -189,7 +196,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 						'city'       => $payment->shippingContact->locality,
 						'state'      => $payment->shippingContact->administrativeArea,
 						'postcode'   => $payment->shippingContact->postalCode,
-						'country'    => $payment->shippingContact->countryCode,
+						'country'    => strtoupper( $payment->shippingContact->countryCode ),
 					) );
 				}
 
@@ -209,6 +216,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 			// process the payment via the gateway
 			$result = $this->get_processing_gateway()->process_payment( $order->id );
+
+			// clear the payment request data
+			unset( WC()->session->apple_pay_payment_request );
 
 			wp_send_json( $result );
 
@@ -272,18 +282,10 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			'fees' => WC()->cart->get_fees(),
 		);
 
-		foreach ( array_keys( WC()->cart->taxes + WC()->cart->shipping_taxes ) as $tax_rate_id ) {
-
-			$args['taxes'][ $tax_rate_id ] = array(
-				'amount'          => WC()->cart->get_tax_amount( $tax_rate_id ),
-				'shipping_amount' => WC()->cart->get_shipping_tax_amount( $tax_rate_id ),
-			);
-		}
-
 		foreach ( WC()->shipping->get_packages() as $key => $package ) {
 
 			$args['packages'][ $key ] = array(
-
+				// TODO
 			);
 		}
 
@@ -302,13 +304,57 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 
 	/**
+	 * Creates an order from a single product request.
+	 *
+	 * @since 4.6.0-dev
+	 * @throws \SV_WC_Plugin_Exception
+	 */
+	protected function create_product_order() {
+
+		$payment_request = $this->get_stored_payment_request();
+
+		$items = array();
+
+		foreach ( $payment_request['lineItems'] as $product_id => $item ) {
+
+			$product = wc_get_product( $product_id );
+
+			if ( ! $product ) {
+				continue;
+			}
+
+			$items[] = array(
+				'product'  => $product,
+				'quantity' => 1,
+				'args'     => array(),
+				'values'   => $item,
+			);
+		}
+
+		$order = $this->create_order( $items );
+
+		if ( ! empty( $payment_request['lineItems']['taxes'] ) ) {
+			$order->set_total( $payment_request['lineItems']['taxes']['amount'], 'tax' );
+		}
+
+		if ( ! empty( $payment_request['lineItems']['shipping'] ) ) {
+			$order->set_total( $payment_request['lineItems']['shipping']['amount'], 'shipping' );
+		}
+
+		$order->set_total( $payment_request['total']['amount'] );
+
+		return $order;
+	}
+
+
+	/**
 	 * Creates a new order from provided data.
 	 *
 	 * @since 4.6.0-dev
 	 * @param array $args the order args
 	 * @throws \SV_WC_Plugin_Exception
 	 */
-	public function create_order( $items, $args ) {
+	public function create_order( $items, $args = array() ) {
 
 		$args = wp_parse_args( $args, array(
 			'customer_id'      => get_current_user_id(),
@@ -404,6 +450,29 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 			throw $e;
 		}
+	}
+
+
+	/**
+	 * Gets the stored payment request data.
+	 *
+	 * @since 4.6.0-dev
+	 * @return array
+	 */
+	public function get_stored_payment_request() {
+
+		return WC()->session->get( 'apple_pay_payment_request', array() );
+	}
+
+
+	/**
+	 * Stores payment request data for later use.
+	 *
+	 * @since 4.6.0-dev
+	 */
+	public function store_payment_request( $data ) {
+
+		WC()->session->set( 'apple_pay_payment_request', $data );
 	}
 
 

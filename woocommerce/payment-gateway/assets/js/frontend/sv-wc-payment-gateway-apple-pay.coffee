@@ -27,6 +27,8 @@ jQuery( document ).ready ($) ->
 			@request_action = args.request_action
 			@request_nonce  = args.request_nonce
 
+			@payment_request = args.payment_request
+
 			if this.is_available()
 
 				this.init()
@@ -47,25 +49,31 @@ jQuery( document ).ready ($) ->
 
 		init: ->
 
-			this.block_ui()
-
 			@buttons = $( '.sv-wc-apple-pay-button' )
 
-			this.get_payment_request().then ( response ) =>
+			if not @payment_request
 
-				@payment_request = $.parseJSON( response )
+				this.block_ui()
 
-				if @payment_request
+				this.get_payment_request().then ( response ) =>
 
-					@buttons.show().prop( 'disabled', false )
+					@payment_request = $.parseJSON( response )
+
+					if @payment_request
+
+						@buttons.show().prop( 'disabled', false )
+
+						this.unblock_ui()
+
+				, ( response ) =>
+
+					console.log '[Apple Pay Error] ' + response
 
 					this.unblock_ui()
 
-			, ( response ) =>
+			else
 
-				console.log '[Apple Pay Error] ' + response
-
-				this.unblock_ui()
+				@buttons.show().prop( 'disabled', false )
 
 			$( document.body ).on 'click', '.sv-wc-apple-pay-button:not([disabled])', ( e ) =>
 
@@ -172,6 +180,7 @@ jQuery( document ).ready ($) ->
 			data = {
 				action:  'sv_wc_apple_pay_process_payment',
 				nonce:   @params.process_nonce,
+				type:    @type,
 				payment: JSON.stringify( payment )
 			}
 
@@ -256,12 +265,18 @@ jQuery( document ).ready ($) ->
 		# @since 3.9.2-1
 		constructor: (args) ->
 
+			@type = 'cart'
+
 			@payment_form = $( '.cart_totals' )
 
 			super(args)
 
 			# re-init if the cart totals are updated
-			$( document.body ).on( 'updated_cart_totals', => this.init() )
+			$( document.body ).on 'updated_cart_totals', =>
+
+				@payment_request = false
+
+				this.init()
 
 
 	# The WooCommerce Apple Pay checkout handler class.
@@ -275,12 +290,18 @@ jQuery( document ).ready ($) ->
 		# @since 3.9.2-1
 		constructor: (args) ->
 
+			@type = 'checkout'
+
 			@payment_form = $( 'form.woocommerce-checkout' )
 
 			super(args)
 
 			# re-init if the cart totals are updated
-			$( document.body ).on( 'update_checkout', => this.init() )
+			$( document.body ).on 'update_checkout', =>
+
+				@payment_request = false
+
+				this.init()
 
 
 	# The WooCommerce Apple Pay product handler class.
@@ -294,28 +315,8 @@ jQuery( document ).ready ($) ->
 		# @since 3.9.2-1
 		constructor: (args) ->
 
+			@type = 'product'
+
 			@payment_form = $( 'form.cart' )
 
-			@product_id = args.product_id
-
 			super(args)
-
-			# re-init if the varation form is updated
-			$( document.body ).on( 'show_variation', ( event, variation, purchasable ) => this.init_variations( variation.variation_id, purchasable ) )
-
-
-		init_variations: ( variation_id, purchasable ) =>
-
-			if variation_id and purchasable
-				@product_id = variation_id
-			else
-				@product_id = 0
-
-			this.init()
-
-
-		init: =>
-
-			return if @product_id is 0
-
-			super()
