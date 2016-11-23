@@ -138,10 +138,15 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		try {
 
 			if ( ! $payment ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Invalid payment data recieved' ); // TODO
+				throw new SV_WC_Payment_Gateway_Exception( 'Invalid payment data recieved' );
 			}
 
 			$this->payment_data = $payment;
+
+			// pretend this is at checkout so totals are fully calculated
+			if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
+				define( 'WOOCOMMERCE_CHECKOUT', true );
+			}
 
 			// log the payment response
 			$this->get_processing_gateway()->add_debug_message( "Apple Pay Payment Response:\n" . print_r( $payment, true ) );
@@ -154,6 +159,10 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			} else {
 				throw new SV_WC_Payment_Gateway_Exception( 'Invalid payment type recieved' );
 			}
+
+			// if we got to this point, the payment was authorized by Apple Pay
+			// from here on out, it's up to the gateway to not screw things up.
+			$order->add_order_note( __( 'Apple Pay payment authorized.', 'woocommerce-plugin-framework' ) );
 
 			$billing_address = $shipping_address = array();
 
@@ -226,6 +235,12 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 			$this->get_processing_gateway()->add_debug_message( 'Apple Pay payment failed. ' . $e->getMessage() );
 
+			$order->add_order_note( sprintf(
+				/** translators: Placeholders: %s - the error message */
+				__( 'Apple Pay payment failed. %s', 'woocommerce-plugin-framework' ),
+				$e->getMessage()
+			) );
+
 			wp_send_json( array(
 				'result'  => 'error',
 				'message' => $e->getMessage(),
@@ -259,6 +274,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		$items = array();
 
+		WC()->cart->calculate_totals();
+
 		foreach ( WC()->cart->get_cart() as $cart_item_key => $item ) {
 
 			$items[ $cart_item_key ] = array(
@@ -282,11 +299,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			'fees' => WC()->cart->get_fees(),
 		);
 
-		foreach ( WC()->shipping->get_packages() as $key => $package ) {
-
-			$args['packages'][ $key ] = array(
-				// TODO
-			);
+		if ( $packages = WC()->shipping->get_packages() ) {
+			$args['packages'] = $packages;
 		}
 
 		foreach ( WC()->cart->get_coupons() as $code => $coupon ) {
@@ -333,6 +347,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		$order = $this->create_order( $items );
 
+		// set the totals
 		if ( ! empty( $payment_request['lineItems']['taxes'] ) ) {
 			$order->set_total( $payment_request['lineItems']['taxes']['amount'], 'tax' );
 		}
@@ -349,6 +364,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 	/**
 	 * Creates a new order from provided data.
+	 *
+	 * This is adapted from WooCommerce's `WC_Checkout::create_order()`
 	 *
 	 * @since 4.6.0-dev
 	 * @param array $args the order args
@@ -390,6 +407,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 			$order->set_payment_method( $this->get_processing_gateway()->get_id() );
 
+			// add line items
 			foreach ( $items as $key => $item ) {
 
 				$item_id = $order->add_product( $item['product'], $item['quantity'], $item['args'] );
@@ -401,6 +419,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				do_action( 'woocommerce_add_order_item_meta', $item_id, $item['values'], $key );
 			}
 
+			// add fees
 			foreach ( $args['fees'] as $key => $fee ) {
 
 				$item_id = $order->add_fee( $fee );
@@ -412,6 +431,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				do_action( 'woocommerce_add_order_fee_meta', $order_id, $item_id, $fee, $key );
 			}
 
+			// add shipping packages
 			foreach ( $args['packages'] as $key => $package ) {
 
 				$shipping_methods = WC()->session->get( 'chosen_shipping_methods' );
@@ -428,6 +448,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				}
 			}
 
+			// add coupons
 			foreach ( $args['coupons'] as $code => $coupon ) {
 
 				if ( ! $order->add_coupon( $code, $coupon['amount'], $coupon['tax_amount'] ) ) {

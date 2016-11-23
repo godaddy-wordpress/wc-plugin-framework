@@ -110,6 +110,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			'ajax_url'              => admin_url( 'admin-ajax.php' ),
 			'validate_nonce'        => wp_create_nonce( 'sv_wc_apple_pay_validate_merchant' ),
 			'process_nonce'         => wp_create_nonce( 'sv_wc_apple_pay_process_payment' ),
+			'generic_error'         => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
 		) );
 
 		wp_localize_script( 'sv-wc-apple-pay', 'sv_wc_apple_pay_params', $params );
@@ -178,7 +179,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Product_Handler(%s);', json_encode( $args ) ) );
 
-		add_action( 'woocommerce_after_add_to_cart_button', array( $this, 'render_button' ) );
+		add_action( 'woocommerce_before_add_to_cart_button', array( $this, 'render_button' ) );
 	}
 
 
@@ -205,8 +206,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			'tax_total'         => 0,
 		);
 
-		$shipping_cost = (int) get_option( 'sv_wc_apple_pay_buy_now_shipping_cost', 0 );
-		$tax_rate      = (int) get_option( 'sv_wc_apple_pay_buy_now_tax_rate', 0 );
+		$shipping_cost = (float) get_option( 'sv_wc_apple_pay_buy_now_shipping_cost', 0 );
+		$tax_rate      = (float) get_option( 'sv_wc_apple_pay_buy_now_tax_rate', 0 );
 
 		if ( $product->needs_shipping() && $shipping_cost ) {
 			$args['shipping_total'] = $shipping_cost;
@@ -357,6 +358,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		// product line items
 		$line_items = array();
 
+		// set the line items
 		foreach ( $cart->get_cart() as $cart_item_key => $item ) {
 
 			$line_items[ $item['data']->get_id() ] = array(
@@ -366,20 +368,24 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			);
 		}
 
-		// TODO: fees?
+		// set any fees
+		foreach ( $cart->get_fees() as $fee ) {
 
-		// TODO: discounts?
+			$line_items[ $fee->id ] = array(
+				'name'     => $fee->name,
+				'quantity' => 1,
+				'amount'   => $fee->amount,
+			);
+		}
 
-		// order total
-		$total = array(
-			'amount' => $cart->total,
-		);
+		$args = array();
 
-		// taxes
-		$args = array(
-			'tax_total' => $cart->tax_total + $cart->shipping_tax_total,
-		);
+		// discount total
+		if ( $cart->has_discount() ) {
+			$args['discount_total'] = $cart->get_cart_discount_total();
+		}
 
+		// set shipping totals
 		if ( $cart->needs_shipping() ) {
 
 			$args['shipping_required'] = true;
@@ -412,6 +418,14 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 				throw new SV_WC_Payment_Gateway_Exception( __( 'No shipping totals available.', 'woocommerce-plugin-framework' ) );
 			}
 		}
+
+		// tax total
+		$args['tax_total'] = $cart->tax_total + $cart->shipping_tax_total;
+
+		// order total
+		$total = array(
+			'amount' => $cart->total,
+		);
 
 		$this->get_gateway()->add_debug_message( 'Generating Apple Pay Payment Request' );
 
@@ -487,6 +501,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			$request['requiredShippingContactFields'][] = 'postalAddress';
 		}
 
+		// line items
 		foreach ( $line_items as $key => $item ) {
 
 			$label = $item['name'];
@@ -503,13 +518,13 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			);
 		}
 
-		// taxes
-		if ( ! empty( $args['tax_total'] ) ) {
+		// discounts
+		if ( ! empty( $args['discount_total'] ) ) {
 
-			$line_items['taxes'] = array(
+			$line_items[ 'discount' ] = array(
 				'type'   => 'final',
-				'label'  => __( 'Taxes', 'woocommerce-plugin-framework' ),
-				'amount' => $this->format_price( $args['tax_total'] ),
+				'label'  => __( 'Discount', 'woocommerce-plugin-framework' ),
+				'amount' => $this->format_price( $args['discount_total'] ),
 			);
 		}
 
@@ -527,10 +542,21 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			);
 		}
 
+		// taxes
+		if ( ! empty( $args['tax_total'] ) ) {
+
+			$line_items['taxes'] = array(
+				'type'   => 'final',
+				'label'  => __( 'Taxes', 'woocommerce-plugin-framework' ),
+				'amount' => $this->format_price( $args['tax_total'] ),
+			);
+		}
+
 		if ( ! empty( $line_items ) ) {
 			$request['lineItems'] = $line_items;
 		}
 
+		// order total
 		$request['total'] = wp_parse_args( $total, array(
 			'label'  => get_bloginfo( 'name', 'display' ),
 			'amount' => 0,

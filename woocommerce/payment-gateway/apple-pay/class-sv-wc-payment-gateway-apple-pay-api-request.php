@@ -60,7 +60,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Request extends SV_WC_API_JSON_Request
 
 		$data = array(
 			'merchantIdentifier' => $merchant_id,
-			'domainName'         => 'applepay-skyverge.fwd.wf', // TODO: remove hardcode
+			'domainName'         => str_replace( array( 'http://', 'https://' ), '', home_url() ),
 			'displayName'        => $display_name,
 		);
 

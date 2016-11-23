@@ -208,7 +208,7 @@ jQuery( document ).ready ($) ->
 
 			this.unblock_ui()
 
-			this.render_errors( ['An error occurred'] ) # localize
+			this.render_errors( [ @params.generic_error ] )
 
 
 		# Sets the Apple Pay payment status depending on the processing result.

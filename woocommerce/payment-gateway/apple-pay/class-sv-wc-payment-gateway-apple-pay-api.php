@@ -46,7 +46,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 
 		$this->gateway = $gateway;
 
-		$this->request_uri = 'https://apple-pay-gateway-cert.apple.com/paymentservices/startSession'; // TODO: production URL
+		$this->request_uri = 'https://apple-pay-gateway-cert.apple.com/paymentservices/startSession';
 
 		$this->set_request_content_type_header( 'application/json' );
 		$this->set_request_accept_header( 'application/json' );
