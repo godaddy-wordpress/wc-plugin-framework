@@ -65,7 +65,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		add_action( 'wp_ajax_sv_wc_apple_pay_process_payment',        array( $this, 'process_payment' ) );
 		add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_process_payment', array( $this, 'process_payment' ) );
 
-		add_filter( 'wc_payment_gateway_' . $this->get_processing_gateway()->get_id() . '_get_order', array( $this, 'add_order_data' ) );
+		if ( $this->is_available() ) {
+			add_filter( 'wc_payment_gateway_' . $this->get_processing_gateway()->get_id() . '_get_order', array( $this, 'add_order_data' ) );
+		}
 	}
 
 
@@ -260,11 +262,14 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 */
 	public function add_order_data( $order ) {
 
-		$payment_data = WC()->session->set( 'apple_pay_payment_response', array() );
+		$payment_data = WC()->session->get( 'apple_pay_payment_response', array() );
 
-		$order = $this->get_processing_gateway()->add_apple_pay_order_data( $order, $payment_data );
+		if ( ! empty( $payment_data ) ) {
 
-		unset( WC()->session->apple_pay_payment_response );
+			$order = $this->get_processing_gateway()->add_apple_pay_order_data( $order, $payment_data );
+
+			unset( WC()->session->apple_pay_payment_response );
+		}
 
 		return $order;
 	}
@@ -455,7 +460,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				}
 			}
 
-			$order->set_payment_method( $this->get_processing_gateway()->get_id() );
+			$order->set_payment_method( $this->get_processing_gateway() );
 
 			// add line items
 			foreach ( $items as $key => $item ) {
