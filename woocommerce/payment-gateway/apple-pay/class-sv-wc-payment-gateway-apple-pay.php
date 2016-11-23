@@ -162,6 +162,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			// from here on out, it's up to the gateway to not screw things up.
 			$order->add_order_note( __( 'Apple Pay payment authorized.', 'woocommerce-plugin-framework' ) );
 
+			// set the new order ID so it can be resumed in case of failure
+			WC()->session->order_awaiting_payment = $order->id;
+
 			$billing_address = $shipping_address = array();
 
 			// set the billing address
@@ -226,6 +229,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 			// clear the payment request data
 			unset( WC()->session->apple_pay_payment_request );
+			unset( WC()->session->order_awaiting_payment );
 
 			wp_send_json( $result );
 
@@ -313,6 +317,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			);
 		}
 
+		// set the cart hash to this can be resumed on failure
+		$args['cart_hash'] = md5( json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total );
+
 		$order = $this->create_order( $items, $args );
 
 		return $order;
@@ -330,6 +337,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		$payment_request = $this->get_stored_payment_request();
 
 		$items = array();
+		$args  = array();
 
 		foreach ( $payment_request['lineItems'] as $product_id => $item ) {
 
@@ -351,7 +359,10 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			);
 		}
 
-		$order = $this->create_order( $items );
+		// set the cart hash to this can be resumed on failure
+		$args['cart_hash'] = md5( json_encode( wc_clean( $payment_request ) ) . $payment_request['total']['amount'] );
+
+		$order = $this->create_order( $items, $args );
 
 		// set the totals
 		if ( ! empty( $payment_request['lineItems']['taxes'] ) ) {
@@ -386,6 +397,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			'coupons'          => array(),
 			'billing_address'  => array(),
 			'shipping_address' => array(),
+			'cart_hash'        => '',
 		) );
 
 		try {
@@ -395,20 +407,53 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			$order_data = array(
 				'status'      => apply_filters( 'woocommerce_default_order_status', 'pending' ),
 				'customer_id' => $args['customer_id'],
+				'cart_hash'   => $args['cart_hash'],
 				'created_via' => 'apple_pay',
 			);
 
-			$order = wc_create_order( $order_data );
+			// Insert or update the post data
+			$order_id = absint( WC()->session->order_awaiting_payment );
 
-			if ( is_wp_error( $order ) ) {
-				throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 520 ) );
-			} elseif ( false === $order ) {
-				throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 521 ) );
+			/**
+			 * If there is an order pending payment, we can resume it here so
+			 * long as it has not changed. If the order has changed, i.e.
+			 * different items or cost, create a new order. We use a hash to
+			 * detect changes which is based on cart items + order total.
+			 */
+			if ( $order_id && $order_data['cart_hash'] === get_post_meta( $order_id, '_cart_hash', true ) && ( $order = wc_get_order( $order_id ) ) && $order->has_status( array( 'pending', 'failed' ) ) ) {
+
+				$order_data['order_id'] = $order_id;
+
+				$order = wc_update_order( $order_data );
+
+				if ( is_wp_error( $order ) ) {
+
+					throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 522 ) );
+				} else {
+
+					$order->remove_order_items();
+
+					do_action( 'woocommerce_resume_order', $order_id );
+				}
+
 			} else {
 
-				$order_id = $order->id;
+				$order = wc_create_order( $order_data );
 
-				do_action( 'woocommerce_new_order', $order_id );
+				if ( is_wp_error( $order ) ) {
+
+					throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 520 ) );
+
+				} elseif ( false === $order ) {
+
+					throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 521 ) );
+
+				} else {
+
+					$order_id = $order->id;
+
+					do_action( 'woocommerce_new_order', $order_id );
+				}
 			}
 
 			$order->set_payment_method( $this->get_processing_gateway()->get_id() );
