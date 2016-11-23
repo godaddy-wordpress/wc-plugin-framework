@@ -41,9 +41,6 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/** @var \SV_WC_Payment_Gateway_Plugin the plugin instance */
 	protected $plugin;
 
-	/** @var object the authorized payment data to be sent to the gateway API */
-	protected $payment_data;
-
 	/** @var \SV_WC_Payment_Gateway_Apple_Pay_API the Apple Pay API */
 	protected $api;
 
@@ -141,7 +138,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				throw new SV_WC_Payment_Gateway_Exception( 'Invalid payment data recieved' );
 			}
 
-			$this->payment_data = $payment;
+			// store the the payment response for later use
+			WC()->session->set( 'apple_pay_payment_response', $payment );
 
 			// pretend this is at checkout so totals are fully calculated
 			if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
@@ -258,7 +256,11 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 */
 	public function add_order_data( $order ) {
 
-		$order = $this->get_processing_gateway()->add_apple_pay_order_data( $order, $this->payment_data );
+		$payment_data = WC()->session->set( 'apple_pay_payment_response', array() );
+
+		$order = $this->get_processing_gateway()->add_apple_pay_order_data( $order, $payment_data );
+
+		unset( WC()->session->apple_pay_payment_response );
 
 		return $order;
 	}
