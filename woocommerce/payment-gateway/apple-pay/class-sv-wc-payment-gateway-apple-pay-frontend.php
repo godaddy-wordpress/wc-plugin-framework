@@ -165,6 +165,11 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			return;
 		}
 
+		// if this product can't be purchased, bail
+		if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
+			return;
+		}
+
 		$payment_request = $this->get_product_payment_request( $product );
 
 		/**

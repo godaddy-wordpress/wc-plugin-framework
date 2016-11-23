@@ -337,6 +337,10 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				continue;
 			}
 
+			if ( ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( __( 'The product is out of stock.', 'woocommerce-plugin-framework' ) );
+			}
+
 			$items[] = array(
 				'product'  => $product,
 				'quantity' => 1,
