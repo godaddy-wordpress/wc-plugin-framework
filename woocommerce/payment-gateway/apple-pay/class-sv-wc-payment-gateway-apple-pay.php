@@ -81,6 +81,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php');
 		require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php');
 
+		require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-payment-response.php');
+
 		if ( is_admin() && ! is_ajax() ) {
 			$this->admin = new SV_WC_Payment_Gateway_Apple_Pay_Admin( $this );
 		} else {
@@ -131,25 +133,23 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 */
 	public function process_payment() {
 
-		$type    = SV_WC_Helper::get_post( 'type' );
-		$payment = json_decode( stripslashes( SV_WC_Helper::get_post( 'payment' ) ) );
+		$type     = SV_WC_Helper::get_post( 'type' );
+		$response = stripslashes( SV_WC_Helper::get_post( 'payment' ) );
 
 		try {
 
-			if ( ! $payment ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Invalid payment data recieved' );
-			}
+			// store the the payment response JSON for later use
+			WC()->session->set( 'apple_pay_payment_response', $response );
 
-			// store the the payment response for later use
-			WC()->session->set( 'apple_pay_payment_response', $payment );
+			$response = new SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $response );
+
+			// log the payment response
+			$this->get_processing_gateway()->add_debug_message( "Apple Pay Payment Response:\n" . $response->to_string_safe() );
 
 			// pretend this is at checkout so totals are fully calculated
 			if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
 				define( 'WOOCOMMERCE_CHECKOUT', true );
 			}
-
-			// log the payment response
-			$this->get_processing_gateway()->add_debug_message( "Apple Pay Payment Response:\n" . print_r( $payment, true ) );
 
 			// create a new order
 			if ( 'cart' === $type || 'checkout' === $type ) {
@@ -166,71 +166,15 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 			// set the new order ID so it can be resumed in case of failure
 			WC()->session->order_awaiting_payment = $order->id;
-
-			$billing_address = $shipping_address = array();
-
-			// set the billing address
-			if ( isset( $payment->billingContact ) ) {
-
-				if ( ! empty( $payment->billingContact->givenName ) ) {
-					$billing_address['first_name'] = $payment->billingContact->givenName;
-					$billing_address['last_name']  = $payment->billingContact->familyName;
-				}
-
-				if ( ! empty( $payment->billingContact->addressLines ) ) {
-
-					$billing_address = array_merge( $billing_address, array(
-						'address_1'  => $payment->billingContact->addressLines[0],
-						'address_2'  => ! empty( $payment->billingContact->addressLines[1] ) ? $payment->billingContact->addressLines[1] : '',
-						'city'       => $payment->billingContact->locality,
-						'state'      => $payment->billingContact->administrativeArea,
-						'postcode'   => $payment->billingContact->postalCode,
-						'country'    => strtoupper( $payment->billingContact->countryCode ),
-					) );
-				}
-
-				// default the shipping address to the billing address
-				$shipping_address = $billing_address;
-			}
-
-			// set the shipping address
-			if ( isset( $payment->shippingContact ) ) {
-
-				if ( isset( $payment->shippingContact->givenName ) ) {
-					$shipping_address['first_name'] = $payment->shippingContact->givenName;
-					$shipping_address['last_name']  = $payment->shippingContact->familyName;
-				}
-
-				if ( ! empty( $payment->shippingContact->addressLines ) ) {
-					$shipping_address = array_merge( $shipping_address, array(
-						'address_1'  => $payment->shippingContact->addressLines[0],
-						'address_2'  => ! empty( $payment->shippingContact->addressLines[1] ) ? $payment->shippingContact->addressLines[1] : '',
-						'city'       => $payment->shippingContact->locality,
-						'state'      => $payment->shippingContact->administrativeArea,
-						'postcode'   => $payment->shippingContact->postalCode,
-						'country'    => strtoupper( $payment->shippingContact->countryCode ),
-					) );
-				}
-
-				// set the billing email
-				if ( ! empty( $payment->shippingContact->emailAddress ) ) {
-					$billing_address['email'] = $payment->shippingContact->emailAddress;
-				}
-
-				// set the billing phone number
-				if ( ! empty( $payment->shippingContact->phoneNumber ) ) {
-					$billing_address['phone'] = $payment->shippingContact->phoneNumber;
-				}
-			}
-
-			$order->set_address( $billing_address, 'billing' );
-			$order->set_address( $shipping_address, 'shipping' );
+			$order->set_address( $response->get_billing_address(),  'billing' );
+			$order->set_address( $response->get_shipping_address(), 'shipping' );
 
 			// process the payment via the gateway
 			$result = $this->get_processing_gateway()->process_payment( $order->id );
 
 			// clear the payment request data
 			unset( WC()->session->apple_pay_payment_request );
+			unset( WC()->session->apple_pay_payment_response );
 			unset( WC()->session->order_awaiting_payment );
 
 			wp_send_json( $result );
@@ -262,13 +206,13 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 */
 	public function add_order_data( $order ) {
 
-		$payment_data = WC()->session->get( 'apple_pay_payment_response', array() );
+		$response_data = WC()->session->get( 'apple_pay_payment_response', '' );
 
-		if ( ! empty( $payment_data ) ) {
+		if ( ! empty( $response_data ) ) {
 
-			$order = $this->get_processing_gateway()->add_apple_pay_order_data( $order, $payment_data );
+			$response = new SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $response_data );
 
-			unset( WC()->session->apple_pay_payment_response );
+			$order = $this->get_processing_gateway()->get_order_for_apple_pay( $order, $response );
 		}
 
 		return $order;
@@ -340,6 +284,10 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	protected function create_product_order() {
 
 		$payment_request = $this->get_stored_payment_request();
+
+		if ( empty( $payment_request ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Payment request data is missing.' );
+		}
 
 		$items = array();
 		$args  = array();
@@ -562,9 +510,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		if ( ! $this->api instanceof SV_WC_Payment_Gateway_Apple_Pay_API ) {
 
-			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/class-sv-wc-payment-gateway-apple-pay-api.php');
-			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/class-sv-wc-payment-gateway-apple-pay-api-request.php');
-			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/class-sv-wc-payment-gateway-apple-pay-api-response.php');
+			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api.php');
+			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api-request.php');
+			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api-response.php');
 
 			$this->api = new SV_WC_Payment_Gateway_Apple_Pay_API( $this->get_processing_gateway() );
 		}

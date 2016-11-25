@@ -738,15 +738,20 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Adds the Apple Pay payment data to the order object.
 	 *
-	 * Gateways should override this to see the appropriate values depending on
+	 * Gateways should override this to set the appropriate values depending on
 	 * how their processing API needs to handle the data.
 	 *
 	 * @since 4.6.0-dev
 	 * @param \WC_Order the order object
-	 * @param object the authorized payment data. see https://developer.apple.com/reference/applepayjs/payment for structure
+	 * @param \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response the authorize payment response.
+	 *                                                          see https://developer.apple.com/reference/applepayjs/payment for structure
 	 * @return \WC_Order
 	 */
-	public function add_apple_pay_order_data( $order, $payment_data ) {
+	public function get_order_for_apple_pay( $order, SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $response ) {
+
+		$order->payment->account_number = $response->get_last_four();
+		$order->payment->last_four      = $response->get_last_four();
+		$order->payment->card_type      = $response->get_card_type();
 
 		return $order;
 	}
