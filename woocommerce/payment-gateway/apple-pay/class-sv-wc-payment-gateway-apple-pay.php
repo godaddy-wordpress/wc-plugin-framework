@@ -164,8 +164,6 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			// from here on out, it's up to the gateway to not screw things up.
 			$order->add_order_note( __( 'Apple Pay payment authorized.', 'woocommerce-plugin-framework' ) );
 
-			// set the new order ID so it can be resumed in case of failure
-			WC()->session->order_awaiting_payment = $order->id;
 			$order->set_address( $response->get_billing_address(),  'billing' );
 			$order->set_address( $response->get_shipping_address(), 'shipping' );
 
@@ -338,19 +336,38 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * This is adapted from WooCommerce's `WC_Checkout::create_order()`
 	 *
 	 * @since 4.6.0-dev
-	 * @param array $args the order args
+	 * @param array $items {
+	 *     The items to add to the order.
+	 *
+	 *     @type \WC_Product $product  The product object.
+	 *     @type int         $quantity The item quantity.
+	 *     @type array       $args     The item args. See `WC_Abstract_Order::add_product()` for required keys.
+	 *     @type array       $values   The original cart item values. Only included to maintain compatibility
+	 *                                 with the `woocommerce_add_order_item_meta` filter.
+	 * }
+	 * @param array $args {
+	 *     Optional. The order args.
+	 *
+	 *     @type int    $customer_id The user ID for this customer. If left blank, the current user ID will be
+	 *                               used, or the user will be Guest if there is no current user.
+	 *     @type array  $fees        Any fees to add to the order. See `WC_Abstract_Order::add_fee()` for
+	 *                               required values.
+	 *     @type array  $packages    Any shipping packages to add to the order. As formatted by
+	 *                              `WC()->shipping->get_packages()`
+	 *     @type array  $coupons     Any coupons to add to the order. Arrays as
+	 *                               `$code => array( $amount => 0.00, $tax_amount => 0.00 )`
+	 *     @type string $cart_hash   The hashed cart object to be used later in case the order is to be resumed.
+	 *
 	 * @throws \SV_WC_Plugin_Exception
 	 */
 	public function create_order( $items, $args = array() ) {
 
 		$args = wp_parse_args( $args, array(
-			'customer_id'      => get_current_user_id(),
-			'fees'             => array(),
-			'packages'         => array(),
-			'coupons'          => array(),
-			'billing_address'  => array(),
-			'shipping_address' => array(),
-			'cart_hash'        => '',
+			'customer_id' => get_current_user_id(),
+			'fees'        => array(),
+			'packages'    => array(),
+			'coupons'     => array(),
+			'cart_hash'   => '',
 		) );
 
 		try {
@@ -364,49 +381,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				'created_via' => 'apple_pay',
 			);
 
-			// Insert or update the post data
-			$order_id = absint( WC()->session->order_awaiting_payment );
-
-			/**
-			 * If there is an order pending payment, we can resume it here so
-			 * long as it has not changed. If the order has changed, i.e.
-			 * different items or cost, create a new order. We use a hash to
-			 * detect changes which is based on cart items + order total.
-			 */
-			if ( $order_id && $order_data['cart_hash'] === get_post_meta( $order_id, '_cart_hash', true ) && ( $order = wc_get_order( $order_id ) ) && $order->has_status( array( 'pending', 'failed' ) ) ) {
-
-				$order_data['order_id'] = $order_id;
-
-				$order = wc_update_order( $order_data );
-
-				if ( is_wp_error( $order ) ) {
-
-					throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 522 ) );
-
-				} else {
-
-					$order->remove_order_items();
-
-					do_action( 'woocommerce_resume_order', $order_id );
-				}
-
-			} else {
-
-				$order = wc_create_order( $order_data );
-
-				if ( is_wp_error( $order ) ) {
-
-					throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 520 ) );
-
-				} elseif ( false === $order ) {
-
-					throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 521 ) );
-
-				} else {
-
-					do_action( 'woocommerce_new_order', $order->id );
-				}
-			}
+			$order = $this->get_order_object( $order_data );
 
 			$order->set_payment_method( $this->get_processing_gateway() );
 
@@ -419,6 +394,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 					throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 525 ) );
 				}
 
+				/** This action is a duplicate from \WC_Checkout::create_order() */
 				do_action( 'woocommerce_add_order_item_meta', $item_id, $item['values'], $key );
 			}
 
@@ -431,7 +407,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 					throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 526 ) );
 				}
 
-				do_action( 'woocommerce_add_order_fee_meta', $order_id, $item_id, $fee, $key );
+				/** This action is a duplicate from \WC_Checkout::create_order() */
+				do_action( 'woocommerce_add_order_fee_meta', $order->id, $item_id, $fee, $key );
 			}
 
 			// add shipping packages
@@ -447,7 +424,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 						throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 527 ) );
 					}
 
-					do_action( 'woocommerce_add_shipping_order_item', $order_id, $item_id, $key );
+					/** This action is a duplicate from \WC_Checkout::create_order() */
+					do_action( 'woocommerce_add_shipping_order_item', $order->id, $item_id, $key );
 				}
 			}
 
@@ -458,9 +436,6 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 					throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 529 ) );
 				}
 			}
-
-			$order->set_address( $args['billing_address'], 'billing' );
-			$order->set_address( $args['shipping_address'], 'shipping' );
 
 			$order->calculate_totals();
 
@@ -474,6 +449,57 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 			throw $e;
 		}
+	}
+
+
+	/**
+	 * Gets an order object for add items.
+	 *
+	 * @since 4.6.0-dev
+	 * @param array $order_data the order data
+	 * @return \WC_Order
+	 * @throws \SV_WC_Plugin_Exception
+	 */
+	protected function get_order_object( $order_data ) {
+
+		$order_id = (int) WC()->session->get( 'order_awaiting_payment', 0 );
+
+		if ( $order_id && $order_data['cart_hash'] === get_post_meta( $order_id, '_cart_hash', true ) && ( $order = wc_get_order( $order_id ) ) && $order->has_status( array( 'pending', 'failed' ) ) ) {
+
+			$order_data['order_id'] = $order_id;
+
+			$order = wc_update_order( $order_data );
+
+			if ( is_wp_error( $order ) ) {
+
+				throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 522 ) );
+
+			} else {
+
+				$order->remove_order_items();
+
+				/** This action is a duplicate from \WC_Checkout::create_order() */
+				do_action( 'woocommerce_resume_order', $order_id );
+			}
+
+		} else {
+
+			$order = wc_create_order( $order_data );
+
+			if ( is_wp_error( $order ) ) {
+				throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 520 ) );
+			} elseif ( false === $order ) {
+				throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 521 ) );
+			}
+
+			// set the new order ID so it can be resumed in case of failure
+			WC()->session->set( 'order_awaiting_payment', $order->id );
+
+			/** This action is a duplicate from \WC_Checkout::create_order() */
+			do_action( 'woocommerce_new_order', $order->id );
+		}
+
+		return $order;
 	}
 
 
