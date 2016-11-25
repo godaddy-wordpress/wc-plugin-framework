@@ -51,6 +51,7 @@ jQuery( document ).ready ($) ->
 
 			@buttons = $( '.sv-wc-apple-pay-button' )
 
+			# get a new payment request via AJAX if one is not provided
 			if not @payment_request
 
 				this.block_ui()
@@ -75,6 +76,9 @@ jQuery( document ).ready ($) ->
 
 				@buttons.show().prop( 'disabled', false )
 
+			# remove any previous click events
+			$( document.body ).off( 'click', '.sv-wc-apple-pay-button:not([disabled])' )
+
 			$( document.body ).on 'click', '.sv-wc-apple-pay-button:not([disabled])', ( e ) =>
 
 				e.preventDefault()
@@ -94,8 +98,6 @@ jQuery( document ).ready ($) ->
 					@session.begin()
 
 				catch error
-
-					@session.abort()
 
 					this.fail_payment( error )
 
