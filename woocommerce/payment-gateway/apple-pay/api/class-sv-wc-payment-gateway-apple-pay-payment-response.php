@@ -40,7 +40,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	 */
 	public function get_payment_data() {
 
-		return ! empty( $this->token->paymentData ) ? $this->token->paymentData : null;
+		return ! empty( $this->token->paymentData ) ? (array) $this->token->paymentData : array();
 	}
 
 
@@ -52,7 +52,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	 */
 	public function get_transaction_id() {
 
-		return ! empty( $this->token->transactionIdentifier ) ? $this->token->transactionIdentifier : null;
+		return ! empty( $this->token->transactionIdentifier ) ? $this->token->transactionIdentifier : '';
 	}
 
 
