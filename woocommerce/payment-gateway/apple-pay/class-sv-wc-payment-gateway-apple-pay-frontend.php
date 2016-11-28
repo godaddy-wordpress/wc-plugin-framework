@@ -58,14 +58,14 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		$this->gateway = $this->get_handler()->get_processing_gateway();
 
 		if ( $this->get_handler()->is_available() ) {
+
 			add_action( 'wp', array( $this, 'init' ) );
+
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		}
 
-		add_action( 'wp_ajax_sv_wc_apple_pay_get_cart_payment_request',        array( $this, 'get_cart_payment_request' ) );
-		add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_get_cart_payment_request', array( $this, 'get_cart_payment_request' ) );
-
-		add_action( 'wp_ajax_sv_wc_apple_pay_get_checkout_payment_request',        array( $this, 'get_checkout_payment_request' ) );
-		add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_get_checkout_payment_request', array( $this, 'get_checkout_payment_request' ) );
+		add_action( 'wp_ajax_sv_wc_apple_pay_get_payment_request',        array( $this, 'get_payment_request' ) );
+		add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_get_payment_request', array( $this, 'get_payment_request' ) );
 	}
 
 
@@ -75,8 +75,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * @since 4.6.0-dev
 	 */
 	public function init() {
-
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		if ( is_product() && 'yes' === get_option( 'sv_wc_apple_pay_single_product' ) ) {
 			$this->init_product();
@@ -158,19 +156,26 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 */
 	public function init_product() {
 
-		$product = wc_get_product( get_the_ID() );
+		$args = array();
 
-		// simple products only, for now
-		if ( ! $product || ! $product->is_type( 'simple' ) ) {
+		try {
+
+			$product = wc_get_product( get_the_ID() );
+
+			if ( ! $product ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Product does not exist.' );
+			}
+
+			$payment_request = $this->build_product_payment_request( $product );
+
+			$args['payment_request'] = $payment_request;
+
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+
+			$this->get_gateway()->add_debug_message( 'Apple Pay Error: ' . $e->getMessage() );
+
 			return;
 		}
-
-		// if this product can't be purchased, bail
-		if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
-			return;
-		}
-
-		$payment_request = $this->get_product_payment_request( $product );
 
 		/**
 		 * Filters the Apple Pay product handler args.
@@ -178,9 +183,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		 * @since 4.6.0-dev
 		 * @param array $args
 		 */
-		$args = apply_filters( 'sv_wc_apple_pay_product_handler_args', array(
-			'payment_request' => $payment_request,
-		) );
+		$args = apply_filters( 'sv_wc_apple_pay_product_handler_args', $args );
 
 		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Product_Handler(%s);', json_encode( $args ) ) );
 
@@ -194,8 +197,26 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * @since 4.6.0-dev
 	 * @param \WC_Product $product the product object
 	 * @return array
+	 * @throws \SV_WC_Payment_Gateway_Exception
 	 */
-	public function get_product_payment_request( WC_Product $product ) {
+	public function build_product_payment_request( WC_Product $product ) {
+
+		if ( ! is_user_logged_in() ) {
+			WC()->session->set_customer_session_cookie( true );
+		}
+
+		if ( $this->get_plugin()->is_subscriptions_active() && WC_Subscriptions_Product::is_subscription( $product ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Not available for subscription products.' );
+		}
+
+		if ( ! $product->is_type( 'simple' ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Only available for simple products' );
+		}
+
+		// if this product can't be purchased, bail
+		if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Product is not available for purchase.' );
+		}
 
 		$line_items = array(
 			$product->get_id() => array(
@@ -222,7 +243,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			'amount' => $product->get_price() + $args['shipping_total'],
 		);
 
-		if ( $tax_rate && wc_tax_enabled() ) {
+		if ( wc_tax_enabled() && $tax_rate ) {
 
 			$args['tax_total'] = round( $total['amount'] * ( $tax_rate / 100 ), 2 );
 
@@ -243,8 +264,21 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 */
 	public function init_cart() {
 
-		if ( $this->get_plugin()->is_subscriptions_active() && WC_Subscriptions_Cart::cart_contains_subscription() ) {
-			return;
+		$args = array();
+
+		try {
+
+			if ( $this->get_plugin()->is_subscriptions_active() && WC_Subscriptions_Cart::cart_contains_subscription() ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Apple Pay is not available for carts containing subscription products.' );
+			}
+
+			$payment_request = $this->build_cart_payment_request( WC()->cart );
+
+			$args['payment_request'] = $payment_request;
+
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+
+			$this->get_gateway()->add_debug_message( $e->getMessage() );
 		}
 
 		/**
@@ -253,42 +287,11 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		 * @since 4.6.0-dev
 		 * @param array $args
 		 */
-		$args = apply_filters( 'sv_wc_apple_pay_cart_handler_args', array(
-			'request_action' => 'sv_wc_apple_pay_get_cart_payment_request',
-			'request_nonce'  => wp_create_nonce( 'sv_wc_apple_pay_get_cart_payment_request' )
-		) );
+		$args = apply_filters( 'sv_wc_apple_pay_cart_handler_args', $args );
 
 		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Cart_Handler(%s);', json_encode( $args ) ) );
 
 		add_action( 'woocommerce_proceed_to_checkout', array( $this, 'render_button' ) );
-	}
-
-
-	/**
-	 * Gets a payment request for the current cart.
-	 *
-	 * @since 4.6.0-dev
-	 */
-	public function get_cart_payment_request() {
-
-		check_ajax_referer( 'sv_wc_apple_pay_get_cart_payment_request', 'nonce' );
-
-		try {
-
-			$request = $this->build_cart_payment_request( WC()->cart );
-
-			wp_send_json( array(
-				'result'  => 'success',
-				'request' => json_encode( $request ),
-			) );
-
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
-
-			wp_send_json( array(
-				'result'  => 'error',
-				'message' => $e->getMessage(),
-			) );
-		}
 	}
 
 
@@ -302,52 +305,17 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 */
 	public function init_checkout() {
 
-		if ( $this->get_plugin()->is_subscriptions_active() && WC_Subscriptions_Cart::cart_contains_subscription() ) {
-			return;
-		}
-
 		/**
 		 * Filters the Apple Pay checkout handler args.
 		 *
 		 * @since 4.6.0-dev
 		 * @param array $args
 		 */
-		$args = apply_filters( 'sv_wc_apple_pay_checkout_handler_args', array(
-			'request_action' => 'sv_wc_apple_pay_get_checkout_payment_request',
-			'request_nonce'  => wp_create_nonce( 'sv_wc_apple_pay_get_checkout_payment_request' )
-		) );
+		$args = apply_filters( 'sv_wc_apple_pay_checkout_handler_args', array() );
 
 		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Checkout_Handler(%s);', json_encode( $args ) ) );
 
 		add_action( 'woocommerce_review_order_before_payment', array( $this, 'render_button' ) );
-	}
-
-
-	/**
-	 * Gets a payment request for the checkout.
-	 *
-	 * @since 4.6.0-dev
-	 */
-	public function get_checkout_payment_request() {
-
-		check_ajax_referer( 'sv_wc_apple_pay_get_checkout_payment_request', 'nonce' );
-
-		try {
-
-			$request = $this->build_cart_payment_request( WC()->cart );
-
-			wp_send_json( array(
-				'result'  => 'success',
-				'request' => json_encode( $request ),
-			) );
-
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
-
-			wp_send_json( array(
-				'result'  => 'error',
-				'message' => $e->getMessage(),
-			) );
-		}
 	}
 
 
@@ -357,6 +325,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * @since 4.6.0-dev
 	 * @param \WC_Cart $cart the cart object
 	 * @return array
+	 * @throws \SV_WC_Payment_Gateway_Exception
 	 */
 	protected function build_cart_payment_request( WC_Cart $cart ) {
 
@@ -445,6 +414,42 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		 * @param \WC_Cart $cart the cart object
 		 */
 		return apply_filters( 'sv_wc_apple_pay_cart_payment_request', $request, $cart );
+	}
+
+
+	/**
+	 * Gets a payment request for the specified type.
+	 *
+	 * @since 4.6.0-dev
+	 */
+	public function get_payment_request() {
+
+		$type = SV_WC_Helper::get_post( 'type' );
+
+		try {
+
+			if ( 'product' === $type ) {
+				$request = $this->build_product_payment_request( SV_WC_Helper::get_post( 'product_id' ) );
+			} else if ( 'cart' === $type || 'checkout' === $type ) {
+				$request = $this->build_cart_payment_request( WC()->cart );
+			} else if ( '' === $type ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Payment request type is missing.' );
+			} else {
+				throw new SV_WC_Payment_Gateway_Exception( $type . ' is an invalid payment request type.' );
+			}
+
+			wp_send_json( array(
+				'result'  => 'success',
+				'request' => json_encode( $request ),
+			) );
+
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+
+			wp_send_json( array(
+				'result'  => 'error',
+				'message' => $e->getMessage(),
+			) );
+		}
 	}
 
 

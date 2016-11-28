@@ -151,6 +151,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				define( 'WOOCOMMERCE_CHECKOUT', true );
 			}
 
+			$order = null;
+
 			// create a new order
 			if ( 'cart' === $type || 'checkout' === $type ) {
 				$order = $this->create_cart_order();
@@ -181,11 +183,14 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 			$this->get_processing_gateway()->add_debug_message( 'Apple Pay payment failed. ' . $e->getMessage() );
 
-			$order->add_order_note( sprintf(
-				/** translators: Placeholders: %s - the error message */
-				__( 'Apple Pay payment failed. %s', 'woocommerce-plugin-framework' ),
-				$e->getMessage()
-			) );
+			if ( $order ) {
+
+				$order->add_order_note( sprintf(
+					/** translators: Placeholders: %s - the error message */
+					__( 'Apple Pay payment failed. %s', 'woocommerce-plugin-framework' ),
+					$e->getMessage()
+				) );
+			}
 
 			wp_send_json( array(
 				'result'  => 'error',

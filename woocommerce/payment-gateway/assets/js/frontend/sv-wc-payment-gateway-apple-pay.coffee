@@ -19,13 +19,10 @@ jQuery( document ).ready ($) ->
 
 		# Constructs the handler.
 		#
-		# @since 3.9.2-1
+		# @since 4.6.0-dev
 		constructor: (args) ->
 
 			@params = sv_wc_apple_pay_params
-
-			@request_action = args.request_action
-			@request_nonce  = args.request_nonce
 
 			@payment_request = args.payment_request
 
@@ -36,7 +33,7 @@ jQuery( document ).ready ($) ->
 
 		# Determines if Apple Pay is available.
 		#
-		# @since 3.9.2-1
+		# @since 4.6.0-dev
 		# @return bool
 		is_available: ->
 
@@ -47,37 +44,15 @@ jQuery( document ).ready ($) ->
 				return canMakePayments
 
 
+		# Initializes the handler.
+		#
+		# @since 4.6.0-dev
 		init: ->
 
 			@buttons = $( '.sv-wc-apple-pay-button' )
 
-			# get a new payment request via AJAX if one is not provided
-			if not @payment_request
-
-				this.block_ui()
-
-				this.get_payment_request().then ( response ) =>
-
-					@payment_request = $.parseJSON( response )
-
-					if @payment_request
-
-						@buttons.show().prop( 'disabled', false )
-
-						this.unblock_ui()
-
-				, ( response ) =>
-
-					console.log '[Apple Pay Error] ' + response
-
-					this.unblock_ui()
-
-			else
-
+			if @payment_request
 				@buttons.show().prop( 'disabled', false )
-
-			# remove any previous click events
-			$( document.body ).off( 'click', '.sv-wc-apple-pay-button:not([disabled])' )
 
 			$( document.body ).on 'click', '.sv-wc-apple-pay-button:not([disabled])', ( e ) =>
 
@@ -91,7 +66,7 @@ jQuery( document ).ready ($) ->
 
 					@session.onvalidatemerchant = ( event ) => this.on_validate_merchant( event )
 
-					@session.onpaymentauthorized = ( event ) => this.on_process_authorization( event )
+					@session.onpaymentauthorized = ( event ) => this.on_payment_authorized( event )
 
 					@session.oncancel = ( event ) => this.on_cancel_payment( event )
 
@@ -102,16 +77,43 @@ jQuery( document ).ready ($) ->
 					this.fail_payment( error )
 
 
+		# Resets the payment request via AJAX.
+		#
+		# Extending handlers can call this on change events to refresh the data.
+		#
+		# @since 4.6.0-dev
+		reset_payment_request: ( data = {} ) =>
+
+			this.block_ui()
+
+			this.get_payment_request( data ).then ( response ) =>
+
+				@payment_request = $.parseJSON( response )
+
+				@buttons.show().prop( 'disabled', false )
+
+				this.unblock_ui()
+
+			, ( response ) =>
+
+				console.log '[Apple Pay Error] ' + response
+
+				@buttons.prop( 'disabled', true )
+
+				this.unblock_ui()
+
+
 		# Gets the payment request via AJAX.
 		#
 		# @since 4.6.0-dev
-		get_payment_request: => new Promise ( resolve, reject ) =>
+		get_payment_request: ( data ) => new Promise ( resolve, reject ) =>
 
-			data = {
-				'action':     @request_action
-				'nonce':      @request_nonce
-				'product_id': @product_id
+			base_data = {
+				'action': 'sv_wc_apple_pay_get_payment_request'
+				'type'  : @type
 			}
+
+			$.extend data, base_data
 
 			# retrieve a payment request object
 			$.post @params.ajax_url, data, ( response ) =>
@@ -122,6 +124,9 @@ jQuery( document ).ready ($) ->
 					reject response.message
 
 
+		# The callback for after the merchant data is validated.
+		#
+		# @since 4.6.0-dev
 		on_validate_merchant: ( event ) =>
 
 			this.validate_merchant( event.validationURL ).then ( merchant_session ) =>
@@ -139,7 +144,7 @@ jQuery( document ).ready ($) ->
 
 		# Validates the merchant data.
 		#
-		# @since 3.9.2-1
+		# @since 4.6.0-dev
 		# @return object
 		validate_merchant: ( url ) => new Promise ( resolve, reject ) =>
 
@@ -159,7 +164,10 @@ jQuery( document ).ready ($) ->
 					reject response.message
 
 
-		on_process_authorization: ( event ) =>
+		# The callback for after the payment data is authorized.
+		#
+		# @since 4.6.0-dev
+		on_payment_authorized: ( event ) =>
 
 			this.process_authorization( event.payment ).then ( response ) =>
 
@@ -174,9 +182,9 @@ jQuery( document ).ready ($) ->
 				this.fail_payment 'Payment could no be processed. ' + error
 
 
-		# Processes the transaction data after the payment is authorized.
+		# Processes the transaction data.
 		#
-		# @since 3.9.2-1
+		# @since 4.6.0-dev
 		process_authorization: ( payment ) => new Promise ( resolve, reject ) =>
 
 			data = {
@@ -194,16 +202,25 @@ jQuery( document ).ready ($) ->
 					reject response.message
 
 
+		# The callback for when the payment card is cancelled/dismissed.
+		#
+		# @since 4.6.0-dev
 		on_cancel_payment: ( event ) =>
 
 			this.unblock_ui()
 
 
+		# Completes the purchase based on the gateway result.
+		#
+		# @since 4.6.0-dev
 		complete_purchase: ( response ) ->
 
 			window.location = response.redirect
 
 
+		# Fails the purchase based on the gateway result.
+		#
+		# @since 4.6.0-dev
 		fail_payment: ( error ) ->
 
 			console.log '[Apple Pay Error] ' + error
@@ -213,9 +230,9 @@ jQuery( document ).ready ($) ->
 			this.render_errors( [ @params.generic_error ] )
 
 
-		# Sets the Apple Pay payment status depending on the processing result.
+		# Sets the Apple Pay payment status depending on the gateway result.
 		#
-		# @since 3.9.2-1
+		# @since 4.6.0-dev
 		set_payment_status: ( result ) ->
 
 			if result is 'success'
@@ -226,34 +243,34 @@ jQuery( document ).ready ($) ->
 			@session.completePayment( status )
 
 
-		# Public: Render any new errors and bring them into the viewport
+		# Renders any new errors and bring them into the viewport.
 		#
-		# Returns nothing.
+		# @since 4.6.0-dev
 		render_errors: ( errors ) ->
 
 			# hide and remove any previous errors
 			$( '.woocommerce-error, .woocommerce-message' ).remove()
 
 			# add errors
-			@payment_form.prepend '<ul class="woocommerce-error"><li>' + errors.join( '</li><li>' ) + '</li></ul>'
+			@ui_element.prepend '<ul class="woocommerce-error"><li>' + errors.join( '</li><li>' ) + '</li></ul>'
 
 			# unblock UI
-			@payment_form.removeClass( 'processing' ).unblock()
+			@ui_element.removeClass( 'processing' ).unblock()
 
 			# scroll to top
-			$( 'html, body' ).animate( { scrollTop: @payment_form.offset().top - 100 }, 1000 )
+			$( 'html, body' ).animate( { scrollTop: @ui_element.offset().top - 100 }, 1000 )
 
 
-		# Blocks the payment form UI
+		# Blocks the payment form UI.
 		#
 		# @since 4.6.0-dev
-		block_ui: -> @payment_form.addClass( 'processing' ).block( message: null, overlayCSS: background: '#fff',opacity: 0.6 )
+		block_ui: -> @ui_element.block( message: null, overlayCSS: background: '#fff', opacity: 0.6 )
 
 
-		# Unblocks the payment form UI
+		# Unblocks the payment form UI.
 		#
 		# @since 4.6.0-dev
-		unblock_ui: -> @payment_form.removeClass( 'processing' ).unblock()
+		unblock_ui: -> @ui_element.unblock()
 
 
 	# The WooCommerce Apple Pay cart handler class.
@@ -264,21 +281,30 @@ jQuery( document ).ready ($) ->
 
 		# Constructs the handler.
 		#
-		# @since 3.9.2-1
+		# @since 4.6.0-dev
 		constructor: (args) ->
 
 			@type = 'cart'
 
-			@payment_form = $( '.cart_totals' )
+			@ui_element = $( '.cart_totals' )
 
 			super(args)
+
+
+		init: =>
+
+			super()
 
 			# re-init if the cart totals are updated
 			$( document.body ).on 'updated_cart_totals', =>
 
-				@payment_request = false
+				@ui_element = $( '.cart_totals' )
 
-				this.init()
+				@buttons = $( '.sv-wc-apple-pay-button' )
+
+				@buttons.show()
+
+				this.reset_payment_request()
 
 
 	# The WooCommerce Apple Pay checkout handler class.
@@ -289,21 +315,24 @@ jQuery( document ).ready ($) ->
 
 		# Constructs the handler.
 		#
-		# @since 3.9.2-1
+		# @since 4.6.0-dev
 		constructor: (args) ->
 
 			@type = 'checkout'
 
-			@payment_form = $( 'form.woocommerce-checkout' )
+			@ui_element = $( 'form.woocommerce-checkout' )
 
 			super(args)
 
+
+		init: =>
+
+			super()
+
 			# re-init if the cart totals are updated
-			$( document.body ).on 'update_checkout', =>
+			$( document.body ).on 'updated_checkout', =>
 
-				@payment_request = false
-
-				this.init()
+				this.reset_payment_request()
 
 
 	# The WooCommerce Apple Pay product handler class.
@@ -314,11 +343,11 @@ jQuery( document ).ready ($) ->
 
 		# Constructs the handler.
 		#
-		# @since 3.9.2-1
+		# @since 4.6.0-dev
 		constructor: (args) ->
 
 			@type = 'product'
 
-			@payment_form = $( 'form.cart' )
+			@ui_element = $( 'form.cart' )
 
 			super(args)
