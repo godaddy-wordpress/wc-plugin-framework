@@ -51,8 +51,14 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 		// output the settings
 		add_action( 'woocommerce_settings_checkout', array( $this, 'add_settings' ) );
 
+		// render the special "static" gateway select
+		add_action( 'woocommerce_admin_field_static', array( $this, 'render_static_setting' ) );
+
 		// save the settings
 		add_action( 'woocommerce_settings_save_checkout', array( $this, 'save_settings' ) );
+
+		// add admin notices for configuration options that need attention
+		add_action( 'admin_footer', array( $this, 'add_admin_notices' ), 10 );
 	}
 
 
@@ -92,68 +98,64 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 				'desc'            => __( 'Accept Apple Pay', 'woocommerce-plugin-framework' ),
 				'type'            => 'checkbox',
 				'default'         => 'no',
-				'checkboxgroup'   => 'start',
-				'show_if_checked' => 'option',
 			),
 
 			array(
-				'id'              => 'sv_wc_apple_pay_checkout',
-				'desc'            => __( 'At checkout', 'woocommerce-plugin-framework' ),
-				'type'            => 'checkbox',
-				'default'         => 'yes',
-				'checkboxgroup'   => '',
-				'show_if_checked' => 'yes',
-			),
-
-			array(
-				'id'              => 'sv_wc_apple_pay_cart',
-				'desc'            => __( 'On the Cart page', 'woocommerce-plugin-framework' ),
-				'type'            => 'checkbox',
-				'default'         => 'no',
-				'checkboxgroup'   => '',
-				'show_if_checked' => 'yes',
-			),
-
-			array(
-				'id'              => 'sv_wc_apple_pay_single_product',
-				'desc'            => __( 'On single product pages', 'woocommerce-plugin-framework' ),
-				'type'            => 'checkbox',
-				'default'         => 'no',
-				'checkboxgroup'   => '',
-				'show_if_checked' => 'yes',
+				'id'      => 'sv_wc_apple_pay_display_locations',
+				'title'   => __( 'Allow Apple Pay on', 'woocommerce-plugin-framework' ),
+				'type'    => 'multiselect',
+				'class'   => 'wc-enhanced-select',
+				'css'     => 'width: 350px;',
+				'options' => $this->get_display_location_options(),
+				'default' => array_keys( $this->get_display_location_options() ),
 			),
 
 			array(
 				'type' => 'sectionend',
 			),
+		);
 
-			array(
-				'title' => __( 'Buy Now', 'woocommerce-plugin-framework' ),
-				'type'  => 'title',
-				'desc'  => sprintf(
-					__( 'The %1$sBuy Now with Apple Pay%2$s button is displayed on single product pages, and is only available for simple products. Use these settings to set an optional tax rate and shipping cost for customers who use Buy Now.', 'woocommerce-plugin-framework' ),
-					'<strong>', '</strong>'
+		if ( wc_tax_enabled() || wc_shipping_enabled() ) {
+
+			$buy_settings = array(
+				array(
+					'title' => __( 'Buy Now', 'woocommerce-plugin-framework' ),
+					'type'  => 'title',
+					'desc'  => sprintf(
+						__( 'The %1$sBuy Now with Apple Pay%2$s button is displayed on single product pages, and is only available for simple products. Use these settings to set an optional tax rate and shipping cost for customers who use Buy Now.', 'woocommerce-plugin-framework' ),
+						'<strong>', '</strong>'
+					),
 				),
-			),
+			);
 
-			array(
-				'id'       => 'sv_wc_apple_pay_buy_now_tax_rate',
-				'title'    => __( 'Tax Rate', 'woocommerce-plugin-framework' ),
-				'type'     => 'text',
-				'desc_tip' => __( 'The optional tax rate percentage to apply to Buy Now orders.', 'woocommerce-plugin-framework' ),
-			),
+			if ( wc_tax_enabled() ) {
 
-			array(
-				'id'       => 'sv_wc_apple_pay_buy_now_shipping_cost',
-				'title'    => __( 'Shipping Cost', 'woocommerce-plugin-framework' ),
-				'type'     => 'text',
-				'desc_tip' => __( 'The optional flat-rate shipping cost to add to Buy Now orders.', 'woocommerce-plugin-framework' ),
-			),
+				$buy_settings[] = array(
+					'id'       => 'sv_wc_apple_pay_buy_now_tax_rate',
+					'title'    => __( 'Tax Rate', 'woocommerce-plugin-framework' ),
+					'type'     => 'text',
+					'desc_tip' => __( 'The optional tax rate percentage to apply to Buy Now orders.', 'woocommerce-plugin-framework' ),
+				);
+			}
 
-			array(
+			if ( wc_shipping_enabled() ) {
+
+				$buy_settings[] = array(
+					'id'       => 'sv_wc_apple_pay_buy_now_shipping_cost',
+					'title'    => __( 'Shipping Cost', 'woocommerce-plugin-framework' ),
+					'type'     => 'text',
+					'desc_tip' => __( 'The optional flat-rate shipping cost to add to Buy Now orders.', 'woocommerce-plugin-framework' ),
+				);
+			}
+
+			$buy_settings[] = array(
 				'type' => 'sectionend',
-			),
+			);
 
+			$settings = array_merge( $settings, $buy_settings );
+		}
+
+		$connection_settings = array(
 			array(
 				'title' => __( 'Connection Settings', 'woocommerce-plugin-framework' ),
 				'type'  => 'title',
@@ -163,6 +165,11 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 				'id'      => 'sv_wc_apple_pay_merchant_id',
 				'title'   => __( 'Apple Merchant ID', 'woocommerce-plugin-framework' ),
 				'type'    => 'text',
+				'desc'  => sprintf(
+					/** translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag */
+					__( 'This is found in your %1$sApple developer account%2$s', 'woocommerce-plugin-framework' ),
+					'<a href="https://developer.apple.com" target="_blank">', '</a>'
+				),
 			),
 
 			array(
@@ -176,18 +183,36 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 					'<code>' . ABSPATH . '</code>'
 				),
 			),
+		);
 
-			array(
-				'id'      => 'sv_wc_apple_pay_payment_gateway',
+		$gateway_setting_id = 'sv_wc_apple_pay_payment_gateway';
+		$gateway_options    = $this->get_gateway_options();
+
+		if ( 1 === count( $gateway_options ) ) {
+
+			$connection_settings[] = array(
+				'id'    => $gateway_setting_id,
+				'title' => __( 'Processing Gateway', 'woocommerce-plugin-framework' ),
+				'type'  => 'static',
+				'value' => key( $gateway_options ),
+				'label' => current( $gateway_options ),
+			);
+
+		} else {
+
+			$connection_settings[] = array(
+				'id'      => $gateway_setting_id,
 				'title'   => __( 'Processing Gateway', 'woocommerce-plugin-framework' ),
 				'type'    => 'select',
 				'options' => $this->get_gateway_options(),
-			),
+			);
+		}
 
-			array(
-				'type' => 'sectionend',
-			),
+		$connection_settings[] = array(
+			'type' => 'sectionend',
 		);
+
+		$settings = array_merge( $settings, $connection_settings );
 
 		/**
 		 * Filter the combined settings.
@@ -209,7 +234,30 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 		global $current_section;
 
 		if ( 'apple-pay' === $current_section ) {
+
 			WC_Admin_Settings::output_fields( $this->get_settings() );
+
+			// add inline javascript
+			ob_start();
+			?>
+				$( '#sv_wc_apple_pay_display_locations' ).change( function() {
+
+					var locations      = $( this ).val();
+					var hidden_section = $( '#sv_wc_apple_pay_buy_now_tax_rate, #sv_wc_apple_pay_buy_now_shipping_cost' ).closest( 'table' );
+					var hidden_header  = $( hidden_section ).prevUntil( 'table' );
+
+					if ( $.inArray( 'product', locations ) !== -1 ) {
+						$( hidden_header ).show();
+						$( hidden_section ).show();
+					} else {
+						$( hidden_header ).hide();
+						$( hidden_section ).hide();
+					}
+
+				} ).change();
+			<?php
+
+			wc_enqueue_js( ob_get_clean() );
 		}
 	}
 
@@ -232,6 +280,143 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	}
 
 
+	/**
+	 * Renders a static setting.
+	 *
+	 * This "setting" just displays simple text instead of a <select> with only
+	 * one option.
+	 *
+	 * @since 4.6.0-dev
+	 * @param array $setting
+	 */
+	public function render_static_setting( $setting ) {
+
+		?>
+
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label for="<?php echo esc_attr( $setting['id'] ); ?>"><?php echo esc_html( $setting['title'] ); ?></label>
+			</th>
+			<td class="forminp forminp-<?php echo sanitize_title( $setting['type'] ) ?>">
+				<?php echo esc_html( $setting['label'] ); ?>
+				<input
+					name="<?php echo esc_attr( $setting['id'] ); ?>"
+					id="<?php echo esc_attr( $setting['id'] ); ?>"
+					value="<?php echo esc_html( $setting['value'] ); ?>"
+					type="hidden"
+					>
+			</td>
+		</tr><?php
+	}
+
+
+	/**
+	 * Adds admin notices for configuration options that need attention.
+	 *
+	 * @since 4.6.0-dev
+	 */
+	public function add_admin_notices() {
+
+		// if the feature is not enabled, bail
+		if ( ! $this->handler->is_enabled() ) {
+			return;
+		}
+
+		// if not on the settings screen, bail
+		if ( ! $this->is_settings_screen() ) {
+			return;
+		}
+
+		$errors = array();
+
+		// HTTPS notice
+		if ( ! wc_site_is_https() ) {
+			$errors[] = __( 'Your site must be served over HTTPS with a valid SSL certificate.', 'woocommerce-plugin-framework' );
+		}
+
+		// Currency notice
+		if ( ! in_array( get_woocommerce_currency(), $this->handler->get_accepted_currencies(), true ) ) {
+
+			$accepted_currencies = $this->handler->get_accepted_currencies();
+
+			$errors[] = sprintf(
+				/* translators: Placeholders: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag */
+				_n(
+					'Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable Apple Pay.',
+					'Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept one of %1$s to enable Apple Pay.',
+					count( $accepted_currencies ),
+					'woocommerce-plugin-framework'
+				),
+				'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
+				'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=general' ) ) . '">',
+				'</a>'
+			);
+		}
+
+		// bad cert config notice
+		// this first checks if the option has been set so the notice is not
+		// displayed without the user having the chance to set it.
+		if ( false !== $this->handler->get_cert_path() && ! $this->handler->is_cert_configured() ) {
+
+			$errors[] = sprintf(
+				/** translators: Placeholders: %1$s - <strong> tag, %2$s - </strong> tag */
+				__( 'Your %1$sMerchant Identity Certificate%2$s cannot be found. Please check your path configuration.', 'woocommerce-plugin-framework' ),
+				'<strong>', '</strong>'
+			);
+		}
+
+		if ( ! empty( $errors ) ) {
+
+			$message = '<strong>' . __( 'Apple Pay is disabled.', 'woocommerce-plugin-framework' ) . '</strong>';
+
+			if ( 1 === count( $errors ) ) {
+				$message .= ' ' . current( $errors );
+			} else {
+				$message .= '<ul><li>' . implode( '</li><li>', $errors ) . '</li></ul>';
+			}
+
+			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, 'apple-pay-https-required', array(
+				'notice_class' => 'error',
+				'dismissible'  => false,
+			) );
+		}
+	}
+
+
+	/**
+	 * Determines if the user is currently on the settings screen.
+	 *
+	 * @since 4.6.0-dev
+	 * @return bool
+	 */
+	protected function is_settings_screen() {
+
+		return 'wc-settings' === SV_WC_Helper::get_request( 'page' ) && 'apple-pay' === SV_WC_Helper::get_request( 'section' );
+	}
+
+
+	/**
+	 * Gets the available display location options.
+	 *
+	 * @since 4.6.0-dev
+	 * @return array
+	 */
+	protected function get_display_location_options() {
+
+		return array(
+			'product'  => __( 'Single products', 'woocommerce-plugin-framework' ),
+			'cart'     => __( 'Cart', 'woocommerce-plugin-framework' ),
+			'checkout' => __( 'Checkout', 'woocommerce-plugin-framework' ),
+		);
+	}
+
+
+	/**
+	 * Gets the available gateway options.
+	 *
+	 * @since 4.6.0-dev
+	 * @return array
+	 */
 	protected function get_gateway_options() {
 
 		$gateways = $this->handler->get_supporting_gateways();

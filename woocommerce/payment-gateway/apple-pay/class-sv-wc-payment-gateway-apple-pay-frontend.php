@@ -76,13 +76,27 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 */
 	public function init() {
 
-		if ( is_product() && 'yes' === get_option( 'sv_wc_apple_pay_single_product' ) ) {
+		$locations = $this->get_display_locations();
+
+		if ( is_product() && in_array( 'product', $locations, true ) ) {
 			$this->init_product();
-		} else if ( is_cart() && 'yes' === get_option( 'sv_wc_apple_pay_cart' ) ) {
+		} else if ( is_cart() && in_array( 'cart', $locations, true ) ) {
 			$this->init_cart();
-		} else if ( is_checkout() && 'yes' === get_option( 'sv_wc_apple_pay_checkout' ) ) {
+		} else if ( is_checkout() && in_array( 'checkout', $locations, true ) ) {
 			$this->init_checkout();
 		}
+	}
+
+
+	/**
+	 * Gets the configured display locations.
+	 *
+	 * @since 4.6.0-dev
+	 * @return array
+	 */
+	protected function get_display_locations() {
+
+		return get_option( 'sv_wc_apple_pay_display_locations', array() );
 	}
 
 

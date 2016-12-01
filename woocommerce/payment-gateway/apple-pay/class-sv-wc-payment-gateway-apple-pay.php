@@ -57,15 +57,16 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		$this->init();
 
-		// validate a merchant via AJAX
-		add_action( 'wp_ajax_sv_wc_apple_pay_validate_merchant',        array( $this, 'validate_merchant' ) );
-		add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_validate_merchant', array( $this, 'validate_merchant' ) );
-
-		// process the payment via AJAX
-		add_action( 'wp_ajax_sv_wc_apple_pay_process_payment',        array( $this, 'process_payment' ) );
-		add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_process_payment', array( $this, 'process_payment' ) );
-
 		if ( $this->is_available() ) {
+
+			// validate a merchant via AJAX
+			add_action( 'wp_ajax_sv_wc_apple_pay_validate_merchant',        array( $this, 'validate_merchant' ) );
+			add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_validate_merchant', array( $this, 'validate_merchant' ) );
+
+			// process the payment via AJAX
+			add_action( 'wp_ajax_sv_wc_apple_pay_process_payment',        array( $this, 'process_payment' ) );
+			add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_process_payment', array( $this, 'process_payment' ) );
+
 			add_filter( 'wc_payment_gateway_' . $this->get_processing_gateway()->get_id() . '_get_order', array( $this, 'add_order_data' ) );
 		}
 	}
@@ -564,13 +565,17 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 */
 	public function is_available() {
 
+		$is_available = wc_site_is_https() && $this->is_configured();
+
+		$is_available = $is_available && in_array( get_woocommerce_currency(), $this->get_accepted_currencies(), true );
+
 		/**
 		 * Filters whether Apple Pay should be made available to users.
 		 *
 		 * @since 4.6.0-dev
 		 * @param bool $is_available
 		 */
-		return apply_filters( 'sv_wc_apple_pay_is_available', $this->is_configured() );
+		return apply_filters( 'sv_wc_apple_pay_is_available', $is_available );
 	}
 
 
@@ -580,13 +585,29 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * @since 4.6.0-dev
 	 * @return bool
 	 */
-	protected function is_configured() {
+	public function is_configured() {
 
-		$is_configured = $this->is_enabled() && $this->get_merchant_id() && $this->get_processing_gateway() && $this->get_processing_gateway()->is_enabled();
+		if ( ! $this->get_processing_gateway() ) {
+			return false;
+		}
 
-		$is_configured = $is_configured && $this->get_cert_path() && is_readable( $this->get_cert_path() );
+		$is_configured = $this->is_enabled() && $this->get_merchant_id() && $this->get_processing_gateway()->is_enabled();
+
+		$is_configured = $is_configured && $this->is_cert_configured();
 
 		return $is_configured;
+	}
+
+
+	/**
+	 * Determines if the certification path is set and valid.
+	 *
+	 * @since 4.6.0-dev
+	 * @return bool
+	 */
+	public function is_cert_configured() {
+
+		return is_readable( $this->get_cert_path() );
 	}
 
 
@@ -596,7 +617,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * @since 4.6.0-dev
 	 * @return bool
 	 */
-	protected function is_enabled() {
+	public function is_enabled() {
 
 		return 'yes' === get_option( 'sv_wc_apple_pay_enabled' );
 	}
@@ -627,6 +648,26 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 
 	/**
+	 * Gets the currencies accepted by the gateway's Apple Pay integration.
+	 *
+	 * @since 4.6.0-dev
+	 * @return array
+	 */
+	public function get_accepted_currencies() {
+
+		$currencies = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_apple_pay_currencies() : array();
+
+		/**
+		 * Filters the currencies accepted by the gateway's Apple Pay integration.
+		 *
+		 * @since 4.6.0-dev
+		 * @return array
+		 */
+		return apply_filters( 'sv_wc_apple_pay_accepted_currencies', $currencies );
+	}
+
+
+	/**
 	 * Gets the gateway's Apple Pay capabilities.
 	 *
 	 * @since 4.6.0-dev
@@ -641,7 +682,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			'supportsDebit',
 		);
 
-		$capabilities = array_intersect( $valid_capabilities, $this->get_processing_gateway()->get_apple_pay_capabilities() );
+		$gateway_capabilities = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_apple_pay_capabilities() : array();
+
+		$capabilities = array_intersect( $valid_capabilities, $gateway_capabilities );
 
 		/**
 		 * Filters the gateway's Apple Pay capabilities.
@@ -662,7 +705,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 */
 	public function get_supported_networks() {
 
-		$accepted_card_types = array_map( 'SV_WC_Payment_Gateway_Helper::normalize_card_type', $this->get_processing_gateway()->get_card_types() );
+		$accepted_card_types = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_card_types() : array();
+
+		$accepted_card_types = array_map( 'SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
 
 		$valid_networks = array(
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_AMEX       => 'amex',
