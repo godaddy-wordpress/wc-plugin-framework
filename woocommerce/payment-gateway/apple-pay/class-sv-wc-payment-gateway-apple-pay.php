@@ -115,7 +115,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		} catch ( SV_WC_API_Exception $e ) {
 
-			$this->get_processing_gateway()->add_debug_message( 'Apple Pay API error. ' . $e->getMessage() );
+			$this->log( 'Could not validate merchant. ' . $e->getMessage() );
 
 			wp_send_json( array(
 				'result'  => 'error',
@@ -130,7 +130,6 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * Processes the payment after the Apple Pay authorization.
 	 *
 	 * @since 4.6.0-dev
-	 * @throws \SV_WC_Payment_Gateway_Exception
 	 */
 	public function process_payment() {
 
@@ -145,7 +144,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			$response = new SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $response );
 
 			// log the payment response
-			$this->get_processing_gateway()->add_debug_message( "Apple Pay Payment Response:\n" . $response->to_string_safe() );
+			$this->log( "Payment Response:\n" . $response->to_string_safe() );
 
 			// pretend this is at checkout so totals are fully calculated
 			if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
@@ -182,7 +181,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
-			$this->get_processing_gateway()->add_debug_message( 'Apple Pay payment failed. ' . $e->getMessage() );
+			$this->log( 'Payment failed. ' . $e->getMessage() );
 
 			if ( $order ) {
 
@@ -283,7 +282,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * Creates an order from a single product request.
 	 *
 	 * @since 4.6.0-dev
-	 * @throws \SV_WC_Plugin_Exception
+	 * @throws \SV_WC_Payment_Gateway_Exception
 	 */
 	protected function create_product_order() {
 
@@ -364,7 +363,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *                               `$code => array( $amount => 0.00, $tax_amount => 0.00 )`
 	 *     @type string $cart_hash   The hashed cart object to be used later in case the order is to be resumed.
 	 *
-	 * @throws \SV_WC_Plugin_Exception
+	 * @throws \SV_WC_Payment_Gateway_Exception
 	 */
 	public function create_order( $items, $args = array() ) {
 
@@ -378,7 +377,10 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		try {
 
-			wc_transaction_query( 'start' );
+			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_5() ) {
+				wc_transaction_query( 'start' );
+			}
+
 
 			$order_data = array(
 				'status'      => apply_filters( 'woocommerce_default_order_status', 'pending' ),
@@ -397,7 +399,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				$item_id = $order->add_product( $item['product'], $item['quantity'], $item['args'] );
 
 				if ( ! $item_id ) {
-					throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 525 ) );
+					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 525 ) );
 				}
 
 				/** This action is a duplicate from \WC_Checkout::create_order() */
@@ -410,7 +412,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				$item_id = $order->add_fee( $fee );
 
 				if ( ! $item_id ) {
-					throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 526 ) );
+					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 526 ) );
 				}
 
 				/** This action is a duplicate from \WC_Checkout::create_order() */
@@ -427,7 +429,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 					$item_id = $order->add_shipping( $package['rates'][ $shipping_methods[ $key ] ] );
 
 					if ( ! $item_id ) {
-						throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 527 ) );
+						throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 527 ) );
 					}
 
 					/** This action is a duplicate from \WC_Checkout::create_order() */
@@ -439,19 +441,23 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			foreach ( $args['coupons'] as $code => $coupon ) {
 
 				if ( ! $order->add_coupon( $code, $coupon['amount'], $coupon['tax_amount'] ) ) {
-					throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 529 ) );
+					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 529 ) );
 				}
 			}
 
 			$order->calculate_totals();
 
-			wc_transaction_query( 'commit' );
+			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_5() ) {
+				wc_transaction_query( 'commit' );
+			}
 
 			return $order;
 
-		} catch ( SV_WC_Plugin_Exception $e ) {
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
-			wc_transaction_query( 'rollback' );
+			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_5() ) {
+				wc_transaction_query( 'rollback' );
+			}
 
 			throw $e;
 		}
@@ -464,7 +470,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * @since 4.6.0-dev
 	 * @param array $order_data the order data
 	 * @return \WC_Order
-	 * @throws \SV_WC_Plugin_Exception
+	 * @throws \SV_WC_Payment_Gateway_Exception
 	 */
 	protected function get_order_object( $order_data ) {
 
@@ -478,7 +484,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 			if ( is_wp_error( $order ) ) {
 
-				throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 522 ) );
+				throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 522 ) );
 
 			} else {
 
@@ -493,9 +499,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			$order = wc_create_order( $order_data );
 
 			if ( is_wp_error( $order ) ) {
-				throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 520 ) );
+				throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 520 ) );
 			} elseif ( false === $order ) {
-				throw new SV_WC_Plugin_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 521 ) );
+				throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 521 ) );
 			}
 
 			// set the new order ID so it can be resumed in case of failure
@@ -550,6 +556,26 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		}
 
 		return $this->api;
+	}
+
+
+	/**
+	 * Adds a log entry to the gateway's debug log.
+	 *
+	 * @since 4.6.0-dev
+	 * @param string $message the log message to add
+	 */
+	public function log( $message ) {
+
+		$gateway = $this->get_processing_gateway();
+
+		if ( ! $gateway ) {
+			return;
+		}
+
+		if ( $gateway->debug_log() ) {
+			$gateway->get_plugin()->log( '[Apple Pay] ' . $message, $gateway->get_id() );
+		}
 	}
 
 

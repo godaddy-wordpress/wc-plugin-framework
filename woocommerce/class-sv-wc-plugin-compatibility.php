@@ -88,6 +88,25 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Backports wc_shipping_enabled() to < 2.6.0
+	 *
+	 * @since 4.6.0-dev
+	 * @return bool
+	 */
+	public static function wc_shipping_enabled() {
+
+		if ( self::is_wc_version_gte_2_6() ) {
+
+			return wc_shipping_enabled();
+
+		} else {
+
+			return 'yes' === get_option( 'woocommerce_calc_shipping' );
+		}
+	}
+
+
+	/**
 	 * Backports wc_help_tip() to WC 2.4.x
 	 *
 	 * @link https://github.com/woothemes/woocommerce/pull/9417

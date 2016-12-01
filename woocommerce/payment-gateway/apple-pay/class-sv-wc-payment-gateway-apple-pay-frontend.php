@@ -186,8 +186,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
-			$this->get_gateway()->add_debug_message( 'Apple Pay Error: ' . $e->getMessage(), 'error' );
-
 			return;
 		}
 
@@ -219,12 +217,19 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			WC()->session->set_customer_session_cookie( true );
 		}
 
+		// no subscription products
 		if ( $this->get_plugin()->is_subscriptions_active() && WC_Subscriptions_Product::is_subscription( $product ) ) {
 			throw new SV_WC_Payment_Gateway_Exception( 'Not available for subscription products.' );
 		}
 
+		// no pre-order "charge upon release" products
+		if ( $this->get_plugin()->is_pre_orders_active() && WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Not available for pre-order products that are set to charge upon release.' );
+		}
+
+		// only simple products
 		if ( ! $product->is_type( 'simple' ) ) {
-			throw new SV_WC_Payment_Gateway_Exception( 'Only available for simple products' );
+			throw new SV_WC_Payment_Gateway_Exception( 'Buy Now is only available for simple products' );
 		}
 
 		// if this product can't be purchased, bail
@@ -233,7 +238,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		}
 
 		$line_items = array(
-			$product->get_id() => array(
+			$product->id => array(
 				'name'     => $product->get_title(),
 				'quantity' => 1,
 				'amount'   => $product->get_price(),
@@ -241,7 +246,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		);
 
 		$args = array(
-			'shipping_required' => wc_shipping_enabled() && $product->needs_shipping(),
+			'shipping_required' => SV_WC_Plugin_Compatibility::wc_shipping_enabled() && $product->needs_shipping(),
 			'shipping_total'    => 0,
 			'tax_total'         => 0,
 		);
@@ -282,19 +287,13 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		try {
 
-			if ( $this->get_plugin()->is_subscriptions_active() && WC_Subscriptions_Cart::cart_contains_subscription() ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Apple Pay is not available for carts containing subscription products.' );
-			}
-
-			// TODO: Pre-orders
-
-			$payment_request = $this->build_cart_payment_request( WC()->cart );
+			$payment_request = $this->build_cart_payment_request();
 
 			$args['payment_request'] = $payment_request;
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
-			$this->get_gateway()->add_debug_message( 'Apple Pay Error: ' . $e->getMessage(), 'error' );
+			$args['payment_request'] = false;
 		}
 
 		/**
@@ -339,15 +338,24 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * Builds a payment request based on WC cart data.
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Cart $cart the cart object
 	 * @return array
 	 * @throws \SV_WC_Payment_Gateway_Exception
 	 */
-	protected function build_cart_payment_request( WC_Cart $cart ) {
+	protected function build_cart_payment_request() {
+
+		$cart = WC()->cart;
 
 		// ensure totals are fully calculated
 		if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
 			define( 'WOOCOMMERCE_CHECKOUT', true );
+		}
+
+		if ( $this->get_plugin()->is_subscriptions_active() && WC_Subscriptions_Cart::cart_contains_subscription() ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Cart contains subscriptions.' );
+		}
+
+		if ( $this->get_plugin()->is_pre_orders_active() && WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Cart contains pre-orders.' );
 		}
 
 		$cart->calculate_totals();
@@ -358,7 +366,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		// set the line items
 		foreach ( $cart->get_cart() as $cart_item_key => $item ) {
 
-			$line_items[ $item['data']->get_id() ] = array(
+			$line_items[ $item['data']->id ] = array(
 				'name'     => $item['data']->get_title(),
 				'quantity' => $item['quantity'],
 				'amount'   => $item['line_subtotal'],
@@ -378,7 +386,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		$args = array();
 
 		// discount total
-		if ( $cart->has_discount() ) {
+		if ( 0 < count( $cart->applied_coupons ) ) { // TODO: switch to $cart->has_discount()` when WC 2.5 is required
 			$args['discount_total'] = $cart->get_cart_discount_total();
 		}
 
@@ -404,8 +412,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		$total = array(
 			'amount' => $cart->total,
 		);
-
-		$this->get_gateway()->add_debug_message( 'Generating Apple Pay Payment Request' );
 
 		// build it!
 		$request = $this->build_payment_request( $total, $line_items, $args );
@@ -435,7 +441,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			if ( 'product' === $type ) {
 				$request = $this->build_product_payment_request( SV_WC_Helper::get_post( 'product_id' ) );
 			} else if ( 'cart' === $type || 'checkout' === $type ) {
-				$request = $this->build_cart_payment_request( WC()->cart );
+				$request = $this->build_cart_payment_request();
 			} else if ( '' === $type ) {
 				throw new SV_WC_Payment_Gateway_Exception( 'Payment request type is missing.' );
 			} else {
@@ -449,9 +455,12 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
+			$this->get_handler()->log( 'Could not build payment request. ' . $e->getMessage() );
+
 			wp_send_json( array(
 				'result'  => 'error',
-				'message' => $e->getMessage(),
+				'error'   => $e->getMessage(),
+				'message' => __( 'Apple Pay is currently unavailable.', 'woocommerce-plugin-framework' ),
 			) );
 		}
 	}
@@ -487,6 +496,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * @return array
 	 */
 	protected function build_payment_request( $total, $line_items = array(), $args = array() ) {
+
+		$this->get_handler()->log( 'Building payment request.' );
 
 		$args = wp_parse_args( $args, array(
 			'currency_code'         => get_woocommerce_currency(),
@@ -585,7 +596,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		}
 
 		// log the payment request
-		$this->get_gateway()->add_debug_message( "Apple Pay Payment Request:\n" . print_r( $request, true ) );
+		$this->get_handler()->log( "Payment Request:\n" . print_r( $request, true ) );
 
 		return $request;
 	}

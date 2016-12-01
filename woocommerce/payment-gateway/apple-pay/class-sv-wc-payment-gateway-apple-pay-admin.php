@@ -115,7 +115,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 			),
 		);
 
-		if ( wc_tax_enabled() || wc_shipping_enabled() ) {
+		if ( wc_tax_enabled() || SV_WC_Plugin_Compatibility::wc_shipping_enabled() ) {
 
 			$buy_settings = array(
 				array(
@@ -138,7 +138,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 				);
 			}
 
-			if ( wc_shipping_enabled() ) {
+			if ( SV_WC_Plugin_Compatibility::wc_shipping_enabled() ) {
 
 				$buy_settings[] = array(
 					'id'       => 'sv_wc_apple_pay_buy_now_shipping_cost',

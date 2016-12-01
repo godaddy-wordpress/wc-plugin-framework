@@ -96,7 +96,8 @@ jQuery( document ).ready ($) ->
 
 			, ( response ) =>
 
-				console.log '[Apple Pay Error] ' + response
+				if response.error
+					console.log '[Apple Pay Error] ' + response.error
 
 				@buttons.prop( 'disabled', true )
 
@@ -121,7 +122,7 @@ jQuery( document ).ready ($) ->
 				if response.result is 'success'
 					resolve response.request
 				else
-					reject response.message
+					reject response
 
 
 		# The callback for after the merchant data is validated.
@@ -290,6 +291,7 @@ jQuery( document ).ready ($) ->
 
 			super(args)
 
+			$( document.body ).trigger( 'wc_update_cart' )
 
 		init: =>
 
