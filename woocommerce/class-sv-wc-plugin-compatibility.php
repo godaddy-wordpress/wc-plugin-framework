@@ -125,10 +125,10 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
-	 * Returns true if the installed version of WooCommerce is 2.5 or greater
+	 * Determines if the installed version of WooCommerce is 2.5.0 or greater.
 	 *
 	 * @since 4.2.0
-	 * @return boolean true if the installed version of WooCommerce is 2.5 or greater
+	 * @return bool
 	 */
 	public static function is_wc_version_gte_2_5() {
 		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.5', '>=' );
@@ -136,10 +136,10 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
-	 * Returns true if the installed version of WooCommerce is less than 2.5
+	 * Determines if the installed version of WooCommerce is less than 2.5.0
 	 *
 	 * @since 4.2.0
-	 * @return boolean true if the installed version of WooCommerce is less than 2.5
+	 * @return bool
 	 */
 	public static function is_wc_version_lt_2_5() {
 		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.5', '<' );
@@ -147,10 +147,10 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
-	 * Returns true if the installed version of WooCommerce is 2.6 or greater
+	 * Determines if the installed version of WooCommerce is 2.6.0 or greater.
 	 *
 	 * @since 4.4.0
-	 * @return boolean true if the installed version of WooCommerce is 2.6 or greater
+	 * @return bool
 	 */
 	public static function is_wc_version_gte_2_6() {
 		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.6', '>=' );
@@ -158,13 +158,35 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
-	 * Returns true if the installed version of WooCommerce is less than 2.6
+	 * Determines if the installed version of WooCommerce is less than 2.6.0
 	 *
 	 * @since 4.4.0
-	 * @return boolean true if the installed version of WooCommerce is less than 2.6
+	 * @return bool
 	 */
 	public static function is_wc_version_lt_2_6() {
 		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.6', '<' );
+	}
+
+
+	/**
+	 * Determines if the installed version of WooCommerce is 2.7.0 or greater.
+	 *
+	 * @since 4.6.0-dev
+	 * @return bool
+	 */
+	public static function is_wc_version_gte_2_7() {
+		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.7', '>=' );
+	}
+
+
+	/**
+	 * Determines if the installed version of WooCommerce is less than 2.7.0
+	 *
+	 * @since 4.6.0-dev
+	 * @return bool
+	 */
+	public static function is_wc_version_lt_2_7() {
+		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.7', '<' );
 	}
 
 	/**
