@@ -38,7 +38,7 @@ if ( ! class_exists( 'SV_WC_Plugin_Compatibility' ) ) :
  * are dropped.
  *
  * Current Compatibility
- * + Core 2.4.13 - 2.6.x
+ * + Core 2.5.5 - 2.7.x
  * + Subscriptions 1.5.x - 2.0.x
  *
  * @since 2.0.0
@@ -49,7 +49,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Backports wc_checkout_is_https() to 2.4.x
 	 *
-	 * @since  4.3.0-beta
+	 * @since 4.3.0
 	 * @return bool
 	 */
 	public static function wc_checkout_is_https() {

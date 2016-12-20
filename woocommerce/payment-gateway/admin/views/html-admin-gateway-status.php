@@ -29,7 +29,7 @@
 		<tr>
 			<th colspan="3" data-export-label="">
 				<?php echo esc_html( $gateway->get_method_title() ); ?>
-				<?php echo SV_WC_Plugin_Compatibility::wc_help_tip( __( 'This section contains configuration settings for this gateway.', 'woocommerce-plugin-framework' ) ); ?>
+				<?php echo wc_help_tip( __( 'This section contains configuration settings for this gateway.', 'woocommerce-plugin-framework' ) ); ?>
 			</th>
 		</tr>
 	</thead>
@@ -50,7 +50,7 @@
 
 		<tr>
 			<td data-export-label="Environment"><?php esc_html_e( 'Environment', 'woocommerce-plugin-framework' ); ?>:</td>
-			<td class="help"><?php echo SV_WC_Plugin_Compatibility::wc_help_tip( __( 'The transaction environment for this gateway.', 'woocommerce-plugin-framework' ) ); ?></td>
+			<td class="help"><?php echo wc_help_tip( __( 'The transaction environment for this gateway.', 'woocommerce-plugin-framework' ) ); ?></td>
 			<td><?php echo esc_html( $environment ); ?></td>
 		</tr>
 
@@ -58,7 +58,7 @@
 
 			<tr>
 				<td data-export-label="Tokenization Enabled"><?php esc_html_e( 'Tokenization Enabled', 'woocommerce-plugin-framework' ); ?>:</td>
-				<td class="help"><?php echo SV_WC_Plugin_Compatibility::wc_help_tip( __( 'Displays whether or not tokenization is enabled for this gateway.', 'woocommerce-plugin-framework' ) ); ?></td>
+				<td class="help"><?php echo wc_help_tip( __( 'Displays whether or not tokenization is enabled for this gateway.', 'woocommerce-plugin-framework' ) ); ?></td>
 				<td>
 					<?php if ( $gateway->tokenization_enabled() ) : ?>
 						<mark class="yes">&#10004;</mark>

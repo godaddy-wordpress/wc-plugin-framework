@@ -419,7 +419,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					if ( isset( $settings['environment'] ) && 'production' == $settings['environment'] ) {
 
 						// SSL check if gateway enabled/production mode
-						if ( ! SV_WC_Plugin_Compatibility::wc_checkout_is_https() ) {
+						if ( ! wc_checkout_is_https() ) {
 
 							/* translators: Placeholders: %s - plugin name */
 							$message = sprintf( esc_html__( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", 'woocommerce-plugin-framework' ), '<strong>' . $this->get_plugin_name() . '</strong>' );
