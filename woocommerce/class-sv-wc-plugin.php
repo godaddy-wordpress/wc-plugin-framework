@@ -269,6 +269,7 @@ abstract class SV_WC_Plugin {
 
 		// backwards compatibility for older WC versions
 		require_once( $framework_path . '/class-sv-wc-plugin-compatibility.php' );
+		require_once( $framework_path . '/compatibility/class-sv-wc-order-compatibility.php' );
 
 		// generic API base
 		require_once( $framework_path . '/api/class-sv-wc-api-exception.php' );

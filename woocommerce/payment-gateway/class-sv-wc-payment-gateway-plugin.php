@@ -618,12 +618,14 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			$order = wc_get_order( $order );
 		}
 
+		$payment_method = SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' );
+
 		// bail if the order wasn't paid for with this gateway
-		if ( ! $this->has_gateway( $order->payment_method ) ) {
+		if ( ! $this->has_gateway( $payment_method ) ) {
 			return;
 		}
 
-		$gateway = $this->get_gateway( $order->payment_method );
+		$gateway = $this->get_gateway( $payment_method );
 
 		// ensure that it supports captures
 		if ( ! $this->can_capture_charge( $gateway ) ) {
@@ -665,12 +667,14 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		$order = wc_get_order( $_REQUEST['post'] );
 
+		$payment_method = SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' );
+
 		// bail if the order wasn't paid for with this gateway
-		if ( ! $this->has_gateway( $order->payment_method ) ) {
+		if ( ! $this->has_gateway( $payment_method ) ) {
 			return $actions;
 		}
 
-		$gateway = $this->get_gateway( $order->payment_method );
+		$gateway = $this->get_gateway( $payment_method );
 
 		// ensure that it supports captures
 		if ( ! $this->can_capture_charge( $gateway ) ) {

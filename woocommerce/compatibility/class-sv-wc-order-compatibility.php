@@ -35,6 +35,181 @@ class SV_WC_Order_Compatibility {
 
 
 	/**
+	 * Gets an order property.
+	 *
+	 * @see \WC_Abstract_Order for available properties
+	 *
+	 * @since 4.6.0-dev
+	 * @param \WC_Order $order the order object
+	 * @param string $prop the property name
+	 * @param string $context if 'view' then the value will be filtered
+	 * @return string
+	 */
+	public static function get_prop( WC_Order $order, $prop, $context = 'view' ) {
+
+		$value = '';
+
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+
+			if ( is_callable( array( $order, "get_{$prop}" ) ) ) {
+ 				$value = $order->{"get_{$prop}"}( $context );
+ 			} else {
+				$value = $order->get_prop( $prop, $context );
+			}
+
+		} else {
+
+			$compat_props = self::get_compat_props();
+
+			// convert the
+			if ( isset( $compat_props[ $prop ] ) ) {
+				$prop = $compat_props[ $prop ];
+			}
+
+			// special handling for the shipping total
+			if ( 'order_shipping' === $prop && 'view' === $context ) {
+				$prop = 'total_shipping';
+			}
+
+			// if this is the 'view' context and there is an accessor method, use it
+			if ( is_callable( array( $order, "get_{$prop}" ) ) && 'view' === $context ) {
+				$value = $order->{"get_{$prop}"}();
+			} else {
+				$value = $order->$prop;
+			}
+		}
+
+		return $value;
+	}
+
+
+	/**
+	 * Sets an order's properties.
+	 *
+	 * Note that this does not save any order data.
+	 *
+	 * @since 4.6.0-dev
+	 * @param \WC_Order $order the order object
+	 * @param array $props the order properties as $key => $value
+	 * @return \WC_Order the order object
+	 */
+	public static function set_props( WC_Order $order, $props ) {
+
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+
+			$order->set_props( $props );
+
+		} else {
+
+			$compat_props = self::get_compat_props();
+
+			foreach ( $props as $prop => $value ) {
+
+				if ( isset( $compat_props[ $prop ] ) ) {
+					$prop = $compat_props[ $prop ];
+				}
+
+				$order->$prop = $value;
+			}
+		}
+
+		return $order;
+	}
+
+
+	/**
+	 * Gets an order meta value.
+	 *
+	 * @since 4.6.0-dev
+	 * @param \WC_Order $order the order object
+	 * @param string $key the meta key
+	 * @param bool $single whether to get the meta as a single item. Defaults to `true`
+	 * @param string $context if 'view' then the value will be filtered
+	 * @return string
+	 */
+	public static function get_meta( WC_Order $order, $key = '', $single = true, $context = 'view' ) {
+
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+			$value = $order->get_meta( $key, $single, $context );
+		} else {
+			$value = get_post_meta( $order->id, $key, $single );
+		}
+
+		return $value;
+	}
+
+
+	/**
+	 * Adds an order meta value.
+	 *
+	 * @since 4.6.0-dev
+	 * @param \WC_Order $order the order object
+	 * @param string $key the meta key
+	 * @param string $value the meta value
+	 * @param strint $meta_id Optional. The specific meta ID to update
+	 */
+	public static function add_meta_data( WC_Order $order, $key, $value, $unique = false ) {
+
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+
+			$order->add_meta_data( $key, $value, $unique );
+
+			$order->save_meta_data();
+
+		} else {
+
+			add_post_meta( $order->id, $key, $value, $unique );
+		}
+	}
+
+
+	/**
+	 * Updates an order meta value.
+	 *
+	 * @since 4.6.0-dev
+	 * @param \WC_Order $order the order object
+	 * @param string $key the meta key
+	 * @param string $value the meta value
+	 * @param strint $meta_id Optional. The specific meta ID to update
+	 */
+	public static function update_meta_data( WC_Order $order, $key, $value, $meta_id = '' ) {
+
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+
+			$order->update_meta_data( $key, $value, $meta_id );
+
+			$order->save_meta_data();
+
+		} else {
+
+			update_post_meta( $order->id, $key, $value );
+		}
+	}
+
+
+	/**
+	 * Deletes an order meta value.
+	 *
+	 * @since 4.6.0-dev
+	 * @param \WC_Order $order the order object
+	 * @param string $key the meta key
+	 */
+	public static function delete_meta_data( WC_Order $order, $key ) {
+
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+
+			$order->delete_meta_data( $key );
+
+			$order->save_meta_data();
+
+		} else {
+
+			delete_post_meta( $order->id, $key );
+		}
+	}
+
+
+	/**
 	 * Order item CRUD compatibility method to add a coupon to an order.
 	 *
 	 * @since 4.6.0-dev
@@ -242,138 +417,26 @@ class SV_WC_Order_Compatibility {
 
 
 	/**
-	 * Backports \WC_Order::get_id() to pre-2.7.0
+	 * Gets the property pairs for compatibility.
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @return int
+	 * @return array $valid_key => $deprecated_prop
 	 */
-	public static function get_id( WC_Order $order ) {
+	protected function get_compat_props() {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-			return $order->get_id();
-		} else {
-			return $order->id;
-		}
-	}
-
-
-	/**
-	 * Backports \WC_Order::get_currency() to pre-2.7.0
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @return string
-	 */
-	public static function get_currency( WC_Order $order ) {
-
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-			return $order->get_currency();
-		} else {
-			return $order->get_order_currency();
-		}
-	}
-
-
-	/**
-	 * Backports \WC_Order::get_shipping_total() to pre-2.7.0
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @return float
-	 */
-	public static function get_shipping_total( WC_Order $order ) {
-
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-			return $order->get_shipping_total();
-		} else {
-			return $order->get_total_shipping();
-		}
-	}
-
-
-	/**
-	 * Backports \WC_Order::get_date_created() to pre-2.7.0
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @return string
-	 */
-	public static function get_date_created( WC_Order $order ) {
-
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-			return $order->get_date_created();
-		} else {
-			return $order->order_date;
-		}
-	}
-
-
-	/**
-	 * Backports \WC_Order::get_date_paid() to pre-2.7.0
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @return string
-	 */
-	public static function get_date_paid( WC_Order $order ) {
-
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-			return $order->get_date_paid();
-		} else {
-			return $order->paid_date;
-		}
-	}
-
-
-	/**
-	 * Backports \WC_Order::get_customer_id() to pre-2.7.0
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @return string
-	 */
-	public static function get_customer_id( WC_Order $order ) {
-
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-			return $order->get_customer_id();
-		} else {
-			return $order->customer_user;
-		}
-	}
-
-
-	/**
-	 * Backports \WC_Order::get_customer_note() to pre-2.7.0
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @return string
-	 */
-	public static function get_customer_note( WC_Order $order ) {
-
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-			return $order->get_customer_note();
-		} else {
-			return $order->customer_note;
-		}
-	}
-
-
-	/**
-	 * Backports \WC_Order::get_billing_email() to pre-2.7.0
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @return string
-	 */
-	public static function get_billing_email( WC_Order $order ) {
-
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-			return $order->get_billing_email();
-		} else {
-			return $order->billing_email;
-		}
+		return array(
+			'date_completed' => 'completed_date',
+			'date_paid'      => 'paid_date',
+			'date_modified'  => 'modified_date',
+			'date_created'   => 'order_date',
+			'customer_id'    => 'customer_user',
+			'discount'       => 'cart_discount',
+			'discount_tax'   => 'cart_discount_tax',
+			'shipping_total' => 'order_shipping',
+			'type'           => 'order_type',
+			'currency'       => 'order_currency',
+			'version'        => 'order_version',
+		);
 	}
 
 

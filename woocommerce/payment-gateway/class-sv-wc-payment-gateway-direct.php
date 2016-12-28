@@ -807,12 +807,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// payment info
 		if ( isset( $order->payment->token ) && $order->payment->token ) {
-			$this->update_order_meta( $order->id, 'payment_token', $order->payment->token );
+			$this->update_order_meta( $order, 'payment_token', $order->payment->token );
 		}
 
 		// account number
 		if ( isset( $order->payment->account_number ) && $order->payment->account_number ) {
-			$this->update_order_meta( $order->id, 'account_four', substr( $order->payment->account_number, -4 ) );
+			$this->update_order_meta( $order, 'account_four', substr( $order->payment->account_number, -4 ) );
 		}
 
 		if ( $this->is_credit_card_gateway() ) {
@@ -821,7 +821,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( $response && $response instanceof SV_WC_Payment_Gateway_API_Authorization_Response ) {
 
 				if ( $response->get_authorization_code() ) {
-					$this->update_order_meta( $order->id, 'authorization_code', $response->get_authorization_code() );
+					$this->update_order_meta( $order, 'authorization_code', $response->get_authorization_code() );
 				}
 
 				if ( $order->payment_total > 0 ) {
@@ -831,17 +831,17 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					} else {
 						$captured = 'no';
 					}
-					$this->update_order_meta( $order->id, 'charge_captured', $captured );
+					$this->update_order_meta( $order, 'charge_captured', $captured );
 				}
 
 			}
 
 			if ( isset( $order->payment->exp_year ) && $order->payment->exp_year && isset( $order->payment->exp_month ) && $order->payment->exp_month ) {
-				$this->update_order_meta( $order->id, 'card_expiry_date', $order->payment->exp_year . '-' . $order->payment->exp_month );
+				$this->update_order_meta( $order, 'card_expiry_date', $order->payment->exp_year . '-' . $order->payment->exp_month );
 			}
 
 			if ( isset( $order->payment->card_type ) && $order->payment->card_type ) {
-				$this->update_order_meta( $order->id, 'card_type', $order->payment->card_type );
+				$this->update_order_meta( $order, 'card_type', $order->payment->card_type );
 			}
 
 		} elseif ( $this->is_echeck_gateway() ) {
@@ -850,12 +850,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// optional account type (checking/savings)
 			if ( isset( $order->payment->account_type ) && $order->payment->account_type ) {
-				$this->update_order_meta( $order->id, 'account_type', $order->payment->account_type );
+				$this->update_order_meta( $order, 'account_type', $order->payment->account_type );
 			}
 
 			// optional check number
 			if ( isset( $order->payment->check_number ) && $order->payment->check_number ) {
-				$this->update_order_meta( $order->id, 'check_number', $order->payment->check_number );
+				$this->update_order_meta( $order, 'check_number', $order->payment->check_number );
 			}
 		}
 	}
@@ -1184,7 +1184,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$token = $response->get_payment_token();
 
 			// set the token to the user account
-			$this->get_payment_tokens_handler()->add_token( $order->customer_user, $token );
+			$this->get_payment_tokens_handler()->add_token( SV_WC_Order_Compatibility::get_prop( $order, 'customer_id' ), $token );
 
 			// order note based on gateway type
 			if ( $this->is_credit_card_gateway() ) {
@@ -1264,40 +1264,57 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function get_order_for_add_payment_method() {
 
-		$order = new WC_Order( 0 );
-
-		// default to base store currency
-		$order->order_currency = get_woocommerce_currency();
-
 		// mock order, as all gateway API implementations require an order object for tokenization
+		$order = new WC_Order( 0 );
 		$order = $this->get_order( $order );
 
 		$user = get_userdata( get_current_user_id() );
 
-		$order->customer_user = $user->ID;
-
-		// billing & shipping
-		$fields = array(
-			'billing_first_name', 'billing_last_name', 'billing_address_1', 'billing_company',
-			'billing_address_2', 'billing_city', 'billing_postcode', 'billing_state',
-			'billing_country', 'billing_phone', 'billing_email', 'shipping_first_name',
-			'shipping_last_name', 'shipping_company', 'shipping_address_1', 'shipping_address_2',
-			'shipping_city', 'shipping_postcode', 'shipping_state', 'shipping_country',
+		$properties = array(
+			'currency'    => get_woocommerce_currency(), // default to base store currency
+			'customer_id' => $user->ID,
 		);
 
-		foreach ( $fields as $field ) {
-			$order->$field = $user->$field;
+		$defaults = array(
+			// billing
+			'billing_first_name' => '',
+			'billing_last_name'  => '',
+			'billing_company'    => '',
+			'billing_address_1'  => '',
+			'billing_address_2'  => '',
+			'billing_city'       => '',
+			'billing_postcode'   => '',
+			'billing_state'      => '',
+			'billing_country'    => '',
+			'billing_phone'      => '',
+			'billing_email'      => $user->user_email,
+
+			// shipping
+			'shipping_first_name' => '',
+			'shipping_last_name'  => '',
+			'shipping_company'    => '',
+			'shipping_address_1'  => '',
+			'shipping_address_2'  => '',
+			'shipping_city'       => '',
+			'shipping_postcode'   => '',
+			'shipping_state'      => '',
+			'shipping_country'    => '',
+		);
+
+		foreach ( $defaults as $prop => $value ) {
+
+			if ( ! empty( $user->$prop ) ) {
+				$properties[ $prop ] = $user->$prop;
+			}
 		}
 
-		// If the user hasn't set a billing email yet, use their user meta
-		if ( ! $order->billing_email ) {
-			$order->billing_email = $user->user_email;
-		}
+		$order = SV_WC_Order_Compatibility::set_props( $order, $properties );
 
 		// other default info
-		$order->customer_id = $this->get_customer_id( $order->customer_user );
+		$order->customer_id = $this->get_customer_id( SV_WC_Order_Compatibility::get_prop( $order, 'customer_id' ) );
+
 		/* translators: Placeholders: %1$s - site title, %2$s - customer email. Payment method as in a specific credit card, e-check or bank account */
-		$order->description = sprintf( esc_html__( '%1$s - Add Payment Method for %2$s', 'woocommerce-plugin-framework' ), sanitize_text_field( get_bloginfo( 'name' ) ), $order->billing_email );
+		$order->description = sprintf( esc_html__( '%1$s - Add Payment Method for %2$s', 'woocommerce-plugin-framework' ), sanitize_text_field( get_bloginfo( 'name' ) ), $properties['billing_email'] );
 
 		// force zero amount
 		$order->payment_total = '0.00';
