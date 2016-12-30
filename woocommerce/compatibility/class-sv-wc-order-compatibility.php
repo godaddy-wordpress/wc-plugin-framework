@@ -31,13 +31,26 @@ if ( ! class_exists( 'SV_WC_Order_Compatibility' ) ) :
  *
  * @since 4.6.0-dev
  */
-class SV_WC_Order_Compatibility {
+class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
+
+
+	protected static $compat_props = array(
+		'date_completed' => 'completed_date',
+		'date_paid'      => 'paid_date',
+		'date_modified'  => 'modified_date',
+		'date_created'   => 'order_date',
+		'customer_id'    => 'customer_user',
+		'discount'       => 'cart_discount',
+		'discount_tax'   => 'cart_discount_tax',
+		'shipping_total' => 'total_shipping',
+		'type'           => 'order_type',
+		'currency'       => 'order_currency',
+		'version'        => 'order_version',
+	);
 
 
 	/**
 	 * Gets an order property.
-	 *
-	 * @see \WC_Abstract_Order for available properties
 	 *
 	 * @since 4.6.0-dev
 	 * @param \WC_Order $order the order object
@@ -47,165 +60,28 @@ class SV_WC_Order_Compatibility {
 	 */
 	public static function get_prop( WC_Order $order, $prop, $context = 'view' ) {
 
-		$value = '';
-
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-
-			if ( is_callable( array( $order, "get_{$prop}" ) ) ) {
- 				$value = $order->{"get_{$prop}"}( $context );
- 			} else {
-				$value = $order->get_prop( $prop, $context );
-			}
-
-		} else {
-
-			$compat_props = self::get_compat_props();
-
-			// convert the
-			if ( isset( $compat_props[ $prop ] ) ) {
-				$prop = $compat_props[ $prop ];
-			}
-
-			// special handling for the shipping total
-			if ( 'order_shipping' === $prop && 'view' === $context ) {
-				$prop = 'total_shipping';
-			}
-
-			// if this is the 'view' context and there is an accessor method, use it
-			if ( is_callable( array( $order, "get_{$prop}" ) ) && 'view' === $context ) {
-				$value = $order->{"get_{$prop}"}();
-			} else {
-				$value = $order->$prop;
-			}
+		// backport 'WC_Product::get_shipping_total()' to pre-2.7
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() && 'shipping_total' === $prop && 'view' !== $context ) {
+			$prop = 'order_shipping';
 		}
 
-		return $value;
+		return parent::get_prop( $order, $prop, $context, self::$compat_props );
 	}
 
 
 	/**
 	 * Sets an order's properties.
 	 *
-	 * Note that this does not save any order data.
+	 * Note that this does not save any data to the database.
 	 *
 	 * @since 4.6.0-dev
 	 * @param \WC_Order $order the order object
-	 * @param array $props the order properties as $key => $value
-	 * @return \WC_Order the order object
+	 * @param array $props the new properties as $key => $value
+	 * @return object
 	 */
 	public static function set_props( WC_Order $order, $props ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-
-			$order->set_props( $props );
-
-		} else {
-
-			$compat_props = self::get_compat_props();
-
-			foreach ( $props as $prop => $value ) {
-
-				if ( isset( $compat_props[ $prop ] ) ) {
-					$prop = $compat_props[ $prop ];
-				}
-
-				$order->$prop = $value;
-			}
-		}
-
-		return $order;
-	}
-
-
-	/**
-	 * Gets an order meta value.
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @param string $key the meta key
-	 * @param bool $single whether to get the meta as a single item. Defaults to `true`
-	 * @param string $context if 'view' then the value will be filtered
-	 * @return string
-	 */
-	public static function get_meta( WC_Order $order, $key = '', $single = true, $context = 'view' ) {
-
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-			$value = $order->get_meta( $key, $single, $context );
-		} else {
-			$value = get_post_meta( $order->id, $key, $single );
-		}
-
-		return $value;
-	}
-
-
-	/**
-	 * Adds an order meta value.
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @param string $key the meta key
-	 * @param string $value the meta value
-	 * @param strint $meta_id Optional. The specific meta ID to update
-	 */
-	public static function add_meta_data( WC_Order $order, $key, $value, $unique = false ) {
-
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-
-			$order->add_meta_data( $key, $value, $unique );
-
-			$order->save_meta_data();
-
-		} else {
-
-			add_post_meta( $order->id, $key, $value, $unique );
-		}
-	}
-
-
-	/**
-	 * Updates an order meta value.
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @param string $key the meta key
-	 * @param string $value the meta value
-	 * @param strint $meta_id Optional. The specific meta ID to update
-	 */
-	public static function update_meta_data( WC_Order $order, $key, $value, $meta_id = '' ) {
-
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-
-			$order->update_meta_data( $key, $value, $meta_id );
-
-			$order->save_meta_data();
-
-		} else {
-
-			update_post_meta( $order->id, $key, $value );
-		}
-	}
-
-
-	/**
-	 * Deletes an order meta value.
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @param string $key the meta key
-	 */
-	public static function delete_meta_data( WC_Order $order, $key ) {
-
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-
-			$order->delete_meta_data( $key );
-
-			$order->save_meta_data();
-
-		} else {
-
-			delete_post_meta( $order->id, $key );
-		}
+		return parent::set_props( $order, $props, self::$compat_props );
 	}
 
 
@@ -288,7 +164,7 @@ class SV_WC_Order_Compatibility {
 	 *
 	 * @since 4.6.0-dev
 	 * @param \WC_Order $order the order object
-	 * @param int $item_id the order item ID
+	 * @param int $item the order item ID
 	 * @param array $args {
 	 *     The coupon item args.
 	 *
@@ -298,7 +174,7 @@ class SV_WC_Order_Compatibility {
 	 * }
 	 * @return int|bool the order item ID or false on failure
 	 */
-	public static function update_coupon( WC_Order $order, $item_id, $args ) {
+	public static function update_coupon( WC_Order $order, $item, $args ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
 
@@ -332,7 +208,7 @@ class SV_WC_Order_Compatibility {
 				$args['discount_amount_tax'] = $args['discount_tax'];
 			}
 
-			return $order->update_coupon( $item_id, $args );
+			return $order->update_coupon( $item, $args );
 		}
 	}
 
@@ -342,7 +218,7 @@ class SV_WC_Order_Compatibility {
 	 *
 	 * @since 4.6.0-dev
 	 * @param \WC_Order $order the order object
-	 * @param int $item_id the order item ID
+	 * @param int $item the order item ID
 	 * @param array $args {
 	 *     The fee item args.
 	 *
@@ -353,7 +229,7 @@ class SV_WC_Order_Compatibility {
 	 * }
 	 * @return int|bool the order item ID or false on failure
 	 */
-	public static function update_fee( WC_Order $order, $item_id, $args ) {
+	public static function update_fee( WC_Order $order, $item, $args ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
 
@@ -379,7 +255,7 @@ class SV_WC_Order_Compatibility {
 
 		} else {
 
-			return $order->update_fee( $item_id, $args );
+			return $order->update_fee( $item, $args );
 		}
 	}
 
@@ -413,30 +289,6 @@ class SV_WC_Order_Compatibility {
 		} else {
 			$order->record_product_sales();
 		}
-	}
-
-
-	/**
-	 * Gets the property pairs for compatibility.
-	 *
-	 * @since 4.6.0-dev
-	 * @return array $valid_key => $deprecated_prop
-	 */
-	protected function get_compat_props() {
-
-		return array(
-			'date_completed' => 'completed_date',
-			'date_paid'      => 'paid_date',
-			'date_modified'  => 'modified_date',
-			'date_created'   => 'order_date',
-			'customer_id'    => 'customer_user',
-			'discount'       => 'cart_discount',
-			'discount_tax'   => 'cart_discount_tax',
-			'shipping_total' => 'order_shipping',
-			'type'           => 'order_type',
-			'currency'       => 'order_currency',
-			'version'        => 'order_version',
-		);
 	}
 
 

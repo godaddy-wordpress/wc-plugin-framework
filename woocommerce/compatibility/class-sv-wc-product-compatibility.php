@@ -31,7 +31,72 @@ if ( ! class_exists( 'SV_WC_Product_Compatibility' ) ) :
  *
  * @since 4.6.0-dev
  */
-class SV_WC_Product_Compatibility {
+class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
+
+
+	protected static $compat_props = array(
+		'catalog_visibility' => 'visibility',
+		'date_on_sale_from'  => 'sale_price_dates_from',
+		'date_on_sale_to'    => 'sale_price_dates_to',
+		'gallery_image_ids'  => 'product_image_gallery',
+		'cross_sell_ids'     => 'crosssell_ids',
+	);
+
+
+	/**
+	 * Gets a product property.
+	 *
+	 * @since 4.6.0-dev
+	 * @param \WC_Product $product the product object
+	 * @param string $prop the property name
+	 * @param string $context if 'view' then the value will be filtered
+	 * @return string
+	 */
+	public static function get_prop( WC_Product $product, $prop, $context = 'view' ) {
+
+		// backport 'WC_Product::get_parent_id()' to pre-2.7
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() && 'parent_id' === $prop ) {
+			$prop    = 'id';
+			$context = $product->is_type( 'variation' ) ? 'raw' : $context;
+		}
+
+		return parent::get_prop( $product, $prop, $context, self::$compat_props );
+	}
+
+
+	/**
+	 * Sets an products's properties.
+	 *
+	 * Note that this does not save any data to the database.
+	 *
+	 * @since 4.6.0-dev
+	 * @param \WC_Product $product the product object
+	 * @param array $props the new properties as $key => $value
+	 * @return object
+	 */
+	public static function set_props( WC_Product $product, $props ) {
+
+		return parent::set_props( $product, $props, self::$compat_props );
+	}
+
+
+	/**
+	 * Makes WC_Product::get_parent() available for WC 2.7+
+	 *
+	 * @since 4.6.0-dev
+	 * @param \WC_Product $product the product object
+	 * @return \WC_Product
+	 */
+	public static function get_parent( WC_Product $product ) {
+
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+			$parent = wc_get_product( $product->get_parent_id() );
+		} else {
+			$parent = $product->get_parent();
+		}
+
+		return $parent;
+	}
 
 
 	/**
@@ -158,8 +223,13 @@ class SV_WC_Product_Compatibility {
 	public static function wc_get_product_category_list( WC_Product $product, $sep = ', ', $before = '', $after = '' ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
-			return wc_get_product_category_list( $product->get_id(), $sep, $before, $after );
+
+			$id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
+
+			return wc_get_product_category_list( $id, $sep, $before, $after );
+
 		} else {
+
 			return $product->get_categories( $sep, $before, $after );
 		}
 	}

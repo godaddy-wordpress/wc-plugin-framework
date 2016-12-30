@@ -34,13 +34,13 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 4.5.1
+ * @version 4.6.0-dev
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '4.5.1';
+	const VERSION = '4.6.0-dev';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -269,7 +269,9 @@ abstract class SV_WC_Plugin {
 
 		// backwards compatibility for older WC versions
 		require_once( $framework_path . '/class-sv-wc-plugin-compatibility.php' );
+		require_once( $framework_path . '/compatibility/abstract-sv-wc-data-compatibility.php' );
 		require_once( $framework_path . '/compatibility/class-sv-wc-order-compatibility.php' );
+		require_once( $framework_path . '/compatibility/class-sv-wc-product-compatibility.php' );
 
 		// generic API base
 		require_once( $framework_path . '/api/class-sv-wc-api-exception.php' );

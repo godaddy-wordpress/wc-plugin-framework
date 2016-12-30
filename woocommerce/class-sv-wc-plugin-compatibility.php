@@ -41,6 +41,8 @@ if ( ! class_exists( 'SV_WC_Plugin_Compatibility' ) ) :
  * + Core 2.5.5 - 2.7.x
  * + Subscriptions 1.5.x - 2.0.x
  *
+ * // TODO: move to /compatibility
+ *
  * @since 2.0.0
  */
 class SV_WC_Plugin_Compatibility {
