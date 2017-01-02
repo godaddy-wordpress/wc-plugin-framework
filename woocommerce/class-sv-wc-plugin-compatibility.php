@@ -203,6 +203,30 @@ class SV_WC_Plugin_Compatibility {
 	}
 
 
+	/** WordPress core ******************************************************/
+
+
+	/**
+	 * Normalizes a WooCommerce page screen ID.
+	 *
+	 * Needed because WordPress uses a menu title (which is translatable), not slug, to generate screen ID.
+	 * See details in: https://core.trac.wordpress.org/ticket/21454
+	 * TODO: Add WP version check when https://core.trac.wordpress.org/ticket/18857 is addressed {BR 2016-12-12}
+	 *
+	 * @since 4.6.0-dev
+	 * @param string $screen slug the slug for the screen ID to normalize (minus `woocommerce_page_`)
+	 * @return string normalized screen ID
+	 */
+	public static function normalize_wc_screen_id( $slug = 'wc-settings' ) {
+
+		// the textdomain usage is intentional here, we need to match the menu title
+		$prefix    = sanitize_title( __( 'WooCommerce', 'woocommerce' ) );
+		$screen_id = $prefix . '_page_' . $slug;
+
+		return $screen_id;
+	}
+
+
 	/** Subscriptions *********************************************************/
 
 

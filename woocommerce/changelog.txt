@@ -2,6 +2,7 @@
 
 2017.nn.nn - version 4.6.0-dev
  * Tweak - Plugin "Docs" links now open in a new tab
+ * Misc - Add helper method to get normalized WooCommerce screen IDs
  * Misc - Added support for WooCommerce 2.7
 
 2016.11.18 - version 4.5.1
