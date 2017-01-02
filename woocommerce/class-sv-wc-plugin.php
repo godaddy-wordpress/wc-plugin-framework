@@ -481,7 +481,7 @@ abstract class SV_WC_Plugin {
 		// documentation url if any
 		if ( $this->get_documentation_url() ) {
 			/* translators: Docs as in Documentation */
-			$custom_actions['docs'] = sprintf( '<a href="%s">%s</a>', $this->get_documentation_url(), esc_html__( 'Docs', 'woocommerce-plugin-framework' ) );
+			$custom_actions['docs'] = sprintf( '<a href="%s" target="_blank">%s</a>', $this->get_documentation_url(), esc_html__( 'Docs', 'woocommerce-plugin-framework' ) );
 		}
 
 		// support url if any
