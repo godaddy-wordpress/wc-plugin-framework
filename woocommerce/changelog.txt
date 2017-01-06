@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2017.01.06 - version 4.5.2
+ * Fix - Include Curaçao when converting country codes
+
 2016.11.18 - version 4.5.1
  * Fix - Prevent a potential fatal error for plugins not using the latest JSON/XML request classes
 
