@@ -53,19 +53,19 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * Gets an order property.
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
+	 * @param \WC_Order $object the order object
 	 * @param string $prop the property name
 	 * @param string $context if 'view' then the value will be filtered
 	 * @return string
 	 */
-	public static function get_prop( WC_Order $order, $prop, $context = 'view' ) {
+	public static function get_prop( $object, $prop, $context = 'view', $compat_props = array() ) {
 
 		// backport 'WC_Product::get_shipping_total()' to pre-2.7
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() && 'shipping_total' === $prop && 'view' !== $context ) {
 			$prop = 'order_shipping';
 		}
 
-		return parent::get_prop( $order, $prop, $context, self::$compat_props );
+		return parent::get_prop( $object, $prop, $context, self::$compat_props );
 	}
 
 
@@ -75,13 +75,13 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * Note that this does not save any data to the database.
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
+	 * @param \WC_Order $object the order object
 	 * @param array $props the new properties as $key => $value
 	 * @return object
 	 */
-	public static function set_props( WC_Order $order, $props ) {
+	public static function set_props( $object, $props, $compat_props = array() ) {
 
-		return parent::set_props( $order, $props, self::$compat_props );
+		return parent::set_props( $object, $props, self::$compat_props );
 	}
 
 

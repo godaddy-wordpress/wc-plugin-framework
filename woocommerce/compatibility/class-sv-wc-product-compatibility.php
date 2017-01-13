@@ -47,12 +47,12 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 * Gets a product property.
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Product $product the product object
+	 * @param \WC_Product $object the product object
 	 * @param string $prop the property name
 	 * @param string $context if 'view' then the value will be filtered
 	 * @return string
 	 */
-	public static function get_prop( WC_Product $product, $prop, $context = 'view' ) {
+	public static function get_prop( $object, $prop, $context = 'view', $compat_props = array() ) {
 
 		// backport 'WC_Product::get_parent_id()' to pre-2.7
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() && 'parent_id' === $prop ) {
@@ -60,7 +60,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 			$context = $product->is_type( 'variation' ) ? 'raw' : $context;
 		}
 
-		return parent::get_prop( $product, $prop, $context, self::$compat_props );
+		return parent::get_prop( $object, $prop, $context, self::$compat_props );
 	}
 
 
@@ -70,13 +70,13 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 * Note that this does not save any data to the database.
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Product $product the product object
+	 * @param \WC_Product $object the product object
 	 * @param array $props the new properties as $key => $value
 	 * @return object
 	 */
-	public static function set_props( WC_Product $product, $props ) {
+	public static function set_props( $object, $props, $compat_props = array() ) {
 
-		return parent::set_props( $product, $props, self::$compat_props );
+		return parent::set_props( $object, $props, self::$compat_props );
 	}
 
 
