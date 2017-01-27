@@ -107,6 +107,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 */
 	public function enqueue_scripts() {
 
+		wp_enqueue_style( 'sv-wc-apple-pay', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-apple-pay.css', array(), $this->get_plugin()->get_version() ); // TODO: min
+
 		wp_enqueue_script( 'sv-wc-apple-pay', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-apple-pay.min.js', array( 'jquery' ), $this->get_plugin()->get_version(), true );
 
 		/**
@@ -136,30 +138,43 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 */
 	public function render_button() {
 
-		?>
+		$button_text = '';
+		$classes     = array(
+			'sv-wc-apple-pay-button',
+		);
 
-			<style>
-				.sv-wc-apple-pay-button {
-					display: none;
-					background-color: black;
-					background-image: -webkit-named-image(apple-pay-logo-white);
-					background-size: 100% 100%;
-					background-origin: content-box;
-					background-repeat: no-repeat;
-					width: 100%;
-					height: 44px;
-					margin: 0 0 1em 0;
-					padding: 10px 0;
-					border-radius: 5px;
-				}
-				.sv-wc-apple-pay-button::hover {
-					background-color: black;
-				}
-			</style>
+		switch ( $this->get_handler()->get_button_style() ) {
 
-			<button class="sv-wc-apple-pay-button" disabled="disabled"></button>
+			case 'black':
+				$classes[] = 'apple-pay-button-black';
+			break;
 
-		<?php
+			case 'white':
+				$classes[] = 'apple-pay-button-white';
+			break;
+
+			case 'white-with-line':
+				$classes[] = 'apple-pay-button-white-with-line';
+			break;
+		}
+
+		// if on the single product page, add some text
+		if ( is_product() ) {
+			$classes[]   = 'apple-pay-button-buy-now';
+			$button_text = __( 'Buy with', 'woocommerce-plugin-framework' );
+		}
+
+		if ( $button_text ) {
+			$classes[] = 'apple-pay-button-with-text';
+		}
+
+		echo '<button class="' . implode( ' ', array_map( 'sanitize_html_class', $classes ) ) . '" lang="' . esc_attr( substr( get_locale(), 0, 2 ) ) . '" disabled="disabled">';
+
+			if ( $button_text ) {
+				echo '<span class="text">' . esc_html( $button_text ) . '</span><span class="logo"></span>';
+			}
+
+		echo '</button>';
 	}
 
 

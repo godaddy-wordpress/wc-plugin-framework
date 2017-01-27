@@ -111,6 +111,18 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 			),
 
 			array(
+				'id'      => 'sv_wc_apple_pay_button_style',
+				'title'   => __( 'Button Style', 'woocommerce-plugin-framework' ),
+				'type'    => 'select',
+				'options' => array(
+					'black'           => __( 'Black', 'woocommerce-plugin-framework' ),
+					'white'           => __( 'White', 'woocommerce-plugin-framework' ),
+					'white-with-line' => __( 'White with outline', 'woocommerce-plugin-framework' ),
+				),
+				'default' => 'black',
+			),
+
+			array(
 				'type' => 'sectionend',
 			),
 		);

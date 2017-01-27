@@ -795,6 +795,18 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 
 	/**
+	 * Gets the Apple Pay button style.
+	 *
+	 * @since 4.6.0-dev
+	 * @return string
+	 */
+	public function get_button_style() {
+
+		return get_option( 'sv_wc_apple_pay_button_style', 'black' );
+	}
+
+
+	/**
 	 * Gets the gateway plugin instance.
 	 *
 	 * @since 4.6.0-dev
