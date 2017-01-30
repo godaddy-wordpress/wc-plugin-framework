@@ -186,7 +186,7 @@ class SV_WC_Hook_Deprecator {
 		$message .= ! empty( $hook['replacement'] ) ? sprintf( 'Use %1$s instead.', $hook['replacement'] ) : 'There is no replacement available.';
 
 		// triggers as E_USER_NOTICE
-		trigger_error( $message );
+		SV_WC_Helper::trigger_error( $message );
 	}
 
 

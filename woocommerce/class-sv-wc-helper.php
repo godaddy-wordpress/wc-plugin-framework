@@ -919,6 +919,42 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		}
 
 
+		/**
+		 * Triggers a PHP error.
+		 *
+		 * This wrapper method ensures AJAX isn't broken in the process.
+		 *
+		 * @since 4.6.0-dev
+		 * @param string $message the error message
+		 * @param int $type Optional. The error type. Defaults to E_USER_NOTICE
+		 */
+		public static function trigger_error( $message, $type = E_USER_NOTICE ) {
+
+			if ( is_callable( 'is_ajax' ) && is_ajax() ) {
+
+				switch ( $type ) {
+
+					case E_USER_NOTICE:
+						$prefix = 'Notice: ';
+					break;
+
+					case E_USER_WARNING:
+						$prefix = 'Warning: ';
+					break;
+
+					default:
+						$prefix = '';
+				}
+
+				error_log( $prefix . $message );
+
+			} else {
+
+				trigger_error( $message, $type );
+			}
+		}
+
+
 	}
 
 endif; // Class exists check
