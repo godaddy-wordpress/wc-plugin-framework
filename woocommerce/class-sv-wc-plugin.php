@@ -380,8 +380,8 @@ abstract class SV_WC_Plugin {
 			$message = sprintf(
 				/* translators: Placeholders: %1$s - plugin name, %2$s - a PHP extension/comma-separated list of PHP extensions */
 				_n(
-					'%1$s requires the %2$s PHP extension to function. Contact your host or server administrator to configure and install the missing extension.',
-					'%1$s requires the following PHP extensions to function: %2$s. Contact your host or server administrator to configure and install the missing extensions.',
+					'%1$s requires the %2$s PHP extension to function. Contact your host or server administrator to install and configure the missing extension.',
+					'%1$s requires the following PHP extensions to function: %2$s. Contact your host or server administrator to install and configure the missing extensions.',
 					count( $missing_extensions ),
 					'woocommerce-plugin-framework'
 				),
@@ -403,8 +403,8 @@ abstract class SV_WC_Plugin {
 			$message = sprintf(
 				/* translators: Placeholders: %1$s - plugin name, %2$s - a PHP function/comma-separated list of PHP functions */
 				_n(
-					'%1$s requires the %2$s PHP function to exist.  Contact your host or server administrator to configure and install the missing function.',
-					'%1$s requires the following PHP functions to exist: %2$s.  Contact your host or server administrator to configure and install the missing functions.',
+					'%1$s requires the %2$s PHP function to exist.  Contact your host or server administrator to install and configure the missing function.',
+					'%1$s requires the following PHP functions to exist: %2$s.  Contact your host or server administrator to install and configure the missing functions.',
 					count( $missing_functions ),
 					'woocommerce-plugin-framework'
 				),
