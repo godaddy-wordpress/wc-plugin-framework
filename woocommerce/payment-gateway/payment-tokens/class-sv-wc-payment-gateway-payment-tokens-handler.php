@@ -256,9 +256,10 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token|string $token the payment token to delete
 	 * @param string $environment_id optional environment id, defaults to plugin current environment
+	 * @param bool $force whether to force delete the user meta, regardless of remove token API response
 	 * @return bool|int false if not deleted, updated user meta ID if deleted
 	 */
-	public function remove_token( $user_id, $token, $environment_id = null ) {
+	public function remove_token( $user_id, $token, $environment_id = null, $force = false ) {
 
 		// default to current environment
 		if ( is_null( $environment_id ) ) {
@@ -282,15 +283,19 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 				$response = $this->get_gateway()->get_api()->remove_tokenized_payment_method( $token->get_id(), $this->get_gateway()->get_customer_id( $user_id, array( 'environment_id' => $environment_id ) ) );
 
-				if ( ! $response->transaction_approved() ) {
+				if ( ! $response->transaction_approved() && ! $force ) {
 					return false;
 				}
 
 			} catch( SV_WC_Plugin_Exception $e ) {
+
 				if ( $this->get_gateway()->debug_log() ) {
 					$this->get_gateway()->get_plugin()->log( $e->getMessage() . "\n" . $e->getTraceAsString(), $this->get_gateway()->get_id() );
 				}
-				return false;
+
+				if ( ! $force ) {
+					return false;
+				}
 			}
 		}
 

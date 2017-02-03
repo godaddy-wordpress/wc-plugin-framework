@@ -308,7 +308,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 */
 	protected function remove_token( $user_id, $token_id ) {
 
-		return $this->get_gateway()->get_payment_tokens_handler()->remove_token( $user_id, $token_id, $this->get_gateway()->get_environment() );
+		return $this->get_gateway()->get_payment_tokens_handler()->remove_token( $user_id, $token_id, $this->get_gateway()->get_environment(), true );
 	}
 
 
