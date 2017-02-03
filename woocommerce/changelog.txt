@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2017.02.03 - version 4.5.3-dev
+ * Fix - Always delete a token from user meta when removed using the admin token editor
+
 2017.01.06 - version 4.5.2
  * Fix - Include Curaçao when converting country codes
 
