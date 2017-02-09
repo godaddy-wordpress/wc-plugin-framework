@@ -34,6 +34,7 @@ if ( ! class_exists( 'SV_WC_Order_Compatibility' ) ) :
 class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
+	/** @var array mapped compatibility properties, as `$new_prop => $old_prop` */
 	protected static $compat_props = array(
 		'date_completed' => 'completed_date',
 		'date_paid'      => 'paid_date',
@@ -60,12 +61,29 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_prop( $object, $prop, $context = 'view', $compat_props = array() ) {
 
-		// backport 'WC_Product::get_shipping_total()' to pre-2.7
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() && 'shipping_total' === $prop && 'view' !== $context ) {
-			$prop = 'order_shipping';
+		// backport a few specific properties to pre-2.7
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() ) {
+
+			// converge the shipping total prop for the raw context
+			if ( 'shipping_total' === $prop && 'view' !== $context ) {
+
+				$prop = 'order_shipping';
+
+			// get the post_parent and bail early
+			} elseif ( 'parent_id' === $prop ) {
+
+				return $object->post->post_parent;
+			}
 		}
 
-		return parent::get_prop( $object, $prop, $context, self::$compat_props );
+		$value = parent::get_prop( $object, $prop, $context, self::$compat_props );
+
+		// 2.7+ date getters return a timestamp, where previously MySQL date strings were returned
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() && in_array( $prop, array( 'date_completed', 'date_modified', 'date_created' ), true ) && ! is_numeric( $value ) ) {
+			$value = strtotime( $value );
+		}
+
+		return $value;
 	}
 
 

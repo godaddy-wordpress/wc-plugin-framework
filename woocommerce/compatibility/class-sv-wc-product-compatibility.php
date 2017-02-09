@@ -34,6 +34,7 @@ if ( ! class_exists( 'SV_WC_Product_Compatibility' ) ) :
 class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 
 
+	/** @var array mapped compatibility properties, as `$new_prop => $old_prop` */
 	protected static $compat_props = array(
 		'catalog_visibility' => 'visibility',
 		'date_on_sale_from'  => 'sale_price_dates_from',
@@ -57,7 +58,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 		// backport 'WC_Product::get_parent_id()' to pre-2.7
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() && 'parent_id' === $prop ) {
 			$prop    = 'id';
-			$context = $product->is_type( 'variation' ) ? 'raw' : $context;
+			$context = $object->is_type( 'variation' ) ? 'raw' : $context;
 		}
 
 		return parent::get_prop( $object, $prop, $context, self::$compat_props );
