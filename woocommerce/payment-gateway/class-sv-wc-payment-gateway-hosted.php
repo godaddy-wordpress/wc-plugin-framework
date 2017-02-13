@@ -461,7 +461,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 				$this->mark_order_as_held( $order, $response->get_status_message(), $response );
 
-				$order->reduce_order_stock();
+				SV_WC_Order_Compatibility::reduce_stock_levels( $order );
 
 				$this->do_transaction_held( $order, $response );
 			}

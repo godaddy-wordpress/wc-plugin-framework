@@ -1603,7 +1603,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - a monetary amount */
 			esc_html__( '%1$s Refund in the amount of %2$s approved.', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
-			wc_price( $order->refund->amount, array( 'currency' => $order->get_order_currency() ) )
+			wc_price( $order->refund->amount, array( 'currency' => SV_WC_Order_Compatibility::get_prop( $order, 'currency' ) ) )
 		);
 
 		// adds the transaction id (if any) to the order note
@@ -1824,7 +1824,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			/* translators: Placeholders: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order. */
 			esc_html__( '%1$s Void in the amount of %2$s approved.', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
-			wc_price( $order->refund->amount, array( 'currency' => $order->get_order_currency() ) )
+			wc_price( $order->refund->amount, array( 'currency' => SV_WC_Order_Compatibility::get_prop( $order, 'currency' ) ) )
 		);
 
 		// adds the transaction id (if any) to the order note
@@ -1951,7 +1951,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 			$this->update_order_meta( $order, 'trans_id', $response->get_transaction_id() );
 
-			SV_WC_Order_Compatibility::update_meta_data( $order, '_transaction_id', $response->get_transaction_id() );
+			update_post_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), '_transaction_id', $response->get_transaction_id() );
 		}
 
 		// transaction date
@@ -2796,7 +2796,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( $order_id ) {
 
 			$order    = wc_get_order( $order_id );
-			$currency = $order->get_order_currency();
+			$currency = SV_WC_Order_Compatibility::get_prop( $order, 'currency' );
 		}
 
 		return $currency;

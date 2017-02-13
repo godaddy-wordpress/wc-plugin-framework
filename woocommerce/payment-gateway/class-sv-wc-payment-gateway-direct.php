@@ -417,7 +417,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				}
 
 				if ( $order->has_status( 'on-hold' ) ) {
-					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
+					SV_WC_Order_Compatibility::reduce_stock_levels( $order ); // reduce stock for held orders, but don't complete payment
 				} else {
 					$order->payment_complete(); // mark order as having received payment
 				}
