@@ -726,7 +726,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 								ajax:               {
 									url:            '" . admin_url( 'admin-ajax.php' ) . "',
 									dataType:       'json',
-									cache:          true
+									cache:          true,
 									delay:          250,
 									data:           function( params ) {
 										return {
@@ -770,7 +770,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 								ajax:               {
 									url:         '" . admin_url( 'admin-ajax.php' ) . "',
 									dataType:    'json',
-									cache:       true
+									cache:       true,
 									quietMillis: 250,
 									data:        function( term, page ) {
 										return {
