@@ -57,7 +57,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @param \WC_Order $object the order object
 	 * @param string $prop the property name
 	 * @param string $context if 'view' then the value will be filtered
-	 * @return string
+	 * @return mixed
 	 */
 	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = array() ) {
 
@@ -95,7 +95,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @since 4.6.0-dev
 	 * @param \WC_Order $object the order object
 	 * @param array $props the new properties as $key => $value
-	 * @return object
+	 * @return \WC_Order
 	 */
 	public static function set_props( $object, $props, $compat_props = array() ) {
 
@@ -108,7 +108,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @since 4.6.0-dev
 	 * @param \WC_Order $order the order object
-	 * @param string $code the coupon code
+	 * @param array $code the coupon code
 	 * @param int $discount the discount amount.
 	 * @param int $discount_tax the discount tax amount.
 	 * @return int the order item ID
@@ -182,7 +182,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @since 4.6.0-dev
 	 * @param \WC_Order $order the order object
-	 * @param int $item the order item ID
+	 * @param int|\WC_Order_Item $item the order item ID
 	 * @param array $args {
 	 *     The coupon item args.
 	 *
@@ -234,7 +234,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @since 4.6.0-dev
 	 * @param \WC_Order $order the order object
-	 * @param int $item the order item ID
+	 * @param int|\WC_Order_Item $item the order item ID
 	 * @param array $args {
 	 *     The fee item args.
 	 *

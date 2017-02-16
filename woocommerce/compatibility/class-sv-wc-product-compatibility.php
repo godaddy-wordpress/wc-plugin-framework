@@ -51,7 +51,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 * @param \WC_Product $object the product object
 	 * @param string $prop the property name
 	 * @param string $context if 'view' then the value will be filtered
-	 * @return string
+	 * @return mixed
 	 */
 	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = array() ) {
 
@@ -73,7 +73,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 * @since 4.6.0-dev
 	 * @param \WC_Product $object the product object
 	 * @param array $props the new properties as $key => $value
-	 * @return object
+	 * @return \WC_Product
 	 */
 	public static function set_props( $object, $props, $compat_props = array() ) {
 
