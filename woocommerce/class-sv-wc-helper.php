@@ -724,7 +724,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 									return m;
 								},
 								ajax:               {
-									url:            '" . admin_url( 'admin-ajax.php' ) . "',
+									url:            '" . esc_js( admin_url( 'admin-ajax.php' ) ) . "',
 									dataType:       'json',
 									cache:          true,
 									delay:          250,
@@ -768,7 +768,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 									return m;
 								},
 								ajax:               {
-									url:         '" . admin_url( 'admin-ajax.php' ) . "',
+									url:         '" . esc_js( admin_url( 'admin-ajax.php' ) ) . "',
 									dataType:    'json',
 									cache:       true,
 									quietMillis: 250,
@@ -793,7 +793,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 							};
 
 							if ( $( this ).data( 'multiple' ) === true ) {
-							
+
 								select2_args.multiple        = true;
 								select2_args.initSelection   = function( element, callback ) {
 									var data     = $.parseJSON( element.attr( 'data-selected' ) );
@@ -807,9 +807,9 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 								select2_args.formatSelection = function( data ) {
 									return '<div class=\"selected-option\" data-id=\"' + data.id + '\">' + data.text + '</div>';
 								};
-								
+
 							} else {
-							
+
 								select2_args.multiple        = false;
 								select2_args.initSelection   = function( element, callback ) {
 									var data = {id: element.val(), text: element.attr( 'data-selected' )};
