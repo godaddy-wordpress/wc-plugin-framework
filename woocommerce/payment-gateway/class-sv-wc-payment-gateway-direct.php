@@ -1311,7 +1311,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$order = SV_WC_Order_Compatibility::set_props( $order, $properties );
 
 		// other default info
-		$order->customer_id = $this->get_customer_id( SV_WC_Order_Compatibility::get_prop( $order, 'customer_id' ) );
+		$order->customer_id = $this->get_customer_id( $order->get_user_id() );
 
 		/* translators: Placeholders: %1$s - site title, %2$s - customer email. Payment method as in a specific credit card, e-check or bank account */
 		$order->description = sprintf( esc_html__( '%1$s - Add Payment Method for %2$s', 'woocommerce-plugin-framework' ), sanitize_text_field( get_bloginfo( 'name' ) ), $properties['billing_email'] );

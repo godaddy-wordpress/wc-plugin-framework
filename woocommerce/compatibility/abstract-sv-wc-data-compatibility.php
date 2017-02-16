@@ -41,9 +41,9 @@ abstract class SV_WC_Data_Compatibility {
 	 * @param object $object the data object, likely \WC_Order or \WC_Product
 	 * @param string $prop the property name
 	 * @param string $context if 'view' then the value will be filtered
-	 * @return string
+	 * @return mixed
 	 */
-	public static function get_prop( $object, $prop, $context = 'view', $compat_props = array() ) {
+	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = array() ) {
 
 		$value = '';
 
@@ -51,9 +51,7 @@ abstract class SV_WC_Data_Compatibility {
 
 			if ( is_callable( array( $object, "get_{$prop}" ) ) ) {
  				$value = $object->{"get_{$prop}"}( $context );
- 			} else {
-				$value = '';
-			}
+ 			}
 
 		} else {
 

@@ -53,7 +53,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 * @param string $context if 'view' then the value will be filtered
 	 * @return string
 	 */
-	public static function get_prop( $object, $prop, $context = 'view', $compat_props = array() ) {
+	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = array() ) {
 
 		// backport 'WC_Product::get_parent_id()' to pre-2.7
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() && 'parent_id' === $prop ) {

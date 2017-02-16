@@ -59,7 +59,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @param string $context if 'view' then the value will be filtered
 	 * @return string
 	 */
-	public static function get_prop( $object, $prop, $context = 'view', $compat_props = array() ) {
+	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = array() ) {
 
 		// backport a few specific properties to pre-2.7
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() ) {
@@ -212,8 +212,6 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 			$item->set_props( $args );
 			$item->save();
 
-			do_action( 'woocommerce_order_update_coupon', $order->get_id(), $item->get_id(), $args );
-
 			return $item->get_id();
 
 		} else {
@@ -266,8 +264,6 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 			$item->set_order_id( $order->get_id() );
 			$item->set_props( $args );
 			$item->save();
-
-			do_action( 'woocommerce_order_update_fee', $order->get_id(), $item->get_id(), $args );
 
 			return $item->get_id();
 
