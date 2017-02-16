@@ -116,7 +116,7 @@ abstract class SV_WC_Data_Compatibility {
 	 * @param string $context if 'view' then the value will be filtered
 	 * @return mixed
 	 */
-	public static function get_meta( $object, $key = '', $single = true, $context = 'view' ) {
+	public static function get_meta( $object, $key = '', $single = true, $context = 'edit' ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
 			$value = $object->get_meta( $key, $single, $context );
