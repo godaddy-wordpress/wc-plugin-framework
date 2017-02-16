@@ -645,8 +645,9 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 					if ( ! $().select2 ) return;
 				";
 
-				// ensure localized strings are used
+				// Ensure localized strings are used.
 				$javascript .= "
+
 					function getEnhancedSelectFormatString() {
 
 						if ( 'undefined' !== typeof wc_select_params ) {
@@ -708,67 +709,120 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 					}
 				";
 
-				// add Select2 ajax call
-				$javascript .= "
-					$( ':input.sv-wc-enhanced-search' ).filter( ':not(.enhanced)' ).each( function() {
-						var select2_args = {
-							allowClear:  $( this ).data( 'allow_clear' ) ? true : false,
-							placeholder: $( this ).data( 'placeholder' ),
-							minimumInputLength: $( this ).data( 'minimum_input_length' ) ? $( this ).data( 'minimum_input_length' ) : '3',
-							escapeMarkup: function( m ) {
-								return m;
-							},
-							ajax: {
-								url:         '" . admin_url( 'admin-ajax.php' ) . "',
-								dataType:    'json',
-								quietMillis: 250,
-								data: function( term, page ) {
-									return {
-										term:         term,
-										request_data: $( this ).data( 'request_data' ) ? $( this ).data( 'request_data' ) : {},
-										action:       $( this ).data( 'action' ) || 'woocommerce_json_search_products_and_variations',
-										security:     $( this ).data( 'nonce' )
-									};
+				// Handle Select2 AJAX call according to Select2 version bundled with WC.
+				if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+
+					$javascript .= "
+
+						$( 'select.sv-wc-enhanced-search' ).filter( ':not(.enhanced)' ).each( function() {
+
+							var select2_args = {
+								allowClear:         $( this ).data( 'allow_clear' ) ? true : false,
+								placeholder:        $( this ).data( 'placeholder' ),
+								minimumInputLength: $( this ).data( 'minimum_input_length' ) ? $( this ).data( 'minimum_input_length' ) : '3',
+								escapeMarkup:       function( m ) {
+									return m;
 								},
-								results: function( data, page ) {
-									var terms = [];
-									if ( data ) {
-										$.each( data, function( id, text ) {
-											terms.push( { id: id, text: text } );
-										});
+								ajax:               {
+									url:            '" . esc_js( admin_url( 'admin-ajax.php' ) ) . "',
+									dataType:       'json',
+									cache:          true,
+									delay:          250,
+									data:           function( params ) {
+										return {
+											term:         params.term,
+											request_data: $( this ).data( 'request_data' ) ? $( this ).data( 'request_data' ) : {},
+											action:       $( this ).data( 'action' ) || 'woocommerce_json_search_products_and_variations',
+											security:     $( this ).data( 'nonce' )
+										};
+									},
+									processResults: function( data, params ) {
+										var terms = [];
+										if ( data ) {
+											$.each( data, function( id, text ) {
+												terms.push( { id: id, text: text } );
+											});
+										}
+										return { results: terms };
 									}
-									return { results: terms };
+								}
+							};
+
+							select2_args = $.extend( select2_args, getEnhancedSelectFormatString() );
+
+							$( this ).select2( select2_args ).addClass( 'enhanced' );
+						} );
+					";
+
+				} else {
+
+					$javascript .= "
+
+						$( ':input.sv-wc-enhanced-search' ).filter( ':not(.enhanced)' ).each( function() {
+
+							var select2_args = {
+								allowClear:         $( this ).data( 'allow_clear' ) ? true : false,
+								placeholder:        $( this ).data( 'placeholder' ),
+								minimumInputLength: $( this ).data( 'minimum_input_length' ) ? $( this ).data( 'minimum_input_length' ) : '3',
+								escapeMarkup:       function( m ) {
+									return m;
 								},
-								cache: true
+								ajax:               {
+									url:         '" . esc_js( admin_url( 'admin-ajax.php' ) ) . "',
+									dataType:    'json',
+									cache:       true,
+									quietMillis: 250,
+									data:        function( term, page ) {
+										return {
+											term:         term,
+											request_data: $( this ).data( 'request_data' ) ? $( this ).data( 'request_data' ) : {},
+											action:       $( this ).data( 'action' ) || 'woocommerce_json_search_products_and_variations',
+											security:     $( this ).data( 'nonce' )
+										};
+									},
+									results:     function( data, page ) {
+										var terms = [];
+										if ( data ) {
+											$.each( data, function( id, text ) {
+												terms.push( { id: id, text: text } );
+											});
+										}
+										return { results: terms };
+									}
+								}
+							};
+
+							if ( $( this ).data( 'multiple' ) === true ) {
+
+								select2_args.multiple        = true;
+								select2_args.initSelection   = function( element, callback ) {
+									var data     = $.parseJSON( element.attr( 'data-selected' ) );
+									var selected = [];
+
+									$( element.val().split( ',' ) ).each( function( i, val ) {
+										selected.push( { id: val, text: data[ val ] } );
+									} );
+									return callback( selected );
+								};
+								select2_args.formatSelection = function( data ) {
+									return '<div class=\"selected-option\" data-id=\"' + data.id + '\">' + data.text + '</div>';
+								};
+
+							} else {
+
+								select2_args.multiple        = false;
+								select2_args.initSelection   = function( element, callback ) {
+									var data = {id: element.val(), text: element.attr( 'data-selected' )};
+									return callback( data );
+								};
 							}
-						};
-						if ( $( this ).data( 'multiple' ) === true ) {
-							select2_args.multiple = true;
-							select2_args.initSelection = function( element, callback ) {
-								var data     = $.parseJSON( element.attr( 'data-selected' ) );
-								var selected = [];
 
-								$( element.val().split( ',' ) ).each( function( i, val ) {
-									selected.push( { id: val, text: data[ val ] } );
-								});
-								return callback( selected );
-							};
-							select2_args.formatSelection = function( data ) {
-								return '<div class=\"selected-option\" data-id=\"' + data.id + '\">' + data.text + '</div>';
-							};
-						} else {
-							select2_args.multiple = false;
-							select2_args.initSelection = function( element, callback ) {
-								var data = {id: element.val(), text: element.attr( 'data-selected' )};
-								return callback( data );
-							};
-						}
+							select2_args = $.extend( select2_args, getEnhancedSelectFormatString() );
 
-						select2_args = $.extend( select2_args, getEnhancedSelectFormatString() );
-
-						$( this ).select2( select2_args ).addClass( 'enhanced' );
-					});
-				";
+							$( this ).select2( select2_args ).addClass( 'enhanced' );
+						} );
+					";
+				}
 
 				$javascript .= "} )();";
 
