@@ -214,16 +214,15 @@ class SV_WC_Plugin_Compatibility {
 	 * TODO: Add WP version check when https://core.trac.wordpress.org/ticket/18857 is addressed {BR 2016-12-12}
 	 *
 	 * @since 4.6.0-dev
-	 * @param string $screen slug the slug for the screen ID to normalize (minus `woocommerce_page_`)
-	 * @return string normalized screen ID
+	 * @param string $slug The slug for the screen ID to normalize (minus `woocommerce_page_`).
+	 * @return string Normalized screen ID.
 	 */
 	public static function normalize_wc_screen_id( $slug = 'wc-settings' ) {
 
-		// the textdomain usage is intentional here, we need to match the menu title
-		$prefix    = sanitize_title( __( 'WooCommerce', 'woocommerce' ) );
-		$screen_id = $prefix . '_page_' . $slug;
+		// The textdomain usage is intentional here, we need to match the menu title.
+		$prefix = sanitize_title( __( 'WooCommerce', 'woocommerce' ) );
 
-		return $screen_id;
+		return $prefix . '_page_' . $slug;
 	}
 
 
@@ -248,7 +247,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Subscriptions
 	 *
 	 * @since 4.1.0
-	 * @return string woocommerce version number or null
+	 * @return string WooCommerce Subscriptions version number or null if not found.
 	 */
 	protected static function get_wc_subscriptions_version() {
 
