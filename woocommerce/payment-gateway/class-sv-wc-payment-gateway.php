@@ -1251,7 +1251,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order->payment->type = str_replace( '-', '_', $this->get_payment_type() );
 
 		/* translators: Placeholders: %1$s - site title, %2$s - order number */
-		$order->description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() );
+		$order->description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name(), ENT_QUOTES ), $order->get_order_number() );
 
 		$order = $this->get_order_with_unique_transaction_ref( $order );
 
@@ -1374,7 +1374,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order->capture = new stdClass();
 		$order->capture->amount = SV_WC_Helper::number_format( $order->get_total() );
 		/* translators: Placeholders: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card. */
-		$order->capture->description = sprintf( esc_html__( '%1$s - Capture for Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( get_bloginfo( 'name' ) ), $order->get_order_number() );
+		$order->capture->description = sprintf( esc_html__( '%1$s - Capture for Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
 		$order->capture->trans_id = $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'trans_id' );
 
 		// backwards compat for 4.1 and earlier
@@ -1538,7 +1538,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order->refund->amount = number_format( $amount, 2, '.', '' );
 
 		/* translators: Placeholders: %1$s - site title, %2$s - order number */
-		$order->refund->reason = $reason ? $reason : sprintf( esc_html__( '%1$s - Refund for Order %2$s', 'woocommerce-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+		$order->refund->reason = $reason ? $reason : sprintf( esc_html__( '%1$s - Refund for Order %2$s', 'woocommerce-plugin-framework' ), esc_html( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
 
 		// almost all gateways require the original transaction ID, so include it by default
 		$order->refund->trans_id = $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'trans_id' );

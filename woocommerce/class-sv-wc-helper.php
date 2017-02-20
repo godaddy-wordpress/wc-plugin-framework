@@ -604,6 +604,21 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		}
 
 
+		/**
+		 * Gets the current WordPress site name.
+		 *
+		 * This is helpful for retrieving the actual site name instead of the
+		 * network name on multisite installations.
+		 *
+		 * @since 4.6.0-dev
+		 * @return string
+		 */
+		public static function get_site_name() {
+
+			return ( is_multisite() ) ? get_blog_details()->blogname : get_bloginfo( 'name' );
+		}
+
+
 		/** JavaScript helper functions ***************************************/
 
 

@@ -264,7 +264,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 			$order = $this->get_gateway()->get_order( SV_WC_Order_Compatibility::get_prop( $order, 'id' ) );
 
 			// order description
-			$order->description = sprintf( __( '%s - Pre-Order Release Payment for Order %s', 'woocommerce-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+			$order->description = sprintf( __( '%s - Pre-Order Release Payment for Order %s', 'woocommerce-plugin-framework' ), esc_html( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
 
 			// token is required
 			if ( ! $order->payment->token ) {
