@@ -1239,6 +1239,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// set payment total here so it can be modified for later by add-ons like subscriptions which may need to charge an amount different than the get_total()
 		$order->payment_total = number_format( $order->get_total(), 2, '.', '' );
 
+		$order->customer_id = '';
+
 		// logged in customer?
 		if ( 0 != $order->get_user_id() && false !== ( $customer_id = $this->get_customer_id( $order->get_user_id(), array( 'order' => $order ) ) ) ) {
 			$order->customer_id = $customer_id;
