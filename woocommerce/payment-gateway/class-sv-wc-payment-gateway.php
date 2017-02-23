@@ -2280,7 +2280,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	public function get_guest_customer_id( WC_Order $order ) {
 
 		// is there a customer id already tied to this order?
-		$customer_id = $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'customer_id' );
+		$customer_id = $this->get_order_meta( $order, 'customer_id' );
 
 		if ( $customer_id ) {
 			return $customer_id;

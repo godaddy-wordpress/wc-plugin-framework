@@ -1184,7 +1184,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$token = $response->get_payment_token();
 
 			// set the token to the user account
-			$this->get_payment_tokens_handler()->add_token( SV_WC_Order_Compatibility::get_prop( $order, 'customer_id' ), $token );
+			$this->get_payment_tokens_handler()->add_token( $order->get_user_id(), $token );
 
 			// order note based on gateway type
 			if ( $this->is_credit_card_gateway() ) {
