@@ -119,9 +119,14 @@ abstract class SV_WC_Data_Compatibility {
 	public static function get_meta( $object, $key = '', $single = true, $context = 'edit' ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+
 			$value = $object->get_meta( $key, $single, $context );
+
 		} else {
-			$value = get_post_meta( $object->id, $key, $single );
+
+			$object_id = is_callable( array( $object, 'get_id' ) ) ? $object->get_id() : $object->id;
+
+			$value = get_post_meta( $object_id, $key, $single );
 		}
 
 		return $value;
@@ -147,7 +152,9 @@ abstract class SV_WC_Data_Compatibility {
 
 		} else {
 
-			add_post_meta( $object->id, $key, $value, $unique );
+			$object_id = is_callable( array( $object, 'get_id' ) ) ? $object->get_id() : $object->id;
+
+			add_post_meta( $object_id, $key, $value, $unique );
 		}
 	}
 
@@ -171,7 +178,9 @@ abstract class SV_WC_Data_Compatibility {
 
 		} else {
 
-			update_post_meta( $object->id, $key, $value );
+			$object_id = is_callable( array( $object, 'get_id' ) ) ? $object->get_id() : $object->id;
+
+			update_post_meta( $object_id, $key, $value );
 		}
 	}
 
@@ -193,7 +202,9 @@ abstract class SV_WC_Data_Compatibility {
 
 		} else {
 
-			delete_post_meta( $object->id, $key );
+			$object_id = is_callable( array( $object, 'get_id' ) ) ? $object->get_id() : $object->id;
+
+			delete_post_meta( $object_id, $key );
 		}
 	}
 
