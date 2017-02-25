@@ -79,7 +79,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		$value = parent::get_prop( $object, $prop, $context, self::$compat_props );
 
 		// 2.7+ date getters return a timestamp, where previously MySQL date strings were returned
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() && in_array( $prop, array( 'date_completed', 'date_modified', 'date_created' ), true ) && ! is_numeric( $value ) ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() && in_array( $prop, array( 'date_completed', 'date_paid', 'date_modified', 'date_created' ), true ) && ! is_numeric( $value ) ) {
 			$value = strtotime( $value );
 		}
 
