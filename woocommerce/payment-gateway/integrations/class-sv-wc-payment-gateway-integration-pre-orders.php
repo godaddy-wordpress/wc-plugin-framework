@@ -130,10 +130,10 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 			// if this is a pre-order release payment with a tokenized payment method, get the payment token to complete the order
 
 			// retrieve the payment token
-			$order->payment->token = $this->get_gateway()->get_order_meta( $order, 'payment_token' );
+			$order->payment->token = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'payment_token' );
 
 			// retrieve the optional customer id
-			$order->customer_id = $this->get_gateway()->get_order_meta( $order, 'customer_id' );
+			$order->customer_id = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'customer_id' );
 
 			// set token data on order
 			if ( $this->get_gateway()->get_payment_tokens_handler()->user_has_token( $order->get_user_id(), $order->payment->token ) ) {
@@ -164,15 +164,15 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 				// a guest user means that token data must be set from the original order
 
 				// account number
-				$order->payment->account_number = $this->get_gateway()->get_order_meta( $order, 'account_four' );
+				$order->payment->account_number = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'account_four' );
 
 				if ( $this->get_gateway()->is_credit_card_gateway() ) {
 
 					// card type
-					$order->payment->card_type = $this->get_gateway()->get_order_meta( $order, 'card_type' );
+					$order->payment->card_type = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'card_type' );
 
 					// expiry date
-					if ( $expiry_date = $this->get_gateway()->get_order_meta( $order, 'card_expiry_date' ) ) {
+					if ( $expiry_date = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'card_expiry_date' ) ) {
 						list( $exp_year, $exp_month ) = explode( '-', $expiry_date );
 						$order->payment->exp_month  = $exp_month;
 						$order->payment->exp_year   = $exp_year;
@@ -181,7 +181,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 				} elseif ( $this->get_gateway()->is_echeck_gateway() ) {
 
 					// account type
-					$order->payment->account_type = $this->get_gateway()->get_order_meta( $order, 'account_type' );
+					$order->payment->account_type = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'account_type' );
 				}
 			}
 		}
