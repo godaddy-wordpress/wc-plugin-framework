@@ -197,7 +197,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		foreach ( $this->get_gateways() as $gateway ) {
 
-			if ( $gateway->supports_tokenization() && ! $gateway->supports_add_payment_method() ) {
+			if ( ! $gateway->supports_tokenization() || ! $gateway->supports_add_payment_method() || ! $gateway->tokenization_enabled() ) {
 				unset( $available_gateways[ $gateway->id ] );
 			}
 		}
