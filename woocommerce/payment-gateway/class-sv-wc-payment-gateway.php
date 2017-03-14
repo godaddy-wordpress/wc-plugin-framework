@@ -1711,7 +1711,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// partial voids are not supported
 		if ( $order->refund->amount != $order->get_total() ) {
-			return new WP_Error( 'wc_' . $this->get_id() . '_void_error', esc_html__( 'Oops, you cannot partially void this order. Please use the full order amount.', 'woocommerce-plugin-framework' ) );
+			return new WP_Error( 'wc_' . $this->get_id() . '_void_error', esc_html__( 'Oops, you cannot partially void this order. Please use the full order amount.', 'woocommerce-plugin-framework' ), 500 );
 		}
 
 		try {
