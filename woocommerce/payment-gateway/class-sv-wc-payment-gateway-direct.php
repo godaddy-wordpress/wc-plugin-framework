@@ -402,17 +402,17 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// registered customer checkout (already logged in or creating account at checkout)
 			if ( $this->supports_tokenization() && 0 != $order->get_user_id() && $this->get_payment_tokens_handler()->should_tokenize() &&
-				( 0 == $order->payment_total || $this->tokenize_before_sale() ) ) {
+				( '0.00' === $order->payment_total || $this->tokenize_before_sale() ) ) {
 				$order = $this->get_payment_tokens_handler()->create_token( $order );
 			}
 
 			// payment failures are handled internally by do_transaction()
 			// the order amount will be $0 if a WooCommerce Subscriptions free trial product is being processed
 			// note that customer id & payment token are saved to order when create_token() is called
-			if ( ( 0 == $order->payment_total && ! $this->transaction_forced() ) || $this->do_transaction( $order ) ) {
+			if ( ( '0.00' === $order->payment_total && ! $this->transaction_forced() ) || $this->do_transaction( $order ) ) {
 
 				// add transaction data for zero-dollar "orders"
-				if ( 0 == $order->payment_total ) {
+				if ( '0.00' === $order->payment_total ) {
 					$this->add_transaction_data( $order );
 				}
 
