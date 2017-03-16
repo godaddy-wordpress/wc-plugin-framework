@@ -49,6 +49,38 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Formats a date for output.
+	 *
+	 * Backports WC 3.0.0's wc_format_datetime() to older versions.
+	 *
+	 * @since  4.6.0-dev
+	 *
+	 * @param \WC_DateTime|\SV_WC_DateTime $date date object
+	 * @param string $format date format
+	 * @return string
+	 */
+	public static function wc_format_datetime( $date, $format = '' ) {
+
+		if ( self::is_wc_version_gte_3_0() ) {
+
+			return wc_format_datetime( $date, $format );
+
+		} else {
+
+			if ( ! $format ) {
+				$format = wc_date_format();
+			}
+
+			if ( ! is_a( $date, 'SV_WC_DateTime' ) ) {
+				return '';
+			}
+
+			return $date->date_i18n( $format );
+		}
+	}
+
+
+	/**
 	 * Backports wc_checkout_is_https() to 2.4.x
 	 *
 	 * @since 4.3.0

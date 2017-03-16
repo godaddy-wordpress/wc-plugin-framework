@@ -51,6 +51,116 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
+	 * Gets an order's created date.
+	 *
+	 * @since 4.6.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @param string $context if 'view' then the value will be filtered
+	 *
+	 * @return \WC_DateTime|null
+	 */
+	public static function get_date_created( WC_Order $order, $context = 'edit' ) {
+
+		return self::get_date_prop( $order, 'created', $context );
+	}
+
+
+	/**
+	 * Gets an order's last modified date.
+	 *
+	 * @since 4.6.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @param string $context if 'view' then the value will be filtered
+	 *
+	 * @return \WC_DateTime|null
+	 */
+	public static function get_date_modified( WC_Order $order, $context = 'edit' ) {
+
+		return self::get_date_prop( $order, 'modified', $context );
+	}
+
+
+	/**
+	 * Gets an order's paid date.
+	 *
+	 * @since 4.6.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @param string $context if 'view' then the value will be filtered
+	 *
+	 * @return \WC_DateTime|null
+	 */
+	public static function get_date_paid( WC_Order $order, $context = 'edit' ) {
+
+		return self::get_date_prop( $order, 'paid', $context );
+	}
+
+
+	/**
+	 * Gets an order's completed date.
+	 *
+	 * @since 4.6.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @param string $context if 'view' then the value will be filtered
+	 *
+	 * @return \WC_DateTime|null
+	 */
+	public static function get_date_completed( WC_Order $order, $context = 'edit' ) {
+
+		return self::get_date_prop( $order, 'completed', $context );
+	}
+
+
+	/**
+	 * Gets an order date.
+	 *
+	 * This should only be used to retrieve WC core date properties.
+	 *
+	 * @since 4.6.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @param string $type type of date to get
+	 * @param string $context if 'view' then the value will be filtered
+	 *
+	 * @return \WC_DateTime|null
+	 */
+	public static function get_date_prop( WC_Order $order, $type, $context = 'edit' ) {
+
+		$prop = "date_{$type}";
+
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+
+			$date = is_callable( array( $order, "get_{$prop}" ) ) ? $order->{"get_{$prop}"}( $context ) : null;
+
+		} else {
+
+			// backport the property name for WC < 3.0
+			if ( isset( self::$compat_props[ $prop ] ) ) {
+				$prop = self::$compat_props[ $prop ];
+			}
+
+			if ( $date = $order->$prop ) {
+
+				try {
+
+					$date = new SV_WC_DateTime( $date, new DateTimeZone( wc_timezone_string() ) );
+					$date->setTimezone( new DateTimeZone( wc_timezone_string() ) );
+
+				} catch ( Exception $e ) {
+
+					$date = null;
+				}
+			}
+		}
+
+		return $date;
+	}
+
+
+	/**
 	 * Gets an order property.
 	 *
 	 * @since 4.6.0-dev
@@ -76,14 +186,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 			}
 		}
 
-		$value = parent::get_prop( $object, $prop, $context, self::$compat_props );
-
-		// 2.7+ date getters return a timestamp, where previously MySQL date strings were returned
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() && in_array( $prop, array( 'date_completed', 'date_paid', 'date_modified', 'date_created' ), true ) && ! is_numeric( $value ) ) {
-			$value = strtotime( $value );
-		}
-
-		return $value;
+		return parent::get_prop( $object, $prop, $context, self::$compat_props );
 	}
 
 
