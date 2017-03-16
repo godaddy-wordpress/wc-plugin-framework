@@ -38,7 +38,7 @@ if ( ! class_exists( 'SV_WC_Plugin_Compatibility' ) ) :
  * are dropped.
  *
  * Current Compatibility
- * + Core 2.5.5 - 2.7.x
+ * + Core 2.5.5 - 3.0.x
  * + Subscriptions 1.5.x - 2.0.x
  *
  * // TODO: move to /compatibility
@@ -171,24 +171,24 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
-	 * Determines if the installed version of WooCommerce is 2.7.0 or greater.
+	 * Determines if the installed version of WooCommerce is 3.0 or greater.
 	 *
 	 * @since 4.6.0-dev
 	 * @return bool
 	 */
-	public static function is_wc_version_gte_2_7() {
-		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.7', '>=' );
+	public static function is_wc_version_gte_3_0() {
+		return self::get_wc_version() && version_compare( self::get_wc_version(), '3.0', '>=' );
 	}
 
 
 	/**
-	 * Determines if the installed version of WooCommerce is less than 2.7.0
+	 * Determines if the installed version of WooCommerce is less than 3.0.
 	 *
 	 * @since 4.6.0-dev
 	 * @return bool
 	 */
-	public static function is_wc_version_lt_2_7() {
-		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.7', '<' );
+	public static function is_wc_version_lt_3_0() {
+		return self::get_wc_version() && version_compare( self::get_wc_version(), '3.0', '<' );
 	}
 
 	/**

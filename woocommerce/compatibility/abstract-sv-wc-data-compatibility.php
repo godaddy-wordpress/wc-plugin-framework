@@ -48,7 +48,7 @@ abstract class SV_WC_Data_Compatibility {
 
 		$value = '';
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 			if ( is_callable( array( $object, "get_{$prop}" ) ) ) {
  				$value = $object->{"get_{$prop}"}( $context );
@@ -86,7 +86,7 @@ abstract class SV_WC_Data_Compatibility {
 	 */
 	public static function set_props( $object, $props, $compat_props = array() ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 			$object->set_props( $props );
 
@@ -118,7 +118,7 @@ abstract class SV_WC_Data_Compatibility {
 	 */
 	public static function get_meta( $object, $key = '', $single = true, $context = 'edit' ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 			$value = $object->get_meta( $key, $single, $context );
 
@@ -144,7 +144,7 @@ abstract class SV_WC_Data_Compatibility {
 	 */
 	public static function add_meta_data( $object, $key, $value, $unique = false ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 			$object->add_meta_data( $key, $value, $unique );
 
@@ -170,7 +170,7 @@ abstract class SV_WC_Data_Compatibility {
 	 */
 	public static function update_meta_data( $object, $key, $value, $meta_id = '' ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 			$object->update_meta_data( $key, $value, $meta_id );
 
@@ -194,7 +194,7 @@ abstract class SV_WC_Data_Compatibility {
 	 */
 	public static function delete_meta_data( $object, $key ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 			$object->delete_meta_data( $key );
 

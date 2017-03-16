@@ -725,7 +725,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 				";
 
 				// Handle Select2 AJAX call according to Select2 version bundled with WC.
-				if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+				if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 					$javascript .= "
 

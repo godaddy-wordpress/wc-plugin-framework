@@ -61,10 +61,10 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = array() ) {
 
-		// backport a few specific properties to pre-2.7
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() ) {
+		// backport a few specific properties to pre-3.0
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_3_0() ) {
 
-			// converge the shipping total prop for the raw context
+			// convert the shipping_total prop for the edit context
 			if ( 'shipping_total' === $prop && 'view' !== $context ) {
 
 				$prop = 'order_shipping';
@@ -115,7 +115,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function add_coupon( WC_Order $order, $code = array(), $discount = 0, $discount_tax = 0 ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 			$item = new WC_Order_Item_Coupon();
 
@@ -149,7 +149,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function add_fee( WC_Order $order, $fee ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 			$item = new WC_Order_Item_Fee();
 
@@ -194,7 +194,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function update_coupon( WC_Order $order, $item, $args ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 			if ( is_numeric( $item ) ) {
 				$item = $order->get_item( $item );
@@ -247,7 +247,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function update_fee( WC_Order $order, $item, $args ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 			if ( is_numeric( $item ) ) {
 				$item = $order->get_item( $item );
@@ -282,7 +282,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function reduce_stock_levels( WC_Order $order ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 			wc_reduce_stock_levels( $order->get_id() );
 		} else {
 			$order->reduce_order_stock();
@@ -298,7 +298,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function update_total_sales_counts( WC_Order $order ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 			wc_update_total_sales_counts( $order->get_id() );
 		} else {
 			$order->record_product_sales();

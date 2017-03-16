@@ -55,8 +55,8 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = array() ) {
 
-		// backport 'WC_Product::get_parent_id()' to pre-2.7
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_7() && 'parent_id' === $prop ) {
+		// backport 'WC_Product::get_parent_id()' to pre-3.0
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_3_0() && 'parent_id' === $prop ) {
 			$prop    = 'id';
 			$context = $object->is_type( 'variation' ) ? 'raw' : $context;
 		}
@@ -90,7 +90,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_parent( WC_Product $product ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 			$parent = wc_get_product( $product->get_parent_id() );
 		} else {
 			$parent = $product->get_parent();
@@ -111,7 +111,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function wc_update_product_stock( WC_Product $product, $amount = null, $mode = 'set' ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 			return wc_update_product_stock( $product, $amount, $mode );
 		} else {
 			return $product->set_stock( $amount, $mode );
@@ -128,7 +128,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function wc_get_price_html_from_text( WC_Product $product ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 			return wc_get_price_html_from_text();
 		} else {
 			return $product->get_price_html_from_text();
@@ -147,7 +147,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function wc_get_price_including_tax( WC_Product $product, $qty = 1, $price = '' ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 			return wc_get_price_including_tax( $product, array(
 				'qty'   => $qty,
@@ -172,7 +172,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function wc_get_price_excluding_tax( WC_Product $product, $qty = 1, $price = '' ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 			return wc_get_price_excluding_tax( $product, array(
 				'qty'   => $qty,
@@ -197,7 +197,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function wc_get_price_to_display( WC_Product $product, $price = '', $qty = 1 ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 			return wc_get_price_to_display( $product, array(
 				'qty'   => $qty,
@@ -223,7 +223,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function wc_get_product_category_list( WC_Product $product, $sep = ', ', $before = '', $after = '' ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
 			$id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
 
@@ -246,7 +246,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function wc_get_rating_html( WC_Product $product, $rating = null ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_7() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 			return wc_get_rating_html( $rating );
 		} else {
 			return $product->get_rating_html( $rating );
