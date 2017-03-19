@@ -31,7 +31,7 @@ if ( ! class_exists( 'SV_WC_DateTime' ) ) :
  *
  * TODO: Remove this when WC 3.x can be required {CW 2017-03-16}
  *
- * @since 4.6.0-dev
+ * @since 4.6.0
  */
 class SV_WC_DateTime extends DateTime {
 
@@ -39,7 +39,7 @@ class SV_WC_DateTime extends DateTime {
 	/**
 	 * Outputs an ISO 8601 date string in local timezone.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @return string
 	 */
 	public function __toString() {
@@ -53,7 +53,7 @@ class SV_WC_DateTime extends DateTime {
 	 *
 	 * Missing in PHP 5.2.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @return int
 	 */
 	public function getTimestamp() {
@@ -65,7 +65,7 @@ class SV_WC_DateTime extends DateTime {
 	/**
 	 * Gets the timestamp with the WordPress timezone offset added or subtracted.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @return int
 	 */
 	public function getOffsetTimestamp() {
@@ -77,7 +77,7 @@ class SV_WC_DateTime extends DateTime {
 	/**
 	 * Gets a date based on the offset timestamp.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param  string $format date format
 	 * @return string
 	 */
@@ -90,7 +90,7 @@ class SV_WC_DateTime extends DateTime {
 	/**
 	 * Gets a localised date based on offset timestamp.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param  string $format date format
 	 * @return string
 	 */

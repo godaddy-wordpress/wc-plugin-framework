@@ -610,7 +610,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * This is helpful for retrieving the actual site name instead of the
 		 * network name on multisite installations.
 		 *
-		 * @since 4.6.0-dev
+		 * @since 4.6.0
 		 * @return string
 		 */
 		public static function get_site_name() {
@@ -993,7 +993,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 *
 		 * This wrapper method ensures AJAX isn't broken in the process.
 		 *
-		 * @since 4.6.0-dev
+		 * @since 4.6.0
 		 * @param string $message the error message
 		 * @param int $type Optional. The error type. Defaults to E_USER_NOTICE
 		 */

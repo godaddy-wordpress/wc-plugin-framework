@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_Order_Compatibility' ) ) :
 /**
  * WooCommerce order compatibility class.
  *
- * @since 4.6.0-dev
+ * @since 4.6.0
  */
 class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
@@ -53,7 +53,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets an order's created date.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param string $context if 'view' then the value will be filtered
@@ -69,7 +69,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets an order's last modified date.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param string $context if 'view' then the value will be filtered
@@ -85,7 +85,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets an order's paid date.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param string $context if 'view' then the value will be filtered
@@ -101,7 +101,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets an order's completed date.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param string $context if 'view' then the value will be filtered
@@ -119,7 +119,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * This should only be used to retrieve WC core date properties.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param string $type type of date to get
@@ -163,7 +163,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets an order property.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param \WC_Order $object the order object
 	 * @param string $prop the property name
 	 * @param string $context if 'view' then the value will be filtered
@@ -195,7 +195,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * Note that this does not save any data to the database.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param \WC_Order $object the order object
 	 * @param array $props the new properties as $key => $value
 	 * @return \WC_Order
@@ -209,7 +209,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Order item CRUD compatibility method to add a coupon to an order.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param \WC_Order $order the order object
 	 * @param array $code the coupon code
 	 * @param int $discount the discount amount.
@@ -245,7 +245,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Order item CRUD compatibility method to add a fee to an order.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param \WC_Order $order the order object
 	 * @param object $fee the fee to add
 	 * @return int the order item ID
@@ -283,7 +283,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Order item CRUD compatibility method to update an order coupon.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param \WC_Order $order the order object
 	 * @param int|\WC_Order_Item $item the order item ID
 	 * @param array $args {
@@ -335,7 +335,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Order item CRUD compatibility method to update an order fee.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param \WC_Order $order the order object
 	 * @param int|\WC_Order_Item $item the order item ID
 	 * @param array $args {
@@ -380,7 +380,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Backports wc_reduce_stock_levels() to pre-2.7.0
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param \WC_Order $order the order object
 	 */
 	public static function reduce_stock_levels( WC_Order $order ) {
@@ -396,7 +396,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Backports wc_update_total_sales_counts() to pre-2.7.0
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param \WC_Order $order the order object
 	 */
 	public static function update_total_sales_counts( WC_Order $order ) {

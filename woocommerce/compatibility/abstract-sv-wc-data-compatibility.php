@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_Data_Compatibility' ) ) :
 /**
  * WooCommerce data compatibility class.
  *
- * @since 4.6.0-dev
+ * @since 4.6.0
  */
 abstract class SV_WC_Data_Compatibility {
 
@@ -37,7 +37,7 @@ abstract class SV_WC_Data_Compatibility {
 	/**
 	 * Gets an object property.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param \WC_Data $object the data object, likely \WC_Order or \WC_Product
 	 * @param string $prop the property name
 	 * @param string $context if 'view' then the value will be filtered
@@ -78,7 +78,7 @@ abstract class SV_WC_Data_Compatibility {
 	 *
 	 * Note that this does not save any data to the database.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param \WC_Data $object the data object, likely \WC_Order or \WC_Product
 	 * @param array $props the new properties as $key => $value
 	 * @param array $compat_props Compatibility properties.
@@ -109,7 +109,7 @@ abstract class SV_WC_Data_Compatibility {
 	/**
 	 * Gets an object's stored meta value.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param \WC_Data $object the data object, likely \WC_Order or \WC_Product
 	 * @param string $key the meta key
 	 * @param bool $single whether to get the meta as a single item. Defaults to `true`
@@ -136,7 +136,7 @@ abstract class SV_WC_Data_Compatibility {
 	/**
 	 * Stores an object meta value.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param \WC_Data $object the data object, likely \WC_Order or \WC_Product
 	 * @param string $key the meta key
 	 * @param string $value the meta value
@@ -162,7 +162,7 @@ abstract class SV_WC_Data_Compatibility {
 	/**
 	 * Updates an object's stored meta value.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param \WC_Data $object the data object, likely \WC_Order or \WC_Product
 	 * @param string $key the meta key
 	 * @param string $value the meta value
@@ -188,7 +188,7 @@ abstract class SV_WC_Data_Compatibility {
 	/**
 	 * Deletes an object's stored meta value.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param \WC_Data $object the data object, likely \WC_Order or \WC_Product
 	 * @param string $key the meta key
 	 */

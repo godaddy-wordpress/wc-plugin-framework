@@ -53,7 +53,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * Backports WC 3.0.0's wc_format_datetime() to older versions.
 	 *
-	 * @since  4.6.0-dev
+	 * @since  4.6.0
 	 *
 	 * @param \WC_DateTime|\SV_WC_DateTime $date date object
 	 * @param string $format date format
@@ -205,7 +205,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Determines if the installed version of WooCommerce is 3.0 or greater.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @return bool
 	 */
 	public static function is_wc_version_gte_3_0() {
@@ -216,7 +216,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Determines if the installed version of WooCommerce is less than 3.0.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @return bool
 	 */
 	public static function is_wc_version_lt_3_0() {
@@ -245,7 +245,7 @@ class SV_WC_Plugin_Compatibility {
 	 * See details in: https://core.trac.wordpress.org/ticket/21454
 	 * TODO: Add WP version check when https://core.trac.wordpress.org/ticket/18857 is addressed {BR 2016-12-12}
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.6.0
 	 * @param string $slug The slug for the screen ID to normalize (minus `woocommerce_page_`).
 	 * @return string Normalized screen ID.
 	 */
