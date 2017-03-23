@@ -82,18 +82,18 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Makes WC_Product::get_parent() available for WC 2.7+
+	 * Gets a product's parent product.
 	 *
 	 * @since 4.6.0
 	 * @param \WC_Product $product the product object
-	 * @return \WC_Product
+	 * @return \WC_Product|bool
 	 */
 	public static function get_parent( WC_Product $product ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 			$parent = wc_get_product( $product->get_parent_id() );
 		} else {
-			$parent = $product->get_parent();
+			$parent = $product->is_type( 'variation' ) ? wc_get_product( $product->id ) : false;
 		}
 
 		return $parent;
