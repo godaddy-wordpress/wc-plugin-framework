@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -34,13 +34,13 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 4.5.2
+ * @version 4.6.0
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '4.5.2';
+	const VERSION = '4.6.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -269,6 +269,12 @@ abstract class SV_WC_Plugin {
 
 		// backwards compatibility for older WC versions
 		require_once( $framework_path . '/class-sv-wc-plugin-compatibility.php' );
+		require_once( $framework_path . '/compatibility/abstract-sv-wc-data-compatibility.php' );
+		require_once( $framework_path . '/compatibility/class-sv-wc-order-compatibility.php' );
+		require_once( $framework_path . '/compatibility/class-sv-wc-product-compatibility.php' );
+
+		// TODO: Remove this when WC 3.x can be required {CW 2017-03-16}
+		require_once( $framework_path . '/compatibility/class-sv-wc-datetime.php' );
 
 		// generic API base
 		require_once( $framework_path . '/api/class-sv-wc-api-exception.php' );
@@ -377,8 +383,8 @@ abstract class SV_WC_Plugin {
 			$message = sprintf(
 				/* translators: Placeholders: %1$s - plugin name, %2$s - a PHP extension/comma-separated list of PHP extensions */
 				_n(
-					'%1$s requires the %2$s PHP extension to function. Contact your host or server administrator to configure and install the missing extension.',
-					'%1$s requires the following PHP extensions to function: %2$s. Contact your host or server administrator to configure and install the missing extensions.',
+					'%1$s requires the %2$s PHP extension to function. Contact your host or server administrator to install and configure the missing extension.',
+					'%1$s requires the following PHP extensions to function: %2$s. Contact your host or server administrator to install and configure the missing extensions.',
 					count( $missing_extensions ),
 					'woocommerce-plugin-framework'
 				),
@@ -400,8 +406,8 @@ abstract class SV_WC_Plugin {
 			$message = sprintf(
 				/* translators: Placeholders: %1$s - plugin name, %2$s - a PHP function/comma-separated list of PHP functions */
 				_n(
-					'%1$s requires the %2$s PHP function to exist.  Contact your host or server administrator to configure and install the missing function.',
-					'%1$s requires the following PHP functions to exist: %2$s.  Contact your host or server administrator to configure and install the missing functions.',
+					'%1$s requires the %2$s PHP function to exist.  Contact your host or server administrator to install and configure the missing function.',
+					'%1$s requires the following PHP functions to exist: %2$s.  Contact your host or server administrator to install and configure the missing functions.',
 					count( $missing_functions ),
 					'woocommerce-plugin-framework'
 				),
@@ -478,7 +484,7 @@ abstract class SV_WC_Plugin {
 		// documentation url if any
 		if ( $this->get_documentation_url() ) {
 			/* translators: Docs as in Documentation */
-			$custom_actions['docs'] = sprintf( '<a href="%s">%s</a>', $this->get_documentation_url(), esc_html__( 'Docs', 'woocommerce-plugin-framework' ) );
+			$custom_actions['docs'] = sprintf( '<a href="%s" target="_blank">%s</a>', $this->get_documentation_url(), esc_html__( 'Docs', 'woocommerce-plugin-framework' ) );
 		}
 
 		// support url if any

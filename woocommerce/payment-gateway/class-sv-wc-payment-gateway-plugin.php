@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -153,7 +153,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			if ( $this->is_subscriptions_active() ) {
 
 				// filter the payment gateway table on the checkout settings screen to indicate if a gateway can support Subscriptions but requires tokenization to be enabled
-				add_action( 'admin_print_styles-woocommerce_page_wc-settings', array( $this, 'subscriptions_add_renewal_support_status_inline_style' ) );
+				add_action( 'admin_print_styles', array( $this, 'subscriptions_add_renewal_support_status_inline_style' ) );
 				add_filter( 'woocommerce_payment_gateways_renewal_support_status_html', array( $this, 'subscriptions_maybe_edit_renewal_support_status' ), 10, 2 );
 			}
 
@@ -197,7 +197,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		foreach ( $this->get_gateways() as $gateway ) {
 
-			if ( $gateway->supports_tokenization() && ! $gateway->supports_add_payment_method() ) {
+			if ( ! $gateway->supports_tokenization() || ! $gateway->supports_add_payment_method() || ! $gateway->tokenization_enabled() ) {
 				unset( $available_gateways[ $gateway->id ] );
 			}
 		}
@@ -419,7 +419,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					if ( isset( $settings['environment'] ) && 'production' == $settings['environment'] ) {
 
 						// SSL check if gateway enabled/production mode
-						if ( ! SV_WC_Plugin_Compatibility::wc_checkout_is_https() ) {
+						if ( ! wc_checkout_is_https() ) {
 
 							/* translators: Placeholders: %s - plugin name */
 							$message = sprintf( esc_html__( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", 'woocommerce-plugin-framework' ), '<strong>' . $this->get_plugin_name() . '</strong>' );
@@ -597,7 +597,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function subscriptions_add_renewal_support_status_inline_style() {
 
-		wp_add_inline_style( 'woocommerce_admin_styles', '.sv-wc-payment-gateway-renewal-status-inactive{font-size:1.4em;display:block;text-indent:-9999px;position:relative;height:1em;width:1em;cursor:pointer}.sv-wc-payment-gateway-renewal-status-inactive:before{line-height:1;margin:0;position:absolute;width:100%;height:100%;content:"\e016";color:#ffba00;font-family:WooCommerce;speak:none;font-weight:400;font-variant:normal;text-transform:none;-webkit-font-smoothing:antialiased;text-indent:0;top:0;left:0;text-align:center}' );
+		if ( SV_WC_Plugin_Compatibility::normalize_wc_screen_id() === get_current_screen()->id ) {
+			wp_add_inline_style( 'woocommerce_admin_styles', '.sv-wc-payment-gateway-renewal-status-inactive{font-size:1.4em;display:block;text-indent:-9999px;position:relative;height:1em;width:1em;cursor:pointer}.sv-wc-payment-gateway-renewal-status-inactive:before{line-height:1;margin:0;position:absolute;width:100%;height:100%;content:"\e016";color:#ffba00;font-family:WooCommerce;speak:none;font-weight:400;font-variant:normal;text-transform:none;-webkit-font-smoothing:antialiased;text-indent:0;top:0;left:0;text-align:center}' );
+		}
 	}
 
 
@@ -618,12 +620,14 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			$order = wc_get_order( $order );
 		}
 
+		$payment_method = SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' );
+
 		// bail if the order wasn't paid for with this gateway
-		if ( ! $this->has_gateway( $order->payment_method ) ) {
+		if ( ! $this->has_gateway( $payment_method ) ) {
 			return;
 		}
 
-		$gateway = $this->get_gateway( $order->payment_method );
+		$gateway = $this->get_gateway( $payment_method );
 
 		// ensure that it supports captures
 		if ( ! $this->can_capture_charge( $gateway ) ) {
@@ -665,12 +669,14 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		$order = wc_get_order( $_REQUEST['post'] );
 
+		$payment_method = SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' );
+
 		// bail if the order wasn't paid for with this gateway
-		if ( ! $this->has_gateway( $order->payment_method ) ) {
+		if ( ! $this->has_gateway( $payment_method ) ) {
 			return $actions;
 		}
 
-		$gateway = $this->get_gateway( $order->payment_method );
+		$gateway = $this->get_gateway( $payment_method );
 
 		// ensure that it supports captures
 		if ( ! $this->can_capture_charge( $gateway ) ) {

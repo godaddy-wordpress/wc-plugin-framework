@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -173,7 +173,7 @@ class SV_WC_Framework_Bootstrap {
 		}
 
 		// render update notices
-		if ( ( $this->incompatible_framework_plugins || $this->incompatible_wc_version_plugins || $this->incompatible_wp_version_plugins ) && is_admin() && ! is_ajax() && ! has_action( 'admin_notices', array( $this, 'render_update_notices' ) ) ) {
+		if ( ( $this->incompatible_framework_plugins || $this->incompatible_wc_version_plugins || $this->incompatible_wp_version_plugins ) && is_admin() && ! defined( 'DOING_AJAX' ) && ! has_action( 'admin_notices', array( $this, 'render_update_notices' ) ) ) {
 
 			add_action( 'admin_notices', array( $this, 'render_update_notices' ) );
 		}

@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -130,10 +130,10 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 			// if this is a pre-order release payment with a tokenized payment method, get the payment token to complete the order
 
 			// retrieve the payment token
-			$order->payment->token = $this->get_gateway()->get_order_meta( $order->id, 'payment_token' );
+			$order->payment->token = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'payment_token' );
 
 			// retrieve the optional customer id
-			$order->customer_id = $this->get_gateway()->get_order_meta( $order->id, 'customer_id' );
+			$order->customer_id = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'customer_id' );
 
 			// set token data on order
 			if ( $this->get_gateway()->get_payment_tokens_handler()->user_has_token( $order->get_user_id(), $order->payment->token ) ) {
@@ -164,15 +164,15 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 				// a guest user means that token data must be set from the original order
 
 				// account number
-				$order->payment->account_number = $this->get_gateway()->get_order_meta( $order->id, 'account_four' );
+				$order->payment->account_number = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'account_four' );
 
 				if ( $this->get_gateway()->is_credit_card_gateway() ) {
 
 					// card type
-					$order->payment->card_type = $this->get_gateway()->get_order_meta( $order->id, 'card_type' );
+					$order->payment->card_type = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'card_type' );
 
 					// expiry date
-					if ( $expiry_date = $this->get_gateway()->get_order_meta( $order->id, 'card_expiry_date' ) ) {
+					if ( $expiry_date = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'card_expiry_date' ) ) {
 						list( $exp_year, $exp_month ) = explode( '-', $expiry_date );
 						$order->payment->exp_month  = $exp_month;
 						$order->payment->exp_year   = $exp_year;
@@ -181,7 +181,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 				} elseif ( $this->get_gateway()->is_echeck_gateway() ) {
 
 					// account type
-					$order->payment->account_type = $this->get_gateway()->get_order_meta( $order->id, 'account_type' );
+					$order->payment->account_type = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'account_type' );
 				}
 			}
 		}
@@ -261,10 +261,10 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 		try {
 
 			// set order defaults
-			$order = $this->get_gateway()->get_order( $order->id );
+			$order = $this->get_gateway()->get_order( SV_WC_Order_Compatibility::get_prop( $order, 'id' ) );
 
 			// order description
-			$order->description = sprintf( __( '%s - Pre-Order Release Payment for Order %s', 'woocommerce-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+			$order->description = sprintf( __( '%s - Pre-Order Release Payment for Order %s', 'woocommerce-plugin-framework' ), esc_html( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
 
 			// token is required
 			if ( ! $order->payment->token ) {
@@ -328,7 +328,8 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 				if ( $response->transaction_held() || ( $this->get_gateway()->supports( SV_WC_Payment_Gateway::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->get_gateway()->perform_credit_card_authorization( $order ) ) ) {
 
 					$this->get_gateway()->mark_order_as_held( $order, $this->get_gateway()->supports( SV_WC_Payment_Gateway::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->get_gateway()->perform_credit_card_authorization( $order ) ? __( 'Authorization only transaction', 'woocommerce-plugin-framework' ) : $response->get_status_message(), $response );
-					$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
+
+					SV_WC_Order_Compatibility::reduce_stock_levels( $order ); // reduce stock for held orders, but don't complete payment
 
 				} else {
 					// otherwise complete the order

@@ -19,7 +19,7 @@
  * @package   SkyVerge/WooCommerce/Utilities
  * @author    SkyVerge / Delicious Brains
  * @copyright Copyright (c) 2015-2016 Delicious Brains Inc.
- * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
