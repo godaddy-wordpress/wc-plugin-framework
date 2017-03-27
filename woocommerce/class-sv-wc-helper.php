@@ -436,7 +436,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 				$product = $order->get_product_from_item( $item );
 
-				// TODO: remove when WC 2.7+ can be required
+				// TODO: remove when WC 3.0 can be required
 				$name     = $item instanceof WC_Order_Item_Product ? $item->get_name() : $item['name'];
 				$quantity = $item instanceof WC_Order_Item_Product ? $item->get_quantity() : $item['qty'];
 

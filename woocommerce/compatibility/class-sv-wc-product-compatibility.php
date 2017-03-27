@@ -101,7 +101,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Backports wc_update_product_stock() to pre-2.7.0
+	 * Backports wc_update_product_stock() to pre-3.0.
 	 *
 	 * @since 4.6.0
 	 * @param \WC_Product $product the product object
@@ -120,7 +120,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Backports wc_get_price_html_from_text() to pre-2.7.0
+	 * Backports wc_get_price_html_from_text() to pre-3.0.
 	 *
 	 * @since 4.6.0
 	 * @param \WC_Product $product the product object
@@ -137,7 +137,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Backports wc_get_price_including_tax() to pre-2.7.0
+	 * Backports wc_get_price_including_tax() to pre-3.0.
 	 *
 	 * @since 4.6.0
 	 * @param \WC_Product $product the product object
@@ -162,7 +162,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Backports wc_get_price_excluding_tax() to pre-2.7.0
+	 * Backports wc_get_price_excluding_tax() to pre-3.0.
 	 *
 	 * @since 4.6.0
 	 * @param \WC_Product $product the product object
@@ -187,7 +187,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Backports wc_get_price_to_display() to pre-2.7.0
+	 * Backports wc_get_price_to_display() to pre-3.0.
 	 *
 	 * @since 4.6.0
 	 * @param \WC_Product $product the product object
@@ -212,7 +212,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Backports wc_get_product_category_list() to pre-2.7.0
+	 * Backports wc_get_product_category_list() to pre-3.0.
 	 *
 	 * @since 4.6.0
 	 * @param \WC_Product $product the product object
@@ -237,7 +237,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Backports wc_get_rating_html() to pre-2.7.0
+	 * Backports wc_get_rating_html() to pre-3.0.
 	 *
 	 * @since 4.6.0
 	 * @param \WC_Product $product the product object

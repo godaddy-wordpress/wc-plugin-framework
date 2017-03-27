@@ -320,7 +320,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		} else {
 
-			// convert 2.7.0+ args for backwards compatibility
+			// convert WC 3.0+ args for backwards compatibility
 			if ( isset( $args['discount'] ) ) {
 				$args['discount_amount'] = $args['discount'];
 			}
@@ -379,7 +379,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Backports wc_reduce_stock_levels() to pre-2.7.0
+	 * Backports wc_reduce_stock_levels() to pre-3.0.
 	 *
 	 * @since 4.6.0
 	 * @param \WC_Order $order the order object
@@ -395,7 +395,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Backports wc_update_total_sales_counts() to pre-2.7.0
+	 * Backports wc_update_total_sales_counts() to pre-3.0.
 	 *
 	 * @since 4.6.0
 	 * @param \WC_Order $order the order object
