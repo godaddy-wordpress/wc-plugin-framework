@@ -129,6 +129,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_date_prop( WC_Order $order, $type, $context = 'edit' ) {
 
+		$date = null;
 		$prop = "date_{$type}";
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
