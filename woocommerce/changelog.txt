@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2017.nn.nn - version 4.6.0
+2017.03.27 - version 4.6.0
  * Tweak - Add Payment Gateway debug mode to the System Status report
  * Tweak - Plugin "Docs" links now open in a new tab
  * Misc - Add helper method to get normalized WooCommerce screen IDs
