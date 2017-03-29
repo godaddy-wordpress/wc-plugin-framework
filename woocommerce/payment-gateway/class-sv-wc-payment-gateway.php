@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -571,7 +571,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			if ( $order_id ) {
 				$order = wc_get_order( $order_id );
 
-				return $order->payment_method == $this->get_id();
+				return SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' ) === $this->get_id();
 			}
 
 		}
@@ -1311,6 +1311,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		// set payment total here so it can be modified for later by add-ons like subscriptions which may need to charge an amount different than the get_total()
 		$order->payment_total = number_format( $order->get_total(), 2, '.', '' );
 
+		$order->customer_id = '';
+
 		// logged in customer?
 		if ( 0 != $order->get_user_id() && false !== ( $customer_id = $this->get_customer_id( $order->get_user_id(), array( 'order' => $order ) ) ) ) {
 			$order->customer_id = $customer_id;
@@ -1323,7 +1325,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order->payment->type = str_replace( '-', '_', $this->get_payment_type() );
 
 		/* translators: Placeholders: %1$s - site title, %2$s - order number */
-		$order->description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() );
+		$order->description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name(), ENT_QUOTES ), $order->get_order_number() );
 
 		$order = $this->get_order_with_unique_transaction_ref( $order );
 
@@ -1446,8 +1448,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order->capture = new stdClass();
 		$order->capture->amount = SV_WC_Helper::number_format( $order->get_total() );
 		/* translators: Placeholders: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card. */
-		$order->capture->description = sprintf( esc_html__( '%1$s - Capture for Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( get_bloginfo( 'name' ) ), $order->get_order_number() );
-		$order->capture->trans_id = $this->get_order_meta( $order->id, 'trans_id' );
+		$order->capture->description = sprintf( esc_html__( '%1$s - Capture for Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
+		$order->capture->trans_id = $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'trans_id' );
 
 		// backwards compat for 4.1 and earlier
 		$order->capture_total = $order->capture->amount;
@@ -1476,11 +1478,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function add_capture_data( $order, $response ) {
 
 		// mark the order as captured
-		$this->update_order_meta( $order->id, 'charge_captured', 'yes' );
+		$this->update_order_meta( $order, 'charge_captured', 'yes' );
 
 		// add capture transaction ID
 		if ( $response && $response->get_transaction_id() ) {
-			$this->update_order_meta( $order->id, 'capture_trans_id', $response->get_transaction_id() );
+			$this->update_order_meta( $order, 'capture_trans_id', $response->get_transaction_id() );
 		}
 	}
 
@@ -1610,10 +1612,10 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$order->refund->amount = number_format( $amount, 2, '.', '' );
 
 		/* translators: Placeholders: %1$s - site title, %2$s - order number */
-		$order->refund->reason = $reason ? $reason : sprintf( esc_html__( '%1$s - Refund for Order %2$s', 'woocommerce-plugin-framework' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+		$order->refund->reason = $reason ? $reason : sprintf( esc_html__( '%1$s - Refund for Order %2$s', 'woocommerce-plugin-framework' ), esc_html( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
 
 		// almost all gateways require the original transaction ID, so include it by default
-		$order->refund->trans_id = $this->get_order_meta( $order->id, 'trans_id' );
+		$order->refund->trans_id = $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'trans_id' );
 
 		/**
 		 * Payment Gateway Get Order For Refund Filter.
@@ -1641,11 +1643,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function add_refund_data( WC_Order $order, $response ) {
 
 		// indicate the order was refunded along with the refund amount
-		$this->add_order_meta( $order->id, 'refund_amount', $order->refund->amount );
+		$this->add_order_meta( $order, 'refund_amount', $order->refund->amount );
 
 		// add refund transaction ID
 		if ( $response && $response->get_transaction_id() ) {
-			$this->add_order_meta( $order->id, 'refund_trans_id', $response->get_transaction_id() );
+			$this->add_order_meta( $order, 'refund_trans_id', $response->get_transaction_id() );
 		}
 	}
 
@@ -1675,7 +1677,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - a monetary amount */
 			esc_html__( '%1$s Refund in the amount of %2$s approved.', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
-			wc_price( $order->refund->amount, array( 'currency' => $order->get_order_currency() ) )
+			wc_price( $order->refund->amount, array( 'currency' => SV_WC_Order_Compatibility::get_prop( $order, 'currency', 'view' ) ) )
 		);
 
 		// adds the transaction id (if any) to the order note
@@ -1781,7 +1783,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// partial voids are not supported
 		if ( $order->refund->amount != $order->get_total() ) {
-			return new WP_Error( 'wc_' . $this->get_id() . '_void_error', esc_html__( 'Oops, you cannot partially void this order. Please use the full order amount.', 'woocommerce-plugin-framework' ) );
+			return new WP_Error( 'wc_' . $this->get_id() . '_void_error', esc_html__( 'Oops, you cannot partially void this order. Please use the full order amount.', 'woocommerce-plugin-framework' ), 500 );
 		}
 
 		try {
@@ -1831,11 +1833,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	protected function add_void_data( WC_Order $order, $response ) {
 
 		// indicate the order was voided along with the amount
-		$this->update_order_meta( $order->id, 'void_amount', $order->refund->amount );
+		$this->update_order_meta( $order, 'void_amount', $order->refund->amount );
 
 		// add refund transaction ID
 		if ( $response && $response->get_transaction_id() ) {
-			$this->add_order_meta( $order->id, 'void_trans_id', $response->get_transaction_id() );
+			$this->add_order_meta( $order, 'void_trans_id', $response->get_transaction_id() );
 		}
 	}
 
@@ -1896,7 +1898,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			/* translators: Placeholders: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order. */
 			esc_html__( '%1$s Void in the amount of %2$s approved.', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
-			wc_price( $order->refund->amount, array( 'currency' => $order->get_order_currency() ) )
+			wc_price( $order->refund->amount, array( 'currency' => SV_WC_Order_Compatibility::get_prop( $order, 'currency', 'view' ) ) )
 		);
 
 		// adds the transaction id (if any) to the order note
@@ -1953,9 +1955,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function get_order_with_unique_transaction_ref( $order ) {
 
+		$order_id = SV_WC_Order_Compatibility::get_prop( $order, 'id' );
+
 		// generate a unique retry count
-		if ( is_numeric( $this->get_order_meta( $order->id, 'retry_count' ) ) ) {
-			$retry_count = $this->get_order_meta( $order->id, 'retry_count' );
+		if ( is_numeric( $this->get_order_meta( $order_id, 'retry_count' ) ) ) {
+			$retry_count = $this->get_order_meta( $order_id, 'retry_count' );
 
 			$retry_count++;
 		} else {
@@ -1963,7 +1967,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// keep track of the retry count
-		$this->update_order_meta( $order->id, 'retry_count', $retry_count );
+		$this->update_order_meta( $order, 'retry_count', $retry_count );
 
 		// generate a unique transaction ref based on the order number and retry count, for gateways that require a unique identifier for every transaction request
 		$order->unique_transaction_ref = ltrim( $order->get_order_number(),  esc_html_x( '#', 'hash before order number', 'woocommerce-plugin-framework' ) ) . ( $retry_count > 0 ? '-' . $retry_count : '' );
@@ -2018,18 +2022,18 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// transaction id if available
 		if ( $response && $response->get_transaction_id() ) {
-			$this->update_order_meta( $order->id, 'trans_id', $response->get_transaction_id() );
 
-			// set transaction ID for WC core - remove this and use WC_Order::payment_complete() to add transaction ID after 2.2+ can be required
-			update_post_meta( $order->id, '_transaction_id', $response->get_transaction_id() );
+			$this->update_order_meta( $order, 'trans_id', $response->get_transaction_id() );
+
+			update_post_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), '_transaction_id', $response->get_transaction_id() );
 		}
 
 		// transaction date
-		$this->update_order_meta( $order->id, 'trans_date', current_time( 'mysql' ) );
+		$this->update_order_meta( $order, 'trans_date', current_time( 'mysql' ) );
 
 		// if there's more than one environment
 		if ( count( $this->get_environments() ) > 1 ) {
-			$this->update_order_meta( $order->id, 'environment', $this->get_environment() );
+			$this->update_order_meta( $order, 'environment', $this->get_environment() );
 		}
 
 		// customer data
@@ -2088,7 +2092,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// update the order with the customer ID, note environment is not appended here because it's already available
 		// on the `environment` order meta
-		$this->update_order_meta( $order->id, 'customer_id', $customer_id );
+		$this->update_order_meta( $order, 'customer_id', $customer_id );
 
 		// update the user
 		if ( 0 != $user_id ) {
@@ -2274,12 +2278,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( ! $customer_id && $args['autocreate'] ) {
 
+			$billing_email = ( $args['order'] ) ? SV_WC_Order_Compatibility::get_prop( $args['order'], 'billing_email' ) : '';
+
 			// generate a new customer id.  We try to use 'wc-<hash of billing email>'
 			//  if an order is available, on the theory that it will avoid clashing of
 			//  accounts if a customer uses the same merchant account on multiple independent
 			//  shops.  Otherwise, we use 'wc-<user_id>-<random>'
-			if ( $args['order'] && isset( $args['order']->billing_email ) && $args['order']->billing_email ) {
-				$customer_id = 'wc-' . md5( $args['order']->billing_email );
+			if ( $billing_email ) {
+				$customer_id = 'wc-' . md5( $billing_email );
 			} else {
 				$customer_id = uniqid( 'wc-' . $user_id . '-' );
 			}
@@ -2346,14 +2352,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	public function get_guest_customer_id( WC_Order $order ) {
 
 		// is there a customer id already tied to this order?
-		$customer_id = $this->get_order_meta( $order->id, 'customer_id' );
+		$customer_id = $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'customer_id' );
 
 		if ( $customer_id ) {
 			return $customer_id;
 		}
 
 		// default
-		return 'wc-guest-' . $order->id;
+		return 'wc-guest-' . SV_WC_Order_Compatibility::get_prop( $order, 'id' );
 	}
 
 
@@ -2482,15 +2488,17 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function authorization_valid_for_capture( $order ) {
 
+		$order_id = SV_WC_Order_Compatibility::get_prop( $order, 'id' );
+
 		// check whether the charge has already been captured by this gateway
-		$charge_captured = $this->get_order_meta( $order->id, 'charge_captured' );
+		$charge_captured = $this->get_order_meta( $order_id, 'charge_captured' );
 
 		if ( 'yes' == $charge_captured ) {
 			return false;
 		}
 
 		// if for any reason the authorization can not be captured
-		$auth_can_be_captured = $this->get_order_meta( $order->id, 'auth_can_be_captured' );
+		$auth_can_be_captured = $this->get_order_meta( $order_id, 'auth_can_be_captured' );
 
 		if ( 'no' == $auth_can_be_captured ) {
 			return false;
@@ -2510,7 +2518,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function has_authorization_expired( $order ) {
 
-		$transaction_time = strtotime( $this->get_order_meta( $order->id, 'trans_date' ) );
+		$transaction_time = strtotime( $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'trans_date' ) );
 
 		return floor( ( time() - $transaction_time ) / 3600 ) > $this->get_authorization_time_window();
 	}
@@ -2862,7 +2870,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( $order_id ) {
 
 			$order    = wc_get_order( $order_id );
-			$currency = $order->get_order_currency();
+			$currency = SV_WC_Order_Compatibility::get_prop( $order, 'currency', 'view' );
 		}
 
 		return $currency;
@@ -2925,62 +2933,95 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 
 	/**
-	 * Add order meta
+	 * Adds order meta data.
 	 *
 	 * @since 2.2.0
-	 * @param int|string $order_id ID for order to add meta to
+	 * @param \WC_Order|int the order to add meta to
 	 * @param string $key meta key (already prefixed with gateway ID)
 	 * @param mixed $value meta value
-	 * @param bool $unique
+	 * @param bool $unique whether the meta value should be unique
 	 * @return bool|int
 	 */
-	public function add_order_meta( $order_id, $key, $value, $unique = false ) {
+	public function add_order_meta( $order, $key, $value, $unique = false ) {
 
-		return add_post_meta( $order_id, $this->get_order_meta_prefix() . $key, $value, $unique );
+		if ( is_numeric( $order ) ) {
+			$order = wc_get_order( $order );
+		}
+
+		if ( ! $order instanceof WC_Order ) {
+			return false;
+		}
+
+		return SV_WC_Order_Compatibility::add_meta_data( $order, $this->get_order_meta_prefix() . $key, $value, $unique );
 	}
 
 
 	/**
-	 * Get order meta
+	 * Gets order meta data.
 	 *
-	 * Note this is hardcoded to return a single value for the get_post_meta() call
+	 * Note this is hardcoded to return a single value for the get_post_meta() call.
 	 *
 	 * @since 2.2.0
-	 * @param int|string $order_id ID for order to get meta for
+	 * @param \WC_Order|int the order to get meta for
 	 * @param string $key meta key
 	 * @return mixed
 	 */
-	public function get_order_meta( $order_id, $key ) {
+	public function get_order_meta( $order, $key ) {
 
-		return get_post_meta( $order_id, $this->get_order_meta_prefix() . $key, true );
+		if ( is_numeric( $order ) ) {
+			$order = wc_get_order( $order );
+		}
+
+		if ( ! $order instanceof WC_Order ) {
+			return false;
+		}
+
+		return SV_WC_Order_Compatibility::get_meta( $order, $this->get_order_meta_prefix() . $key, true );
 	}
 
 
 	/**
-	 * Update order meta
+	 * Updates order meta data.
 	 *
 	 * @since 2.2.0
-	 * @param int|string $order_id ID for order to update meta for
+	 * @param \WC_Order|int the order to update meta for
 	 * @param string $key meta key
 	 * @param mixed $value meta value
 	 * @return bool|int
 	 */
-	public function update_order_meta( $order_id, $key, $value ) {
+	public function update_order_meta( $order, $key, $value ) {
 
-		return update_post_meta( $order_id, $this->get_order_meta_prefix() . $key, $value );
+		if ( is_numeric( $order ) ) {
+			$order = wc_get_order( $order );
+		}
+
+		if ( ! $order instanceof WC_Order ) {
+			return false;
+		}
+
+		return SV_WC_Order_Compatibility::update_meta_data( $order, $this->get_order_meta_prefix() . $key, $value );
 	}
 
 
 	/**
-	 * Delete order meta
+	 * Delete order meta data.
 	 *
 	 * @since 2.2.0
-	 * @param int|string $order_id ID for order to delete meta for
+	 * @param \WC_Order|int the order to delete meta for
 	 * @param string $key meta key
 	 * @return bool
 	 */
-	public function delete_order_meta( $order_id, $key ) {
-		return delete_post_meta( $order_id, $this->get_order_meta_prefix() . $key );
+	public function delete_order_meta( $order, $key ) {
+
+		if ( is_numeric( $order ) ) {
+			$order = wc_get_order( $order );
+		}
+
+		if ( ! $order instanceof WC_Order ) {
+			return false;
+		}
+
+		return SV_WC_Order_Compatibility::delete_meta_data( $order, $this->get_order_meta_prefix() . $key );
 	}
 
 

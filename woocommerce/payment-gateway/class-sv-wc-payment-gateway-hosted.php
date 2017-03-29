@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -405,7 +405,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	protected function validate_transaction_response( $order, $response ) {
 
 		// If the order is invalid, bail
-		if ( ! $order || ! $order->id ) {
+		if ( ! $order || ! SV_WC_Order_Compatibility::get_prop( $order, 'id' ) ) {
 
 			throw new SV_WC_Payment_Gateway_Exception( sprintf(
 				__( 'Could not find order %s', 'woocommerce-plugin-framework' ),
@@ -461,7 +461,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 				$this->mark_order_as_held( $order, $response->get_status_message(), $response );
 
-				$order->reduce_order_stock();
+				SV_WC_Order_Compatibility::reduce_stock_levels( $order );
 
 				$this->do_transaction_held( $order, $response );
 			}
@@ -497,13 +497,13 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		// account number
 		if ( $response->get_account_number() ) {
-			$this->update_order_meta( $order->id, 'account_four', substr( $response->get_account_number(), -4 ) );
+			$this->update_order_meta( $order, 'account_four', substr( $response->get_account_number(), -4 ) );
 		}
 
 		if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
 
 			if ( $response->get_authorization_code() ) {
-				$this->update_order_meta( $order->id, 'authorization_code', $response->get_authorization_code() );
+				$this->update_order_meta( $order, 'authorization_code', $response->get_authorization_code() );
 			}
 
 			if ( $order->get_total() > 0 ) {
@@ -513,27 +513,27 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				} else {
 					$captured = 'no';
 				}
-				$this->update_order_meta( $order->id, 'charge_captured', $captured );
+				$this->update_order_meta( $order, 'charge_captured', $captured );
 			}
 
 			if ( $response->get_exp_month() && $response->get_exp_year() ) {
-				$this->update_order_meta( $order->id, 'card_expiry_date', $response->get_exp_year() . '-' . $response->get_exp_month() );
+				$this->update_order_meta( $order, 'card_expiry_date', $response->get_exp_year() . '-' . $response->get_exp_month() );
 			}
 
 			if ( $response->get_card_type() ) {
-				$this->update_order_meta( $order->id, 'card_type', $response->get_card_type() );
+				$this->update_order_meta( $order, 'card_type', $response->get_card_type() );
 			}
 
 		} elseif ( self::PAYMENT_TYPE_ECHECK == $response->get_payment_type() ) {
 
 			// optional account type (checking/savings)
 			if ( $response->get_account_type() ) {
-				$this->update_order_meta( $order->id, 'account_type', $response->get_account_type() );
+				$this->update_order_meta( $order, 'account_type', $response->get_account_type() );
 			}
 
 			// optional check number
 			if ( $response->get_check_number() ) {
-				$this->update_order_meta( $order->id, 'check_number', $response->get_check_number() );
+				$this->update_order_meta( $order, 'check_number', $response->get_check_number() );
 			}
 		}
 	}
@@ -842,7 +842,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		$this->transaction_response_handler_url = add_query_arg( 'wc-api', get_class( $this ), home_url( '/' ) );
 
 		// make ssl if needed
-		if ( SV_WC_Plugin_Compatibility::wc_checkout_is_https() ) {
+		if ( wc_checkout_is_https() ) {
 			$this->transaction_response_handler_url = str_replace( 'http:', 'https:', $this->transaction_response_handler_url );
 		}
 

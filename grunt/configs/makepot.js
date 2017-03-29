@@ -15,7 +15,7 @@ module.exports = function( grunt ) {
 				potFilename: 'woocommerce-plugin-framework.pot',
 				mainFile: 'index.php',
 				potHeaders: {
-					'report-msgid-bugs-to': 'https://support.woothemes.com/hc/',
+					'report-msgid-bugs-to': 'https://support.woocommerce.com/hc/',
 					'project-id-version': '<%= pkg.title %> <%= pkg.version %>',
 				},
 				processPot: function( pot ) {

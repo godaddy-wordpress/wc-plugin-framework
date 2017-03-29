@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -186,7 +186,7 @@ class SV_WC_Hook_Deprecator {
 		$message .= ! empty( $hook['replacement'] ) ? sprintf( 'Use %1$s instead.', $hook['replacement'] ) : 'There is no replacement available.';
 
 		// triggers as E_USER_NOTICE
-		trigger_error( $message );
+		SV_WC_Helper::trigger_error( $message );
 	}
 
 
