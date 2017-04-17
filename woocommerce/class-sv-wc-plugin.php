@@ -230,7 +230,10 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function load_textdomain( $textdomain, $path ) {
 
-		$locale = apply_filters( 'plugin_locale', get_locale(), $textdomain );
+		// user's locale if in the admin for WP 4.7+, or the site locale otherwise
+		$locale = is_admin() && is_callable( 'get_user_locale' ) ? get_user_locale() : get_locale();
+
+		$locale = apply_filters( 'plugin_locale', $locale, $textdomain );
 
 		load_textdomain( $textdomain, WP_LANG_DIR . '/' . $textdomain . '/' . $textdomain . '-' . $locale . '.mo' );
 
