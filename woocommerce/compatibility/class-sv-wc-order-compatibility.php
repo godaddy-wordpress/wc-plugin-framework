@@ -410,6 +410,28 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	}
 
 
+	/**
+	 * Determines if an order has an available shipping address.
+	 *
+	 * WooCommerce 3.0+ no longer fills the shipping address with the billing if
+	 * a shipping address was never set by the customer at checkout, as is the
+	 * case with virtual orders. This method is helpful for gateways that may
+	 * reject such transactions with blank shipping information.
+	 *
+	 * TODO: Remove when WC 3.0.4 can be required {CW 2017-04-17}
+	 *
+	 * @since 4.6.1
+	 *
+	 * @param \WC_Order $order order object
+	 *
+	 * @return bool
+	 */
+	public static function has_shipping_address( WC_Order $order ) {
+
+		return self::get_prop( $order, 'shipping_address_1' ) || self::get_prop( $order, 'shipping_address_2' );
+	}
+
+
 }
 
 

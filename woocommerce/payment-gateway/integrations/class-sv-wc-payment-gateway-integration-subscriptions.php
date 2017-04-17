@@ -185,12 +185,12 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 			// payment token
 			if ( ! empty( $order->payment->token ) ) {
-				update_post_meta( $subscription->id, $this->get_gateway()->get_order_meta_prefix() . 'payment_token', $order->payment->token );
+				update_post_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), $this->get_gateway()->get_order_meta_prefix() . 'payment_token', $order->payment->token );
 			}
 
 			// customer ID
 			if ( ! empty( $order->customer_id ) ) {
-				update_post_meta( $subscription->id, $this->get_gateway()->get_order_meta_prefix() . 'customer_id', $order->customer_id );
+				update_post_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), $this->get_gateway()->get_order_meta_prefix() . 'customer_id', $order->customer_id );
 			}
 		}
 	}
@@ -340,13 +340,16 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		// remove order-specific meta
 		foreach ( $this->get_order_specific_meta_keys() as $meta_key ) {
-			delete_post_meta( $subscription->id, $meta_key );
+			delete_post_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), $meta_key );
 		}
 
+		$old_payment_method = SV_WC_Order_Compatibility::get_meta( $subscription, '_old_payment_method' );
+		$new_payment_method = SV_WC_Order_Compatibility::get_meta( $subscription, '_payment_method' );
+
 		// if the payment method has been changed to another gateway, additionally remove the old payment token and customer ID meta
-		if ( $subscription->payment_method !== $this->get_gateway()->get_id() && $subscription->old_payment_method === $this->get_gateway()->get_id() ) {
-			$this->get_gateway()->delete_order_meta( $subscription->id, 'payment_token' );
-			$this->get_gateway()->delete_order_meta( $subscription->id, 'customer_id' );
+		if ( $new_payment_method !== $this->get_gateway()->get_id() && $old_payment_method === $this->get_gateway()->get_id() ) {
+			$this->get_gateway()->delete_order_meta( $subscription, 'payment_token' );
+			$this->get_gateway()->delete_order_meta( $subscription, 'customer_id' );
 		}
 
 		return $result;
@@ -365,10 +368,10 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	public function update_failing_payment_method( $subscription, $renewal_order ) {
 
 		if ( $customer_id = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $renewal_order, 'id' ), 'customer_id' ) ) {
-			$this->get_gateway()->update_order_meta( $subscription->id, 'customer_id', $customer_id );
+			$this->get_gateway()->update_order_meta( $subscription, 'customer_id', $customer_id );
 		}
 
-		$this->get_gateway()->update_order_meta( $subscription->id, 'payment_token', $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $renewal_order, 'id' ), 'payment_token' ) );
+		$this->get_gateway()->update_order_meta( $subscription, 'payment_token', $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $renewal_order, 'id' ), 'payment_token' ) );
 	}
 
 
@@ -428,7 +431,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	public function maybe_render_payment_method( $payment_method_to_display, $subscription ) {
 
 		// bail for other payment methods
-		if ( $this->get_gateway()->get_id() !== $subscription->payment_method ) {
+		if ( $this->get_gateway()->get_id() !== SV_WC_Order_Compatibility::get_prop( $subscription, 'payment_method' ) ) {
 			return $payment_method_to_display;
 		}
 
@@ -564,11 +567,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		$subscriptions = wcs_get_users_subscriptions( $user_id );
 
-		$token_key = 'wc_' . $this->get_gateway()->get_id() . '_payment_token';
-
 		foreach ( $subscriptions as $key => $subscription ) {
 
-			if ( (string) $token->get_id() !== (string) $subscription->$token_key ) {
+			if ( (string) $token->get_id() !== (string) $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), 'payment_token' ) ) {
 				unset( $subscriptions[ $key ] );
 			}
 		}

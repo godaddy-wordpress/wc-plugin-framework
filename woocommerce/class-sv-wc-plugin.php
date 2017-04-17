@@ -154,7 +154,11 @@ abstract class SV_WC_Plugin {
 		add_action( 'init', array( $this, 'load_translations' ) );
 
 		// add any PHP incompatibilities to the system status report
-		add_filter( 'woocommerce_debug_posting', array( $this, 'add_system_status_php_information' ) );
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+			add_filter( 'woocommerce_system_status_environment_rows', array( $this, 'add_system_status_php_information' ) );
+		} else {
+			add_filter( 'woocommerce_debug_posting', array( $this, 'add_system_status_php_information' ) );
+		}
 	}
 
 
