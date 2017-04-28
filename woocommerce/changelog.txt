@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2017.nn.nn - version 4.6.2-dev
+ * Fix - Ensure authorized, but not yet captured, transactions are marked "on hold" for off-site gateways
+
 2017.04.17 - version 4.6.1
  * Tweak - Load admin translations based on the user's configured language in WordPress 4.7+
  * Tweak - Added the SV_WC_Order_Compatibility::has_shipping_address() method
