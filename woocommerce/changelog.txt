@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2017.nn.nn - version 4.6.2-dev
+2017.05.01 - version 4.6.2
  * Fix - Ensure authorized, but not yet captured, transactions are marked "on hold" for off-site gateways
 
 2017.04.17 - version 4.6.1
