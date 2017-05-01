@@ -449,10 +449,11 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				// determine whether we should complete payment or set to on-hold for later capture
 				if ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization( $order ) ) {
 
-					$this->mark_order_as_held( $order, $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization( $order ) ? esc_html__( 'Authorization only transaction', 'woocommerce-plugin-framework' ) : $response->get_status_message(), $response );
+					$this->mark_order_as_held( $order, __( 'Authorization only transaction', 'woocommerce-plugin-framework' ), $response );
 					SV_WC_Order_Compatibility::reduce_stock_levels( $order ); // reduce stock for held orders, but don't complete payment
 
 				} else {
+
 					$order->payment_complete(); // mark order as having received payment
 				}
 
