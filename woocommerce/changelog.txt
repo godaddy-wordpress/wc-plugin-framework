@@ -1,5 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2017.05.09 - version 4.6.3
+ * Tweak - Add optional notice for plugins that want to require PHP 5.3+ in the future
+ * Tweak - Improved background process handling for certain server & cache configurations
+
 2017.05.01 - version 4.6.2
  * Fix - Ensure authorized, but not yet captured, transactions are marked "on hold" for off-site gateways
 

@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 4.6.2\n"
+"Project-Id-Version: WooCommerce Plugin Framework 4.6.3\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -64,17 +64,17 @@ msgstr ""
 msgid "WooCommerce"
 msgstr ""
 
-#: class-sv-wc-plugin.php:172
+#: class-sv-wc-plugin.php:179
 #. translators: Placeholders: %s - plugin name
 msgid "You cannot clone instances of %s."
 msgstr ""
 
-#: class-sv-wc-plugin.php:182
+#: class-sv-wc-plugin.php:189
 #. translators: Placeholders: %s - plugin name
 msgid "You cannot unserialize instances of %s."
 msgstr ""
 
-#: class-sv-wc-plugin.php:392
+#: class-sv-wc-plugin.php:400
 #. translators: Placeholders: %1$s - plugin name, %2$s - a PHP
 #. extension/comma-separated list of PHP extensions
 msgid ""
@@ -87,7 +87,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: class-sv-wc-plugin.php:415
+#: class-sv-wc-plugin.php:423
 #. translators: Placeholders: %1$s - plugin name, %2$s - a PHP
 #. function/comma-separated list of PHP functions
 msgid ""
@@ -99,37 +99,54 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: class-sv-wc-plugin.php:440
+#: class-sv-wc-plugin.php:448
 #. translators: Placeholders: %s - plugin name
 msgid ""
 "%s may behave unexpectedly because the following PHP configuration settings "
 "are required:"
 msgstr ""
 
-#: class-sv-wc-plugin.php:454
+#: class-sv-wc-plugin.php:462
 msgid "%s or higher"
 msgstr ""
 
-#: class-sv-wc-plugin.php:464
+#: class-sv-wc-plugin.php:472
 msgid ""
 "Please contact your hosting provider or server administrator to configure "
 "these settings."
 msgstr ""
 
-#: class-sv-wc-plugin.php:494
+#: class-sv-wc-plugin.php:485
+#. translators: Placeholders: %1$s - <p>, %2$s - </p>, %3$s - <strong>, %4$s -
+#. </strong>, %5$s - plugin name, %6$s - <a> link, %7$s - </a>
+msgid ""
+"%1$sHey there! We've noticed that your server is running %3$san outdated "
+"version of PHP%4$s, which is the programming language that WooCommerce and "
+"its extensions are built on.\n"
+"\t\t\t\t\tThe PHP version that is currently used for your site is no longer "
+"maintained, nor %3$sreceives security updates%4$s; newer versions are "
+"faster and more secure.%2$s\n"
+"\t\t\t\t\t%1$sAs a result, %5$s will no longer support this version on July "
+"1, so you should upgrade PHP prior to this date. Your hosting provider can "
+"do this for you.\n"
+"\t\t\t\t\t%6$sHere are some resources to help you upgrade%7$s and to "
+"explain PHP versions further.%2$s"
+msgstr ""
+
+#: class-sv-wc-plugin.php:525
 #. translators: Docs as in Documentation
 msgid "Docs"
 msgstr ""
 
-#: class-sv-wc-plugin.php:687
+#: class-sv-wc-plugin.php:718
 msgid "%1$s - A minimum of %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:696
+#: class-sv-wc-plugin.php:727
 msgid "Set as %1$s - %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:933
+#: class-sv-wc-plugin.php:964
 msgid "Configure"
 msgstr ""
 
@@ -1217,19 +1234,19 @@ msgstr ""
 msgid "%1$s eCheck Payment Method Saved: %2$s account ending in %3$s"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:571
+#: utilities/class-sv-wp-background-job-handler.php:581
 msgid "Job data key \"%s\" not set"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:575
+#: utilities/class-sv-wp-background-job-handler.php:585
 msgid "Job data key \"%s\" is not an array"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:787
+#: utilities/class-sv-wp-background-job-handler.php:798
 msgid "Every %d Minutes"
 msgstr ""
 
-#: class-sv-wc-plugin.php:499
+#: class-sv-wc-plugin.php:530
 msgctxt "noun"
 msgid "Support"
 msgstr ""
