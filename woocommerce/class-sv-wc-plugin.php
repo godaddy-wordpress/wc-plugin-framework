@@ -485,7 +485,7 @@ abstract class SV_WC_Plugin {
 				__( '%1$sHey there! We\'ve noticed that your server is running %3$san outdated version of PHP%4$s, which is the programming language that WooCommerce and its extensions are built on.
 					The PHP version that is currently used for your site is no longer maintained, nor %3$sreceives security updates%4$s; newer versions are faster and more secure.%2$s
 					%1$sAs a result, %5$s will no longer support this version on July 1, so you should upgrade PHP prior to this date. Your hosting provider can do this for you.
-					%6$sHere are some resources to help you upgrade%7$s and to explain PHP versions further.%2$s', 'woocommerce-gateway-authorize-net-sim' ),
+					%6$sHere are some resources to help you upgrade%7$s and to explain PHP versions further.%2$s', 'woocommerce-plugin-framework' ),
 				'<p>', '</p>',
 				'<strong>', '</strong>',
 				$this->get_plugin_name(),
