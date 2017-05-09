@@ -75,6 +75,9 @@ abstract class SV_WC_Plugin {
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
 
+	/** @var bool whether a PHP upgrade notice should be displayed in the admin */
+	private $display_php_notice = false;
+
 
 	/**
 	 * Initialize the plugin.
@@ -116,6 +119,10 @@ abstract class SV_WC_Plugin {
 
 		if ( isset( $args['text_domain'] ) ) {
 			$this->text_domain = $args['text_domain'];
+		}
+
+		if ( isset( $args['display_php_notice'] ) ) {
+			$this->display_php_notice = $args['display_php_notice'];
 		}
 
 		// include library files after woocommerce is loaded
@@ -381,6 +388,7 @@ abstract class SV_WC_Plugin {
 	 * @since 3.0.0
 	 */
 	protected function add_dependencies_admin_notices() {
+		global $sv_wc_php_notice_added;
 
 		// report any missing extensions
 		$missing_extensions = $this->get_missing_extension_dependencies();
@@ -467,6 +475,29 @@ abstract class SV_WC_Plugin {
 					'notice_class' => 'error',
 				) );
 			}
+		}
+
+		// add the PHP 5.3+ notice
+		if ( ! $sv_wc_php_notice_added && $this->display_php_notice && version_compare( PHP_VERSION, '5.3.0', '<' ) ) {
+
+			$message = sprintf(
+				/* translators: Placeholders: %1$s - <p>, %2$s - </p>, %3$s - <strong>, %4$s - </strong>, %5$s - plugin name, %6$s - <a> link, %7$s - </a> */
+				__( '%1$sHey there! We\'ve noticed that your server is running %3$san outdated version of PHP%4$s, which is the programming language that WooCommerce and its extensions are built on.
+					The PHP version that is currently used for your site is no longer maintained, nor %3$sreceives security updates%4$s; newer versions are faster and more secure.%2$s
+					%1$sAs a result, %5$s will no longer support this version on July 1, so you should upgrade PHP prior to this date. Your hosting provider can do this for you.
+					%6$sHere are some resources to help you upgrade%7$s and to explain PHP versions further.%2$s', 'woocommerce-plugin-framework' ),
+				'<p>', '</p>',
+				'<strong>', '</strong>',
+				$this->get_plugin_name(),
+				'<a href="http://skyver.ge/upgradephp">', '</a>'
+			);
+
+			$this->get_admin_notice_handler()->add_admin_notice( $message, 'sv-wc-outdated-php-version', array(
+				'dismissible'  => false,
+				'notice_class' => 'error',
+			) );
+
+			$sv_wc_php_notice_added = true;
 		}
 	}
 
