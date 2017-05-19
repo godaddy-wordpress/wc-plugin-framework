@@ -411,7 +411,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		}
 
 		$old_payment_method = SV_WC_Order_Compatibility::get_meta( $subscription, '_old_payment_method' );
-		$new_payment_method = SV_WC_Order_Compatibility::get_meta( $subscription, '_payment_method' );
+		$new_payment_method = SV_WC_Order_Compatibility::get_prop( $subscription, 'payment_method' );
 
 		// if the payment method has been changed to another gateway, additionally remove the old payment token and customer ID meta
 		if ( $new_payment_method !== $this->get_gateway()->get_id() && $old_payment_method === $this->get_gateway()->get_id() ) {
@@ -636,7 +636,10 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		foreach ( $subscriptions as $key => $subscription ) {
 
-			if ( (string) $token->get_id() !== (string) $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), 'payment_token' ) ) {
+			$payment_method  = SV_WC_Order_Compatibility::get_prop( $subscription, 'payment_method' );
+			$stored_token_id = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), 'payment_token' );
+
+			if ( $stored_token_id !== $token->get_id() || $payment_method !== $this->get_gateway()->get_id() ) {
 				unset( $subscriptions[ $key ] );
 			}
 		}
