@@ -1,5 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2017.05.20 - version 4.6.4
+ * Fix - Add dedicated subscriptions Change Payment handling to avoid subscription manipulation
+ * Fix - Ensure old payment methods can be removed after changing subscription payment to a new method
+
 2017.05.09 - version 4.6.3
  * Tweak - Add optional notice for plugins that want to require PHP 5.3+ in the future
  * Tweak - Improved background process handling for certain server & cache configurations
