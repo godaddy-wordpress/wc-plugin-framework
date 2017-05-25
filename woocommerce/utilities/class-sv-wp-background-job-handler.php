@@ -19,7 +19,7 @@
  * @package   SkyVerge/WooCommerce/Utilities
  * @author    SkyVerge / Delicious Brains
  * @copyright Copyright (c) 2015-2016 Delicious Brains Inc.
- * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -324,6 +324,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * @return object|null
 	 */
 	public function create_job( $attrs ) {
+		global $wpdb;
 
 		if ( empty( $attrs ) ) {
 			return null;
@@ -349,7 +350,11 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			'status'     => 'queued',
 		), $attrs );
 
-		update_option( "{$this->identifier}_job_{$job_id}" , json_encode( $attrs ) );
+		$wpdb->insert( $wpdb->options, array(
+			'option_name'  => "{$this->identifier}_job_{$job_id}",
+			'option_value' => json_encode( $attrs ),
+			'autoload'     => 'no'
+		) );
 
 		$job = new stdClass();
 
@@ -396,7 +401,13 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			", $key, $queued, $processing ) );
 
 		} else {
-			$results = get_option( "{$this->identifier}_job_{$id}" );
+
+			$results = $wpdb->get_var( $wpdb->prepare( "
+				SELECT option_value
+				FROM {$wpdb->options}
+				WHERE option_name = %s
+			", "{$this->identifier}_job_{$id}" ) );
+
 		}
 
 		if ( ! empty( $results ) ) {
@@ -435,7 +446,6 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * @return array|null Found jobs or null if none found
 	 */
 	public function get_jobs( $args = array() ) {
-
 		global $wpdb;
 
 		$args = wp_parse_args( $args, array(
@@ -634,7 +644,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 		$job->updated_at = current_time( 'mysql' );
 
-		update_option( "{$this->identifier}_job_{$job->id}" , json_encode( $job ) );
+		$this->update_job_option( $job );
 
 		/**
 		 * Run when a job is updated
@@ -666,7 +676,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		$job->status       = 'completed';
 		$job->completed_at = current_time( 'mysql' );
 
-		update_option( "{$this->identifier}_job_{$job->id}", json_encode( $job ) );
+		$this->update_job_option( $job );
 
 		/**
 		 * Run when a job is completed
@@ -707,7 +717,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			$job->failure_reason = $reason;
 		}
 
-		update_option( "{$this->identifier}_job_{$job->id}", json_encode( $job ) );
+		$this->update_job_option( $job );
 
 		/**
 		 * Run when a job is failed
@@ -727,6 +737,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * @return false on failure
 	 */
 	public function delete_job( $job ) {
+		global $wpdb;
 
 		if ( is_string( $job ) ) {
 			$job = $this->get_job( $job );
@@ -736,7 +747,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			return false;
 		}
 
-		delete_option( "{$this->identifier}_job_{$job->id}" );
+		$wpdb->delete( $wpdb->options, array( 'option_name' => "{$this->identifier}_job_{$job->id}" ) );
 
 		/**
 		* Run after a job is deleted
@@ -877,6 +888,23 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		}
 	}
 
+
+	/**
+	 * Update a job option in options database.
+	 *
+	 * @since 4.7.0-dev.1
+	 * @param object $job the job instance to update in database
+	 * @return int|bool number of rows updated or false on failure, see wpdb::update()
+	 */
+	private function update_job_option( $job ) {
+		global $wpdb;
+
+		return $wpdb->update(
+			$wpdb->options,
+			array( 'option_value' => json_encode( $job ) ),
+			array( 'option_name'  => "{$this->identifier}_job_{$job->id}" )
+		);
+	}
 
 }
 

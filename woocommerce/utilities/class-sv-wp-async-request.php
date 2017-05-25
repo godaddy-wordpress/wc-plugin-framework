@@ -19,7 +19,7 @@
  * @package   SkyVerge/WooCommerce/Utilities
  * @author    SkyVerge / Delicious Brains
  * @copyright Copyright (c) 2015-2016 Delicious Brains Inc.
- * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -92,9 +92,9 @@ abstract class SV_WP_Async_Request {
 	public function dispatch() {
 
 		$url  = add_query_arg( $this->get_query_args(), $this->get_query_url() );
-		$args = $this->get_post_args();
+		$args = $this->get_request_args();
 
-		return wp_safe_remote_post( esc_url_raw( $url ), $args );
+		return wp_safe_remote_get( esc_url_raw( $url ), $args );
 	}
 
 
@@ -134,15 +134,17 @@ abstract class SV_WP_Async_Request {
 
 
 	/**
-	 * Get post args
+	 * Get request args
+	 *
+	 * In 4.7.0-dev.1 renamed from get_post_args to get_request_args
 	 *
 	 * @since 4.4.0
 	 * @return array
 	 */
-	protected function get_post_args() {
+	protected function get_request_args() {
 
-		if ( property_exists( $this, 'post_args' ) ) {
-			return $this->post_args;
+		if ( property_exists( $this, 'request_args' ) ) {
+			return $this->request_args;
 		}
 
 		return array(
