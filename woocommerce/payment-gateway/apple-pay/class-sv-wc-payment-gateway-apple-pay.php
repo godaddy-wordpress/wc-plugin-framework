@@ -296,28 +296,29 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			throw new SV_WC_Payment_Gateway_Exception( 'Payment request data is missing.' );
 		}
 
+		if ( empty( $payment_request['product_id'] ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Product ID is missing.' );
+		}
+
 		$items = array();
 		$args  = array();
 
-		foreach ( $payment_request['lineItems'] as $product_id => $item ) {
+		$product = wc_get_product( $payment_request['product_id'] );
 
-			$product = wc_get_product( $product_id );
-
-			if ( ! $product ) {
-				continue;
-			}
-
-			if ( ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
-				throw new SV_WC_Payment_Gateway_Exception( __( 'The product is out of stock.', 'woocommerce-plugin-framework' ) );
-			}
-
-			$items[] = array(
-				'product'  => $product,
-				'quantity' => 1,
-				'args'     => array(),
-				'values'   => $item,
-			);
+		if ( ! $product ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Invalid product ID.' );
 		}
+
+		if ( ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( __( 'The product is out of stock.', 'woocommerce-plugin-framework' ) );
+		}
+
+		$items[] = array(
+			'product'  => $product,
+			'quantity' => 1,
+			'args'     => array(),
+			'values'   => array(),
+		);
 
 		// set the cart hash to this can be resumed on failure
 		$args['cart_hash'] = md5( json_encode( wc_clean( $payment_request ) ) . $payment_request['total']['amount'] );

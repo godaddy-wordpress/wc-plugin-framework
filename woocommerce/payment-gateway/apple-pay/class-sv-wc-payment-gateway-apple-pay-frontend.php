@@ -252,39 +252,45 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			throw new SV_WC_Payment_Gateway_Exception( 'Product is not available for purchase.' );
 		}
 
-		$line_items = array(
-			$product->id => array(
-				'name'     => $product->get_title(),
-				'quantity' => 1,
-				'amount'   => $product->get_price(),
-			),
-		);
+		$amount = $product->get_price();
 
 		$args = array(
-			'shipping_required' => SV_WC_Plugin_Compatibility::wc_shipping_enabled() && $product->needs_shipping(),
-			'shipping_total'    => 0,
-			'tax_total'         => 0,
+			'subtotal' => $product->get_price(),
 		);
 
 		$shipping_cost = (float) get_option( 'sv_wc_apple_pay_buy_now_shipping_cost', 0 );
 		$tax_rate      = (float) get_option( 'sv_wc_apple_pay_buy_now_tax_rate', 0 );
 
-		if ( $args['shipping_required'] && $shipping_cost ) {
-			$args['shipping_total'] = $shipping_cost;
-		}
+		if ( SV_WC_Plugin_Compatibility::wc_shipping_enabled() && $product->needs_shipping() && $shipping_cost ) {
 
-		$total = array(
-			'amount' => $product->get_price() + $args['shipping_total'],
-		);
+			$args['shipping_total'] = $shipping_cost;
+
+			$amount += $args['shipping_total'];
+		}
 
 		if ( wc_tax_enabled() && $tax_rate ) {
 
-			$args['tax_total'] = round( $total['amount'] * ( $tax_rate / 100 ), 2 );
+			$args['tax_total'] = round( $amount * ( $tax_rate / 100 ), 2 );
 
-			$total['amount'] += $args['tax_total'];
+			$amount += $args['tax_total'];
 		}
 
-		return $this->build_payment_request( $total, $line_items, $args );
+		$request       = $this->build_payment_request( $amount, $args );
+		$request_store = $this->get_handler()->get_stored_payment_request();
+
+		// add the product ID to the stored request for later use
+		$request_store['product_id'] = $product->get_id();
+
+		$this->get_handler()->store_payment_request( $request_store );
+
+		/**
+		 * Filters the Apple Pay Buy Now JS payment request.
+		 *
+		 * @since 4.6.0-dev
+		 * @param array $request request data
+		 * @param \WC_Product $product product object
+		 */
+		return apply_filters( 'sv_wc_apple_pay_buy_now_payment_request', $request, $product );
 	}
 
 
@@ -375,40 +381,15 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		$cart->calculate_totals();
 
-		// product line items
-		$line_items = array();
+		$args = array(
+			'subtotal'       => $cart->cart_contents_total,
+			'discount_total' => $cart->get_cart_discount_total(),
+			'fee_total'      => $cart->fee_total,
+			'tax_total'      => $cart->tax_total + $cart->shipping_tax_total,
+		);
 
-		// set the line items
-		foreach ( $cart->get_cart() as $cart_item_key => $item ) {
-
-			$line_items[ $item['data']->id ] = array(
-				'name'     => $item['data']->get_title(),
-				'quantity' => $item['quantity'],
-				'amount'   => $item['line_subtotal'],
-			);
-		}
-
-		// set any fees
-		foreach ( $cart->get_fees() as $fee ) {
-
-			$line_items[ $fee->id ] = array(
-				'name'     => $fee->name,
-				'quantity' => 1,
-				'amount'   => $fee->amount,
-			);
-		}
-
-		$args = array();
-
-		// discount total
-		if ( 0 < count( $cart->applied_coupons ) ) { // TODO: switch to $cart->has_discount()` when WC 2.5 is required
-			$args['discount_total'] = $cart->get_cart_discount_total();
-		}
-
-		// set shipping totals
+		// set shipping total
 		if ( $cart->needs_shipping() ) {
-
-			$args['shipping_required'] = true;
 
 			$chosen_shipping_methods = WC()->session->get( 'chosen_shipping_methods', array() );
 
@@ -420,16 +401,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			}
 		}
 
-		// tax total
-		$args['tax_total'] = $cart->tax_total + $cart->shipping_tax_total;
-
-		// order total
-		$total = array(
-			'amount' => $cart->total,
-		);
-
 		// build it!
-		$request = $this->build_payment_request( $total, $line_items, $args );
+		$request = $this->build_payment_request( $cart->total, $args );
 
 		/**
 		 * Filters the Apple Pay cart JS payment request.
@@ -453,14 +426,19 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		try {
 
-			if ( 'product' === $type ) {
-				$request = $this->build_product_payment_request( SV_WC_Helper::get_post( 'product_id' ) );
-			} else if ( 'cart' === $type || 'checkout' === $type ) {
-				$request = $this->build_cart_payment_request();
-			} else if ( '' === $type ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Payment request type is missing.' );
-			} else {
-				throw new SV_WC_Payment_Gateway_Exception( $type . ' is an invalid payment request type.' );
+			switch ( $type ) {
+
+				case 'product':
+					$request = $this->build_product_payment_request( SV_WC_Helper::get_post( 'product_id' ) );
+				break;
+
+				case 'cart':
+				case 'checkout':
+					$request = $this->build_cart_payment_request();
+				break;
+
+				default:
+					throw new SV_WC_Payment_Gateway_Exception( 'Invalid payment request type.' );
 			}
 
 			wp_send_json( array(
@@ -487,39 +465,45 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * This contains all of the data necessary to complete a payment, including
 	 * line items and shipping info.
 	 *
-	 * @since 4.6.0-dev
-	 * @param array $total {
-	 *     The payment total.
+	 * @since 4.6.0-applepay
 	 *
-	 *     @type string $label  the total label. Defaults to the site name
-	 *     @type string $amount the total payment amount
-	 * }
-	 * @param array $line_items {
-	 *     Optional. The order line items.
-	 *
-	 *     @type string $name the line item name (usually a WC product title)
-	 *     @type string $amount the line subtotal
-	 * }
+	 * @param float|int $amount amount to be charged by Apple Pay
 	 * @param array $args {
 	 *     Optional. The payment request args.
 	 *
-	 *     @type string $currency_code         the payment currency code. Defaults to the shop currency.
-	 *     @type string $country_code          the payment country code. Defaults to the shop base country.
-	 *     @type array  $merchant_capabilities the merchant capabilities
-	 *     @type array  $supported_networks    the supported networks or card types
+	 *     @type string    $currency_code         Payment currency code. Defaults to the shop currency.
+	 *     @type string    $country_code          Payment country code. Defaults to the shop base country.
+	 *     @type string    $merchant_name         Merchant name. Defaults to the shop name.
+	 *     @type array     $merchant_capabilities merchant capabilities
+	 *     @type array     $supported_networks    supported networks or card types
+	 *     @type float|int $subtotal              order subtotal
+	 *     @type float|int $fee_total             fees total
+	 *     @type float|int $discount_total        discount total
+	 *     @type float|int $shipping_total        shipping total
+	 *     @type float|int $tax_total             taxes total
 	 * }
+	 *
 	 * @return array
 	 */
-	protected function build_payment_request( $total, $line_items = array(), $args = array() ) {
+	protected function build_payment_request( $amount, $args = array() ) {
 
 		$this->get_handler()->log( 'Building payment request.' );
 
 		$args = wp_parse_args( $args, array(
+
+			// transaction details
 			'currency_code'         => get_woocommerce_currency(),
 			'country_code'          => get_option( 'woocommerce_default_country' ),
+			'merchant_name'         => get_bloginfo( 'name', 'display' ),
 			'merchant_capabilities' => $this->get_handler()->get_capabilities(),
 			'supported_networks'    => $this->get_handler()->get_supported_networks(),
-			'shipping_required'     => false,
+
+			// totals
+			'subtotal'       => 0,
+			'fee_total'      => 0,
+			'discount_total' => 0,
+			'shipping_total' => 0,
+			'tax_total'      => 0,
 		) );
 
 		// set the base required defaults
@@ -536,32 +520,32 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			),
 		);
 
-		// if a shipping address is required
-		if ( $args['shipping_required'] ) {
-			$request['requiredShippingContactFields'][] = 'postalAddress';
+		$line_items = array();
+
+		// subtotal
+		if ( $args['subtotal'] > 0 ) {
+
+			$line_items['subtotal'] = array(
+				'type'   => 'final',
+				'label'  => __( 'Subtotal', 'woocommerce-plugin-framework' ),
+				'amount' => $this->format_price( $args['subtotal'] ),
+			);
 		}
 
-		// line items
-		foreach ( $line_items as $key => $item ) {
+		// fees
+		if ( $args['fee_total'] > 0 ) {
 
-			$label = $item['name'];
-
-			// add the item quantity if more than one
-			if ( ! empty( $item['quantity'] ) && 1 < $item['quantity'] ) {
-				$label .= ' (x' . (int) $item['quantity'] . ')';
-			}
-
-			$line_items[ $key ] = array(
+			$line_items['fees'] = array(
 				'type'   => 'final',
-				'label'  => $label,
-				'amount' => $this->format_price( $item['amount'] ),
+				'label'  => __( 'Fees', 'woocommerce-plugin-framework' ),
+				'amount' => $this->format_price( $args['fee_total'] ),
 			);
 		}
 
 		// discounts
-		if ( ! empty( $args['discount_total'] ) ) {
+		if ( $args['discount_total'] > 0 ) {
 
-			$line_items[ 'discount' ] = array(
+			$line_items['discount'] = array(
 				'type'   => 'final',
 				'label'  => __( 'Discount', 'woocommerce-plugin-framework' ),
 				'amount' => $this->format_price( $args['discount_total'] ),
@@ -569,11 +553,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		}
 
 		// shipping
-		if ( ! empty( $args['shipping_methods'] ) ) {
+		if ( $args['shipping_total'] > 0 ) {
 
-			$request['shippingMethods'] = $args['shipping_methods'];
-
-		} else if ( ! empty( $args['shipping_total'] ) ) {
+			$request['requiredShippingContactFields'][] = 'postalAddress';
 
 			$line_items['shipping'] = array(
 				'type'   => 'final',
@@ -583,7 +565,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		}
 
 		// taxes
-		if ( ! empty( $args['tax_total'] ) ) {
+		if ( $args['tax_total'] > 0 ) {
 
 			$line_items['taxes'] = array(
 				'type'   => 'final',
@@ -597,15 +579,14 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		}
 
 		// order total
-		$request['total'] = wp_parse_args( $total, array(
-			'label'  => get_bloginfo( 'name', 'display' ),
-			'amount' => 0,
-		) );
-
-		$request['total']['amount'] = $this->format_price( $request['total']['amount'] );
+		$request['total'] = array(
+			'label'  => $args['merchant_name'],
+			'amount' => $this->format_price( $amount ),
+		);
 
 		$this->get_handler()->store_payment_request( $request );
 
+		// remove line item keys that are only useful for us later
 		if ( ! empty( $request['lineItems'] ) ) {
 			$request['lineItems'] = array_values( $request['lineItems'] );
 		}
