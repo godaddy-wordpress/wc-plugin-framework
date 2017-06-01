@@ -168,7 +168,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			$classes[] = 'apple-pay-button-with-text';
 		}
 
-		echo '<button class="' . implode( ' ', array_map( 'sanitize_html_class', $classes ) ) . '" lang="' . esc_attr( substr( get_locale(), 0, 2 ) ) . '" disabled="disabled">';
+		echo '<button class="' . implode( ' ', array_map( 'sanitize_html_class', $classes ) ) . '" lang="' . esc_attr( substr( get_locale(), 0, 2 ) ) . '">';
 
 			if ( $button_text ) {
 				echo '<span class="text">' . esc_html( $button_text ) . '</span><span class="logo"></span>';

@@ -26,9 +26,16 @@ jQuery( document ).ready ($) ->
 
 			@payment_request = args.payment_request
 
+			@buttons = '.sv-wc-apple-pay-button'
+
 			if this.is_available()
 
+				if @payment_request
+					$( @buttons ).show()
+
 				this.init()
+
+				this.attach_update_events()
 
 
 		# Determines if Apple Pay is available.
@@ -49,12 +56,7 @@ jQuery( document ).ready ($) ->
 		# @since 4.6.0-dev
 		init: ->
 
-			@buttons = $( '.sv-wc-apple-pay-button' )
-
-			if @payment_request
-				@buttons.show().prop( 'disabled', false )
-
-			$( document.body ).on 'click', '.sv-wc-apple-pay-button:not([disabled])', ( e ) =>
+			$( document.body ).on 'click', '.sv-wc-apple-pay-button', ( e ) =>
 
 				e.preventDefault()
 
@@ -77,6 +79,13 @@ jQuery( document ).ready ($) ->
 					this.fail_payment( error )
 
 
+		# Attaches any update events required by the implementing class.
+		#
+		# @since 4.6.0-dev
+		attach_update_events: =>
+			# Optional, for resetting the request data
+
+
 		# Resets the payment request via AJAX.
 		#
 		# Extending handlers can call this on change events to refresh the data.
@@ -88,9 +97,9 @@ jQuery( document ).ready ($) ->
 
 			this.get_payment_request( data ).then ( response ) =>
 
-				@payment_request = $.parseJSON( response )
+				$( @buttons ).show()
 
-				@buttons.show().prop( 'disabled', false )
+				@payment_request = $.parseJSON( response )
 
 				this.unblock_ui()
 
@@ -99,7 +108,7 @@ jQuery( document ).ready ($) ->
 				if response.error
 					console.log '[Apple Pay Error] ' + response.error
 
-				@buttons.prop( 'disabled', true )
+				$( @buttons ).hide()
 
 				this.unblock_ui()
 
@@ -283,28 +292,18 @@ jQuery( document ).ready ($) ->
 		# Constructs the handler.
 		#
 		# @since 4.6.0-dev
-		constructor: (args) ->
+		constructor: ( args ) ->
 
 			@type = 'cart'
 
-			@ui_element = $( '.cart_totals' )
+			@ui_element = $( 'form.woocommerce-cart-form' ).parents( 'div.woocommerce' )
 
-			super(args)
+			super( args )
 
-			$( document.body ).trigger( 'wc_update_cart' )
-
-		init: =>
-
-			super()
+		attach_update_events: =>
 
 			# re-init if the cart totals are updated
 			$( document.body ).on 'updated_cart_totals', =>
-
-				@ui_element = $( '.cart_totals' )
-
-				@buttons = $( '.sv-wc-apple-pay-button' )
-
-				@buttons.show()
 
 				this.reset_payment_request()
 
@@ -318,18 +317,16 @@ jQuery( document ).ready ($) ->
 		# Constructs the handler.
 		#
 		# @since 4.6.0-dev
-		constructor: (args) ->
+		constructor: ( args ) ->
 
 			@type = 'checkout'
 
 			@ui_element = $( 'form.woocommerce-checkout' )
 
-			super(args)
+			super( args )
 
 
-		init: =>
-
-			super()
+		attach_update_events: =>
 
 			# re-init if the cart totals are updated
 			$( document.body ).on 'updated_checkout', =>
@@ -346,10 +343,10 @@ jQuery( document ).ready ($) ->
 		# Constructs the handler.
 		#
 		# @since 4.6.0-dev
-		constructor: (args) ->
+		constructor: ( args ) ->
 
 			@type = 'product'
 
 			@ui_element = $( 'form.cart' )
 
-			super(args)
+			super( args )
