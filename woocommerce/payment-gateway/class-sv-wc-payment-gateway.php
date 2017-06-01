@@ -1165,8 +1165,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// any required countries?
-		if ( $this->countries && WC()->customer && WC()->customer->get_country() && ! in_array( WC()->customer->get_country(), $this->countries ) ) {
-			$is_available = false;
+		if ( $this->countries && WC()->customer ) {
+
+			$customer_country = ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) ? WC()->customer->get_billing_country() : WC()->customer->get_country();
+
+			if ( $customer_country && ! in_array( $customer_country, $this->countries, true ) ) {
+				$is_available = false;
+			}
 		}
 
 		/**

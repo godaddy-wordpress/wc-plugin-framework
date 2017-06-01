@@ -1,5 +1,21 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2017.05.20 - version 4.6.4
+ * Fix - Add dedicated subscriptions Change Payment handling to avoid subscription manipulation
+ * Fix - Ensure old payment methods can be removed after changing subscription payment to a new method
+
+2017.05.09 - version 4.6.3
+ * Tweak - Add optional notice for plugins that want to require PHP 5.3+ in the future
+ * Tweak - Improved background process handling for certain server & cache configurations
+
+2017.05.01 - version 4.6.2
+ * Fix - Ensure authorized, but not yet captured, transactions are marked "on hold" for off-site gateways
+
+2017.04.17 - version 4.6.1
+ * Tweak - Load admin translations based on the user's configured language in WordPress 4.7+
+ * Tweak - Added the SV_WC_Order_Compatibility::has_shipping_address() method
+ * Fix - Prevent some deprecated notices when processing subscriptions in WooCommerce 3.0+
+
 2017.03.27 - version 4.6.0
  * Tweak - Add Payment Gateway debug mode to the System Status report
  * Tweak - Plugin "Docs" links now open in a new tab

@@ -93,6 +93,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			// don't copy over order-specific meta to the WC_Subscription object during renewal processing
 			add_filter( 'wcs_renewal_order_meta', array( $this, 'do_not_copy_order_meta' ) );
 
+			// process the Change Payment "transaction"
+			add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_process_payment', array( $this, 'process_change_payment' ), 10, 3 );
+
 			// remove order-specific meta from the Subscription object after the change payment method action
 			add_filter( 'woocommerce_subscriptions_process_payment_for_change_method_via_pay_shortcode', array( $this, 'remove_order_meta_from_change_payment' ), 10, 2 );
 
@@ -185,12 +188,12 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 			// payment token
 			if ( ! empty( $order->payment->token ) ) {
-				update_post_meta( $subscription->id, $this->get_gateway()->get_order_meta_prefix() . 'payment_token', $order->payment->token );
+				update_post_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), $this->get_gateway()->get_order_meta_prefix() . 'payment_token', $order->payment->token );
 			}
 
 			// customer ID
 			if ( ! empty( $order->customer_id ) ) {
-				update_post_meta( $subscription->id, $this->get_gateway()->get_order_meta_prefix() . 'customer_id', $order->customer_id );
+				update_post_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), $this->get_gateway()->get_order_meta_prefix() . 'customer_id', $order->customer_id );
 			}
 		}
 	}
@@ -326,6 +329,70 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 
 	/**
+	 * Processes a Change Payment transaction.
+	 *
+	 * This hooks in before standard payment processing to simply add or create
+	 * token data and avoid certain failure conditions affecting the subscription
+	 * object.
+	 *
+	 * @internal
+	 *
+	 * @since 4.6.4
+	 *
+	 * @param bool|array $result result from any others filtering this
+	 * @param int $order_id an order or subscription ID
+	 * @param \SV_WC_Payment_Gateway_Direct $gateway gateway object
+	 * @return array $result change payment result
+	 */
+	public function process_change_payment( $result, $order_id, $gateway ) {
+
+		// if this is not a subscription and not changing payment, bail for normal order processing
+		if ( ! wcs_is_subscription( $order_id ) || ! did_action( 'woocommerce_subscription_change_payment_method_via_pay_shortcode' ) ) {
+			return $result;
+		}
+
+		$subscription = $gateway->get_order( $order_id );
+
+		try {
+
+			// if using a saved method, just add the data
+			if ( isset( $subscription->payment->token ) && $subscription->payment->token ) {
+
+				$gateway->add_transaction_data( $subscription );
+
+			// otherwise...tokenize
+			} else {
+
+				$subscription = $gateway->get_payment_tokens_handler()->create_token( $subscription );
+			}
+
+			$result = array(
+				'result'   => 'success',
+				'redirect' => $subscription->get_view_order_url(),
+			);
+
+		} catch( SV_WC_Payment_Gateway_Exception $e ) {
+
+			/* translators: Placeholders: %1$s - payment gateway title, %2$s - error message; e.g. Order Note: [Payment method] Payment Change failed [error] */
+			$note = sprintf( __( '%1$s Payment Change Failed (%2$s)', 'woocommerce-plugin-framework' ), $gateway->get_method_title(), $e->getMessage() );
+
+			// add a subscription note to keep track of failures
+			$subscription->add_order_note( $note );
+
+			SV_WC_Helper::wc_add_notice( __( 'An error occurred, please try again or try an alternate form of payment.', 'woocommerce-plugin-framework' ), 'error' );
+
+			// this isn't used by Subscriptions, but return a failure result anyway
+			$result = array(
+				'result'  => 'failure',
+				'message' => $e->getMessage(),
+			);
+		}
+
+		return $result;
+	}
+
+
+	/**
 	 * Remove order meta (like trans ID) that's added to a Subscription object
 	 * during the change payment method flow, which uses WC_Payment_Gateway::process_payment(),
 	 * thus some order-specific meta is added that is undesirable to have copied
@@ -340,13 +407,16 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		// remove order-specific meta
 		foreach ( $this->get_order_specific_meta_keys() as $meta_key ) {
-			delete_post_meta( $subscription->id, $meta_key );
+			delete_post_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), $meta_key );
 		}
 
+		$old_payment_method = SV_WC_Order_Compatibility::get_meta( $subscription, '_old_payment_method' );
+		$new_payment_method = SV_WC_Order_Compatibility::get_prop( $subscription, 'payment_method' );
+
 		// if the payment method has been changed to another gateway, additionally remove the old payment token and customer ID meta
-		if ( $subscription->payment_method !== $this->get_gateway()->get_id() && $subscription->old_payment_method === $this->get_gateway()->get_id() ) {
-			$this->get_gateway()->delete_order_meta( $subscription->id, 'payment_token' );
-			$this->get_gateway()->delete_order_meta( $subscription->id, 'customer_id' );
+		if ( $new_payment_method !== $this->get_gateway()->get_id() && $old_payment_method === $this->get_gateway()->get_id() ) {
+			$this->get_gateway()->delete_order_meta( $subscription, 'payment_token' );
+			$this->get_gateway()->delete_order_meta( $subscription, 'customer_id' );
 		}
 
 		return $result;
@@ -365,10 +435,10 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	public function update_failing_payment_method( $subscription, $renewal_order ) {
 
 		if ( $customer_id = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $renewal_order, 'id' ), 'customer_id' ) ) {
-			$this->get_gateway()->update_order_meta( $subscription->id, 'customer_id', $customer_id );
+			$this->get_gateway()->update_order_meta( $subscription, 'customer_id', $customer_id );
 		}
 
-		$this->get_gateway()->update_order_meta( $subscription->id, 'payment_token', $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $renewal_order, 'id' ), 'payment_token' ) );
+		$this->get_gateway()->update_order_meta( $subscription, 'payment_token', $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $renewal_order, 'id' ), 'payment_token' ) );
 	}
 
 
@@ -428,7 +498,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	public function maybe_render_payment_method( $payment_method_to_display, $subscription ) {
 
 		// bail for other payment methods
-		if ( $this->get_gateway()->get_id() !== $subscription->payment_method ) {
+		if ( $this->get_gateway()->get_id() !== SV_WC_Order_Compatibility::get_prop( $subscription, 'payment_method' ) ) {
 			return $payment_method_to_display;
 		}
 
@@ -564,11 +634,12 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		$subscriptions = wcs_get_users_subscriptions( $user_id );
 
-		$token_key = 'wc_' . $this->get_gateway()->get_id() . '_payment_token';
-
 		foreach ( $subscriptions as $key => $subscription ) {
 
-			if ( (string) $token->get_id() !== (string) $subscription->$token_key ) {
+			$payment_method  = SV_WC_Order_Compatibility::get_prop( $subscription, 'payment_method' );
+			$stored_token_id = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), 'payment_token' );
+
+			if ( $stored_token_id !== $token->get_id() || $payment_method !== $this->get_gateway()->get_id() ) {
 				unset( $subscriptions[ $key ] );
 			}
 		}
