@@ -341,7 +341,16 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function maybe_init_apple_pay() {
 
-		if ( $this->supports_apple_pay() ) {
+		/**
+		 * Filters whether Apple Pay is activated.
+		 *
+		 * @since 4.7.0-dev
+		 *
+		 * @param bool $activated whether Apple Pay is activated
+		 */
+		$activated = (bool) apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_activate_apple_pay', false );
+
+		if ( $this->supports_apple_pay() && $activated ) {
 			$this->apple_pay = $this->get_apple_pay_instance();
 		}
 	}
