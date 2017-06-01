@@ -169,8 +169,12 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			$order->set_address( $response->get_billing_address(),  'billing' );
 			$order->set_address( $response->get_shipping_address(), 'shipping' );
 
+			// save the order data before payment for WC 3.0+
+			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+				$order->save();
+			}
 			// process the payment via the gateway
-			$result = $this->get_processing_gateway()->process_payment( $order->id );
+			$result = $this->get_processing_gateway()->process_payment( SV_WC_Order_Compatibility::get_prop( $order, 'id' ) );
 
 			// clear the payment request data
 			unset( WC()->session->apple_pay_payment_request );
@@ -377,10 +381,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		try {
 
-			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_5() ) {
-				wc_transaction_query( 'start' );
-			}
-
+			wc_transaction_query( 'start' );
 
 			$order_data = array(
 				'status'      => apply_filters( 'woocommerce_default_order_status', 'pending' ),
@@ -409,14 +410,14 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			// add fees
 			foreach ( $args['fees'] as $key => $fee ) {
 
-				$item_id = $order->add_fee( $fee );
+				$item_id = SV_WC_Order_Compatibility::add_fee( $order, $fee );
 
 				if ( ! $item_id ) {
-					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 526 ) );
+					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 526 ) );
 				}
 
 				/** This action is a duplicate from \WC_Checkout::create_order() */
-				do_action( 'woocommerce_add_order_fee_meta', $order->id, $item_id, $fee, $key );
+				do_action( 'woocommerce_add_order_fee_meta', SV_WC_Order_Compatibility::get_prop( $order, 'id' ), $item_id, $fee, $key );
 			}
 
 			// add shipping packages
@@ -426,38 +427,34 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 				if ( isset( $package['rates'][ $shipping_methods[ $key ] ] ) ) {
 
-					$item_id = $order->add_shipping( $package['rates'][ $shipping_methods[ $key ] ] );
+					$item_id = SV_WC_Order_Compatibility::add_shipping( $order, $package['rates'][ $shipping_methods[ $key ] ] );
 
 					if ( ! $item_id ) {
 						throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 527 ) );
 					}
 
 					/** This action is a duplicate from \WC_Checkout::create_order() */
-					do_action( 'woocommerce_add_shipping_order_item', $order->id, $item_id, $key );
+					do_action( 'woocommerce_add_shipping_order_item', SV_WC_Order_Compatibility::get_prop( $order, 'id' ), $item_id, $key );
 				}
 			}
 
 			// add coupons
 			foreach ( $args['coupons'] as $code => $coupon ) {
 
-				if ( ! $order->add_coupon( $code, $coupon['amount'], $coupon['tax_amount'] ) ) {
+				if ( ! SV_WC_Order_Compatibility::add_coupon( $order, $code, $coupon['amount'], $coupon['tax_amount'] ) ) {
 					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 529 ) );
 				}
 			}
 
 			$order->calculate_totals();
 
-			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_5() ) {
-				wc_transaction_query( 'commit' );
-			}
+			wc_transaction_query( 'commit' );
 
 			return $order;
 
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+		} catch ( Exception $e ) {
 
-			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_5() ) {
-				wc_transaction_query( 'rollback' );
-			}
+			wc_transaction_query( 'rollback' );
 
 			throw $e;
 		}
@@ -505,10 +502,10 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			}
 
 			// set the new order ID so it can be resumed in case of failure
-			WC()->session->set( 'order_awaiting_payment', $order->id );
+			WC()->session->set( 'order_awaiting_payment', SV_WC_Order_Compatibility::get_prop( $order, 'id' ) );
 
 			/** This action is a duplicate from \WC_Checkout::create_order() */
-			do_action( 'woocommerce_new_order', $order->id );
+			do_action( 'woocommerce_new_order', SV_WC_Order_Compatibility::get_prop( $order, 'id' ) );
 		}
 
 		return $order;
