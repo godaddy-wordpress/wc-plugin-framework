@@ -79,4 +79,23 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Request extends SV_WC_API_JSON_Request
 		 */
 		$this->data = apply_filters( 'sv_wc_apple_pay_api_merchant_data', $data, $this );
 	}
+
+
+	/**
+	 * Get the string representation of this response with any and all sensitive
+	 * elements masked or removed.
+	 *
+	 * @since 4.7.0-dev
+	 * @see SV_WC_API_Response::to_string_safe()
+	 * @return string
+	 */
+	public function to_string_safe() {
+
+		// mask the merchant ID
+		$string = str_replace( $this->data['merchantIdentifier'], str_repeat( '*', strlen( $this->data['merchantIdentifier'] ) ), $this->to_string() );
+
+		return $string;
+	}
+
+
 }

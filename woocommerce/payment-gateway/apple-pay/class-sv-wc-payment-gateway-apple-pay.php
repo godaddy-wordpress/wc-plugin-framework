@@ -138,13 +138,13 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		try {
 
-			// store the the payment response JSON for later use
+			// store the payment response JSON for later use
 			WC()->session->set( 'apple_pay_payment_response', $response );
 
 			$response = new SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $response );
 
 			// log the payment response
-			$this->log( "Payment Response:\n" . $response->to_string_safe() );
+			$this->log( "Payment Response:\n" . $response->to_string_safe() . "\n" );
 
 			// pretend this is at checkout so totals are fully calculated
 			if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
@@ -173,6 +173,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 				$order->save();
 			}
+
 			// process the payment via the gateway
 			$result = $this->get_processing_gateway()->process_payment( SV_WC_Order_Compatibility::get_prop( $order, 'id' ) );
 

@@ -160,4 +160,32 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	}
 
 
+	/**
+	 * Get the string representation of this response with any and all sensitive
+	 * elements masked or removed.
+	 *
+	 * No strong indication from the Apple documentation that these _need_ to be
+	 * masked, but they don't provide any useful info and only make the debug
+	 * logs unnecessarily huge.
+	 *
+	 * @since 4.7.0-dev
+	 * @see SV_WC_API_Response::to_string_safe()
+	 * @return string
+	 */
+	public function to_string_safe() {
+
+		$string = $this->to_string();
+
+		if ( ! empty( $this->token->paymentData->data ) ) {
+			$string = str_replace( $this->token->paymentData->data, str_repeat( '*', 10 ), $string );
+		}
+
+		if ( ! empty( $this->token->paymentData->signature ) ) {
+			$string = str_replace( $this->token->paymentData->signature, str_repeat( '*', 10 ), $string );
+		}
+
+		return $string;
+	}
+
+
 }
