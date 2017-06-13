@@ -68,6 +68,14 @@ jQuery( document ).ready ($) ->
 
 					@session.onvalidatemerchant = ( event ) => this.on_validate_merchant( event )
 
+					if ( @type is 'product' )
+
+						@session.onpaymentmethodselected = ( event ) => this.on_payment_method_selected( event )
+
+						@session.onshippingcontactselected = ( event ) => this.on_shipping_contact_selected( event )
+
+						@session.onshippingmethodselected = ( event ) => this.on_shipping_method_selected( event )
+
 					@session.onpaymentauthorized = ( event ) => this.on_payment_authorized( event )
 
 					@session.oncancel = ( event ) => this.on_cancel_payment( event )
@@ -172,6 +180,24 @@ jQuery( document ).ready ($) ->
 					resolve response.merchant_session
 				else
 					reject response.message
+
+
+		# Fires after a payment method has been selected.
+		#
+		# @since 4.7.0-dev
+		on_payment_method_selected: ( event ) =>
+
+
+		# Fires after a shipping contact has been selected.
+		#
+		# @since 4.7.0-dev
+		on_shipping_contact_selected: ( event ) =>
+
+
+		# Fires after a shipping method has been selected.
+		#
+		# @since 4.7.0-dev
+		on_shipping_method_selected: ( event ) =>
 
 
 		# The callback for after the payment data is authorized.
@@ -350,3 +376,89 @@ jQuery( document ).ready ($) ->
 			@ui_element = $( 'form.cart' )
 
 			super( args )
+
+
+		# Fires after a payment method has been selected.
+		#
+		# @since 4.7.0-dev
+		on_payment_method_selected: ( event ) =>
+
+			new Promise ( resolve, reject ) =>
+
+				data = {
+					'action': 'sv_wc_apple_pay_recalculate_product_totals',
+					'nonce':  @params.recalculate_product_totals_nonce,
+				}
+
+				# retrieve a payment request object
+				$.post @params.ajax_url, data, ( response ) =>
+
+					if response.success
+
+						data = response.data
+
+						resolve @session.completePaymentMethodSelection( data.total, data.line_items )
+
+					else
+
+						console.log 'Error selecting a shipping contact. ' + response.message
+
+						reject @session.completePaymentMethodSelection( @payment_request.total, @payment_request.lineItems )
+
+
+		# Fires after a shipping contact has been selected.
+		#
+		# @since 4.7.0-dev
+		on_shipping_contact_selected: ( event ) =>
+
+			new Promise ( resolve, reject ) =>
+
+				data = {
+					'action':  'sv_wc_apple_pay_recalculate_product_totals',
+					'nonce':   @params.recalculate_product_totals_nonce,
+					'contact': event.shippingContact
+				}
+
+				# retrieve a payment request object
+				$.post @params.ajax_url, data, ( response ) =>
+
+					if response.success
+
+						data = response.data
+
+						resolve @session.completeShippingContactSelection( ApplePaySession.STATUS_SUCCESS, data.shipping_methods, data.total, data.line_items )
+
+					else
+
+						console.log 'Error selecting a shipping contact. ' + response.message
+
+						reject @session.completeShippingContactSelection( ApplePaySession.STATUS_FAILURE, [], @payment_request.total, @payment_request.lineItems )
+
+
+		# Fires after a shipping method has been selected.
+		#
+		# @since 4.7.0-dev
+		on_shipping_method_selected: ( event ) =>
+
+			new Promise ( resolve, reject ) =>
+
+				data = {
+					'action': 'sv_wc_apple_pay_recalculate_product_totals',
+					'nonce':  @params.recalculate_product_totals_nonce,
+					'method': event.shippingMethod.identifier
+				}
+
+				# retrieve a payment request object
+				$.post @params.ajax_url, data, ( response ) =>
+
+					if response.success
+
+						data = response.data
+
+						resolve @session.completeShippingMethodSelection( ApplePaySession.STATUS_SUCCESS, data.total, data.line_items )
+
+					else
+
+						console.log 'Error selecting a shipping method. ' + response.message
+
+						reject @session.completeShippingMethodSelection( ApplePaySession.STATUS_FAILURE, @payment_request.total, @payment_request.lineItems )

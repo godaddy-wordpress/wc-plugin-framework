@@ -63,6 +63,10 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			add_action( 'wp_ajax_sv_wc_apple_pay_validate_merchant',        array( $this, 'validate_merchant' ) );
 			add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_validate_merchant', array( $this, 'validate_merchant' ) );
 
+			// recalculate product totals via AJAX
+			add_action( 'wp_ajax_sv_wc_apple_pay_recalculate_product_totals',        array( $this, 'recalculate_product_totals' ) );
+			add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_recalculate_product_totals', array( $this, 'recalculate_product_totals' ) );
+
 			// process the payment via AJAX
 			add_action( 'wp_ajax_sv_wc_apple_pay_process_payment',        array( $this, 'process_payment' ) );
 			add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_process_payment', array( $this, 'process_payment' ) );
@@ -123,6 +127,393 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				'code'    => $e->getCode(),
 			) );
 		}
+	}
+
+
+	/**
+	 * Calculates shipping & taxes for a product.
+	 *
+	 * This is called via AJAX to calculate product shipping & taxes for a
+	 * product from its since product page using the Buy Now Apple Pay button.
+	 *
+	 * @since 4.7.0-dev
+	 */
+	public function recalculate_product_totals() {
+
+		check_ajax_referer( 'sv_wc_apple_pay_recalculate_product_totals', 'nonce' );
+
+		try {
+
+			if ( $payment_request = $this->get_stored_payment_request() ) {
+
+				if ( ! empty( $payment_request['product_id'] ) ) {
+
+					$product = wc_get_product( $payment_request['product_id'] );
+
+					if ( ! $product ) {
+						throw new SV_WC_Payment_Gateway_Exception( 'Invalid product ID.' );
+					}
+
+				} else {
+
+					throw new SV_WC_Payment_Gateway_Exception( 'Product ID is missing.' );
+				}
+
+			} else {
+
+				throw new SV_WC_Payment_Gateway_Exception( 'Payment request data is missing.' );
+			}
+
+			// if a contact is passed, set the customer address data
+			if ( isset( $_REQUEST['contact'] ) && is_array( $_REQUEST['contact'] ) ) {
+
+				$contact = wp_parse_args( $_REQUEST['contact'], array(
+					'administrativeArea' => null,
+					'countryCode'        => null,
+					'locality'           => null,
+					'postalCode'         => null,
+				) );
+
+				$state    = $contact['administrativeArea'];
+				$country  = strtoupper( $contact['countryCode'] );
+				$city     = $contact['locality'];
+				$postcode = $contact['postalCode'];
+
+				WC()->customer->set_shipping_city( $city );
+				WC()->customer->set_shipping_state( $state );
+				WC()->customer->set_shipping_country( $country );
+				WC()->customer->set_shipping_postcode( $postcode );
+
+				if ( $country ) {
+					WC()->customer->set_calculated_shipping( true );
+				}
+			}
+
+			// if a specific method ID was chosen, set it in the session
+			if ( ! empty( $_REQUEST['method'] ) ) {
+				WC()->session->set( 'chosen_shipping_methods', array( wc_clean( $_REQUEST['method'] ) ) );
+			} else {
+				WC()->session->set( 'chosen_shipping_methods', array() );
+			}
+
+			/**
+			 * Filters the discount total when calculating the Buy Now payment details for a product.
+			 *
+			 * @since 4.7.0-dev
+			 *
+			 * @param float $total discount total, either negative or positive
+			 * @param \WC_Product $product product object
+			 */
+			$discount_total = (float) apply_filters( 'wc_payment_gateway_apple_pay_buy_now_discount_total', 0.00, $product );
+
+			$shipping_methods = array();
+			$shipping_total   = 0;
+
+			// set shipping total & methods if needed
+			if ( $product->needs_shipping() ) {
+
+				$shipping_rates = $this->get_product_shipping_rates( $product );
+
+				foreach ( $shipping_rates as $method ) {
+
+					/**
+					 * Filters a shipping method's description for the Apple Pay payment card.
+					 *
+					 * @since 4.7.0-dev
+					 *
+					 * @param string $detail shipping method detail, such as delivery estimation
+					 * @param object $method shipping method object
+					 */
+					$method_detail = apply_filters( 'wc_payment_gateway_apple_pay_shipping_method_detail', '', $method );
+
+					$shipping_methods[] = array(
+						'label'      => $method->get_label(),
+						'detail'     => $method_detail,
+						'amount'     => $this->format_price( $method->cost ),
+						'identifier' => $method->id,
+					);
+				}
+
+				$shipping_total = WC()->shipping->shipping_total;
+			}
+
+			/**
+			 * Filters the fee total when calculating the Buy Now payment details for a product.
+			 *
+			 * @since 4.7.0-dev
+			 *
+			 * @param float $total fee total, either negative or positive
+			 * @param \WC_Product $product product object
+			 */
+			$fee_total = (float) apply_filters( 'wc_payment_gateway_apple_pay_buy_now_fee_total', 0.00, $product );
+
+			$tax_total = array_sum( WC_Tax::calc_tax( $product->get_price(), WC_Tax::get_rates( $product->get_tax_class() ) ) ) + array_sum( WC()->shipping->shipping_taxes );
+
+			$payment_request['lineItems'] = $this->build_payment_request_lines( array(
+				'subtotal' => $product->get_price(),
+				'discount' => $discount_total,
+				'shipping' => $shipping_total,
+				'fees'     => $fee_total,
+				'taxes'    => $tax_total,
+			) );
+
+			// reset the order total based on the new line items
+			$payment_request['total']['amount'] = $this->format_price( array_sum( wp_list_pluck( $payment_request['lineItems'], 'amount' ) ) );
+
+			// update the stored payment request session with the new line items & totals
+			$this->store_payment_request( $payment_request );
+
+			wp_send_json_success( array(
+				'shipping_methods' => $shipping_methods,
+				'line_items'       => array_values( $payment_request['lineItems'] ),
+				'total'            => $payment_request['total'],
+			) );
+
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+
+			wp_send_json_error( array(
+				'message' => $e->getMessage(),
+				'code'    => $e->getCode(),
+			) );
+		}
+	}
+
+
+	/**
+	 * Gets the shipping method rates available for a product.
+	 *
+	 * This is used for Apple Pay on the product page.
+	 *
+	 * @since 4.7.0-dev
+	 *
+	 * @param \WC_Product $product product object
+	 * @return array $rates shipping method rates
+	 */
+	protected function get_product_shipping_rates( WC_Product $product ) {
+
+		// build a "package" for WC_Shipping to use in calculations
+		$package = array(
+			'contents' => array(
+				array(
+					'quantity' => 1,
+					'data'     => $product,
+				),
+			),
+			'contents_cost' => $product->get_price(),
+			'user'          => array(
+				'ID' => get_current_user_id(),
+			),
+			'destination' => array(
+				'country'   => WC()->customer->get_shipping_country(),
+				'state'     => WC()->customer->get_shipping_state(),
+				'postcode'  => WC()->customer->get_shipping_postcode(),
+				'city'      => WC()->customer->get_shipping_city(),
+				'address'   => WC()->customer->get_shipping_address(),
+				'address_2' => WC()->customer->get_shipping_address_2(),
+			),
+		);
+
+		WC()->shipping->calculate_shipping( array( $package ) );
+
+		$packages = WC()->shipping->get_packages();
+
+		return $packages[0]['rates'];
+	}
+
+
+	/**
+	 * Builds a payment request for the Apple Pay JS.
+	 *
+	 * This contains all of the data necessary to complete a payment, including
+	 * line items and shipping info.
+	 *
+	 * @since 4.7.0-dev
+	 *
+	 * @param float|int $amount amount to be charged by Apple Pay
+	 * @param array $args {
+	 *     Optional. The payment request args.
+	 *
+	 *     @type string    $currency_code         Payment currency code. Defaults to the shop currency.
+	 *     @type string    $country_code          Payment country code. Defaults to the shop base country.
+	 *     @type string    $merchant_name         Merchant name. Defaults to the shop name.
+	 *     @type array     $merchant_capabilities merchant capabilities
+	 *     @type array     $supported_networks    supported networks or card types
+	 *     @type float|int $subtotal              order subtotal
+	 *     @type float|int $discount_total        discount total
+	 *     @type float|int $shipping_total        shipping total
+	 *     @type float|int $fee_total             fees total
+	 *     @type float|int $tax_total             taxes total
+	 *     @type bool      $needs_shipping        whether the payment needs shipping
+	 * }
+	 *
+	 * @return array
+	 */
+	public function build_payment_request( $amount, $args = array() ) {
+
+		$this->log( 'Building payment request.' );
+
+		$args = wp_parse_args( $args, array(
+
+			// transaction details
+			'currency_code'         => get_woocommerce_currency(),
+			'country_code'          => get_option( 'woocommerce_default_country' ),
+			'merchant_name'         => get_bloginfo( 'name', 'display' ),
+			'merchant_capabilities' => $this->get_capabilities(),
+			'supported_networks'    => $this->get_supported_networks(),
+
+			// totals
+			'subtotal'       => 0.00,
+			'discount_total' => 0.00,
+			'shipping_total' => 0.00,
+			'fee_total'      => 0.00,
+			'tax_total'      => 0.00,
+
+			'needs_shipping' => false,
+		) );
+
+		// set the base required defaults
+		$request = array(
+			'currencyCode'                  => $args['currency_code'],
+			'countryCode'                   => substr( $args['country_code'], 0, 2 ),
+			'merchantCapabilities'          => $args['merchant_capabilities'],
+			'supportedNetworks'             => $args['supported_networks'],
+			'requiredBillingContactFields'  => array( 'postalAddress' ),
+			'requiredShippingContactFields' => array(
+				'phone',
+				'email',
+				'name',
+			),
+		);
+
+		$line_items = $this->build_payment_request_lines( array(
+			'subtotal' => $args['subtotal'],
+			'discount' => $args['discount_total'],
+			'shipping' => $args['shipping_total'],
+			'fees'     => $args['fee_total'],
+			'taxes'    => $args['tax_total'],
+		) );
+
+		if ( ! empty( $line_items ) ) {
+			$request['lineItems'] = $line_items;
+		}
+
+		// if a shipping line is present, require the full shipping address
+		if ( $args['shipping_total'] > 0 || $args['needs_shipping'] ) {
+			$request['requiredShippingContactFields'][] = 'postalAddress';
+		}
+
+		// order total
+		$request['total'] = array(
+			'type'   => 'final',
+			'label'  => $args['merchant_name'],
+			'amount' => $this->format_price( $amount ),
+		);
+
+		$this->store_payment_request( $request );
+
+		// remove line item keys that are only useful for us later
+		if ( ! empty( $request['lineItems'] ) ) {
+			$request['lineItems'] = array_values( $request['lineItems'] );
+		}
+
+		// log the payment request
+		$this->log( "Payment Request:\n" . print_r( $request, true ) );
+
+		return $request;
+	}
+
+
+	/**
+	 * Builds payment request lines for the Apple Pay JS.
+	 *
+	 * @since 4.7.0-dev
+	 *
+	 * @param array $totals {
+	 *     Payment line totals.
+	 *
+	 *     @type float $subtotal items subtotal
+	 *     @type float $discount discounts total
+	 *     @type float $shipping shipping total
+	 *     @type float $fees     fees total
+	 *     @type float $taxes    tax total
+	 * }
+	 */
+	public function build_payment_request_lines( $totals ) {
+
+		$totals = wp_parse_args( $totals, array(
+			'subtotal' => 0.00,
+			'discount' => 0.00,
+			'shipping' => 0.00,
+			'fees'     => 0.00,
+			'taxes'    => 0.00,
+		) );
+
+		$lines = array();
+
+		// subtotal
+		if ( $totals['subtotal'] > 0 ) {
+
+			$lines['subtotal'] = array(
+				'type'   => 'final',
+				'label'  => __( 'Subtotal', 'woocommerce-plugin-framework' ),
+				'amount' => $this->format_price( $totals['subtotal'] ),
+			);
+		}
+
+		// discounts
+		if ( $totals['discount'] > 0 ) {
+
+			$lines['discount'] = array(
+				'type'   => 'final',
+				'label'  => __( 'Discount', 'woocommerce-plugin-framework' ),
+				'amount' => abs( $this->format_price( $totals['discount'] ) ) * -1,
+			);
+		}
+
+		// shipping
+		if ( $totals['shipping'] > 0 ) {
+
+			$lines['shipping'] = array(
+				'type'   => 'final',
+				'label'  => __( 'Shipping', 'woocommerce-plugin-framework' ),
+				'amount' => $this->format_price( $totals['shipping'] ),
+			);
+		}
+
+		// fees
+		if ( $totals['fees'] > 0 ) {
+
+			$lines['fees'] = array(
+				'type'   => 'final',
+				'label'  => __( 'Fees', 'woocommerce-plugin-framework' ),
+				'amount' => $this->format_price( $totals['fees'] ),
+			);
+		}
+
+		// taxes
+		if ( $totals['taxes'] > 0 ) {
+
+			$lines['taxes'] = array(
+				'type'   => 'final',
+				'label'  => __( 'Taxes', 'woocommerce-plugin-framework' ),
+				'amount' => $this->format_price( $totals['taxes'] ),
+			);
+		}
+
+		return $lines;
+	}
+
+
+	/**
+	 * Formats a total price for use with Apple Pay JS.
+	 *
+	 * @since 4.7.0-dev
+	 * @param string|float $price the price to format
+	 * @return string
+	 */
+	protected function format_price( $price ) {
+
+		return wc_format_decimal( $price, 2 );
 	}
 
 

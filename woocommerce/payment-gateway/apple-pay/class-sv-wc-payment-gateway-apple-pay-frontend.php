@@ -118,13 +118,14 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		 * @param array $params the JS params
 		 */
 		$params = apply_filters( 'sv_wc_apple_pay_js_handler_params', array(
-			'gateway_id'            => $this->get_gateway()->get_id(),
-			'gateway_id_dasherized' => $this->get_gateway()->get_id_dasherized(),
-			'merchant_id'           => $this->get_handler()->get_merchant_id(),
-			'ajax_url'              => admin_url( 'admin-ajax.php' ),
-			'validate_nonce'        => wp_create_nonce( 'sv_wc_apple_pay_validate_merchant' ),
-			'process_nonce'         => wp_create_nonce( 'sv_wc_apple_pay_process_payment' ),
-			'generic_error'         => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
+			'gateway_id'                       => $this->get_gateway()->get_id(),
+			'gateway_id_dasherized'            => $this->get_gateway()->get_id_dasherized(),
+			'merchant_id'                      => $this->get_handler()->get_merchant_id(),
+			'ajax_url'                         => admin_url( 'admin-ajax.php' ),
+			'validate_nonce'                   => wp_create_nonce( 'sv_wc_apple_pay_validate_merchant' ),
+			'recalculate_product_totals_nonce' => wp_create_nonce( 'sv_wc_apple_pay_recalculate_product_totals' ),
+			'process_nonce'                    => wp_create_nonce( 'sv_wc_apple_pay_process_payment' ),
+			'generic_error'                    => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
 		) );
 
 		wp_localize_script( 'sv-wc-apple-pay', 'sv_wc_apple_pay_params', $params );
@@ -252,30 +253,34 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			throw new SV_WC_Payment_Gateway_Exception( 'Product is not available for purchase.' );
 		}
 
-		$amount = $product->get_price();
+		/**
+		 * Filters the discount total when calculating the Buy Now payment details for a product.
+		 *
+		 * @since 4.7.0-dev
+		 *
+		 * @param float $total discount total, either negative or positive
+		 * @param \WC_Product $product product object
+		 */
+		$discount_total = (float) apply_filters( 'wc_payment_gateway_apple_pay_buy_now_discount_total', 0.00, $product );
+
+		/**
+		 * Filters the fee total when calculating the Buy Now payment details for a product.
+		 *
+		 * @since 4.7.0-dev
+		 *
+		 * @param float $total fee total, either negative or positive
+		 * @param \WC_Product $product product object
+		 */
+		$fee_total = (float) apply_filters( 'wc_payment_gateway_apple_pay_buy_now_fee_total', 0.00, $product );
 
 		$args = array(
-			'subtotal' => $product->get_price(),
+			'subtotal'       => $product->get_price(),
+			'discount_total' => $discount_total,
+			'fee_total'      => $fee_total,
+			'needs_shipping' => $product->needs_shipping(),
 		);
 
-		$shipping_cost = (float) get_option( 'sv_wc_apple_pay_buy_now_shipping_cost', 0 );
-		$tax_rate      = (float) get_option( 'sv_wc_apple_pay_buy_now_tax_rate', 0 );
-
-		if ( SV_WC_Plugin_Compatibility::wc_shipping_enabled() && $product->needs_shipping() && $shipping_cost ) {
-
-			$args['shipping_total'] = $shipping_cost;
-
-			$amount += $args['shipping_total'];
-		}
-
-		if ( wc_tax_enabled() && $tax_rate ) {
-
-			$args['tax_total'] = round( $amount * ( $tax_rate / 100 ), 2 );
-
-			$amount += $args['tax_total'];
-		}
-
-		$request       = $this->build_payment_request( $amount, $args );
+		$request       = $this->get_handler()->build_payment_request( $product->get_price(), $args );
 		$request_store = $this->get_handler()->get_stored_payment_request();
 
 		// add the product ID to the stored request for later use
@@ -382,27 +387,26 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		$cart->calculate_totals();
 
 		$args = array(
-			'subtotal'       => $cart->cart_contents_total,
+			'subtotal'       => $cart->subtotal_ex_tax,
 			'discount_total' => $cart->get_cart_discount_total(),
+			'shipping_total' => $cart->shipping_total,
 			'fee_total'      => $cart->fee_total,
 			'tax_total'      => $cart->tax_total + $cart->shipping_tax_total,
 		);
 
-		// set shipping total
 		if ( $cart->needs_shipping() ) {
+
+			$args['needs_shipping'] = true;
 
 			$chosen_shipping_methods = WC()->session->get( 'chosen_shipping_methods', array() );
 
-			// if shipping methods have already been chosen, simply add the total as a line item
-			if ( ! empty( $chosen_shipping_methods ) ) {
-				$args['shipping_total'] = $cart->shipping_total;
-			} else {
+			if ( empty( $chosen_shipping_methods ) ) {
 				throw new SV_WC_Payment_Gateway_Exception( __( 'No shipping method chosen.', 'woocommerce-plugin-framework' ) );
 			}
 		}
 
 		// build it!
-		$request = $this->build_payment_request( $cart->total, $args );
+		$request = $this->get_handler()->build_payment_request( $cart->total, $args );
 
 		/**
 		 * Filters the Apple Pay cart JS payment request.
@@ -456,158 +460,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 				'message' => __( 'Apple Pay is currently unavailable.', 'woocommerce-plugin-framework' ),
 			) );
 		}
-	}
-
-
-	/**
-	 * Builds an Apple Pay payment request.
-	 *
-	 * This contains all of the data necessary to complete a payment, including
-	 * line items and shipping info.
-	 *
-	 * @since 4.6.0-applepay
-	 *
-	 * @param float|int $amount amount to be charged by Apple Pay
-	 * @param array $args {
-	 *     Optional. The payment request args.
-	 *
-	 *     @type string    $currency_code         Payment currency code. Defaults to the shop currency.
-	 *     @type string    $country_code          Payment country code. Defaults to the shop base country.
-	 *     @type string    $merchant_name         Merchant name. Defaults to the shop name.
-	 *     @type array     $merchant_capabilities merchant capabilities
-	 *     @type array     $supported_networks    supported networks or card types
-	 *     @type float|int $subtotal              order subtotal
-	 *     @type float|int $fee_total             fees total
-	 *     @type float|int $discount_total        discount total
-	 *     @type float|int $shipping_total        shipping total
-	 *     @type float|int $tax_total             taxes total
-	 * }
-	 *
-	 * @return array
-	 */
-	protected function build_payment_request( $amount, $args = array() ) {
-
-		$this->get_handler()->log( 'Building payment request.' );
-
-		$args = wp_parse_args( $args, array(
-
-			// transaction details
-			'currency_code'         => get_woocommerce_currency(),
-			'country_code'          => get_option( 'woocommerce_default_country' ),
-			'merchant_name'         => get_bloginfo( 'name', 'display' ),
-			'merchant_capabilities' => $this->get_handler()->get_capabilities(),
-			'supported_networks'    => $this->get_handler()->get_supported_networks(),
-
-			// totals
-			'subtotal'       => 0,
-			'fee_total'      => 0,
-			'discount_total' => 0,
-			'shipping_total' => 0,
-			'tax_total'      => 0,
-		) );
-
-		// set the base required defaults
-		$request = array(
-			'currencyCode'                  => $args['currency_code'],
-			'countryCode'                   => substr( $args['country_code'], 0, 2 ),
-			'merchantCapabilities'          => $args['merchant_capabilities'],
-			'supportedNetworks'             => $args['supported_networks'],
-			'requiredBillingContactFields'  => array( 'postalAddress' ),
-			'requiredShippingContactFields' => array(
-				'phone',
-				'email',
-				'name',
-			),
-		);
-
-		$line_items = array();
-
-		// subtotal
-		if ( $args['subtotal'] > 0 ) {
-
-			$line_items['subtotal'] = array(
-				'type'   => 'final',
-				'label'  => __( 'Subtotal', 'woocommerce-plugin-framework' ),
-				'amount' => $this->format_price( $args['subtotal'] ),
-			);
-		}
-
-		// fees
-		if ( $args['fee_total'] > 0 ) {
-
-			$line_items['fees'] = array(
-				'type'   => 'final',
-				'label'  => __( 'Fees', 'woocommerce-plugin-framework' ),
-				'amount' => $this->format_price( $args['fee_total'] ),
-			);
-		}
-
-		// discounts
-		if ( $args['discount_total'] > 0 ) {
-
-			$line_items['discount'] = array(
-				'type'   => 'final',
-				'label'  => __( 'Discount', 'woocommerce-plugin-framework' ),
-				'amount' => $this->format_price( $args['discount_total'] ),
-			);
-		}
-
-		// shipping
-		if ( $args['shipping_total'] > 0 ) {
-
-			$request['requiredShippingContactFields'][] = 'postalAddress';
-
-			$line_items['shipping'] = array(
-				'type'   => 'final',
-				'label'  => __( 'Shipping', 'woocommerce-plugin-framework' ),
-				'amount' => $this->format_price( $args['shipping_total'] ),
-			);
-		}
-
-		// taxes
-		if ( $args['tax_total'] > 0 ) {
-
-			$line_items['taxes'] = array(
-				'type'   => 'final',
-				'label'  => __( 'Taxes', 'woocommerce-plugin-framework' ),
-				'amount' => $this->format_price( $args['tax_total'] ),
-			);
-		}
-
-		if ( ! empty( $line_items ) ) {
-			$request['lineItems'] = $line_items;
-		}
-
-		// order total
-		$request['total'] = array(
-			'label'  => $args['merchant_name'],
-			'amount' => $this->format_price( $amount ),
-		);
-
-		$this->get_handler()->store_payment_request( $request );
-
-		// remove line item keys that are only useful for us later
-		if ( ! empty( $request['lineItems'] ) ) {
-			$request['lineItems'] = array_values( $request['lineItems'] );
-		}
-
-		// log the payment request
-		$this->get_handler()->log( "Payment Request:\n" . print_r( $request, true ) );
-
-		return $request;
-	}
-
-
-	/**
-	 * Formats a total price for use with Apple Pay JS.
-	 *
-	 * @since 4.6.0-dev
-	 * @param string|float $price the price to format
-	 * @return string
-	 */
-	protected function format_price( $price ) {
-
-		return wc_format_decimal( $price, 2 );
 	}
 
 
