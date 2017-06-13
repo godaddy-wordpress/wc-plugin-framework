@@ -127,46 +127,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 			),
 		);
 
-		if ( wc_tax_enabled() || SV_WC_Plugin_Compatibility::wc_shipping_enabled() ) {
-
-			$buy_settings = array(
-				array(
-					'title' => __( 'Buy Now', 'woocommerce-plugin-framework' ),
-					'type'  => 'title',
-					'desc'  => sprintf(
-						__( 'The %1$sBuy Now with Apple Pay%2$s button is displayed on single product pages, and is only available for simple products. Use these settings to set an optional tax rate and shipping cost for customers who use Buy Now.', 'woocommerce-plugin-framework' ),
-						'<strong>', '</strong>'
-					),
-				),
-			);
-
-			if ( wc_tax_enabled() ) {
-
-				$buy_settings[] = array(
-					'id'       => 'sv_wc_apple_pay_buy_now_tax_rate',
-					'title'    => __( 'Tax Rate', 'woocommerce-plugin-framework' ),
-					'type'     => 'text',
-					'desc_tip' => __( 'The optional tax rate percentage to apply to Buy Now orders.', 'woocommerce-plugin-framework' ),
-				);
-			}
-
-			if ( SV_WC_Plugin_Compatibility::wc_shipping_enabled() ) {
-
-				$buy_settings[] = array(
-					'id'       => 'sv_wc_apple_pay_buy_now_shipping_cost',
-					'title'    => __( 'Shipping Cost', 'woocommerce-plugin-framework' ),
-					'type'     => 'text',
-					'desc_tip' => __( 'The optional flat-rate shipping cost to add to Buy Now orders.', 'woocommerce-plugin-framework' ),
-				);
-			}
-
-			$buy_settings[] = array(
-				'type' => 'sectionend',
-			);
-
-			$settings = array_merge( $settings, $buy_settings );
-		}
-
 		$connection_settings = array(
 			array(
 				'title' => __( 'Connection Settings', 'woocommerce-plugin-framework' ),
@@ -246,30 +206,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 		global $current_section;
 
 		if ( 'apple-pay' === $current_section ) {
-
 			WC_Admin_Settings::output_fields( $this->get_settings() );
-
-			// add inline javascript
-			ob_start();
-			?>
-				$( '#sv_wc_apple_pay_display_locations' ).change( function() {
-
-					var locations      = $( this ).val();
-					var hidden_section = $( '#sv_wc_apple_pay_buy_now_tax_rate, #sv_wc_apple_pay_buy_now_shipping_cost' ).closest( 'table' );
-					var hidden_header  = $( hidden_section ).prevUntil( 'table' );
-
-					if ( $.inArray( 'product', locations ) !== -1 ) {
-						$( hidden_header ).show();
-						$( hidden_section ).show();
-					} else {
-						$( hidden_header ).hide();
-						$( hidden_section ).hide();
-					}
-
-				} ).change();
-			<?php
-
-			wc_enqueue_js( ob_get_clean() );
 		}
 	}
 
