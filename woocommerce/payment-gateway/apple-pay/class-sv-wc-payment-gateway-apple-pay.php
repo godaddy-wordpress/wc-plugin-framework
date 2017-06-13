@@ -795,9 +795,6 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				if ( ! $item_id ) {
 					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 525 ) );
 				}
-
-				/** This action is a duplicate from \WC_Checkout::create_order() */
-				do_action( 'woocommerce_add_order_item_meta', $item_id, $item['values'], $key );
 			}
 
 			// add fees
@@ -808,9 +805,6 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				if ( ! $item_id ) {
 					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 526 ) );
 				}
-
-				/** This action is a duplicate from \WC_Checkout::create_order() */
-				do_action( 'woocommerce_add_order_fee_meta', SV_WC_Order_Compatibility::get_prop( $order, 'id' ), $item_id, $fee, $key );
 			}
 
 			// add shipping packages
@@ -825,9 +819,6 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 					if ( ! $item_id ) {
 						throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 527 ) );
 					}
-
-					/** This action is a duplicate from \WC_Checkout::create_order() */
-					do_action( 'woocommerce_add_shipping_order_item', SV_WC_Order_Compatibility::get_prop( $order, 'id' ), $item_id, $key );
 				}
 			}
 
