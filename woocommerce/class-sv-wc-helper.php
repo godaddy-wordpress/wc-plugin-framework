@@ -434,23 +434,40 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 				$line_item = new stdClass();
 
-				$product = $order->get_product_from_item( $item );
-
 				// TODO: remove when WC 3.0 can be required
 				$name     = $item instanceof WC_Order_Item_Product ? $item->get_name() : $item['name'];
 				$quantity = $item instanceof WC_Order_Item_Product ? $item->get_quantity() : $item['qty'];
 
 				$item_desc = array();
 
+				// TODO: remove this check when WC 3.1+ is required
+				if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_1() ) {
+
+					$product = $item->get_product();
+
+					$meta_data = $item->get_formatted_meta_data( '_', true );
+					$item_meta = array();
+
+					foreach ( $meta_data as $meta ) {
+
+						$item_meta[] = array(
+							'label' => $meta->display_key,
+							'value' => $meta->value,
+						);
+					}
+
+				} else {
+
+					$product = $order->get_product_from_item( $item );
+
+					$item_meta = new WC_Order_Item_Meta( $item );
+					$item_meta = $item_meta->get_formatted();
+				}
+
 				// add SKU to description if available
 				if ( is_callable( array( $product, 'get_sku' ) ) && $product->get_sku() ) {
 					$item_desc[] = sprintf( 'SKU: %s', $product->get_sku() );
 				}
-
-				// get meta + format it
-				$item_meta = new WC_Order_Item_Meta( $item );
-
-				$item_meta = $item_meta->get_formatted();
 
 				if ( ! empty( $item_meta ) ) {
 
