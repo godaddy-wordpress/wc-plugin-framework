@@ -201,16 +201,6 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				WC()->session->set( 'chosen_shipping_methods', array() );
 			}
 
-			/**
-			 * Filters the discount total when calculating the Buy Now payment details for a product.
-			 *
-			 * @since 4.7.0-dev
-			 *
-			 * @param float $total discount total, either negative or positive
-			 * @param \WC_Product $product product object
-			 */
-			$discount_total = (float) apply_filters( 'wc_payment_gateway_apple_pay_buy_now_discount_total', 0.00, $product );
-
 			$shipping_methods = array();
 			$shipping_total   = 0;
 
@@ -242,23 +232,11 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				$shipping_total = WC()->shipping->shipping_total;
 			}
 
-			/**
-			 * Filters the fee total when calculating the Buy Now payment details for a product.
-			 *
-			 * @since 4.7.0-dev
-			 *
-			 * @param float $total fee total, either negative or positive
-			 * @param \WC_Product $product product object
-			 */
-			$fee_total = (float) apply_filters( 'wc_payment_gateway_apple_pay_buy_now_fee_total', 0.00, $product );
-
 			$tax_total = array_sum( WC_Tax::calc_tax( $product->get_price(), WC_Tax::get_rates( $product->get_tax_class() ) ) ) + array_sum( WC()->shipping->shipping_taxes );
 
 			$payment_request['lineItems'] = $this->build_payment_request_lines( array(
 				'subtotal' => $product->get_price(),
-				'discount' => $discount_total,
 				'shipping' => $shipping_total,
-				'fees'     => $fee_total,
 				'taxes'    => $tax_total,
 			) );
 

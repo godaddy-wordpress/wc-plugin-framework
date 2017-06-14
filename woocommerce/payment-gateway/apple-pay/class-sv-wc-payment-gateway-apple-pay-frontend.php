@@ -253,30 +253,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			throw new SV_WC_Payment_Gateway_Exception( 'Product is not available for purchase.' );
 		}
 
-		/**
-		 * Filters the discount total when calculating the Buy Now payment details for a product.
-		 *
-		 * @since 4.7.0-dev
-		 *
-		 * @param float $total discount total, either negative or positive
-		 * @param \WC_Product $product product object
-		 */
-		$discount_total = (float) apply_filters( 'wc_payment_gateway_apple_pay_buy_now_discount_total', 0.00, $product );
-
-		/**
-		 * Filters the fee total when calculating the Buy Now payment details for a product.
-		 *
-		 * @since 4.7.0-dev
-		 *
-		 * @param float $total fee total, either negative or positive
-		 * @param \WC_Product $product product object
-		 */
-		$fee_total = (float) apply_filters( 'wc_payment_gateway_apple_pay_buy_now_fee_total', 0.00, $product );
-
 		$args = array(
 			'subtotal'       => $product->get_price(),
-			'discount_total' => $discount_total,
-			'fee_total'      => $fee_total,
 			'needs_shipping' => $product->needs_shipping(),
 		);
 
