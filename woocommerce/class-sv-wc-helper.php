@@ -508,10 +508,14 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 			foreach ( $order->get_items() as $item ) {
 
-				$product = $order->get_product_from_item( $item );
+				if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+					$product = $item->get_product();
+				} else {
+					$product = $order->get_product_from_item( $item );
+				}
 
 				// once we've found one non-virtual product we know we're done, break out of the loop
-				if ( ! $product->is_virtual() ) {
+				if ( $product && ! $product->is_virtual() ) {
 					$is_virtual = false;
 					break;
 				}
