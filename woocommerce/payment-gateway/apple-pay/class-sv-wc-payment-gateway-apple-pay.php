@@ -633,12 +633,10 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		}
 
 		$args = array(
-			'fees' => WC()->cart->get_fees(),
+			'coupons'          => array(),
+			'shipping_methods' => array(),
+			'fees'             => WC()->cart->get_fees(),
 		);
-
-		if ( $packages = WC()->shipping->get_packages() ) {
-			$args['packages'] = $packages;
-		}
 
 		foreach ( WC()->cart->get_coupons() as $code => $coupon ) {
 
@@ -646,6 +644,18 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				'amount'     => WC()->cart->get_coupon_discount_amount( $code ),
 				'tax_amount' => WC()->cart->get_coupon_discount_tax_amount( $code ),
 			);
+		}
+
+		$chosen_methods = WC()->session->get( 'chosen_shipping_methods', array() );
+
+		foreach ( WC()->shipping->get_packages() as $key => $package ) {
+
+			if ( isset( $package['rates'][ $chosen_methods[ $key ] ] ) ) {
+
+				$method = $package['rates'][ $chosen_methods[ $key ] ];
+
+				$args['shipping_methods'][ $method->id ] = $method;
+			}
 		}
 
 		// set the cart hash to this can be resumed on failure
@@ -735,12 +745,12 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *
 	 *     @type int    $customer_id The user ID for this customer. If left blank, the current user ID will be
 	 *                               used, or the user will be Guest if there is no current user.
-	 *     @type array  $fees        Any fees to add to the order. See `WC_Abstract_Order::add_fee()` for
-	 *                               required values.
-	 *     @type array  $packages    Any shipping packages to add to the order. As formatted by
-	 *                              `WC()->shipping->get_packages()`
 	 *     @type array  $coupons     Any coupons to add to the order. Arrays as
 	 *                               `$code => array( $amount => 0.00, $tax_amount => 0.00 )`
+	 *     @type array  $shipping_methods Any shipping methods to add to the order. As formatted by
+	 *                              `WC()->shipping->get_packages()`
+	 *     @type array  $fees        Any fees to add to the order. See `WC_Abstract_Order::add_fee()` for
+	 *                               required values.
 	 *     @type string $cart_hash   The hashed cart object to be used later in case the order is to be resumed.
 	 *
 	 * @throws \SV_WC_Payment_Gateway_Exception
@@ -748,11 +758,11 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	public function create_order( $items, $args = array() ) {
 
 		$args = wp_parse_args( $args, array(
-			'customer_id' => get_current_user_id(),
-			'fees'        => array(),
-			'packages'    => array(),
-			'coupons'     => array(),
-			'cart_hash'   => '',
+			'customer_id'      => get_current_user_id(),
+			'coupons'          => array(),
+			'shipping_methods' => array(),
+			'fees'             => array(),
+			'cart_hash'        => '',
 		) );
 
 		try {
@@ -773,35 +783,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			// add line items
 			foreach ( $items as $key => $item ) {
 
-				$item_id = $order->add_product( $item['product'], $item['quantity'], $item['args'] );
-
-				if ( ! $item_id ) {
+				if ( ! $order->add_product( $item['product'], $item['quantity'], $item['args'] ) ) {
 					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 525 ) );
-				}
-			}
-
-			// add fees
-			foreach ( $args['fees'] as $key => $fee ) {
-
-				$item_id = SV_WC_Order_Compatibility::add_fee( $order, $fee );
-
-				if ( ! $item_id ) {
-					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 526 ) );
-				}
-			}
-
-			// add shipping packages
-			foreach ( $args['packages'] as $key => $package ) {
-
-				$shipping_methods = WC()->session->get( 'chosen_shipping_methods' );
-
-				if ( isset( $package['rates'][ $shipping_methods[ $key ] ] ) ) {
-
-					$item_id = SV_WC_Order_Compatibility::add_shipping( $order, $package['rates'][ $shipping_methods[ $key ] ] );
-
-					if ( ! $item_id ) {
-						throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 527 ) );
-					}
 				}
 			}
 
@@ -810,6 +793,22 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 				if ( ! SV_WC_Order_Compatibility::add_coupon( $order, $code, $coupon['amount'], $coupon['tax_amount'] ) ) {
 					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 529 ) );
+				}
+			}
+
+			// add shipping methods
+			foreach ( $args['shipping_methods'] as $method_id => $method ) {
+
+				if ( ! SV_WC_Order_Compatibility::add_shipping( $order, $method ) ) {
+					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 527 ) );
+				}
+			}
+
+			// add fees
+			foreach ( $args['fees'] as $key => $fee ) {
+
+				if ( ! SV_WC_Order_Compatibility::add_fee( $order, $fee ) ) {
+					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 526 ) );
 				}
 			}
 
@@ -847,15 +846,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			$order = wc_update_order( $order_data );
 
 			if ( is_wp_error( $order ) ) {
-
 				throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 522 ) );
-
 			} else {
-
 				$order->remove_order_items();
-
-				/** This action is a duplicate from \WC_Checkout::create_order() */
-				do_action( 'woocommerce_resume_order', $order_id );
 			}
 
 		} else {
@@ -870,9 +863,6 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 			// set the new order ID so it can be resumed in case of failure
 			WC()->session->set( 'order_awaiting_payment', SV_WC_Order_Compatibility::get_prop( $order, 'id' ) );
-
-			/** This action is a duplicate from \WC_Checkout::create_order() */
-			do_action( 'woocommerce_new_order', SV_WC_Order_Compatibility::get_prop( $order, 'id' ) );
 		}
 
 		return $order;
