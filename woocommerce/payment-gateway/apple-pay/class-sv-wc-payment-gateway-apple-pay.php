@@ -185,7 +185,12 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				WC()->customer->set_shipping_postcode( $postcode );
 
 				if ( $country ) {
-					WC()->customer->set_calculated_shipping( true );
+
+					if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+						WC()->customer->set_calculated_shipping( true );
+					} else {
+						WC()->customer->calculated_shipping( true );
+					}
 				}
 			}
 
