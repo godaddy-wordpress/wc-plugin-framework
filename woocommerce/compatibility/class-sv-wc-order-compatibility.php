@@ -286,7 +286,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @since 4.7.0-dev
 	 * @param \WC_Order $order order object
-	 * @param object $shipping_rate shipping rate to add
+	 * @param \WC_Shipping_Rate $shipping_rate shipping rate to add
 	 * @return int the order item ID
 	 */
 	public static function add_shipping( WC_Order $order, $shipping_rate ) {
@@ -315,7 +315,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		} else {
 
-			return $order->add_shipping( $fee );
+			return $order->add_shipping( $shipping_rate );
 		}
 	}
 
