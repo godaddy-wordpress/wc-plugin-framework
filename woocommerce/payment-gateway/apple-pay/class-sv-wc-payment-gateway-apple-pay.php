@@ -229,6 +229,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 					);
 				}
 
+				$payment_request['shippingMethods'] = $shipping_methods;
+
 				$shipping_total = WC()->shipping->shipping_total;
 			}
 
@@ -692,9 +694,6 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			throw new SV_WC_Payment_Gateway_Exception( 'Product ID is missing.' );
 		}
 
-		$items = array();
-		$args  = array();
-
 		$product = wc_get_product( $payment_request['product_id'] );
 
 		if ( ! $product ) {
@@ -705,26 +704,41 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			throw new SV_WC_Payment_Gateway_Exception( __( 'The product is out of stock.', 'woocommerce-plugin-framework' ) );
 		}
 
-		$items[] = array(
-			'product'  => $product,
-			'quantity' => 1,
-			'args'     => array(),
-			'values'   => array(),
+		$items = array(
+			array(
+				'product'  => $product,
+				'quantity' => 1,
+				'args'     => array(),
+				'values'   => array(),
+			)
 		);
+
+		$args  = array();
+
+		if ( ! empty( $payment_request['shippingMethods'] ) ) {
+
+			$chosen_methods = WC()->session->get( 'chosen_shipping_methods', array() );
+
+			foreach( $payment_request['shippingMethods'] as $method ) {
+
+				if ( ! in_array( $method['identifier'], $chosen_methods, true ) ) {
+					continue;
+				}
+
+				$rate_id   = $method['identifier'];
+				$label     = $method['label'];
+				$cost      = $method['amount'];
+				$taxes     = array(); // TODO: test
+				$method_id = $rate_id;
+
+				$args['shipping_methods'][ $rate_id ] = new WC_Shipping_Rate( $rate_id, $label, $cost, $taxes, $method_id );
+			}
+		}
 
 		// set the cart hash to this can be resumed on failure
 		$args['cart_hash'] = md5( json_encode( wc_clean( $payment_request ) ) . $payment_request['total']['amount'] );
 
 		$order = $this->create_order( $items, $args );
-
-		// set the totals
-		if ( ! empty( $payment_request['lineItems']['taxes'] ) ) {
-			$order->set_total( $payment_request['lineItems']['taxes']['amount'], 'tax' );
-		}
-
-		if ( ! empty( $payment_request['lineItems']['shipping'] ) ) {
-			$order->set_total( $payment_request['lineItems']['shipping']['amount'], 'shipping' );
-		}
 
 		$order->set_total( $payment_request['total']['amount'] );
 
