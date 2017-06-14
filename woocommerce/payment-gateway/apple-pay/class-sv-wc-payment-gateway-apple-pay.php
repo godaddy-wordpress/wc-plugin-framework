@@ -528,12 +528,19 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			$order = null;
 
 			// create a new order
-			if ( 'cart' === $type || 'checkout' === $type ) {
-				$order = $this->create_cart_order();
-			} else if ( 'product' === $type ) {
-				$order = $this->create_product_order();
-			} else {
-				throw new SV_WC_Payment_Gateway_Exception( 'Invalid payment type recieved' );
+			switch ( $type ) {
+
+				case 'product':
+					$order = $this->create_product_order();
+				break;
+
+				case 'cart':
+				case 'checkout':
+					$order = $this->create_cart_order();
+				break;
+
+				default:
+					throw new SV_WC_Payment_Gateway_Exception( 'Invalid payment type recieved' );
 			}
 
 			// if we got to this point, the payment was authorized by Apple Pay
