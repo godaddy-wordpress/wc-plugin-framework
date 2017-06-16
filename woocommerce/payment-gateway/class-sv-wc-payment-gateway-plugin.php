@@ -407,33 +407,44 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	protected function add_ssl_admin_notices() {
 
-		// check settings:  gateway active and SSL enabled
-		if ( $this->requires_ssl() && $this->get_admin_notice_handler()->should_display_notice( 'ssl-required' ) ) {
+		if ( ! $this->requires_ssl() ) {
+			return;
+		}
 
-			foreach ( $this->get_gateway_ids() as $gateway_id ) {
+		foreach ( $this->get_gateways() as $gateway ) {
 
-				$settings = $this->get_gateway_settings( $gateway_id );
+			// don't display any notices for disabled gateways
+			if ( ! $gateway->is_enabled() ) {
+				continue;
+			}
 
-				if ( isset( $settings['enabled'] ) && 'yes' == $settings['enabled'] ) {
+			// SSL check if gateway enabled/production mode
+			if ( ! wc_checkout_is_https() ) {
 
-					if ( isset( $settings['environment'] ) && 'production' == $settings['environment'] ) {
+				if ( $gateway->is_production_environment() && $this->get_admin_notice_handler()->should_display_notice( 'ssl-required' ) ) {
 
-						// SSL check if gateway enabled/production mode
-						if ( ! wc_checkout_is_https() ) {
+					/* translators: Placeholders: %s - plugin name */
+					$message = sprintf( esc_html__( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", 'woocommerce-plugin-framework' ), '<strong>' . $this->get_plugin_name() . '</strong>' );
 
-							/* translators: Placeholders: %s - plugin name */
-							$message = sprintf( esc_html__( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", 'woocommerce-plugin-framework' ), '<strong>' . $this->get_plugin_name() . '</strong>' );
+					$this->get_admin_notice_handler()->add_admin_notice( $message, 'ssl-required', array(
+						'notice_class' => 'error',
+					) );
 
-							$this->get_admin_notice_handler()->add_admin_notice( $message, 'ssl-required', array(
-								'notice_class' => 'error',
-							) );
-
-							// just show the message once for plugins with multiple gateway support
-							break;
-						}
-
-					}
+					// just show the message once for plugins with multiple gateway support
+					break;
 				}
+
+			} elseif ( $gateway->get_api() && $gateway->get_api()->require_tls_1_2() && ! $gateway->get_api()->is_tls_1_2_available() ) {
+
+				/* translators: Placeholders: %s - payment gateway name */
+				$message = sprintf( esc_html__( "%s requires TLS v1.2 support to process transactions. Please contact your hosting provider to update your environment to support the latest security standards.", 'woocommerce-plugin-framework' ), '<strong>' . $gateway->get_method_title() . '</strong>' );
+
+				$this->get_admin_notice_handler()->add_admin_notice( $message, 'tls-1-2-required', array(
+					'notice_class' => 'error',
+				) );
+
+				// just show the message once for plugins with multiple gateway support
+				break;
 			}
 		}
 	}
