@@ -440,34 +440,14 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 				$item_desc = array();
 
-				// TODO: remove this check when WC 3.1+ is required
-				if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_1() ) {
-
-					$product = $item->get_product();
-
-					$meta_data = $item->get_formatted_meta_data( '_', true );
-					$item_meta = array();
-
-					foreach ( $meta_data as $meta ) {
-
-						$item_meta[] = array(
-							'label' => $meta->display_key,
-							'value' => $meta->value,
-						);
-					}
-
-				} else {
-
-					$product = $order->get_product_from_item( $item );
-
-					$item_meta = new WC_Order_Item_Meta( $item );
-					$item_meta = $item_meta->get_formatted();
-				}
+				$product = ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_1() ) ? $item->get_product() : $order->get_product_from_item( $item );
 
 				// add SKU to description if available
 				if ( is_callable( array( $product, 'get_sku' ) ) && $product->get_sku() ) {
 					$item_desc[] = sprintf( 'SKU: %s', $product->get_sku() );
 				}
+
+				$item_meta = SV_WC_Order_Compatibility::get_item_formatted_meta_data( $item, '_', true );
 
 				if ( ! empty( $item_meta ) ) {
 

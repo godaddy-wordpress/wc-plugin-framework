@@ -432,6 +432,44 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	}
 
 
+	/**
+	 * Gets the formatted meta data for an order item.
+	 *
+	 * @since 4.6.5-dev
+	 *
+	 * @param \WC_Order_Item|array $item order item object or array
+	 * @param string $hideprefix prefix for meta that is considered hidden
+	 * @param bool $include_all whether to include all meta (attributes, etc...), or just custom fields
+	 * @return array $item_meta {
+	 *     @type string $label meta field label
+	 *     @type mixed  $value meta value
+ 	 * }
+	 */
+	public static function get_item_formatted_meta_data( $item, $hideprefix = '_', $include_all = false ) {
+
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_1() && $item instanceof WC_Order_Item ) {
+
+			$meta_data = $item->get_formatted_meta_data( $hideprefix, $include_all );
+			$item_meta = array();
+
+			foreach ( $meta_data as $meta ) {
+
+				$item_meta[] = array(
+					'label' => $meta->display_key,
+					'value' => $meta->value,
+				);
+			}
+
+		} else {
+
+			$item_meta = new WC_Order_Item_Meta( $item );
+			$item_meta = $item_meta->get_formatted( $hideprefix );
+		}
+
+		return $item_meta;
+	}
+
+
 }
 
 
