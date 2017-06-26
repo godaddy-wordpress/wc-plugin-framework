@@ -435,7 +435,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets the formatted meta data for an order item.
 	 *
-	 * @since 4.6.5-dev
+	 * @since 4.6.5
 	 *
 	 * @param \WC_Order_Item|array $item order item object or array
 	 * @param string $hideprefix prefix for meta that is considered hidden

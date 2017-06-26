@@ -791,7 +791,7 @@ abstract class SV_WC_API_Base {
 	/**
 	 * Determines if TLS 1.2 is available.
 	 *
-	 * @since 4.6.5-dev
+	 * @since 4.6.5
 	 *
 	 * @return bool
 	 */

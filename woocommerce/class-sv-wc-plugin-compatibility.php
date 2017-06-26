@@ -227,7 +227,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Determines if the installed version of WooCommerce is 3.1 or greater.
 	 *
-	 * @since 4.6.5-dev
+	 * @since 4.6.5
 	 * @return bool
 	 */
 	public static function is_wc_version_gte_3_1() {
@@ -238,7 +238,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Determines if the installed version of WooCommerce is less than 3.1.
 	 *
-	 * @since 4.6.5-dev
+	 * @since 4.6.5
 	 * @return bool
 	 */
 	public static function is_wc_version_lt_3_1() {
