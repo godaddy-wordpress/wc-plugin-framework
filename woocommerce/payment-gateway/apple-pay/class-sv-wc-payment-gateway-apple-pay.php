@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) or exit;
 /**
  * Sets up Apple Pay support.
  *
- * @since 4.6.0-dev
+ * @since 4.7.0-dev
  */
 class SV_WC_Payment_Gateway_Apple_Pay {
 
@@ -37,6 +37,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 	/** @var \SV_WC_Payment_Gateway_Apple_Pay_Frontend the frontend instance */
 	protected $frontend;
+
+	/** @var \SV_WC_Payment_Gateway_Apple_Pay_AJAX the AJAX instance */
+	protected $ajax;
 
 	/** @var \SV_WC_Payment_Gateway_Plugin the plugin instance */
 	protected $plugin;
@@ -48,7 +51,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @param \SV_WC_Payment_Gateway_Plugin $plugin the plugin instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin ) {
@@ -58,20 +61,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		$this->init();
 
 		if ( $this->is_available() ) {
-
-			// validate a merchant via AJAX
-			add_action( 'wp_ajax_sv_wc_apple_pay_validate_merchant',        array( $this, 'validate_merchant' ) );
-			add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_validate_merchant', array( $this, 'validate_merchant' ) );
-
-			// recalculate product totals via AJAX
-			add_action( 'wp_ajax_sv_wc_apple_pay_recalculate_product_totals',        array( $this, 'recalculate_product_totals' ) );
-			add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_recalculate_product_totals', array( $this, 'recalculate_product_totals' ) );
-
-			// process the payment via AJAX
-			add_action( 'wp_ajax_sv_wc_apple_pay_process_payment',        array( $this, 'process_payment' ) );
-			add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_process_payment', array( $this, 'process_payment' ) );
-
-			add_filter( 'wc_payment_gateway_' . $this->get_processing_gateway()->get_id() . '_get_order', array( $this, 'add_order_data' ) );
+			add_filter( 'woocommerce_customer_taxable_address', array( $this, 'set_customer_taxable_address' ) );
 		}
 	}
 
@@ -79,238 +69,367 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Initializes the Apple Pay handlers.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 */
 	protected function init() {
 
 		require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php');
 		require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php');
+		require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/class-sv-wc-payment-gateway-apple-pay-ajax.php');
+		require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php');
 
 		require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-payment-response.php');
 
 		if ( is_admin() && ! is_ajax() ) {
 			$this->admin = new SV_WC_Payment_Gateway_Apple_Pay_Admin( $this );
 		} else {
+			$this->ajax     = new SV_WC_Payment_Gateway_Apple_Pay_AJAX( $this );
 			$this->frontend = new SV_WC_Payment_Gateway_Apple_Pay_Frontend( $this->get_plugin(), $this );
 		}
 	}
 
 
 	/**
-	 * Validates a merchant via AJAX.
+	 * Processes the payment after an Apple Pay authorization.
 	 *
-	 * @since 4.6.0-dev
-	 */
-	public function validate_merchant() {
-
-		check_ajax_referer( 'sv_wc_apple_pay_validate_merchant', 'nonce' );
-
-		$merchant_id = SV_WC_Helper::get_post( 'merchant_id' );
-		$url         = SV_WC_Helper::get_post( 'url' );
-
-		try {
-
-			$response = $this->get_api()->validate_merchant( $url, $merchant_id, home_url(), get_bloginfo( 'name' ) );
-
-			wp_send_json( array(
-				'result'           => 'success',
-				'merchant_session' => $response->get_merchant_session(),
-			) );
-
-		} catch ( SV_WC_API_Exception $e ) {
-
-			$this->log( 'Could not validate merchant. ' . $e->getMessage() );
-
-			wp_send_json( array(
-				'result'  => 'error',
-				'message' => $e->getMessage(),
-				'code'    => $e->getCode(),
-			) );
-		}
-	}
-
-
-	/**
-	 * Calculates shipping & taxes for a product.
-	 *
-	 * This is called via AJAX to calculate product shipping & taxes for a
-	 * product from its since product page using the Buy Now Apple Pay button.
+	 * This method creates a new order and calls the gateway for processing.
 	 *
 	 * @since 4.7.0-dev
 	 */
-	public function recalculate_product_totals() {
+	public function process_payment( $type ) {
 
-		check_ajax_referer( 'sv_wc_apple_pay_recalculate_product_totals', 'nonce' );
+		$order = null;
 
 		try {
 
-			if ( $payment_request = $this->get_stored_payment_request() ) {
+			$payment_response = $this->get_stored_payment_response();
 
-				if ( ! empty( $payment_request['product_id'] ) ) {
+			if ( ! $payment_response ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Invalid payment response data' );
+			}
 
-					$product = wc_get_product( $payment_request['product_id'] );
+			$this->log( "Payment Response:\n" . $payment_response->to_string_safe() . "\n" );
 
-					if ( ! $product ) {
-						throw new SV_WC_Payment_Gateway_Exception( 'Invalid product ID.' );
-					}
+			$order = SV_WC_Payment_Gateway_Apple_Pay_Orders::create_order( WC()->cart );
 
-				} else {
+			$order->set_payment_method( $this->get_processing_gateway() );
 
-					throw new SV_WC_Payment_Gateway_Exception( 'Product ID is missing.' );
-				}
+			// if we got to this point, the payment was authorized by Apple Pay
+			// from here on out, it's up to the gateway to not screw things up.
+			$order->add_order_note( __( 'Apple Pay payment authorized.', 'woocommerce-plugin-framework' ) );
 
+			$order->set_address( $payment_response->get_billing_address(),  'billing' );
+			$order->set_address( $payment_response->get_shipping_address(), 'shipping' );
+
+			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+				$order->save();
+			}
+
+			// add Apple Pay response data to the order
+			add_filter( 'wc_payment_gateway_' . $this->get_processing_gateway()->get_id() . '_get_order', array( $this, 'add_order_data' ) );
+
+			if ( $this->is_test_mode() ) {
+				$result = $this->process_test_payment( $order );
 			} else {
-
-				throw new SV_WC_Payment_Gateway_Exception( 'Payment request data is missing.' );
+				$result = $this->get_processing_gateway()->process_payment( SV_WC_Order_Compatibility::get_prop( $order, 'id' ) );
 			}
 
-			// if a contact is passed, set the customer address data
-			if ( isset( $_REQUEST['contact'] ) && is_array( $_REQUEST['contact'] ) ) {
-
-				$contact = wp_parse_args( $_REQUEST['contact'], array(
-					'administrativeArea' => null,
-					'countryCode'        => null,
-					'locality'           => null,
-					'postalCode'         => null,
-				) );
-
-				$state    = $contact['administrativeArea'];
-				$country  = strtoupper( $contact['countryCode'] );
-				$city     = $contact['locality'];
-				$postcode = $contact['postalCode'];
-
-				WC()->customer->set_shipping_city( $city );
-				WC()->customer->set_shipping_state( $state );
-				WC()->customer->set_shipping_country( $country );
-				WC()->customer->set_shipping_postcode( $postcode );
-
-				if ( $country ) {
-
-					if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
-						WC()->customer->set_calculated_shipping( true );
-					} else {
-						WC()->customer->calculated_shipping( true );
-					}
-				}
+			if ( isset( $result['result'] ) && 'success' !== $result['result'] ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Gateway processing error.' );
 			}
 
-			// if a specific method ID was chosen, set it in the session
-			if ( ! empty( $_REQUEST['method'] ) ) {
-				WC()->session->set( 'chosen_shipping_methods', array( wc_clean( $_REQUEST['method'] ) ) );
-			} else {
-				WC()->session->set( 'chosen_shipping_methods', array() );
+			if ( $user_id = $order->get_user_id() ) {
+				$this->update_customer_addresses( $user_id, $payment_response );
 			}
 
-			$shipping_methods = array();
-			$shipping_total   = 0;
+			$this->clear_payment_data();
 
-			// set shipping total & methods if needed
-			if ( $product->needs_shipping() ) {
-
-				$shipping_rates = $this->get_product_shipping_rates( $product );
-
-				foreach ( $shipping_rates as $method ) {
-
-					/**
-					 * Filters a shipping method's description for the Apple Pay payment card.
-					 *
-					 * @since 4.7.0-dev
-					 *
-					 * @param string $detail shipping method detail, such as delivery estimation
-					 * @param object $method shipping method object
-					 */
-					$method_detail = apply_filters( 'wc_payment_gateway_apple_pay_shipping_method_detail', '', $method );
-
-					$shipping_methods[] = array(
-						'label'      => $method->get_label(),
-						'detail'     => $method_detail,
-						'amount'     => $this->format_price( $method->cost ),
-						'identifier' => $method->id,
-					);
-				}
-
-				$payment_request['shippingMethods'] = $shipping_methods;
-
-				$shipping_total = WC()->shipping->shipping_total;
-			}
-
-			$tax_total = array_sum( WC_Tax::calc_tax( $product->get_price(), WC_Tax::get_rates( $product->get_tax_class() ) ) ) + array_sum( WC()->shipping->shipping_taxes );
-
-			$payment_request['lineItems'] = $this->build_payment_request_lines( array(
-				'subtotal' => $product->get_price(),
-				'shipping' => $shipping_total,
-				'taxes'    => $tax_total,
-			) );
-
-			// reset the order total based on the new line items
-			$payment_request['total']['amount'] = $this->format_price( array_sum( wp_list_pluck( $payment_request['lineItems'], 'amount' ) ) );
-
-			// update the stored payment request session with the new line items & totals
-			$this->store_payment_request( $payment_request );
-
-			wp_send_json_success( array(
-				'shipping_methods' => $shipping_methods,
-				'line_items'       => array_values( $payment_request['lineItems'] ),
-				'total'            => $payment_request['total'],
-			) );
+			return $result;
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
-			wp_send_json_error( array(
-				'message' => $e->getMessage(),
-				'code'    => $e->getCode(),
-			) );
+			if ( $order ) {
+
+				$order->add_order_note( sprintf(
+					/** translators: Placeholders: %s - the error message */
+					__( 'Apple Pay payment failed. %s', 'woocommerce-plugin-framework' ),
+					$e->getMessage()
+				) );
+			}
+
+			throw $e;
 		}
 	}
 
 
 	/**
-	 * Gets the shipping method rates available for a product.
-	 *
-	 * This is used for Apple Pay on the product page.
+	 * Updates a customer's stored billing & shipping addresses based on the
+	 * Apple Pay payment response.
 	 *
 	 * @since 4.7.0-dev
 	 *
-	 * @param \WC_Product $product product object
-	 * @return array $rates shipping method rates
+	 * @param int $user_id WordPress user ID
+	 * @param \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $payment_response payment response object
 	 */
-	protected function get_product_shipping_rates( WC_Product $product ) {
+	protected function update_customer_addresses( $user_id, SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $payment_response ) {
 
-		// build a "package" for WC_Shipping to use in calculations
-		$package = array(
-			'contents' => array(
-				array(
-					'quantity' => 1,
-					'data'     => $product,
-				),
-			),
-			'contents_cost' => $product->get_price(),
-			'user'          => array(
-				'ID' => get_current_user_id(),
-			),
-			'destination' => array(
-				'country'   => WC()->customer->get_shipping_country(),
-				'state'     => WC()->customer->get_shipping_state(),
-				'postcode'  => WC()->customer->get_shipping_postcode(),
-				'city'      => WC()->customer->get_shipping_city(),
-				'address'   => WC()->customer->get_shipping_address(),
-				'address_2' => WC()->customer->get_shipping_address_2(),
-			),
+		foreach ( $payment_response->get_billing_address() as $key => $value ) {
+			update_user_meta( $user_id, 'billing_' . $key, $value );
+		}
+
+		$shipping_address = $payment_response->get_shipping_address();
+
+		if ( ! empty( $shipping_address['address_1'] ) ) {
+
+			foreach ( $payment_response->get_shipping_address() as $key => $value ) {
+				update_user_meta( $user_id, 'shipping_' . $key, $value );
+			}
+		}
+	}
+
+
+	/**
+	 * Simulates a successful gateway payment response.
+	 *
+	 * This provides an easy way for merchants to test that their certificates
+	 * and other settings are correctly configured and communicating with Apple
+	 * without processing actual payments to test.
+	 *
+	 * @since 4.7.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @return array
+	 */
+	protected function process_test_payment( WC_Order $order ) {
+
+		$order->payment_complete();
+
+		WC()->cart->empty_cart();
+
+		return array(
+			'result'   => 'success',
+			'redirect' => $this->get_processing_gateway()->get_return_url( $order ),
+		);
+	}
+
+
+	/**
+	 * Gets a single product payment request.
+	 *
+	 * @since 4.7.0-dev
+	 * @see \SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
+	 *
+	 * @param \WC_Product $product product object
+	 * @param bool $in_cart whether to generate a cart for this request
+	 * @return array
+	 *
+	 * @throws \SV_WC_Payment_Gateway_Exception
+	 */
+	public function get_product_payment_request( WC_Product $product, $in_cart = false ) {
+
+		if ( ! is_user_logged_in() ) {
+			WC()->session->set_customer_session_cookie( true );
+		}
+
+		// no subscription products
+		if ( $this->get_plugin()->is_subscriptions_active() && WC_Subscriptions_Product::is_subscription( $product ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Not available for subscription products.' );
+		}
+
+		// no pre-order "charge upon release" products
+		if ( $this->get_plugin()->is_pre_orders_active() && WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Not available for pre-order products that are set to charge upon release.' );
+		}
+
+		// only simple products
+		if ( ! $product->is_type( 'simple' ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Buy Now is only available for simple products' );
+		}
+
+		// if this product can't be purchased, bail
+		if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Product is not available for purchase.' );
+		}
+
+		if ( $in_cart ) {
+
+			WC()->cart->empty_cart();
+
+			WC()->cart->add_to_cart( $product->get_id() );
+
+			$request = $this->get_cart_payment_request( WC()->cart );
+
+		} else {
+
+			$request = $this->build_payment_request( $product->get_price(), array( 'needs_shipping' => $product->needs_shipping() ) );
+
+			$stored_request = $this->get_stored_payment_request();
+
+			$stored_request['product_id'] = $product->get_id();
+
+			$this->store_payment_request( $stored_request );
+		}
+
+		/**
+		 * Filters the Apple Pay Buy Now JS payment request.
+		 *
+		 * @since 4.7.0-dev
+		 * @param array $request request data
+		 * @param \WC_Product $product product object
+		 */
+		return apply_filters( 'sv_wc_apple_pay_buy_now_payment_request', $request, $product );
+	}
+
+
+	/**
+	 * Gets a payment request based on WooCommerce cart data.
+	 *
+	 * @since 4.7.0-dev
+	 * @see \SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
+	 *
+	 * @param \WC_Cart $cart cart object
+	 * @return array
+	 *
+	 * @throws \SV_WC_Payment_Gateway_Exception
+	 */
+	public function get_cart_payment_request( WC_Cart $cart ) {
+
+		if ( $this->get_plugin()->is_subscriptions_active() && WC_Subscriptions_Cart::cart_contains_subscription() ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Cart contains subscriptions.' );
+		}
+
+		if ( $this->get_plugin()->is_pre_orders_active() && WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Cart contains pre-orders.' );
+		}
+
+		// ensure totals are fully calculated by simulating checkout
+		if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
+			define( 'WOOCOMMERCE_CHECKOUT', true );
+		}
+
+		$cart->calculate_totals();
+
+		if ( count( WC()->shipping->get_packages() ) > 1 ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Apple Pay cannot be used for multiple shipments.' );
+		}
+
+		$args = array(
+			'line_totals'    => $this->get_cart_totals( $cart ),
+			'needs_shipping' => $cart->needs_shipping(),
 		);
 
-		WC()->shipping->calculate_shipping( array( $package ) );
+		// build it!
+		$request = $this->build_payment_request( $cart->total, $args );
+
+		/**
+		 * Filters the Apple Pay cart JS payment request.
+		 *
+		 * @since 4.7.0-dev
+		 * @param array $args the cart JS payment request
+		 * @param \WC_Cart $cart the cart object
+		 */
+		return apply_filters( 'sv_wc_apple_pay_cart_payment_request', $request, $cart );
+	}
+
+
+	/**
+	 * Recalculates the lines and totals for the current payment request.
+	 *
+	 * @since 4.7.0-dev
+	 *
+	 * @return array
+	 *
+	 * @throws \SV_WC_Payment_Gateway_Exception
+	 */
+	public function recalculate_totals() {
+
+		$payment_request = $this->get_stored_payment_request();
+
+		if ( empty( $payment_request ) ){
+			throw new SV_WC_Payment_Gateway_Exception( 'Payment request data is missing.' );
+		}
+
+		// if this is a single product request, make sure the cart gets populated
+		if ( ! empty( $payment_request['product_id'] ) && $product = wc_get_product( $payment_request['product_id'] ) ) {
+			$payment_request = $this->get_product_payment_request( $product, true );
+		}
+
+		if ( ! WC()->cart ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Cart data is missing.' );
+		}
+
+		$totals = $this->get_cart_totals( WC()->cart );
+
+		$payment_request['lineItems']       = $this->build_payment_request_lines( $totals );
+		$payment_request['shippingMethods'] = array();
 
 		$packages = WC()->shipping->get_packages();
 
-		return $packages[0]['rates'];
+		if ( ! empty( $packages ) ) {
+
+			foreach ( $packages[0]['rates'] as $method ) {
+
+				/**
+				 * Filters a shipping method's description for the Apple Pay payment card.
+				 *
+				 * @since 4.7.0-dev
+				 *
+				 * @param string $detail shipping method detail, such as delivery estimation
+				 * @param object $method shipping method object
+				 */
+				$method_detail = apply_filters( 'wc_payment_gateway_apple_pay_shipping_method_detail', '', $method );
+
+				$payment_request['shippingMethods'][] = array(
+					'label'      => $method->get_label(),
+					'detail'     => $method_detail,
+					'amount'     => $this->format_price( $method->cost ),
+					'identifier' => $method->id,
+				);
+			}
+		}
+
+		// reset the order total based on the new line items
+		$payment_request['total']['amount'] = $this->format_price( array_sum( wp_list_pluck( $payment_request['lineItems'], 'amount' ) ) );
+
+		// update the stored payment request session with the new line items & totals
+		$this->store_payment_request( $payment_request );
+
+		return $payment_request;
+	}
+
+
+	/**
+	 * Gets the line totals for a cart.
+	 *
+	 * @since 4.7.0-dev
+	 * @see \SV_WC_Payment_Gateway_Apple_Pay::build_payment_request_lines()
+	 *
+	 * @param \WC_Cart $cart cart object
+	 * @return array
+	 */
+	protected function get_cart_totals( WC_Cart $cart ) {
+
+		// ensure totals are fully calculated by simulating checkout
+		if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
+			define( 'WOOCOMMERCE_CHECKOUT', true );
+		}
+
+		$cart->calculate_totals();
+
+		return array(
+			'subtotal' => $cart->subtotal_ex_tax,
+			'discount' => $cart->get_cart_discount_total(),
+			'shipping' => $cart->shipping_total,
+			'fees'     => $cart->fee_total,
+			'taxes'    => $cart->tax_total + $cart->shipping_tax_total,
+		);
 	}
 
 
 	/**
 	 * Builds a payment request for the Apple Pay JS.
 	 *
-	 * This contains all of the data necessary to complete a payment, including
-	 * line items and shipping info.
+	 * This contains all of the data necessary to complete a payment.
 	 *
 	 * @since 4.7.0-dev
 	 *
@@ -318,42 +437,27 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * @param array $args {
 	 *     Optional. The payment request args.
 	 *
-	 *     @type string    $currency_code         Payment currency code. Defaults to the shop currency.
-	 *     @type string    $country_code          Payment country code. Defaults to the shop base country.
-	 *     @type string    $merchant_name         Merchant name. Defaults to the shop name.
-	 *     @type array     $merchant_capabilities merchant capabilities
-	 *     @type array     $supported_networks    supported networks or card types
-	 *     @type float|int $subtotal              order subtotal
-	 *     @type float|int $discount_total        discount total
-	 *     @type float|int $shipping_total        shipping total
-	 *     @type float|int $fee_total             fees total
-	 *     @type float|int $tax_total             taxes total
-	 *     @type bool      $needs_shipping        whether the payment needs shipping
+	 *     @type string $currency_code         Payment currency code. Defaults to the shop currency.
+	 *     @type string $country_code          Payment country code. Defaults to the shop base country.
+	 *     @type string $merchant_name         Merchant name. Defaults to the shop name.
+	 *     @type array  $merchant_capabilities merchant capabilities
+	 *     @type array  $supported_networks    supported networks or card types
+	 *     @type bool   $needs_shipping        whether the payment needs shipping
+	 *     @type array  $line_totals           request line totals. @see \SV_WC_Payment_Gateway_Apple_Pay::build_payment_request_lines()
 	 * }
 	 *
 	 * @return array
 	 */
 	public function build_payment_request( $amount, $args = array() ) {
 
-		$this->log( 'Building payment request.' );
-
 		$args = wp_parse_args( $args, array(
-
-			// transaction details
 			'currency_code'         => get_woocommerce_currency(),
 			'country_code'          => get_option( 'woocommerce_default_country' ),
 			'merchant_name'         => get_bloginfo( 'name', 'display' ),
 			'merchant_capabilities' => $this->get_capabilities(),
 			'supported_networks'    => $this->get_supported_networks(),
-
-			// totals
-			'subtotal'       => 0.00,
-			'discount_total' => 0.00,
-			'shipping_total' => 0.00,
-			'fee_total'      => 0.00,
-			'tax_total'      => 0.00,
-
-			'needs_shipping' => false,
+			'line_totals'           => array(),
+			'needs_shipping'        => false,
 		) );
 
 		// set the base required defaults
@@ -370,21 +474,12 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			),
 		);
 
-		$line_items = $this->build_payment_request_lines( array(
-			'subtotal' => $args['subtotal'],
-			'discount' => $args['discount_total'],
-			'shipping' => $args['shipping_total'],
-			'fees'     => $args['fee_total'],
-			'taxes'    => $args['tax_total'],
-		) );
-
-		if ( ! empty( $line_items ) ) {
-			$request['lineItems'] = $line_items;
+		if ( $args['needs_shipping'] ) {
+			$request['requiredShippingContactFields'][] = 'postalAddress';
 		}
 
-		// if a shipping line is present, require the full shipping address
-		if ( $args['shipping_total'] > 0 || $args['needs_shipping'] ) {
-			$request['requiredShippingContactFields'][] = 'postalAddress';
+		if ( is_array( $args['line_totals'] ) && ! empty( $args['line_totals'] ) ) {
+			$request['lineItems'] = $this->build_payment_request_lines( $args['line_totals'] );
 		}
 
 		// order total
@@ -401,15 +496,21 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			$request['lineItems'] = array_values( $request['lineItems'] );
 		}
 
-		// log the payment request
-		$this->log( "Payment Request:\n" . print_r( $request, true ) );
-
 		return $request;
 	}
 
 
 	/**
 	 * Builds payment request lines for the Apple Pay JS.
+	 *
+	 * Apple guidelines prefer that the "lines" displayed on the Apple Pay card
+	 * should be overall order totals, instead of listing actual product lines.
+	 * This method standardizes the main breakdowns which are:
+	 * + Subtotal
+	 * + Discounts (represented as a single negative amount)
+	 * + Shipping
+	 * + Fees
+	 * + Taxes
 	 *
 	 * @since 4.7.0-dev
 	 *
@@ -503,397 +604,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 
 	/**
-	 * Processes the payment after the Apple Pay authorization.
-	 *
-	 * @since 4.6.0-dev
-	 */
-	public function process_payment() {
-
-		$type     = SV_WC_Helper::get_post( 'type' );
-		$response = stripslashes( SV_WC_Helper::get_post( 'payment' ) );
-
-		try {
-
-			// store the payment response JSON for later use
-			WC()->session->set( 'apple_pay_payment_response', $response );
-
-			$response = new SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $response );
-
-			// log the payment response
-			$this->log( "Payment Response:\n" . $response->to_string_safe() . "\n" );
-
-			// pretend this is at checkout so totals are fully calculated
-			if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
-				define( 'WOOCOMMERCE_CHECKOUT', true );
-			}
-
-			$order = null;
-
-			// create a new order
-			switch ( $type ) {
-
-				case 'product':
-					$order = $this->create_product_order();
-				break;
-
-				case 'cart':
-				case 'checkout':
-					$order = $this->create_cart_order();
-				break;
-
-				default:
-					throw new SV_WC_Payment_Gateway_Exception( 'Invalid payment type recieved' );
-			}
-
-			// if we got to this point, the payment was authorized by Apple Pay
-			// from here on out, it's up to the gateway to not screw things up.
-			$order->add_order_note( __( 'Apple Pay payment authorized.', 'woocommerce-plugin-framework' ) );
-
-			$order->set_address( $response->get_billing_address(),  'billing' );
-			$order->set_address( $response->get_shipping_address(), 'shipping' );
-
-			// save the order data before payment for WC 3.0+
-			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
-				$order->save();
-			}
-
-			// process the payment via the gateway
-			$result = $this->get_processing_gateway()->process_payment( SV_WC_Order_Compatibility::get_prop( $order, 'id' ) );
-
-			// clear the payment request data
-			unset( WC()->session->apple_pay_payment_request );
-			unset( WC()->session->apple_pay_payment_response );
-			unset( WC()->session->order_awaiting_payment );
-
-			wp_send_json( $result );
-
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
-
-			$this->log( 'Payment failed. ' . $e->getMessage() );
-
-			if ( $order ) {
-
-				$order->add_order_note( sprintf(
-					/** translators: Placeholders: %s - the error message */
-					__( 'Apple Pay payment failed. %s', 'woocommerce-plugin-framework' ),
-					$e->getMessage()
-				) );
-			}
-
-			wp_send_json( array(
-				'result'  => 'error',
-				'message' => $e->getMessage(),
-			) );
-		}
-	}
-
-
-	/**
-	 * Allows the processing gateway to add Apple Pay details to the payment data.
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @return \WC_Order
-	 */
-	public function add_order_data( $order ) {
-
-		$response_data = WC()->session->get( 'apple_pay_payment_response', '' );
-
-		if ( ! empty( $response_data ) ) {
-
-			$response = new SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $response_data );
-
-			$order = $this->get_processing_gateway()->get_order_for_apple_pay( $order, $response );
-		}
-
-		return $order;
-	}
-
-
-	/**
-	 * Creates an order from the current cart.
-	 *
-	 * @since 4.6.0-dev
-	 * @throws \SV_WC_Plugin_Exception
-	 */
-	public function create_cart_order() {
-
-		$items = array();
-
-		WC()->cart->calculate_totals();
-
-		foreach ( WC()->cart->get_cart() as $cart_item_key => $item ) {
-
-			$items[ $cart_item_key ] = array(
-				'product'  => $item['data'],
-				'quantity' => $item['quantity'],
-				'args'     => array(
-					'variation' => $item['variation'],
-					'totals'    => array(
-						'subtotal'     => $item['line_subtotal'],
-						'subtotal_tax' => $item['line_subtotal_tax'],
-						'total'        => $item['line_total'],
-						'tax'          => $item['line_tax'],
-						'tax_data'     => $item['line_tax_data']
-					),
-				),
-				'values' => $item,
-			);
-		}
-
-		$args = array(
-			'coupons'          => array(),
-			'shipping_methods' => array(),
-			'fees'             => WC()->cart->get_fees(),
-		);
-
-		foreach ( WC()->cart->get_coupons() as $code => $coupon ) {
-
-			$args['coupons'][ $code ] = array(
-				'amount'     => WC()->cart->get_coupon_discount_amount( $code ),
-				'tax_amount' => WC()->cart->get_coupon_discount_tax_amount( $code ),
-			);
-		}
-
-		$chosen_methods = WC()->session->get( 'chosen_shipping_methods', array() );
-
-		foreach ( WC()->shipping->get_packages() as $key => $package ) {
-
-			if ( isset( $package['rates'][ $chosen_methods[ $key ] ] ) ) {
-
-				$method = $package['rates'][ $chosen_methods[ $key ] ];
-
-				$args['shipping_methods'][ $method->id ] = $method;
-			}
-		}
-
-		// set the cart hash to this can be resumed on failure
-		$args['cart_hash'] = md5( json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total );
-
-		$order = $this->create_order( $items, $args );
-
-		return $order;
-	}
-
-
-	/**
-	 * Creates an order from a single product request.
-	 *
-	 * @since 4.6.0-dev
-	 * @throws \SV_WC_Payment_Gateway_Exception
-	 */
-	protected function create_product_order() {
-
-		$payment_request = $this->get_stored_payment_request();
-
-		if ( empty( $payment_request ) ) {
-			throw new SV_WC_Payment_Gateway_Exception( 'Payment request data is missing.' );
-		}
-
-		if ( empty( $payment_request['product_id'] ) ) {
-			throw new SV_WC_Payment_Gateway_Exception( 'Product ID is missing.' );
-		}
-
-		$product = wc_get_product( $payment_request['product_id'] );
-
-		if ( ! $product ) {
-			throw new SV_WC_Payment_Gateway_Exception( 'Invalid product ID.' );
-		}
-
-		if ( ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
-			throw new SV_WC_Payment_Gateway_Exception( __( 'The product is out of stock.', 'woocommerce-plugin-framework' ) );
-		}
-
-		$items = array(
-			array(
-				'product'  => $product,
-				'quantity' => 1,
-				'args'     => array(),
-				'values'   => array(),
-			)
-		);
-
-		$args  = array();
-
-		if ( ! empty( $payment_request['shippingMethods'] ) ) {
-
-			$chosen_methods = WC()->session->get( 'chosen_shipping_methods', array() );
-
-			foreach( $payment_request['shippingMethods'] as $method ) {
-
-				if ( ! in_array( $method['identifier'], $chosen_methods, true ) ) {
-					continue;
-				}
-
-				$rate_id   = $method['identifier'];
-				$label     = $method['label'];
-				$cost      = $method['amount'];
-				$taxes     = array(); // TODO: test
-				$method_id = $rate_id;
-
-				$args['shipping_methods'][ $rate_id ] = new WC_Shipping_Rate( $rate_id, $label, $cost, $taxes, $method_id );
-			}
-		}
-
-		// set the cart hash to this can be resumed on failure
-		$args['cart_hash'] = md5( json_encode( wc_clean( $payment_request ) ) . $payment_request['total']['amount'] );
-
-		$order = $this->create_order( $items, $args );
-
-		$order->set_total( $payment_request['total']['amount'] );
-
-		return $order;
-	}
-
-
-	/**
-	 * Creates a new order from provided data.
-	 *
-	 * This is adapted from WooCommerce's `WC_Checkout::create_order()`
-	 *
-	 * @since 4.6.0-dev
-	 * @param array $items {
-	 *     The items to add to the order.
-	 *
-	 *     @type \WC_Product $product  The product object.
-	 *     @type int         $quantity The item quantity.
-	 *     @type array       $args     The item args. See `WC_Abstract_Order::add_product()` for required keys.
-	 *     @type array       $values   The original cart item values. Only included to maintain compatibility
-	 *                                 with the `woocommerce_add_order_item_meta` filter.
-	 * }
-	 * @param array $args {
-	 *     Optional. The order args.
-	 *
-	 *     @type int    $customer_id The user ID for this customer. If left blank, the current user ID will be
-	 *                               used, or the user will be Guest if there is no current user.
-	 *     @type array  $coupons     Any coupons to add to the order. Arrays as
-	 *                               `$code => array( $amount => 0.00, $tax_amount => 0.00 )`
-	 *     @type array  $shipping_methods Any shipping methods to add to the order. As formatted by
-	 *                              `WC()->shipping->get_packages()`
-	 *     @type array  $fees        Any fees to add to the order. See `WC_Abstract_Order::add_fee()` for
-	 *                               required values.
-	 *     @type string $cart_hash   The hashed cart object to be used later in case the order is to be resumed.
-	 *
-	 * @throws \SV_WC_Payment_Gateway_Exception
-	 */
-	public function create_order( $items, $args = array() ) {
-
-		$args = wp_parse_args( $args, array(
-			'customer_id'      => get_current_user_id(),
-			'coupons'          => array(),
-			'shipping_methods' => array(),
-			'fees'             => array(),
-			'cart_hash'        => '',
-		) );
-
-		try {
-
-			wc_transaction_query( 'start' );
-
-			$order_data = array(
-				'status'      => apply_filters( 'woocommerce_default_order_status', 'pending' ),
-				'customer_id' => $args['customer_id'],
-				'cart_hash'   => $args['cart_hash'],
-				'created_via' => 'apple_pay',
-			);
-
-			$order = $this->get_order_object( $order_data );
-
-			$order->set_payment_method( $this->get_processing_gateway() );
-
-			// add line items
-			foreach ( $items as $key => $item ) {
-
-				if ( ! $order->add_product( $item['product'], $item['quantity'], $item['args'] ) ) {
-					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 525 ) );
-				}
-			}
-
-			// add coupons
-			foreach ( $args['coupons'] as $code => $coupon ) {
-
-				if ( ! SV_WC_Order_Compatibility::add_coupon( $order, $code, $coupon['amount'], $coupon['tax_amount'] ) ) {
-					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 529 ) );
-				}
-			}
-
-			// add shipping methods
-			foreach ( $args['shipping_methods'] as $method_id => $method ) {
-
-				if ( ! SV_WC_Order_Compatibility::add_shipping( $order, $method ) ) {
-					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 527 ) );
-				}
-			}
-
-			// add fees
-			foreach ( $args['fees'] as $key => $fee ) {
-
-				if ( ! SV_WC_Order_Compatibility::add_fee( $order, $fee ) ) {
-					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 526 ) );
-				}
-			}
-
-			$order->calculate_totals();
-
-			wc_transaction_query( 'commit' );
-
-			return $order;
-
-		} catch ( Exception $e ) {
-
-			wc_transaction_query( 'rollback' );
-
-			throw $e;
-		}
-	}
-
-
-	/**
-	 * Gets an order object for add items.
-	 *
-	 * @since 4.6.0-dev
-	 * @param array $order_data the order data
-	 * @return \WC_Order
-	 * @throws \SV_WC_Payment_Gateway_Exception
-	 */
-	protected function get_order_object( $order_data ) {
-
-		$order_id = (int) WC()->session->get( 'order_awaiting_payment', 0 );
-
-		if ( $order_id && $order_data['cart_hash'] === get_post_meta( $order_id, '_cart_hash', true ) && ( $order = wc_get_order( $order_id ) ) && $order->has_status( array( 'pending', 'failed' ) ) ) {
-
-			$order_data['order_id'] = $order_id;
-
-			$order = wc_update_order( $order_data );
-
-			if ( is_wp_error( $order ) ) {
-				throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 522 ) );
-			} else {
-				$order->remove_order_items();
-			}
-
-		} else {
-
-			$order = wc_create_order( $order_data );
-
-			if ( is_wp_error( $order ) ) {
-				throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 520 ) );
-			} elseif ( false === $order ) {
-				throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 521 ) );
-			}
-
-			// set the new order ID so it can be resumed in case of failure
-			WC()->session->set( 'order_awaiting_payment', SV_WC_Order_Compatibility::get_prop( $order, 'id' ) );
-		}
-
-		return $order;
-	}
-
-
-	/**
 	 * Gets the stored payment request data.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return array
 	 */
 	public function get_stored_payment_request() {
@@ -903,9 +616,27 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 
 	/**
+	 * Gets the stored payment response data.
+	 *
+	 * @since 4.7.0-dev
+	 * @return \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response|false
+	 */
+	public function get_stored_payment_response() {
+
+		$response_data = WC()->session->get( 'apple_pay_payment_response', array() );
+
+		if ( ! empty( $response_data ) ) {
+			return new SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $response_data );
+		} else {
+			return false;
+		}
+	}
+
+
+	/**
 	 * Stores payment request data for later use.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 */
 	public function store_payment_request( $data ) {
 
@@ -914,12 +645,93 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 
 	/**
+	 * Stores payment response data for later use.
+	 *
+	 * @since 4.7.0-dev
+	 */
+	public function store_payment_response( $data ) {
+
+		WC()->session->set( 'apple_pay_payment_response', $data );
+	}
+
+
+	/**
+	 * Clears all payment request & response data from the session.
+	 *
+	 * @since 4.7.0-dev
+	 */
+	public function clear_payment_data() {
+
+		unset( WC()->session->apple_pay_payment_request );
+		unset( WC()->session->apple_pay_payment_response );
+		unset( WC()->session->order_awaiting_payment );
+	}
+
+
+	/**
+	 * Filters and sets the customer's taxable address.
+	 *
+	 * This is necessary because Apple Pay doesn't ever provide a billing
+	 * address until after payment is complete. If the shop is set to calculate
+	 * tax based on the billing address, we need to use the shipping address
+	 * to at least get some rates for new customers.
+	 *
+	 * @internal
+	 *
+	 * @since 4.7.0-dev
+	 *
+	 * @param array $address taxable address
+	 * @return array
+	 */
+	public function set_customer_taxable_address( $address ) {
+
+		$billing_country = SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ? WC()->customer->get_billing_country() : WC()->customer->get_country();
+
+		// set to the shipping address provided by Apple Pay if:
+		// 1. shipping is available
+		// 2. billing is not available
+		// 3. taxes aren't configured to use the shop base
+		if ( WC()->customer->get_shipping_country() && ! $billing_country && $address[0] !== WC()->countries->get_base_country() ) {
+
+			$address = array(
+				WC()->customer->get_shipping_country(),
+				WC()->customer->get_shipping_state(),
+				WC()->customer->get_shipping_postcode(),
+				WC()->customer->get_shipping_city(),
+			);
+		}
+
+		return $address;
+	}
+
+
+	/**
+	 * Allows the processing gateway to add Apple Pay details to the payment data.
+	 *
+	 * @internal
+	 *
+	 * @since 4.7.0-dev
+	 *
+	 * @param \WC_Order $order the order object
+	 * @return \WC_Order
+	 */
+	public function add_order_data( $order ) {
+
+		if ( $response = $this->get_stored_payment_response() ) {
+			$order = $this->get_processing_gateway()->get_order_for_apple_pay( $order, $response );
+		}
+
+		return $order;
+	}
+
+
+	/**
 	 * Gets the Apple Pay API.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return \SV_WC_Payment_Gateway_Apple_Pay_API
 	 */
-	protected function get_api() {
+	public function get_api() {
 
 		if ( ! $this->api instanceof SV_WC_Payment_Gateway_Apple_Pay_API ) {
 
@@ -937,7 +749,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Adds a log entry to the gateway's debug log.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @param string $message the log message to add
 	 */
 	public function log( $message ) {
@@ -961,7 +773,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * that Apple Pay is properly configured and ready to be initiated by the
 	 * Apple Pay JS.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return bool
 	 */
 	public function is_available() {
@@ -973,7 +785,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		/**
 		 * Filters whether Apple Pay should be made available to users.
 		 *
-		 * @since 4.6.0-dev
+		 * @since 4.7.0-dev
 		 * @param bool $is_available
 		 */
 		return apply_filters( 'sv_wc_apple_pay_is_available', $is_available );
@@ -983,7 +795,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Determines if Apple Pay settings are properly configured.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return bool
 	 */
 	public function is_configured() {
@@ -1003,7 +815,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Determines if the certification path is set and valid.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return bool
 	 */
 	public function is_cert_configured() {
@@ -1015,7 +827,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Determines if Apple Pay is enabled.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
+	 *
 	 * @return bool
 	 */
 	public function is_enabled() {
@@ -1025,9 +838,22 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 
 	/**
+	 * Determines if test mode is enabled.
+	 *
+	 * @since 4.7.0-dev
+	 *
+	 * @return bool
+	 */
+	public function is_test_mode() {
+
+		return 'yes' === get_option( 'sv_wc_apple_pay_test_mode' );
+	}
+
+
+	/**
 	 * Gets the configured Apple merchant ID.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return string
 	 */
 	public function get_merchant_id() {
@@ -1039,7 +865,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the certificate file path.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return string
 	 */
 	public function get_cert_path() {
@@ -1051,7 +877,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the currencies accepted by the gateway's Apple Pay integration.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return array
 	 */
 	public function get_accepted_currencies() {
@@ -1061,7 +887,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		/**
 		 * Filters the currencies accepted by the gateway's Apple Pay integration.
 		 *
-		 * @since 4.6.0-dev
+		 * @since 4.7.0-dev
 		 * @return array
 		 */
 		return apply_filters( 'sv_wc_apple_pay_accepted_currencies', $currencies );
@@ -1071,7 +897,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the gateway's Apple Pay capabilities.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return array
 	 */
 	public function get_capabilities() {
@@ -1090,7 +916,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		/**
 		 * Filters the gateway's Apple Pay capabilities.
 		 *
-		 * @since 4.6.0-dev
+		 * @since 4.7.0-dev
 		 * @param array $capabilities the gateway capabilities
 		 * @param \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler
 		 */
@@ -1101,7 +927,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the supported networks for Apple Pay.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return array
 	 */
 	public function get_supported_networks() {
@@ -1123,7 +949,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		/**
 		 * Filters the supported Apple Pay networks (card types).
 		 *
-		 * @since 4.6.0-dev
+		 * @since 4.7.0-dev
 		 * @param array $networks the supported networks
 		 * @param \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler
 		 */
@@ -1134,7 +960,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the gateways that declare Apple Pay support.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return array the supporting gateways as `$gateway_id => \SV_WC_Payment_Gateway`
 	 */
 	public function get_supporting_gateways() {
@@ -1156,7 +982,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the gateway set to process Apple Pay transactions.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return \SV_WC_Payment_Gateway|null
 	 */
 	public function get_processing_gateway() {
@@ -1172,7 +998,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the Apple Pay button style.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return string
 	 */
 	public function get_button_style() {
@@ -1184,7 +1010,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the gateway plugin instance.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return \SV_WC_Payment_Gateway_Plugin
 	 */
 	public function get_plugin() {

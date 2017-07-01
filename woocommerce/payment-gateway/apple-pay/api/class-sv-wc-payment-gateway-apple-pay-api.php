@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) or exit;
 /**
  * Sets up the Apple Pay API.
  *
- * @since 4.6.0-dev
+ * @since 4.7.0-dev
  */
 class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 
@@ -39,7 +39,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @param \SV_WC_Payment_Gateway the gateway instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway $gateway ) {
@@ -58,7 +58,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	/**
 	 * Validates the Apple Pay merchant.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @param string $url the validation URL
 	 * @param string $merchant_id the merchant ID to validate
 	 * @param string $domain_name the verified domain name
@@ -182,7 +182,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	/**
 	 * Gets a new request object.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @param array $type Optional. The desired request type
 	 * @return \SV_WC_Payment_Gateway_Apple_Pay_API_Request the request object
 	 */
@@ -195,7 +195,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	/**
 	 * Gets the gateway instance.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return \SV_WC_Payment_Gateway
 	 */
 	protected function get_gateway() {
@@ -207,7 +207,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	/**
 	 * Gets the plugin instance.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return \SV_WC_Payment_Gateway_Plugin
 	 */
 	protected function get_plugin() {

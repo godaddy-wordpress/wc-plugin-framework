@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) or exit;
 /**
  * Sets up the Apple Pay settings screen.
  *
- * @since 4.6.0-dev
+ * @since 4.7.0-dev
  */
 class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 
@@ -65,7 +65,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	/**
 	 * Adds Apple Pay to the checkout settings sections.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @param array $sections the existing sections
 	 * @return array
 	 */
@@ -181,6 +181,14 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 		}
 
 		$connection_settings[] = array(
+			'id'      => 'sv_wc_apple_pay_test_mode',
+			'title'   => __( 'Test Mode', 'woocommerce-plugin-framework' ),
+			'desc'    => __( 'Enable to test Apple Pay functionality throughout your sites without processing real payments.', 'woocommerce-plugin-framework' ),
+			'type'    => 'checkbox',
+			'default' => 'no',
+		);
+
+		$connection_settings[] = array(
 			'type' => 'sectionend',
 		);
 
@@ -235,7 +243,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	 * This "setting" just displays simple text instead of a <select> with only
 	 * one option.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @param array $setting
 	 */
 	public function render_static_setting( $setting ) {
@@ -262,7 +270,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	/**
 	 * Adds admin notices for configuration options that need attention.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 */
 	public function add_admin_notices() {
 
@@ -335,7 +343,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	/**
 	 * Determines if the user is currently on the settings screen.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return bool
 	 */
 	protected function is_settings_screen() {
@@ -347,7 +355,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	/**
 	 * Gets the available display location options.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return array
 	 */
 	protected function get_display_location_options() {
@@ -363,7 +371,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	/**
 	 * Gets the available gateway options.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return array
 	 */
 	protected function get_gateway_options() {

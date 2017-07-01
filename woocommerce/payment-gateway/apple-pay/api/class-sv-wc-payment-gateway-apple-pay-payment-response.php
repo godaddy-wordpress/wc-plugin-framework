@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) or exit;
 /**
  * The Apple Pay payment response object.
  *
- * @since 4.6.0-dev
+ * @since 4.7.0-dev
  */
 class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Response {
 
@@ -35,7 +35,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	/**
 	 * Gets the authorized payment data.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return object
 	 */
 	public function get_payment_data() {
@@ -47,7 +47,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	/**
 	 * Gets the authorization transaction ID.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return string
 	 */
 	public function get_transaction_id() {
@@ -59,7 +59,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	/**
 	 * Gets the authorized card type.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return string
 	 */
 	public function get_card_type() {
@@ -73,7 +73,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	/**
 	 * Gets the last four digits of the authorized card.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return string
 	 */
 	public function get_last_four() {
@@ -91,7 +91,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	/**
 	 * Gets the billing address.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return array
 	 */
 	public function get_billing_address() {
@@ -117,7 +117,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	/**
 	 * Gets the shipping address.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return array
 	 */
 	public function get_shipping_address() {
@@ -133,7 +133,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	/**
 	 * Prepare an address to WC formatting.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @param object $contact the address to prepare
 	 * @return array
 	 */
