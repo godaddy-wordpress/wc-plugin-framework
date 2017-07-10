@@ -82,9 +82,31 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 
 
 	/**
-	 * Set the PEM file required for authentication with the Global Gateway API
+	 * Performs the request and return the parsed response.
 	 *
-	 * @since 4.0.0
+	 * @since 4.7.0-dev
+	 *
+	 * @param \SV_WC_API_Request
+	 * @return \SV_WC_API_Response
+	 *
+	 * @throws \SV_WC_API_Exception
+	 */
+	protected function perform_request( $request ) {
+
+		// set PEM file cert for requests
+		add_action( 'http_api_curl', array( $this, 'set_cert_file' ) );
+
+		return parent::perform_request( $request );
+	}
+
+
+	/**
+	 * Sets the PEM file required for authentication.
+	 *
+	 * @internal
+	 *
+	 * @since 4.7.0-dev
+	 *
 	 * @param resource $curl_handle
 	 */
 	public function set_cert_file( $curl_handle ) {
@@ -94,70 +116,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 		}
 
 		curl_setopt( $curl_handle, CURLOPT_SSLCERT, get_option( 'sv_wc_apple_pay_cert_path' ) );
-	}
-
-
-	/**
-	 * Perform the remote request.
-	 *
-	 * WP 4.6 decided to make adding our own `curl_setopt` impossible, so we have to build a custom
-	 * request in those cases.
-	 *
-	 * @since 4.1.4
-	 * @param string $request_uri the request URL
-	 * @param string $request_args the request args as used by `wp_safe_remote_request()`
-	 * @return array|WP_Error
-	 */
-	protected function do_remote_request( $request_uri, $request_args ) {
-
-		// create a custom request for WP 4.6+
-		if ( version_compare( get_bloginfo( 'version' ), '4.6', '>=' ) ) {
-
-			$headers = $request_args['headers'];
-			$type    = $request_args['method'];
-			$data    = $request_args['body'];
-
-			$options = array(
-				'timeout'          => $request_args['timeout'],
-				'useragent'        => $request_args['user-agent'],
-				'blocking'         => $request_args['blocking'],
-				'follow_redirects' => false,
-				'verify'           => ABSPATH . WPINC . '/certificates/ca-bundle.crt',
-				'hooks'            => new Requests_Hooks(),
-			);
-
-			// set PEM file cert for requests
-			$options['hooks']->register( 'curl.before_send', array( $this, 'set_cert_file' ) );
-
-			// documented by WP in wp-includes/class-wp-http.php
-			$options['verify'] = apply_filters( 'https_ssl_verify', $options['verify'] );
-
-			try {
-
-				$response = Requests::request( $request_uri, $headers, $data, $type, $options );
-
-				// convert the response into an array
-				$http_response = new WP_HTTP_Requests_Response( $response );
-				$response      = $http_response->to_array();
-
-				// add the original object to the array
-				$response['http_response'] = $http_response;
-
-			} catch ( Requests_Exception $e ) {
-
-				$response = new WP_Error( 'http_request_failed', $e->getMessage() );
-			}
-
-		// otherwise, do a good old-fashioned request
-		} else {
-
-			// set PEM file cert for requests
-			add_action( 'http_api_curl', array( $this, 'set_cert_file' ) );
-
-			$response = wp_safe_remote_request( $request_uri, $request_args );
-		}
-
-		return $response;
 	}
 
 
