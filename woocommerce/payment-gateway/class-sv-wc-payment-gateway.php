@@ -2922,9 +2922,14 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		foreach ( $order->get_items() as $item ) {
-			$product = $order->get_product_from_item( $item );
 
-			if ( $product->needs_shipping() ) {
+			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+				$product = $item->get_product();
+			} else {
+				$product = $order->get_product_from_item( $item );
+			}
+
+			if ( $product && $product->needs_shipping() ) {
 				return true;
 			}
 		}

@@ -1,5 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2017.06.26 - version 4.6.5
+ * Misc. - Make a TLS 1.2 admin notice available for gateways that require it
+ * Misc. - Ensure WooCommerce 3.1 compatibility
+
 2017.05.20 - version 4.6.4
  * Fix - Add dedicated subscriptions Change Payment handling to avoid subscription manipulation
  * Fix - Ensure old payment methods can be removed after changing subscription payment to a new method
