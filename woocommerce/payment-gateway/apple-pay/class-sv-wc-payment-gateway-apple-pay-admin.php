@@ -39,7 +39,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	/**
 	 * Construct the class.
 	 *
-	 * @since 1.0.0
+	 * @since 4.7.0-dev
 	 */
 	public function __construct( $handler ) {
 
@@ -65,7 +65,10 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	/**
 	 * Adds Apple Pay to the checkout settings sections.
 	 *
+	 * @internal
+	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @param array $sections the existing sections
 	 * @return array
 	 */
@@ -80,7 +83,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	/**
 	 * Gets all of the combined settings.
 	 *
-	 * @since 1.0.0
+	 * @since 4.7.0-dev
+	 *
 	 * @return array $settings The combined settings.
 	 */
 	public function get_settings() {
@@ -205,9 +209,12 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 
 
 	/**
-	 * Replace core Tax settings with our own when the AvaTax section is being viewed.
+	 * Outputs the settings fields.
 	 *
-	 * @since 1.0.0
+	 * @internal
+	 *
+	 * @since 4.7.0-dev
+	 *
 	 * @return array
 	 */
 	public function add_settings() {
@@ -220,9 +227,12 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 
 
 	/**
-	 * Save the settings.
+	 * Saves the settings.
 	 *
-	 * @since 1.0.0
+	 * @internal
+	 *
+	 * @since 4.7.0-dev
+	 *
 	 * @global string $current_section The current settings section.
 	 */
 	public function save_settings() {
@@ -244,6 +254,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	 * one option.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @param array $setting
 	 */
 	public function render_static_setting( $setting ) {
@@ -344,6 +355,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	 * Determines if the user is currently on the settings screen.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @return bool
 	 */
 	protected function is_settings_screen() {
@@ -356,6 +368,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	 * Gets the available display location options.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @return array
 	 */
 	protected function get_display_location_options() {
@@ -372,6 +385,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	 * Gets the available gateway options.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @return array
 	 */
 	protected function get_gateway_options() {

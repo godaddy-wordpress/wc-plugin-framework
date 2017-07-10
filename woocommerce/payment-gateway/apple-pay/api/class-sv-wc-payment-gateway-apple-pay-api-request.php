@@ -40,6 +40,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Request extends SV_WC_API_JSON_Request
 	 * Constructs the request.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @param \SV_WC_Payment_Gateway $gateway the gateway instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway $gateway ) {
@@ -52,6 +53,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Request extends SV_WC_API_JSON_Request
 	 * Sets the data for merchant validation.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @param string $merchant_id the merchant ID to validate
 	 * @param string $domain_name the verified domain name
 	 * @param string $display_name the merchant display name
@@ -68,6 +70,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Request extends SV_WC_API_JSON_Request
 		 * Filters the data for merchant validation.
 		 *
 		 * @since 4.7.0-dev
+		 *
 		 * @param array $data {
 		 *     The merchant data.
 		 *
@@ -87,6 +90,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Request extends SV_WC_API_JSON_Request
 	 *
 	 * @since 4.7.0-dev
 	 * @see SV_WC_API_Response::to_string_safe()
+	 *
 	 * @return string
 	 */
 	public function to_string_safe() {

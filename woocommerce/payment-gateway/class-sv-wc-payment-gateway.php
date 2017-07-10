@@ -706,7 +706,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Determines whether this gateway supports Apple Pay.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
+	 *
 	 * @return bool
 	 */
 	public function supports_apple_pay() {
@@ -722,7 +723,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * the default. See https://developer.apple.com/reference/applepayjs/paymentrequest/1916123-merchantcapabilities
 	 * for valid values.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
+	 *
 	 * @return array
 	 */
 	public function get_apple_pay_capabilities() {
@@ -738,7 +740,8 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Gets the currencies supported by Apple Pay.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
+	 *
 	 * @return array
 	 */
 	public function get_apple_pay_currencies() {
@@ -753,13 +756,13 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Gateways should override this to set the appropriate values depending on
 	 * how their processing API needs to handle the data.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
+	 *
 	 * @param \WC_Order the order object
-	 * @param \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response the authorize payment response.
-	 *                                                          see https://developer.apple.com/reference/applepayjs/payment for structure
+	 * @param \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response authorized payment response
 	 * @return \WC_Order
 	 */
-	public function get_order_for_apple_pay( $order, $response ) {
+	public function get_order_for_apple_pay( WC_Order $order, SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $response ) {
 
 		$order->payment->account_number = $response->get_last_four();
 		$order->payment->last_four      = $response->get_last_four();

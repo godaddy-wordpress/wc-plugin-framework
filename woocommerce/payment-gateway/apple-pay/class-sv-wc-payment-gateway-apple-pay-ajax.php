@@ -40,6 +40,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	 * Constructs the class.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @param \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Apple_Pay $handler ) {
@@ -69,6 +70,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	/**
 	 * Gets a payment request for the specified type.
 	 *
+	 * @internal
+	 *
 	 * @since 4.7.0-dev
 	 */
 	public function get_payment_request() {
@@ -97,6 +100,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 	/**
 	 * Validates the merchant.
+	 *
+	 * @internal
 	 *
 	 * @since 4.7.0-dev
 	 */
@@ -129,6 +134,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 	/**
 	 * Recalculates the totals for the current payment request.
+	 *
+	 * @internal
 	 *
 	 * @since 4.7.0-dev
 	 */
@@ -201,6 +208,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	/**
 	 * Processes the payment after the Apple Pay authorization.
 	 *
+	 * @internal
+	 *
 	 * @since 4.7.0-dev
 	 */
 	public function process_payment() {
@@ -234,6 +243,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	 * Gets the Apple Pay handler instance.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @return \SV_WC_Payment_Gateway_Apple_Pay
 	 */
 	protected function get_handler() {

@@ -46,6 +46,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * Constructs the class.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @param \SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance
 	 * @param \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance
 	 */
@@ -89,6 +90,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * Gets the configured display locations.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @return array
 	 */
 	protected function get_display_locations() {
@@ -281,6 +283,11 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	}
 
 
+	/**
+	 * Renders the Apple Pay button for checkout.
+	 *
+	 * @since 4.7.0-dev
+	 */
 	public function render_checkout_button() {
 
 		?>
@@ -307,6 +314,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * Gets the gateway instance.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @return \SV_WC_Payment_Gateway
 	 */
 	protected function get_gateway() {
@@ -319,6 +327,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * Gets the gateway plugin instance.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @return \SV_WC_Payment_Gateway_Plugin
 	 */
 	protected function get_plugin() {
@@ -330,6 +339,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * Gets the Apple Pay handler instance.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @return \SV_WC_Payment_Gateway_Apple_Pay
 	 */
 	protected function get_handler() {

@@ -40,6 +40,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	 * Constructs the class.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @param \SV_WC_Payment_Gateway the gateway instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway $gateway ) {
@@ -59,11 +60,14 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	 * Validates the Apple Pay merchant.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @param string $url the validation URL
 	 * @param string $merchant_id the merchant ID to validate
 	 * @param string $domain_name the verified domain name
 	 * @param string $display_name the merchant display name
 	 * @return \SV_WC_Payment_Gateway_Apple_Pay_API_Response the response object
+	 *
+	 * @throws \SV_WC_API_Exception
 	 */
 	public function validate_merchant( $url, $merchant_id, $domain_name, $display_name ) {
 
@@ -160,12 +164,15 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	/** Validation methods ****************************************************/
 
 
-	protected function do_pre_parse_response_validation() {
-
-
-	}
-
-
+	/**
+	 * Validates the post-parsed response.
+	 *
+	 * @since 4.7.0-dev
+	 *
+	 * @return bool
+	 *
+	 * @throws \SV_WC_API_Exception
+	 */
 	protected function do_post_parse_response_validation() {
 
 		$response = $this->get_response();
@@ -173,6 +180,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 		if ( $response->get_status_code() && 200 !== $response->get_status_code() ) {
 			throw new SV_WC_API_Exception( $response->get_status_message() );
 		}
+
+		return true;
 	}
 
 
@@ -183,6 +192,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	 * Gets a new request object.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @param array $type Optional. The desired request type
 	 * @return \SV_WC_Payment_Gateway_Apple_Pay_API_Request the request object
 	 */
@@ -196,6 +206,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	 * Gets the gateway instance.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @return \SV_WC_Payment_Gateway
 	 */
 	protected function get_gateway() {
@@ -208,6 +219,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	 * Gets the plugin instance.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @return \SV_WC_Payment_Gateway_Plugin
 	 */
 	protected function get_plugin() {

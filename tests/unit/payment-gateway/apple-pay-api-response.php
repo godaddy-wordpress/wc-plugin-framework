@@ -7,7 +7,7 @@ use \WP_Mock as Mock;
 /**
  * Unit tests for \SV_WC_Payment_Gateway_Apple_Pay_API_Response
  *
- * @since 4.6.0-dev
+ * @since 4.7.0-dev
  */
 class Payment_Gateway_Apple_Pay_API_Response extends Test_Case {
 
@@ -15,7 +15,7 @@ class Payment_Gateway_Apple_Pay_API_Response extends Test_Case {
 	/**
 	 * Test for \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_status_code()
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 */
 	public function test_get_status_code() {
 
@@ -28,7 +28,7 @@ class Payment_Gateway_Apple_Pay_API_Response extends Test_Case {
 	/**
 	 * Test for blank \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_status_code()
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 */
 	public function test_get_status_code_blank() {
 
@@ -41,7 +41,7 @@ class Payment_Gateway_Apple_Pay_API_Response extends Test_Case {
 	/**
 	 * Test for \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_status_message()
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 */
 	public function test_get_status_message() {
 
@@ -54,7 +54,7 @@ class Payment_Gateway_Apple_Pay_API_Response extends Test_Case {
 	/**
 	 * Test for blank \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_status_message()
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 */
 	public function test_get_status_message_blank() {
 
@@ -67,7 +67,7 @@ class Payment_Gateway_Apple_Pay_API_Response extends Test_Case {
 	/**
 	 * Test for \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_merchant_session()
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 */
 	public function test_get_merchant_session() {
 
@@ -82,7 +82,7 @@ class Payment_Gateway_Apple_Pay_API_Response extends Test_Case {
 	/**
 	 * Test for blank \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_merchant_session()
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 */
 	public function test_get_merchant_session_blank() {
 
@@ -95,7 +95,7 @@ class Payment_Gateway_Apple_Pay_API_Response extends Test_Case {
 	/**
 	 * Gets an example error response.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 * @return string
 	 */
 	private function get_error_response_data() {

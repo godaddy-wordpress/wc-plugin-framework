@@ -337,7 +337,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Initializes Apple Pay if it's supported.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
 	 */
 	public function maybe_init_apple_pay() {
 
@@ -359,7 +359,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Gets the Apple Pay handler instance.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
+	 *
 	 * @return \SV_WC_Payment_Gateway_Apple_Pay
 	 */
 	public function get_apple_pay_instance() {
@@ -371,7 +372,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Determines if this plugin has any gateways with Apple Pay support.
 	 *
-	 * @since 4.6.0-dev
+	 * @since 4.7.0-dev
+	 *
 	 * @return bool
 	 */
 	public function supports_apple_pay() {

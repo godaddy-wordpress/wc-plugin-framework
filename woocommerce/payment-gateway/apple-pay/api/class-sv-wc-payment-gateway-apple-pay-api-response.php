@@ -36,6 +36,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Response extends SV_WC_API_JSON_Respon
 	 * Gets the status code.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @return string
 	 */
 	public function get_status_code() {
@@ -48,6 +49,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Response extends SV_WC_API_JSON_Respon
 	 * Gets the status message.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @return string
 	 */
 	public function get_status_message() {
@@ -60,6 +62,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Response extends SV_WC_API_JSON_Respon
 	 * Gets the validated merchant session.
 	 *
 	 * @since 4.7.0-dev
+	 *
 	 * @return array
 	 */
 	public function get_merchant_session() {
@@ -78,6 +81,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Response extends SV_WC_API_JSON_Respon
 	 *
 	 * @since 4.7.0-dev
 	 * @see SV_WC_API_Response::to_string_safe()
+	 *
 	 * @return string
 	 */
 	public function to_string_safe() {
