@@ -351,8 +351,23 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		$activated = (bool) apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_activate_apple_pay', false );
 
 		if ( $this->supports_apple_pay() && $activated ) {
-			$this->apple_pay = $this->get_apple_pay_instance();
+			$this->apple_pay = $this->build_apple_pay_instance();
 		}
+	}
+
+
+	/**
+	 * Builds the Apple Pay handler instance.
+	 *
+	 * Gateways can override this to define their own Apple Pay class.
+	 *
+	 * @since 4.7.0-dev
+	 *
+	 * @return \SV_WC_Payment_Gateway_Apple_Pay
+	 */
+	protected function build_apple_pay_instance() {
+
+		return new SV_WC_Payment_Gateway_Apple_Pay( $this );
 	}
 
 
@@ -365,7 +380,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_apple_pay_instance() {
 
-		return new SV_WC_Payment_Gateway_Apple_Pay( $this );
+		return $this->apple_pay;
 	}
 
 
