@@ -24,6 +24,8 @@
 
 defined( 'ABSPATH' ) or exit;
 
+if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay_API' ) ) :
+
 /**
  * Sets up the Apple Pay API.
  *
@@ -187,3 +189,5 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 
 
 }
+
+endif;

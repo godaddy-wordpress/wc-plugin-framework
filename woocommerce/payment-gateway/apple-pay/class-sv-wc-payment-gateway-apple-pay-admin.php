@@ -24,6 +24,8 @@
 
 defined( 'ABSPATH' ) or exit;
 
+if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay_Admin' ) ) :
+
 /**
  * Sets up the Apple Pay settings screen.
  *
@@ -401,3 +403,5 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 
 
 }
+
+endif;

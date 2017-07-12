@@ -24,6 +24,8 @@
 
 defined( 'ABSPATH' ) or exit;
 
+if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay_AJAX' ) ) :
+
 /**
  * The Apple Pay AJAX handler.
  *
@@ -253,3 +255,5 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 
 }
+
+endif;

@@ -24,6 +24,8 @@
 
 defined( 'ABSPATH' ) or exit;
 
+if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay_Orders' ) ) :
+
 /**
  * The Apple Pay order handler.
  *
@@ -183,3 +185,5 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 
 
 }
+
+endif;

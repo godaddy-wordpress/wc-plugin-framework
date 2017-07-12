@@ -24,6 +24,8 @@
 
 defined( 'ABSPATH' ) or exit;
 
+if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay' ) ) :
+
 /**
  * Sets up Apple Pay support.
  *
@@ -1035,3 +1037,5 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 
 }
+
+endif;

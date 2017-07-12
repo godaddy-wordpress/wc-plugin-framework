@@ -24,6 +24,8 @@
 
 defined( 'ABSPATH' ) or exit;
 
+if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay_API_Request' ) ) :
+
 /**
  * The Apple Pay API request object.
  *
@@ -103,3 +105,5 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Request extends SV_WC_API_JSON_Request
 
 
 }
+
+endif;
