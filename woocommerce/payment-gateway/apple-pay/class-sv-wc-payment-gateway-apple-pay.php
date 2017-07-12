@@ -74,13 +74,6 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 */
 	protected function init() {
 
-		require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php');
-		require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php');
-		require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/class-sv-wc-payment-gateway-apple-pay-ajax.php');
-		require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php');
-
-		require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-payment-response.php');
-
 		if ( is_admin() && ! is_ajax() ) {
 			$this->admin = new SV_WC_Payment_Gateway_Apple_Pay_Admin( $this );
 		} else {
