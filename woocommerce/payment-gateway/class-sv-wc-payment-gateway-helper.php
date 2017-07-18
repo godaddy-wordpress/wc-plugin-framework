@@ -138,13 +138,6 @@ class SV_WC_Payment_Gateway_Helper {
 
 		// card type regex patterns from https://github.com/stripe/jquery.payment/blob/master/src/jquery.payment.coffee
 		$types = array(
-
-			// these are kept for backwards compatibility since some gateways check
-			// against this method's returned value.
-			// TODO: remove these once the offending gateways use the below constants {CW 2016-09-29}
-			'mc'     => '/^(5[1-5]|2[2-7])/',
-			'diners' => '/^(36|38|30[0-5])/',
-
 			self::CARD_TYPE_VISA       => '/^4/',
 			self::CARD_TYPE_MASTERCARD => '/^(5[1-5]|2[2-7])/',
 			self::CARD_TYPE_AMEX       => '/^3[47]/',
