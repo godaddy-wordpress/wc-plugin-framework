@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_DateTime' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_DateTime' ) ) :
 
 /**
  * Backports the \WC_DateTime class to WooCommerce pre-3.0.0
@@ -33,7 +35,7 @@ if ( ! class_exists( 'SV_WC_DateTime' ) ) :
  *
  * @since 4.6.0
  */
-class SV_WC_DateTime extends DateTime {
+class SV_WC_DateTime extends \DateTime {
 
 
 	/**

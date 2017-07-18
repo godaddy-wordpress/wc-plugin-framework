@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Payment_Gateway_Hosted' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_Hosted' ) ) :
 
 /**
  * # WooCommerce Payment Gateway Framework Hosted Gateway
@@ -215,10 +217,11 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 2.2.0
 	 * @see SV_WC_Payment_Gateway_Hosted::use_auto_form_post()
-	 * @param WC_Order $order the order object
+	 *
+	 * @param \WC_Order $order the order object
 	 * @param array $request_params associative array of request parameters
 	 */
-	public function render_auto_post_form( WC_Order $order, $request_params ) {
+	public function render_auto_post_form( \WC_Order $order, $request_params ) {
 
 		$args = $this->get_auto_post_form_args( $order );
 
@@ -262,10 +265,11 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 4.3.0
 	 * @see SV_WC_Payment_Gateway_Hosted::render_auto_post_form() for args
+	 *
 	 * @param \WC_Order $order the order object
 	 * @return array
 	 */
-	protected function get_auto_post_form_args( WC_Order $order ) {
+	protected function get_auto_post_form_args( \WC_Order $order ) {
 
 		$args = array(
 			'submit_url'     => $this->get_hosted_pay_page_url( $order ),
@@ -633,11 +637,12 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * transaction.  This is a generic, default approved handler.
 	 *
 	 * @since 2.1.0
+	 *
 	 * @param \WC_Order $order the order object
 	 * @param \WC_Paytrail_API_Payment_Response $response the response object
 	 * @param array $note_args Optional. The order note arguments. @see `SV_WC_Payment_Gateway_Hosted::add_transaction_approved_order_note()`
 	 */
-	protected function do_transaction_approved( WC_Order $order, $response, $note_args = array() ) {
+	protected function do_transaction_approved( \WC_Order $order, $response, $note_args = array() ) {
 
 		// Add the order note
 		$this->add_transaction_approved_order_note( $order, $note_args );
@@ -732,10 +737,11 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * Handle a held transaction response.
 	 *
 	 * @since 4.3.0
+	 *
 	 * @param \WC_Order $order the order object
 	 * @param \SV_WC_Payment_Gateway_API_Payment_Notification_Response $response the response object
 	 */
-	protected function do_transaction_held( WC_Order $order, $response ) {
+	protected function do_transaction_held( \WC_Order $order, $response ) {
 
 		if ( $response->is_ipn() ) {
 
@@ -754,10 +760,11 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * Handle a cancelled transaction response.
 	 *
 	 * @since 4.3.0
+	 *
 	 * @param \WC_Order $order the order object
 	 * @param \SV_WC_Payment_Gateway_API_Payment_Notification_Response $response the response object
 	 */
-	protected function do_transaction_cancelled( WC_Order $order, $response ) {
+	protected function do_transaction_cancelled( \WC_Order $order, $response ) {
 
 		if ( $response->is_ipn() ) {
 
@@ -776,10 +783,11 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * Handle a failed transaction response.
 	 *
 	 * @since 4.3.0
+	 *
 	 * @param \WC_Order $order the order object
 	 * @param \SV_WC_Payment_Gateway_API_Payment_Notification_Response $response the response object
 	 */
-	protected function do_transaction_failed( WC_Order $order, $response ) {
+	protected function do_transaction_failed( \WC_Order $order, $response ) {
 
 		if ( $response->is_ipn() ) {
 

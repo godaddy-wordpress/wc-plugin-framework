@@ -22,16 +22,18 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway' ) ) :
 
 /**
  * WooCommerce Payment Gateway Framework
  *
  * @since 1.0.0
  */
-abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
+abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/** Sends through sale and request for funds to be charged to cardholder's credit card. */
@@ -545,7 +547,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		$object_name = str_replace( '-', '_', $handle ) . '_params';
 
 		// If the plugin's JS params already exists in the localized data, bail
-		if ( $wp_scripts instanceof WP_Scripts && strpos( $wp_scripts->get_data( $handle, 'data' ), $object_name ) ) {
+		if ( $wp_scripts instanceof \WP_Scripts && strpos( $wp_scripts->get_data( $handle, 'data' ), $object_name ) ) {
 			return;
 		}
 
@@ -1142,7 +1144,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		if ( $this->icon ) {
 
 			// use icon provided by filter
-			$icon = sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" />', esc_url( WC_HTTPS::force_https_url( $this->icon ) ), esc_attr( $this->get_title() ), esc_attr( $this->get_id_dasherized() ) );
+			$icon = sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" />', esc_url( \WC_HTTPS::force_https_url( $this->icon ) ), esc_attr( $this->get_title() ), esc_attr( $this->get_id_dasherized() ) );
 		}
 
 		// credit card images
@@ -1202,12 +1204,12 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 
 		// first, is the card image available within the plugin?
 		if ( is_readable( $this->get_plugin()->get_payment_gateway_framework_assets_path() . '/images/card-' . $image_type . $image_extension ) ) {
-			return WC_HTTPS::force_https_url( $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/card-' . $image_type . $image_extension );
+			return \WC_HTTPS::force_https_url( $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/card-' . $image_type . $image_extension );
 		}
 
 		// default: is the card image available within the framework?
 		if ( is_readable( $this->get_plugin()->get_payment_gateway_framework_assets_path() . '/images/card-' . $image_type . $image_extension ) ) {
-			return WC_HTTPS::force_https_url( $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/card-' . $image_type . $image_extension );
+			return \WC_HTTPS::force_https_url( $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/card-' . $image_type . $image_extension );
 		}
 
 		return null;
@@ -1252,7 +1254,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// add payment info
-		$order->payment = new stdClass();
+		$order->payment = new \stdClass();
 
 		// payment type (credit_card/check/etc)
 		$order->payment->type = str_replace( '-', '_', $this->get_payment_type() );
@@ -1378,7 +1380,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// add capture info
-		$order->capture = new stdClass();
+		$order->capture = new \stdClass();
 		$order->capture->amount = SV_WC_Helper::number_format( $order->get_total() );
 		/* translators: Placeholders: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card. */
 		$order->capture->description = sprintf( esc_html__( '%1$s - Capture for Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
@@ -1541,7 +1543,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		// add refund info
-		$order->refund = new stdClass();
+		$order->refund = new \stdClass();
 		$order->refund->amount = number_format( $amount, 2, '.', '' );
 
 		/* translators: Placeholders: %1$s - site title, %2$s - order number */
@@ -1573,7 +1575,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
 	 */
-	protected function add_refund_data( WC_Order $order, $response ) {
+	protected function add_refund_data( \WC_Order $order, $response ) {
 
 		// indicate the order was refunded along with the refund amount
 		$this->add_order_meta( $order, 'refund_amount', $order->refund->amount );
@@ -1592,7 +1594,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
 	 */
-	protected function add_payment_gateway_refund_data( WC_Order $order, $response ) {
+	protected function add_payment_gateway_refund_data( \WC_Order $order, $response ) {
 		// Optional method
 	}
 
@@ -1604,7 +1606,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param WC_Order $order order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
 	 */
-	protected function add_refund_order_note( WC_Order $order, $response ) {
+	protected function add_refund_order_note( \WC_Order $order, $response ) {
 
 		$message = sprintf(
 			/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - a monetary amount */
@@ -1649,7 +1651,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			);
 		}
 
-		return new WP_Error( 'wc_' . $this->get_id() . '_refund_failed', $message );
+		return new \WP_Error( 'wc_' . $this->get_id() . '_refund_failed', $message );
 	}
 
 
@@ -1712,11 +1714,11 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param WC_Order $order order object (with refund class member already added)
 	 * @return bool|WP_Error true on success, or a WP_Error object on failure/error
 	 */
-	protected function process_void( WC_Order $order ) {
+	protected function process_void( \WC_Order $order ) {
 
 		// partial voids are not supported
 		if ( $order->refund->amount != $order->get_total() ) {
-			return new WP_Error( 'wc_' . $this->get_id() . '_void_error', esc_html__( 'Oops, you cannot partially void this order. Please use the full order amount.', 'woocommerce-plugin-framework' ), 500 );
+			return new \WP_Error( 'wc_' . $this->get_id() . '_void_error', esc_html__( 'Oops, you cannot partially void this order. Please use the full order amount.', 'woocommerce-plugin-framework' ), 500 );
 		}
 
 		try {
@@ -1763,7 +1765,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
 	 */
-	protected function add_void_data( WC_Order $order, $response ) {
+	protected function add_void_data( \WC_Order $order, $response ) {
 
 		// indicate the order was voided along with the amount
 		$this->update_order_meta( $order, 'void_amount', $order->refund->amount );
@@ -1782,7 +1784,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
 	 */
-	protected function add_payment_gateway_void_data( WC_Order $order, $response ) {
+	protected function add_payment_gateway_void_data( \WC_Order $order, $response ) {
 		// Optional method
 	}
 
@@ -1814,7 +1816,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			);
 		}
 
-		return new WP_Error( 'wc_' . $this->get_id() . '_void_failed', $message );
+		return new \WP_Error( 'wc_' . $this->get_id() . '_void_failed', $message );
 	}
 
 
@@ -1917,7 +1919,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
 	 * @return boolean false
 	 */
-	protected function do_transaction_failed_result( WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
+	protected function do_transaction_failed_result( \WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
 
 		$order_note = '';
 
@@ -2282,7 +2284,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @param WC_Order $order order object
 	 * @return string payment gateway guest customer id
 	 */
-	public function get_guest_customer_id( WC_Order $order ) {
+	public function get_guest_customer_id( \WC_Order $order ) {
 
 		// is there a customer id already tied to this order?
 		$customer_id = $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'customer_id' );
@@ -2481,7 +2483,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @throws Exception
 	 * @return bool
 	 */
-	public function perform_credit_card_charge( WC_Order $order = null ) {
+	public function perform_credit_card_charge( \WC_Order $order = null ) {
 
 		assert( $this->supports_credit_card_charge() );
 
@@ -2511,7 +2513,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * @throws Exception
 	 * @return bool
 	 */
-	public function perform_credit_card_authorization( WC_Order $order = null ) {
+	public function perform_credit_card_authorization( \WC_Order $order = null ) {
 
 		assert( $this->supports_credit_card_authorization() );
 
@@ -2886,7 +2888,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$order = wc_get_order( $order );
 		}
 
-		if ( ! $order instanceof WC_Order ) {
+		if ( ! $order instanceof \WC_Order ) {
 			return false;
 		}
 
@@ -2910,7 +2912,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$order = wc_get_order( $order );
 		}
 
-		if ( ! $order instanceof WC_Order ) {
+		if ( ! $order instanceof \WC_Order ) {
 			return false;
 		}
 
@@ -2933,7 +2935,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$order = wc_get_order( $order );
 		}
 
-		if ( ! $order instanceof WC_Order ) {
+		if ( ! $order instanceof \WC_Order ) {
 			return false;
 		}
 
@@ -2955,7 +2957,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 			$order = wc_get_order( $order );
 		}
 
-		if ( ! $order instanceof WC_Order ) {
+		if ( ! $order instanceof \WC_Order ) {
 			return false;
 		}
 

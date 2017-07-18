@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Payment_Gateway_Payment_Form' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
 
 /**
  * Payment Form Class
@@ -485,7 +487,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 */
 	protected function get_sample_check_html() {
 
-		$image_url = WC_HTTPS::force_https_url( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/sample-check.png' );
+		$image_url = \WC_HTTPS::force_https_url( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/sample-check.png' );
 
 		$html = sprintf( '<div class="js-sv-wc-payment-gateway-echeck-form-sample-check" style="display: none;"><img width="541" height="270" src="%s" /></div>', esc_url( $image_url ) );;
 
@@ -952,7 +954,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		);
 
 		if ( $this->get_gateway()->supports_card_types() ) {
-			$args['enabled_card_types'] = array_map( array( 'SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
+			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_0_0\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
 		}
 
 		/**

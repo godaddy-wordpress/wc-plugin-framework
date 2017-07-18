@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Payment_Gateway_Integration_Subscriptions' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_Integration_Subscriptions' ) ) :
 
 /**
  * Subscriptions Integration
@@ -158,9 +160,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			}
 		}
 
-		if ( WC_Subscriptions_Cart::cart_contains_subscription() ||
+		if ( \WC_Subscriptions_Cart::cart_contains_subscription() ||
 			 wcs_cart_contains_renewal() ||
-			 WC_Subscriptions_Change_Payment_Gateway::$is_request_to_change_payment ||
+			 \WC_Subscriptions_Change_Payment_Gateway::$is_request_to_change_payment ||
 			 $pay_page_subscription ) {
 			$force_tokenization = true;
 		}
@@ -694,7 +696,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		// payment token
 		if ( empty( $meta['post_meta'][ $prefix . 'payment_token' ]['value'] ) ) {
-			throw new Exception( sprintf( __( '%s is required.', 'woocommerce-plugin-framework' ), $meta['post_meta'][ $prefix . 'payment_token' ]['label'] ) );
+			throw new \Exception( sprintf( __( '%s is required.', 'woocommerce-plugin-framework' ), $meta['post_meta'][ $prefix . 'payment_token' ]['label'] ) );
 		}
 
 		// customer ID - optional for some gateways so check if it's set first

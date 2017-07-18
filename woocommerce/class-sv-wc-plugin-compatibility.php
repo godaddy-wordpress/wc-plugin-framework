@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Plugin_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Plugin_Compatibility' ) ) :
 
 /**
  * WooCommerce Compatibility Utility Class
@@ -71,7 +73,7 @@ class SV_WC_Plugin_Compatibility {
 				$format = wc_date_format();
 			}
 
-			if ( ! is_a( $date, 'SV_WC_DateTime' ) ) {
+			if ( ! is_a( $date, '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_DateTime' ) ) { // TODO: verify this {CW 2017-07-18}
 				return '';
 			}
 
@@ -108,7 +110,7 @@ class SV_WC_Plugin_Compatibility {
 	 * @param \WC_Product $product product object
 	 * @return string|int product ID
 	 */
-	public static function product_get_id( WC_Product $product ) {
+	public static function product_get_id( \WC_Product $product ) {
 
 		if ( self::is_wc_version_gte_2_5() ) {
 
@@ -306,7 +308,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	protected static function get_wc_subscriptions_version() {
 
-		return class_exists( 'WC_Subscriptions' ) && ! empty( WC_Subscriptions::$version ) ? WC_Subscriptions::$version : null;
+		return class_exists( 'WC_Subscriptions' ) && ! empty( \WC_Subscriptions::$version ) ? \WC_Subscriptions::$version : null;
 	}
 
 
