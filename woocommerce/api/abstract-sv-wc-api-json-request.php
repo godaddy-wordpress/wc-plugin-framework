@@ -110,10 +110,6 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 
 		$data = $this->get_data();
 
-		if ( empty( $data ) && ! in_array( strtoupper( $this->get_method() ), array( 'GET', 'HEAD' ) ) ) {
-			$data = $this->get_params();
-		}
-
 		return ! empty( $data ) ? json_encode( $data ) : '';
 	}
 

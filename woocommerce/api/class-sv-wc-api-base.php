@@ -368,15 +368,17 @@ abstract class SV_WC_API_Base {
 	 * Gets the request URL query.
 	 *
 	 * @since 4.5.0
+	 *
 	 * @return string
 	 */
 	protected function get_request_query() {
 
-		$query = '';
+		$query   = '';
+		$request = $this->get_request();
 
-		if ( ( $request = $this->get_request() ) && in_array( strtoupper( $this->get_request_method() ), array( 'GET', 'HEAD' ) ) ) {
+		if ( $request && in_array( strtoupper( $this->get_request_method() ), array( 'GET', 'HEAD' ), true ) ) {
 
-			$params = is_callable( array( $request, 'get_params' ) ) ? $request->get_params() : array(); // TODO: remove is_callable() when \SV_WC_API_Request::get_params exists {CW 2016-09-28}
+			$params = $request->get_params();
 
 			if ( ! empty( $params ) ) {
 				$query = http_build_query( $params, '', '&' );
