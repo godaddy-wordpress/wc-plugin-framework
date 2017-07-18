@@ -53,6 +53,26 @@ interface SV_WC_API_Request {
 
 
 	/**
+	 * Gets the request query params.
+	 *
+	 * @since 5.0.0-dev
+	 *
+	 * @return array
+	 */
+	public function get_params();
+
+
+	/**
+	 * Gets the request data.
+	 *
+	 * @since 5.0.0-dev
+	 *
+	 * @return array
+	 */
+	public function get_data();
+
+
+	/**
 	 * Returns the string representation of this request
 	 *
 	 * @since 2.2.0
