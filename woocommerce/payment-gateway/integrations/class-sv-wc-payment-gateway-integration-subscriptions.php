@@ -74,67 +74,58 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			'subscription_payment_method_change_admin',
 		) );
 
-		// 2.0.x hooks
-		if ( SV_WC_Plugin_Compatibility::is_wc_subscriptions_version_gte_2_0() ) {
+		// force tokenization when needed
+		add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_tokenization_forced', array( $this, 'maybe_force_tokenization' ) );
 
-			// force tokenization when needed
-			add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_tokenization_forced', array( $this, 'maybe_force_tokenization' ) );
+		// save token/customer ID to subscription objects
+		add_action( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_add_transaction_data', array( $this, 'save_payment_meta' ), 10, 2 );
 
-			// save token/customer ID to subscription objects
-			add_action( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_add_transaction_data', array( $this, 'save_payment_meta' ), 10, 2 );
+		// process renewal payments
+		add_action( 'woocommerce_scheduled_subscription_payment_' . $this->get_gateway()->get_id(), array( $this, 'process_renewal_payment' ), 10, 2 );
 
-			// process renewal payments
-			add_action( 'woocommerce_scheduled_subscription_payment_' . $this->get_gateway()->get_id(), array( $this, 'process_renewal_payment' ), 10, 2 );
+		// update the customer/token ID on the subscription when updating a previously failing payment method
+		add_action( 'woocommerce_subscription_failing_payment_method_updated_' . $this->get_gateway()->get_id(), array( $this, 'update_failing_payment_method' ), 10, 2 );
 
-			// update the customer/token ID on the subscription when updating a previously failing payment method
-			add_action( 'woocommerce_subscription_failing_payment_method_updated_' . $this->get_gateway()->get_id(), array( $this, 'update_failing_payment_method' ), 10, 2 );
+		// display the current payment method used for a subscription in the "My Subscriptions" table
+		add_filter( 'woocommerce_my_subscriptions_payment_method', array( $this, 'maybe_render_payment_method' ), 10, 3 );
 
-			// display the current payment method used for a subscription in the "My Subscriptions" table
-			add_filter( 'woocommerce_my_subscriptions_payment_method', array( $this, 'maybe_render_payment_method' ), 10, 3 );
+		// don't copy over order-specific meta to the WC_Subscription object during renewal processing
+		add_filter( 'wcs_renewal_order_meta', array( $this, 'do_not_copy_order_meta' ) );
 
-			// don't copy over order-specific meta to the WC_Subscription object during renewal processing
-			add_filter( 'wcs_renewal_order_meta', array( $this, 'do_not_copy_order_meta' ) );
+		// process the Change Payment "transaction"
+		add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_process_payment', array( $this, 'process_change_payment' ), 10, 3 );
 
-			// process the Change Payment "transaction"
-			add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_process_payment', array( $this, 'process_change_payment' ), 10, 3 );
+		// remove order-specific meta from the Subscription object after the change payment method action
+		add_filter( 'woocommerce_subscriptions_process_payment_for_change_method_via_pay_shortcode', array( $this, 'remove_order_meta_from_change_payment' ), 10, 2 );
 
-			// remove order-specific meta from the Subscription object after the change payment method action
-			add_filter( 'woocommerce_subscriptions_process_payment_for_change_method_via_pay_shortcode', array( $this, 'remove_order_meta_from_change_payment' ), 10, 2 );
+		// don't copy over order-specific meta to the new WC_Subscription object during upgrade to 2.0.x
+		add_filter( 'wcs_upgrade_subscription_meta_to_copy', array( $this, 'do_not_copy_order_meta_during_upgrade' ) );
 
-			// don't copy over order-specific meta to the new WC_Subscription object during upgrade to 2.0.x
-			add_filter( 'wcs_upgrade_subscription_meta_to_copy', array( $this, 'do_not_copy_order_meta_during_upgrade' ) );
+		// allow concrete gateways to define additional order-specific meta keys to exclude
+		if ( is_callable( array( $this->get_gateway(), 'subscriptions_get_excluded_order_meta_keys' ) ) ) {
+			add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_subscriptions_order_specific_meta_keys', array( $this->get_gateway(), 'subscriptions_get_excluded_order_meta_keys' ) );
+		}
 
-			// allow concrete gateways to define additional order-specific meta keys to exclude
-			if ( is_callable( array( $this->get_gateway(), 'subscriptions_get_excluded_order_meta_keys' ) ) ) {
-				add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_subscriptions_order_specific_meta_keys', array( $this->get_gateway(), 'subscriptions_get_excluded_order_meta_keys' ) );
-			}
+		/* My Payment Methods */
 
-			/* My Payment Methods */
+		add_filter( 'wc_' . $this->get_gateway()->get_plugin()->get_id() . '_my_payment_methods_table_headers', array( $this, 'add_my_payment_methods_table_header' ), 10, 2 );
+		add_filter( 'wc_' . $this->get_gateway()->get_plugin()->get_id() . '_my_payment_methods_table_body_row_data', array( $this, 'add_my_payment_methods_table_body_row_data' ), 10, 3 );
+		add_filter( 'wc_' . $this->get_gateway()->get_plugin()->get_id() . '_my_payment_methods_table_method_actions', array( $this, 'disable_my_payment_methods_table_method_delete' ), 10, 3 );
 
-			add_filter( 'wc_' . $this->get_gateway()->get_plugin()->get_id() . '_my_payment_methods_table_headers', array( $this, 'add_my_payment_methods_table_header' ), 10, 2 );
-			add_filter( 'wc_' . $this->get_gateway()->get_plugin()->get_id() . '_my_payment_methods_table_body_row_data', array( $this, 'add_my_payment_methods_table_body_row_data' ), 10, 3 );
-			add_filter( 'wc_' . $this->get_gateway()->get_plugin()->get_id() . '_my_payment_methods_table_method_actions', array( $this, 'disable_my_payment_methods_table_method_delete' ), 10, 3 );
+		/* Admin Change Payment Method support */
 
-			/* Admin Change Payment Method support */
+		// framework defaults - payment_token and customer_id
+		add_filter( 'woocommerce_subscription_payment_meta', array( $this, 'admin_add_payment_meta' ), 9, 2 );
+		add_action( 'woocommerce_subscription_validate_payment_meta_' . $this->get_gateway()->get_id(), array( $this, 'admin_validate_payment_meta' ), 9 );
 
-			// framework defaults - payment_token and customer_id
-			add_filter( 'woocommerce_subscription_payment_meta', array( $this, 'admin_add_payment_meta' ), 9, 2 );
-			add_action( 'woocommerce_subscription_validate_payment_meta_' . $this->get_gateway()->get_id(), array( $this, 'admin_validate_payment_meta' ), 9 );
+		// allow concrete gateways to add/change defaults
+		if ( is_callable( array( $this->get_gateway(), 'subscriptions_admin_add_payment_meta' ) ) ) {
+			add_filter( 'woocommerce_subscription_payment_meta', array( $this->get_gateway(), 'subscriptions_admin_add_payment_meta' ), 10, 2 );
+		}
 
-			// allow concrete gateways to add/change defaults
-			if ( is_callable( array( $this->get_gateway(), 'subscriptions_admin_add_payment_meta' ) ) ) {
-				add_filter( 'woocommerce_subscription_payment_meta', array( $this->get_gateway(), 'subscriptions_admin_add_payment_meta' ), 10, 2 );
-			}
-
-			// allow concrete gateways to perform additional validation
-			if ( is_callable( array( $this->get_gateway(), 'subscriptions_admin_validate_payment_meta' ) ) ) {
-				add_action( 'woocommerce_subscription_validate_payment_meta_' . $this->get_gateway()->get_id(), array( $this->get_gateway(), 'subscriptions_admin_validate_payment_meta' ), 10 );
-			}
-
-		} else {
-
-			// 1.5.x
-			$this->add_support_1_5();
+		// allow concrete gateways to perform additional validation
+		if ( is_callable( array( $this->get_gateway(), 'subscriptions_admin_validate_payment_meta' ) ) ) {
+			add_action( 'woocommerce_subscription_validate_payment_meta_' . $this->get_gateway()->get_id(), array( $this->get_gateway(), 'subscriptions_admin_validate_payment_meta' ), 10 );
 		}
 	}
 
@@ -701,336 +692,8 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		// customer ID - optional for some gateways so check if it's set first
 		if ( isset( $meta['post_meta'][ $prefix . 'customer_id'] ) && empty( $meta['post_meta'][ $prefix . 'customer_id' ]['value'] ) ) {
-			throw new Exception( sprintf( __( '%s is required.', 'woocommerce-plugin-framework' ), $meta['post_meta'][ $prefix . 'customer_id' ]['label'] ) );
+			throw new \Exception( sprintf( __( '%s is required.', 'woocommerce-plugin-framework' ), $meta['post_meta'][ $prefix . 'customer_id' ]['label'] ) );
 		}
-	}
-
-
-	/** 1.5.x Support *********************************************************/
-
-
-	/**
-	 * Adds support for subscriptions 1.5.x
-	 *
-	 * @since 4.1.0
-	 */
-	public function add_support_1_5() {
-
-		$this->get_gateway()->add_support( array( 'subscription_payment_method_change' ) );
-
-		// force tokenization when needed
-		add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_tokenization_forced', array( $this, 'maybe_force_tokenization_1_5' ) );
-
-		// add subscriptions data to the order object
-		add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_get_order', array( $this, 'get_order_1_5' ) );
-
-		// process scheduled subscription payments
-		add_action( 'scheduled_subscription_payment_' . $this->get_gateway()->get_id(), array( $this, 'process_renewal_payment_1_5' ), 10, 3 );
-
-		// prevent unnecessary order meta from polluting parent renewal orders
-		add_filter( 'woocommerce_subscriptions_renewal_order_meta_query', array( $this, 'remove_renewal_order_meta' ), 10, 4 );
-
-		// update the customer/token ID on the original order when making payment for a failed automatic renewal order
-		add_action( 'woocommerce_subscriptions_changed_failing_payment_method_' . $this->get_gateway()->get_id(), array( $this, 'update_failing_payment_method_1_5' ), 10, 2 );
-
-		// display the current payment method used for a subscription in the "My Subscriptions" table
-		add_filter( 'woocommerce_my_subscriptions_recurring_payment_method', array( $this, 'maybe_render_payment_method_1_5' ), 10, 3 );
-	}
-
-
-	/**
-	 * Force tokenization for subscriptions, this can be forced either during checkout
-	 * or when the payment method for a subscription is being changed
-	 *
-	 * @since 4.1.0
-	 * @see SV_WC_Payment_Gateway::tokenization_forced()
-	 * @param bool $force_tokenization whether tokenization should be forced
-	 * @return bool true if tokenization should be forced, false otherwise
-	 */
-	public function maybe_force_tokenization_1_5( $force_tokenization ) {
-
-		// pay page with subscription?
-		$pay_page_subscription = false;
-		if ( $this->get_gateway()->is_pay_page_gateway() ) {
-
-			$order_id = $this->get_gateway()->get_checkout_pay_page_order_id();
-
-			if ( $order_id ) {
-				$pay_page_subscription = WC_Subscriptions_Order::order_contains_subscription( $order_id );
-			}
-
-		}
-
-		if ( WC_Subscriptions_Cart::cart_contains_subscription() ||
-			 WC_Subscriptions_Change_Payment_Gateway::$is_request_to_change_payment ||
-			 $pay_page_subscription ) {
-			$force_tokenization = true;
-		}
-
-		return $force_tokenization;
-	}
-
-
-	/**
-	 * Adds subscriptions data to the order object
-	 *
-	 * @since 4.1.0
-	 * @see SV_WC_Payment_Gateway::get_order()
-	 * @param WC_Order $order the order
-	 * @return WC_Order the orders
-	 */
-	public function get_order_1_5( $order ) {
-
-		// bail if the order doesn't contain a subscription
-		if ( ! WC_Subscriptions_Order::order_contains_subscription( SV_WC_Order_Compatibility::get_prop( $order, 'id' ) ) ) {
-			return $order;
-		}
-
-		// subscriptions total, ensuring that we have a decimal point, even if it's 1.00
-		$order->payment_total = SV_WC_Helper::number_format( WC_Subscriptions_Order::get_total_initial_payment( $order ) );
-
-		// load any required members that we might not have
-		if ( ! isset( $order->payment->token ) || ! $order->payment->token ) {
-			$order->payment->token = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'payment_token' );
-		}
-
-		if ( ! isset( $order->customer_id ) || ! $order->customer_id ) {
-			$order->customer_id = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'customer_id' );
-		}
-
-		// ensure the payment token is still valid
-		if ( ! $this->get_gateway()->get_payment_tokens_handler()->user_has_token( $order->get_user_id(), $order->payment->token ) ) {
-			$order->payment->token = null;
-		} else {
-
-			// get the token object
-			$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( $order->get_user_id(), $order->payment->token );
-
-			if ( ! isset( $order->payment->account_number ) || ! $order->payment->account_number )
-				$order->payment->account_number = $token->get_last_four();
-
-			if ( $this->get_gateway()->is_credit_card_gateway() ) {
-
-				// credit card token
-				if ( ! isset( $order->payment->card_type ) || ! $order->payment->card_type ) {
-					$order->payment->card_type = $token->get_card_type();
-				}
-
-				if ( ! isset( $order->payment->exp_month ) || ! $order->payment->exp_month ) {
-					$order->payment->exp_month = $token->get_exp_month();
-				}
-
-				if ( ! isset( $order->payment->exp_year ) || ! $order->payment->exp_year ) {
-					$order->payment->exp_year = $token->get_exp_year();
-				}
-
-			} elseif ( $this->get_gateway()->is_echeck_gateway() ) {
-
-				// check token
-				if ( ! isset( $order->payment->account_type ) || ! $order->payment->account_type ) {
-					$order->payment->account_type = $token->get_account_type();
-				}
-			}
-		}
-
-		return $order;
-	}
-
-
-	/**
-	 * Process subscription renewal
-	 *
-	 * @since 4.1.0
-	 * @param float $amount_to_charge subscription amount to charge, could include multiple renewals if they've previously failed and the admin has enabled it
-	 * @param WC_Order $order original order containing the subscription
-	 * @param int $product_id the subscription product id
-	 */
-	public function process_renewal_payment_1_5( $amount_to_charge, $order, $product_id ) {
-
-		try {
-
-			// set order defaults
-			$order = $this->get_gateway()->get_order( SV_WC_Order_Compatibility::get_prop( $order, 'id' ) );
-
-			// zero-dollar subscription renewal. weird, but apparently it happens
-			if ( 0 == $amount_to_charge ) {
-
-				// add order note
-				$order->add_order_note( sprintf( __( '%s0 Subscription Renewal Approved', 'woocommerce-plugin-framework' ), get_woocommerce_currency_symbol() ) );
-
-				// update subscription
-				WC_Subscriptions_Manager::process_subscription_payments_on_order( $order, $product_id );
-
-				return;
-			}
-
-			// set the amount to charge, ensuring that we have a decimal point, even if it's 1.00
-			$order->payment_total = SV_WC_Helper::number_format( $amount_to_charge );
-
-			// required
-			if ( ! $order->payment->token || ! $order->get_user_id() ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Subscription Renewal: Payment Token or User ID is missing/invalid.' );
-			}
-
-			// get the token, we've already verified it's good
-			$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( $order->get_user_id(), $order->payment->token );
-
-			// perform the transaction
-			if ( $this->get_gateway()->is_credit_card_gateway() ) {
-
-				if ( $this->get_gateway()->perform_credit_card_charge( $order ) ) {
-					$response = $this->get_gateway()->get_api()->credit_card_charge( $order );
-				} else {
-					$response = $this->get_gateway()->get_api()->credit_card_authorization( $order );
-				}
-
-			} elseif ( $this->get_gateway()->is_echeck_gateway() ) {
-				$response = $this->get_gateway()->get_api()->check_debit( $order );
-			}
-
-			// check for success
-			if ( $response->transaction_approved() ) {
-
-				// order note based on gateway type
-				if ( $this->get_gateway()->is_credit_card_gateway() ) {
-					$message = sprintf(
-						_x( '%s %s Subscription Renewal Payment Approved: %s ending in %s (expires %s)', 'woocommerce-plugin-framework' ),
-						$this->get_gateway()->get_method_title(),
-						$this->get_gateway()->perform_credit_card_authorization( $order ) ? 'Authorization' : 'Charge',
-						$token->get_card_type() ? $token->get_type_full() : 'card',
-						$token->get_last_four(),
-						$token->get_exp_month() . '/' . $token->get_exp_year()
-					);
-				} elseif ( $this->get_gateway()->is_echeck_gateway() ) {
-
-					// there may or may not be an account type (checking/savings) available, which is fine
-					$message = sprintf( __( '%s Check Subscription Renewal Payment Approved: %s account ending in %s', 'woocommerce-plugin-framework' ), $this->get_gateway()->get_method_title(), $token->get_account_type(), $token->get_last_four() );
-				}
-
-				// add order note
-				$order->add_order_note( $message );
-
-				// set transaction ID manually, WCS 1.5.x calls WC_Order::payment_complete() internally
-				if ( $response->get_transaction_id() ) {
-					update_post_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), '_transaction_id', $response->get_transaction_id() );
-				}
-
-				// update subscription
-				WC_Subscriptions_Manager::process_subscription_payments_on_order( $order, $product_id );
-
-			} else {
-
-				// failure
-				throw new SV_WC_Payment_Gateway_Exception( sprintf( '%s: %s', $response->get_status_code(), $response->get_status_message() ) );
-			}
-
-		} catch ( SV_WC_Plugin_Exception $e ) {
-
-			// don't mark the order as failed, Subscriptions will handle marking the renewal order as failed
-			$order->add_order_note( sprintf( _x( '%s Renewal Payment Failed (%s)', 'woocommerce-plugin-framework' ), $this->get_gateway()->get_method_title(), $e->getMessage() ) );
-
-			// update subscription
-			WC_Subscriptions_Manager::process_subscription_payment_failure_on_order( $order, $product_id );
-		}
-	}
-
-
-	/**
-	 * Don't copy over gateway-specific order meta when creating a parent renewal order.
-	 *
-	 * @since 4.1.0
-	 * @see SV_WC_Payment_Gateway::get_remove_subscription_renewal_order_meta_fragment()
-	 * @param array $order_meta_query MySQL query for pulling the metadata
-	 * @param int $original_order_id Post ID of the order being used to purchased the subscription being renewed
-	 * @param int $renewal_order_id Post ID of the order created for renewing the subscription
-	 * @param string $new_order_role The role the renewal order is taking, one of 'parent' or 'child'
-	 * @return string MySQL meta query for pulling the metadata, excluding data added by this gateway
-	 */
-	public function remove_renewal_order_meta( $order_meta_query, $original_order_id, $renewal_order_id, $new_order_role ) {
-
-		// all required and optional
-		if ( 'parent' == $new_order_role ) {
-			$order_meta_query .= $this->get_remove_renewal_order_meta_fragment(
-				array(
-					$this->get_gateway()->get_order_meta_prefix() . 'trans_id',
-					$this->get_gateway()->get_order_meta_prefix() . 'trans_date',
-					$this->get_gateway()->get_order_meta_prefix() . 'payment_token',
-					$this->get_gateway()->get_order_meta_prefix() . 'account_four',
-					$this->get_gateway()->get_order_meta_prefix() . 'card_expiry_date',
-					$this->get_gateway()->get_order_meta_prefix() . 'card_type',
-					$this->get_gateway()->get_order_meta_prefix() . 'authorization_code',
-					$this->get_gateway()->get_order_meta_prefix() . 'auth_can_be_captured',
-					$this->get_gateway()->get_order_meta_prefix() . 'charge_captured',
-					$this->get_gateway()->get_order_meta_prefix() . 'capture_trans_id',
-					$this->get_gateway()->get_order_meta_prefix() . 'account_type',
-					$this->get_gateway()->get_order_meta_prefix() . 'check_number',
-					$this->get_gateway()->get_order_meta_prefix() . 'environment',
-					$this->get_gateway()->get_order_meta_prefix() . 'customer_id',
-					$this->get_gateway()->get_order_meta_prefix() . 'retry_count',
-				)
-			);
-		}
-
-		return $order_meta_query;
-	}
-
-
-	/**
-	 * Returns the query fragment to remove the given subscription renewal order meta
-	 *
-	 * @since 4.1.0
-	 * @see SV_WC_Payment_Gateway::remove_subscription_renewal_order_meta()
-	 * @param array $meta_names array of string meta names to remove
-	 * @return string query fragment
-	 */
-	protected function get_remove_renewal_order_meta_fragment( $meta_names ) {
-
-		return " AND `meta_key` NOT IN ( '" . join( "', '", $meta_names ) . "' )";
-	}
-
-
-	/**
-	 * Update the payment token and optional customer ID for a subscription after a customer
-	 * uses this gateway to successfully complete the payment for an automatic
-	 * renewal payment which had previously failed.
-	 *
-	 * @since 4.1.0
-	 * @param WC_Order $original_order the original order in which the subscription was purchased.
-	 * @param WC_Order $renewal_order the order which recorded the successful payment (to make up for the failed automatic payment).
-	 */
-	public function update_failing_payment_method_1_5( $original_order, $renewal_order ) {
-
-		if ( $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $renewal_order, 'id' ), 'customer_id' ) ) {
-			$this->get_gateway()->update_order_meta( $original_order, 'customer_id',   $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $renewal_order, 'id' ), 'customer_id' ) );
-		}
-
-		$this->get_gateway()->update_order_meta( $original_order, 'payment_token', $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $renewal_order, 'id' ), 'payment_token' ) );
-	}
-
-
-	/**
-	 * Render the payment method used for a subscription in the "My Subscriptions" table
-	 *
-	 * @since 4.1.0
-	 * @param string $payment_method_to_display the default payment method text to display
-	 * @param array $subscription_details the subscription details
-	 * @param WC_Order $order the order containing the subscription
-	 * @return string the subscription payment method
-	 */
-	public function maybe_render_payment_method_1_5( $payment_method_to_display, $subscription_details, $order ) {
-
-		// bail for other payment methods
-		if ( $this->get_gateway()->get_id() !== $order->recurring_payment_method ) {
-			return $payment_method_to_display;
-		}
-
-		$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( $order->get_user_id(), $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'payment_token' ) );
-
-		if ( is_object( $token ) ) {
-			$payment_method_to_display = sprintf( __( 'Via %s ending in %s', 'woocommerce-plugin-framework' ), $token->get_type_full(), $token->get_last_four() );
-		}
-
-		return $payment_method_to_display;
 	}
 
 
