@@ -970,14 +970,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_payment_gateway_configuration_section( $gateway_id ) {
 
-		// WC 2.6+ uses the gateway ID instead of class name
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_6() ) {
-			$section = $this->get_gateway_class_name( $gateway_id );
-		} else {
-			$section = $gateway_id;
-		}
-
-		return strtolower( $section );
+		return strtolower( $gateway_id );
 	}
 
 

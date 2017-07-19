@@ -74,11 +74,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		// render the My Payment Methods section
 		// TODO: merge our payment methods data into the core table and remove this in a future version {CW 2016-05-17}
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_6() ) {
-			add_action( 'woocommerce_after_my_account', array( $this, 'render_lt_2_6' ) );
-		} else {
-			add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render' ) );
-		}
+		add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render' ) );
 
 		// styles/scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_styles_scripts' ) );
@@ -106,7 +102,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			// if there are no WC 2.6+ core tokens, hide the "No saved methods found." notice
 			// TODO: remove this when we fully support the core payment methods table {CW 2016-05-17}
-			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_2_6() && ! (bool) wc_get_customer_saved_methods_list( get_current_user_id() ) ) {
+			if ( ! (bool) wc_get_customer_saved_methods_list( get_current_user_id() ) ) {
 				wc_enqueue_js( '$( "table.wc-' . $this->get_plugin()->get_id_dasherized() . '-my-payment-methods" ).prev( ".woocommerce-Message.woocommerce-Message--info" ).hide();' );
 			}
 
@@ -202,34 +198,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			 */
 			do_action( 'wc_' . $this->get_plugin()->get_id() . '_after_my_payment_method_table', $this );
 
-		}
-	}
-
-
-	/**
-	 * Render the My Payment Methods section on the My Account page for WC 2.5.5 and older.
-	 *
-	 * @since 4.4.0
-	 */
-	public function render_lt_2_6() {
-
-		if ( $this->has_tokens ) {
-
-			echo $this->get_table_title_html();
-
-			// documented in SV_WC_Payment_Gateway_My_Payment_Methods::render()
-			do_action( 'wc_' . $this->get_plugin()->get_id() . '_before_my_payment_method_table', $this );
-
-			echo $this->get_table_html();
-
-			// documented in SV_WC_Payment_Gateway_My_Payment_Methods::render()
-			do_action( 'wc_' . $this->get_plugin()->get_id() . '_after_my_payment_method_table', $this );
-
-		} else {
-
-			echo $this->get_table_title_html();
-
-			echo $this->get_no_payment_methods_html();
 		}
 	}
 
@@ -772,13 +740,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	protected function redirect_to_my_account() {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_6() ) {
-			$url = wc_get_page_permalink( 'myaccount' );
-		} else {
-			$url = wc_get_account_endpoint_url( 'payment-methods' );
-		}
-
-		wp_redirect( $url );
+		wp_redirect( wc_get_account_endpoint_url( 'payment-methods' ) );
 		exit;
 	}
 
