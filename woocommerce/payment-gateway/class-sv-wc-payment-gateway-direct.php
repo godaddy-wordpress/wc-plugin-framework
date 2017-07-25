@@ -672,15 +672,24 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// credit card order note
 			$message = sprintf(
-				/* translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...), %5$s - last four digits of the card, %6$s - expiry date */
-				esc_html__( '%1$s %2$s %3$s Approved: %4$s ending in %5$s (expires %6$s)', 'woocommerce-plugin-framework' ),
+				/* translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...), %5$s - last four digits of the card */
+				esc_html__( '%1$s %2$s %3$s Approved: %4$s ending in %5$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
 				$this->perform_credit_card_authorization( $order ) ? esc_html_x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' ) : esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' ),
 				SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ),
-				$last_four,
-				$order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 )
+				$last_four
 			);
+
+			// add the expiry date if it is available
+			if ( ! empty( $order->payment->exp_month ) && ! empty( $order->payment->exp_year ) ) {
+
+				$message .= ' ' . sprintf(
+					/** translators: Placeholders: %s - credit card expiry date */
+					__( '(expires %s)', 'woocommerce-plugin-framework' ),
+					$order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 )
+				);
+			}
 
 			// adds the transaction id (if any) to the order note
 			if ( $response->get_transaction_id() ) {
