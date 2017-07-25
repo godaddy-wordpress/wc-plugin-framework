@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay_API_Response' ) ) :
 /**
  * The Apple Pay API response object.
  *
- * @since 4.7.0-dev
+ * @since 4.7.0
  */
 class SV_WC_Payment_Gateway_Apple_Pay_API_Response extends SV_WC_API_JSON_Response {
 
@@ -37,7 +37,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Response extends SV_WC_API_JSON_Respon
 	/**
 	 * Gets the status code.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return string
 	 */
@@ -50,7 +50,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Response extends SV_WC_API_JSON_Respon
 	/**
 	 * Gets the status message.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return string
 	 */
@@ -63,7 +63,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Response extends SV_WC_API_JSON_Respon
 	/**
 	 * Gets the validated merchant session.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return array
 	 */
@@ -81,7 +81,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Response extends SV_WC_API_JSON_Respon
 	 * masked, but they don't provide any useful info and only make the debug
 	 * logs unnecessarily huge.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 * @see SV_WC_API_Response::to_string_safe()
 	 *
 	 * @return string

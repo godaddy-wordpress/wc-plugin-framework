@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay_API_Request' ) ) :
 /**
  * The Apple Pay API request object.
  *
- * @since 4.7.0-dev
+ * @since 4.7.0
  */
 class SV_WC_Payment_Gateway_Apple_Pay_API_Request extends SV_WC_API_JSON_Request {
 
@@ -41,7 +41,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Request extends SV_WC_API_JSON_Request
 	/**
 	 * Constructs the request.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param \SV_WC_Payment_Gateway $gateway the gateway instance
 	 */
@@ -54,7 +54,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Request extends SV_WC_API_JSON_Request
 	/**
 	 * Sets the data for merchant validation.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param string $merchant_id the merchant ID to validate
 	 * @param string $domain_name the verified domain name
@@ -71,7 +71,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Request extends SV_WC_API_JSON_Request
 		/**
 		 * Filters the data for merchant validation.
 		 *
-		 * @since 4.7.0-dev
+		 * @since 4.7.0
 		 *
 		 * @param array $data {
 		 *     The merchant data.
@@ -90,7 +90,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Request extends SV_WC_API_JSON_Request
 	 * Get the string representation of this response with any and all sensitive
 	 * elements masked or removed.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 * @see SV_WC_API_Response::to_string_safe()
 	 *
 	 * @return string

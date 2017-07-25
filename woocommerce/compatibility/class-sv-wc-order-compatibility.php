@@ -284,7 +284,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Order item CRUD compatibility method to add a shipping line to an order.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param \WC_Shipping_Rate $shipping_rate shipping rate to add
@@ -324,7 +324,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Order item CRUD compatibility method to add a tax line to an order.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param int $tax_rate_id tax rate ID

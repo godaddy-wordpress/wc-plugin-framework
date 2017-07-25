@@ -124,7 +124,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Backports wc_shipping_enabled() to < 2.6.0
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 * @return bool
 	 */
 	public static function wc_shipping_enabled() {

@@ -136,7 +136,7 @@ abstract class SV_WP_Async_Request {
 	/**
 	 * Get request args
 	 *
-	 * In 4.7.0-dev.1 renamed from get_post_args to get_request_args
+	 * In 4.6.3 renamed from get_post_args to get_request_args
 	 *
 	 * @since 4.4.0
 	 * @return array

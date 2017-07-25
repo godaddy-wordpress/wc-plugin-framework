@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay_API' ) ) :
 /**
  * Sets up the Apple Pay API.
  *
- * @since 4.7.0-dev
+ * @since 4.7.0
  */
 class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 
@@ -41,7 +41,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param \SV_WC_Payment_Gateway the gateway instance
 	 */
@@ -61,7 +61,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	/**
 	 * Validates the Apple Pay merchant.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param string $url the validation URL
 	 * @param string $merchant_id the merchant ID to validate
@@ -86,7 +86,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	/**
 	 * Performs the request and return the parsed response.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param \SV_WC_API_Request
 	 * @return \SV_WC_API_Response
@@ -107,7 +107,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	 *
 	 * @internal
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param resource $curl_handle
 	 */
@@ -127,7 +127,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	/**
 	 * Validates the post-parsed response.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return bool
 	 *
@@ -151,7 +151,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	/**
 	 * Gets a new request object.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param array $type Optional. The desired request type
 	 * @return \SV_WC_Payment_Gateway_Apple_Pay_API_Request the request object
@@ -165,7 +165,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	/**
 	 * Gets the gateway instance.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return \SV_WC_Payment_Gateway
 	 */
@@ -178,7 +178,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	/**
 	 * Gets the plugin instance.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return \SV_WC_Payment_Gateway_Plugin
 	 */

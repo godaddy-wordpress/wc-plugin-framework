@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay_AJAX' ) ) :
 /**
  * The Apple Pay AJAX handler.
  *
- * @since 4.7.0-dev
+ * @since 4.7.0
  */
 class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
@@ -41,7 +41,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance
 	 */
@@ -74,7 +74,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	 *
 	 * @internal
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function get_payment_request() {
 
@@ -105,7 +105,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	 *
 	 * @internal
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function validate_merchant() {
 
@@ -139,7 +139,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	 *
 	 * @internal
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function recalculate_totals() {
 
@@ -212,7 +212,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	 *
 	 * @internal
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function process_payment() {
 
@@ -244,7 +244,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	/**
 	 * Gets the Apple Pay handler instance.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return \SV_WC_Payment_Gateway_Apple_Pay
 	 */

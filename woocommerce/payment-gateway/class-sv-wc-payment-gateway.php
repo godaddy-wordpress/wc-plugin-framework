@@ -706,7 +706,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Determines whether this gateway supports Apple Pay.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return bool
 	 */
@@ -723,7 +723,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * the default. See https://developer.apple.com/reference/applepayjs/paymentrequest/1916123-merchantcapabilities
 	 * for valid values.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return array
 	 */
@@ -740,7 +740,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Gets the currencies supported by Apple Pay.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return array
 	 */
@@ -756,7 +756,7 @@ abstract class SV_WC_Payment_Gateway extends WC_Payment_Gateway {
 	 * Gateways should override this to set the appropriate values depending on
 	 * how their processing API needs to handle the data.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param \WC_Order the order object
 	 * @param \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response authorized payment response

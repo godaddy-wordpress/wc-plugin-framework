@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay_Orders' ) ) :
 /**
  * The Apple Pay order handler.
  *
- * @since 4.7.0-dev
+ * @since 4.7.0
  */
 class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 
@@ -37,7 +37,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 	/**
 	 * Creates an order from a cart.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param \WC_Cart $cart cart object
 	 *
@@ -143,7 +143,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 	/**
 	 * Gets an order object for payment.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param array $order_data the order data
 	 * @return \WC_Order

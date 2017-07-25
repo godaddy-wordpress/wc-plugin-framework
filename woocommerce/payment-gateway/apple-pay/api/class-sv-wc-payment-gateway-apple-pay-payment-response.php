@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay_Payment_Response' ) ) :
 /**
  * The Apple Pay payment response object.
  *
- * @since 4.7.0-dev
+ * @since 4.7.0
  */
 class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Response {
 
@@ -37,7 +37,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	/**
 	 * Gets the authorized payment data.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return object
 	 */
@@ -50,7 +50,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	/**
 	 * Gets the authorization transaction ID.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return string
 	 */
@@ -63,7 +63,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	/**
 	 * Gets the authorized card type.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return string
 	 */
@@ -78,7 +78,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	/**
 	 * Gets the last four digits of the authorized card.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return string
 	 */
@@ -97,7 +97,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	/**
 	 * Gets the billing address.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return array
 	 */
@@ -124,7 +124,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	/**
 	 * Gets the shipping address.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return array
 	 */
@@ -141,7 +141,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	/**
 	 * Prepare an address to WC formatting.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param object $contact the address to prepare
 	 * @return array
@@ -177,7 +177,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	 * masked, but they don't provide any useful info and only make the debug
 	 * logs unnecessarily huge.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @see SV_WC_API_Response::to_string_safe()
 	 * @return string

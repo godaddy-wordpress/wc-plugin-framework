@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay_Frontend' ) ) :
 /**
  * Sets up the Apple Pay front-end functionality.
  *
- * @since 4.7.0-dev
+ * @since 4.7.0
  */
 class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
@@ -47,7 +47,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param \SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance
 	 * @param \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance
@@ -72,7 +72,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Initializes the scripts and hooks.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function init() {
 
@@ -91,7 +91,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Gets the configured display locations.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return array
 	 */
@@ -104,7 +104,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Enqueues the scripts.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function enqueue_scripts() {
 
@@ -115,7 +115,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		/**
 		 * Filters the Apple Pay JS handler params.
 		 *
-		 * @since 4.7.0-dev
+		 * @since 4.7.0
 		 * @param array $params the JS params
 		 */
 		$params = apply_filters( 'sv_wc_apple_pay_js_handler_params', array(
@@ -136,7 +136,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Renders an Apple Pay button.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function render_button() {
 
@@ -183,7 +183,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Initializes Apple Pay on the single product page.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function init_product() {
 
@@ -209,7 +209,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		/**
 		 * Filters the Apple Pay product handler args.
 		 *
-		 * @since 4.7.0-dev
+		 * @since 4.7.0
 		 * @param array $args
 		 */
 		$args = apply_filters( 'sv_wc_apple_pay_product_handler_args', $args );
@@ -226,7 +226,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Initializes Apple Pay on the cart page.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function init_cart() {
 
@@ -246,7 +246,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		/**
 		 * Filters the Apple Pay cart handler args.
 		 *
-		 * @since 4.7.0-dev
+		 * @since 4.7.0
 		 * @param array $args
 		 */
 		$args = apply_filters( 'sv_wc_apple_pay_cart_handler_args', $args );
@@ -263,14 +263,14 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Initializes Apple Pay on the checkout page.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function init_checkout() {
 
 		/**
 		 * Filters the Apple Pay checkout handler args.
 		 *
-		 * @since 4.7.0-dev
+		 * @since 4.7.0
 		 * @param array $args
 		 */
 		$args = apply_filters( 'sv_wc_apple_pay_checkout_handler_args', array() );
@@ -288,7 +288,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Renders the Apple Pay button for checkout.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function render_checkout_button() {
 
@@ -315,7 +315,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Gets the gateway instance.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return \SV_WC_Payment_Gateway
 	 */
@@ -328,7 +328,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Gets the gateway plugin instance.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return \SV_WC_Payment_Gateway_Plugin
 	 */
@@ -340,7 +340,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Gets the Apple Pay handler instance.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return \SV_WC_Payment_Gateway_Apple_Pay
 	 */

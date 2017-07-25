@@ -892,7 +892,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Update a job option in options database.
 	 *
-	 * @since 4.7.0-dev.1
+	 * @since 4.6.3
 	 * @param object $job the job instance to update in database
 	 * @return int|bool number of rows updated or false on failure, see wpdb::update()
 	 */

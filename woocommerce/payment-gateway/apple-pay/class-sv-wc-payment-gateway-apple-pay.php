@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay' ) ) :
 /**
  * Sets up Apple Pay support.
  *
- * @since 4.7.0-dev
+ * @since 4.7.0
  */
 class SV_WC_Payment_Gateway_Apple_Pay {
 
@@ -53,7 +53,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param \SV_WC_Payment_Gateway_Plugin $plugin the plugin instance
 	 */
@@ -72,7 +72,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Initializes the Apple Pay handlers.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	protected function init() {
 
@@ -90,7 +90,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *
 	 * This method creates a new order and calls the gateway for processing.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return array
 	 * @throws \SV_WC_Payment_Gateway_Exception
@@ -165,7 +165,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * Updates a customer's stored billing & shipping addresses based on the
 	 * Apple Pay payment response.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param int $user_id WordPress user ID
 	 * @param \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $payment_response payment response object
@@ -194,7 +194,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * and other settings are correctly configured and communicating with Apple
 	 * without processing actual payments to test.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return array
@@ -215,7 +215,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets a single product payment request.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 * @see \SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
 	 *
 	 * @param \WC_Product $product product object
@@ -272,7 +272,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		/**
 		 * Filters the Apple Pay Buy Now JS payment request.
 		 *
-		 * @since 4.7.0-dev
+		 * @since 4.7.0
 		 * @param array $request request data
 		 * @param \WC_Product $product product object
 		 */
@@ -283,7 +283,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets a payment request based on WooCommerce cart data.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 * @see \SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
 	 *
 	 * @param \WC_Cart $cart cart object
@@ -323,7 +323,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		/**
 		 * Filters the Apple Pay cart JS payment request.
 		 *
-		 * @since 4.7.0-dev
+		 * @since 4.7.0
 		 * @param array $args the cart JS payment request
 		 * @param \WC_Cart $cart the cart object
 		 */
@@ -334,7 +334,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Recalculates the lines and totals for the current payment request.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return array
 	 *
@@ -371,7 +371,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				/**
 				 * Filters a shipping method's description for the Apple Pay payment card.
 				 *
-				 * @since 4.7.0-dev
+				 * @since 4.7.0
 				 *
 				 * @param string $detail shipping method detail, such as delivery estimation
 				 * @param object $method shipping method object
@@ -400,7 +400,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the line totals for a cart.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 * @see \SV_WC_Payment_Gateway_Apple_Pay::build_payment_request_lines()
 	 *
 	 * @param \WC_Cart $cart cart object
@@ -430,7 +430,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *
 	 * This contains all of the data necessary to complete a payment.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param float|int $amount amount to be charged by Apple Pay
 	 * @param array $args {
@@ -511,7 +511,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * + Fees
 	 * + Taxes
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param array $totals {
 	 *     Payment line totals.
@@ -592,7 +592,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Formats a total price for use with Apple Pay JS.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param string|float $price the price to format
 	 * @return string
@@ -606,7 +606,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the stored payment request data.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return array
 	 */
@@ -619,7 +619,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the stored payment response data.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response|false
 	 */
@@ -638,7 +638,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Stores payment request data for later use.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function store_payment_request( $data ) {
 
@@ -649,7 +649,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Stores payment response data for later use.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function store_payment_response( $data ) {
 
@@ -660,7 +660,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Clears all payment request & response data from the session.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function clear_payment_data() {
 
@@ -680,7 +680,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *
 	 * @internal
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param array $address taxable address
 	 * @return array
@@ -712,7 +712,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *
 	 * @internal
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param \WC_Order $order the order object
 	 * @return \WC_Order
@@ -730,7 +730,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the Apple Pay API.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return \SV_WC_Payment_Gateway_Apple_Pay_API
 	 */
@@ -752,7 +752,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Adds a log entry to the gateway's debug log.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @param string $message the log message to add
 	 */
@@ -777,7 +777,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * that Apple Pay is properly configured and ready to be initiated by the
 	 * Apple Pay JS.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return bool
 	 */
@@ -790,7 +790,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		/**
 		 * Filters whether Apple Pay should be made available to users.
 		 *
-		 * @since 4.7.0-dev
+		 * @since 4.7.0
 		 * @param bool $is_available
 		 */
 		return apply_filters( 'sv_wc_apple_pay_is_available', $is_available );
@@ -800,7 +800,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Determines if Apple Pay settings are properly configured.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return bool
 	 */
@@ -821,7 +821,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Determines if the certification path is set and valid.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return bool
 	 */
@@ -834,7 +834,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Determines if Apple Pay is enabled.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return bool
 	 */
@@ -847,7 +847,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Determines if test mode is enabled.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return bool
 	 */
@@ -860,7 +860,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the configured Apple merchant ID.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 * @return string
 	 */
 	public function get_merchant_id() {
@@ -872,7 +872,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the certificate file path.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return string
 	 */
@@ -885,7 +885,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the currencies accepted by the gateway's Apple Pay integration.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return array
 	 */
@@ -896,7 +896,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		/**
 		 * Filters the currencies accepted by the gateway's Apple Pay integration.
 		 *
-		 * @since 4.7.0-dev
+		 * @since 4.7.0
 		 * @return array
 		 */
 		return apply_filters( 'sv_wc_apple_pay_accepted_currencies', $currencies );
@@ -906,7 +906,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the gateway's Apple Pay capabilities.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return array
 	 */
@@ -926,7 +926,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		/**
 		 * Filters the gateway's Apple Pay capabilities.
 		 *
-		 * @since 4.7.0-dev
+		 * @since 4.7.0
 		 *
 		 * @param array $capabilities the gateway capabilities
 		 * @param \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler
@@ -938,7 +938,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the supported networks for Apple Pay.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return array
 	 */
@@ -961,7 +961,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		/**
 		 * Filters the supported Apple Pay networks (card types).
 		 *
-		 * @since 4.7.0-dev
+		 * @since 4.7.0
 		 *
 		 * @param array $networks the supported networks
 		 * @param \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler
@@ -973,7 +973,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the gateways that declare Apple Pay support.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return array the supporting gateways as `$gateway_id => \SV_WC_Payment_Gateway`
 	 */
@@ -996,7 +996,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the gateway set to process Apple Pay transactions.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return \SV_WC_Payment_Gateway|null
 	 */
@@ -1013,7 +1013,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the Apple Pay button style.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return string
 	 */
@@ -1026,7 +1026,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Gets the gateway plugin instance.
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 *
 	 * @return \SV_WC_Payment_Gateway_Plugin
 	 */

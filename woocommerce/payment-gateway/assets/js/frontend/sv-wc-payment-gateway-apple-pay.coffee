@@ -1,6 +1,6 @@
 ###
  WooCommerce Apple Pay Handler
- Version 4.7.0-dev
+ Version 4.7.0
 
  Copyright (c) 2016, SkyVerge, Inc.
  Licensed under the GNU General Public License v3.0
@@ -13,13 +13,13 @@ jQuery( document ).ready ($) ->
 
 	# The WooCommerce Apple Pay handler base class.
 	#
-	# @since 4.7.0-dev
+	# @since 4.7.0
 	class window.SV_WC_Apple_Pay_Handler
 
 
 		# Constructs the handler.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		constructor: (args) ->
 
 			@params = sv_wc_apple_pay_params
@@ -40,7 +40,7 @@ jQuery( document ).ready ($) ->
 
 		# Determines if Apple Pay is available.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		# @return bool
 		is_available: ->
 
@@ -53,7 +53,7 @@ jQuery( document ).ready ($) ->
 
 		# Initializes the handler.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		init: ->
 
 			$( document.body ).on 'click', '.sv-wc-apple-pay-button', ( e ) =>
@@ -83,7 +83,7 @@ jQuery( document ).ready ($) ->
 
 		# The callback for after the merchant data is validated.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		on_validate_merchant: ( event ) =>
 
 			this.validate_merchant( event.validationURL ).then ( merchant_session ) =>
@@ -101,7 +101,7 @@ jQuery( document ).ready ($) ->
 
 		# Validates the merchant data.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		# @return object
 		validate_merchant: ( url ) => new Promise ( resolve, reject ) =>
 
@@ -123,7 +123,7 @@ jQuery( document ).ready ($) ->
 
 		# Fires after a payment method has been selected.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		on_payment_method_selected: ( event ) =>
 
 			new Promise ( resolve, reject ) =>
@@ -151,7 +151,7 @@ jQuery( document ).ready ($) ->
 
 		# Fires after a shipping contact has been selected.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		on_shipping_contact_selected: ( event ) =>
 
 			new Promise ( resolve, reject ) =>
@@ -180,7 +180,7 @@ jQuery( document ).ready ($) ->
 
 		# Fires after a shipping method has been selected.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		on_shipping_method_selected: ( event ) =>
 
 			new Promise ( resolve, reject ) =>
@@ -209,7 +209,7 @@ jQuery( document ).ready ($) ->
 
 		# The callback for after the payment data is authorized.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		on_payment_authorized: ( event ) =>
 
 			this.process_authorization( event.payment ).then ( response ) =>
@@ -227,7 +227,7 @@ jQuery( document ).ready ($) ->
 
 		# Processes the transaction data.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		process_authorization: ( payment ) => new Promise ( resolve, reject ) =>
 
 			data = {
@@ -247,7 +247,7 @@ jQuery( document ).ready ($) ->
 
 		# The callback for when the payment card is cancelled/dismissed.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		on_cancel_payment: ( event ) =>
 
 			this.unblock_ui()
@@ -255,7 +255,7 @@ jQuery( document ).ready ($) ->
 
 		# Completes the purchase based on the gateway result.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		complete_purchase: ( response ) ->
 
 			window.location = response.redirect
@@ -263,7 +263,7 @@ jQuery( document ).ready ($) ->
 
 		# Fails the purchase based on the gateway result.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		fail_payment: ( error ) ->
 
 			console.error '[Apple Pay] ' + error
@@ -275,7 +275,7 @@ jQuery( document ).ready ($) ->
 
 		# Sets the Apple Pay payment status depending on the gateway result.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		set_payment_status: ( success ) ->
 
 			if success
@@ -288,7 +288,7 @@ jQuery( document ).ready ($) ->
 
 		# Attaches any update events required by the implementing class.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		attach_update_events: =>
 
 			# Optional, for resetting the request data
@@ -298,7 +298,7 @@ jQuery( document ).ready ($) ->
 		#
 		# Extending handlers can call this on change events to refresh the data.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		reset_payment_request: ( data = {} ) =>
 
 			this.block_ui()
@@ -322,7 +322,7 @@ jQuery( document ).ready ($) ->
 
 		# Gets the payment request via AJAX.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		get_payment_request: ( data ) => new Promise ( resolve, reject ) =>
 
 			base_data = {
@@ -343,7 +343,7 @@ jQuery( document ).ready ($) ->
 
 		# Renders any new errors and bring them into the viewport.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		render_errors: ( errors ) ->
 
 			# hide and remove any previous errors
@@ -361,25 +361,25 @@ jQuery( document ).ready ($) ->
 
 		# Blocks the payment form UI.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		block_ui: -> @ui_element.block( message: null, overlayCSS: background: '#fff', opacity: 0.6 )
 
 
 		# Unblocks the payment form UI.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		unblock_ui: -> @ui_element.unblock()
 
 
 	# The WooCommerce Apple Pay cart handler class.
 	#
-	# @since 4.7.0-dev
+	# @since 4.7.0
 	class window.SV_WC_Apple_Pay_Cart_Handler extends SV_WC_Apple_Pay_Handler
 
 
 		# Constructs the handler.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		constructor: ( args ) ->
 
 			@type = 'cart'
@@ -398,13 +398,13 @@ jQuery( document ).ready ($) ->
 
 	# The WooCommerce Apple Pay checkout handler class.
 	#
-	# @since 4.7.0-dev
+	# @since 4.7.0
 	class window.SV_WC_Apple_Pay_Checkout_Handler extends SV_WC_Apple_Pay_Handler
 
 
 		# Constructs the handler.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		constructor: ( args ) ->
 
 			@type = 'checkout'
@@ -426,13 +426,13 @@ jQuery( document ).ready ($) ->
 
 	# The WooCommerce Apple Pay product handler class.
 	#
-	# @since 4.7.0-dev
+	# @since 4.7.0
 	class window.SV_WC_Apple_Pay_Product_Handler extends SV_WC_Apple_Pay_Handler
 
 
 		# Constructs the handler.
 		#
-		# @since 4.7.0-dev
+		# @since 4.7.0
 		constructor: ( args ) ->
 
 			@type = 'product'
