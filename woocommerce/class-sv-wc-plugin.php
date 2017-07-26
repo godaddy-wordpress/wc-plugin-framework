@@ -68,9 +68,6 @@ abstract class SV_WC_Plugin {
 	/** @var array string names of required PHP extensions */
 	private $dependencies = array();
 
-	/** @var array string names of required PHP functions */
-	private $function_dependencies = array();
-
 	/** @var string the plugin text domain */
 	private $text_domain;
 
@@ -108,11 +105,6 @@ abstract class SV_WC_Plugin {
 		$this->version     = $version;
 
 		$dependencies = isset( $args['dependencies'] ) ? $args['dependencies'] : array();
-
-		// for backwards compatibility
-		if ( empty( $dependencies['functions'] ) && ! empty( $args['function_dependencies'] ) ) {
-			$dependencies['functions'] = $args['function_dependencies'];
-		}
 
 		$this->set_dependencies( $dependencies );
 
