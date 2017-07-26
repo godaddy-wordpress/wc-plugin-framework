@@ -101,16 +101,17 @@ abstract class SV_WC_Plugin {
 	public function __construct( $id, $version, $args = array() ) {
 
 		// required params
-		$this->id          = $id;
-		$this->version     = $version;
+		$this->id      = $id;
+		$this->version = $version;
 
-		$dependencies = isset( $args['dependencies'] ) ? $args['dependencies'] : array();
+		$args = wp_parse_args( $args, array(
+			'dependencies' => array(),
+			'text_domain'  => '',
+		) );
 
-		$this->set_dependencies( $dependencies );
+		$this->set_dependencies( $args['dependencies'] );
 
-		if ( isset( $args['text_domain'] ) ) {
-			$this->text_domain = $args['text_domain'];
-		}
+		$this->text_domain = $args['text_domain'];
 
 		// include library files after woocommerce is loaded
 		add_action( 'sv_wc_framework_plugins_loaded', array( $this, 'lib_includes' ) );
