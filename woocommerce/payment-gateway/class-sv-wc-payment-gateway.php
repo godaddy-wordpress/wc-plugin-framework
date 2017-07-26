@@ -114,6 +114,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/** Customer ID feature */
 	const FEATURE_CUSTOMER_ID = 'customer_id';
 
+	/** Apple Pay feature */
+	const FEATURE_APPLE_PAY = 'apple_pay';
+
 	/** @var SV_WC_Payment_Gateway_Plugin the parent plugin class */
 	private $plugin;
 
@@ -696,6 +699,78 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		return $defaults;
+	}
+
+
+	/** Apple Pay Feature *****************************************************/
+
+
+	/**
+	 * Determines whether this gateway supports Apple Pay.
+	 *
+	 * @since 4.7.0
+	 *
+	 * @return bool
+	 */
+	public function supports_apple_pay() {
+
+		return $this->supports( self::FEATURE_APPLE_PAY );
+	}
+
+
+	/**
+	 * Gets the Apple Pay gateway capabilities.
+	 *
+	 * Gateways should override this if they have more or less capabilities than
+	 * the default. See https://developer.apple.com/reference/applepayjs/paymentrequest/1916123-merchantcapabilities
+	 * for valid values.
+	 *
+	 * @since 4.7.0
+	 *
+	 * @return array
+	 */
+	public function get_apple_pay_capabilities() {
+
+		return array(
+			'supports3DS',
+			'supportsCredit',
+			'supportsDebit',
+		);
+	}
+
+
+	/**
+	 * Gets the currencies supported by Apple Pay.
+	 *
+	 * @since 4.7.0
+	 *
+	 * @return array
+	 */
+	public function get_apple_pay_currencies() {
+
+		return array( 'USD' );
+	}
+
+
+	/**
+	 * Adds the Apple Pay payment data to the order object.
+	 *
+	 * Gateways should override this to set the appropriate values depending on
+	 * how their processing API needs to handle the data.
+	 *
+	 * @since 4.7.0
+	 *
+	 * @param \WC_Order the order object
+	 * @param \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response authorized payment response
+	 * @return \WC_Order
+	 */
+	public function get_order_for_apple_pay( WC_Order $order, SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $response ) {
+
+		$order->payment->account_number = $response->get_last_four();
+		$order->payment->last_four      = $response->get_last_four();
+		$order->payment->card_type      = $response->get_card_type();
+
+		return $order;
 	}
 
 

@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2017.07.25 - version 4.7.0
+ * Feature - Introduce the Apple Pay framework for developers
+
 2017.07.11 - version 4.6.6
  * Fix - Ensure backwards compatibility with gateways that don't extend the SV_WC_API_Base class for their API
 

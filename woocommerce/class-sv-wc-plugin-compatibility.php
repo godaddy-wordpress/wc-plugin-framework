@@ -190,8 +190,8 @@ class SV_WC_Plugin_Compatibility {
 	 * TODO: Add WP version check when https://core.trac.wordpress.org/ticket/18857 is addressed {BR 2016-12-12}
 	 *
 	 * @since 4.6.0
-	 * @param string $slug The slug for the screen ID to normalize (minus `woocommerce_page_`).
-	 * @return string Normalized screen ID.
+	 * @param string $slug slug for the screen ID to normalize (minus `woocommerce_page_`)
+	 * @return string normalized screen ID
 	 */
 	public static function normalize_wc_screen_id( $slug = 'wc-settings' ) {
 
