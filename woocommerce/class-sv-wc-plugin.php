@@ -131,9 +131,6 @@ abstract class SV_WC_Plugin {
 		// Admin
 		if ( is_admin() && ! is_ajax() ) {
 
-			// admin message handler
-			require_once( $this->get_framework_path() . '/class-sv-wp-admin-message-handler.php' );
-
 			// render any admin notices, delayed notices, and
 			add_action( 'admin_notices', array( $this, 'add_admin_notices'            ), 10 );
 			add_action( 'admin_footer',  array( $this, 'add_delayed_admin_notices'    ), 10 );
@@ -1128,9 +1125,10 @@ abstract class SV_WC_Plugin {
 	public function get_message_handler() {
 
 		if ( is_object( $this->message_handler ) ) {
-
 			return $this->message_handler;
 		}
+
+		require_once( $this->get_framework_path() . '/class-sv-wp-admin-message-handler.php' );
 
 		return $this->message_handler = new SV_WP_Admin_Message_Handler( $this->get_id() );
 	}
