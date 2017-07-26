@@ -292,11 +292,11 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @param \WC_Shipping_Rate $shipping_rate shipping rate to add
 	 * @return int the order item ID
 	 */
-	public static function add_shipping( WC_Order $order, $shipping_rate ) {
+	public static function add_shipping( \WC_Order $order, $shipping_rate ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
-			$item = new WC_Order_Item_Shipping();
+			$item = new \WC_Order_Item_Shipping();
 
 			$item->set_props( array(
 				'method_title' => $shipping_rate->label,
@@ -334,11 +334,11 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @param float $shipping_tax_amount shipping tax amount
 	 * @return int order item ID
 	 */
-	public static function add_tax( WC_Order $order, $tax_rate_id, $tax_amount = 0, $shipping_tax_amount = 0 ) {
+	public static function add_tax( \WC_Order $order, $tax_rate_id, $tax_amount = 0, $shipping_tax_amount = 0 ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
-			$item = new WC_Order_Item_Tax();
+			$item = new \WC_Order_Item_Tax();
 
 			$item->set_props( array(
 				'rate_id'            => $tax_rate_id,

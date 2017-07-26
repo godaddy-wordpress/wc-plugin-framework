@@ -764,7 +764,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @param \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response authorized payment response
 	 * @return \WC_Order
 	 */
-	public function get_order_for_apple_pay( WC_Order $order, SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $response ) {
+	public function get_order_for_apple_pay( \WC_Order $order, SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $response ) {
 
 		$order->payment->account_number = $response->get_last_four();
 		$order->payment->last_four      = $response->get_last_four();

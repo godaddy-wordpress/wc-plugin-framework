@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay_Admin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_Apple_Pay_Admin' ) ) :
 
 /**
  * Sets up the Apple Pay settings screen.
@@ -223,7 +225,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 		global $current_section;
 
 		if ( 'apple-pay' === $current_section ) {
-			WC_Admin_Settings::output_fields( $this->get_settings() );
+			\WC_Admin_Settings::output_fields( $this->get_settings() );
 		}
 	}
 
@@ -244,7 +246,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 		// Output the general settings
 		if ( 'apple-pay' == $current_section ) {
 
-			WC_Admin_Settings::save_fields( $this->get_settings() );
+			\WC_Admin_Settings::save_fields( $this->get_settings() );
 		}
 	}
 
