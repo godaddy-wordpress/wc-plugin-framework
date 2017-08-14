@@ -805,7 +805,7 @@ abstract class SV_WC_API_Base {
 
 			$versions = curl_version();
 
-			// cURL is considered the minimum version that supports TLS 1.2
+			// cURL 7.34.0 is considered the minimum version that supports TLS 1.2
 			if ( version_compare( $versions['version'], '7.34.0', '<' ) ) {
 				$is_available = false;
 			}
