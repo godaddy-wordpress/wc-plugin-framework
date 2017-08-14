@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2017.08.14 - version 4.7.1
+ * Tweak - Refine the TLS 1.2 notice wording and appearance
+
 2017.07.25 - version 4.7.0
  * Feature - Introduce the Apple Pay framework for developers
 

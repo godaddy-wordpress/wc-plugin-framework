@@ -814,7 +814,7 @@ abstract class SV_WC_API_Base {
 		/**
 		 * Filters whether TLS 1.2 is available.
 		 *
-		 * @since 4.7.1-dev
+		 * @since 4.7.1
 		 *
 		 * @param bool $is_available whether TLS 1.2 is available
 		 * @param \SV_WC_API_Base $api API class instance

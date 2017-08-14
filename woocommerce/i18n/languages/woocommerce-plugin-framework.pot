@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 4.7.0\n"
+"Project-Id-Version: WooCommerce Plugin Framework 4.7.1\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -965,12 +965,13 @@ msgstr ""
 #: payment-gateway/class-sv-wc-payment-gateway-plugin.php:530
 #. translators: Placeholders: %s - payment gateway name
 msgid ""
-"%s requires TLS v1.2 support to process transactions. Please contact your "
-"hosting provider to update your environment to support the latest security "
-"standards."
+"%s will soon require TLS 1.2 support to process transactions and your "
+"server environment may need to be updated. Please contact your hosting "
+"provider to confirm that your site can send and receive TLS 1.2 connections "
+"and request they make any necessary updates."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:583
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:584
 #. translators: Placeholders: %1$s - plugin name, %2$s - a
 #. currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
 msgid ""
@@ -982,7 +983,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:627
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:628
 #. translators: Placeholders: %1$s - payment gateway title (such as
 #. Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
 msgid ""
@@ -990,7 +991,7 @@ msgid ""
 "tokenization%3$s to activate %1$s for Subscriptions."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:645
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:646
 #. translators: Placeholders: %1$s - payment gateway title (such as
 #. Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
 msgid ""
@@ -998,18 +999,18 @@ msgid ""
 "tokenization%3$s to activate %1$s for Pre-Orders."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:681
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:682
 msgid ""
 "You must enable tokenization for this gateway in order to support automatic "
 "renewal payments with the WooCommerce Subscriptions extension."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:682
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:683
 msgid "Inactive"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:826
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:895
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:827
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:896
 #. translators: verb, as in "Capture credit card charge". 		 Used when an
 #. amount has been pre-authorized before, but funds have not yet been captured
 #. (taken) from the card. 		 Capturing the charge will take the money from the
