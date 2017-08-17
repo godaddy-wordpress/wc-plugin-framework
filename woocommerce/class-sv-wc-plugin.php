@@ -134,7 +134,7 @@ abstract class SV_WC_Plugin {
 		$this->load_hook_deprecator();
 
 		// Admin
-		if ( is_admin() && ! is_ajax() ) {
+		if ( ( is_admin() && ! is_ajax() ) || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 
 			// admin message handler
 			require_once( $this->get_framework_path() . '/class-sv-wp-admin-message-handler.php' );
@@ -259,7 +259,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function lib_includes() {
 
-		if ( is_admin() ) {
+		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			// instantiate the admin notice handler
 			$this->get_admin_notice_handler();
 		}
