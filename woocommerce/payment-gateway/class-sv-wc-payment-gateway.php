@@ -99,6 +99,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/** Credit Card capture charge transaction feature */
 	const FEATURE_CREDIT_CARD_CAPTURE = 'capture_charge';
 
+	/** Credit Card partial capture transaction feature */
+	const FEATURE_CREDIT_CARD_PARTIAL_CAPTURE = 'partial_capture';
+
 	/** Display detailed customer decline messages on checkout */
 	const FEATURE_DETAILED_CUSTOMER_DECLINE_MESSAGES = 'customer_decline_messages';
 
@@ -140,6 +143,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 	/** @var string configuration option: whether transactions should always be charged if the order is virtual-only, defaults to 'no' */
 	private $charge_virtual_orders;
+
+	/** @var string configuration option: whether orders can be partially captured multiple times */
+	private $enable_partial_capture;
 
 	/** @var array configuration option: card types to show images for */
 	private $card_types;
@@ -1062,7 +1068,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				$( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_transaction_type' ).change( function() {
 
 					var transaction_type = $( this ).val();
-					var hidden_setting   = $( '#woocommerce_<?php echo $this->get_id(); ?>_charge_virtual_orders' ).closest( 'tr' );
+					var hidden_setting   = $( '#woocommerce_<?php echo $this->get_id(); ?>_charge_virtual_orders, #woocommerce_<?php echo $this->get_id(); ?>_enable_partial_capture' ).closest( 'tr' );
 
 					if ( '<?php echo esc_js( self::TRANSACTION_TYPE_AUTHORIZATION ); ?>' === transaction_type ) {
 						$( hidden_setting ).show();
@@ -1363,9 +1369,19 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @param \WC_Order $order the order object
 	 * @return \SV_WC_Payment_Gateway_API_Response|null
 	 */
-	public function do_credit_card_capture( $order ) {
+	public function do_credit_card_capture( $order, $amount = null ) {
 
-		$order = $this->get_order_for_capture( $order );
+		$order = $this->get_order_for_capture( $order, $amount );
+
+		// if the input amount exceeds the max amount available, bail
+		if ( $order->capture->amount > $order->capture->remaining ) {
+
+			throw new SV_WC_Payment_Gateway_Exception( sprintf(
+				/* translators: Placeholders: %s - dollar amount */
+				__( '%s exceeds the amount available remaining for capture.', 'woocommerce-plugin-framework' ),
+				get_woocommerce_currency_symbol() . wc_format_decimal( $order->capture->amount )
+			) );
+		}
 
 		try {
 
@@ -1377,7 +1393,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount. Definitions: Capture, as in capture funds from a credit card. */
 					esc_html__( '%1$s Capture of %2$s Approved', 'woocommerce-plugin-framework' ),
 					$this->get_method_title(),
-					get_woocommerce_currency_symbol() . wc_format_decimal( $order->capture_total )
+					get_woocommerce_currency_symbol() . wc_format_decimal( $order->capture->amount )
 				);
 
 				// adds the transaction id (if any) to the order note
@@ -1387,11 +1403,15 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 				$order->add_order_note( $message );
 
-				// prevent stock from being reduced when payment is completed as this is done when the charge was authorized
-				add_filter( 'woocommerce_payment_complete_reduce_order_stock', '__return_false', 100 );
+				// if this completes all available captures, mark the order as paid
+				if ( '0.00' === $order->capture->remaining || $order->capture->amount === $order->get_total() ) {
 
-				// complete the order
-				$order->payment_complete();
+					// prevent stock from being reduced when payment is completed as this is done when the charge was authorized
+					add_filter( 'woocommerce_payment_complete_reduce_order_stock', '__return_false', 100 );
+
+					// complete the order
+					$order->payment_complete();
+				}
 
 				// add the standard capture data to the order
 				$this->add_capture_data( $order, $response );
@@ -1399,11 +1419,16 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				// let payment gateway implementations add their own data
 				$this->add_payment_gateway_capture_data( $order, $response );
 
+				return array(
+					'result'  => 'success',
+					'message' => $message,
+				);
+
 			} else {
 
 				$message = sprintf(
 					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount, %3$s - transaction status message. Definitions: Capture, as in capture funds from a credit card. */
-					esc_html__( '%1$s Capture Failed: %2$s - %3$s', 'woocommerce-plugin-framework' ),
+					__( '%1$s Capture Failed: %2$s - %3$s', 'woocommerce-plugin-framework' ),
 					$this->get_method_title(),
 					$response->get_status_code(),
 					$response->get_status_message()
@@ -1411,22 +1436,27 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 				$order->add_order_note( $message );
 
+				return array(
+					'result'  => 'failure',
+					'message' => $message,
+				);
 			}
-
-			return $response;
 
 		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			$message = sprintf(
 				/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - failure message. Definitions: "capture" as in capturing funds from a credit card. */
-				esc_html__( '%1$s Capture Failed: %2$s', 'woocommerce-plugin-framework' ),
+				__( '%1$s Capture Failed: %2$s', 'woocommerce-plugin-framework' ),
 				$this->get_method_title(),
 				$e->getMessage()
 			);
 
 			$order->add_order_note( $message );
 
-			return null;
+			return array(
+				'result'  => 'failure',
+				'message' => $message,
+			);
 		}
 	}
 
@@ -1441,14 +1471,16 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * included for backwards compat (4.1 and earlier)
 	 *
-	 * $order->capture_total
-	 * $order->description
+	 * $order->capture->amount
+	 * $order->capture->description
 	 *
 	 * @since 4.5.0
+	 *
 	 * @param \WC_Order|int $order the order being processed
+	 * @param float $amount amount to capture
 	 * @return \WC_Order
 	 */
-	protected function get_order_for_capture( $order ) {
+	protected function get_order_for_capture( $order, $amount = null ) {
 
 		if ( is_numeric( $order ) ) {
 			$order = wc_get_order( $order );
@@ -1456,14 +1488,17 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		// add capture info
 		$order->capture = new \stdClass();
-		$order->capture->amount = SV_WC_Helper::number_format( $order->get_total() );
+
+		if ( ! $amount ) {
+			$amount = $order->get_total();
+		}
+
+		$order->capture->amount    = SV_WC_Helper::number_format( $amount );
+		$order->capture->remaining = SV_WC_Helper::number_format( $this->get_order_capture_maximum( $order ) - $this->get_order_meta( $order, 'capture_total' ) );
+
 		/* translators: Placeholders: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card. */
 		$order->capture->description = sprintf( esc_html__( '%1$s - Capture for Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
 		$order->capture->trans_id = $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'trans_id' );
-
-		// backwards compat for 4.1 and earlier
-		$order->capture_total = $order->capture->amount;
-		$order->description   = $order->capture->description;
 
 		/**
 		 * Direct Gateway Capture Get Order Filter.
@@ -1475,6 +1510,24 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 * @param \SV_WC_Payment_Gateway_Direct $this instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_capture', $order, $this );
+	}
+
+
+	/**
+	 * Gets the maximum amount that can be captured from an order.
+	 *
+	 * Gateways can override this for an value above or below the order total.
+	 * For instance, some processors allow capturing an amount a certain
+	 * percentage higher than the payment total.
+	 *
+	 * @since 5.0.0-dev.1
+	 *
+	 * @param \WC_Order $order order object
+	 * @return float
+	 */
+	public function get_order_capture_maximum( \WC_Order $order ) {
+
+		return $order->get_total();
 	}
 
 
@@ -2453,6 +2506,18 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
+	 * Determines if the gateway supports capturing a partial charge.
+	 *
+	 * @since 5.0.0-dev
+	 *
+	 * @return bool
+	 */
+	public function supports_credit_card_partial_capture() {
+		return $this->supports( self::FEATURE_CREDIT_CARD_PARTIAL_CAPTURE );
+	}
+
+
+	/**
 	 * Adds any credit card authorization/charge admin fields, allowing the
 	 * administrator to choose between performing authorizations or charges
 	 *
@@ -2485,6 +2550,16 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			);
 		}
 
+		if ( $this->supports_credit_card_partial_capture() ) {
+
+			$form_fields['enable_partial_capture'] = array(
+				'label'       => esc_html__( 'Enable Partial Capture', 'woocommerce-plugin-framework' ),
+				'type'        => 'checkbox',
+				'description' => esc_html__( 'Allow orders to be partially captured multiple times.', 'woocommerce-plugin-framework' ),
+				'default'     => 'no',
+			);
+		}
+
 		return $form_fields;
 	}
 
@@ -2503,7 +2578,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		// check whether the charge has already been captured by this gateway
 		$charge_captured = $this->get_order_meta( $order_id, 'charge_captured' );
 
-		if ( 'yes' == $charge_captured ) {
+		if ( 'yes' === $charge_captured || '0.00' === SV_WC_Helper::number_format( $this->get_order_capture_maximum( $order ) - $this->get_order_meta( $order, 'capture_total' ) ) ) {
 			return false;
 		}
 
@@ -2528,9 +2603,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function has_authorization_expired( $order ) {
 
-		$transaction_time = strtotime( $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'trans_date' ) );
+		$transaction_date = $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'trans_date' );
 
-		return floor( ( time() - $transaction_time ) / 3600 ) > $this->get_authorization_time_window();
+		$transaction_time = strtotime( $transaction_date );
+
+		return $transaction_date && floor( ( time() - $transaction_time ) / 3600 ) > $this->get_authorization_time_window();
 	}
 
 
@@ -2603,6 +2680,29 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 * @param \SV_WC_Payment_Gateway $gateway the gateway object
 		 */
 		return apply_filters( 'wc_' . $this->get_id() . '_perform_credit_card_authorization', $perform, $order, $this );
+	}
+
+
+	/**
+	 * Determines if partial capture is enabled.
+	 *
+	 * @since 5.0.0-dev
+	 *
+	 * @return bool
+	 */
+	public function is_partial_capture_enabled() {
+
+		assert( $this->supports_credit_card_partial_capture() );
+
+		/**
+		 * Filters whether partial capture is enabled.
+		 *
+		 * @since 5.0.0-dev.1
+		 *
+		 * @param bool $enabled whether partial capture is enabled
+		 * @param SV_WC_Payment_Gateway $gateway gateway object
+		 */
+		return apply_filters( 'wc_' . $this->get_id() . '_partial_capture_enabled', 'yes' === $this->enable_partial_capture, $this );
 	}
 
 
