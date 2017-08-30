@@ -46,7 +46,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * @since 4.1.0
 	 * @param \SV_WC_Payment_Gateway_Direct $gateway
 	 */
-	public function __construct( SV_WC_Payment_Gateway_Direct $gateway ) {
+	public function __construct( SV_WC_Payment_Gateway $gateway ) {
 
 		parent::__construct( $gateway );
 
@@ -215,7 +215,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		}
 
 		// add subscriptions data to the order object prior to processing the payment
-		add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_get_order', array( $this, 'get_order' ) );
+		add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_get_order_base', array( $this, 'get_order' ) );
 
 		$this->get_gateway()->process_payment( SV_WC_Order_Compatibility::get_prop( $order, 'id' ) );
 	}
