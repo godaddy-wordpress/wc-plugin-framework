@@ -114,6 +114,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/** Customer ID feature */
 	const FEATURE_CUSTOMER_ID = 'customer_id';
 
+	/** Add new payment method feature */
+	const FEATURE_ADD_PAYMENT_METHOD = 'add_payment_method';
+
 	/** Apple Pay feature */
 	const FEATURE_APPLE_PAY = 'apple_pay';
 
@@ -3061,6 +3064,25 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 */
 		return apply_filters( 'wc_' . $this->get_id() . '_perform_credit_card_authorization', $perform, $order, $this );
 	}
+
+
+	/** Add Payment Method feature ********************************************/
+
+
+	/**
+	 * Determines if the gateway supports the add payment method feature.
+	 *
+	 * @since 5.0.0-dev.1
+	 *
+	 * @return bool
+	 */
+	public function supports_add_payment_method() {
+
+		return $this->supports( self::FEATURE_ADD_PAYMENT_METHOD );
+	}
+
+
+	// TODO: generalize the direct methods
 
 
 	/** Card Types feature ******************************************************/
