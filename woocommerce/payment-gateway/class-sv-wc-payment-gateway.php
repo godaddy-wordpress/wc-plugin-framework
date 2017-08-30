@@ -1365,7 +1365,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Perform a credit card capture for an order.
 	 *
-	 * @since 4.5.0
+	 * @since 5.0.0-dev
+	 *
 	 * @param \WC_Order $order the order object
 	 * @return \SV_WC_Payment_Gateway_API_Response|null
 	 */
@@ -1389,6 +1390,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 			if ( $response->transaction_approved() ) {
 
+				$order->capture->remaining -= $order->capture->amount;
+
 				$message = sprintf(
 					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount. Definitions: Capture, as in capture funds from a credit card. */
 					esc_html__( '%1$s Capture of %2$s Approved', 'woocommerce-plugin-framework' ),
@@ -1404,7 +1407,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				$order->add_order_note( $message );
 
 				// if this completes all available captures, mark the order as paid
-				if ( '0.00' === $order->capture->remaining || $order->capture->amount === $order->get_total() ) {
+				if ( '0.00' === $order->capture->remaining || $order->capture->amount === SV_WC_Helper::number_format( $order->get_total() ) ) {
 
 					// prevent stock from being reduced when payment is completed as this is done when the charge was authorized
 					add_filter( 'woocommerce_payment_complete_reduce_order_stock', '__return_false', 100 );
@@ -1540,8 +1543,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	protected function add_capture_data( $order, $response ) {
 
-		// mark the order as captured
-		$this->update_order_meta( $order, 'charge_captured', 'yes' );
+		$this->update_order_meta( $order, 'capture_total',   SV_WC_Helper::number_format( $this->get_order_meta( $order, 'capture_total' ) + $order->capture->amount ) );
+		$this->update_order_meta( $order, 'charge_captured', $order->capture->remaining > 0 ? 'partial' : 'yes' );
 
 		// add capture transaction ID
 		if ( $response && $response->get_transaction_id() ) {
