@@ -508,16 +508,16 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		if ( $response->transaction_approved() || $response->transaction_held() ) {
 
+			// if tokenization is supported, process any token data that might have come back in the response
+			if ( $this->supports_tokenization() && $this->tokenization_enabled() && $response instanceof SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response ) {
+				$order = $this->process_tokenization_response( $order, $response );
+			}
+
 			// always add transasaction data to the order for approved and held transactions
 			$this->add_transaction_data( $order, $response );
 
 			// let gateways easily add their own data
 			$this->add_payment_gateway_transaction_data( $order, $response );
-
-			// if tokenization is supported, process any token data that might have come back in the response
-			if ( $this->supports_tokenization() && $this->tokenization_enabled() && $response instanceof SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response ) {
-				$this->process_tokenization_response( $order, $response );
-			}
 
 			// handle the order status, etc...
 			$this->complete_payment( $order, $response );
