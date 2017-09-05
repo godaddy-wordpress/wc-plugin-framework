@@ -360,15 +360,15 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 */
 	public function handle_transaction_response_request() {
 
-		// log the request
-		$this->log_transaction_response_request( $_REQUEST );
-
 		$order = null;
 
 		try {
 
 			// get the transaction response object for the current request
 			$response = $this->get_transaction_response( $_REQUEST );
+
+			// log the request
+			$this->log_transaction_response_request( $response->to_string_safe() );
 
 			// get the associated order, or die trying
 			$order = $this->get_order_from_response( $response );
