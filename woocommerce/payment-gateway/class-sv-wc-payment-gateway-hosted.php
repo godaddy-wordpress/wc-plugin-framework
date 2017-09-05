@@ -552,6 +552,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * @param \WC_Order $order order object
 	 * @param SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response $response response object
+	 * @return \WC_Order order object
 	 */
 	protected function process_tokenization_response( \WC_Order $order, $response ) {
 
@@ -561,8 +562,16 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 				$token = $response->get_payment_token();
 
+				$order->payment->token          = $token->get_id();
+				$order->payment->account_number = $token->get_last_four();
+				$order->payment->last_four      = $token->get_last_four();
+
 				// order note based on gateway type
-				if ( $this->is_credit_card_gateway() ) {
+				if ( $token->is_credit_card() ) {
+
+					$order->payment->exp_month = $token->get_exp_month();
+					$order->payment->exp_year  = $token->get_exp_year();
+					$order->payment->card_type = $token->get_card_type();
 
 					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - payment method name (mastercard, bank account, etc), %3$s - last four digits of the card/account, %4$s - card/account expiry date */
 					$order->add_order_note( sprintf( __( '%1$s Payment Method Saved: %2$s ending in %3$s (expires %4$s)', 'woocommerce-plugin-framework' ),
@@ -572,7 +581,10 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 						$token->get_exp_date()
 					) );
 
-				} elseif ( $this->is_echeck_gateway() ) {
+				} elseif ( $token->is_echeck() ) {
+
+					$order->payment->account_type = $token->get_account_type();
+					$order->payment->check_number = $token->get_check_number();
 
 					// account type (checking/savings) may or may not be available, which is fine
 					/* translators: Placeholders: %1$s - payment gateway title (such as CyberSouce, NETbilling, etc), %2$s - account type (checking/savings - may or may not be available), %3$s - last four digits of the account */
@@ -599,6 +611,8 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		foreach ( $response->get_deleted_payment_tokens() as $token_id ) {
 			$this->get_payment_tokens_handler()->remove_token( $order->get_user_id(), $token_id );
 		}
+
+		return $order;
 	}
 
 
