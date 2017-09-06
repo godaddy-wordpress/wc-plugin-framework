@@ -609,7 +609,12 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		// remove any tokens that were deleted on the hosted pay page
 		foreach ( $response->get_deleted_payment_tokens() as $token_id ) {
-			$this->get_payment_tokens_handler()->remove_token( $order->get_user_id(), $token_id );
+
+			$tokens = $this->get_payment_tokens_handler()->get_tokens( $order->get_user_id() );
+
+			unset( $tokens[ $token_id ] );
+
+			$this->get_payment_tokens_handler()->update_tokens( $order->get_user_id(), $tokens );
 		}
 
 		return $order;
