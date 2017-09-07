@@ -149,16 +149,6 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 
 
 	/**
-	 * Gets the payment token that was chosen on the hosted pay page.
-	 *
-	 * @since 5.0.0-dev
-	 *
-	 * @return string
-	 */
-	public function get_chosen_payment_token();
-
-
-	/**
 	 * Gets any payment tokens that were edited on the hosted pay page.
 	 *
 	 * @since 5.0.0-dev
