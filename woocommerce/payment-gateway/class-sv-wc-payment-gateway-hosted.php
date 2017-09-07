@@ -400,6 +400,14 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	}
 
 
+	/**
+	 * Gets the order object with transaction data.
+	 *
+	 * @since 5.0.0-dev
+	 *
+	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response $response response object
+	 * @return \WC_Order
+	 */
 	protected function get_order_from_response( $response ) {
 
 		$order = wc_get_order( $response->get_order_id() );
