@@ -1634,13 +1634,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	protected function complete_payment( \WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
 
-		if ( self::PAYMENT_TYPE_CREDIT_CARD == $this->get_payment_type() ) {
+		if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
 			$order->add_order_note( $this->get_credit_card_transaction_approved_message( $order, $response ) );
-		} elseif ( self::PAYMENT_TYPE_ECHECK == $this->get_payment_type() ) {
+		} elseif ( self::PAYMENT_TYPE_ECHECK == $response->get_payment_type() ) {
 			$order->add_order_note( $this->get_echeck_transaction_approved_message( $order, $response ) );
 		} else {
 
-			$message_method = 'get_' . $this->get_payment_type() . '_transaction_approved_message';
+			$message_method = 'get_' . $response->get_payment_type() . '_transaction_approved_message';
 
 			if ( is_callable( array( $this, $message_method ) ) ) {
 				$order->add_order_note( $this->$message_method( $order, $response ) );
@@ -2473,6 +2473,15 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	}
 
 
+	/**
+	 * Gets the order note message for approved credit card transactions.
+	 *
+	 * @since 5.0.0-dev.1
+	 *
+	 * @param \WC_Order $order order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response response object
+	 * @return string
+	 */
 	public function get_credit_card_transaction_approved_message( \WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
 
 		$last_four = ! empty( $order->payment->last_four ) ? $order->payment->last_four : substr( $order->payment->account_number, -4 );
@@ -2536,6 +2545,15 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	}
 
 
+	/**
+	 * Gets the order note message for approved eCheck transactions.
+	 *
+	 * @since 5.0.0-dev.1
+	 *
+	 * @param \WC_Order $order order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response response object
+	 * @return string
+	 */
 	public function get_echeck_transaction_approved_message( \WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
 
 		$last_four = ! empty( $order->payment->last_four ) ? $order->payment->last_four : substr( $order->payment->account_number, -4 );
