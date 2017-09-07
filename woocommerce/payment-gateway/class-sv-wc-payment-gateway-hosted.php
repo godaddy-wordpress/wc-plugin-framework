@@ -414,58 +414,20 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			) );
 		}
 
-		$order->customer_id   = '';
+		$order = $this->get_order( $order );
 
-		if ( $order->get_user_id() && false !== ( $customer_id = $this->get_customer_id( $order->get_user_id(), array( 'order' => $order ) ) ) ) {
-			$order->customer_id = $customer_id;
-		}
+		$order->payment->account_number = $response->get_account_number();
 
-		$order->payment_total = number_format( $order->get_total(), 2, '.', '' );
+		if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
 
-		$order->payment = new \stdClass();
-		$order->payment->account_number = '';
+			$order->payment->exp_month = $response->get_exp_month();
+			$order->payment->exp_year  = $response->get_exp_year();
+			$order->payment->card_type = $response->get_card_type();
 
-		if ( $this->supports_tokenization() && $this->tokenization_enabled() && $response instanceof SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response && $response->get_chosen_payment_token() ) {
+		} elseif ( self::PAYMENT_TYPE_ECHECK == $response->get_payment_type() ) {
 
-			if ( $response->get_customer_id() ) {
-				$order->customer_id = $response->get_customer_id();
-			}
-
-			$order->payment->token = $response->get_chosen_payment_token();
-
-			if ( $token = $this->get_payment_tokens_handler()->get_token( $order->get_user_id(), $order->payment->token ) ) {
-
-				$order->payment->account_number = $token->get_last_four();
-				$order->payment->last_four      = $token->get_last_four();
-
-				if ( $token->is_credit_card() ) {
-
-					$order->payment->exp_month = $token->get_exp_month();
-					$order->payment->exp_year  = $token->get_exp_year();
-					$order->payment->card_type = $token->get_card_type();
-
-				} elseif ( $token->is_echeck() ) {
-
-					$order->payment->account_type = $token->get_account_type();
-					$order->payment->check_number = $token->get_check_number();
-				}
-			}
-
-		} else {
-
-			$order->payment->account_number = $response->get_account_number();
-
-			if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
-
-				$order->payment->exp_month = $response->get_exp_month();
-				$order->payment->exp_year  = $response->get_exp_year();
-				$order->payment->card_type = $response->get_card_type();
-
-			} elseif ( self::PAYMENT_TYPE_ECHECK == $response->get_payment_type() ) {
-
-				$order->payment->account_type = $response->get_account_type();
-				$order->payment->check_number = $response->get_check_number();
-			}
+			$order->payment->account_type = $response->get_account_type();
+			$order->payment->check_number = $response->get_check_number();
 		}
 
 		return $order;
@@ -556,54 +518,80 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 */
 	protected function process_tokenization_response( \WC_Order $order, $response ) {
 
-		if ( $response->payment_method_tokenized() ) {
+		if ( is_callable( array( $response, 'get_customer_id' ) ) && $response->get_customer_id() ) {
+			$order->customer_id = $response->get_customer_id();
+		}
 
-			if ( $response->tokenization_successful() && $this->get_payment_tokens_handler()->add_token( $order->get_user_id(), $response->get_payment_token() ) ) {
+		$token = $response->get_payment_token();
 
-				$token = $response->get_payment_token();
+		if ( $order->get_user_id() ) {
 
-				$order->payment->token          = $token->get_id();
-				$order->payment->account_number = $token->get_last_four();
-				$order->payment->last_four      = $token->get_last_four();
+			if ( $response->payment_method_tokenized() ) {
 
-				// order note based on gateway type
-				if ( $token->is_credit_card() ) {
+				if ( $response->tokenization_successful() && $this->get_payment_tokens_handler()->add_token( $order->get_user_id(), $token ) ) {
 
-					$order->payment->exp_month = $token->get_exp_month();
-					$order->payment->exp_year  = $token->get_exp_year();
-					$order->payment->card_type = $token->get_card_type();
+					// order note based on gateway type
+					if ( $token->is_credit_card() ) {
 
-					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - payment method name (mastercard, bank account, etc), %3$s - last four digits of the card/account, %4$s - card/account expiry date */
-					$order->add_order_note( sprintf( __( '%1$s Payment Method Saved: %2$s ending in %3$s (expires %4$s)', 'woocommerce-plugin-framework' ),
-						$this->get_method_title(),
-						$token->get_type_full(),
-						$token->get_last_four(),
-						$token->get_exp_date()
-					) );
+						/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - payment method name (mastercard, bank account, etc), %3$s - last four digits of the card/account, %4$s - card/account expiry date */
+						$order->add_order_note( sprintf( __( '%1$s Payment Method Saved: %2$s ending in %3$s (expires %4$s)', 'woocommerce-plugin-framework' ),
+							$this->get_method_title(),
+							$token->get_type_full(),
+							$token->get_last_four(),
+							$token->get_exp_date()
+						) );
 
-				} elseif ( $token->is_echeck() ) {
+					} elseif ( $token->is_echeck() ) {
 
-					$order->payment->account_type = $token->get_account_type();
-					$order->payment->check_number = $token->get_check_number();
+						// account type (checking/savings) may or may not be available, which is fine
+						/* translators: Placeholders: %1$s - payment gateway title (such as CyberSouce, NETbilling, etc), %2$s - account type (checking/savings - may or may not be available), %3$s - last four digits of the account */
+						$order->add_order_note( sprintf( __( '%1$s eCheck Payment Method Saved: %2$s account ending in %3$s', 'woocommerce-plugin-framework' ),
+							$this->get_method_title(),
+							$token->get_account_type(),
+							$token->get_last_four()
+						) );
 
-					// account type (checking/savings) may or may not be available, which is fine
-					/* translators: Placeholders: %1$s - payment gateway title (such as CyberSouce, NETbilling, etc), %2$s - account type (checking/savings - may or may not be available), %3$s - last four digits of the account */
-					$order->add_order_note( sprintf( __( '%1$s eCheck Payment Method Saved: %2$s account ending in %3$s', 'woocommerce-plugin-framework' ),
-						$this->get_method_title(),
-						$token->get_account_type(),
-						$token->get_last_four()
-					) );
+					} else {
+
+						/* translators: Placeholders: %s - payment gateway title (such as CyberSouce, NETbilling, etc) */
+						$order->add_order_note( sprintf( __( '%s Payment Method Saved', 'woocommerce-plugin-framework' ),
+							$this->get_method_title()
+						) );
+					}
+
+				} else {
+
+					$message = sprintf(
+						/* translators: Placeholders: %s - a failed tokenization API error */
+						__( 'Tokenization failed. %s', 'woocommerce-plugin-framework' ),
+						$response->get_tokenization_message()
+					);
+
+					$this->mark_order_as_held( $order, $message, $response );
 				}
+			}
 
-			} else {
+			// get a fresh copy of the token object just in case the response doesn't include all of the method details
+			$token = $this->get_payment_tokens_handler()->get_token( $order->get_user_id(), $token->get_id() );
+		}
 
-				$message = sprintf(
-					/* translators: Placeholders: %s - a failed tokenization API error */
-					__( 'Tokenization failed. %s', 'woocommerce-plugin-framework' ),
-					$response->get_tokenization_message()
-				);
+		// add the payment method order data
+		if ( $token ) {
 
-				$this->mark_order_as_held( $order, $message, $response );
+			$order->payment->token          = $token->get_id();
+			$order->payment->account_number = $token->get_last_four();
+			$order->payment->last_four      = $token->get_last_four();
+
+			if ( $token->is_credit_card() ) {
+
+				$order->payment->exp_month = $token->get_exp_month();
+				$order->payment->exp_year  = $token->get_exp_year();
+				$order->payment->card_type = $token->get_card_type();
+
+			} elseif ( $token->is_echeck() ) {
+
+				$order->payment->account_type = $token->get_account_type();
+				$order->payment->check_number = $token->get_check_number();
 			}
 		}
 
