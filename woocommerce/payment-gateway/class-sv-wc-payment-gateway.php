@@ -1659,6 +1659,16 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 			$order->payment_complete();
 		}
+
+		/**
+		 * Fires after a payment transaction is successfully completed.
+		 *
+		 * @since 5.0.0-dev.1
+		 *
+		 * @param \WC_Order $order order object
+		 * @param SV_WC_Payment_Gateway $gateway gateway object
+		 */
+		do_action( 'wc_payment_gateway_' . $this->get_id() . '_complete_payment', $order, $this );
 	}
 
 

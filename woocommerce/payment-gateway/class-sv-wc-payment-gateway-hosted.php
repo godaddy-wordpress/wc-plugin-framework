@@ -443,6 +443,31 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 
 	/**
+	 * Gets the order object with payment data added.
+	 *
+	 * @since 5.0.0-dev.1
+	 * @see SV_WC_Payment_Gateway::get_order()
+	 *
+	 * @param int|\WC_Order $order_id order ID or object
+	 * @return \WC_Order
+	 */
+	public function get_order( $order_id ) {
+
+		$order = parent::get_order( $order_id );
+
+		/**
+		 * Filters the order object after adding gateway data.
+		 *
+		 * @since 5.0.0-dev.1
+		 *
+		 * @param \WC_Order $order order object
+		 * @param SV_WC_Payment_Gateway $gateway gateway object
+		 */
+		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order', $order, $this );
+	}
+
+
+	/**
 	 * Validate a transaction response.
 	 *
 	 * @since 4.3.0
