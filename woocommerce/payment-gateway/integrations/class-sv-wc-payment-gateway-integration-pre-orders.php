@@ -125,7 +125,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 			if ( 0 == $order->get_user_id() && false !== ( $customer_id = $this->get_gateway()->get_guest_customer_id( $order ) ) )
 				$order->customer_id = $customer_id;
 
-		} elseif ( WC_Pre_Orders_Order::order_has_payment_token( $order ) ) {
+		} elseif ( WC_Pre_Orders_Order::order_has_payment_token( $order ) && ! is_checkout_pay_page() ) {
 
 			// if this is a pre-order release payment with a tokenized payment method, get the payment token to complete the order
 
