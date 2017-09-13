@@ -102,7 +102,9 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			return array( 'result' => 'failure' );
 		}
 
-		WC()->cart->empty_cart();
+		if ( is_callable( array( WC()->cart, 'empty_cart' ) ) ) {
+			WC()->cart->empty_cart();
+		}
 
 		return array(
 			'result'   => 'success',
@@ -358,9 +360,6 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 */
 	public function handle_transaction_response_request() {
 
-		// log the request
-		$this->log_transaction_response_request( $_REQUEST );
-
 		$order = null;
 
 		try {
@@ -368,8 +367,11 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			// get the transaction response object for the current request
 			$response = $this->get_transaction_response( $_REQUEST );
 
+			// log the request
+			$this->log_transaction_response_request( $response->to_string_safe() );
+
 			// get the associated order, or die trying
-			$order = $response->get_order();
+			$order = $this->get_order_from_response( $response );
 
 			// Validate the response data such as order ID and payment status
 			$this->validate_transaction_response( $order, $response );
@@ -399,6 +401,73 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 
 	/**
+	 * Gets the order object with transaction data.
+	 *
+	 * @since 5.0.0-dev
+	 *
+	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response $response response object
+	 * @return \WC_Order
+	 */
+	protected function get_order_from_response( $response ) {
+
+		$order = wc_get_order( $response->get_order_id() );
+
+		// If the order is invalid, bail
+		if ( ! $order ) {
+
+			throw new SV_WC_Payment_Gateway_Exception( sprintf(
+				/* translators: Placeholders: %s - a WooCommerce order ID */
+				__( 'Could not find order %s', 'woocommerce-plugin-framework' ),
+				$response->get_order_id()
+			) );
+		}
+
+		$order = $this->get_order( $order );
+
+		$order->payment->account_number = $response->get_account_number();
+
+		if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
+
+			$order->payment->exp_month = $response->get_exp_month();
+			$order->payment->exp_year  = $response->get_exp_year();
+			$order->payment->card_type = $response->get_card_type();
+
+		} elseif ( self::PAYMENT_TYPE_ECHECK == $response->get_payment_type() ) {
+
+			$order->payment->account_type = $response->get_account_type();
+			$order->payment->check_number = $response->get_check_number();
+		}
+
+		return $order;
+	}
+
+
+	/**
+	 * Gets the order object with payment data added.
+	 *
+	 * @since 5.0.0-dev.1
+	 * @see SV_WC_Payment_Gateway::get_order()
+	 *
+	 * @param int|\WC_Order $order_id order ID or object
+	 * @return \WC_Order
+	 */
+	public function get_order( $order_id ) {
+
+		$order = parent::get_order( $order_id );
+
+		/**
+		 * Filters the order object after adding gateway data.
+		 *
+		 * @since 5.0.0-dev.1
+		 *
+		 * @param \WC_Order $order order object
+		 * @param SV_WC_Payment_Gateway $gateway gateway object
+		 */
+		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order', $order, $this );
+	}
+
+
+	/**
 	 * Validate a transaction response.
 	 *
 	 * @since 4.3.0
@@ -407,15 +476,6 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * @throws \SV_WC_Payment_Gateway_Exception
 	 */
 	protected function validate_transaction_response( $order, $response ) {
-
-		// If the order is invalid, bail
-		if ( ! $order || ! SV_WC_Order_Compatibility::get_prop( $order, 'id' ) ) {
-
-			throw new SV_WC_Payment_Gateway_Exception( sprintf(
-				__( 'Could not find order %s', 'woocommerce-plugin-framework' ),
-				$response->get_order_id()
-			) );
-		}
 
 		// If the order has already been completed, bail
 		if ( ! $order->needs_payment() ) {
@@ -435,47 +495,32 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 * Process the transaction response for the given order
 	 *
 	 * @since 2.1.0
-	 * @param WC_Order $order the order
+	 *
+	 * @param \WC_Order $order the order
 	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response transaction response
-	 * @return boolean true if transaction did not fail, false otherwise
 	 */
 	protected function process_transaction_response( $order, $response ) {
 
 		if ( $response->transaction_approved() || $response->transaction_held() ) {
 
-			// Always add transasaction data to the order for approved and held transactions
+			// if tokenization is supported, process any token data that might have come back in the response
+			if ( $this->supports_tokenization() && $this->tokenization_enabled() && $response instanceof SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response ) {
+				$order = $this->process_tokenization_response( $order, $response );
+			}
+
+			// always add transasaction data to the order for approved and held transactions
 			$this->add_transaction_data( $order, $response );
+
+			// let gateways easily add their own data
 			$this->add_payment_gateway_transaction_data( $order, $response );
 
-			// If approved, payment is complete
+			// handle the order status, etc...
+			$this->complete_payment( $order, $response );
+
+			// do the final transaction action, like a redirect
 			if ( $response->transaction_approved() ) {
-
-				// determine whether we should complete payment or set to on-hold for later capture
-				if ( $this->supports( self::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->perform_credit_card_authorization( $order ) ) {
-
-					$this->mark_order_as_held( $order, __( 'Authorization only transaction', 'woocommerce-plugin-framework' ), $response );
-					SV_WC_Order_Compatibility::reduce_stock_levels( $order ); // reduce stock for held orders, but don't complete payment
-
-				} else {
-
-					$order->payment_complete(); // mark order as having received payment
-				}
-
-				if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
-					$this->do_credit_card_transaction_approved( $order, $response );
-				} elseif ( self::PAYMENT_TYPE_ECHECK == $response->get_payment_type() ) {
-					$this->do_check_transaction_approved( $order, $response );
-				} else {
-					$this->do_transaction_approved( $order, $response );
-				}
-
-			// Otherwise, if the transaction was held (ie fraud validation failure) mark it as such and reduce stock
+				$this->do_transaction_approved( $order, $response );
 			} elseif ( $response->transaction_held() ) {
-
-				$this->mark_order_as_held( $order, $response->get_status_message(), $response );
-
-				SV_WC_Order_Compatibility::reduce_stock_levels( $order );
-
 				$this->do_transaction_held( $order, $response );
 			}
 
@@ -485,7 +530,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 			$this->do_transaction_cancelled( $order, $response );
 
-		} else { // failure
+		} else {
 
 			// Add the order note and debug info
 			$this->do_transaction_failed_result( $order, $response );
@@ -496,139 +541,104 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 
 	/**
-	 * Adds the standard transaction data to the order
+	 * Processes a transaction response's token data, if any.
 	 *
-	 * @since 2.2.0
-	 * @see SV_WC_Payment_Gateway::add_transaction_data()
-	 * @param WC_Order $order the order object
-	 * @param SV_WC_Payment_Gateway_API_Response|null $response optional transaction response
+	 * @since 5.0.0-dev.1
+	 *
+	 * @param \WC_Order $order order object
+	 * @param SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response $response response object
+	 * @return \WC_Order order object
 	 */
-	public function add_transaction_data( $order, $response = null ) {
+	protected function process_tokenization_response( \WC_Order $order, $response ) {
 
-		// add parent transaction data
-		parent::add_transaction_data( $order, $response );
-
-		// account number
-		if ( $response->get_account_number() ) {
-			$this->update_order_meta( $order, 'account_four', substr( $response->get_account_number(), -4 ) );
+		if ( is_callable( array( $response, 'get_customer_id' ) ) && $response->get_customer_id() ) {
+			$order->customer_id = $response->get_customer_id();
 		}
 
-		if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
+		$token = $response->get_payment_token();
 
-			if ( $response->get_authorization_code() ) {
-				$this->update_order_meta( $order, 'authorization_code', $response->get_authorization_code() );
-			}
+		if ( $order->get_user_id() ) {
 
-			if ( $order->get_total() > 0 ) {
-				// mark as captured
-				if ( $response->is_charge() ) {
-					$captured = 'yes';
+			if ( $response->payment_method_tokenized() ) {
+
+				if ( $response->tokenization_successful() && $this->get_payment_tokens_handler()->add_token( $order->get_user_id(), $token ) ) {
+
+					// order note based on gateway type
+					if ( $token->is_credit_card() ) {
+
+						/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - payment method name (mastercard, bank account, etc), %3$s - last four digits of the card/account, %4$s - card/account expiry date */
+						$order->add_order_note( sprintf( __( '%1$s Payment Method Saved: %2$s ending in %3$s (expires %4$s)', 'woocommerce-plugin-framework' ),
+							$this->get_method_title(),
+							$token->get_type_full(),
+							$token->get_last_four(),
+							$token->get_exp_date()
+						) );
+
+					} elseif ( $token->is_echeck() ) {
+
+						// account type (checking/savings) may or may not be available, which is fine
+						/* translators: Placeholders: %1$s - payment gateway title (such as CyberSouce, NETbilling, etc), %2$s - account type (checking/savings - may or may not be available), %3$s - last four digits of the account */
+						$order->add_order_note( sprintf( __( '%1$s eCheck Payment Method Saved: %2$s account ending in %3$s', 'woocommerce-plugin-framework' ),
+							$this->get_method_title(),
+							$token->get_account_type(),
+							$token->get_last_four()
+						) );
+
+					} else {
+
+						/* translators: Placeholders: %s - payment gateway title (such as CyberSouce, NETbilling, etc) */
+						$order->add_order_note( sprintf( __( '%s Payment Method Saved', 'woocommerce-plugin-framework' ),
+							$this->get_method_title()
+						) );
+					}
+
 				} else {
-					$captured = 'no';
+
+					$message = sprintf(
+						/* translators: Placeholders: %s - a failed tokenization API error */
+						__( 'Tokenization failed. %s', 'woocommerce-plugin-framework' ),
+						$response->get_tokenization_message()
+					);
+
+					$this->mark_order_as_held( $order, $message, $response );
 				}
-				$this->update_order_meta( $order, 'charge_captured', $captured );
 			}
 
-			if ( $response->get_exp_month() && $response->get_exp_year() ) {
-				$this->update_order_meta( $order, 'card_expiry_date', $response->get_exp_year() . '-' . $response->get_exp_month() );
-			}
-
-			if ( $response->get_card_type() ) {
-				$this->update_order_meta( $order, 'card_type', $response->get_card_type() );
-			}
-
-		} elseif ( self::PAYMENT_TYPE_ECHECK == $response->get_payment_type() ) {
-
-			// optional account type (checking/savings)
-			if ( $response->get_account_type() ) {
-				$this->update_order_meta( $order, 'account_type', $response->get_account_type() );
-			}
-
-			// optional check number
-			if ( $response->get_check_number() ) {
-				$this->update_order_meta( $order, 'check_number', $response->get_check_number() );
-			}
+			// get a fresh copy of the token object just in case the response doesn't include all of the method details
+			$token = $this->get_payment_tokens_handler()->get_token( $order->get_user_id(), $token->get_id() );
 		}
-	}
 
+		// add the payment method order data
+		if ( $token ) {
 
-	/**
-	 * Adds an order note, along with anything else required after an approved
-	 * credit card transaction
-	 *
-	 * @since 2.2.0
-	 * @param WC_Order $order the order
-	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response transaction response
-	 */
-	protected function do_credit_card_transaction_approved( $order, $response ) {
+			$order->payment->token          = $token->get_id();
+			$order->payment->account_number = $token->get_last_four();
+			$order->payment->last_four      = $token->get_last_four();
 
-		$note = '';
+			if ( $token->is_credit_card() ) {
 
-		// Add the card type and last four digits, if available
-		if ( $response->get_account_number() ) {
+				$order->payment->exp_month = $token->get_exp_month();
+				$order->payment->exp_year  = $token->get_exp_year();
+				$order->payment->card_type = $token->get_card_type();
 
-			$note .= ': ' . sprintf(
-				__( '%1$s ending in %2$s', 'woocommerce-plugin-framework' ),
-				SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_card_type() ? $response->get_card_type() : 'card' ) ),
-				substr( $response->get_account_number(), -4 )
-			);
+			} elseif ( $token->is_echeck() ) {
 
-			// Add the expiration date, if available
-			if ( $response->get_exp_month() && $response->get_exp_year() ) {
-				$note .= ' ' . sprintf( __( '(expires %s)', 'woocommerce-plugin-framework' ), $response->get_exp_month() . '/' . substr( $response->get_exp_year(), -2 ) );
+				$order->payment->account_type = $token->get_account_type();
+				$order->payment->check_number = $token->get_check_number();
 			}
 		}
 
-		// Set the specific credit card args
-		$note_args = array(
-			'method_type'     => self::PAYMENT_TYPE_CREDIT_CARD,
-			'additional_note' => $note,
-			'transaction_id'  => $response->get_transaction_id(),
-		);
+		// remove any tokens that were deleted on the hosted pay page
+		foreach ( $response->get_deleted_payment_tokens() as $token_id ) {
 
-		// Set the transaction type
-		if ( $response->is_authorization() ) {
-			$note_args['transaction_type'] = _x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' );
-		} elseif ( $response->is_charge() ) {
-			$note_args['transaction_type'] = _x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' );
+			$tokens = $this->get_payment_tokens_handler()->get_tokens( $order->get_user_id() );
+
+			unset( $tokens[ $token_id ] );
+
+			$this->get_payment_tokens_handler()->update_tokens( $order->get_user_id(), $tokens );
 		}
 
-		$this->do_transaction_approved( $order, $response, $note_args );
-	}
-
-
-	/**
-	 * Adds an order note, along with anything else required after an approved
-	 * echeck transaction
-	 *
-	 * @since 2.2.0
-	 * @param WC_Order $order the order
-	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response transaction response
-	 */
-	protected function do_check_transaction_approved( $order, $response ) {
-
-		$note = '';
-
-		// Add the check type and last four digits, if available
-		if ( $response->get_account_number() ) {
-
-			$note .= ': ' . sprintf(
-				__( '%1$s ending in %2$s', 'woocommerce-plugin-framework' ),
-				SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( $response->get_account_type() ? $response->get_account_type() : 'bank' ) ),
-				substr( $response->get_account_number(), -4 )
-			);
-		}
-
-		// Add the check number, if available
-		if ( $response->get_check_number() ) {
-			$note .= ' ' . sprintf( __( '(check number %s)', 'woocommerce-plugin-framework' ), $response->get_check_number() );
-		}
-
-		$this->do_transaction_approved( $order, $response, array(
-			'method_type'     => self::PAYMENT_TYPE_ECHECK,
-			'additional_note' => $note,
-			'transaction_id'  => $response->get_transaction_id(),
-		) );
+		return $order;
 	}
 
 
@@ -640,12 +650,8 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * @param \WC_Order $order the order object
 	 * @param \WC_Paytrail_API_Payment_Response $response the response object
-	 * @param array $note_args Optional. The order note arguments. @see `SV_WC_Payment_Gateway_Hosted::add_transaction_approved_order_note()`
 	 */
-	protected function do_transaction_approved( \WC_Order $order, $response, $note_args = array() ) {
-
-		// Add the order note
-		$this->add_transaction_approved_order_note( $order, $note_args );
+	protected function do_transaction_approved( \WC_Order $order, $response ) {
 
 		// Die or redirect
 		if ( $response->is_ipn() ) {
@@ -658,78 +664,6 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			wp_redirect( $this->get_return_url( $order ) );
 			exit;
 		}
-	}
-
-
-	/**
-	 * Add an order note with the approved transaction information.
-	 *
-	 * @since 4.3.0
-	 * @param \WC_Order $order The order object
-	 * @param array $args {
-	 *     Optional. The order note options.
-	 *
-	 *     @type string $method_title       Payment method title
-	 *     @type string $method_type        Payment method type, like credit-card or check
-	 *     @type string $transaction_id     The transaction ID
-	 *     @type string $transaction_type   Transaction type name for display
-	 *     @type string $transaction_result Transaction result for display, like "Approved" or "Completed"
-	 *     @type string $environment_name   The environment name, like Test
-	 *     @type string $additional_note    Additional text to append to the transaction note
-	 * }
-	 */
-	protected function add_transaction_approved_order_note( $order, $args = array() ) {
-
-		$args = wp_parse_args( $args, array(
-			'method_title'       => $this->get_method_title(),
-			'method_type'        => '',
-			'transaction_id'     => '',
-			'transaction_type'   => __( 'Transaction', 'woocommerce-plugin-framework' ),
-			'transaction_result' => __( 'Approved', 'woocommerce-plugin-framework' ),
-			'environment_name'   => ( $this->is_test_environment() ) ? _x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
-			'additional_note'    => '',
-		) );
-
-		// Build the order note
-		$note = implode( ' ', array(
-			$args['method_title'],
-			$args['environment_name'],
-			$args['transaction_type'],
-			$args['transaction_result']
-		) );
-
-		// Add the additional information, if available
-		if ( $args['additional_note'] ) {
-			$note .= $args['additional_note'];
-		}
-
-		// Add the transaction ID, if available
-		if ( $args['transaction_id'] ) {
-			$note .= ' ' . sprintf( __( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $args['transaction_id'] );
-		}
-
-		if ( $args['method_type'] ) {
-
-			/**
-			 * Filter the note added to an order when a transaction is approved for a specific payment type.
-			 *
-			 * @since 4.3.0
-			 * @param string $note The note text
-			 * @param \WC_Order $order The order object
-			 */
-			$note = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_' . $args['method_type'] . '_transaction_approved_order_note', $note, $order );
-		}
-
-		/**
-		 * Filter the note added to an order when a transaction is approved.
-		 *
-		 * @since 4.3.0
-		 * @param string $note The note text
-		 * @param \WC_Order $order The order object
-		 */
-		$note = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_transaction_approved_order_note', $note, $order );
-
-		$order->add_order_note( $note );
 	}
 
 
@@ -750,7 +684,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		} else {
 
-			wp_redirect( $order->get_return_url() );
+			wp_redirect( $this->get_return_url( $order ) );
 			exit;
 		}
 	}

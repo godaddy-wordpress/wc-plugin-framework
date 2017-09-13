@@ -46,7 +46,7 @@ abstract class SV_WC_Payment_Gateway_Integration {
 	 * @since 4.1.0
 	 * @param \SV_WC_Payment_Gateway_Direct $gateway direct gateway instance
 	 */
-	public function __construct( SV_WC_Payment_Gateway_Direct $gateway ) {
+	public function __construct( SV_WC_Payment_Gateway $gateway ) {
 
 		$this->gateway = $gateway;
 	}

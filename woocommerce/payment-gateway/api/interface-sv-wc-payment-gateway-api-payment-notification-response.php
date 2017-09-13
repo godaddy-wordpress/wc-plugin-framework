@@ -49,16 +49,6 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 
 
 	/**
-	 * Returns the order associated with this response
-	 *
-	 * @since 2.1.0
-	 * @return WC_Order the order associated with this response, or null if it could not be determined
-	 * @throws Exception if there was a serious error finding the order
-	 */
-	public function get_order();
-
-
-	/**
 	 * Returns true if the transaction was cancelled, false otherwise
 	 *
 	 * @since 2.1.0
@@ -84,7 +74,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 	 * @since 4.3.0
 	 * @return bool
 	 */
-	// public function is_ipn();
+	public function is_ipn();
 
 
 }
