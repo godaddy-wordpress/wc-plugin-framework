@@ -2384,20 +2384,23 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			// credit card gateway data
 			if ( $response && $response instanceof SV_WC_Payment_Gateway_API_Authorization_Response ) {
 
+				$this->update_order_meta( $order, 'authorization_amount', $order->payment_total );
+
 				if ( $response->get_authorization_code() ) {
 					$this->update_order_meta( $order, 'authorization_code', $response->get_authorization_code() );
 				}
 
 				if ( $order->payment_total > 0 ) {
+
 					// mark as captured
 					if ( $this->perform_credit_card_charge( $order ) ) {
 						$captured = 'yes';
 					} else {
 						$captured = 'no';
 					}
+
 					$this->update_order_meta( $order, 'charge_captured', $captured );
 				}
-
 			}
 
 			if ( isset( $order->payment->exp_year ) && $order->payment->exp_year && isset( $order->payment->exp_month ) && $order->payment->exp_month ) {
