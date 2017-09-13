@@ -285,7 +285,9 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 */
 	protected function output_partial_capture_html( \WC_Order $order, SV_WC_Payment_Gateway $gateway ) {
 
-		$total_captured = $gateway->get_order_meta( $order, 'capture_total' );
+		$total_captured          = $gateway->get_order_meta( $order, 'capture_total' );
+		$authorization_remaining = SV_WC_Helper::number_format( (float) $gateway->get_order_authorization_amount( $order ) - (float) $total_captured );
+		$max_remaining           = SV_WC_Helper::number_format( (float) $gateway->get_order_capture_maximum( $order ) - (float) $total_captured );
 
 		include( $this->get_plugin()->get_payment_gateway_framework_path() . '/admin/views/html-order-partial-capture.php' );
 	}

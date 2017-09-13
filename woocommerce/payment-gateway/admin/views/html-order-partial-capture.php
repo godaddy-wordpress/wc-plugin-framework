@@ -29,9 +29,17 @@
 			<td class="label"><?php esc_html_e( 'Amount already captured', 'woocommerce-plugin-framework' ); ?>:</td>
 			<td class="total"><?php echo wc_price( $total_captured, array( 'currency' => $order->get_currency() ) ); ?></td>
 		</tr>
+
+		<?php if ( $max_remaining > $authorization_remaining ) : ?>
+			<tr>
+				<td class="label"><?php esc_html_e( 'Remaining order total to capture', 'woocommerce-plugin-framework' ); ?>:</td>
+				<td class="total"><?php echo wc_price( $authorization_remaining, array( 'currency' => $order->get_currency() ) ); ?></td>
+			</tr>
+		<?php endif; ?>
+
 		<tr>
 			<td class="label"><?php esc_html_e( 'Total available to capture', 'woocommerce-plugin-framework' ); ?>:</td>
-			<td class="total"><?php echo wc_price( $gateway->get_order_capture_maximum( $order ) - $total_captured, array( 'currency' => $order->get_currency() ) ); ?></td>
+			<td class="total"><?php echo wc_price( $max_remaining, array( 'currency' => $order->get_currency() ) ); ?></td>
 		</tr>
 		<tr>
 			<td class="label"><label for="capture_amount"><?php esc_html_e( 'Capture amount', 'woocommerce-plugin-framework' ); ?>:</label></td>
