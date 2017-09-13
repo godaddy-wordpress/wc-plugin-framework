@@ -374,6 +374,11 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			return;
 		}
 
+		// if no amount is specified, and the authorization has already been captured for the original amount, bail
+		if ( ! $amount && $gateway->get_order_meta( $order, 'capture_total' ) >= $gateway->get_order_authorization_amount( $order ) ) {
+			return;
+		}
+
 		// remove order status change actions, otherwise we get a whole bunch of capture calls and errors
 		remove_action( 'woocommerce_order_action_wc_' . $this->get_plugin()->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
 

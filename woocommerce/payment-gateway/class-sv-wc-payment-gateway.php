@@ -1365,8 +1365,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Perform a credit card capture for an order.
 	 *
-	 * @since 5.0.0-dev
-	 *
+	 * @since 4.5.0
 	 * @param \WC_Order $order the order object
 	 * @return \SV_WC_Payment_Gateway_API_Response|null
 	 */
@@ -1374,17 +1373,17 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		$order = $this->get_order_for_capture( $order, $amount );
 
-		// if the input amount exceeds the max amount available, bail
-		if ( $order->capture->amount > $order->capture->remaining ) {
-
-			throw new SV_WC_Payment_Gateway_Exception( sprintf(
-				/* translators: Placeholders: %s - dollar amount */
-				__( '%s exceeds the amount available remaining for capture.', 'woocommerce-plugin-framework' ),
-				get_woocommerce_currency_symbol() . wc_format_decimal( $order->capture->amount )
-			) );
-		}
-
 		try {
+
+			// if the input amount exceeds the max amount available, bail
+			if ( $order->capture->amount > $order->capture->remaining ) {
+
+				throw new SV_WC_Payment_Gateway_Exception( sprintf(
+					/* translators: Placeholders: %s - dollar amount */
+					__( '%s exceeds the amount available remaining for capture.', 'woocommerce-plugin-framework' ),
+					get_woocommerce_currency_symbol() . wc_format_decimal( $order->capture->amount )
+				) );
+			}
 
 			$response = $this->get_api()->credit_card_capture( $order );
 
@@ -1406,8 +1405,14 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 				$order->add_order_note( $message );
 
-				// if this completes all available captures, mark the order as paid
-				if ( '0.00' === $order->capture->remaining || $order->capture->amount === SV_WC_Helper::number_format( $order->get_total() ) ) {
+				// add the standard capture data to the order
+				$this->add_capture_data( $order, $response );
+
+				// let payment gateway implementations add their own data
+				$this->add_payment_gateway_capture_data( $order, $response );
+
+				// if the original auth amount has been captured, complete payment
+				if ( $this->get_order_meta( $order, 'capture_total' ) >= SV_WC_Helper::number_format( $this->get_order_authorization_amount( $order ) ) ) {
 
 					// prevent stock from being reduced when payment is completed as this is done when the charge was authorized
 					add_filter( 'woocommerce_payment_complete_reduce_order_stock', '__return_false', 100 );
@@ -1415,12 +1420,6 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 					// complete the order
 					$order->payment_complete();
 				}
-
-				// add the standard capture data to the order
-				$this->add_capture_data( $order, $response );
-
-				// let payment gateway implementations add their own data
-				$this->add_payment_gateway_capture_data( $order, $response );
 
 				return array(
 					'result'  => 'success',
@@ -1492,12 +1491,15 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		// add capture info
 		$order->capture = new \stdClass();
 
+		$total_captured = $this->get_order_meta( $order, 'capture_total' );
+
+		// if no amount is specified, as in a bulk capture situation, always use the amount remaining
 		if ( ! $amount ) {
-			$amount = $order->get_total();
+			$amount = (float) $order->get_total() - (float) $total_captured;
 		}
 
 		$order->capture->amount    = SV_WC_Helper::number_format( $amount );
-		$order->capture->remaining = SV_WC_Helper::number_format( $this->get_order_capture_maximum( $order ) - $this->get_order_meta( $order, 'capture_total' ) );
+		$order->capture->remaining = SV_WC_Helper::number_format( (float) $this->get_order_capture_maximum( $order ) - (float) $total_captured );
 
 		/* translators: Placeholders: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card. */
 		$order->capture->description = sprintf( esc_html__( '%1$s - Capture for Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
@@ -1530,7 +1532,33 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function get_order_capture_maximum( \WC_Order $order ) {
 
-		return $order->get_total();
+		// if a specific auth amount was stored, use it
+		// otherwise, use the order total
+		if ( $authorization_amount = $this->get_order_meta( $order, 'authorization_amount' ) ) {
+			$max = $authorization_amount;
+		} else {
+			$max = $order->get_total();
+		}
+
+		return $this->get_order_authorization_amount( $order );
+	}
+
+
+	/**
+	 * Gets the amount originally authorized for an order.
+	 *
+	 * @since 5.0.0-dev.1
+	 *
+	 * @param \WC_Order $order order object
+	 * @return float
+	 */
+	public function get_order_authorization_amount( \WC_Order $order ) {
+
+		// if a specific auth amount was stored, use it
+		// otherwise, use the order total
+		$amount = ( $this->get_order_meta( $order, 'authorization_amount' ) ) ? $this->get_order_meta( $order, 'authorization_amount' ) : $order->get_total();
+
+		return (float) $amount;
 	}
 
 
@@ -1543,7 +1571,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	protected function add_capture_data( $order, $response ) {
 
-		$this->update_order_meta( $order, 'capture_total',   SV_WC_Helper::number_format( $this->get_order_meta( $order, 'capture_total' ) + $order->capture->amount ) );
+		$this->update_order_meta( $order, 'capture_total',   SV_WC_Helper::number_format( (float) $this->get_order_meta( $order, 'capture_total' ) + (float) $order->capture->amount ) );
 		$this->update_order_meta( $order, 'charge_captured', $order->capture->remaining > 0 ? 'partial' : 'yes' );
 
 		// add capture transaction ID
