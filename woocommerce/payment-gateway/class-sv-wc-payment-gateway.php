@@ -3097,7 +3097,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		// check whether the charge has already been captured by this gateway
 		$charge_captured = $this->get_order_meta( $order_id, 'charge_captured' );
 
-		if ( 'yes' === $charge_captured || '0.00' === SV_WC_Helper::number_format( $this->get_order_capture_maximum( $order ) - $this->get_order_meta( $order, 'capture_total' ) ) ) {
+		if ( 'yes' === $charge_captured || '0.00' === SV_WC_Helper::number_format( (float) $this->get_order_capture_maximum( $order ) - (float) $this->get_order_meta( $order, 'capture_total' ) ) ) {
 			return false;
 		}
 
