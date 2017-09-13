@@ -1,5 +1,12 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2017.09.12 - version 4.7.2
+ * Fix - Ensure failed Pre-Orders can be paid with a new method by bypassing the failed order's stored token
+ * Fix - Use the parameters passed to SV_WP_Admin_Message_Handler::show_messages()
+
+2017.08.14 - version 4.7.1
+ * Tweak - Refine the TLS 1.2 notice wording and appearance
+
 2017.07.25 - version 4.7.0
  * Feature - Introduce the Apple Pay framework for developers
 
