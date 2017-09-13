@@ -102,7 +102,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			return array( 'result' => 'failure' );
 		}
 
-		if ( isset( WC()->cart ) ) {
+		if ( is_callable( array( WC()->cart, 'empty_cart' ) ) ) {
 			WC()->cart->empty_cart();
 		}
 
