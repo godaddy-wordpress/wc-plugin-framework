@@ -1,8 +1,9 @@
 <?php
 
-namespace SkyVerge\WC_Plugin_Framework\Unit_Tests;
+namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
+use \SkyVerge\WooCommerce\PluginFramework\v5_0_0 as PluginFramework;
 
 /**
  * Unit tests for \SV_WC_Payment_Gateway_Payment_Token
@@ -25,7 +26,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 			'type' => 'credit_card',
 		);
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', $data );
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', $data );
 
 		$this->assertEquals( 'mock-token',  $token->get_id() );
 		$this->assertEquals( $data, $token->to_datastore_format() );
@@ -42,7 +43,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 	 */
 	public function test__construct_set_card_type( $data, $expected ) {
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', $data );
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', $data );
 
 		$this->assertEquals( $expected, $token->get_card_type() );
 	}
@@ -75,7 +76,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 	 */
 	public function test_set_default() {
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
 
 		$this->assertFalse( $token->is_default() );
 
@@ -92,7 +93,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 	 */
 	public function test_is_credit_card_true() {
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array(
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array(
 			'type' => 'credit_card',
 		) );
 
@@ -107,7 +108,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 	 */
 	public function test_is_credit_card_false() {
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array(
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array(
 			'type' => 'check',
 		) );
 
@@ -122,7 +123,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 	 */
 	public function test_is_echeck_true() {
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array(
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array(
 			'type' => 'check',
 		) );
 
@@ -137,7 +138,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 	 */
 	public function test_is_echeck_false() {
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array(
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array(
 			'type' => 'credit_card',
 		) );
 
@@ -154,7 +155,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 	 */
 	public function test_set_card_type() {
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
 
 		$this->assertNull( $token->get_card_type() );
 
@@ -173,7 +174,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 	 */
 	public function test_set_account_type() {
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
 
 		$this->assertNull( $token->get_account_type() );
 
@@ -195,7 +196,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 			'return' => array(),
 		) );
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', $data );
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', $data );
 
 		Mock::wpPassthruFunction( 'esc_html__' );
 		Mock::wpPassthruFunction( 'esc_html_x' );
@@ -228,7 +229,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 	 */
 	public function test_set_last_four() {
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
 
 		$this->assertNull( $token->get_last_four() );
 
@@ -247,7 +248,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 	 */
 	public function test_set_exp_month() {
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
 
 		$this->assertNull( $token->get_exp_month() );
 
@@ -266,7 +267,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 	 */
 	public function test_set_exp_year() {
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
 
 		$this->assertNull( $token->get_exp_year() );
 
@@ -283,7 +284,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 	 */
 	public function test_get_exp_date() {
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array(
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array(
 			'exp_month' => '01',
 			'exp_year'  => '1985',
 		) );
@@ -301,7 +302,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 	 */
 	public function test_set_image_url() {
 
-		$token = new \SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
 
 		$token->set_image_url( 'http://example.com/1234.jpg' );
 

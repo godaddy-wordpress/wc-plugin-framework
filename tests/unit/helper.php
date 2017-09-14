@@ -1,14 +1,15 @@
 <?php
 
-namespace SkyVerge\WC_Plugin_Framework\Unit_Tests;
+namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
-use Patchwork as p;
+use \Patchwork as p;
+use \SkyVerge\WooCommerce\PluginFramework\v5_0_0 as PluginFramework;
 
 /**
  * Helper Class Unit Tests
  *
- * @package SkyVerge\WC_Plugin_Framework\Unit_Tests
+ * @package SkyVerge\WooCommerce\PluginFramework\Tests\Unit
  * @since 4.0.1-1
  */
 class Helper extends Test_Case {
@@ -30,12 +31,12 @@ class Helper extends Test_Case {
 	public function test_str_starts_with_ascii( $asserts_as_true, $haystack, $needle ) {
 
 		// force ASCII handling
-		p\redefine( 'SV_WC_Helper::multibyte_loaded', function() { return false; } );
+		p\redefine( '\SkyVerge\WooCommerce\PluginFramework\v5_0_0\SV_WC_Helper::multibyte_loaded', function() { return false; } );
 
 		if ( $asserts_as_true ) {
-			$this->assertTrue( \SV_WC_Helper::str_starts_with( $haystack, $needle ) );
+			$this->assertTrue( PluginFramework\SV_WC_Helper::str_starts_with( $haystack, $needle ) );
 		} else {
-			$this->assertFalse( \SV_WC_Helper::str_starts_with( $haystack, $needle ) );
+			$this->assertFalse( PluginFramework\SV_WC_Helper::str_starts_with( $haystack, $needle ) );
 		}
 	}
 
@@ -76,9 +77,9 @@ class Helper extends Test_Case {
 		}
 
 		if ( $asserts_as_true ) {
-			$this->assertTrue( \SV_WC_Helper::str_starts_with( $haystack, $needle ) );
+			$this->assertTrue( PluginFramework\SV_WC_Helper::str_starts_with( $haystack, $needle ) );
 		} else {
-			$this->assertFalse( \SV_WC_Helper::str_starts_with( $haystack, $needle ) );
+			$this->assertFalse( PluginFramework\SV_WC_Helper::str_starts_with( $haystack, $needle ) );
 		}
 	}
 
@@ -115,12 +116,12 @@ class Helper extends Test_Case {
 	public function test_str_ends_with_ascii( $asserts_as_true, $haystack, $needle ) {
 
 		// force ASCII handling
-		p\redefine( 'SV_WC_Helper::multibyte_loaded', function() { return false; } );
+		p\redefine( '\SkyVerge\WooCommerce\PluginFramework\v5_0_0\SV_WC_Helper::multibyte_loaded', function() { return false; } );
 
 		if ( $asserts_as_true ) {
-			$this->assertTrue( \SV_WC_Helper::str_ends_with( $haystack, $needle ) );
+			$this->assertTrue( PluginFramework\SV_WC_Helper::str_ends_with( $haystack, $needle ) );
 		} else {
-			$this->assertFalse( \SV_WC_Helper::str_ends_with( $haystack, $needle ) );
+			$this->assertFalse( PluginFramework\SV_WC_Helper::str_ends_with( $haystack, $needle ) );
 		}
 	}
 
@@ -161,9 +162,9 @@ class Helper extends Test_Case {
 		}
 
 		if ( $asserts_as_true ) {
-			$this->assertTrue( \SV_WC_Helper::str_ends_with( $haystack, $needle ) );
+			$this->assertTrue( PluginFramework\SV_WC_Helper::str_ends_with( $haystack, $needle ) );
 		} else {
-			$this->assertFalse( \SV_WC_Helper::str_ends_with( $haystack, $needle ) );
+			$this->assertFalse( PluginFramework\SV_WC_Helper::str_ends_with( $haystack, $needle ) );
 		}
 	}
 
@@ -196,7 +197,7 @@ class Helper extends Test_Case {
 	 */
 	public function test_str_to_ascii( $string, $ascii ) {
 
-		$this->assertEquals( \SV_WC_Helper::str_to_ascii( $string ), $ascii );
+		$this->assertEquals( PluginFramework\SV_WC_Helper::str_to_ascii( $string ), $ascii );
 	}
 
 
@@ -228,7 +229,7 @@ class Helper extends Test_Case {
 	 */
 	public function test_str_to_sane_utf8( $string, $utf8 ) {
 
-		$this->assertEquals( \SV_WC_Helper::str_to_sane_utf8( $string ), $utf8 );
+		$this->assertEquals( PluginFramework\SV_WC_Helper::str_to_sane_utf8( $string ), $utf8 );
 	}
 
 
@@ -264,12 +265,12 @@ class Helper extends Test_Case {
 	public function test_str_exists_ascii( $asserts_as_true, $haystack, $needle ) {
 
 		// force ASCII handling
-		p\redefine( 'SV_WC_Helper::multibyte_loaded', function() { return false; } );
+		p\redefine( '\SkyVerge\WooCommerce\PluginFramework\v5_0_0\SV_WC_Helper::multibyte_loaded', function() { return false; } );
 
 		if ( $asserts_as_true ) {
-			$this->assertTrue( \SV_WC_Helper::str_exists( $haystack, $needle ) );
+			$this->assertTrue( PluginFramework\SV_WC_Helper::str_exists( $haystack, $needle ) );
 		} else {
-			$this->assertFalse( \SV_WC_Helper::str_exists( $haystack, $needle ) );
+			$this->assertFalse( PluginFramework\SV_WC_Helper::str_exists( $haystack, $needle ) );
 		}
 	}
 
@@ -310,9 +311,9 @@ class Helper extends Test_Case {
 		}
 
 		if ( $asserts_as_true ) {
-			$this->assertTrue( \SV_WC_Helper::str_exists( $haystack, $needle ) );
+			$this->assertTrue( PluginFramework\SV_WC_Helper::str_exists( $haystack, $needle ) );
 		} else {
-			$this->assertFalse( \SV_WC_Helper::str_exists( $haystack, $needle ) );
+			$this->assertFalse( PluginFramework\SV_WC_Helper::str_exists( $haystack, $needle ) );
 		}
 	}
 
@@ -345,18 +346,18 @@ class Helper extends Test_Case {
 	public function test_str_truncate_ascii() {
 
 		// force ASCII handling
-		p\redefine( 'SV_WC_Helper::multibyte_loaded', function() { return false; } );
+		p\redefine( '\SkyVerge\WooCommerce\PluginFramework\v5_0_0\SV_WC_Helper::multibyte_loaded', function() { return false; } );
 
 		$the_string = 'The quick brown fox jumps ಠ_ಠ';
 
 		// no truncation needed / non-ASCII removed
-		$this->assertEquals( 'The quick brown fox jumps _', \SV_WC_Helper::str_truncate( $the_string, 30 ) );
+		$this->assertEquals( 'The quick brown fox jumps _', PluginFramework\SV_WC_Helper::str_truncate( $the_string, 30 ) );
 
 		// simple truncation
-		$this->assertEquals( 'The quick brown ...', \SV_WC_Helper::str_truncate( $the_string, 19 ) );
+		$this->assertEquals( 'The quick brown ...', PluginFramework\SV_WC_Helper::str_truncate( $the_string, 19 ) );
 
 		// custom omission string
-		$this->assertEquals( 'The quick brown fo-', \SV_WC_Helper::str_truncate( $the_string, 19, '-' ) );
+		$this->assertEquals( 'The quick brown fo-', PluginFramework\SV_WC_Helper::str_truncate( $the_string, 19, '-' ) );
 	}
 
 
@@ -375,13 +376,13 @@ class Helper extends Test_Case {
 		$the_string = 'The quick brown fox jumps ಠ_ಠ';
 
 		// no truncation needed
-		$this->assertEquals( 'The quick brown fox jumps ಠ_ಠ', \SV_WC_Helper::str_truncate( $the_string, 30 ) );
+		$this->assertEquals( 'The quick brown fox jumps ಠ_ಠ', PluginFramework\SV_WC_Helper::str_truncate( $the_string, 30 ) );
 
 		// simple truncation
-		$this->assertEquals( 'The quick brown ...', \SV_WC_Helper::str_truncate( $the_string, 19 ) );
+		$this->assertEquals( 'The quick brown ...', PluginFramework\SV_WC_Helper::str_truncate( $the_string, 19 ) );
 
 		// custom omission string
-		$this->assertEquals( 'The quick brown fox jumps ಠ-', \SV_WC_Helper::str_truncate( $the_string, 28, '-' ) );
+		$this->assertEquals( 'The quick brown fox jumps ಠ-', PluginFramework\SV_WC_Helper::str_truncate( $the_string, 28, '-' ) );
 	}
 
 
@@ -401,7 +402,7 @@ class Helper extends Test_Case {
 		$count = 666;
 
 		// test 0 return value if function doens't exist
-		$this->assertEquals( 0, \SV_WC_Helper::wc_notice_count( $type ) );
+		$this->assertEquals( 0, PluginFramework\SV_WC_Helper::wc_notice_count( $type ) );
 
 		// mock wc_notice_count() function
 		Mock::wpFunction( 'wc_notice_count', array(
@@ -410,7 +411,7 @@ class Helper extends Test_Case {
 		) );
 
 		// test the return value is as expected
-		$this->assertEquals( $count, \SV_WC_Helper::wc_notice_count( $type ) );
+		$this->assertEquals( $count, PluginFramework\SV_WC_Helper::wc_notice_count( $type ) );
 	}
 
 
@@ -432,7 +433,7 @@ class Helper extends Test_Case {
 			'return' => null,
 		) );
 
-		$this->assertNull( \SV_WC_Helper::wc_add_notice( $message, $type ) );
+		$this->assertNull( PluginFramework\SV_WC_Helper::wc_add_notice( $message, $type ) );
 	}
 
 
@@ -454,7 +455,7 @@ class Helper extends Test_Case {
 			'return' => null,
 		) );
 
-		$this->assertNull( \SV_WC_Helper::wc_print_notice( $message, $type ) );
+		$this->assertNull( PluginFramework\SV_WC_Helper::wc_print_notice( $message, $type ) );
 	}
 
 
@@ -483,7 +484,7 @@ class Helper extends Test_Case {
 			'return' => $admin_url . $path,
 		) );
 
-		$this->assertEquals( $admin_url . $path, \SV_WC_Helper::get_wc_log_file_url( $handle ) );
+		$this->assertEquals( $admin_url . $path, PluginFramework\SV_WC_Helper::get_wc_log_file_url( $handle ) );
 	}
 
 
@@ -498,17 +499,17 @@ class Helper extends Test_Case {
 		$key = 'sv_test_key';
 
 		// Test for an unset key
-		$this->assertEquals( '', \SV_WC_Helper::get_post( $key ) );
+		$this->assertEquals( '', PluginFramework\SV_WC_Helper::get_post( $key ) );
 
 		$_POST[ $key ] = 'value';
 
 		// Check that a value is returned
-		$this->assertEquals( 'value', \SV_WC_Helper::get_post( $key ) );
+		$this->assertEquals( 'value', PluginFramework\SV_WC_Helper::get_post( $key ) );
 
 		$_POST[ $key ] = ' untrimmed-value ';
 
 		// Check that the value is trimmed
-		$this->assertEquals( 'untrimmed-value', \SV_WC_Helper::get_post( $key ) );
+		$this->assertEquals( 'untrimmed-value', PluginFramework\SV_WC_Helper::get_post( $key ) );
 	}
 
 
@@ -539,7 +540,7 @@ class Helper extends Test_Case {
 			->method( 'get_formatted' )
 			->willReturn( [ 'label' => 'Size', 'value' => 'Large' ] );
 
-		$actual_line_items = \SV_WC_Helper::get_order_line_items( $this->get_wc_order_mock() );
+		$actual_line_items = PluginFramework\SV_WC_Helper::get_order_line_items( $this->get_wc_order_mock() );
 
 		$this->assertEquals( [ $expected_item ], $actual_line_items );
 
@@ -636,8 +637,8 @@ class Helper extends Test_Case {
 
 		$_REQUEST[ $request_key ]  = $request_value;
 
-		$this->assertEquals( \SV_WC_Helper::get_request( $request_key ), trim( $request_value ) );
-		$this->assertEquals( \SV_WC_Helper::get_request( 'invalidKey' ), '' );
+		$this->assertEquals( PluginFramework\SV_WC_Helper::get_request( $request_key ), trim( $request_value ) );
+		$this->assertEquals( PluginFramework\SV_WC_Helper::get_request( 'invalidKey' ), '' );
 	}
 
 
@@ -661,12 +662,12 @@ class Helper extends Test_Case {
 
 		$insert_point = '2';
 
-		$this->assertArrayHasKey( key( $added_array ), \SV_WC_Helper::array_insert_after( $target_array, $insert_point, $added_array ) );
+		$this->assertArrayHasKey( key( $added_array ), PluginFramework\SV_WC_Helper::array_insert_after( $target_array, $insert_point, $added_array ) );
 
 		// Test a key that doesn't exist
 		$insert_point = 'bad-key';
 
-		$this->assertEquals( $target_array, \SV_WC_Helper::array_insert_after( $target_array, $insert_point, $added_array ) );
+		$this->assertEquals( $target_array, PluginFramework\SV_WC_Helper::array_insert_after( $target_array, $insert_point, $added_array ) );
 	}
 
 
@@ -681,7 +682,7 @@ class Helper extends Test_Case {
 
 		Mock::wpPassthruFunction( '__' );
 
-		$this->assertEquals( $string, \SV_WC_Helper::f__( $string ) );
+		$this->assertEquals( $string, PluginFramework\SV_WC_Helper::f__( $string ) );
 	}
 
 	/**
@@ -695,7 +696,7 @@ class Helper extends Test_Case {
 
 		Mock::wpPassthruFunction( '_x' );
 
-		$this->assertEquals( $string, \SV_WC_Helper::f_x( $string, 'string-context' ) );
+		$this->assertEquals( $string, PluginFramework\SV_WC_Helper::f_x( $string, 'string-context' ) );
 	}
 
 	/*
@@ -712,7 +713,7 @@ class Helper extends Test_Case {
 			'return' => function( $string ) { echo $string; },
 		) );
 
-		\SV_WC_Helper::f_e( $string );
+		PluginFramework\SV_WC_Helper::f_e( $string );
 
 		$this->expectOutputString( $string );
 	}
@@ -730,7 +731,7 @@ class Helper extends Test_Case {
 		$xml->openMemory();
 		$xml->startDocument( '1.0', 'UTF-8' );
 
-		\SV_WC_Helper::array_to_xml( $xml, 'foo', array(
+		PluginFramework\SV_WC_Helper::array_to_xml( $xml, 'foo', array(
 			array( 'value' ),
 			array(
 				'bar' => array(
@@ -766,7 +767,7 @@ MSG;
 	 */
 	public function test_number_format( $original_number, $formatted_number ) {
 
-		$result = \SV_WC_Helper::number_format( $original_number );
+		$result = PluginFramework\SV_WC_Helper::number_format( $original_number );
 
 		$this->assertTrue( is_numeric( $result ), true  );
 		$this->assertEquals( $result, $formatted_number );
@@ -781,7 +782,7 @@ MSG;
 	 */
 	public function test_convert_country_code( $input_code, $converted_code ) {
 
-		$this->assertEquals( $converted_code, \SV_WC_Helper::convert_country_code( $input_code )  );
+		$this->assertEquals( $converted_code, PluginFramework\SV_WC_Helper::convert_country_code( $input_code )  );
 
 		// 2 digits codes are converted into 3 digits and vice versa
 		if ( 2 === strlen( $input_code ) ) {

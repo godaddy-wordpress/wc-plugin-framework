@@ -1,8 +1,9 @@
 <?php
 
-namespace SkyVerge\WC_Plugin_Framework\Unit_Tests;
+namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
+use \SkyVerge\WooCommerce\PluginFramework\v5_0_0 as PluginFramework;
 
 /**
  * Unit tests for \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response
@@ -19,7 +20,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	 */
 	public function test_get_payment_data() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $this->get_valid_response_data() );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $this->get_valid_response_data() );
 
 		$this->assertEquals( array( 'This is the payment data.' ), $response->get_payment_data() );
 	}
@@ -32,7 +33,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	 */
 	public function test_get_payment_data_blank() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( '' );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( '' );
 
 		$this->assertEquals( array(), $response->get_payment_data() );
 	}
@@ -45,7 +46,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	 */
 	public function test_get_transaction_id() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $this->get_valid_response_data() );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $this->get_valid_response_data() );
 
 		$this->assertEquals( '12345', $response->get_transaction_id() );
 	}
@@ -58,7 +59,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	 */
 	public function test_get_transaction_id_blank() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( '' );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( '' );
 
 		$this->assertEquals( '', $response->get_transaction_id() );
 	}
@@ -71,7 +72,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	 */
 	public function test_get_card_type() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $this->get_valid_response_data() );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $this->get_valid_response_data() );
 
 		$this->assertEquals( 'visa', $response->get_card_type() );
 	}
@@ -90,7 +91,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 			),
 		) );
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( '' );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( '' );
 
 		$this->assertEquals( 'card', $response->get_card_type() );
 	}
@@ -103,7 +104,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	 */
 	public function test_get_last_four() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $this->get_valid_response_data() );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $this->get_valid_response_data() );
 
 		$this->assertEquals( '1234', $response->get_last_four() );
 	}
@@ -116,7 +117,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	 */
 	public function test_get_last_four_blank() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( '' );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( '' );
 
 		$this->assertEquals( '', $response->get_last_four() );
 	}
@@ -129,7 +130,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	 */
 	public function test_get_billing_address() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $this->get_valid_response_data() );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $this->get_valid_response_data() );
 
 		$expected = array(
 			'first_name' => 'Lloyd',
@@ -155,7 +156,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	 */
 	public function test_get_billing_address_blank() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( '' );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( '' );
 
 		$expected = array(
 			'first_name' => '',
@@ -179,7 +180,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	 */
 	public function test_get_shipping_address() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $this->get_valid_response_data() );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $this->get_valid_response_data() );
 
 		$expected = array(
 			'first_name' => 'Mary',
@@ -203,7 +204,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	 */
 	public function test_get_shipping_address_blank() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( '' );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( '' );
 
 		$expected = array(
 			'first_name' => '',
