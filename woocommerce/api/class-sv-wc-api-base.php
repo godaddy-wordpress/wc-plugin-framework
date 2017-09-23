@@ -44,7 +44,7 @@ abstract class SV_WC_API_Base {
 	protected $request_uri;
 
 	/** @var array request headers */
-	protected $request_headers = array();
+	protected $request_headers = [];
 
 	/** @var string request user-agent */
 	protected $request_user_agent;
@@ -98,7 +98,7 @@ abstract class SV_WC_API_Base {
 
 		// If this API requires TLS v1.2, force it
 		if ( $this->require_tls_1_2() && $this->is_tls_1_2_available() ) {
-			add_action( 'http_api_curl', array( $this, 'set_tls_1_2_request' ), 10, 3 );
+			add_action( 'http_api_curl', [ $this, 'set_tls_1_2_request' ], 10, 3 );
 		}
 
 		// perform the request
@@ -248,21 +248,21 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function broadcast_request() {
 
-		$request_data = array(
+		$request_data = [
 			'method'     => $this->get_request_method(),
 			'uri'        => $this->get_request_uri(),
 			'user-agent' => $this->get_request_user_agent(),
 			'headers'    => $this->get_sanitized_request_headers(),
 			'body'       => $this->get_sanitized_request_body(),
 			'duration'   => $this->get_request_duration() . 's', // seconds
-		);
+		];
 
-		$response_data = array(
+		$response_data = [
 			'code'    => $this->get_response_code(),
 			'message' => $this->get_response_message(),
 			'headers' => $this->get_response_headers(),
 			'body'    => $this->get_sanitized_response_body() ? $this->get_sanitized_response_body() : $this->get_raw_response_body(),
-		);
+		];
 
 		/**
 		 * API Base Request Performed Action.
@@ -374,7 +374,7 @@ abstract class SV_WC_API_Base {
 
 		if ( ( $request = $this->get_request() ) && in_array( strtoupper( $this->get_request_method() ), array( 'GET', 'HEAD' ) ) ) {
 
-			$params = is_callable( array( $request, 'get_params' ) ) ? $request->get_params() : array(); // TODO: remove is_callable() when \SV_WC_API_Request::get_params exists {CW 2016-09-28}
+			$params = is_callable( [ $request, 'get_params' ] ) ? $request->get_params() : []; // TODO: remove is_callable() when \SV_WC_API_Request::get_params exists {CW 2016-09-28}
 
 			if ( ! empty( $params ) ) {
 				$query = http_build_query( $params, '', '&' );
@@ -393,7 +393,7 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function get_request_args() {
 
-		$args = array(
+		$args = [
 			'method'      => $this->get_request_method(),
 			'timeout'     => MINUTE_IN_SECONDS,
 			'redirection' => 0,
@@ -403,8 +403,8 @@ abstract class SV_WC_API_Base {
 			'user-agent'  => $this->get_request_user_agent(),
 			'headers'     => $this->get_request_headers(),
 			'body'        => $this->get_request_body(),
-			'cookies'     => array(),
-		);
+			'cookies'     => [],
+		];
 
 		/**
 		 * Request arguments.
@@ -605,7 +605,7 @@ abstract class SV_WC_API_Base {
 	 * @return string|null
 	 */
 	protected function get_sanitized_response_body() {
-		return is_callable( array( $this->get_response(), 'to_string_safe' ) ) ? $this->get_response()->to_string_safe() : null;
+		return is_callable( [ $this->get_response(), 'to_string_safe' ] ) ? $this->get_response()->to_string_safe() : null;
 	}
 
 
@@ -661,7 +661,7 @@ abstract class SV_WC_API_Base {
 	 * @param array $args optional request arguments
 	 * @return \SV_WC_API_Request
 	 */
-	abstract protected function get_new_request( $args = array() );
+	abstract protected function get_new_request( $args = [] );
 
 
 	/**
