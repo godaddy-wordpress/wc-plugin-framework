@@ -261,7 +261,7 @@ abstract class SV_WC_API_Base {
 			'code'    => $this->get_response_code(),
 			'message' => $this->get_response_message(),
 			'headers' => $this->get_response_headers(),
-			'body'    => $this->get_sanitized_response_body() ? $this->get_sanitized_response_body() : $this->get_raw_response_body(),
+			'body'    => $this->get_sanitized_response_body() ?? $this->get_raw_response_body(),
 		];
 
 		/**
