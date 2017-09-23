@@ -368,7 +368,7 @@ abstract class SV_WC_API_Base {
 
 		$query = '';
 
-		if ( ( $request = $this->get_request() ) && in_array( strtoupper( $this->get_request_method() ), array( 'GET', 'HEAD' ) ) ) {
+		if ( ( $request = $this->get_request() ) && $this->is_get_or_head() ) {
 
 			$params = is_callable( [ $request, 'get_params' ] ) ? $request->get_params() : []; // TODO: remove is_callable() when \SV_WC_API_Request::get_params exists {CW 2016-09-28}
 
@@ -753,6 +753,13 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function set_response_handler( $handler ) {
 		$this->response_handler = $handler;
+	}
+
+	/**
+	 * Check if the request method is GET or HEAD 
+	 */
+	private function is_get_or_head() {
+		return in_array( strtoupper( $this->get_request_method() ), [ 'GET', 'HEAD' ] );
 	}
 
 
