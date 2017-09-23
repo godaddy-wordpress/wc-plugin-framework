@@ -41,10 +41,10 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 	protected $path;
 
 	/** @var array The request parameters, if any */
-	protected $params = array();
+	protected $params = [];
 
 	/** @var array the request data */
-	protected $data = array();
+	protected $data = [];
 
 
 	/**
@@ -108,7 +108,7 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 
 		$data = $this->get_data();
 
-		if ( empty( $data ) && ! in_array( strtoupper( $this->get_method() ), array( 'GET', 'HEAD' ) ) ) {
+		if ( empty( $data ) && ! in_array( strtoupper( $this->get_method() ), [ 'GET', 'HEAD' ] ) ) {
 			$data = $this->get_params();
 		}
 
