@@ -380,7 +380,6 @@ abstract class SV_WC_API_Base {
 		return $query;
 	}
 
-
 	/**
 	 * Get the request arguments in the format required by wp_remote_request()
 	 *
@@ -428,6 +427,18 @@ abstract class SV_WC_API_Base {
 		return $this->get_request() && $this->get_request()->get_method() ? $this->get_request()->get_method() : $this->request_method;
 	}
 
+	/**
+	 * Gets the request.
+	 *
+	 * @return string
+	 */
+	protected function get__request() {
+
+		// GET & HEAD requests don't support a body
+		return ( ( ! $this->is_get_or_head() ) && ( $this->get_request() ) )
+			? $this->get_request()
+			: null;
+	}
 
 	/**
 	 * Gets the request body.
@@ -438,11 +449,9 @@ abstract class SV_WC_API_Base {
 	protected function get_request_body() {
 
 		// GET & HEAD requests don't support a body
-		if ( in_array( strtoupper( $this->get_request_method() ), array( 'GET', 'HEAD' ) ) ) {
-			return '';
-		}
-
-		return ( $this->get_request() && $this->get_request()->to_string() ) ? $this->get_request()->to_string() : '';
+		return ( $this->get__request() && $this->get__request()->to_string() ) )
+			? $this->get__request()->to_string()
+			: '';
 	}
 
 
@@ -454,12 +463,9 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function get_sanitized_request_body() {
 
-		// GET & HEAD requests don't support a body
-		if ( in_array( strtoupper( $this->get_request_method() ), array( 'GET', 'HEAD' ) ) ) {
-			return '';
-		}
-
-		return ( $this->get_request() && $this->get_request()->to_string_safe() ) ? $this->get_request()->to_string_safe() : '';
+		return ( $this->get__request() && $this->get__request()->to_string_safe() )
+			? $this->get__request()->to_string_safe()
+			: '';
 	}
 
 
