@@ -78,18 +78,10 @@ abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 	 */
 	public function __get( $key ) {
 
-		if ( ! isset( $this->response_data->$key ) ) {
-			return null;
-		}
-
 		// array cast & empty check prevents fataling on empty stdClass objects
-		$array = (array) $this->response_data->$key;
-
-		if ( empty( $array ) ) {
-			return null;
-		}
-
-		return $this->response_data->$key;
+		return ( ( ! isset( $this->response_data->$key ) ) || empty( (array) $this->response_data->$key ) )
+			 ? null
+			 : $this->response_data->$key;
 	}
 
 
