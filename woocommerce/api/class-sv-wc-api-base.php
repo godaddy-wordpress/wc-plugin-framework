@@ -326,13 +326,9 @@ abstract class SV_WC_API_Base {
 			$url_parts = parse_url( $uri );
 
 			// if the URL already has some query params, add to them
-			if ( ! empty( $url_parts['query'] ) ) {
-				$query = '&' . $query;
-			} else {
-				$query = '?' . $query;
-			}
+			$glue = ! empty( $url_parts['query'] ) ? '&' : '?';
 
-			$uri = untrailingslashit( $uri ) . $query;
+			$uri = untrailingslashit( $uri ) . $glue . $query;
 		}
 
 		/**
