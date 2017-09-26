@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2017.nn.nn - version 4.7.3-dev
+ * Fix - Conflict with WooCommerce filtering of nonce checks for background jobs
+
 2017.09.12 - version 4.7.2
  * Fix - Ensure failed Pre-Orders can be paid with a new method by bypassing the failed order's stored token
  * Fix - Use the parameters passed to SV_WP_Admin_Message_Handler::show_messages()
