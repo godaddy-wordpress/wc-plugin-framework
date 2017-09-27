@@ -25,22 +25,23 @@
 
 <div class="wc-order-data-row wc-order-data-row-toggle sv-wc-payment-gateway-partial-capture wc-<?php echo esc_attr( $gateway->get_id_dasherized() ); ?>-partial-capture" style="display:none;">
 	<table class="wc-order-totals">
+
+		<tr>
+			<td class="label"><?php esc_html_e( 'Authorization total', 'woocommerce-plugin-framework' ); ?>:</td>
+			<td class="total"><?php echo wc_price( $authorization_total, array( 'currency' => $order->get_currency() ) ); ?></td>
+		</tr>
 		<tr>
 			<td class="label"><?php esc_html_e( 'Amount already captured', 'woocommerce-plugin-framework' ); ?>:</td>
 			<td class="total"><?php echo wc_price( $total_captured, array( 'currency' => $order->get_currency() ) ); ?></td>
 		</tr>
 
-		<?php if ( $max_remaining > $authorization_remaining ) : ?>
+		<?php if ( $remaining_total > 0 ) : ?>
 			<tr>
-				<td class="label"><?php esc_html_e( 'Remaining order total to capture', 'woocommerce-plugin-framework' ); ?>:</td>
-				<td class="total"><?php echo wc_price( $authorization_remaining, array( 'currency' => $order->get_currency() ) ); ?></td>
+				<td class="label"><?php esc_html_e( 'Remaining order total', 'woocommerce-plugin-framework' ); ?>:</td>
+				<td class="total"><?php echo wc_price( $remaining_total, array( 'currency' => $order->get_currency() ) ); ?></td>
 			</tr>
 		<?php endif; ?>
 
-		<tr>
-			<td class="label"><?php esc_html_e( 'Total available to capture', 'woocommerce-plugin-framework' ); ?>:</td>
-			<td class="total"><?php echo wc_price( $max_remaining, array( 'currency' => $order->get_currency() ) ); ?></td>
-		</tr>
 		<tr>
 			<td class="label"><label for="capture_amount"><?php esc_html_e( 'Capture amount', 'woocommerce-plugin-framework' ); ?>:</label></td>
 			<td class="total">
