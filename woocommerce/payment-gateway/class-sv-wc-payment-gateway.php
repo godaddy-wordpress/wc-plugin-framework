@@ -2557,7 +2557,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @param SV_WC_Payment_Gateway_API_Response $response response object
 	 * @return string
 	 */
-	public function get_credit_card_transaction_approved_message( \WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
+	public function get_credit_card_transaction_approved_message( \WC_Order $order, $response ) {
 
 		$last_four = ! empty( $order->payment->last_four ) ? $order->payment->last_four : substr( $order->payment->account_number, -4 );
 
