@@ -1926,7 +1926,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		// if captures are supported and the order has an authorized, but not captured charge, void it instead
-		if ( $this->supports_voids() && $this->authorization_valid_for_capture( $order ) ) {
+		if ( $this->supports_voids() && ! $this->authorization_captured( $order ) ) {
 			return $this->process_void( $order );
 		}
 
@@ -3078,7 +3078,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		// check whether the charge has already been captured by this gateway
 		$charge_captured = $this->get_order_meta( $order_id, 'charge_captured' );
 
-		if ( 'yes' === $charge_captured || '0.00' === SV_WC_Helper::number_format( (float) $this->get_order_capture_maximum( $order ) - (float) $this->get_order_meta( $order, 'capture_total' ) ) ) {
+		if ( $this->authorization_fully_captured( $order ) ) {
 			return false;
 		}
 
@@ -3091,6 +3091,40 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		// authorization hasn't already been captured, but has it expired?
 		return ! $this->has_authorization_expired( $order );
+	}
+
+
+	/**
+	 * Determines if an order's authorization has been captured, event partially.
+	 *
+	 * @since 5.0.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @return bool
+	 */
+	public function authorization_captured( $order ) {
+
+		return in_array( $this->get_order_meta( $order, 'charge_captured' ), array( 'yes', 'partial' ), true );
+	}
+
+
+	/**
+	 * Determines if an order's authorization has been fully captured.
+	 *
+	 * @since 5.0.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @return bool
+	 */
+	public function authorization_fully_captured( $order ) {
+
+		$captured = 'yes' === $this->get_order_meta( $order, 'charge_captured' );
+
+		if ( ! $captured && $this->supports_credit_card_partial_capture() && $this->is_partial_capture_enabled() ) {
+			$captured = (float) $this->get_order_meta( $order, 'capture_total' ) >= (float) $this->get_order_capture_maximum( $order );
+		}
+
+		return $captured;
 	}
 
 
