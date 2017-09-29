@@ -338,9 +338,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 				throw new SV_WC_Payment_Gateway_Exception( $result['message'] );
 			}
 
-			wp_send_json_success( array(
-				'message' => $result['message'],
-			) );
+			wp_send_json_success();
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
