@@ -102,7 +102,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			return array( 'result' => 'failure' );
 		}
 
-		if ( is_callable( array( WC()->cart, 'empty_cart' ) ) ) {
+		if ( $this->empty_cart_before_redirect() && is_callable( array( WC()->cart, 'empty_cart' ) ) ) {
 			WC()->cart->empty_cart();
 		}
 
@@ -140,6 +140,21 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		}
 
 		return false;
+	}
+
+
+	/**
+	 * Determines if the customers cart should be emptied before redirecting to the payment form, after the order is created.
+	 *
+	 * Gateways can set this to false if they want the cart to remain intact until a successful payment is made.
+	 *
+	 * @since 5.0.0-dev
+	 *
+	 * @return bool
+	 */
+	protected function empty_cart_before_redirect() {
+
+		return true;
 	}
 
 
