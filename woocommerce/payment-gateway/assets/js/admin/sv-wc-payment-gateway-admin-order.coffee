@@ -87,10 +87,9 @@ jQuery( document ).ready ($) ->
 				data: data
 			).done( ( response ) ->
 
-				alert( response.data.message ) if response.data.message
+				alert( response.data.message ) if response.data? and response.data.message?
 
-				if ( response.success )
-					location.reload()
+				location.reload() if response.success
 
 			).fail( ->
 
