@@ -1,6 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2017.nn.nn - version 4.7.3-dev
+2017.10.05 - version 4.7.3
+ * Tweak - Add new methods for checking for specific WooCommerce versions
+ * Tweak - Adjust the PHP version notice to check for 5.6 by May 2018 and adjust the messaging when that date has passed
  * Fix - Conflict with WooCommerce filtering of nonce checks for background jobs
 
 2017.09.12 - version 4.7.2
