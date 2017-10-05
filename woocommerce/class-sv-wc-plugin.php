@@ -491,7 +491,7 @@ abstract class SV_WC_Plugin {
 
 			$message .= '</p><p>';
 
-			$deadline = strtotime( 'May 2017' );
+			$deadline = strtotime( 'May 2018' );
 
 			if ( time() < $deadline ) {
 
