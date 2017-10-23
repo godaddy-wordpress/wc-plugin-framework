@@ -84,6 +84,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/** @var boolean true if this gateway requires SSL for processing transactions, false otherwise */
 	private $require_ssl;
 
+	/** @var \SV_WC_Payment_Gateway_Admin_Order order handler instance */
+	protected $admin_order_handler;
+
 	/** @var SV_WC_Payment_Gateway_Admin_User_Edit_Handler adds admin user edit payment gateway functionality */
 	private $admin_user_edit_handler;
 
@@ -146,17 +149,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// Admin
 		if ( is_admin() && ! is_ajax() ) {
-
-			if ( $this->supports( self::FEATURE_CAPTURE_CHARGE ) ) {
-
-				// capture charge order action
-				add_filter( 'woocommerce_order_actions', array( $this, 'maybe_add_capture_charge_order_action' ) );
-				add_action( 'woocommerce_order_action_wc_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
-
-				// bulk capture charge order action
-				add_action( 'admin_footer-edit.php', array( $this, 'maybe_add_capture_charge_bulk_order_action' ) );
-				add_action( 'load-edit.php',         array( $this, 'process_capture_charge_bulk_order_action' ) );
-			}
 
 			if ( $this->is_subscriptions_active() ) {
 
@@ -281,9 +273,13 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// Admin user handler
 		if ( is_admin() ) {
+
+			require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-order.php' );
 			require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-user-handler.php' );
 			require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php' );
-			$this->admin_user_handler = new SV_WC_Payment_Gateway_Admin_User_Handler( $this );
+
+			$this->admin_order_handler = new SV_WC_Payment_Gateway_Admin_Order( $this );
+			$this->admin_user_handler  = new SV_WC_Payment_Gateway_Admin_User_Handler( $this );
 		}
 	}
 
@@ -708,200 +704,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	}
 
 
-	/** Capture Charge Feature ******************************************************/
-
-
-	/**
-	 * Capture a credit card charge for a prior authorization if this payment
-	 * method was used for the given order, the charge hasn't already been
-	 * captured, and the gateway supports issuing a capture request
-	 *
-	 * @since 1.0.0
-	 * @param \WC_Order|int $order the order identifier or order object
-	 */
-	public function maybe_capture_charge( $order ) {
-
-		if ( ! is_object( $order ) ) {
-			$order = wc_get_order( $order );
-		}
-
-		$payment_method = SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' );
-
-		// bail if the order wasn't paid for with this gateway
-		if ( ! $this->has_gateway( $payment_method ) ) {
-			return;
-		}
-
-		$gateway = $this->get_gateway( $payment_method );
-
-		// ensure that it supports captures
-		if ( ! $this->can_capture_charge( $gateway ) ) {
-			return;
-		}
-
-		// ensure the authorization is still valid for capture
-		if ( ! $gateway->authorization_valid_for_capture( $order ) ) {
-			return;
-		}
-
-		// remove order status change actions, otherwise we get a whole bunch of capture calls and errors
-		remove_action( 'woocommerce_order_action_wc_' . $this->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
-
-		// since a capture results in an update to the post object (by updating
-		// the paid date) we need to unhook the meta box save action, otherwise we
-		// can get boomeranged and change the status back to on-hold
-		remove_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Data::save', 40 );
-
-		// perform the capture
-		$gateway->do_credit_card_capture( $order );
-	}
-
-
-	/**
-	 * Add a "Capture Charge" action to the Admin Order Edit Order
-	 * Actions select if there is an authorization awaiting capture
-	 *
-	 * @since 1.0.0
-	 * @param array $actions available order actions
-	 * @return array actions
-	 */
-	public function maybe_add_capture_charge_order_action( $actions ) {
-
-		// bail adding a new order from the admin
-		if ( ! isset( $_REQUEST['post'] ) ) {
-			return $actions;
-		}
-
-		$order = wc_get_order( $_REQUEST['post'] );
-
-		$payment_method = SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' );
-
-		// bail if the order wasn't paid for with this gateway
-		if ( ! $this->has_gateway( $payment_method ) ) {
-			return $actions;
-		}
-
-		$gateway = $this->get_gateway( $payment_method );
-
-		// ensure that it supports captures
-		if ( ! $this->can_capture_charge( $gateway ) ) {
-			return $actions;
-		}
-
-		// ensure that the authorization is still valid for capture
-		if ( ! $gateway->authorization_valid_for_capture( $order ) ) {
-			return $actions;
-		}
-
-		return $this->add_order_action_charge_action( $actions );
-	}
-
-
-	/**
-	 * Adds 'Capture charge' to the Orders screen bulk action select
-	 *
-	 * @since 3.0.0
-	 */
-	public function maybe_add_capture_charge_bulk_order_action() {
-		global $post_type, $post_status;
-
-		if ( $post_type == 'shop_order' && $post_status != 'trash' ) {
-
-			// ensure at least one gateway supports capturing charge
-			$can_capture_charge = false;
-			foreach ( $this->get_gateways() as $gateway ) {
-
-				// ensure that it supports captures
-				if ( $this->can_capture_charge( $gateway ) ) {
-					$can_capture_charge = true;
-					break;
-				}
-			}
-
-			if ( ! $can_capture_charge ) {
-				return;
-			}
-
-			?>
-				<script type="text/javascript">
-					jQuery( document ).ready( function ( $ ) {
-						if ( 0 == $( 'select[name^=action] option[value=wc_capture_charge]' ).size() ) {
-							$( 'select[name^=action]' ).append(
-								$( '<option>' ).val( '<?php echo esc_js( 'wc_capture_charge' ); ?>' ).text( '<?php _e( 'Capture Charge', 'woocommerce-plugin-framework' ); ?>' )
-							);
-						}
-					});
-				</script>
-			<?php
-		}
-	}
-
-
-	/**
-	 * Process the 'Capture Charge' custom bulk action on the Orders screen
-	 * bulk action select
-	 *
-	 * @since 2.1.0
-	 */
-	public function process_capture_charge_bulk_order_action() {
-		global $typenow;
-
-		if ( 'shop_order' == $typenow ) {
-
-			// get the action
-			$wp_list_table = _get_list_table( 'WP_Posts_List_Table' );
-			$action        = $wp_list_table->current_action();
-
-			// bail if not processing a capture
-			if ( 'wc_capture_charge' !== $action ) {
-				return;
-			}
-
-			// security check
-			check_admin_referer( 'bulk-posts' );
-
-			// make sure order IDs are submitted
-			if ( isset( $_REQUEST['post'] ) ) {
-				$order_ids = array_map( 'absint', $_REQUEST['post'] );
-			}
-
-			// return if there are no orders to export
-			if ( empty( $order_ids ) ) {
-				return;
-			}
-
-			// give ourselves an unlimited timeout if possible
-			@set_time_limit( 0 );
-
-			foreach ( $order_ids as $order_id ) {
-
-				$order = wc_get_order( $order_id );
-
-				$this->maybe_capture_charge( $order );
-			}
-		}
-	}
-
-
-	/**
-	 * Add a "Capture Charge" action to the Admin Order Edit Order
-	 * Actions dropdown
-	 *
-	 * @since 2.1.0
-	 * @param array $actions available order actions
-	 * @return array actions
-	 */
-	public function add_order_action_charge_action( $actions ) {
-
-		/* translators: verb, as in "Capture credit card charge".
-		 Used when an amount has been pre-authorized before, but funds have not yet been captured (taken) from the card.
-		 Capturing the charge will take the money from the credit card and put it in the merchant's pockets. */
-		$actions[ 'wc_' . $this->get_id() . '_capture_charge' ] = esc_html__( 'Capture Charge', 'woocommerce-plugin-framework' );
-
-		return $actions;
-	}
-
-
 	/**
 	 * Add gateway information to the system status report.
 	 *
@@ -927,6 +729,19 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
+	 * Determines if the plugin supports the capture charge feature.
+	 *
+	 * @since 5.0.0-dev
+	 *
+	 * @return bool
+	 */
+	public function supports_capture_charge() {
+
+		return $this->supports( self::FEATURE_CAPTURE_CHARGE );
+	}
+
+
+	/**
 	 * Returns true if the gateway supports the named feature
 	 *
 	 * @since 1.0.0
@@ -938,20 +753,18 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	}
 
 
-	/**
-	 * Returns true if the gateway supports the charge capture operation and it
-	 * can be invoked
-	 *
-	 * @since 1.0.0
-	 * @param \SV_WC_Payment_Gateway $gateway the payment gateway
-	 * @return boolean true if the gateway supports the charge capture operation and it can be invoked
-	 */
-	public function can_capture_charge( $gateway ) {
-		return $this->supports( self::FEATURE_CAPTURE_CHARGE ) && $this->get_gateway()->is_available() && $gateway->supports( self::FEATURE_CAPTURE_CHARGE );
-	}
-
-
 	/** Getter methods ******************************************************/
+
+
+	/**
+	 * Get the admin order handler instance.
+	 *
+	 * @since 5.0.0-dev
+	 * @return \SV_WC_Payment_Gateway_Admin_Order
+	 */
+	public function get_admin_order_handler() {
+		return $this->admin_order_handler;
+	}
 
 
 	/**
