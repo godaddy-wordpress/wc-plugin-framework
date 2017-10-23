@@ -1337,7 +1337,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				$( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_transaction_type' ).change( function() {
 
 					var transaction_type = $( this ).val();
-					var hidden_setting   = $( '#woocommerce_<?php echo $this->get_id(); ?>_charge_virtual_orders, #woocommerce_<?php echo $this->get_id(); ?>_enable_partial_capture' ).closest( 'tr' );
+					var hidden_setting   = $( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_charge_virtual_orders, #woocommerce_<?php echo esc_js( $this->get_id() ); ?>_enable_partial_capture' ).closest( 'tr' );
 
 					if ( '<?php echo esc_js( self::TRANSACTION_TYPE_AUTHORIZATION ); ?>' === transaction_type ) {
 						$( hidden_setting ).show();

@@ -54,7 +54,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		// capture feature
-		if ( $this->get_plugin()->supports( SV_WC_Payment_Gateway_Plugin::FEATURE_CAPTURE_CHARGE ) ) {
+		if ( $this->get_plugin()->supports_capture_charge() ) {
 
 			add_action( 'woocommerce_order_item_add_action_buttons', array( $this, 'add_capture_button' ) );
 
@@ -82,7 +82,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 			wp_enqueue_script( 'sv-wc-payment-gateway-admin-order', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/admin/sv-wc-payment-gateway-admin-order.min.js', array( 'jquery' ), SV_WC_Plugin::VERSION, true );
 
-			$order = wc_get_order( SV_WC_Helper::get_request( 'post' ) ); // TODO: best way to get the order?
+			$order = wc_get_order( SV_WC_Helper::get_request( 'post' ) );
 
 			if ( ! $order ) {
 				return;
@@ -113,6 +113,10 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 */
 	public function maybe_add_capture_charge_bulk_order_action() {
 		global $post_type, $post_status;
+
+		if ( ! current_user_can( 'edit_shop_orders' ) ) {
+			return;
+		}
 
 		if ( $post_type === 'shop_order' && $post_status !== 'trash' ) {
 
@@ -156,7 +160,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	public function process_capture_charge_bulk_order_action() {
 		global $typenow;
 
-		if ( 'shop_order' == $typenow ) {
+		if ( 'shop_order' === $typenow ) {
 
 			// get the action
 			$wp_list_table = _get_list_table( 'WP_Posts_List_Table' );
@@ -164,6 +168,10 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 			// bail if not processing a capture
 			if ( 'wc_capture_charge' !== $action ) {
+				return;
+			}
+
+			if ( ! current_user_can( 'edit_shop_orders' ) ) {
 				return;
 			}
 
@@ -314,10 +322,15 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 		try {
 
-			$order = wc_get_order( SV_WC_Helper::get_request( 'order_id' ) );
+			$order_id = SV_WC_Helper::get_request( 'order_id' );
+			$order    = wc_get_order( $order_id );
 
 			if ( ! $order ) {
 				throw new SV_WC_Payment_Gateway_Exception( 'Invalid order ID' );
+			}
+
+			if ( ! current_user_can( 'edit_shop_order', $order_id ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Invalid permissions' );
 			}
 
 			if ( SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' ) !== $gateway->get_id() ) {

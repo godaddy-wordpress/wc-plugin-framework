@@ -729,6 +729,19 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
+	 * Determines if the plugin supports the capture charge feature.
+	 *
+	 * @since 5.0.0-dev
+	 *
+	 * @return bool
+	 */
+	public function supports_capture_charge() {
+
+		return $this->supports( self::FEATURE_CAPTURE_CHARGE );
+	}
+
+
+	/**
 	 * Returns true if the gateway supports the named feature
 	 *
 	 * @since 1.0.0
