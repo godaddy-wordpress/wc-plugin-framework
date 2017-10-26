@@ -72,6 +72,9 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/** @var string cron interval identifier */
 	protected $cron_interval_identifier;
 
+	/** @var string debug message, used by the system status tool */
+	protected $debug_message;
+
 
 	/**
 	 * Initiate new background job handler
