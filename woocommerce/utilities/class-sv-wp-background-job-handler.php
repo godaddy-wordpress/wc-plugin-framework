@@ -977,6 +977,109 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	}
 
 
+	/** Debug & Testing Methods ***********************************************/
+
+
+	/**
+	 * Tests the background handler's connection.
+	 *
+	 * @since 4.8.0-dev
+	 *
+	 * @return bool
+	 */
+	public function test_connection() {
+
+		$test_url = add_query_arg( 'action', "{$this->identifier}_test", admin_url( 'admin-ajax.php' ) );
+
+		$result = wp_safe_remote_get( $test_url );
+
+		return ! is_wp_error( $result ) && wp_remote_retrieve_body( $result ) && '[TEST_LOOPBACK]' === wp_remote_retrieve_body( $result );
+	}
+
+
+	/**
+	 * Handles the connection test request.
+	 *
+	 * @since 4.8.0-dev
+	 */
+	public function handle_connection_test_response() {
+
+		echo '[TEST_LOOPBACK]';
+		exit;
+	}
+
+
+	/**
+	 * Adds the WooCommerce debug tool.
+	 *
+	 * @since 4.8.0-dev
+	 *
+	 * @param array $tools WooCommerce core tools
+	 * @return array
+	 */
+	public function add_debug_tool( $tools ) {
+
+		// this key is not unique to the plugin to avoid duplicate tools
+		$tools['sv_wc_background_job_test'] = array(
+			'name'     => __( 'Background Processing Test', 'woocommerce-plugin-framework' ),
+			'button'   => __( 'Run Test', 'woocommerce-plugin-framework' ),
+			'desc'     => __( 'This tool will test whether your server is capable of processing background jobs.', 'woocommerce-plugin-framework' ),
+			'callback' => array( $this, 'run_debug_tool' ),
+		);
+
+		return $tools;
+	}
+
+
+	/**
+	 * Runs the test connection debug tool.
+	 *
+	 * @since 4.8.0-dev
+	 *
+	 * @return string
+	 */
+	public function run_debug_tool() {
+
+		if ( $this->test_connection() ) {
+			$this->debug_message = __( 'Success! You should be able to process background jobs.', 'woocommerce-plugin-framework' );
+			$result = true;
+		} else {
+			$this->debug_message = __( 'Could not connect. Please ask your hosting company to ensure your server has loopback connections enabled.', 'woocommerce-plugin-framework' );
+			$result = false;
+		}
+
+		// WC 2.6 has no positive message output by default
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_3_0() && $result ) {
+			echo "<div class='updated inline'><p>{$this->debug_message}</p></div>";
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * Translate the tool success message.
+	 *
+	 * This can be removed in favor of returning the message string in `run_debug_tool()`
+	 *  when WC 3.1 is required, though that means the message will always be "success" styled.
+	 *
+	 * @since 4.8.0-dev
+	 *
+	 * @param string $translated the text to output
+	 * @param string $original the original text
+	 * @param string $domain the textdomain
+	 * @return string the updated text
+	 */
+	public function translate_success_message( $translated, $original, $domain ) {
+
+		if ( 'woocommerce' === $domain && ( 'Tool ran.' === $original || 'There was an error calling %s' === $original ) ) {
+			$translated = $this->debug_message;
+		}
+
+		return $translated;
+	}
+
+
 	/** Helper Methods ********************************************************/
 
 
