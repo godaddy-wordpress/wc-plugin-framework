@@ -1,5 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2017.nn.nn - version 4.8.0-dev
+ * Feature - Add a framework for batch job handling for when background processing is unavailable
+ * Feature - Debug tool for testing the site's environment for loopback connection support
+
 2017.10.05 - version 4.7.3
  * Tweak - Add new methods for checking for specific WooCommerce versions
  * Tweak - Adjust the PHP version notice to check for 5.6 by May 2018 and adjust the messaging when that date has passed
