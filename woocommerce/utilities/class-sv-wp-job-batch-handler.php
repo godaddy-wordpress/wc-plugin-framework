@@ -27,7 +27,10 @@ defined( 'ABSPATH' ) or exit;
 if ( ! class_exists( 'SV_WP_Job_Batch_Handler' ) ) :
 
 /**
- * TODO: Move this to the framework
+ * The job batch handler class.
+ *
+ * This provides a way for plugins to process "background" jobs in batches when
+ * regular background processing isn't available.
  *
  * @since 4.8.0-dev
  */
