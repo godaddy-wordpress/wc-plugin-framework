@@ -95,7 +95,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Adds the necessary action and filter hooks.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 */
 	protected function add_hooks() {
 
@@ -986,7 +986,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Tests the background handler's connection.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 *
 	 * @return bool
 	 */
@@ -1003,7 +1003,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Handles the connection test request.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 */
 	public function handle_connection_test_response() {
 
@@ -1015,7 +1015,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Adds the WooCommerce debug tool.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 *
 	 * @param array $tools WooCommerce core tools
 	 * @return array
@@ -1037,7 +1037,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Runs the test connection debug tool.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 *
 	 * @return string
 	 */
@@ -1066,7 +1066,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * This can be removed in favor of returning the message string in `run_debug_tool()`
 	 *  when WC 3.1 is required, though that means the message will always be "success" styled.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 *
 	 * @param string $translated the text to output
 	 * @param string $original the original text
@@ -1089,7 +1089,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/**
 	 * Gets the job handler identifier.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 *
 	 * @return string
 	 */

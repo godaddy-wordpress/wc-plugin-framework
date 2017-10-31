@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2017.nn.nn - version 4.8.0-dev
+2017.10.31 - version 4.8.0
  * Feature - Add a framework for batch job handling for when background processing is unavailable
  * Feature - Debug tool for testing the site's environment for loopback connection support
 

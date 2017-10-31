@@ -1,7 +1,7 @@
 ###*
 # WordPress Batch Job Handler
 #
-# @since 4.8.0-dev
+# @since 4.8.0
 ###
 
 jQuery( document ).ready ( $ ) ->
@@ -10,13 +10,13 @@ jQuery( document ).ready ( $ ) ->
 
 	# Handles batch processing job items.
 	#
-	# @since 4.8.0-dev
+	# @since 4.8.0
 	class window.SV_WP_Job_Batch_Handler
 
 
 		# Constructs the class.
 		#
-		# @since 4.8.0-dev
+		# @since 4.8.0
 		#
 		# @params [Object] args with properties:
 		#     id:    job handler ID, used for naming actions and events
@@ -31,7 +31,7 @@ jQuery( document ).ready ( $ ) ->
 
 		# Processes a given job ID in batches.
 		#
-		# @since 4.8.0-dev
+		# @since 4.8.0
 		#
 		# @param [String] an existing job ID
 		# @returns [Promise]
@@ -71,7 +71,7 @@ jQuery( document ).ready ( $ ) ->
 
 		# Cancels a given job.
 		#
-		# @since 4.8.0-dev
+		# @since 4.8.0
 		#
 		# @param [String] an existing job ID
 		# @returns [Promise]

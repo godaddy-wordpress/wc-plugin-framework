@@ -32,7 +32,7 @@ if ( ! class_exists( 'SV_WP_Job_Batch_Handler' ) ) :
  * This provides a way for plugins to process "background" jobs in batches when
  * regular background processing isn't available.
  *
- * @since 4.8.0-dev
+ * @since 4.8.0
  */
 class SV_WP_Job_Batch_Handler {
 
@@ -50,7 +50,7 @@ class SV_WP_Job_Batch_Handler {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 *
 	 * @param \SV_WP_Background_Job_Handler $job_handler job handler instance
 	 * @param \SV_WC_Plugin $plugin WC plugin instance
@@ -73,7 +73,7 @@ class SV_WP_Job_Batch_Handler {
 	/**
 	 * Adds the necessary action and filter hooks.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 */
 	protected function add_hooks() {
 
@@ -87,7 +87,7 @@ class SV_WP_Job_Batch_Handler {
 	/**
 	 * Enqueues the scripts.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 */
 	public function enqueue_scripts() {
 
@@ -98,14 +98,14 @@ class SV_WP_Job_Batch_Handler {
 	/**
 	 * Renders the inline JavaScript for instantiating the batch handler class.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 */
 	protected function render_js() {
 
 		/**
 		 * Filters the JavaScript batch handler arguments.
 		 *
-		 * @since 4.8.0-dev
+		 * @since 4.8.0
 		 *
 		 * @param array $args arguments to pass to the JavaScript batch handler
 		 * @param \SV_WP_Job_Batch_Handler $handler handler object
@@ -123,7 +123,7 @@ class SV_WP_Job_Batch_Handler {
 	/**
 	 * Gets the JavaScript batch handler arguments.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 *
 	 * @return array
 	 */
@@ -142,7 +142,7 @@ class SV_WP_Job_Batch_Handler {
 	 *
 	 * Plugins can override this with their own handler that extends the base.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 *
 	 * @return string
 	 */
@@ -157,7 +157,7 @@ class SV_WP_Job_Batch_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 */
 	public function ajax_process_batch() {
 
@@ -191,7 +191,7 @@ class SV_WP_Job_Batch_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 */
 	public function ajax_cancel_job() {
 
@@ -212,7 +212,7 @@ class SV_WP_Job_Batch_Handler {
 	 *
 	 * Allows plugins to add extra job properties and handle certain statuses.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 *
 	 * @param object $job job object
 	 * @return object $job job object
@@ -233,7 +233,7 @@ class SV_WP_Job_Batch_Handler {
 	 * A batch consists of the number of items defined by self::get_items_per_batch()
 	 * or the number we're able to process before exeeding time or memory limits.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 *
 	 * @param string $job_id job to process
 	 * @return object $job job after processing the batch
@@ -254,7 +254,7 @@ class SV_WP_Job_Batch_Handler {
 	/**
 	 * Gets the number of items to process in a single request when processing job item batches.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 *
 	 * @return int
 	 */
@@ -263,7 +263,7 @@ class SV_WP_Job_Batch_Handler {
 		/**
 		 * Filters the number of items to process in a single request when processing job item batches.
 		 *
-		 * @since 4.8.0-dev
+		 * @since 4.8.0
 		 *
 		 * @param int $items_per_batch
 		 */
@@ -276,7 +276,7 @@ class SV_WP_Job_Batch_Handler {
 	/**
 	 * Gets the job handler.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 *
 	 * @return \SV_WP_Background_Job_Handler
 	 */
@@ -289,7 +289,7 @@ class SV_WP_Job_Batch_Handler {
 	/**
 	 * Gets the plugin instance.
 	 *
-	 * @since 4.8.0-dev
+	 * @since 4.8.0
 	 *
 	 * @return \SV_WP_Plugin
 	 */
