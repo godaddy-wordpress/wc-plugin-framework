@@ -165,6 +165,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/** @var string configuration option: indicates whether a Card Security Code field will be presented on checkout, either 'yes' or 'no' */
 	private $enable_csc;
 
+	/** @var string configuration option: indicates whether a Card Security Code field will be presented for saved cards at checkout, either 'yes' or 'no' */
+	private $enable_token_csc;
+
 	/** @var array configuration option: supported echeck fields, one of 'check_number', 'account_type' */
 	private $supported_check_fields;
 
@@ -1310,6 +1313,16 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			'default' => 'yes',
 		);
 
+		if ( $this->supports_tokenization() ) {
+
+			$form_fields['enable_token_csc'] = array(
+				'title'   => esc_html__( 'Saved Card Verification', 'woocommerce-plugin-framework' ),
+				'label'   => esc_html__( 'Display the Card Security Code field when paying with a saved card', 'woocommerce-plugin-framework' ),
+				'type'    => 'checkbox',
+				'default' => 'yes',
+			);
+		}
+
 		return $form_fields;
 	}
 
@@ -1327,6 +1340,28 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		?>
 		<style type="text/css">.nowrap { white-space: nowrap; }</style>
 		<?php
+
+		if ( isset( $this->form_fields['enable_csc'] ) ) {
+
+			// add inline javascript to show/hide any shared settings fields as needed
+			ob_start();
+			?>
+				$( '#woocommerce_<?php echo $this->get_id(); ?>_enable_csc' ).change( function() {
+
+					var enabled = $( this ).is( ':checked' );
+
+					if ( enabled ) {
+						$( '#woocommerce_<?php echo $this->get_id(); ?>_enable_token_csc' ).closest( 'tr' ).show();
+					} else {
+						$( '#woocommerce_<?php echo $this->get_id(); ?>_enable_token_csc' ).closest( 'tr' ).hide();
+					}
+
+				} ).change();
+			<?php
+
+			wc_enqueue_js( ob_get_clean() );
+
+		}
 
 		// if transaction types are supported, show/hide the "charge virtual-only" setting
 		if ( isset( $this->form_fields['transaction_type'] ) ) {
@@ -3768,6 +3803,17 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function csc_enabled() {
 		return 'yes' === $this->enable_csc;
+	}
+
+
+	/**
+	 * Determines if the Card Security Code (CVV) field should be used for saved cards at checkout.
+	 *
+	 * @since 5.0.0-dev
+	 * @return bool
+	 */
+	public function csc_enabled_for_tokens() {
+		return $this->csc_enabled() && 'yes' === $this->enable_token_csc;
 	}
 
 
