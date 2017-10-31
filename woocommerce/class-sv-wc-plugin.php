@@ -464,6 +464,55 @@ abstract class SV_WC_Plugin {
 				) );
 			}
 		}
+
+		// add the PHP 5.6+ notice
+		if ( ! $sv_wc_php_notice_added && $this->display_php_notice && version_compare( PHP_VERSION, '5.6.0', '<' ) ) {
+
+			$message = '<p>';
+
+			$message .= sprintf(
+				/* translators: Placeholders: %1$s - <strong>, %2$s - </strong> */
+				__( 'Hey there! We\'ve noticed that your server is running %1$san outdated version of PHP%2$s, which is the programming language that WooCommerce and its extensions are built on.
+					The PHP version that is currently used for your site is no longer maintained, nor %1$sreceives security updates%2$s; newer versions are faster and more secure.', 'woocommerce-plugin-framework' ),
+				'<strong>', '</strong>'
+			);
+
+			$message .= '</p><p>';
+
+			$deadline = strtotime( 'May 2018' );
+
+			if ( time() < $deadline ) {
+
+				$message .= sprintf(
+					/* translators: Placeholders: %1$s - WooCommerce plugin name, %2$s - a month and year, such as May 2018 */
+					__( 'As a result, %1$s will no longer support this version starting %2$s and you should upgrade PHP prior to this date.', 'woocommerce-plugin-framework' ),
+					$this->get_plugin_name(),
+					'<strong>' . date_i18n( 'F Y', $deadline ) . '</strong>'
+				);
+
+			} else {
+
+				$message .= sprintf(
+					/* translators: Placeholders: %s - WooCommerce plugin name */
+					__( 'As a result, %s no longer supports this version and you should upgrade PHP as soon as possible.', 'woocommerce-plugin-framework' ),
+					$this->get_plugin_name()
+				);
+			}
+
+			$message .= ' ' . sprintf(
+				/* translators: Placeholders: %1$s - <a>, %2$s - </a> */
+				__( 'Your hosting provider can do this for you. %1$sHere are some resources to help you upgrade%2$s and to explain PHP versions further.', 'woocommerce-plugin-framework' ),
+				'<a href="http://skyver.ge/upgradephp">', '</a>'
+			);
+
+			$message .= '</p>';
+
+			$this->get_admin_notice_handler()->add_admin_notice( $message, 'sv-wc-outdated-php-version', array(
+				'notice_class' => 'error',
+			) );
+
+			$sv_wc_php_notice_added = true;
+		}
 	}
 
 
