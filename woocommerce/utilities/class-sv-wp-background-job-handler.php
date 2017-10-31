@@ -74,6 +74,9 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	/** @var string cron interval identifier */
 	protected $cron_interval_identifier;
 
+	/** @var string debug message, used by the system status tool */
+	protected $debug_message;
+
 
 	/**
 	 * Initiate new background job handler
@@ -87,8 +90,25 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		$this->cron_hook_identifier     = $this->identifier . '_cron';
 		$this->cron_interval_identifier = $this->identifier . '_cron_interval';
 
+		$this->add_hooks();
+	}
+
+
+	/**
+	 * Adds the necessary action and filter hooks.
+	 *
+	 * @since 4.8.0
+	 */
+	protected function add_hooks() {
+
+		// cron healthcheck
 		add_action( $this->cron_hook_identifier, array( $this, 'handle_cron_healthcheck' ) );
 		add_filter( 'cron_schedules', array( $this, 'schedule_cron_healthcheck' ) );
+
+		// debugging & testing
+		add_action( "wp_ajax_nopriv_{$this->identifier}_test", array( $this, 'handle_connection_test_response' ) );
+		add_filter( 'woocommerce_debug_tools', array( $this, 'add_debug_tool' ) );
+		add_filter( 'gettext', array( $this, 'translate_success_message' ), 10, 3 );
 	}
 
 
@@ -128,7 +148,20 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			wp_die();
 		}
 
+		// WC core does 2 things here that can interfere with our nonce check:
+		// 1. WooCommerce starts a session due to our GET request to dispatch a job
+		//  However, this happens *after* we've generated a nonce without a session (in CRON context)
+		// 2. it then filters nonces for logged-out users indiscriminately without checking the nonce action; if
+		//  there is a session created (and now the server does have one), it tries to filter every.single.nonce
+		//  for logged-out users to use the customer session ID instead of 0 for user ID. We *want* to check
+		//  against a UID of 0 (since that's how the nonce was created), so we temporarily pause the
+		//  logged-out nonce hijacking before standing aside.
+		remove_filter( 'nonce_user_logged_out', array( WC()->session, 'nonce_user_logged_out' ) );
+
 		check_ajax_referer( $this->identifier, 'nonce' );
+
+		// sorry, later nonce users! please play again
+		add_filter( 'nonce_user_logged_out', array( WC()->session, 'nonce_user_logged_out' ) );
 
 		$this->handle();
 
@@ -228,6 +261,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * of the maximum WordPress memory.
 	 *
 	 * @since 4.4.0
+	 *
 	 * @return bool True if exceeded memory limit, false otherwise
 	 */
 	protected function memory_exceeded() {
@@ -244,6 +278,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 * Filter whether memory limit has been exceeded or not
 		 *
 		 * @since 4.4.0
+		 *
 		 * @param bool $exceeded
 		 */
 		return apply_filters( "{$this->identifier}_memory_exceeded", $return );
@@ -254,6 +289,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Get memory limit
 	 *
 	 * @since 4.4.0
+	 *
 	 * @return int memory limit in bytes
 	 */
 	protected function get_memory_limit() {
@@ -281,6 +317,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * A timeout limit of 30s is common on shared hosting.
 	 *
 	 * @since 4.4.0
+	 *
 	 * @return bool True, if time limit exceeded, false otherwise
 	 */
 	protected function time_exceeded() {
@@ -290,6 +327,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 * 20 seconds
 		 *
 		 * @since 4.4.0
+		 *
 		 * @param int $time Time in seconds
 		 */
 		$finish = $this->start_time + apply_filters( "{$this->identifier}_default_time_limit", 20 );
@@ -309,7 +347,6 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	}
 
 
-
 	/**
 	 * Create a background job
 	 *
@@ -322,6 +359,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * control over the job.
 	 *
 	 * @since 4.4.0
+	 *
 	 * @param mixed $attrs Job attributes.
 	 * @return object|null
 	 */
@@ -339,6 +377,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 * Filter new background job attributes
 		 *
 		 * @since 4.4.0
+		 *
 		 * @param array $attrs Job attributes
 		 * @param string $id Job ID
 		 */
@@ -368,6 +407,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 * Run when a job is created
 		 *
 		 * @since 4.4.0
+		 *
 		 * @param object $job The created job
 		 */
 		do_action( "{$this->identifier}_job_created", $job );
@@ -380,6 +420,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Get a job (by default the first in the queue)
 	 *
 	 * @since 4.4.0
+	 *
 	 * @param string $id Optional. Job ID. Will return first job in queue if not
 	 *                   provided. Will not return completed or failed jobs from queue.
 	 * @return object|null The found job object or null
@@ -428,6 +469,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 * Filter job as returned from the database
 		 *
 		 * @since 4.4.0
+		 *
 		 * @param object $job
 		 */
 		return apply_filters( "{$this->identifier}_returned_job", $job );
@@ -438,6 +480,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Get jobs
 	 *
 	 * @since 4.4.2
+	 *
 	 * @param array $args {
 	 *     Optional. An array of arguments
 	 *
@@ -531,15 +574,6 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			// handle PHP errors from here on out
 			register_shutdown_function( array( $this, 'handle_shutdown' ), $job );
 
-			// Indicate that the job has started processing
-			if ( 'processing' != $job->status ) {
-
-				$job->status                = 'processing';
-				$job->started_processing_at = current_time( 'mysql' );
-
-				$this->update_job( $job );
-			}
-
 			// Start processing
 			$this->process_job( $job );
 
@@ -573,9 +607,26 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * If no data is set, the job will completed right away.
 	 *
 	 * @since 4.4.0
+	 *
 	 * @param object $job
+	 * @param int $items_per_batch number of items to process in a single request. Defaults to unlimited.
+	 * @throws \Exception when job data is incorrect
+	 * @return object $job
 	 */
-	protected function process_job( $job ) {
+	public function process_job( $job, $items_per_batch = null ) {
+
+		if ( ! $this->start_time ) {
+			$this->start_time = time();
+		}
+
+		// Indicate that the job has started processing
+		if ( 'processing' !== $job->status ) {
+
+			$job->status                = 'processing';
+			$job->started_processing_at = current_time( 'mysql' );
+
+			$job = $this->update_job( $job );
+		}
 
 		$data_key = $this->data_key;
 
@@ -588,6 +639,8 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		}
 
 		$data = $job->{$data_key};
+
+		$job->total = count( $data );
 
 		// progress indicates how many items have been processed, it
 		// does NOT indicate the processed item key in any way
@@ -603,18 +656,22 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		// loop over unprocessed items and process them
 		if ( ! empty( $data ) ) {
 
+			$processed       = 0;
+			$items_per_batch = (int) $items_per_batch;
+
 			foreach ( $data as $item ) {
 
 				// process the item
 				$this->process_item( $item, $job );
 
+				$processed++;
 				$job->progress++;
 
 				// update job progress
-				$this->update_job( $job );
+				$job = $this->update_job( $job );
 
 				// job limits reached
-				if ( $this->time_exceeded() || $this->memory_exceeded() ) {
+				if ( ( $items_per_batch && $processed >= $items_per_batch ) || $this->time_exceeded() || $this->memory_exceeded() ) {
 					break;
 				}
 			}
@@ -622,8 +679,10 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 		// complete current job
 		if ( $job->progress >= count( $job->{$data_key} ) ) {
-			$this->complete_job( $job );
+			$job = $this->complete_job( $job );
 		}
+
+		return $job;
 	}
 
 
@@ -631,8 +690,9 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Update job attrs
 	 *
 	 * @since 4.4.0
+	 *
 	 * @param object|string $job Job instance or ID
-	 * @return false on failure
+	 * @return object|false on failure
 	 */
 	public function update_job( $job ) {
 
@@ -655,6 +715,8 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 * @param object $job The updated job
 		 */
 		do_action( "{$this->identifier}_job_updated", $job );
+
+		return $job;
 	}
 
 
@@ -662,8 +724,9 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Handle job completion
 	 *
 	 * @since 4.4.0
+	 *
 	 * @param object|string $job Job instance or ID
-	 * @return false on failure
+	 * @return object|false on failure
 	 */
 	public function complete_job( $job ) {
 
@@ -687,6 +750,8 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 * @param object $job The completed job
 		 */
 		do_action( "{$this->identifier}_job_complete", $job );
+
+		return $job;
 	}
 
 
@@ -698,9 +763,10 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * indicate that a particular job has failed for some reason.
 	 *
 	 * @since 4.4.0
+	 *
 	 * @param object|string $job Job instance or ID
 	 * @param string $reason Optional. Reason for failure.
-	 * @return false on failure
+	 * @return object|false on failure
 	 */
 	public function fail_job( $job, $reason = '' ) {
 
@@ -725,9 +791,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 * Run when a job is failed
 		 *
 		 * @since 4.4.0
+		 *
 		 * @param object $job The failed job
 		 */
 		do_action( "{$this->identifier}_job_failed", $job );
+
+		return $job;
 	}
 
 
@@ -735,6 +804,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Delete a job
 	 *
 	 * @since 4.4.2
+	 *
 	 * @param object|string $job Job instance or ID
 	 * @return false on failure
 	 */
@@ -755,6 +825,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		* Run after a job is deleted
 		*
 		* @since 4.4.2
+		*
 		* @param object $job The job that was deleted from database
 		*/
 		do_action( "{$this->identifier}_job_deleted", $job );
@@ -864,6 +935,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * item in job data.
 	 *
 	 * @since 4.4.2
+	 *
 	 * @param mixed $item Job data item to iterate over
 	 * @param object $job Job instance
 	 * @return mixed
@@ -895,6 +967,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Update a job option in options database.
 	 *
 	 * @since 4.6.3
+	 *
 	 * @param object $job the job instance to update in database
 	 * @return int|bool number of rows updated or false on failure, see wpdb::update()
 	 */
@@ -907,6 +980,126 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			array( 'option_name'  => "{$this->identifier}_job_{$job->id}" )
 		);
 	}
+
+
+	/** Debug & Testing Methods ***********************************************/
+
+
+	/**
+	 * Tests the background handler's connection.
+	 *
+	 * @since 4.8.0
+	 *
+	 * @return bool
+	 */
+	public function test_connection() {
+
+		$test_url = add_query_arg( 'action', "{$this->identifier}_test", admin_url( 'admin-ajax.php' ) );
+
+		$result = wp_safe_remote_get( $test_url );
+
+		return ! is_wp_error( $result ) && wp_remote_retrieve_body( $result ) && '[TEST_LOOPBACK]' === wp_remote_retrieve_body( $result );
+	}
+
+
+	/**
+	 * Handles the connection test request.
+	 *
+	 * @since 4.8.0
+	 */
+	public function handle_connection_test_response() {
+
+		echo '[TEST_LOOPBACK]';
+		exit;
+	}
+
+
+	/**
+	 * Adds the WooCommerce debug tool.
+	 *
+	 * @since 4.8.0
+	 *
+	 * @param array $tools WooCommerce core tools
+	 * @return array
+	 */
+	public function add_debug_tool( $tools ) {
+
+		// this key is not unique to the plugin to avoid duplicate tools
+		$tools['sv_wc_background_job_test'] = array(
+			'name'     => __( 'Background Processing Test', 'woocommerce-plugin-framework' ),
+			'button'   => __( 'Run Test', 'woocommerce-plugin-framework' ),
+			'desc'     => __( 'This tool will test whether your server is capable of processing background jobs.', 'woocommerce-plugin-framework' ),
+			'callback' => array( $this, 'run_debug_tool' ),
+		);
+
+		return $tools;
+	}
+
+
+	/**
+	 * Runs the test connection debug tool.
+	 *
+	 * @since 4.8.0
+	 *
+	 * @return string
+	 */
+	public function run_debug_tool() {
+
+		if ( $this->test_connection() ) {
+			$this->debug_message = __( 'Success! You should be able to process background jobs.', 'woocommerce-plugin-framework' );
+			$result = true;
+		} else {
+			$this->debug_message = __( 'Could not connect. Please ask your hosting company to ensure your server has loopback connections enabled.', 'woocommerce-plugin-framework' );
+			$result = false;
+		}
+
+		// WC 2.6 has no positive message output by default
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_3_0() && $result ) {
+			echo "<div class='updated inline'><p>{$this->debug_message}</p></div>";
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * Translate the tool success message.
+	 *
+	 * This can be removed in favor of returning the message string in `run_debug_tool()`
+	 *  when WC 3.1 is required, though that means the message will always be "success" styled.
+	 *
+	 * @since 4.8.0
+	 *
+	 * @param string $translated the text to output
+	 * @param string $original the original text
+	 * @param string $domain the textdomain
+	 * @return string the updated text
+	 */
+	public function translate_success_message( $translated, $original, $domain ) {
+
+		if ( 'woocommerce' === $domain && ( 'Tool ran.' === $original || 'There was an error calling %s' === $original ) ) {
+			$translated = $this->debug_message;
+		}
+
+		return $translated;
+	}
+
+
+	/** Helper Methods ********************************************************/
+
+
+	/**
+	 * Gets the job handler identifier.
+	 *
+	 * @since 4.8.0
+	 *
+	 * @return string
+	 */
+	public function get_identifier() {
+
+		return $this->identifier;
+	}
+
 
 }
 

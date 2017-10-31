@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 4.7.2\n"
+"Project-Id-Version: WooCommerce Plugin Framework 4.8.0\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -60,7 +60,7 @@ msgstr ""
 msgid "Please %1$supdate WooCommerce%2$s"
 msgstr ""
 
-#: class-sv-wc-plugin-compatibility.php:297
+#: class-sv-wc-plugin-compatibility.php:325
 msgid "WooCommerce"
 msgstr ""
 
@@ -116,37 +116,53 @@ msgid ""
 "these settings."
 msgstr ""
 
-#: class-sv-wc-plugin.php:485
-#. translators: Placeholders: %1$s - <p>, %2$s - </p>, %3$s - <strong>, %4$s -
-#. </strong>, %5$s - plugin name, %6$s - <a> link, %7$s - </a>
+#: class-sv-wc-plugin.php:487
+#. translators: Placeholders: %1$s - <strong>, %2$s - </strong>
 msgid ""
-"%1$sHey there! We've noticed that your server is running %3$san outdated "
-"version of PHP%4$s, which is the programming language that WooCommerce and "
+"Hey there! We've noticed that your server is running %1$san outdated "
+"version of PHP%2$s, which is the programming language that WooCommerce and "
 "its extensions are built on.\n"
 "\t\t\t\t\tThe PHP version that is currently used for your site is no longer "
-"maintained, nor %3$sreceives security updates%4$s; newer versions are "
-"faster and more secure.%2$s\n"
-"\t\t\t\t\t%1$sAs a result, %5$s will no longer support this version on July "
-"1, so you should upgrade PHP prior to this date. Your hosting provider can "
-"do this for you.\n"
-"\t\t\t\t\t%6$sHere are some resources to help you upgrade%7$s and to "
-"explain PHP versions further.%2$s"
+"maintained, nor %1$sreceives security updates%2$s; newer versions are "
+"faster and more secure."
 msgstr ""
 
-#: class-sv-wc-plugin.php:525
+#: class-sv-wc-plugin.php:500
+#. translators: Placeholders: %1$s - WooCommerce plugin name, %2$s - a month
+#. and year, such as May 2018
+msgid ""
+"As a result, %1$s will no longer support this version starting %2$s and you "
+"should upgrade PHP prior to this date."
+msgstr ""
+
+#: class-sv-wc-plugin.php:509
+#. translators: Placeholders: %s - WooCommerce plugin name
+msgid ""
+"As a result, %s no longer supports this version and you should upgrade PHP "
+"as soon as possible."
+msgstr ""
+
+#: class-sv-wc-plugin.php:516
+#. translators: Placeholders: %1$s - <a>, %2$s - </a>
+msgid ""
+"Your hosting provider can do this for you. %1$sHere are some resources to "
+"help you upgrade%2$s and to explain PHP versions further."
+msgstr ""
+
+#: class-sv-wc-plugin.php:551
 #. translators: Docs as in Documentation
 msgid "Docs"
 msgstr ""
 
-#: class-sv-wc-plugin.php:718
+#: class-sv-wc-plugin.php:744
 msgid "%1$s - A minimum of %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:727
+#: class-sv-wc-plugin.php:753
 msgid "Set as %1$s - %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:964
+#: class-sv-wc-plugin.php:990
 msgid "Configure"
 msgstr ""
 
@@ -1403,19 +1419,43 @@ msgstr ""
 msgid "%1$s eCheck Payment Method Saved: %2$s account ending in %3$s"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:581
+#: utilities/class-sv-wp-background-job-handler.php:632
 msgid "Job data key \"%s\" not set"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:585
+#: utilities/class-sv-wp-background-job-handler.php:636
 msgid "Job data key \"%s\" is not an array"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:798
+#: utilities/class-sv-wp-background-job-handler.php:869
 msgid "Every %d Minutes"
 msgstr ""
 
-#: class-sv-wc-plugin.php:530
+#: utilities/class-sv-wp-background-job-handler.php:1027
+msgid "Background Processing Test"
+msgstr ""
+
+#: utilities/class-sv-wp-background-job-handler.php:1028
+msgid "Run Test"
+msgstr ""
+
+#: utilities/class-sv-wp-background-job-handler.php:1029
+msgid ""
+"This tool will test whether your server is capable of processing background "
+"jobs."
+msgstr ""
+
+#: utilities/class-sv-wp-background-job-handler.php:1047
+msgid "Success! You should be able to process background jobs."
+msgstr ""
+
+#: utilities/class-sv-wp-background-job-handler.php:1050
+msgid ""
+"Could not connect. Please ask your hosting company to ensure your server "
+"has loopback connections enabled."
+msgstr ""
+
+#: class-sv-wc-plugin.php:556
 msgctxt "noun"
 msgid "Support"
 msgstr ""
