@@ -49,7 +49,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @since 4.3.0
 	 * @param \SV_WC_Payment_Gateway_Direct $gateway The gateway instance
 	 */
-	public function __construct( SV_WC_Payment_Gateway_Direct $gateway ) {
+	public function __construct( SV_WC_Payment_Gateway $gateway ) {
 
 		$this->gateway = $gateway;
 

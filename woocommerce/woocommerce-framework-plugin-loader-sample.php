@@ -51,7 +51,15 @@ class SV_WC_Framework_Plugin_Loader {
 	/** minimum PHP version required by this plugin */
 	const MINIMUM_PHP_VERSION = '5.3.0';
 
+	/** minimum WordPress version required by this plugin */
+	const MINIMUM_WP_VERSION = '4.4';
+
+	/** minimum WooCommerce version required by this plugin */
+	const MINIMUM_WC_VERSION = '2.6';
+
+	/** the plugin name, for displaying notices */
 	const PLUGIN_NAME = 'WooCommerce Framework Plugin'; // TODO: plugin name
+
 
 	/** @var SV_WC_Plugin_Loader single instance of this class */
 	protected static $instance;
@@ -70,6 +78,7 @@ class SV_WC_Framework_Plugin_Loader {
 		register_activation_hook( __FILE__, array( $this, 'activation_check' ) );
 
 		add_action( 'admin_init', array( $this, 'check_environment' ) );
+		add_action( 'admin_init', array( $this, 'add_plugin_notices' ) );
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ), 15 );
 
@@ -106,6 +115,10 @@ class SV_WC_Framework_Plugin_Loader {
 	 * @since 1.0.0
 	 */
 	public function init_plugin() {
+
+		if ( ! $this->plugins_compatible() ) {
+			return;
+		}
 
 		$this->load_framework();
 
@@ -167,6 +180,82 @@ class SV_WC_Framework_Plugin_Loader {
 
 			$this->add_admin_notice( 'bad_environment', 'error', self::PLUGIN_NAME . ' has been deactivated. ' . $this->get_environment_message() );
 		}
+	}
+
+
+	/**
+	 * Adds notices for out-of-date WordPress and/or WooCommerce versions.
+	 *
+	 * @since 1.0.0
+	 */
+	public function add_plugin_notices() {
+
+		if ( ! $this->is_wp_compatible() ) {
+
+			$this->add_admin_notice( 'update_wordpress', 'error', sprintf(
+				'%s requires WordPress version %s or higher. Please %supdate WordPress &raquo;%s',
+				'<strong>' . self::PLUGIN_NAME . '</strong>',
+				self::MINIMUM_WP_VERSION,
+				'<a href="' . esc_url( admin_url( 'update-core.php' ) ) . '">', '</a>'
+			) );
+		}
+
+		if ( ! $this->is_wc_compatible() ) {
+
+			$this->add_admin_notice( 'update_woocommerce', 'error', sprintf(
+				'%s requires WooCommerce version %s or higher. Please %supdate WooCommerce &raquo;%s',
+				'<strong>' . self::PLUGIN_NAME . '</strong>',
+				self::MINIMUM_WP_VERSION,
+				'<a href="' . esc_url( admin_url( 'update-core.php' ) ) . '">', '</a>'
+			) );
+		}
+	}
+
+
+	/**
+	 * Determines if the required plugins are compatible.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
+	protected function plugins_compatible() {
+
+		return $this->is_wp_compatible() && $this->is_wc_compatible();
+	}
+
+
+	/**
+	 * Determines if the WordPress compatible.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
+	protected function is_wp_compatible() {
+
+		if ( ! self::MINIMUM_WP_VERSION ) {
+			return true;
+		}
+
+		return version_compare( get_bloginfo( 'version' ), self::MINIMUM_WP_VERSION, '>=' );
+	}
+
+
+	/**
+	 * Determines if the WooCommerce compatible.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
+	protected function is_wc_compatible() {
+
+		if ( ! self::MINIMUM_WC_VERSION ) {
+			return true;
+		}
+
+		return defined( 'WC_VERSION' ) && version_compare( WC_VERSION, self::MINIMUM_WC_VERSION, '>=' );
 	}
 
 

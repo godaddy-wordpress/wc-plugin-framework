@@ -1,8 +1,9 @@
 <?php
 
-namespace SkyVerge\WC_Plugin_Framework\Unit_Tests;
+namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
+use \SkyVerge\WooCommerce\PluginFramework\v5_0_0 as PluginFramework;
 
 /**
  * Unit tests for \SV_WC_Payment_Gateway_Helper
@@ -19,7 +20,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	 */
 	public function test_luhn_check_true() {
 
-		$this->assertTrue( \SV_WC_Payment_Gateway_Helper::luhn_check( '4222222222222' ) );
+		$this->assertTrue( PluginFramework\SV_WC_Payment_Gateway_Helper::luhn_check( '4222222222222' ) );
 	}
 
 
@@ -30,7 +31,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	 */
 	public function test_luhn_check_false() {
 
-		$this->assertFalse( \SV_WC_Payment_Gateway_Helper::luhn_check( '4222222222222222' ) );
+		$this->assertFalse( PluginFramework\SV_WC_Payment_Gateway_Helper::luhn_check( '4222222222222222' ) );
 	}
 
 
@@ -50,7 +51,7 @@ class Payment_Gateway_Helper extends Test_Case {
 			),
 		) );
 
-		$this->assertEquals( $expected, \SV_WC_Payment_Gateway_Helper::normalize_card_type( $card_type ) );
+		$this->assertEquals( $expected, PluginFramework\SV_WC_Payment_Gateway_Helper::normalize_card_type( $card_type ) );
 	}
 
 
@@ -79,7 +80,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	 */
 	public function test_card_type_from_account_number( $account_number, $card_type ) {
 
-		$this->assertEquals( $card_type, \SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $account_number ) );
+		$this->assertEquals( $card_type, PluginFramework\SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $account_number ) );
 	}
 
 
@@ -93,11 +94,11 @@ class Payment_Gateway_Helper extends Test_Case {
 
 		return array(
 			array( '4222222222222',    'visa' ),
-			array( '5555555555554444', 'mc' ),
-			array( '2223000048400011', 'mc' ),
+			array( '5555555555554444', 'mastercard' ),
+			array( '2223000048400011', 'mastercard' ),
 			array( '371449635398431',  'amex' ),
 			array( '6011111111111117', 'discover' ),
-			array( '38520000023237',   'diners' ),
+			array( '38520000023237',   'dinersclub' ),
 			array( '3566002020360505', 'jcb' ),
 			array( '6759649826438453', 'maestro' ),
 			array( '1234567890123456', null ), // unknown type
@@ -128,7 +129,7 @@ class Payment_Gateway_Helper extends Test_Case {
 			),
 		) );
 
-		$this->assertEquals( $expected, \SV_WC_Payment_Gateway_Helper::payment_type_to_name( $type ) );
+		$this->assertEquals( $expected, PluginFramework\SV_WC_Payment_Gateway_Helper::payment_type_to_name( $type ) );
 	}
 
 
@@ -158,7 +159,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	 */
 	public function test_get_card_types_structure() {
 
-		foreach ( \SV_WC_Payment_Gateway_Helper::get_card_types() as $card_type ) {
+		foreach ( PluginFramework\SV_WC_Payment_Gateway_Helper::get_card_types() as $card_type ) {
 			$this->assertArrayHasKey( 'name',       $card_type );
 			$this->assertArrayHasKey( 'variations', $card_type );
 		}
@@ -173,7 +174,7 @@ class Payment_Gateway_Helper extends Test_Case {
 	 */
 	public function test_get_card_types_roll_call( $card_type ) {
 
-		$this->assertArrayHasKey( $card_type, \SV_WC_Payment_Gateway_Helper::get_card_types() );
+		$this->assertArrayHasKey( $card_type, PluginFramework\SV_WC_Payment_Gateway_Helper::get_card_types() );
 	}
 
 

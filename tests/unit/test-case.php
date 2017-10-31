@@ -1,6 +1,6 @@
 <?php
 
-namespace SkyVerge\WC_Plugin_Framework\Unit_Tests;
+namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 class Test_Case extends \PHPUnit_Framework_TestCase {
 

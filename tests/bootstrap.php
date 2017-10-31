@@ -109,7 +109,7 @@ class SV_WC_Plugin_Framework_Tests_Bootstrap {
 	 * Get the single class instance
 	 *
 	 * @since 2.2
-	 * @return WC_Unit_Tests_Bootstrap
+	 * @return \SV_WC_Plugin_Framework_Tests_Bootstrap
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {

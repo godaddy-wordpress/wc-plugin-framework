@@ -1,0 +1,27 @@
+/*
+WooCommerce SkyVerge Payment Gateway Framework Order Admin SCSS
+Version 5.0.0-dev
+
+Copyright (c) 2016-2017, SkyVerge, Inc.
+ Licensed under the GNU General Public License v3.0
+http://www.gnu.org/licenses/gpl-3.0.html
+*/
+
+#woocommerce-order-items {
+
+	.sv-wc-payment-gateway-partial-capture .capture-actions {
+		margin-top: 5px;
+		padding-top: 12px;
+		border-top: 1px solid #dfdfdf;
+
+		.button {
+			float: right;
+			margin-left: 4px;
+		}
+
+		.cancel-action {
+			float: left;
+			margin-left: 0;
+		}
+	}
+}

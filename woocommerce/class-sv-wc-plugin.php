@@ -42,7 +42,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.0.0-dev';
+  const VERSION = '5.0.0-dev';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -67,9 +67,6 @@ abstract class SV_WC_Plugin {
 
 	/** @var array string names of required PHP extensions */
 	private $dependencies = array();
-
-	/** @var array string names of required PHP functions */
-	private $function_dependencies = array();
 
 	/** @var string the plugin text domain */
 	private $text_domain;
@@ -104,21 +101,17 @@ abstract class SV_WC_Plugin {
 	public function __construct( $id, $version, $args = array() ) {
 
 		// required params
-		$this->id          = $id;
-		$this->version     = $version;
+		$this->id      = $id;
+		$this->version = $version;
 
-		$dependencies = isset( $args['dependencies'] ) ? $args['dependencies'] : array();
+		$args = wp_parse_args( $args, array(
+			'dependencies' => array(),
+			'text_domain'  => '',
+		) );
 
-		// for backwards compatibility
-		if ( empty( $dependencies['functions'] ) && ! empty( $args['function_dependencies'] ) ) {
-			$dependencies['functions'] = $args['function_dependencies'];
-		}
+		$this->set_dependencies( $args['dependencies'] );
 
-		$this->set_dependencies( $dependencies );
-
-		if ( isset( $args['text_domain'] ) ) {
-			$this->text_domain = $args['text_domain'];
-		}
+		$this->text_domain = $args['text_domain'];
 
 		// include library files after woocommerce is loaded
 		add_action( 'sv_wc_framework_plugins_loaded', array( $this, 'lib_includes' ) );

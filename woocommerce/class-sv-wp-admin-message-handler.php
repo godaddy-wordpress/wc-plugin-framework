@@ -244,11 +244,11 @@ class SV_WP_Admin_Message_Handler {
 	 */
 	public function show_messages( $params = array() ) {
 
-		$params = wp_parse_args( array(
+		$params = wp_parse_args( $params, array(
 			'capabilities' => array(
 				'manage_woocommerce',
 			),
-		), $params );
+		) );
 
 		$check_user_capabilities = array();
 
