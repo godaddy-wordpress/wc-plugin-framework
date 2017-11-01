@@ -134,6 +134,7 @@ MSG;
 				'dependencies'          => array( 'json' ),
 				'function_dependencies' => array( 'ftp_ssl_connect' ),
 				'text_domain'           => 'mock',
+				'display_php_notice'    => true,
 			),
 		);
 
