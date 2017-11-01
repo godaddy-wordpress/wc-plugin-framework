@@ -74,6 +74,9 @@ abstract class SV_WC_Plugin {
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
 
+	/** @var bool whether to display the PHP version notice */
+	private $display_php_notice;
+
 
 	/**
 	 * Initialize the plugin.
@@ -105,13 +108,15 @@ abstract class SV_WC_Plugin {
 		$this->version = $version;
 
 		$args = wp_parse_args( $args, array(
-			'dependencies' => array(),
-			'text_domain'  => '',
+			'dependencies'       => array(),
+			'text_domain'        => '',
+			'display_php_notice' => false,
 		) );
 
 		$this->set_dependencies( $args['dependencies'] );
 
-		$this->text_domain = $args['text_domain'];
+		$this->text_domain        = $args['text_domain'];
+		$this->display_php_notice = $args['display_php_notice'];
 
 		// include library files after woocommerce is loaded
 		add_action( 'sv_wc_framework_plugins_loaded', array( $this, 'lib_includes' ) );
