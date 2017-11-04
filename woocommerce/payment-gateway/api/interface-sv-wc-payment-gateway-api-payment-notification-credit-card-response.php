@@ -39,24 +39,6 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response ex
 
 
 	/**
-	 * Returns true if this is an authorization response
-	 *
-	 * @since 2.2.0
-	 * @return boolean true if this is an authorization response
-	 */
-	public function is_authorization();
-
-
-	/**
-	 * Returns true if this is an charge response
-	 *
-	 * @since 2.2.0
-	 * @return boolean true if this is a charge response
-	 */
-	public function is_charge();
-
-
-	/**
 	 * Returns the card type, if available, i.e., 'visa', 'mastercard', etc
 	 *
 	 * @since 2.2.0
