@@ -375,7 +375,8 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 */
 	public function handle_transaction_response_request() {
 
-		$order = null;
+		$order    = null;
+		$response = null;
 
 		try {
 
@@ -405,7 +406,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				$this->get_plugin()->log(
 					/* translators: Placeholders: %1$s - transaction request type such as IPN or Redirect-back, %2$s - the error message */
 					sprintf( '%1$s processing error: %2$s',
-					( $response->is_ipn() ) ? 'IPN' : 'Redirect-back',
+					( $response && $response->is_ipn() ) ? 'IPN' : 'Redirect-back',
 					$e->getMessage()
 				), $this->get_id() );
 			}
