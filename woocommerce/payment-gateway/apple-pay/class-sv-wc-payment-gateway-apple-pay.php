@@ -301,8 +301,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			throw new SV_WC_Payment_Gateway_Exception( 'Cart contains pre-orders.' );
 		}
 
-		// ensure totals are fully calculated by simulating checkout
-		if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
+		// ensure totals are fully calculated by simulating checkout in WC 3.1 or lower
+		// TODO: remove this when WC 3.2+ can be required {CW 2017-11-17}
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.2' ) && ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
 			define( 'WOOCOMMERCE_CHECKOUT', true );
 		}
 
@@ -408,8 +409,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 */
 	protected function get_cart_totals( WC_Cart $cart ) {
 
-		// ensure totals are fully calculated by simulating checkout
-		if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
+		// ensure totals are fully calculated by simulating checkout in WC 3.1 or lower
+		// TODO: remove this when WC 3.2+ can be required {CW 2017-11-17}
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.2' ) && ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
 			define( 'WOOCOMMERCE_CHECKOUT', true );
 		}
 

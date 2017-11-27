@@ -45,7 +45,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 	 */
 	public static function create_order( WC_Cart $cart ) {
 
-		if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
+		// ensure totals are fully calculated by simulating checkout in WC 3.1 or lower
+		// TODO: remove this when WC 3.2+ can be required {CW 2017-11-17}
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.2' ) && ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
 			define( 'WOOCOMMERCE_CHECKOUT', true );
 		}
 
@@ -111,7 +113,10 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 				}
 			}
 
-			foreach ( array_keys( $cart->taxes + $cart->shipping_taxes ) as $rate_id ) {
+			$cart_taxes     = SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.2' ) ? $cart->get_cart_contents_taxes() : $cart->taxes;
+			$shipping_taxes = SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.2' ) ? $cart->get_shipping_taxes() : $cart->shipping_taxes;
+
+			foreach ( array_keys( $cart_taxes + $shipping_taxes ) as $rate_id ) {
 
 				if ( $rate_id && apply_filters( 'woocommerce_cart_remove_taxes_zero_rate_id', 'zero-rated' ) !== $rate_id ) {
 
