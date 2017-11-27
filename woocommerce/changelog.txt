@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2017.nn.nn - version 4.8.1-dev
+2017.11.27 - version 4.8.1
  * Fix - Fix Apple Pay compatibility with WooCommerce 3.2+
 
 2017.10.31 - version 4.8.0

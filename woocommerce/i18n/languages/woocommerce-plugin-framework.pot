@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 4.8.0\n"
+"Project-Id-Version: WooCommerce Plugin Framework 4.8.1\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -544,14 +544,14 @@ msgstr ""
 msgid "or"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:81
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:88
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:101
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:110
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:119
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:164
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:174
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:176
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:83
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:90
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:103
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:112
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:124
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:169
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:179
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:181
 msgid "Error %d: Unable to create order. Please try again."
 msgstr ""
 
@@ -563,23 +563,23 @@ msgstr ""
 msgid "Apple Pay payment failed. %s"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:543
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:545
 msgid "Subtotal"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:553
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:555
 msgid "Discount"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:563
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:565
 msgid "Shipping"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:573
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:575
 msgid "Fees"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:583
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:585
 msgid "Taxes"
 msgstr ""
 
