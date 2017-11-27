@@ -8,7 +8,7 @@ use \SkyVerge\WooCommerce\PluginFramework\v5_0_0 as PluginFramework;
 /**
  * Unit tests for \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response
  *
- * @since 4.7.0-dev
+ * @since 4.7.0
  */
 class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 
@@ -16,7 +16,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	/**
 	 * Test for \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_payment_data()
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function test_get_payment_data() {
 
@@ -29,7 +29,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	/**
 	 * Test for blank \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_payment_data()
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function test_get_payment_data_blank() {
 
@@ -42,7 +42,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	/**
 	 * Test for \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_transaction_id()
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function test_get_transaction_id() {
 
@@ -55,7 +55,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	/**
 	 * Test for blank \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_transaction_id()
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function test_get_transaction_id_blank() {
 
@@ -68,7 +68,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	/**
 	 * Test for \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_card_type()
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function test_get_card_type() {
 
@@ -81,7 +81,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	/**
 	 * Test for blank \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_card_type()
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function test_get_card_type_blank() {
 
@@ -100,7 +100,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	/**
 	 * Test for \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_last_four()
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function test_get_last_four() {
 
@@ -113,7 +113,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	/**
 	 * Test for blank \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_last_four()
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function test_get_last_four_blank() {
 
@@ -126,7 +126,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	/**
 	 * Test for \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_billing_address()
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function test_get_billing_address() {
 
@@ -152,7 +152,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	/**
 	 * Test for blank \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_billing_address()
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function test_get_billing_address_blank() {
 
@@ -176,7 +176,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	/**
 	 * Test for \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_shipping_address()
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function test_get_shipping_address() {
 
@@ -200,7 +200,7 @@ class Payment_Gateway_Apple_Pay_Payment_Response extends Test_Case {
 	/**
 	 * Test for blank \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response::get_shipping_address()
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 */
 	public function test_get_shipping_address_blank() {
 

@@ -8,7 +8,7 @@ use \SkyVerge\WooCommerce\PluginFramework\v5_0_0 as PluginFramework;
 /**
  * Unit tests for \SV_WC_Payment_Gateway_Apple_Pay_API_Request
  *
- * @since 4.7.0-dev
+ * @since 4.7.0
  */
 class Payment_Gateway_Apple_Pay_API_Request extends Test_Case {
 
@@ -16,7 +16,7 @@ class Payment_Gateway_Apple_Pay_API_Request extends Test_Case {
 	/**
 	 * Tests for \SV_WC_Payment_Gateway_Apple_Pay_API_Request::set_merchant_data()
 	 *
-	 * @since 4.7.0-dev
+	 * @since 4.7.0
 	 * @dataProvider provider_test_set_merchant_data
 	 */
 	public function test_set_merchant_data( $merchant_id, $domain_name, $display_name, $expected ) {

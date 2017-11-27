@@ -171,7 +171,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Determines if the installed version of WooCommerce meets or exceeds the
 	 * passed version.
 	 *
-	 * @since 4.7.3-dev
+	 * @since 4.7.3
 	 *
 	 * @param string $version version number to compare
 	 * @return bool
@@ -185,7 +185,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Determines if the installed version of WooCommerce is lower than the
 	 * passed version.
 	 *
-	 * @since 4.7.3-dev
+	 * @since 4.7.3
 	 *
 	 * @param string $version version number to compare
 	 * @return bool
