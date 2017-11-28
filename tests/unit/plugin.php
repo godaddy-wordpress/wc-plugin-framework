@@ -33,13 +33,6 @@ class Plugin extends Test_Case {
 		$this->expectOutputString( 'foo' );
 	}
 
-	public function test_lib_includes() {
-
-		$this->plugin()->lib_includes();
-
-		$this->assertInstanceOf( '\SkyVerge\WooCommerce\PluginFramework\v5_0_0\SV_WC_Admin_Notice_Handler', $this->plugin()->get_admin_notice_handler() );
-	}
-
 	public function test_plug_action_links() {
 
 		$actions = array();
