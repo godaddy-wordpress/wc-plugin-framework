@@ -993,10 +993,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	public function test_connection() {
 
 		$test_url = add_query_arg( 'action', "{$this->identifier}_test", admin_url( 'admin-ajax.php' ) );
+		$result   = wp_safe_remote_get( $test_url );
+		$body     = ! is_wp_error( $result ) ? wp_remote_retrieve_body( $result ) : null;
 
-		$result = wp_safe_remote_get( $test_url );
-
-		return ! is_wp_error( $result ) && wp_remote_retrieve_body( $result ) && '[TEST_LOOPBACK]' === wp_remote_retrieve_body( $result );
+		// some servers may add a UTF8-BOM at the beginning of the response body, so we check if our test
+		// string is included in the body, as an equal check would produce a false negative test result
+		return $body && SV_WC_Helper::str_exists( $body, '[TEST_LOOPBACK]' );
 	}
 
 
