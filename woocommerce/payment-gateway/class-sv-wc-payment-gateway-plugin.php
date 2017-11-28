@@ -138,6 +138,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			$this->require_ssl  = $args['require_ssl'];
 		}
 
+		$this->includes();
+
 		// My Payment Methods feature
 		if ( ! is_admin() && $this->supports( self::FEATURE_MY_PAYMENT_METHODS ) ) {
 
@@ -212,9 +214,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * @since 1.0.0
 	 * @see SV_WC_Plugin::lib_includes()
 	 */
-	public function lib_includes() {
-
-		parent::lib_includes();
+	private function includes() {
 
 		$payment_gateway_framework_path = $this->get_payment_gateway_framework_path();
 

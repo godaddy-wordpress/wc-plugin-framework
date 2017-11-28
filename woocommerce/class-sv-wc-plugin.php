@@ -118,9 +118,6 @@ abstract class SV_WC_Plugin {
 		$this->text_domain        = $args['text_domain'];
 		$this->display_php_notice = $args['display_php_notice'];
 
-		// include library files after woocommerce is loaded
-		add_action( 'sv_wc_framework_plugins_loaded', array( $this, 'lib_includes' ) );
-
 		// includes that are required to be available at all times
 		$this->includes();
 
@@ -243,20 +240,6 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Include required library files
-	 *
-	 * @since 2.0.0
-	 */
-	public function lib_includes() {
-
-		if ( is_admin() ) {
-			// instantiate the admin notice handler
-			$this->get_admin_notice_handler();
-		}
-	}
-
-
-	/**
 	 * Include any critical files which must be available as early as possible
 	 *
 	 * @since 2.0.0
@@ -293,6 +276,11 @@ abstract class SV_WC_Plugin {
 		// JSON API base
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
+
+		if ( is_admin() ) {
+			// instantiate the admin notice handler
+			$this->get_admin_notice_handler();
+		}
 	}
 
 

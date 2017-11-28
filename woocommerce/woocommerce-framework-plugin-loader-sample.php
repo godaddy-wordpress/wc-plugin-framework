@@ -127,8 +127,6 @@ class SV_WC_Framework_Plugin_Loader {
 
 		// fire it up!
 		wc_framework_plugin(); // TODO: call the main plugin method
-
-		do_action( 'sv_wc_framework_plugins_loaded' ); // TODO: we should eliminate the need for this {CW 2017-07-18}
 	}
 
 
