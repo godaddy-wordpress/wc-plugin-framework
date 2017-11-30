@@ -68,7 +68,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 
 	/**
-	 * Enqueue the scripts and styles.
+	 * Enqueues the scripts and styles.
 	 *
 	 * @internal
 	 *
@@ -152,10 +152,9 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 
 	/**
-	 * Process the 'Capture Charge' custom bulk action on the Orders screen
-	 * bulk action select
+	 * Processes the 'Capture Charge' custom bulk action.
 	 *
-	 * @since 2.1.0
+	 * @since 5.0.0-dev
 	 */
 	public function process_capture_charge_bulk_order_action() {
 		global $typenow;
@@ -202,12 +201,12 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 
 	/**
-	 * Add a "Capture Charge" action to the Admin Order Edit Order
-	 * Actions dropdown
+	 * Adds a "Capture Charge" action to the admin Order Edit screen
 	 *
-	 * @since 2.1.0
+	 * @since 5.0.0-dev
+	 *
 	 * @param array $actions available order actions
-	 * @return array actions
+	 * @return array
 	 */
 	public function add_order_action_charge_action( $actions ) {
 
@@ -225,7 +224,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 *
 	 * @internal
 	 *
-	 * @since 5.0.0-dev.1
+	 * @since 5.0.0-dev
 	 *
 	 * @param \WC_Order $order order object
 	 */
@@ -290,7 +289,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Outputs the partial capture UI HTML.
 	 *
-	 * @since 5.0.0-dev.1
+	 * @since 5.0.0-dev
 	 *
 	 * @param \WC_Order $order order object
 	 * @param SV_WC_Payment_Gateway $gateway gateway instance
@@ -373,7 +372,8 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * method was used for the given order, the charge hasn't already been
 	 * captured, and the gateway supports issuing a capture request
 	 *
-	 * @since 1.0.0
+	 * @since 5.0.0-dev
+	 *
 	 * @param \WC_Order|int $order the order identifier or order object
 	 */
 	protected function maybe_capture_charge( $order, $amount = null ) {
@@ -433,7 +433,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Gets the gateway object from an order.
 	 *
-	 * @since 5.0.0-dev.1
+	 * @since 5.0.0-dev
 	 *
 	 * @param \WC_Order $order order object
 	 * @return \SV_WC_Payment_Gateway
@@ -462,6 +462,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * Gets the plugin instance.
 	 *
 	 * @since 5.0.0-dev
+	 *
 	 * @return SV_WC_Payment_Gateway_Plugin the plugin instance
 	 */
 	protected function get_plugin() {
