@@ -235,6 +235,10 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			return;
 		}
 
+		if ( ! $this->is_order_ready_for_capture( $order ) ) {
+			return;
+		}
+
 		$gateway = $this->get_order_gateway( $order );
 
 		if ( ! $gateway ) {
@@ -378,6 +382,11 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			$order = wc_get_order( $order );
 		}
 
+		// don't try to capture cancelled/fully refunded transactions
+		if ( ! $this->is_order_ready_for_capture( $order ) ) {
+			return;
+		}
+
 		$gateway = $this->get_order_gateway( $order );
 
 		if ( ! $gateway ) {
@@ -404,6 +413,20 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 		// perform the capture
 		return $gateway->do_credit_card_capture( $order, $amount );
+	}
+
+
+	/**
+	 * Determines if an order is ready for capture.
+	 *
+	 * @since 5.0.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @return bool
+	 */
+	protected function is_order_ready_for_capture( \WC_Order $order ) {
+
+		return ! in_array( $order->get_status(), array( 'cancelled', 'refunded' ), true );
 	}
 
 
