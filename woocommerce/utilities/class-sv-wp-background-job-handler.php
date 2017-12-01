@@ -203,6 +203,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * @return bool True if processing is running, false otherwise
 	 */
 	protected function is_process_running() {
+
+		// add a random artificial delay to prevent a race condition if 2 or more processes are trying to 
+		// process the job queue at the very same moment in time and neither of them have yet set the lock
+		// before the others are calling this method
+		usleep( rand( 100000, 300000 ) );
+
 		return (bool) get_transient( "{$this->identifier}_process_lock" );
 	}
 
@@ -906,7 +912,10 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	protected function schedule_event() {
 
 		if ( ! wp_next_scheduled( $this->cron_hook_identifier ) ) {
-			wp_schedule_event( time(), $this->cron_interval_identifier, $this->cron_hook_identifier );
+			
+			// schedule the health check to fire after 30 seconds from now, as to not create a race condition
+			// with job process lock on servers that fire & handle cron events instantly
+			wp_schedule_event( time() + 30, $this->cron_interval_identifier, $this->cron_hook_identifier );
 		}
 	}
 
