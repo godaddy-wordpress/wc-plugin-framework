@@ -1,5 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2017.12.01 - version 4.8.2
+ * Fix - Fix a possible race condition when performing background processing health checks
+ * Fix - Account for possible false negatives when testing loopback connections in certain environments
+
 2017.11.27 - version 4.8.1
  * Fix - Fix Apple Pay compatibility with WooCommerce 3.2+
 
