@@ -434,6 +434,12 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function update_failing_payment_method( $subscription, $renewal_order ) {
 
+		// if the order doesn't have a transaction date stored, bail
+		// this prevents updating the subscription with a failing token in case the merchant is switching the order status manually without new payment
+		if ( ! $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $renewal_order, 'id' ), 'trans_date' ) ) {
+			return;
+		}
+
 		if ( $customer_id = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $renewal_order, 'id' ), 'customer_id' ) ) {
 			$this->get_gateway()->update_order_meta( $subscription, 'customer_id', $customer_id );
 		}
