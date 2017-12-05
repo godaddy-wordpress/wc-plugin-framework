@@ -410,6 +410,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			delete_post_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), $meta_key );
 		}
 
+		// get a fresh subscription object after previous metadata changes
+		$subscription = wcs_get_subscription( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ) );
+
 		$old_payment_method = SV_WC_Order_Compatibility::get_meta( $subscription, '_old_payment_method' );
 		$new_payment_method = SV_WC_Order_Compatibility::get_prop( $subscription, 'payment_method' );
 
