@@ -55,7 +55,7 @@ interface SV_WC_API_Request {
 	/**
 	 * Gets the request query params.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return array
 	 */
@@ -65,7 +65,7 @@ interface SV_WC_API_Request {
 	/**
 	 * Gets the request data.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return array
 	 */

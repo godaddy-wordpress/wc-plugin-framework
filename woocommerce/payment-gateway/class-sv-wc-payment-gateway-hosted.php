@@ -148,7 +148,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * Gateways can set this to false if they want the cart to remain intact until a successful payment is made.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -419,7 +419,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Gets the order object with transaction data.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response $response response object
 	 * @return \WC_Order
@@ -461,7 +461,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Gets the order object with payment data added.
 	 *
-	 * @since 5.0.0-dev.1
+	 * @since 5.0.0
 	 * @see SV_WC_Payment_Gateway::get_order()
 	 *
 	 * @param int|\WC_Order $order_id order ID or object
@@ -474,7 +474,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		/**
 		 * Filters the order object after adding gateway data.
 		 *
-		 * @since 5.0.0-dev.1
+		 * @since 5.0.0
 		 *
 		 * @param \WC_Order $order order object
 		 * @param SV_WC_Payment_Gateway $gateway gateway object
@@ -559,7 +559,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	/**
 	 * Processes a transaction response's token data, if any.
 	 *
-	 * @since 5.0.0-dev.1
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response $response response object

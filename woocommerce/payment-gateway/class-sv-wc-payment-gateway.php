@@ -739,7 +739,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Initialize payment tokens handler.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 */
 	protected function init_payment_tokens_handler() {
 
@@ -752,7 +752,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * Concrete classes can override this method to return a custom implementation.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return \SV_WC_Payment_Gateway_Payment_Tokens_Handler
 	 */
@@ -765,7 +765,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Gets the payment tokens handler instance.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return \SV_WC_Payment_Gateway_Payment_Tokens_Handler
 	 */
@@ -778,7 +778,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines if tokenization takes place prior to transaction processing.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -790,7 +790,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines tokenization takes place during a transaction request.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -802,7 +802,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines tokenization takes place after a transaction request.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -814,7 +814,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines if the gateway supports the admin token editor feature.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -829,7 +829,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Initializes supported integrations.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 */
 	public function init_integrations() {
 
@@ -857,7 +857,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Gets an array of available integration objects
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 * @return array
 	 */
 	public function get_integrations() {
@@ -869,7 +869,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Gets the integration object for the given ID.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @param string $id the integration ID, e.g. subscriptions
 	 * @return \SV_WC_Payment_Gateway_Integration|null
@@ -885,7 +885,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * Concrete classes can override this method to return a custom implementation.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return \SV_WC_Payment_Gateway_Integration_Subscriptions
 	 */
@@ -898,7 +898,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Gets the Subscriptions integration class instance.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return \SV_WC_Payment_Gateway_Integration_Subscriptions|null
 	 */
@@ -913,7 +913,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * Concrete classes can override this method to return a custom implementation.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return \SV_WC_Payment_Gateway_Integration_Pre_Orders
 	 */
@@ -926,7 +926,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Gets the Pre-Orders integration class instance.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return \SV_WC_Payment_Gateway_Integration_Pre_Orders|null
 	 */
@@ -948,7 +948,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Concrete gateways can override this to conditionally support Subscriptions
 	 * based on certain settings (e.g. only when CSC is not required, etc.)
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -970,7 +970,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Concrete gateways can override this to conditionally support Pre-Orders
 	 * based on certain settings (e.g. only when CSC is not required, etc.)
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -1668,7 +1668,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * This method marks the order with an appropriate status, and adds a relevant order note.
 	 *
-	 * @since 5.0.0-dev.1
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response response object
@@ -1704,7 +1704,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		/**
 		 * Fires after a payment transaction is successfully completed.
 		 *
-		 * @since 5.0.0-dev.1
+		 * @since 5.0.0
 		 *
 		 * @param \WC_Order $order order object
 		 * @param SV_WC_Payment_Gateway $gateway gateway object
@@ -1866,7 +1866,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * For instance, some processors allow capturing an amount a certain
 	 * percentage higher than the payment total.
 	 *
-	 * @since 5.0.0-dev.1
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return float
@@ -1880,7 +1880,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Gets the amount originally authorized for an order.
 	 *
-	 * @since 5.0.0-dev.1
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return float
@@ -2589,7 +2589,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Gets the order note message for approved credit card transactions.
 	 *
-	 * @since 5.0.0-dev.1
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response response object
@@ -2661,7 +2661,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Gets the order note message for approved eCheck transactions.
 	 *
-	 * @since 5.0.0-dev.1
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response response object
@@ -3046,7 +3046,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines if the gateway supports capturing a partial charge.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -3135,7 +3135,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines if an order's authorization has been captured, event partially.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return bool
@@ -3149,7 +3149,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines if an order's authorization has been fully captured.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return bool
@@ -3258,7 +3258,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines if partial capture is enabled.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -3269,7 +3269,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		/**
 		 * Filters whether partial capture is enabled.
 		 *
-		 * @since 5.0.0-dev.1
+		 * @since 5.0.0
 		 *
 		 * @param bool $enabled whether partial capture is enabled
 		 * @param SV_WC_Payment_Gateway $gateway gateway object
@@ -3284,7 +3284,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines if the gateway supports the add payment method feature.
 	 *
-	 * @since 5.0.0-dev.1
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -3809,7 +3809,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines if the Card Security Code (CVV) field should be used for saved cards at checkout.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 * @return bool
 	 */
 	public function csc_enabled_for_tokens() {

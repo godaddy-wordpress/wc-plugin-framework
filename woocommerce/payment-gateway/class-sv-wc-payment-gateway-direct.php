@@ -855,7 +855,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			/**
 			 * Fires after a new payment method is added by a customer.
 			 *
-			 * @since 5.0.0-dev
+			 * @since 5.0.0
 			 *
 			 * @param string $token_id new token ID
 			 * @param int $user_id user ID

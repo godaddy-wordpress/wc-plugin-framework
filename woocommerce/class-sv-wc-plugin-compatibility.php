@@ -85,7 +85,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Logs a deprecated function notice.
 	 *
-	 * @since  5.0.0-dev
+	 * @since  5.0.0
 	 *
 	 * @param  string $function deprecated function name
 	 * @param  string $version deprecated-since version

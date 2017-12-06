@@ -126,13 +126,13 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	 * Gets the request data to be converted to XML.
 	 *
 	 * @since 4.3.0
-	 * @deprecated 5.0.0-dev
+	 * @deprecated 5.0.0
 	 *
 	 * @return array
 	 */
 	public function get_request_data() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __FUNCTION__, '5.0.0-dev', 'SV_WC_API_XML_Request::get_data' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __FUNCTION__, '5.0.0', 'SV_WC_API_XML_Request::get_data' );
 
 		return $this->get_data();
 	}
@@ -141,7 +141,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	/**
 	 * Gets the request data to be converted to XML.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 * @return array
 	 */
 	public function get_data() {

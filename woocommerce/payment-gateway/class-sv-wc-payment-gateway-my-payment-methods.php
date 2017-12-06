@@ -705,7 +705,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 						/**
 						 * Fires after a new payment method is deleted by a customer.
 						 *
-						 * @since 5.0.0-dev
+						 * @since 5.0.0
 						 *
 						 * @param string $token_id ID of the deleted token
 						 * @param int $user_id user ID
@@ -726,7 +726,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 					/**
 					 * Fires after a new payment method is made default by a customer.
 					 *
-					 * @since 5.0.0-dev
+					 * @since 5.0.0
 					 *
 					 * @param string $token_id ID of the modified token
 					 * @param int $user_id user ID

@@ -1,6 +1,6 @@
 ###
  WooCommerce SkyVerge Payment Gateway Framework Order Admin CoffeeScript
- Version 5.0.0-dev
+ Version 5.0.0
 
  Copyright (c) 2017, SkyVerge, Inc.
  Licensed under the GNU General Public License v3.0

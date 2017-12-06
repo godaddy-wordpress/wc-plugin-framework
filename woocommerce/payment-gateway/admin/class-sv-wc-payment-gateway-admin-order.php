@@ -31,7 +31,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Pa
 /**
  * Handle the admin order screens.
  *
- * @since 5.0.0-dev
+ * @since 5.0.0
  */
 class SV_WC_Payment_Gateway_Admin_Order {
 
@@ -43,7 +43,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin The plugin instance
 	 */
@@ -72,7 +72,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 *
 	 * @internal
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @param string $hook_suffix page hook suffix
 	 */
@@ -109,7 +109,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Adds 'Capture charge' to the Orders screen bulk action select.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 */
 	public function maybe_add_capture_charge_bulk_order_action() {
 		global $post_type, $post_status;
@@ -154,7 +154,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Processes the 'Capture Charge' custom bulk action.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 */
 	public function process_capture_charge_bulk_order_action() {
 		global $typenow;
@@ -203,7 +203,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Adds a "Capture Charge" action to the admin Order Edit screen
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @param array $actions available order actions
 	 * @return array
@@ -224,7 +224,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 *
 	 * @internal
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Order $order order object
 	 */
@@ -289,7 +289,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Outputs the partial capture UI HTML.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param SV_WC_Payment_Gateway $gateway gateway instance
@@ -309,7 +309,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 *
 	 * @internal
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 */
 	public function ajax_process_capture() {
 
@@ -372,7 +372,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * method was used for the given order, the charge hasn't already been
 	 * captured, and the gateway supports issuing a capture request
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Order|int $order the order identifier or order object
 	 */
@@ -419,7 +419,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Determines if an order is ready for capture.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return bool
@@ -433,7 +433,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Gets the gateway object from an order.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return \SV_WC_Payment_Gateway
@@ -461,7 +461,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Gets the plugin instance.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return SV_WC_Payment_Gateway_Plugin the plugin instance
 	 */

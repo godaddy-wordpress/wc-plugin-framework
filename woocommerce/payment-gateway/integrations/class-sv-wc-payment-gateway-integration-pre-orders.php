@@ -265,7 +265,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 	 *
 	 * @internal
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Order $order order object
 	 */

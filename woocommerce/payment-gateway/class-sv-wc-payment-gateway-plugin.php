@@ -731,7 +731,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Determines if the plugin supports the capture charge feature.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -759,7 +759,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Get the admin order handler instance.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 * @return \SV_WC_Payment_Gateway_Admin_Order
 	 */
 	public function get_admin_order_handler() {

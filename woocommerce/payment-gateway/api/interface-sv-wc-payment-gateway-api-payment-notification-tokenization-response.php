@@ -45,7 +45,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	 * Gets the overall result message for a new payment method tokenization
 	 * and/or customer creation.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return string
 	 */
@@ -55,7 +55,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	/**
 	 * Gets the result message for a new customer creation.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return string
 	 */
@@ -65,7 +65,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	/**
 	 * Gets the result message for a new payment method tokenization.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return string
 	 */
@@ -78,7 +78,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	/**
 	 * Gets the result code for a new customer creation.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return string
 	 */
@@ -88,7 +88,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	/**
 	 * Gets the result code for a new payment method tokenization.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return string
 	 */
@@ -98,7 +98,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	/**
 	 * Determines whether a new customer was created.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -108,7 +108,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	/**
 	 * Determines whether a new payment method was tokenized.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -121,7 +121,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	 * Gatewways can check that the payment method was tokenized, and if a new
 	 * customer was created, that was successful.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -131,7 +131,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	/**
 	 * Determines whether the customer was successfully created.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -141,7 +141,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	/**
 	 * Determines whether the payment method was successfully tokenized.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
@@ -151,7 +151,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	/**
 	 * Gets any payment tokens that were edited on the hosted pay page.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return array
 	 */
@@ -161,7 +161,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	/**
 	 * Gets any payment tokens that were deleted on the hosted pay page.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @return array
 	 */
