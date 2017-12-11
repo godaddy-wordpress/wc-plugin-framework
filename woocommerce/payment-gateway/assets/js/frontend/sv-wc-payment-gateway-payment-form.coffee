@@ -331,7 +331,8 @@ jQuery( document ).ready ($) ->
 				else
 					$parent_row.hide()
 					$parent_row.next().hide()
-			.change()
+
+			$( 'input#createaccount' ).change() unless $( 'input#createaccount' ).is( ':checked' )
 
 
 		# Public: Handle showing/hiding the sample check image
