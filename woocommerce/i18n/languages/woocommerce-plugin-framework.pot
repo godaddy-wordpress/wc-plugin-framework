@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 4.8.2\n"
+"Project-Id-Version: WooCommerce Plugin Framework 4.8.3\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -237,7 +237,7 @@ msgid "%s Payment Tokens"
 msgstr ""
 
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-handler.php:287
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:673
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:682
 msgid "Customer ID"
 msgstr ""
 
@@ -1364,39 +1364,39 @@ msgstr ""
 msgid "%1$s Payment Change Failed (%2$s)"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:508
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:1028
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:517
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:1037
 msgid "Via %s ending in %s"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:535
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:544
 msgid "Subscriptions"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:605
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:614
 msgid ""
 "This payment method is tied to a subscription and cannot be deleted. Please "
 "switch the subscription to another method first."
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:615
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:624
 msgid "View Subscription"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:669
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:678
 msgid "Payment Token"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:697
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:702
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:706
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:711
 msgid "%s is required."
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:857
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:866
 msgid "%s0 Subscription Renewal Approved"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:905
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:914
 msgid "%s Check Subscription Renewal Payment Approved: %s account ending in %s"
 msgstr ""
 
@@ -1557,7 +1557,7 @@ msgctxt "hash before order number"
 msgid "#"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:565
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:574
 msgctxt "hash before order number"
 msgid "#%s"
 msgstr ""
@@ -1568,12 +1568,12 @@ msgctxt "software environment"
 msgid "Production"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:895
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:904
 msgctxt "woocommerce-plugin-framework"
 msgid "%s %s Subscription Renewal Payment Approved: %s ending in %s (expires %s)"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:928
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:937
 msgctxt "woocommerce-plugin-framework"
 msgid "%s Renewal Payment Failed (%s)"
 msgstr ""
