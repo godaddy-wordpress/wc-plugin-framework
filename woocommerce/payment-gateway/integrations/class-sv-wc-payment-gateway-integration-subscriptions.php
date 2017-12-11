@@ -410,6 +410,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			delete_post_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), $meta_key );
 		}
 
+		// get a fresh subscription object after previous metadata changes
+		$subscription = wcs_get_subscription( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ) );
+
 		$old_payment_method = SV_WC_Order_Compatibility::get_meta( $subscription, '_old_payment_method' );
 		$new_payment_method = SV_WC_Order_Compatibility::get_prop( $subscription, 'payment_method' );
 
@@ -433,6 +436,12 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * @param \WC_Order $renewal_order order which recorded the successful payment (to make up for the failed automatic payment).
 	 */
 	public function update_failing_payment_method( $subscription, $renewal_order ) {
+
+		// if the order doesn't have a transaction date stored, bail
+		// this prevents updating the subscription with a failing token in case the merchant is switching the order status manually without new payment
+		if ( ! $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $renewal_order, 'id' ), 'trans_date' ) ) {
+			return;
+		}
 
 		if ( $customer_id = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $renewal_order, 'id' ), 'customer_id' ) ) {
 			$this->get_gateway()->update_order_meta( $subscription, 'customer_id', $customer_id );
