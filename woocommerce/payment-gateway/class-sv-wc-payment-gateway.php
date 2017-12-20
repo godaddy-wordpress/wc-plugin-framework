@@ -159,6 +159,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/** @var string configuration option: whether orders can be partially captured multiple times */
 	private $enable_partial_capture;
 
+	/** @var string configuration option: whether orders are captured when switched to a "paid" status */
+	private $enable_paid_capture;
+
 	/** @var array configuration option: card types to show images for */
 	private $card_types;
 
@@ -1372,12 +1375,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				$( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_transaction_type' ).change( function() {
 
 					var transaction_type = $( this ).val();
-					var hidden_setting   = $( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_charge_virtual_orders, #woocommerce_<?php echo esc_js( $this->get_id() ); ?>_enable_partial_capture' ).closest( 'tr' );
+					var hidden_settings   = $( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_charge_virtual_orders, #woocommerce_<?php echo esc_js( $this->get_id() ); ?>_enable_partial_capture, #woocommerce_<?php echo esc_js( $this->get_id() ); ?>_enable_paid_capture' ).closest( 'tr' );
 
 					if ( '<?php echo esc_js( self::TRANSACTION_TYPE_AUTHORIZATION ); ?>' === transaction_type ) {
-						$( hidden_setting ).show();
+						$( hidden_settings ).show();
 					} else {
-						$( hidden_setting ).hide();
+						$( hidden_settings ).hide();
 					}
 
 				} ).change();
@@ -3098,6 +3101,24 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			);
 		}
 
+		// get a list of the "paid" status names
+		$paid_statuses = array_map( 'wc_get_order_status_name', SV_WC_Plugin_Compatibility::wc_get_is_paid_statuses() );
+
+		// do some oxford comma magic
+		$last_status = array_pop( $paid_statuses );
+		array_push( $paid_statuses, "or {$last_status}" );
+		$separator = count( $last_status ) < 3 ? ' ' : ', ';
+
+		$form_fields['enable_paid_capture'] = array(
+			'label'       => __( 'Capture Paid Orders', 'woocommerce-plugin-framework' ),
+			'type'        => 'checkbox',
+			'description' => sprintf(
+				__( 'Automatically capture orders when they are changed to %s.', 'woocommerce-plugin-framework' ),
+				implode( $separator, $paid_statuses )
+		 	),
+			'default' => 'no',
+		);
+
 		return $form_fields;
 	}
 
@@ -3275,6 +3296,27 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 * @param SV_WC_Payment_Gateway $gateway gateway object
 		 */
 		return apply_filters( 'wc_' . $this->get_id() . '_partial_capture_enabled', 'yes' === $this->enable_partial_capture, $this );
+	}
+
+
+	/**
+	 * Determines if orders should be captured when switched to a "paid" status.
+	 *
+	 * @since 5.0.1-dev
+	 *
+	 * @return bool
+	 */
+	public function is_paid_capture_enabled() {
+
+		/**
+		 * Filters whether orders should be captured when switched to a "paid" status.
+		 *
+		 * @since 5.0.1-dev
+		 *
+		 * @param bool $enabled whether "paid" capture is enabled
+		 * @param SV_WC_Payment_Gateway $gateway gateway object
+		 */
+		return apply_filters( 'wc_' . $this->get_id() . '_paid_capture_enabled', 'yes' === $this->enable_paid_capture, $this );
 	}
 
 

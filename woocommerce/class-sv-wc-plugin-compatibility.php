@@ -51,6 +51,23 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Gets the statuses that are considered "paid".
+	 *
+	 * @since 5.0.1-dev
+	 *
+	 * @return array
+	 */
+	public static function wc_get_is_paid_statuses() {
+
+		if ( self::is_wc_version_gte_3_0() ) {
+			return wc_get_is_paid_statuses();
+		} else {
+			return (array) apply_filters( 'woocommerce_order_is_paid_statuses', array( 'processing', 'completed' ) );
+		}
+	}
+
+
+	/**
 	 * Formats a date for output.
 	 *
 	 * Backports WC 3.0.0's wc_format_datetime() to older versions.
