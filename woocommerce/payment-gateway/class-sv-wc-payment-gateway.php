@@ -3383,13 +3383,14 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		assert( $this->supports_card_types() );
 
 		$form_fields['card_types'] = array(
-			'title'    => esc_html__( 'Accepted Card Types', 'woocommerce-plugin-framework' ),
-			'type'     => 'multiselect',
-			'desc_tip' => esc_html__( 'Select which card types you accept.', 'woocommerce-plugin-framework' ),
-			'default'  => array_keys( $this->get_available_card_types() ),
-			'class'    => 'wc-enhanced-select',
-			'css'      => 'width: 350px;',
-			'options'  => $this->get_available_card_types(),
+			'title'       => esc_html__( 'Accepted Card Logos', 'woocommerce-plugin-framework' ),
+			'type'        => 'multiselect',
+			'desc_tip'    => __( 'These are the card logos that are displayed to customers as accepted during checkout.', 'woocommerce-plugin-framework' ),
+			'description' => __( 'This can be configured to match those accepted by your payment processor, but does not change your merchant account configuration.', 'woocommerce-plugin-framework' ),
+			'default'     => array_keys( $this->get_available_card_types() ),
+			'class'       => 'wc-enhanced-select',
+			'css'         => 'width: 350px;',
+			'options'     => $this->get_available_card_types(),
 		);
 
 		return $form_fields;
