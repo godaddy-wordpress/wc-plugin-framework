@@ -53,11 +53,13 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WP_Ad
  */
 class SV_WP_Admin_Message_Handler {
 
+
 	/** transient message prefix */
 	const MESSAGE_TRANSIENT_PREFIX = '_wp_admin_message_';
 
 	/** the message id GET name */
 	const MESSAGE_ID_GET_NAME = 'wpamhid';
+
 
 	/** @var string unique message identifier, defaults to __FILE__ unless otherwise set */
 	private $message_id;
@@ -67,6 +69,12 @@ class SV_WP_Admin_Message_Handler {
 
 	/** @var array array of error messages */
 	private $errors = array();
+
+	/** @var array array of warning messages */
+	private $warnings = array();
+
+	/** @var array array of info messages */
+	private $infos = array();
 
 
 	/**
@@ -96,11 +104,16 @@ class SV_WP_Admin_Message_Handler {
 	public function set_messages() {
 
 		// any messages to persist?
-		if ( $this->message_count() > 0 || $this->error_count() > 0 ) {
+		if ( $this->message_count() > 0 || $this->info_count() > 0 || $this->warning_count() > 0 || $this->error_count() > 0 ) {
 
 			set_transient(
 				self::MESSAGE_TRANSIENT_PREFIX . $this->get_message_id(),
-				array( 'errors' => $this->errors, 'messages' => $this->messages ),
+				array(
+					'errors'   => $this->errors,
+					'warnings' => $this->warnings,
+					'infos'    => $this->infos,
+					'messages' => $this->messages,
+				),
 				60 * 60
 			);
 
@@ -123,6 +136,8 @@ class SV_WP_Admin_Message_Handler {
 			$memo = get_transient( self::MESSAGE_TRANSIENT_PREFIX . $_GET[ self::MESSAGE_ID_GET_NAME ] );
 
 			if ( isset( $memo['errors'] ) )   $this->errors   = $memo['errors'];
+			if ( isset( $memo['warnings'] ) ) $this->warnings = $memo['warnings'];
+			if ( isset( $memo['infos'] ) )    $this->infos    = $memo['infos'];
 			if ( isset( $memo['messages'] ) ) $this->messages = $memo['messages'];
 
 			$this->clear_messages( $_GET[ self::MESSAGE_ID_GET_NAME ] );
@@ -153,6 +168,30 @@ class SV_WP_Admin_Message_Handler {
 
 
 	/**
+	 * Adds a warning message.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @param string $message warning message to add
+	 */
+	public function add_warning( $message ) {
+		$this->warnings[] = $message;
+	}
+
+
+	/**
+	 * Adds a info message.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @param string $message info message to add
+	 */
+	public function add_info( $message ) {
+		$this->infos[] = $message;
+	}
+
+
+	/**
 	 * Add a message.
 	 *
 	 * @since 1.0.0
@@ -171,6 +210,30 @@ class SV_WP_Admin_Message_Handler {
 	 */
 	public function error_count() {
 		return sizeof( $this->errors );
+	}
+
+
+	/**
+	 * Gets the warning message count.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return int warning message count
+	 */
+	public function warning_count() {
+		return sizeof( $this->warnings );
+	}
+
+
+	/**
+	 * Gets the info message count.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return int info message count
+	 */
+	public function info_count() {
+		return sizeof( $this->infos );
 	}
 
 
@@ -205,6 +268,56 @@ class SV_WP_Admin_Message_Handler {
 	 */
 	public function get_error( $index ) {
 		return isset( $this->errors[ $index ] ) ? $this->errors[ $index ] : '';
+	}
+
+
+	/**
+	 * Gets all warning messages.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return array
+	 */
+	public function get_warnings() {
+		return $this->warnings;
+	}
+
+
+	/**
+	 * Gets a specific warning message.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @param int $index warning message index
+	 * @return string
+	 */
+	public function get_warning( $index ) {
+		return isset( $this->warnings[ $index ] ) ? $this->warnings[ $index ] : '';
+	}
+
+
+	/**
+	 * Gets all info messages.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return array
+	 */
+	public function get_infos() {
+		return $this->infos;
+	}
+
+
+	/**
+	 * Gets a specific info message.
+	 *
+	 * @since 5.0.0-dev
+	 *
+	 * @param int $index info message index
+	 * @return string
+	 */
+	public function get_info( $index ) {
+		return isset( $this->infos[ $index ] ) ? $this->infos[ $index ] : '';
 	}
 
 
@@ -263,11 +376,19 @@ class SV_WP_Admin_Message_Handler {
 		}
 
 		if ( $this->error_count() > 0 ) {
-			echo '<div id="wp-admin-message-handler-error" class="error"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_errors() ) . '</strong></li></ul></div>';
+			echo '<div id="wp-admin-message-handler-error" class="notice-error notice"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_errors() ) . '</strong></li></ul></div>';
+		}
+
+		if ( $this->warning_count() > 0 ) {
+			echo '<div id="wp-admin-message-handler-warning"  class="notice-warning notice"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_warnings() ) . '</strong></li></ul></div>';
+		}
+
+		if ( $this->info_count() > 0 ) {
+			echo '<div id="wp-admin-message-handler-warning"  class="notice-info notice"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_infos() ) . '</strong></li></ul></div>';
 		}
 
 		if ( $this->message_count() > 0 ) {
-			echo '<div id="wp-admin-message-handler-message"  class="updated"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_messages() ) . '</strong></li></ul></div>';
+			echo '<div id="wp-admin-message-handler-message"  class="notice-success notice"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_messages() ) . '</strong></li></ul></div>';
 		}
 	}
 
