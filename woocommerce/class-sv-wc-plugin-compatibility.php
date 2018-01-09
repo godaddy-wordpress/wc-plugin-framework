@@ -38,8 +38,8 @@ if ( ! class_exists( 'SV_WC_Plugin_Compatibility' ) ) :
  * are dropped.
  *
  * Current Compatibility
- * + Core 2.5.5 - 3.0.x
- * + Subscriptions 1.5.x - 2.0.x
+ * + Core 2.6.14 - 3.3.x
+ * + Subscriptions 1.5.x - 2.2.x
  *
  * // TODO: move to /compatibility
  *
