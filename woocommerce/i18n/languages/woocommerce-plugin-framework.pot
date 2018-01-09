@@ -1,8 +1,8 @@
-# Copyright (C) 2017 
+# Copyright (C) 2017
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 4.8.1\n"
+"Project-Id-Version: WooCommerce Plugin Framework 4.8.3\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -268,8 +268,8 @@ msgstr ""
 msgid "%s Payment Tokens"
 msgstr ""
 
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-handler.php:291
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:666
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-handler.php:287
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:682
 msgid "Customer ID"
 msgstr ""
 
@@ -1456,68 +1456,92 @@ msgstr ""
 msgid "%1$s Payment Change Failed (%2$s)"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:501
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:517
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:1037
 msgid "Via %s ending in %s"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:528
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:544
 msgid "Subscriptions"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:598
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:614
 msgid ""
 "This payment method is tied to a subscription and cannot be deleted. Please "
 "switch the subscription to another method first."
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:608
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:624
 msgid "View Subscription"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:662
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:678
 msgid "Payment Token"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:690
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:695
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:706
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:711
 msgid "%s is required."
 msgstr ""
 
-#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:157
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:866
+msgid "%s0 Subscription Renewal Approved"
+msgstr ""
+
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:914
+msgid "%s Check Subscription Renewal Payment Approved: %s account ending in %s"
+msgstr ""
+
+#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:152
 msgid "Unknown Error"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:634
-msgid "Job data key \"%s\" not set"
+#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:746
+#. translators: Placeholders: %1$s - payment gateway title (such as
+#. Authorize.net, Braintree, etc), %2$s - payment method name (mastercard, bank
+#. account, etc), %3$s - last four digits of the card/account, %4$s -
+#. card/account expiry date
+msgid "%1$s Payment Method Saved: %2$s ending in %3$s (expires %4$s)"
+msgstr ""
+
+#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:757
+#. translators: Placeholders: %1$s - payment gateway title (such as CyberSouce,
+#. NETbilling, etc), %2$s - account type (checking/savings - may or may not be
+#. available), %3$s - last four digits of the account
+msgid "%1$s eCheck Payment Method Saved: %2$s account ending in %3$s"
 msgstr ""
 
 #: utilities/class-sv-wp-background-job-handler.php:638
+msgid "Job data key \"%s\" not set"
+msgstr ""
+
+#: utilities/class-sv-wp-background-job-handler.php:642
 msgid "Job data key \"%s\" is not an array"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:871
+#: utilities/class-sv-wp-background-job-handler.php:875
 msgid "Every %d Minutes"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:1029
+#: utilities/class-sv-wp-background-job-handler.php:1038
 msgid "Background Processing Test"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:1030
+#: utilities/class-sv-wp-background-job-handler.php:1039
 msgid "Run Test"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:1031
+#: utilities/class-sv-wp-background-job-handler.php:1040
 msgid ""
 "This tool will test whether your server is capable of processing background "
 "jobs."
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:1049
+#: utilities/class-sv-wp-background-job-handler.php:1058
 msgid "Success! You should be able to process background jobs."
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:1052
+#: utilities/class-sv-wp-background-job-handler.php:1061
 msgid ""
 "Could not connect. Please ask your hosting company to ensure your server "
 "has loopback connections enabled."
@@ -1625,7 +1649,7 @@ msgctxt "hash before order number"
 msgid "#"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:558
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:574
 msgctxt "hash before order number"
 msgid "#%s"
 msgstr ""
@@ -1634,4 +1658,14 @@ msgstr ""
 #. translators: https:www.skyverge.com/for-translators-environments/
 msgctxt "software environment"
 msgid "Production"
+msgstr ""
+
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:904
+msgctxt "woocommerce-plugin-framework"
+msgid "%s %s Subscription Renewal Payment Approved: %s ending in %s (expires %s)"
+msgstr ""
+
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:937
+msgctxt "woocommerce-plugin-framework"
+msgid "%s Renewal Payment Failed (%s)"
 msgstr ""

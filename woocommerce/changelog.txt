@@ -1,5 +1,13 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2017.12.11 - version 4.8.3
+ * Fix - Ensure failed order token meta is only copied to the parent subscription when a successful payment has occurred
+ * Fix - Don't reset the checkout password field if it's already visible
+
+2017.12.01 - version 4.8.2
+ * Fix - Fix a possible race condition when performing background processing health checks
+ * Fix - Account for possible false negatives when testing loopback connections in certain environments
+
 2017.11.27 - version 4.8.1
  * Fix - Fix Apple Pay compatibility with WooCommerce 3.2+
 
