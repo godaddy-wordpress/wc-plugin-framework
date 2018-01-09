@@ -49,6 +49,37 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Logs a doing_it_wrong message.
+	 *
+	 * Backports wc_doing_it_wrong() to WC 2.6.
+	 *
+	 * @since 4.8.4-dev
+	 *
+	 * @param string $function function used
+	 * @param string $message message to log
+	 * @param string $version version the message was added in
+	 */
+	public static function wc_doing_it_wrong( $function, $message, $version ) {
+
+		if ( self::is_wc_version_gte( '3.0' ) ) {
+
+			wc_doing_it_wrong( $function, $message, $version );
+
+		} else {
+
+			$message .= ' Backtrace: ' . wp_debug_backtrace_summary();
+
+			if ( is_ajax() ) {
+				do_action( 'doing_it_wrong_run', $function, $message, $version );
+				error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." );
+			} else {
+				_doing_it_wrong( $function, $message, $version );
+			}
+		}
+	}
+
+
+	/**
 	 * Formats a date for output.
 	 *
 	 * Backports WC 3.0.0's wc_format_datetime() to older versions.
