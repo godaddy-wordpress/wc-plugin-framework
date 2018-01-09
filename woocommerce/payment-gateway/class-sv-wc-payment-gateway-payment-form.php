@@ -546,11 +546,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 */
 	protected function get_manage_payment_methods_button_html() {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_6() ) {
-			$url = wc_get_page_permalink( 'myaccount' ) . '#wc-' . $this->get_gateway()->get_plugin()->get_id_dasherized() . '-my-payment-methods';
-		} else {
-			$url = wc_get_endpoint_url( 'payment-methods', '', wc_get_page_permalink( 'myaccount' ) );
-		}
+		$url = wc_get_endpoint_url( 'payment-methods', '', wc_get_page_permalink( 'myaccount' ) );
 
 		/**
 		 * Payment Form Manage Payment Methods Button Text Filter.
