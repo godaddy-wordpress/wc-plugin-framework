@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay_Orders' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_Apple_Pay_Orders' ) ) :
 
 /**
  * The Apple Pay order handler.
@@ -43,7 +45,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 	 *
 	 * @throws \SV_WC_Payment_Gateway_Exception
 	 */
-	public static function create_order( WC_Cart $cart ) {
+	public static function create_order( \WC_Cart $cart ) {
 
 		// ensure totals are fully calculated by simulating checkout in WC 3.1 or lower
 		// TODO: remove this when WC 3.2+ can be required {CW 2017-11-17}

@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( 'SV_WC_API_Request' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_API_Request' ) ) :
 
 /**
  * API Request
@@ -48,6 +50,26 @@ interface SV_WC_API_Request {
 	 * @return string the request path, or '' if none
 	 */
 	public function get_path();
+
+
+	/**
+	 * Gets the request query params.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @return array
+	 */
+	public function get_params();
+
+
+	/**
+	 * Gets the request data.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @return array
+	 */
+	public function get_data();
 
 
 	/**

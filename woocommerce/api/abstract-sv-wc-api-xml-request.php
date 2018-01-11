@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_API_XML_Request' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_API_XML_Request' ) ) :
 
 /**
  * Base XML API request class.
@@ -102,7 +104,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 			return $this->request_xml;
 		}
 
-		$this->xml = new XMLWriter();
+		$this->xml = new \XMLWriter();
 
 		// Create XML document in memory
 		$this->xml->openMemory();
@@ -110,7 +112,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 		// Set XML version & encoding
 		$this->xml->startDocument( '1.0', 'UTF-8' );
 
-		$request_data = $this->get_request_data();
+		$request_data = $this->get_data();
 
 		SV_WC_Helper::array_to_xml( $this->xml, $this->get_root_element(), $request_data[ $this->get_root_element() ] );
 
@@ -121,12 +123,28 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 
 
 	/**
-	 * Return the request data to be converted to XML
+	 * Gets the request data to be converted to XML.
 	 *
 	 * @since 4.3.0
+	 * @deprecated 5.0.0
+	 *
 	 * @return array
 	 */
 	public function get_request_data() {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __FUNCTION__, '5.0.0', 'SV_WC_API_XML_Request::get_data' );
+
+		return $this->get_data();
+	}
+
+
+	/**
+	 * Gets the request data to be converted to XML.
+	 *
+	 * @since 5.0.0
+	 * @return array
+	 */
+	public function get_data() {
 
 		return $this->request_data;
 	}
@@ -168,7 +186,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	 */
 	public function prettify_xml( $xml_string ) {
 
-		$dom = new DOMDocument();
+		$dom = new \DOMDocument();
 
 		// suppress errors for invalid XML syntax issues
 		if ( @$dom->loadXML( $xml_string ) ) {

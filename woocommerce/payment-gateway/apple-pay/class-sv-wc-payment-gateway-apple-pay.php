@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Payment_Gateway_Apple_Pay' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_Apple_Pay' ) ) :
 
 /**
  * Sets up Apple Pay support.
@@ -199,7 +201,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * @param \WC_Order $order order object
 	 * @return array
 	 */
-	protected function process_test_payment( WC_Order $order ) {
+	protected function process_test_payment( \WC_Order $order ) {
 
 		$order->payment_complete();
 
@@ -224,19 +226,19 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *
 	 * @throws \SV_WC_Payment_Gateway_Exception
 	 */
-	public function get_product_payment_request( WC_Product $product, $in_cart = false ) {
+	public function get_product_payment_request( \WC_Product $product, $in_cart = false ) {
 
 		if ( ! is_user_logged_in() ) {
 			WC()->session->set_customer_session_cookie( true );
 		}
 
 		// no subscription products
-		if ( $this->get_plugin()->is_subscriptions_active() && WC_Subscriptions_Product::is_subscription( $product ) ) {
+		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Product::is_subscription( $product ) ) {
 			throw new SV_WC_Payment_Gateway_Exception( 'Not available for subscription products.' );
 		}
 
 		// no pre-order "charge upon release" products
-		if ( $this->get_plugin()->is_pre_orders_active() && WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
+		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
 			throw new SV_WC_Payment_Gateway_Exception( 'Not available for pre-order products that are set to charge upon release.' );
 		}
 
@@ -293,11 +295,11 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 */
 	public function get_cart_payment_request( WC_Cart $cart ) {
 
-		if ( $this->get_plugin()->is_subscriptions_active() && WC_Subscriptions_Cart::cart_contains_subscription() ) {
+		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Cart::cart_contains_subscription() ) {
 			throw new SV_WC_Payment_Gateway_Exception( 'Cart contains subscriptions.' );
 		}
 
-		if ( $this->get_plugin()->is_pre_orders_active() && WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
+		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
 			throw new SV_WC_Payment_Gateway_Exception( 'Cart contains pre-orders.' );
 		}
 
@@ -407,7 +409,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * @param \WC_Cart $cart cart object
 	 * @return array
 	 */
-	protected function get_cart_totals( WC_Cart $cart ) {
+	protected function get_cart_totals( \WC_Cart $cart ) {
 
 		// ensure totals are fully calculated by simulating checkout in WC 3.1 or lower
 		// TODO: remove this when WC 3.2+ can be required {CW 2017-11-17}

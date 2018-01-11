@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_API_XML_Response' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_API_XML_Response' ) ) :
 
 /**
  * Base XML API response class.
@@ -55,7 +57,7 @@ abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 		$this->raw_response_xml = $raw_response_xml;
 
 		// LIBXML_NOCDATA ensures that any XML fields wrapped in [CDATA] will be included as text nodes
-		$this->response_xml = new SimpleXMLElement( $raw_response_xml, LIBXML_NOCDATA );
+		$this->response_xml = new \SimpleXMLElement( $raw_response_xml, LIBXML_NOCDATA );
 
 		/**
 		 * workaround to convert the horrible data structure that SimpleXMLElement returns
@@ -103,7 +105,7 @@ abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 
 		$response = $this->raw_response_xml;
 
-		$dom = new DOMDocument();
+		$dom = new \DOMDocument();
 
 		// suppress errors for invalid XML syntax issues
 		if ( @$dom->loadXML( $response ) ) {

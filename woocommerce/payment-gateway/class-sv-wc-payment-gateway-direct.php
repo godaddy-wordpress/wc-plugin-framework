@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Payment_Gateway_Direct' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_Direct' ) ) :
 
 /**
  * # WooCommerce Payment Gateway Framework Direct Gateway
@@ -32,47 +34,6 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Direct' ) ) :
  * @since 1.0.0
  */
 abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
-
-
-	/** Add new payment method feature */
-	const FEATURE_ADD_PAYMENT_METHOD = 'add_payment_method';
-
-	/** Admin token editor feature */
-	const FEATURE_TOKEN_EDITOR = 'token_editor';
-
-	/** Subscriptions integration ID */
-	const INTEGRATION_SUBSCRIPTIONS = 'subscriptions';
-
-	/** Pre-orders integration ID */
-	const INTEGRATION_PRE_ORDERS = 'pre_orders';
-
-	/** @var \SV_WC_Payment_Gateway_Payment_Tokens_Handler payment tokens handler instance */
-	protected $payment_tokens_handler;
-
-	/** @var array of SV_WC_Payment_Gateway_Integration objects for Subscriptions, Pre-Orders, etc. */
-	protected $integrations;
-
-
-	/**
-	 * Initialize the gateway
-	 *
-	 * See parent constructor for full method documentation
-	 *
-	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::__construct()
-	 * @param string $id the gateway id
-	 * @param SV_WC_Payment_Gateway_Plugin $plugin the parent plugin class
-	 * @param array $args gateway arguments
-	 */
-	public function __construct( $id, $plugin, $args ) {
-
-		// parent constructor
-		parent::__construct( $id, $plugin, $args );
-
-		$this->init_payment_tokens_handler();
-
-		$this->init_integrations();
-	}
 
 
 	/**
@@ -101,7 +62,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				}
 
 				// Check the CSC if enabled
-				if ( $this->is_credit_card_gateway() && $this->csc_enabled() ) {
+				if ( $this->is_credit_card_gateway() && $this->csc_enabled_for_tokens() ) {
 					$is_valid = $this->validate_csc( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' ) ) && $is_valid;
 				}
 
@@ -548,7 +509,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$order->payment->exp_month = $token->get_exp_month();
 				$order->payment->exp_year  = $token->get_exp_year();
 
-				if ( $this->csc_enabled() ) {
+				if ( $this->csc_enabled_for_tokens() ) {
 					$order->payment->csc = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
@@ -801,329 +762,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	}
 
 
-	/**
-	 * Adds the standard transaction data to the order
-	 *
-	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::add_transaction_data()
-	 * @param WC_Order $order the order object
-	 * @param SV_WC_Payment_Gateway_API_Response|null $response optional transaction response
-	 */
-	public function add_transaction_data( $order, $response = null ) {
-
-		// add parent transaction data
-		parent::add_transaction_data( $order, $response );
-
-		// payment info
-		if ( isset( $order->payment->token ) && $order->payment->token ) {
-			$this->update_order_meta( $order, 'payment_token', $order->payment->token );
-		}
-
-		// account number
-		if ( isset( $order->payment->account_number ) && $order->payment->account_number ) {
-			$this->update_order_meta( $order, 'account_four', substr( $order->payment->account_number, -4 ) );
-		}
-
-		if ( $this->is_credit_card_gateway() ) {
-
-			// credit card gateway data
-			if ( $response && $response instanceof SV_WC_Payment_Gateway_API_Authorization_Response ) {
-
-				if ( $response->get_authorization_code() ) {
-					$this->update_order_meta( $order, 'authorization_code', $response->get_authorization_code() );
-				}
-
-				if ( $order->payment_total > 0 ) {
-					// mark as captured
-					if ( $this->perform_credit_card_charge( $order ) ) {
-						$captured = 'yes';
-					} else {
-						$captured = 'no';
-					}
-					$this->update_order_meta( $order, 'charge_captured', $captured );
-				}
-
-			}
-
-			if ( isset( $order->payment->exp_year ) && $order->payment->exp_year && isset( $order->payment->exp_month ) && $order->payment->exp_month ) {
-				$this->update_order_meta( $order, 'card_expiry_date', $order->payment->exp_year . '-' . $order->payment->exp_month );
-			}
-
-			if ( isset( $order->payment->card_type ) && $order->payment->card_type ) {
-				$this->update_order_meta( $order, 'card_type', $order->payment->card_type );
-			}
-
-		} elseif ( $this->is_echeck_gateway() ) {
-
-			// checking gateway data
-
-			// optional account type (checking/savings)
-			if ( isset( $order->payment->account_type ) && $order->payment->account_type ) {
-				$this->update_order_meta( $order, 'account_type', $order->payment->account_type );
-			}
-
-			// optional check number
-			if ( isset( $order->payment->check_number ) && $order->payment->check_number ) {
-				$this->update_order_meta( $order, 'check_number', $order->payment->check_number );
-			}
-		}
-	}
-
-
-	/** Tokenization **************************************************/
-
-
-	/**
-	 * Initialize payment tokens handler.
-	 *
-	 * @since 4.3.0
-	 */
-	protected function init_payment_tokens_handler() {
-
-		$this->payment_tokens_handler = $this->build_payment_tokens_handler();
-	}
-
-
-	/**
-	 * Return the Payment Tokens Handler class instance. Concrete classes
-	 * can override this method to return a custom implementation.
-	 *
-	 * @since 4.3.0
-	 * @return \SV_WC_Payment_Gateway_Payment_Tokens_Handler
-	 */
-	protected function build_payment_tokens_handler() {
-
-		return new SV_WC_Payment_Gateway_Payment_Tokens_Handler( $this );
-	}
-
-
-	/**
-	 * Get the payment tokens handler instance.
-	 *
-	 * @since 4.3.0
-	 * @return \SV_WC_Payment_Gateway_Payment_Tokens_Handler
-	 */
-	public function get_payment_tokens_handler() {
-
-		return $this->payment_tokens_handler;
-	}
-
-
-	/**
-	 * Returns true if tokenization takes place prior authorization/charge
-	 * transaction.
-	 *
-	 * Defaults to false but can be overridden by child gateway class
-	 *
-	 * @since 2.1.0
-	 * @return boolean true if there is a tokenization request that is issued
-	 *         before a authorization/charge transaction
-	 */
-	public function tokenize_before_sale() {
-		return false;
-	}
-
-
-	/**
-	 * Returns true if authorization/charge requests also tokenize the payment
-	 * method.  False if this gateway has a separate "tokenize" method which
-	 * is always used.
-	 *
-	 * Defaults to false but can be overridden by child gateway class
-	 *
-	 * @since 2.0.0
-	 * @return boolean true if tokenization is combined with sales, false if
-	 *         there is a special request for tokenization
-	 */
-	public function tokenize_with_sale() {
-		return false;
-	}
-
-
-	/**
-	 * Returns true if tokenization takes place after an authorization/charge
-	 * transaction.
-	 *
-	 * Defaults to false but can be overridden by child gateway class
-	 *
-	 * @since 2.1.0
-	 * @return boolean true if there is a tokenization request that is issued
-	 *         after an authorization/charge transaction
-	 */
-	public function tokenize_after_sale() {
-		return false;
-	}
-
-
-	/**
-	 * Determine if the gateway supports the admin token editor feature.
-	 *
-	 * @since 4.3.0
-	 * @return boolean
-	 */
-	public function supports_token_editor() {
-		return $this->supports( self::FEATURE_TOKEN_EDITOR );
-	}
-
-
-	/** Integrations Feature **************************************************/
-
-
-	/**
-	 * Initialize supported integrations
-	 *
-	 * @since 4.1.0
-	 */
-	public function init_integrations() {
-
-		if ( $this->supports_subscriptions() ) {
-			$this->integrations[ self::INTEGRATION_SUBSCRIPTIONS ] = $this->build_subscriptions_integration();
-		}
-
-		if ( $this->supports_pre_orders() ) {
-			$this->integrations[ self::INTEGRATION_PRE_ORDERS ] = $this->build_pre_orders_integration();
-		}
-
-		/**
-		 * Payment Gateway Integrations Initialized Action.
-		 *
-		 * Fired when integrations (Subscriptons/Pre-Orders) have been loaded and
-		 * initialized.
-		 *
-		 * @since 4.1.0
-		 * @param \SV_WC_Payment_Gateway_Direct $this instance
-		 */
-		do_action( 'wc_payment_gateway_' . $this->get_id() . '_init_integrations', $this );
-	}
-
-
-	/**
-	 * Return an array of available integration objects
-	 *
-	 * @since 4.1.0
-	 * @return array
-	 */
-	public function get_integrations() {
-
-		return $this->integrations;
-	}
-
-
-	/**
-	 * Get the integration object for the given ID
-	 *
-	 * @since 4.1.0
-	 * @param string $id the integration ID, e.g. subscriptions
-	 * @return \SV_WC_Payment_Gateway_Integration|null
-	 */
-	public function get_integration( $id ) {
-
-		return isset( $this->integrations[ $id ] ) ? $this->integrations[ $id ] : null;
-	}
-
-
-	/**
-	 * A factory method to build and return the Subscriptions class instance.
-	 * Concrete classes can override this method to return a custom
-	 * implementation.
-	 *
-	 * @since 4.1.0
-	 * @return \SV_WC_Payment_Gateway_Integration_Subscriptions
-	 */
-	protected function build_subscriptions_integration() {
-
-		return new SV_WC_Payment_Gateway_Integration_Subscriptions( $this );
-	}
-
-
-	/**
-	 * Get the Subscriptions integration class instance
-	 *
-	 * @since 4.1.0
-	 * @return \SV_WC_Payment_Gateway_Integration_Subscriptions|null
-	 */
-	public function get_subscriptions_integration() {
-
-		return isset( $this->integrations[ self::INTEGRATION_SUBSCRIPTIONS ] ) ? $this->integrations[ self::INTEGRATION_SUBSCRIPTIONS ] : null;
-	}
-
-
-	/**
-	 * A factory method to build and return the Pre-Orders class instance.
-	 * Concrete classes can override this method to return a custom
-	 * implementation.
-	 *
-	 * @since 4.1.0
-	 * @return \SV_WC_Payment_Gateway_Integration_Pre_Orders
-	 */
-	protected function build_pre_orders_integration() {
-
-		return new SV_WC_Payment_Gateway_Integration_Pre_Orders( $this );
-	}
-
-
-	/**
-	 * Get the Pre-Orders integration class instance
-	 *
-	 * @since 4.1.0
-	 * @return \SV_WC_Payment_Gateway_Integration_Pre_Orders|null
-	 */
-	public function get_pre_orders_integration() {
-
-		return isset( $this->integrations[ self::INTEGRATION_PRE_ORDERS ] ) ? $this->integrations[ self::INTEGRATION_PRE_ORDERS ] : null;
-	}
-
-
-	/**
-	 * A gateway supports Subscriptions if all of the following are true:
-	 *
-	 * + Subscriptions is active
-	 * + tokenization is supported
-	 * + tokenization is enabled
-	 *
-	 * Concrete gateways can override this to conditionally support Subscriptions
-	 * based on certain settings (e.g. only when CSC is not required, etc.)
-	 *
-	 * @since 1.0.0
-	 * @return boolean true if the gateway supports subscriptions
-	 */
-	public function supports_subscriptions() {
-
-		return $this->get_plugin()->is_subscriptions_active() && $this->supports_tokenization() && $this->tokenization_enabled();
-	}
-
-
-	/**
-	 * A gateway supports Pre-Orders if all of the following are true:
-	 *
-	 * + Pre-Orders is active
-	 * + tokenization is supported
-	 * + tokenization is enabled
-	 *
-	 * Concrete gateways can override this to conditionally support Pre-Orders
-	 * based on certain settings (e.g. only when CSC is not required, etc.)
-	 *
-	 * @since 1.0.0
-	 * @return boolean true if the gateway supports pre-orders
-	 */
-	public function supports_pre_orders() {
-
-		return $this->get_plugin()->is_pre_orders_active() && $this->supports_tokenization() && $this->tokenization_enabled();
-	}
-
-
 	/** Add Payment Method feature ********************************************/
-
-
-	/**
-	 * Returns true if the gateway supports the add payment method feature
-	 *
-	 * @since 4.0.0
-	 * @return boolean true if the gateway supports add payment method feature
-	 */
-	public function supports_add_payment_method() {
-		return $this->supports( self::FEATURE_ADD_PAYMENT_METHOD );
-	}
 
 
 	/**
@@ -1154,20 +793,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		SV_WC_Helper::wc_add_notice( $result['message'], $result['success'] ? 'success' : 'error' );
 
-		// if successful, redirect to the newly added method
 		if ( $result['success'] ) {
-
-			// if this is WooCommerce 2.5.5 or older, redirect to the My Account page
-			if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_6() ) {
-
-				$redirect_url = wc_get_page_permalink( 'myaccount' );
-
-			// otherwise, redirect to the Payment Methods page (WC 2.6+)
-			} else {
-				$redirect_url = wc_get_account_endpoint_url( 'payment-methods' );
-			}
-
-		// otherwise, back to the Add Payment Method page
+			$redirect_url = wc_get_account_endpoint_url( 'payment-methods' );
 		} else {
 			$redirect_url = wc_get_endpoint_url( 'add-payment-method' );
 		}
@@ -1184,7 +811,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 4.0.0
 	 * @return array result with success/error message and request status (success/failure)
 	 */
-	protected function do_add_payment_method_transaction( WC_Order $order ) {
+	protected function do_add_payment_method_transaction( \WC_Order $order ) {
 
 		$response = $this->get_api()->tokenize_payment_method( $order );
 
@@ -1224,6 +851,17 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// add customer data, primarily customer ID to user meta
 			$this->add_add_payment_method_customer_data( $order, $response );
+
+			/**
+			 * Fires after a new payment method is added by a customer.
+			 *
+			 * @since 5.0.0
+			 *
+			 * @param string $token_id new token ID
+			 * @param int $user_id user ID
+			 * @param \SV_WC_Payment_Gateway_API_Response $response API response object
+			 */
+			do_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_method_added', $token->get_id(), $order->get_user_id(), $response );
 
 			$result = array( 'message' => $message, 'success' => true );
 
@@ -1274,7 +912,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	protected function get_order_for_add_payment_method() {
 
 		// mock order, as all gateway API implementations require an order object for tokenization
-		$order = new WC_Order( 0 );
+		$order = new \WC_Order( 0 );
 		$order = $this->get_order( $order );
 
 		$user = get_userdata( get_current_user_id() );

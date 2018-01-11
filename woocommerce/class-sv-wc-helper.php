@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Helper' ) ) :
 
 	/**
 	 * SkyVerge Helper Class
@@ -432,11 +434,11 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 
 			foreach ( $order->get_items() as $id => $item ) {
 
-				$line_item = new stdClass();
+				$line_item = new \stdClass();
 
 				// TODO: remove when WC 3.0 can be required
-				$name     = $item instanceof WC_Order_Item_Product ? $item->get_name() : $item['name'];
-				$quantity = $item instanceof WC_Order_Item_Product ? $item->get_quantity() : $item['qty'];
+				$name     = $item instanceof \WC_Order_Item_Product ? $item->get_name() : $item['name'];
+				$quantity = $item instanceof \WC_Order_Item_Product ? $item->get_quantity() : $item['qty'];
 
 				$item_desc = array();
 
@@ -482,7 +484,7 @@ if ( ! class_exists( 'SV_WC_Helper' ) ) :
 		 * @param \WC_Order $order the order object
 		 * @return bool
 		 */
-		public static function is_order_virtual( WC_Order $order ) {
+		public static function is_order_virtual( \WC_Order $order ) {
 
 			$is_virtual = true;
 

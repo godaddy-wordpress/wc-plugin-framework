@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Plugin_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Plugin_Compatibility' ) ) :
 
 /**
  * WooCommerce Compatibility Utility Class
@@ -71,7 +73,7 @@ class SV_WC_Plugin_Compatibility {
 				$format = wc_date_format();
 			}
 
-			if ( ! is_a( $date, 'SV_WC_DateTime' ) ) {
+			if ( ! is_a( $date, '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_DateTime' ) ) { // TODO: verify this {CW 2017-07-18}
 				return '';
 			}
 
@@ -81,86 +83,30 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
-	 * Backports wc_checkout_is_https() to 2.4.x
+	 * Logs a deprecated function notice.
 	 *
-	 * @since 4.3.0
-	 * @return bool
+	 * @since  5.0.0
+	 *
+	 * @param  string $function deprecated function name
+	 * @param  string $version deprecated-since version
+	 * @param  string $replacement replacement function name
 	 */
-	public static function wc_checkout_is_https() {
+	public static function wc_deprecated_function( $function, $version, $replacement = null ) {
 
-		if ( self::is_wc_version_gte_2_5() ) {
+		if ( self::is_wc_version_gte_3_0() ) {
 
-			return wc_checkout_is_https();
+			wc_deprecated_function( $function, $version, $replacement );
 
 		} else {
 
-			return wc_site_is_https() || 'yes' === get_option( 'woocommerce_force_ssl_checkout' ) || class_exists( 'WordPressHTTPS' ) || strstr( wc_get_page_permalink( 'checkout' ), 'https:' );
-		}
-	}
-
-
-	/**
-	 * Backports WC_Product::get_id() method to 2.4.x
-	 *
-	 * @link https://github.com/woothemes/woocommerce/pull/9765
-	 *
-	 * @since 4.2.0
-	 * @param \WC_Product $product product object
-	 * @return string|int product ID
-	 */
-	public static function product_get_id( WC_Product $product ) {
-
-		if ( self::is_wc_version_gte_2_5() ) {
-
-			return $product->get_id();
-
-		} else {
-
-			return $product->is_type( 'variation' ) ? $product->variation_id : $product->id;
-		}
-	}
-
-
-	/**
-	 * Backports wc_shipping_enabled() to < 2.6.0
-	 *
-	 * @since 4.7.0
-	 * @return bool
-	 */
-	public static function wc_shipping_enabled() {
-
-		if ( self::is_wc_version_gte_2_6() ) {
-
-			return wc_shipping_enabled();
-
-		} else {
-
-			return 'yes' === get_option( 'woocommerce_calc_shipping' );
-		}
-	}
-
-
-	/**
-	 * Backports wc_help_tip() to WC 2.4.x
-	 *
-	 * @link https://github.com/woothemes/woocommerce/pull/9417
-	 *
-	 * @since 4.2.0
-	 * @param string $tip help tip content, HTML allowed if $has_html is true
-	 * @param bool $has_html false by default, true to indicate tip content has HTML
-	 * @return string help tip HTML, a <span> in WC 2.5, <img> in WC 2.4
-	 */
-	public static function wc_help_tip( $tip, $has_html = false ) {
-
-		if ( self::is_wc_version_gte_2_5() ) {
-
-			return wc_help_tip( $tip, $has_html );
-
-		} else {
-
-			$tip = $has_html ? wc_sanitize_tooltip( $tip ) : esc_attr( $tip );
-
-			return sprintf( '<img class="help_tip" data-tip="%1$s" src="%2$s" height="16" width="16" />', $tip, esc_url( WC()->plugin_url() ) . '/assets/images/help.png' );
+			if ( is_ajax() ) {
+				do_action( 'deprecated_function_run', $function, $replacement, $version );
+				$log_string  = "The {$function} function is deprecated since version {$version}.";
+				$log_string .= $replacement ? " Replace with {$replacement}." : '';
+				error_log( $log_string );
+			} else {
+				_deprecated_function( $function, $version, $replacement );
+			}
 		}
 	}
 
@@ -174,50 +120,6 @@ class SV_WC_Plugin_Compatibility {
 	protected static function get_wc_version() {
 
 		return defined( 'WC_VERSION' ) && WC_VERSION ? WC_VERSION : null;
-	}
-
-
-	/**
-	 * Determines if the installed version of WooCommerce is 2.5.0 or greater.
-	 *
-	 * @since 4.2.0
-	 * @return bool
-	 */
-	public static function is_wc_version_gte_2_5() {
-		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.5', '>=' );
-	}
-
-
-	/**
-	 * Determines if the installed version of WooCommerce is less than 2.5.0
-	 *
-	 * @since 4.2.0
-	 * @return bool
-	 */
-	public static function is_wc_version_lt_2_5() {
-		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.5', '<' );
-	}
-
-
-	/**
-	 * Determines if the installed version of WooCommerce is 2.6.0 or greater.
-	 *
-	 * @since 4.4.0
-	 * @return bool
-	 */
-	public static function is_wc_version_gte_2_6() {
-		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.6', '>=' );
-	}
-
-
-	/**
-	 * Determines if the installed version of WooCommerce is less than 2.6.0
-	 *
-	 * @since 4.4.0
-	 * @return bool
-	 */
-	public static function is_wc_version_lt_2_6() {
-		return self::get_wc_version() && version_compare( self::get_wc_version(), '2.6', '<' );
 	}
 
 
@@ -353,7 +255,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	protected static function get_wc_subscriptions_version() {
 
-		return class_exists( 'WC_Subscriptions' ) && ! empty( WC_Subscriptions::$version ) ? WC_Subscriptions::$version : null;
+		return class_exists( 'WC_Subscriptions' ) && ! empty( \WC_Subscriptions::$version ) ? \WC_Subscriptions::$version : null;
 	}
 
 

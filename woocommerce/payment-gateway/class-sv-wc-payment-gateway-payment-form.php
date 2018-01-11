@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Payment_Gateway_Payment_Form' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
 
 /**
  * Payment Form Class
@@ -333,7 +335,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
 				'placeholder'       => esc_html__( 'CSC', 'woocommerce-plugin-framework' ),
-				'required'          => $this->get_gateway()->csc_required(),
+				'required'          => true,
 				'class'             => array( 'form-row-last' ),
 				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-csc' ),
 				'maxlength'         => 4,
@@ -485,7 +487,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 */
 	protected function get_sample_check_html() {
 
-		$image_url = WC_HTTPS::force_https_url( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/sample-check.png' );
+		$image_url = \WC_HTTPS::force_https_url( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/sample-check.png' );
 
 		$html = sprintf( '<div class="js-sv-wc-payment-gateway-echeck-form-sample-check" style="display: none;"><img width="541" height="270" src="%s" /></div>', esc_url( $image_url ) );;
 
@@ -546,11 +548,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 */
 	protected function get_manage_payment_methods_button_html() {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_6() ) {
-			$url = wc_get_page_permalink( 'myaccount' ) . '#wc-' . $this->get_gateway()->get_plugin()->get_id_dasherized() . '-my-payment-methods';
-		} else {
-			$url = wc_get_endpoint_url( 'payment-methods', '', wc_get_page_permalink( 'myaccount' ) );
-		}
+		$url = wc_get_endpoint_url( 'payment-methods', '', wc_get_page_permalink( 'myaccount' ) );
 
 		/**
 		 * Payment Form Manage Payment Methods Button Text Filter.
@@ -944,15 +942,16 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	public function render_js() {
 
 		$args = array(
-			'plugin_id'     => $this->get_gateway()->get_plugin()->get_id(),
-			'id'            => $this->get_gateway()->get_id(),
-			'id_dasherized' => $this->get_gateway()->get_id_dasherized(),
-			'type'          => $this->get_gateway()->get_payment_type(),
-			'csc_required'  => $this->get_gateway()->csc_required(),
+			'plugin_id'               => $this->get_gateway()->get_plugin()->get_id(),
+			'id'                      => $this->get_gateway()->get_id(),
+			'id_dasherized'           => $this->get_gateway()->get_id_dasherized(),
+			'type'                    => $this->get_gateway()->get_payment_type(),
+			'csc_required'            => $this->get_gateway()->csc_enabled(),
+			'csc_required_for_tokens' => $this->get_gateway()->csc_enabled_for_tokens(),
 		);
 
 		if ( $this->get_gateway()->supports_card_types() ) {
-			$args['enabled_card_types'] = array_map( array( 'SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
+			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_0_0\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
 		}
 
 		/**

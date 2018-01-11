@@ -1,8 +1,9 @@
 <?php
 
-namespace SkyVerge\WC_Plugin_Framework\Unit_Tests;
+namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
+use \SkyVerge\WooCommerce\PluginFramework\v5_0_0 as PluginFramework;
 
 /**
  * Unit tests for \SV_WC_Payment_Gateway_API_Response_Message_Helper
@@ -20,7 +21,7 @@ class Payment_Gateway_API_Response_Message_Helper extends Test_Case {
 	 */
 	public function test_get_user_messages( $message_ids, $expected ) {
 
-		$helper = new \SV_WC_Payment_Gateway_API_Response_Message_Helper;
+		$helper = new PluginFramework\SV_WC_Payment_Gateway_API_Response_Message_Helper;
 
 		Mock::wpPassthruFunction( 'esc_html__' );
 
@@ -53,7 +54,7 @@ class Payment_Gateway_API_Response_Message_Helper extends Test_Case {
 	 */
 	public function test_get_user_message( $message_id, $expected ) {
 
-		$helper = new \SV_WC_Payment_Gateway_API_Response_Message_Helper;
+		$helper = new PluginFramework\SV_WC_Payment_Gateway_API_Response_Message_Helper;
 
 		Mock::wpPassthruFunction( 'esc_html__' );
 

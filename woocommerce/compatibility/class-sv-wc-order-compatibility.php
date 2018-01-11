@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Order_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Order_Compatibility' ) ) :
 
 /**
  * WooCommerce order compatibility class.
@@ -60,7 +62,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @return \WC_DateTime|null
 	 */
-	public static function get_date_created( WC_Order $order, $context = 'edit' ) {
+	public static function get_date_created( \WC_Order $order, $context = 'edit' ) {
 
 		return self::get_date_prop( $order, 'created', $context );
 	}
@@ -76,7 +78,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @return \WC_DateTime|null
 	 */
-	public static function get_date_modified( WC_Order $order, $context = 'edit' ) {
+	public static function get_date_modified( \WC_Order $order, $context = 'edit' ) {
 
 		return self::get_date_prop( $order, 'modified', $context );
 	}
@@ -92,7 +94,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @return \WC_DateTime|null
 	 */
-	public static function get_date_paid( WC_Order $order, $context = 'edit' ) {
+	public static function get_date_paid( \WC_Order $order, $context = 'edit' ) {
 
 		return self::get_date_prop( $order, 'paid', $context );
 	}
@@ -108,7 +110,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @return \WC_DateTime|null
 	 */
-	public static function get_date_completed( WC_Order $order, $context = 'edit' ) {
+	public static function get_date_completed( \WC_Order $order, $context = 'edit' ) {
 
 		return self::get_date_prop( $order, 'completed', $context );
 	}
@@ -127,7 +129,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @return \WC_DateTime|null
 	 */
-	public static function get_date_prop( WC_Order $order, $type, $context = 'edit' ) {
+	public static function get_date_prop( \WC_Order $order, $type, $context = 'edit' ) {
 
 		$date = null;
 		$prop = "date_{$type}";
@@ -147,10 +149,10 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 				try {
 
-					$date = new SV_WC_DateTime( $date, new DateTimeZone( wc_timezone_string() ) );
-					$date->setTimezone( new DateTimeZone( wc_timezone_string() ) );
+					$date = new SV_WC_DateTime( $date, new \DateTimeZone( wc_timezone_string() ) );
+					$date->setTimezone( new \DateTimeZone( wc_timezone_string() ) );
 
-				} catch ( Exception $e ) {
+				} catch ( \Exception $e ) {
 
 					$date = null;
 				}
@@ -217,11 +219,11 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @param int $discount_tax the discount tax amount.
 	 * @return int the order item ID
 	 */
-	public static function add_coupon( WC_Order $order, $code = array(), $discount = 0, $discount_tax = 0 ) {
+	public static function add_coupon( \WC_Order $order, $code = array(), $discount = 0, $discount_tax = 0 ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
-			$item = new WC_Order_Item_Coupon();
+			$item = new \WC_Order_Item_Coupon();
 
 			$item->set_props( array(
 				'code'         => $code,
@@ -251,11 +253,11 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @param object $fee the fee to add
 	 * @return int the order item ID
 	 */
-	public static function add_fee( WC_Order $order, $fee ) {
+	public static function add_fee( \WC_Order $order, $fee ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
-			$item = new WC_Order_Item_Fee();
+			$item = new \WC_Order_Item_Fee();
 
 			$item->set_props( array(
 				'name'      => $fee->name,
@@ -290,11 +292,11 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @param \WC_Shipping_Rate $shipping_rate shipping rate to add
 	 * @return int the order item ID
 	 */
-	public static function add_shipping( WC_Order $order, $shipping_rate ) {
+	public static function add_shipping( \WC_Order $order, $shipping_rate ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
-			$item = new WC_Order_Item_Shipping();
+			$item = new \WC_Order_Item_Shipping();
 
 			$item->set_props( array(
 				'method_title' => $shipping_rate->label,
@@ -332,11 +334,11 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @param float $shipping_tax_amount shipping tax amount
 	 * @return int order item ID
 	 */
-	public static function add_tax( WC_Order $order, $tax_rate_id, $tax_amount = 0, $shipping_tax_amount = 0 ) {
+	public static function add_tax( \WC_Order $order, $tax_rate_id, $tax_amount = 0, $shipping_tax_amount = 0 ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
-			$item = new WC_Order_Item_Tax();
+			$item = new \WC_Order_Item_Tax();
 
 			$item->set_props( array(
 				'rate_id'            => $tax_rate_id,
@@ -374,7 +376,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * }
 	 * @return int|bool the order item ID or false on failure
 	 */
-	public static function update_coupon( WC_Order $order, $item, $args ) {
+	public static function update_coupon( \WC_Order $order, $item, $args ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
@@ -427,7 +429,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * }
 	 * @return int|bool the order item ID or false on failure
 	 */
-	public static function update_fee( WC_Order $order, $item, $args ) {
+	public static function update_fee( \WC_Order $order, $item, $args ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 
@@ -462,7 +464,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @since 4.6.0
 	 * @param \WC_Order $order the order object
 	 */
-	public static function reduce_stock_levels( WC_Order $order ) {
+	public static function reduce_stock_levels( \WC_Order $order ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 			wc_reduce_stock_levels( $order->get_id() );
@@ -478,7 +480,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @since 4.6.0
 	 * @param \WC_Order $order the order object
 	 */
-	public static function update_total_sales_counts( WC_Order $order ) {
+	public static function update_total_sales_counts( \WC_Order $order ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 			wc_update_total_sales_counts( $order->get_id() );
@@ -504,7 +506,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @return bool
 	 */
-	public static function has_shipping_address( WC_Order $order ) {
+	public static function has_shipping_address( \WC_Order $order ) {
 
 		return self::get_prop( $order, 'shipping_address_1' ) || self::get_prop( $order, 'shipping_address_2' );
 	}
@@ -525,7 +527,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_item_formatted_meta_data( $item, $hideprefix = '_', $include_all = false ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_1() && $item instanceof WC_Order_Item ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_1() && $item instanceof \WC_Order_Item ) {
 
 			$meta_data = $item->get_formatted_meta_data( $hideprefix, $include_all );
 			$item_meta = array();
@@ -540,7 +542,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		} else {
 
-			$item_meta = new WC_Order_Item_Meta( $item );
+			$item_meta = new \WC_Order_Item_Meta( $item );
 			$item_meta = $item_meta->get_formatted( $hideprefix );
 		}
 

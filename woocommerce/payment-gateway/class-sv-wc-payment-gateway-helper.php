@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Payment_Gateway_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_Helper' ) ) :
 
 /**
  * SkyVerge Payment Gateway Helper Class
@@ -136,13 +138,6 @@ class SV_WC_Payment_Gateway_Helper {
 
 		// card type regex patterns from https://github.com/stripe/jquery.payment/blob/master/src/jquery.payment.coffee
 		$types = array(
-
-			// these are kept for backwards compatibility since some gateways check
-			// against this method's returned value.
-			// TODO: remove these once the offending gateways use the below constants {CW 2016-09-29}
-			'mc'     => '/^(5[1-5]|2[2-7])/',
-			'diners' => '/^(36|38|30[0-5])/',
-
 			self::CARD_TYPE_VISA       => '/^4/',
 			self::CARD_TYPE_MASTERCARD => '/^(5[1-5]|2[2-7])/',
 			self::CARD_TYPE_AMEX       => '/^3[47]/',

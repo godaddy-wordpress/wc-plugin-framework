@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Payment_Gateway_Integration' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_Integration' ) ) :
 
 /**
  * Abstract Integration
@@ -44,7 +46,7 @@ abstract class SV_WC_Payment_Gateway_Integration {
 	 * @since 4.1.0
 	 * @param \SV_WC_Payment_Gateway_Direct $gateway direct gateway instance
 	 */
-	public function __construct( SV_WC_Payment_Gateway_Direct $gateway ) {
+	public function __construct( SV_WC_Payment_Gateway $gateway ) {
 
 		$this->gateway = $gateway;
 	}

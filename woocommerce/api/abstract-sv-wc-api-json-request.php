@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_API_JSON_Request' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_API_JSON_Request' ) ) :
 
 /**
  * Base JSON API request class.
@@ -89,7 +91,7 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 	 * @since 4.5.0
 	 * @return array
 	 */
-	protected function get_data() {
+	public function get_data() {
 		return $this->data;
 	}
 
@@ -107,10 +109,6 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 	public function to_string() {
 
 		$data = $this->get_data();
-
-		if ( empty( $data ) && ! in_array( strtoupper( $this->get_method() ), array( 'GET', 'HEAD' ) ) ) {
-			$data = $this->get_params();
-		}
 
 		return ! empty( $data ) ? json_encode( $data ) : '';
 	}

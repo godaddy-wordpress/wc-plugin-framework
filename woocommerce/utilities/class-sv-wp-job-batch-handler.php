@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-defined( 'ABSPATH' ) or exit;
+ namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
 
-if ( ! class_exists( 'SV_WP_Job_Batch_Handler' ) ) :
+ defined( 'ABSPATH' ) or exit;
+
+ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WP_Job_Batch_Handler' ) ) :
 
 /**
  * The job batch handler class.
@@ -37,10 +39,10 @@ if ( ! class_exists( 'SV_WP_Job_Batch_Handler' ) ) :
 class SV_WP_Job_Batch_Handler {
 
 
-	/** @var \SV_WP_Background_Job_Handler job handler instance */
+	/** @var SV_WP_Background_Job_Handler job handler instance */
 	protected $job_handler;
 
-	/** @var \SV_WC_Plugin $plugin WC plugin instance */
+	/** @var SV_WC_Plugin $plugin WC plugin instance */
 	protected $plugin;
 
 	/** @var int default items per batch */
@@ -52,8 +54,8 @@ class SV_WP_Job_Batch_Handler {
 	 *
 	 * @since 4.8.0
 	 *
-	 * @param \SV_WP_Background_Job_Handler $job_handler job handler instance
-	 * @param \SV_WC_Plugin $plugin WC plugin instance
+	 * @param SV_WP_Background_Job_Handler $job_handler job handler instance
+	 * @param SV_WC_Plugin $plugin WC plugin instance
 	 */
 	public function __construct( $job_handler, SV_WC_Plugin $plugin ) {
 
@@ -108,7 +110,7 @@ class SV_WP_Job_Batch_Handler {
 		 * @since 4.8.0
 		 *
 		 * @param array $args arguments to pass to the JavaScript batch handler
-		 * @param \SV_WP_Job_Batch_Handler $handler handler object
+		 * @param SV_WP_Job_Batch_Handler $handler handler object
 		 */
 		$args = apply_filters( $this->get_job_handler()->get_identifier() . '_batch_handler_js_args', $this->get_js_args(), $this );
 
@@ -217,7 +219,7 @@ class SV_WP_Job_Batch_Handler {
 	 * @param object $job job object
 	 * @return object $job job object
 	 *
-	 * @throws \SV_WC_Plugin_Exception
+	 * @throws SV_WC_Plugin_Exception
 	 */
 	protected function process_job_status( $job ) {
 
@@ -237,7 +239,7 @@ class SV_WP_Job_Batch_Handler {
 	 *
 	 * @param string $job_id job to process
 	 * @return object $job job after processing the batch
-	 * @throws \SV_WC_Plugin_Exception
+	 * @throws SV_WC_Plugin_Exception
 	 */
 	public function process_batch( $job_id ) {
 
@@ -278,7 +280,7 @@ class SV_WP_Job_Batch_Handler {
 	 *
 	 * @since 4.8.0
 	 *
-	 * @return \SV_WP_Background_Job_Handler
+	 * @return SV_WP_Background_Job_Handler
 	 */
 	protected function get_job_handler() {
 
@@ -291,7 +293,7 @@ class SV_WP_Job_Batch_Handler {
 	 *
 	 * @since 4.8.0
 	 *
-	 * @return \SV_WP_Plugin
+	 * @return SV_WP_Plugin
 	 */
 	protected function get_plugin() {
 

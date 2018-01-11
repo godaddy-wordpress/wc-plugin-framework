@@ -141,6 +141,14 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 
 	table.sv-wc-payment-gateway-my-payment-methods-table {
 
+		tr td.sv-wc-payment-gateway-payment-method-title::before {
+			content: '';
+		}
+
+		.sv-wc-payment-gateway-payment-method-title img {
+			float: left;
+		}
+
 		td.sv-wc-payment-gateway-payment-method-actions {
 			text-align: left;
 

@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( 'SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response' ) ) :
 
 /**
  * WooCommerce Payment Gateway API Payment Credit Card Notification Response
@@ -34,24 +36,6 @@ if ( ! interface_exists( 'SV_WC_Payment_Gateway_API_Payment_Notification_Credit_
  * @since 2.2.0
  */
 interface SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response extends SV_WC_Payment_Gateway_API_Payment_Notification_Response, SV_WC_Payment_Gateway_API_Authorization_Response {
-
-
-	/**
-	 * Returns true if this is an authorization response
-	 *
-	 * @since 2.2.0
-	 * @return boolean true if this is an authorization response
-	 */
-	public function is_authorization();
-
-
-	/**
-	 * Returns true if this is an charge response
-	 *
-	 * @since 2.2.0
-	 * @return boolean true if this is a charge response
-	 */
-	public function is_charge();
 
 
 	/**

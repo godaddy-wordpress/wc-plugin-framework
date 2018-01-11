@@ -22,7 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
+
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_Payment_Tokens_Handler' ) ) :
 
 /**
  * Handle the payment tokenization related functionality.
@@ -45,7 +49,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @since 4.3.0
 	 * @param \SV_WC_Payment_Gateway_Direct $gateway The gateway instance
 	 */
-	public function __construct( SV_WC_Payment_Gateway_Direct $gateway ) {
+	public function __construct( SV_WC_Payment_Gateway $gateway ) {
 
 		$this->gateway = $gateway;
 
@@ -86,13 +90,14 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * data to the order post record.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param \WC_Order $order The order object
 	 * @param \SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response Optional. Payment token API response, or null if the request should be made
 	 * @param string $environment_id Optional. Environment ID. Default: the current environment.
 	 * @throws \SV_WC_Payment_Gateway_Exception on transaction failure
 	 * @return \WC_Order The order object
 	 */
-	public function create_token( WC_Order $order, $response = null, $environment_id = null ) {
+	public function create_token( \WC_Order $order, $response = null, $environment_id = null ) {
 
 		$gateway = $this->get_gateway();
 
@@ -806,3 +811,5 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		return $this->gateway;
 	}
 }
+
+endif;

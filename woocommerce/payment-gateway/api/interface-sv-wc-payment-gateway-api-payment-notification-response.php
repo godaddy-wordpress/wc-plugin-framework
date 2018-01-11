@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( 'SV_WC_Payment_Gateway_API_Payment_Notification_Response' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_API_Payment_Notification_Response' ) ) :
 
 /**
  * WooCommerce Payment Gateway API Payment Notification Response
@@ -44,16 +46,6 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 	 * @throws Exception if there was a serious error finding the order id
 	 */
 	public function get_order_id();
-
-
-	/**
-	 * Returns the order associated with this response
-	 *
-	 * @since 2.1.0
-	 * @return WC_Order the order associated with this response, or null if it could not be determined
-	 * @throws Exception if there was a serious error finding the order
-	 */
-	public function get_order();
 
 
 	/**
@@ -82,7 +74,7 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 	 * @since 4.3.0
 	 * @return bool
 	 */
-	// public function is_ipn();
+	public function is_ipn();
 
 
 }

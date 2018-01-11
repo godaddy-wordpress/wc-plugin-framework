@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( 'SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Plugin' ) ) :
 
 /**
  * # WooCommerce Plugin Framework
@@ -34,13 +36,13 @@ if ( ! class_exists( 'SV_WC_Plugin' ) ) :
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 4.8.3
+ * @version 5.0.0
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '4.8.3';
+	const VERSION = '5.0.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -66,17 +68,14 @@ abstract class SV_WC_Plugin {
 	/** @var array string names of required PHP extensions */
 	private $dependencies = array();
 
-	/** @var array string names of required PHP functions */
-	private $function_dependencies = array();
-
 	/** @var string the plugin text domain */
 	private $text_domain;
 
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
 
-	/** @var bool whether a PHP upgrade notice should be displayed in the admin */
-	private $display_php_notice = false;
+	/** @var bool whether to display the PHP version notice */
+	private $display_php_notice;
 
 
 	/**
@@ -105,28 +104,19 @@ abstract class SV_WC_Plugin {
 	public function __construct( $id, $version, $args = array() ) {
 
 		// required params
-		$this->id          = $id;
-		$this->version     = $version;
+		$this->id      = $id;
+		$this->version = $version;
 
-		$dependencies = isset( $args['dependencies'] ) ? $args['dependencies'] : array();
+		$args = wp_parse_args( $args, array(
+			'dependencies'       => array(),
+			'text_domain'        => '',
+			'display_php_notice' => false,
+		) );
 
-		// for backwards compatibility
-		if ( empty( $dependencies['functions'] ) && ! empty( $args['function_dependencies'] ) ) {
-			$dependencies['functions'] = $args['function_dependencies'];
-		}
+		$this->set_dependencies( $args['dependencies'] );
 
-		$this->set_dependencies( $dependencies );
-
-		if ( isset( $args['text_domain'] ) ) {
-			$this->text_domain = $args['text_domain'];
-		}
-
-		if ( isset( $args['display_php_notice'] ) ) {
-			$this->display_php_notice = $args['display_php_notice'];
-		}
-
-		// include library files after woocommerce is loaded
-		add_action( 'sv_wc_framework_plugins_loaded', array( $this, 'lib_includes' ) );
+		$this->text_domain        = $args['text_domain'];
+		$this->display_php_notice = $args['display_php_notice'];
 
 		// includes that are required to be available at all times
 		$this->includes();
@@ -136,22 +126,19 @@ abstract class SV_WC_Plugin {
 		// Admin
 		if ( is_admin() && ! is_ajax() ) {
 
-			// admin message handler
-			require_once( $this->get_framework_path() . '/class-sv-wp-admin-message-handler.php' );
-
 			// render any admin notices, delayed notices, and
 			add_action( 'admin_notices', array( $this, 'add_admin_notices'            ), 10 );
 			add_action( 'admin_footer',  array( $this, 'add_delayed_admin_notices'    ), 10 );
 
 			// add a 'Configure' link to the plugin action links
-			add_filter( 'plugin_action_links_' . plugin_basename( $this->get_file() ), array( $this, 'plugin_action_links' ) );
+			add_filter( 'plugin_action_links_' . plugin_basename( $this->get_plugin_file() ), array( $this, 'plugin_action_links' ) );
 
 			// defer until WP/WC has fully loaded
 			add_action( 'wp_loaded', array( $this, 'do_install' ) );
 
 			// register activation/deactivation hooks for convenience
-			register_activation_hook(   $this->get_file(), array( $this, 'activate' ) );
-			register_deactivation_hook( $this->get_file(), array( $this, 'deactivate' ) );
+			register_activation_hook(   $this->get_plugin_file(), array( $this, 'activate' ) );
+			register_deactivation_hook( $this->get_plugin_file(), array( $this, 'deactivate' ) );
 		}
 
 		// automatically log HTTP requests from SV_WC_API_Base
@@ -228,7 +215,7 @@ abstract class SV_WC_Plugin {
 	 * @since 4.5.0
 	 */
 	protected function load_plugin_textdomain() {
-		$this->load_textdomain( $this->text_domain, dirname( plugin_basename( $this->get_file() ) ) );
+		$this->load_textdomain( $this->text_domain, dirname( plugin_basename( $this->get_plugin_file() ) ) );
 	}
 
 
@@ -249,20 +236,6 @@ abstract class SV_WC_Plugin {
 		load_textdomain( $textdomain, WP_LANG_DIR . '/' . $textdomain . '/' . $textdomain . '-' . $locale . '.mo' );
 
 		load_plugin_textdomain( $textdomain, false, untrailingslashit( $path ) . '/i18n/languages' );
-	}
-
-
-	/**
-	 * Include required library files
-	 *
-	 * @since 2.0.0
-	 */
-	public function lib_includes() {
-
-		if ( is_admin() ) {
-			// instantiate the admin notice handler
-			$this->get_admin_notice_handler();
-		}
 	}
 
 
@@ -303,6 +276,11 @@ abstract class SV_WC_Plugin {
 		// JSON API base
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
+
+		if ( is_admin() ) {
+			// instantiate the admin notice handler
+			$this->get_admin_notice_handler();
+		}
 	}
 
 
@@ -818,7 +796,7 @@ abstract class SV_WC_Plugin {
 		}
 
 		if ( ! is_object( $this->logger ) ) {
-			$this->logger = new WC_Logger();
+			$this->logger = new \WC_Logger();
 		}
 
 		$this->logger->add( $log_id, $message );
@@ -842,6 +820,21 @@ abstract class SV_WC_Plugin {
 
 
 	/** Getter methods ******************************************************/
+
+
+	/**
+	 * Gets the main plugin file.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @return string
+	 */
+	public function get_plugin_file() {
+
+		$slug = dirname( plugin_basename( $this->get_file() ) );
+
+		return trailingslashit( $slug ) . $slug . '.php';
+	}
 
 
 	/**
@@ -1167,9 +1160,10 @@ abstract class SV_WC_Plugin {
 	public function get_message_handler() {
 
 		if ( is_object( $this->message_handler ) ) {
-
 			return $this->message_handler;
 		}
+
+		require_once( $this->get_framework_path() . '/class-sv-wp-admin-message-handler.php' );
 
 		return $this->message_handler = new SV_WP_Admin_Message_Handler( $this->get_id() );
 	}

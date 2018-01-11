@@ -25,12 +25,13 @@ jQuery( document ).ready ($) ->
 		# Returns SV_WC_Payment_Form_Handler instance
 		constructor: (args) ->
 
-			@id                 = args.id
-			@id_dasherized      = args.id_dasherized
-			@plugin_id          = args.plugin_id
-			@type               = args.type
-			@csc_required       = args.csc_required
-			@enabled_card_types = args.enabled_card_types
+			@id                      = args.id
+			@id_dasherized           = args.id_dasherized
+			@plugin_id               = args.plugin_id
+			@type                    = args.type
+			@csc_required            = args.csc_required
+			@csc_required_for_tokens = args.csc_required_for_tokens
+			@enabled_card_types      = args.enabled_card_types
 
 			# which payment form?
 			if $( 'form.checkout' ).length
@@ -200,7 +201,8 @@ jQuery( document ).ready ($) ->
 					errors.push( @params.cvv_digits_invalid ) if /\D/.test( csc )
 					errors.push( @params.cvv_length_invalid ) if csc.length < 3 || csc.length > 4
 				else if @csc_required
-					errors.push( @params.cvv_missing )
+					if not @saved_payment_method_selected or @csc_required_for_tokens
+						errors.push( @params.cvv_missing )
 
 			# Only validate the other CC fields if necessary
 			if not @saved_payment_method_selected
@@ -292,7 +294,10 @@ jQuery( document ).ready ($) ->
 
 			# make available inside change events
 			id_dasherized = @id_dasherized
-			csc_required  = @csc_required
+
+			csc_required             = @csc_required
+			csc_required_for_tokens  = @csc_required_for_tokens
+
 			$new_payment_method_selection = $( "div.js-wc-#{ id_dasherized }-new-payment-method-form" )
 			$csc_field = $new_payment_method_selection.find( '.js-sv-wc-payment-gateway-credit-card-form-csc' ).parent()
 
@@ -306,7 +311,7 @@ jQuery( document ).ready ($) ->
 					$new_payment_method_selection.slideUp( 200 )
 
 					# move the CSC field out of the 'new method' fields so it can be used with the tokenized transaction
-					if csc_required
+					if csc_required_for_tokens
 						$csc_field.removeClass( 'form-row-last' ).addClass( 'form-row-first' )
 						$new_payment_method_selection.after( $csc_field )
 
@@ -315,7 +320,7 @@ jQuery( document ).ready ($) ->
 					$new_payment_method_selection.slideDown( 200 )
 
 					# move the CSC field back into its regular spot
-					if csc_required
+					if csc_required_for_tokens
 						$csc_field.removeClass( 'form-row-first' ).addClass( 'form-row-last' )
 						$new_payment_method_selection.find( '.js-sv-wc-payment-gateway-credit-card-form-expiry' ).parent().after( $csc_field )
 			.change()

@@ -1,8 +1,9 @@
 <?php
 
-namespace SkyVerge\WC_Plugin_Framework\Unit_Tests;
+namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
+use \SkyVerge\WooCommerce\PluginFramework\v5_0_0 as PluginFramework;
 
 /**
  * Plugin Test
@@ -14,7 +15,7 @@ class Plugin extends Test_Case {
 
 	public function test_constructor() {
 
-		$this->assertInstanceOf( 'SV_WC_Plugin', $this->plugin() );
+		$this->assertInstanceOf( '\SkyVerge\WooCommerce\PluginFramework\v5_0_0\SV_WC_Plugin', $this->plugin() );
 	}
 
 	public function test_clone() {
@@ -30,13 +31,6 @@ class Plugin extends Test_Case {
 		clone $this->plugin();
 
 		$this->expectOutputString( 'foo' );
-	}
-
-	public function test_lib_includes() {
-
-		$this->plugin()->lib_includes();
-
-		$this->assertInstanceOf( 'SV_WC_Admin_Notice_Handler', $this->plugin()->get_admin_notice_handler() );
 	}
 
 	public function test_plug_action_links() {
@@ -102,9 +96,10 @@ MSG;
 
 		// functions used as part of constructor
 		Mock::wpPassthruFunction( 'untrailingslashit' );
+		Mock::wpPassthruFunction( 'trailingslashit' );
 
 		Mock::wpFunction( 'plugin_dir_path', array(
-			'args' => bootstrap()->get_framework_path() . '/woocommerce/class-sv-wc-plugin.php',
+			'args'   => bootstrap()->get_framework_path() . '/woocommerce/class-sv-wc-plugin.php',
 			'return' => bootstrap()->get_framework_path() . '/woocommerce',
 		) );
 
@@ -131,10 +126,12 @@ MSG;
 			array(
 				'dependencies'          => array( 'json' ),
 				'function_dependencies' => array( 'ftp_ssl_connect' ),
+				'text_domain'           => 'mock',
+				'display_php_notice'    => true,
 			),
 		);
 
-		return $this->getMockBuilder( 'SV_WC_Plugin' )
+		return $this->getMockBuilder( '\SkyVerge\WooCommerce\PluginFramework\v5_0_0\SV_WC_Plugin' )
 							 ->setConstructorArgs( $args )
 							 ->getMockForAbstractClass();
 	}

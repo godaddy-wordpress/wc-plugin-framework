@@ -1,8 +1,9 @@
 <?php
 
-namespace SkyVerge\WC_Plugin_Framework\Unit_Tests;
+namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
+use \SkyVerge\WooCommerce\PluginFramework\v5_0_0 as PluginFramework;
 
 /**
  * Unit tests for \SV_WC_Payment_Gateway_Apple_Pay_API_Response
@@ -19,7 +20,7 @@ class Payment_Gateway_Apple_Pay_API_Response extends Test_Case {
 	 */
 	public function test_get_status_code() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_API_Response( $this->get_error_response_data() );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_API_Response( $this->get_error_response_data() );
 
 		$this->assertEquals( '123', $response->get_status_code() );
 	}
@@ -32,7 +33,7 @@ class Payment_Gateway_Apple_Pay_API_Response extends Test_Case {
 	 */
 	public function test_get_status_code_blank() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_API_Response( '' );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_API_Response( '' );
 
 		$this->assertNull( $response->get_status_code() );
 	}
@@ -45,7 +46,7 @@ class Payment_Gateway_Apple_Pay_API_Response extends Test_Case {
 	 */
 	public function test_get_status_message() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_API_Response( $this->get_error_response_data() );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_API_Response( $this->get_error_response_data() );
 
 		$this->assertEquals( 'Error', $response->get_status_message() );
 	}
@@ -58,7 +59,7 @@ class Payment_Gateway_Apple_Pay_API_Response extends Test_Case {
 	 */
 	public function test_get_status_message_blank() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_API_Response( '' );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_API_Response( '' );
 
 		$this->assertNull( $response->get_status_message() );
 	}
@@ -73,7 +74,7 @@ class Payment_Gateway_Apple_Pay_API_Response extends Test_Case {
 
 		$data = json_encode( array( 'response' ) );
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_API_Response( $data );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_API_Response( $data );
 
 		$this->assertEquals( $data, $response->get_merchant_session() );
 	}
@@ -86,7 +87,7 @@ class Payment_Gateway_Apple_Pay_API_Response extends Test_Case {
 	 */
 	public function test_get_merchant_session_blank() {
 
-		$response = new \SV_WC_Payment_Gateway_Apple_Pay_API_Response( '' );
+		$response = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_API_Response( '' );
 
 		$this->assertEquals( '', $response->get_merchant_session() );
 	}
