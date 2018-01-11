@@ -1,5 +1,15 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2018.01.11 - version 5.0.0
+ * Feature - Partial capture - add a UI for multiple partial captures in supported gateways
+ * Feature - Add CSC setting to enable or disable the field for tokenized methods
+ * Tweak - Improve the My Payment Methods table styling on mobile
+ * Dev - Add versioned namespaces
+ * Dev - Add a sample plugin loader class
+ * Dev - Add action hooks for My Payment Method actions
+ * Misc - Drop WooCommerce 2.5 support
+ * Misc - Drop Subscriptions 1.x support
+
 2017.12.11 - version 4.8.3
  * Fix - Ensure failed order token meta is only copied to the parent subscription when a successful payment has occurred
  * Fix - Don't reset the checkout password field if it's already visible

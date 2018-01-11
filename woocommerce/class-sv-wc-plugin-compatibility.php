@@ -40,8 +40,8 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Pl
  * are dropped.
  *
  * Current Compatibility
- * + Core 2.5.5 - 3.0.x
- * + Subscriptions 1.5.x - 2.0.x
+ * + Core 2.6.14 - 3.2.x
+ * + Subscriptions 2.2.x
  *
  * // TODO: move to /compatibility
  *
