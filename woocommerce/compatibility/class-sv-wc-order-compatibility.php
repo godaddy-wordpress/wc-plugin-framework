@@ -550,6 +550,24 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	}
 
 
+	/**
+	 * Gets the admin Edit screen URL for an order.
+	 *
+	 * @since 5.0.1-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @return string
+	 */
+	public static function get_edit_order_url( \WC_Order $order ) {
+
+		if ( self::is_wc_version_gte( '3.3' ) ) {
+			return $order->get_edit_order_url();
+		} else {
+			return apply_filters( 'woocommerce_get_edit_order_url', get_admin_url( null, 'post.php?post=' . self::get_prop( $order, 'id' ) . '&action=edit' ), $order );
+		}
+	}
+
+
 }
 
 

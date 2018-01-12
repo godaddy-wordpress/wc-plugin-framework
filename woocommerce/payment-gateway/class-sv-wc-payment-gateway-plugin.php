@@ -847,7 +847,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_payment_gateway_configuration_url( $gateway_id ) {
 
-		return admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $this->get_payment_gateway_configuration_section( $gateway_id ) );
+		return admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $gateway_id );
 	}
 
 
@@ -862,18 +862,25 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		return isset( $_GET['page'] ) && 'wc-settings' == $_GET['page'] &&
 		isset( $_GET['tab'] ) && 'checkout' == $_GET['tab'] &&
-		isset( $_GET['section'] ) && $this->get_payment_gateway_configuration_section( $gateway_id ) == $_GET['section'];
+		isset( $_GET['section'] ) && $gateway_id === $_GET['section'];
 	}
 
 
 	/**
 	 * Get a gateway's settings screen section ID.
 	 *
+	 * This was used as a helper method for WC 2.5 compatibility, but is no
+	 * longer needed and now deprecated.
+	 *
 	 * @since 4.4.0
+	 * @deprecated 5.0.1-dev
+	 *
 	 * @param string $gateway_id the gateway ID
 	 * @return string
 	 */
 	public function get_payment_gateway_configuration_section( $gateway_id ) {
+
+		SV_WC_Plugin_Compatibility::wc_doing_it_wrong( 'SV_WC_Payment_Gateway_Plugin::get_payment_gateway_configuration_section()', 'Deprecated! Use the plain gateway ID instead.', '5.0.1-dev' );
 
 		return strtolower( $gateway_id );
 	}
