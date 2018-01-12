@@ -1057,14 +1057,14 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * longer needed and now deprecated.
 	 *
 	 * @since 4.4.0
-	 * @deprecated 4.8.4-dev
+	 * @deprecated 4.9.0-dev
 	 *
 	 * @param string $gateway_id payment gateway ID
 	 * @return string
 	 */
 	public function get_payment_gateway_configuration_section( $gateway_id ) {
 
-		SV_WC_Plugin_Compatibility::wc_doing_it_wrong( 'SV_WC_Payment_Gateway_Plugin::get_payment_gateway_configuration_section()', 'Deprecated! Use the plain gateway ID instead.', '4.8.4-dev' );
+		SV_WC_Plugin_Compatibility::wc_doing_it_wrong( 'SV_WC_Payment_Gateway_Plugin::get_payment_gateway_configuration_section()', 'Deprecated! Use the plain gateway ID instead.', '4.9.0-dev' );
 
 		return strtolower( $gateway_id );
 	}

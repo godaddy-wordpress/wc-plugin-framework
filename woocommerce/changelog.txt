@@ -1,5 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2018.nn.nn - version 4.9.0
+ * Misc - Remove support for WooCommerce 2.5
+ * Misc - Require WordPress 4.4 or higher
+
 2017.12.11 - version 4.8.3
  * Fix - Ensure failed order token meta is only copied to the parent subscription when a successful payment has occurred
  * Fix - Don't reset the checkout password field if it's already visible

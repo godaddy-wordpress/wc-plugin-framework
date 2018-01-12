@@ -204,11 +204,11 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * Render the My Payment Methods section on the My Account page for WC 2.5.5 and older.
 	 *
 	 * @since 4.4.0
-	 * @deprecated 4.8.4-dev
+	 * @deprecated 4.9.0-dev
 	 */
 	public function render_lt_2_6() {
 
-		SV_WC_Plugin_Compatibility::wc_doing_it_wrong( 'SV_WC_Payment_Gateway_Plugin::get_payment_gateway_configuration_section()', 'This method is deprecated! Use SV_WC_Payment_Gateway_My_Payment_Methods::render() instead.', '4.8.4-dev' );
+		SV_WC_Plugin_Compatibility::wc_doing_it_wrong( 'SV_WC_Payment_Gateway_Plugin::get_payment_gateway_configuration_section()', 'This method is deprecated! Use SV_WC_Payment_Gateway_My_Payment_Methods::render() instead.', '4.9.0-dev' );
 
 		$this->render();
 	}
