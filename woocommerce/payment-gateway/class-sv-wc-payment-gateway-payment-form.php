@@ -546,7 +546,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 */
 	protected function get_manage_payment_methods_button_html() {
 
-		$url = wc_get_endpoint_url( 'payment-methods', '', wc_get_page_permalink( 'myaccount' ) );
+		$url = wc_get_account_endpoint_url( 'payment-methods' );
 
 		/**
 		 * Payment Form Manage Payment Methods Button Text Filter.
