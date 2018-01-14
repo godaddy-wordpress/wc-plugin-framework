@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -300,16 +300,32 @@ class SV_WC_Framework_Bootstrap {
 		// must update WC notice
 		if ( ! empty( $this->incompatible_wc_version_plugins ) ) {
 
+			$minimum_versions = array();
+
 			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_wc_version_plugins ) > 1 ? esc_html__( 'The following plugins are inactive because they require a newer version of WooCommerce:', 'woocommerce-plugin-framework' ) : esc_html__( 'The following plugin is inactive because it requires a newer version of WooCommerce:', 'woocommerce-plugin-framework' ) );
 
 			foreach ( $this->incompatible_wc_version_plugins as $plugin ) {
+
+				$minimum_versions[] = $plugin['args']['minimum_wc_version'];
 
 				/* translators: Placeholders: %1$s - plugin name, %2$s - WooCommerce version number */
 				echo '<li>' . sprintf( esc_html__( '%1$s requires WooCommerce %2$s or newer', 'woocommerce-plugin-framework' ), $plugin['plugin_name'], $plugin['args']['minimum_wc_version'] ) . '</li>';
 			}
 
-			/* translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag */
-			echo '</ul><p>' . sprintf( esc_html__( 'Please %1$supdate WooCommerce%2$s', 'woocommerce-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
+			echo '</ul><p>';
+
+			// sort the min WC versions from lowest to highest
+			// below we'll get the highest to build the download link
+			usort( $minimum_versions, 'version_compare' );
+
+			printf(
+				/* translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag, %3$s - <a> tag, %4$s - </a> tag */
+				esc_html__( 'Please %1$supdate WooCommerce%2$s to the latest version, or %3$sdownload the minimum required version &raquo;%4$s', 'woocommerce-plugin-framework' ),
+				'<a href="' . esc_url( admin_url( 'update-core.php' ) ) . '">', '</a>',
+				'<a href="' . esc_url( 'https://downloads.wordpress.org/plugin/woocommerce.' . end( $minimum_versions ) . '.zip' ) . '">', '</a>'
+			);
+
+			echo '</p></div>';
 		}
 
 		// must update WP notice

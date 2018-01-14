@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -38,14 +38,45 @@ if ( ! class_exists( 'SV_WC_Plugin_Compatibility' ) ) :
  * are dropped.
  *
  * Current Compatibility
- * + Core 2.5.5 - 3.0.x
- * + Subscriptions 1.5.x - 2.0.x
+ * + Core 2.6.14 - 3.3.x
+ * + Subscriptions 1.5.x - 2.2.x
  *
  * // TODO: move to /compatibility
  *
  * @since 2.0.0
  */
 class SV_WC_Plugin_Compatibility {
+
+
+	/**
+	 * Logs a doing_it_wrong message.
+	 *
+	 * Backports wc_doing_it_wrong() to WC 2.6.
+	 *
+	 * @since 4.9.0-dev
+	 *
+	 * @param string $function function used
+	 * @param string $message message to log
+	 * @param string $version version the message was added in
+	 */
+	public static function wc_doing_it_wrong( $function, $message, $version ) {
+
+		if ( self::is_wc_version_gte( '3.0' ) ) {
+
+			wc_doing_it_wrong( $function, $message, $version );
+
+		} else {
+
+			$message .= ' Backtrace: ' . wp_debug_backtrace_summary();
+
+			if ( is_ajax() ) {
+				do_action( 'doing_it_wrong_run', $function, $message, $version );
+				error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." );
+			} else {
+				_doing_it_wrong( $function, $message, $version );
+			}
+		}
+	}
 
 
 	/**

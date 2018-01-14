@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -212,34 +212,15 @@ class SV_WC_Admin_Notice_Handler {
 		) );
 
 		$classes = array(
+			'notice',
 			'js-wc-plugin-framework-admin-notice',
 			$params['notice_class'],
 		);
 
-		// Maybe make this notice dismissible.
-		// If WordPress 4.2+, use core's dismissible notice markup.
-		$dismissible = $params['dismissible'] && ( ! $params['always_show_on_settings'] || ! $this->get_plugin()->is_plugin_settings() );
-
-		if ( version_compare( get_bloginfo( 'version' ), '4.2', '>=' ) ) {
-
-			$classes[] = 'notice';
-
-			if ( $dismissible ) {
-				$classes[] = 'is-dismissible';
-			}
-
-		} else {
-
-			if ( $dismissible ) {
-
-				/* translators: this is an action that dismisses a message */
-				$dismiss_link = sprintf(
-					'<a href="#" class="js-wc-plugin-framework-notice-dismiss" style="float: right;">%s</a>',
-					esc_html__( 'Dismiss', 'woocommerce-plugin-framework' )
-				);
-
-				$message .= ' ' . $dismiss_link;
-			}
+		// maybe make this notice dismissible
+		// uses a WP core class which handles the markup and styling
+		if ( $params['dismissible'] && ( ! $params['always_show_on_settings'] || ! $this->get_plugin()->is_plugin_settings() ) ) {
+			$classes[] = 'is-dismissible';
 		}
 
 		echo sprintf(

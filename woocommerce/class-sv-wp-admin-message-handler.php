@@ -16,10 +16,10 @@
  * versions in the future. If you wish to customize the plugin for your
  * needs please refer to http://www.skyverge.com
  *
- * @package     SkyVerge/WordPress/WP-Admin-Message-Handler
- * @author      SkyVerge
- * @copyright   Copyright (c) 2013-2017, SkyVerge, Inc.
- * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
+ * @package   SkyVerge/WordPress/WP-Admin-Message-Handler
+ * @author    SkyVerge
+ * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
 

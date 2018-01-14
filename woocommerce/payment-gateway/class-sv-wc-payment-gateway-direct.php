@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -1157,18 +1157,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// if successful, redirect to the newly added method
 		if ( $result['success'] ) {
 
-			// if this is WooCommerce 2.5.5 or older, redirect to the My Account page
-			if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_2_6() ) {
-
-				$redirect_url = wc_get_page_permalink( 'myaccount' );
-
-			// otherwise, redirect to the Payment Methods page (WC 2.6+)
-			} else {
-				$redirect_url = wc_get_account_endpoint_url( 'payment-methods' );
-			}
+			$redirect_url = wc_get_account_endpoint_url( 'payment-methods' );
 
 		// otherwise, back to the Add Payment Method page
 		} else {
+
 			$redirect_url = wc_get_endpoint_url( 'add-payment-method' );
 		}
 
