@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2018.nn.nn - version 4.9.0
+2018.01.14 - version 4.9.0
  * Misc - Remove support for WooCommerce 2.5
  * Misc - Require WordPress 4.4 or higher
 

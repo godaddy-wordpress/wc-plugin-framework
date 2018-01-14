@@ -53,7 +53,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * Backports wc_doing_it_wrong() to WC 2.6.
 	 *
-	 * @since 4.9.0-dev
+	 * @since 4.9.0
 	 *
 	 * @param string $function function used
 	 * @param string $message message to log
