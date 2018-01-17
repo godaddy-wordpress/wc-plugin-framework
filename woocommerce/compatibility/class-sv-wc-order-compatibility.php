@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Compatibility
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -547,6 +547,24 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		}
 
 		return $item_meta;
+	}
+
+
+	/**
+	 * Gets the admin Edit screen URL for an order.
+	 *
+	 * @since 5.0.1-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @return string
+	 */
+	public static function get_edit_order_url( \WC_Order $order ) {
+
+		if ( self::is_wc_version_gte( '3.3' ) ) {
+			return $order->get_edit_order_url();
+		} else {
+			return apply_filters( 'woocommerce_get_edit_order_url', get_admin_url( null, 'post.php?post=' . self::get_prop( $order, 'id' ) . '&action=edit' ), $order );
+		}
 	}
 
 
