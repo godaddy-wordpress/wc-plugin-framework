@@ -1,5 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2018.01.17 - version 5.0.1
+ * Misc - Remove support for WooCommerce 2.5
+ * Misc - Require WordPress 4.4 or higher
+
 2018.01.11 - version 5.0.0
  * Feature - Partial capture - add a UI for multiple partial captures in supported gateways
  * Feature - Add CSC setting to enable or disable the field for tokenized methods

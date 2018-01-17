@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Order_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WC_Order_Compatibility' ) ) :
 
 /**
  * WooCommerce order compatibility class.
@@ -553,7 +553,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets the admin Edit screen URL for an order.
 	 *
-	 * @since 5.0.1-dev
+	 * @since 5.0.1
 	 *
 	 * @param \WC_Order $order order object
 	 * @return string

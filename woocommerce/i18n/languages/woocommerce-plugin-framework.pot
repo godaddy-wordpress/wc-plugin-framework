@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 5.0.0\n"
+"Project-Id-Version: WooCommerce Plugin Framework 5.0.1\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -11,11 +11,6 @@ msgstr ""
 "PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-
-#: class-sv-wc-admin-notice-handler.php:240
-#. translators: this is an action that dismisses a message
-msgid "Dismiss"
-msgstr ""
 
 #: class-sv-wc-framework-bootstrap.php:268
 msgid ""
@@ -60,7 +55,7 @@ msgstr ""
 msgid "Please %1$supdate WooCommerce%2$s"
 msgstr ""
 
-#: class-sv-wc-plugin-compatibility.php:227
+#: class-sv-wc-plugin-compatibility.php:261
 msgid "WooCommerce"
 msgstr ""
 
