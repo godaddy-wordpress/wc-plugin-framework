@@ -19,15 +19,15 @@
  * @package   SkyVerge/WooCommerce/Utilities
  * @author    SkyVerge / Delicious Brains
  * @copyright Copyright (c) 2015-2016 Delicious Brains Inc.
- * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WP_Background_Job_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WP_Background_Job_Handler' ) ) :
 
 /**
  * SkyVerge WordPress Background Job Handler class
@@ -205,6 +205,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * @return bool True if processing is running, false otherwise
 	 */
 	protected function is_process_running() {
+
+		// add a random artificial delay to prevent a race condition if 2 or more processes are trying to 
+		// process the job queue at the very same moment in time and neither of them have yet set the lock
+		// before the others are calling this method
+		usleep( rand( 100000, 300000 ) );
+
 		return (bool) get_transient( "{$this->identifier}_process_lock" );
 	}
 
@@ -908,7 +914,10 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	protected function schedule_event() {
 
 		if ( ! wp_next_scheduled( $this->cron_hook_identifier ) ) {
-			wp_schedule_event( time(), $this->cron_interval_identifier, $this->cron_hook_identifier );
+			
+			// schedule the health check to fire after 30 seconds from now, as to not create a race condition
+			// with job process lock on servers that fire & handle cron events instantly
+			wp_schedule_event( time() + 30, $this->cron_interval_identifier, $this->cron_hook_identifier );
 		}
 	}
 
@@ -995,10 +1004,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	public function test_connection() {
 
 		$test_url = add_query_arg( 'action', "{$this->identifier}_test", admin_url( 'admin-ajax.php' ) );
+		$result   = wp_safe_remote_get( $test_url );
+		$body     = ! is_wp_error( $result ) ? wp_remote_retrieve_body( $result ) : null;
 
-		$result = wp_safe_remote_get( $test_url );
-
-		return ! is_wp_error( $result ) && wp_remote_retrieve_body( $result ) && '[TEST_LOOPBACK]' === wp_remote_retrieve_body( $result );
+		// some servers may add a UTF8-BOM at the beginning of the response body, so we check if our test
+		// string is included in the body, as an equal check would produce a false negative test result
+		return $body && SV_WC_Helper::str_exists( $body, '[TEST_LOOPBACK]' );
 	}
 
 

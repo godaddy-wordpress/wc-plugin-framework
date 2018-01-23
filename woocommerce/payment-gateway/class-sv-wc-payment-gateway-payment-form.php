@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
 
 /**
  * Payment Form Class
@@ -548,7 +548,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 */
 	protected function get_manage_payment_methods_button_html() {
 
-		$url = wc_get_endpoint_url( 'payment-methods', '', wc_get_page_permalink( 'myaccount' ) );
+		$url = wc_get_account_endpoint_url( 'payment-methods' );
 
 		/**
 		 * Payment Form Manage Payment Methods Button Text Filter.
@@ -951,7 +951,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		);
 
 		if ( $this->get_gateway()->supports_card_types() ) {
-			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_0_0\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
+			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_0_1\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
 		}
 
 		/**

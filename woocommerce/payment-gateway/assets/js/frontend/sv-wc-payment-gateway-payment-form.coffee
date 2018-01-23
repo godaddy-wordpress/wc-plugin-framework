@@ -2,7 +2,7 @@
  WooCommerce SkyVerge Payment Gateway Framework Payment Form CoffeeScript
  Version 4.3.0-beta
 
- Copyright (c) 2014-2017, SkyVerge, Inc.
+ Copyright (c) 2014-2018, SkyVerge, Inc.
  Licensed under the GNU General Public License v3.0
  http://www.gnu.org/licenses/gpl-3.0.html
 ###
@@ -336,7 +336,8 @@ jQuery( document ).ready ($) ->
 				else
 					$parent_row.hide()
 					$parent_row.next().hide()
-			.change()
+
+			$( 'input#createaccount' ).change() unless $( 'input#createaccount' ).is( ':checked' )
 
 
 		# Public: Handle showing/hiding the sample check image

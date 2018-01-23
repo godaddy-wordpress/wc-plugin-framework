@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
 
 /**
  * My Payment Methods Class
@@ -100,7 +100,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		// if there are tokens to display, add the custom JS
 		if ( $this->has_tokens ) {
 
-			// if there are no WC 2.6+ core tokens, hide the "No saved methods found." notice
+			// if there are no core tokens, hide the "No saved methods found." notice
 			// TODO: remove this when we fully support the core payment methods table {CW 2016-05-17}
 			if ( ! (bool) wc_get_customer_saved_methods_list( get_current_user_id() ) ) {
 				wc_enqueue_js( '$( "table.wc-' . $this->get_plugin()->get_id_dasherized() . '-my-payment-methods" ).prev( ".woocommerce-Message.woocommerce-Message--info" ).hide();' );

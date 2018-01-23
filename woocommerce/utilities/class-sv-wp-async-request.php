@@ -19,15 +19,15 @@
  * @package   SkyVerge/WooCommerce/Utilities
  * @author    SkyVerge / Delicious Brains
  * @copyright Copyright (c) 2015-2016 Delicious Brains Inc.
- * @copyright Copyright (c) 2013-2017, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_0_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_0_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WP_Async_Request' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WP_Async_Request' ) ) :
 
 /**
  * SkyVerge Wordpress Async Request class

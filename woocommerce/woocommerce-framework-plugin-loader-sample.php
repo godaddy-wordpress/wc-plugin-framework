@@ -9,14 +9,14 @@
  * Text Domain: TODO: plugin textdomain
  * Domain Path: /i18n/languages/
  *
- * Copyright: (c) 2011-2017, SkyVerge, Inc. (info@skyverge.com)
+ * Copyright: (c) 2011-2018, SkyVerge, Inc. (info@skyverge.com)
  *
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * @package   TODO: package
  * @author    SkyVerge
- * @copyright Copyright (c) 2011-2017, SkyVerge, Inc.
+ * @copyright Copyright (c) 2011-2018, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  *
  * Woo: 99999:00000000000000000000000000000000 TODO: updater keys
@@ -137,12 +137,12 @@ class SV_WC_Framework_Plugin_Loader {
 	 */
 	protected function load_framework() {
 
-		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Plugin' ) ) {
+		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WC_Plugin' ) ) {
 			require_once( plugin_dir_path( __FILE__ ) . 'lib/skyverge/woocommerce/class-sv-wc-plugin.php' );
 		}
 
 		// TODO: remove this if not a payment gateway
-		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_0\\SV_WC_Payment_Gateway_Plugin' ) ) {
+		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WC_Payment_Gateway_Plugin' ) ) {
 			require_once( plugin_dir_path( __FILE__ ) . 'lib/skyverge/woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php' );
 		}
 	}
