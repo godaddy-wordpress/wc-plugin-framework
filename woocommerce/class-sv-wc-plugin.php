@@ -71,6 +71,9 @@ abstract class SV_WC_Plugin {
 	/** @var string the plugin text domain */
 	private $text_domain;
 
+	/** @var Plugin\Lifecycle lifecycle handler */
+	private $lifecycle_handler;
+
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
 
@@ -276,6 +279,11 @@ abstract class SV_WC_Plugin {
 		// JSON API base
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
+
+		// Lifecycle handler
+		require_once( $framework_path . '/Lifecycle.php' );
+
+		$this->get_lifecycle_handler();
 
 		if ( is_admin() ) {
 			// instantiate the admin notice handler
@@ -884,6 +892,21 @@ abstract class SV_WC_Plugin {
 	 * @return string plugin name
 	 */
 	abstract public function get_plugin_name();
+
+
+	/**
+	 * Gets the lifecycle handler instance.
+	 *
+	 * @since 5.1.0-dev
+	 */
+	public function get_lifecycle_handler() {
+
+		if ( is_null( $this->lifecycle_handler ) ) {
+			$this->lifecycle_handler = new Plugin\Lifecycle( $this );
+		}
+
+		return $this->lifecycle_handler;
+	}
 
 
 	/**
