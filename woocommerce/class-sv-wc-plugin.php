@@ -534,6 +534,11 @@ abstract class SV_WC_Plugin {
 			$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', $this->get_support_url(), esc_html_x( 'Support', 'noun', 'woocommerce-plugin-framework' ) );
 		}
 
+		// review url if any
+		if ( $this->get_reviews_url() ) {
+			$custom_actions['review'] = sprintf( '<a href="%s">%s</a>', $this->get_reviews_url(), esc_html_x( 'Review', 'verb', 'woocommerce-plugin-framework' ) );
+		}
+
 		// add the links to the front of the actions list
 		return array_merge( $custom_actions, $actions );
 	}
@@ -1050,6 +1055,34 @@ abstract class SV_WC_Plugin {
 	public function get_support_url() {
 
 		return null;
+	}
+
+
+	/**
+	 * Gets the plugin sales page URL.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return string
+	 */
+	public function get_sales_page_url() {
+
+		return '';
+	}
+
+
+	/**
+	 * Gets the plugin reviews page URL.
+	 *
+	 * Used for the 'Reviews' plugin action and review prompts.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return string
+	 */
+	public function get_reviews_url() {
+
+		return ( $this->get_sales_page_url() ) ? $this->get_sales_page_url() . '#comments' : '';
 	}
 
 
