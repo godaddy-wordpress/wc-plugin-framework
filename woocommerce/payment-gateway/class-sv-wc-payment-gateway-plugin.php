@@ -141,9 +141,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		$this->includes();
 
 		// My Payment Methods feature
-		if ( ! is_admin() && $this->supports( self::FEATURE_MY_PAYMENT_METHODS ) ) {
-
-			add_action( 'wp', array( $this, 'maybe_init_my_payment_methods' ) );
+		if ( ( ! is_admin() || is_ajax() ) && $this->supports( self::FEATURE_MY_PAYMENT_METHODS ) ) {
+			add_action( 'init', array( $this, 'maybe_init_my_payment_methods' ) );
 		}
 
 		// Apple Pay feature
@@ -296,8 +295,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function maybe_init_my_payment_methods() {
 
-		if ( is_account_page() && is_user_logged_in() && $this->tokenization_enabled() ) {
-
+		if ( is_user_logged_in() && $this->tokenization_enabled() ) {
 			$this->my_payment_methods = $this->get_my_payment_methods_instance();
 		}
 	}

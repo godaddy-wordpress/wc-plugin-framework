@@ -6,22 +6,8 @@ Copyright (c) 2015-2018, SkyVerge, Inc.
  Licensed under the GNU General Public License v3.0
 http://www.gnu.org/licenses/gpl-3.0.html
 */
-.sv-wc-payment-gateway-my-payment-methods-table-title {
-	clear: both; // storefront fix
-	margin: 1.5em 0;
-	h2 {
-		display: inline;
-	}
-	a.button {
-		float: right;
-		line-height: 1.5;
-		padding-left: .8em;
-		padding-right: .8em;
-		&:before {
-			margin-right: 5px;
-		}
-	}
-}
+
+@import '../../../../assets/css/mixins';
 
 table.sv-wc-payment-gateway-my-payment-methods-table {
 	font-size: 0.85em;
@@ -34,29 +20,93 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 		white-space: nowrap;
 	}
 
-	.sv-wc-payment-gateway-payment-method-title img {
-		width: 40px;
-		height: 25px;
-		vertical-align: middle;
-		margin-right: 1em;
-		display: inline !important;
+	.sv-wc-payment-gateway-my-payment-methods-method {
+
+		.sv-wc-payment-gateway-payment-method-title {
+			width: 30%;
+
+			input {
+				width: 100%;
+			}
+		}
+
+		.sv-wc-payment-gateway-payment-method-default mark {
+			display: inline-block;
+			color: white;
+			background-color: #3d9cd2;
+			font-size: 0.75em;
+			text-transform: uppercase;
+			padding: 2px 4px;
+			border-radius: 2px;
+		}
+
+		.sv-wc-payment-gateway-payment-method-details {
+			text-align: right;
+			white-space: nowrap;
+
+			img {
+				width: 40px;
+				height: 25px;
+				margin-right: 0.5em;
+				vertical-align: middle;
+				display: inline !important;
+			}
+		}
+
+		.sv-wc-payment-gateway-payment-method-actions {
+			text-align: right;
+
+			.button {
+				margin: .125em 0 .125em .25em;
+
+				&.disabled.tip:hover {
+					cursor: help;
+				}
+			}
+		}
+
+		.edit-payment-method {
+			visibility: hidden;
+		}
+
+		&:hover {
+
+			&:not(.editing) .edit-payment-method {
+				visibility: visible;
+			}
+		}
 	}
 
-	td.sv-wc-payment-gateway-payment-method-actions {
-		text-align: right;
+	&.editing {
 
-		.button {
-			margin: .125em 0 .125em .25em;
+		.sv-wc-payment-gateway-my-payment-methods-method:not(.editing),
+		.sv-wc-payment-gateway-my-payment-methods-type-divider {
+			opacity: 0.5;
+		}
 
-			&.disabled.tip:hover {
-				cursor: help;
-			}
+		.sv-wc-payment-gateway-my-payment-methods-method:hover {
+			opacity: 1;
 		}
 	}
 
 	tr.sv-wc-payment-gateway-my-payment-methods-type-divider td {
 		font-weight: 700;
 	}
+
+	.error td {
+		color: white;
+		text-align: center;
+		background-color: #e26838;
+		border-radius: 0 0 3px 3px;
+		padding: 5px;
+	}
+}
+
+.save-payment-methods, .cancel-edit-payment-methods {
+	float: right;
+}
+.save-payment-methods {
+	margin-left: 0.5em;
 }
 
 #tiptip_holder {

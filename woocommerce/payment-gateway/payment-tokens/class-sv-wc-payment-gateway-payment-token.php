@@ -395,6 +395,32 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Gets the payment method nickname.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return string
+	 */
+	public function get_nickname() {
+
+		return isset( $this->data['nickname'] ) ? $this->data['nickname'] : '';
+	}
+
+
+	/**
+	 * Sets the payment method nickname.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @param string $value nickname value
+	 */
+	public function set_nickname( $value ) {
+
+		$this->data['nickname'] = $value;
+	}
+
+
+	/**
 	 * Returns a representation of this token suitable for persisting to a
 	 * datastore
 	 *
