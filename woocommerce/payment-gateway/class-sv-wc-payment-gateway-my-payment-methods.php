@@ -672,7 +672,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	protected function get_payment_method_expiry_html( SV_WC_Payment_Gateway_Payment_Token $token ) {
 
-		$html = '<div class="view">' . esc_html( $token->get_exp_date() ) . '</div>';
+		$html = esc_html( $token->get_exp_date() );
 
 		// TODO: add edit support {CW 2018-01-30}
 

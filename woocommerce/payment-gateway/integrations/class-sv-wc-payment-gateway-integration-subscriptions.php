@@ -599,25 +599,10 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			}
 		}
 
-		// If at least one can be changed, no deleting for you!
-		if ( $disable_delete ) {
-
-			if ( isset( $actions['delete'] ) ) {
-				$actions['delete']['class'][] = 'disabled';
-				$actions['delete']['tip'] = __( 'This payment method is tied to a subscription and cannot be deleted. Please switch the subscription to another method first.', 'woocommerce-plugin-framework' );
-			}
-
-			// If there is only one subscription, provide a handy link to view it
-			if ( 1 === count( $subscriptions ) ) {
-
-				$subscription = reset( $subscriptions );
-
-				$actions['view-subscription'] = array(
-					'url'  => $subscription->get_view_order_url(),
-					'name' => __( 'View Subscription', 'woocommerce-plugin-framework' ),
-				);
-			}
-
+		// if at least one can be changed, no deleting for you!
+		if ( isset( $actions['delete'] ) && $disable_delete ) {
+			$actions['delete']['class'] = array_merge( (array) $actions['delete']['class'], array( 'disabled' ) );
+			$actions['delete']['tip']   = __( 'This payment method is tied to a subscription and cannot be deleted. Please switch the subscription to another method first.', 'woocommerce-plugin-framework' );
 		}
 
 		return $actions;
