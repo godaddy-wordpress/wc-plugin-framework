@@ -803,7 +803,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 	public function ajax_save_payment_method() {
 
-		check_ajax_referer( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_methodzz', 'nonce' );
+		check_ajax_referer( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method', 'nonce' );
 
 		try {
 
