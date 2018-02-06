@@ -162,7 +162,13 @@ class Lifecycle {
 	 */
 	public function register_milestone_message( $id, $message ) {
 
-		$messages = $this->get_milestone_messages();
+		$messages          = $this->get_milestone_messages();
+		$dismissed_notices = array_keys( $this->get_plugin()->get_admin_notice_handler()->get_dismissed_notices() );
+
+		// if the user has dismissed more than three milestone messages already, don't add any more
+		if ( count( array_intersect( array_keys( $messages ), $dismissed_notices ) ) > 3 ) {
+			return false;
+		}
 
 		$messages[ $id ] = $message;
 
