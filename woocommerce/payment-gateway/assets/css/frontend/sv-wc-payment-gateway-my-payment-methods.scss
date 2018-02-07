@@ -20,28 +20,28 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 		white-space: nowrap;
 	}
 
+	.sv-wc-payment-gateway-payment-method-header-details span,
+	.sv-wc-payment-gateway-payment-method-header-default span,
+	.sv-wc-payment-gateway-payment-method-header-actions span {
+		display: none;
+	}
+
+	.sv-wc-payment-gateway-payment-method-header-expiry,
+	.sv-wc-payment-gateway-payment-method-header-default {
+		text-align: center;
+	}
+
+	.sv-wc-payment-gateway-payment-method-header-actions {
+		text-align: right;
+	}
+
 	.sv-wc-payment-gateway-my-payment-methods-method {
 
-		.sv-wc-payment-gateway-payment-method-title {
-			width: 30%;
-
-			input {
-				width: 100%;
-			}
-		}
-
-		.sv-wc-payment-gateway-payment-method-default mark {
-			display: inline-block;
-			color: white;
-			background-color: #3d9cd2;
-			font-size: 0.75em;
-			text-transform: uppercase;
-			padding: 2px 4px;
-			border-radius: 2px;
+		.sv-wc-payment-gateway-payment-method-title input {
+			width: 100%;
 		}
 
 		.sv-wc-payment-gateway-payment-method-details {
-			text-align: right;
 			white-space: nowrap;
 
 			img {
@@ -54,7 +54,21 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 		}
 
 		.sv-wc-payment-gateway-payment-method-expiry {
-			text-align: right;
+			text-align: center;
+		}
+
+		.sv-wc-payment-gateway-payment-method-default {
+			text-align: center;
+
+			mark {
+				display: inline-block;
+				color: white;
+				background-color: #3d9cd2;
+				font-size: 0.75em;
+				text-transform: uppercase;
+				padding: 2px 4px;
+				border-radius: 2px;
+			}
 		}
 
 		.sv-wc-payment-gateway-payment-method-actions {
@@ -73,6 +87,11 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 			visibility: hidden;
 		}
 
+		.edit-payment-method,
+		.cancel-edit-payment-method {
+			margin-right: 0.5em;
+		}
+
 		&:hover {
 
 			&:not(.editing) .edit-payment-method {
@@ -82,6 +101,10 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 	}
 
 	&.editing {
+
+		.sv-wc-payment-gateway-payment-method-header-default span {
+			display: inline;
+		}
 
 		.sv-wc-payment-gateway-my-payment-methods-method:not(.editing),
 		.sv-wc-payment-gateway-my-payment-methods-type-divider {

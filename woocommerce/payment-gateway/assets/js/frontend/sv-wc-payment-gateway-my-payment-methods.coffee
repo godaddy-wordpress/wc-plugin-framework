@@ -9,9 +9,22 @@
 jQuery( document ).ready ($) ->
 	"use strict"
 
+	# The My Payment Methods handler.
+	#
+	# @since 5.1.0-dev
 	class window.SV_WC_Payment_Methods_Handler
 
 
+		# Constructs the class.
+		#
+		# @since 5.1.0-dev
+		#
+		# @param [Object] args, with the properties:
+		#     id:         [String] plugin ID
+		#     slug:       [String] plugin slug or dasherized ID
+		#     i18n:       [Object] localized text strings
+		#     ajax_url:   [String] URL for AJAX requests
+		#     ajax_nonce: [String] nonce for AJAX requests
 		constructor: ( args ) ->
 
 			@id         = args.id
@@ -27,20 +40,28 @@ jQuery( document ).ready ($) ->
 			$( ".wc-#{@slug}-payment-method-actions .button.tip" ).tipTip()
 
 			# handle the edit action
-			$( ".wc-#{@slug}-payment-method-actions" ).on( 'click', '.edit-payment-method', ( event ) => this.edit_method( event ) )
+			$( ".wc-#{@slug}-my-payment-methods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .edit-payment-method", ( event ) => this.edit_method( event ) )
 
 			# handle the save action
-			$( ".wc-#{@slug}-payment-method-actions" ).on( 'click', '.save-payment-method', ( event ) => this.save_method( event ) )
+			$( ".wc-#{@slug}-my-payment-methods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .save-payment-method", ( event ) => this.save_method( event ) )
 
 			# handle the cancel action
-			$( ".wc-#{@slug}-payment-method-actions" ).on( 'click', '.cancel-edit-payment-method', ( event ) => this.cancel_edit( event ) )
+			$( ".wc-#{@slug}-my-payment-methods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .cancel-edit-payment-method", ( event ) => this.cancel_edit( event ) )
+
+			# handle the delete action
+			$( ".wc-#{@slug}-my-payment-methods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .delete-payment-method", ( event ) =>
+
+				if $( event.currentTarget ).hasClass( 'disabled' ) or not confirm( @i18n.delete_ays )
+					event.preventDefault()
+
+			)
 
 
 		# Edits a payment method.
 		#
 		# @since 5.1.0-dev
 		#
-		# @param [Object] button
+		# @param [Object] event jQuery event object
 		edit_method: ( event ) =>
 
 			event.preventDefault()
@@ -61,6 +82,11 @@ jQuery( document ).ready ($) ->
 			$( ".wc-#{@slug}-my-payment-methods" ).addClass( 'editing' )
 
 
+		# Saves a payment method.
+		#
+		# @since 5.1.0-dev
+		#
+		# @param [Object] event jQuery event object
 		save_method: ( event ) =>
 
 			event.preventDefault()
@@ -85,13 +111,15 @@ jQuery( document ).ready ($) ->
 
 					return this.display_error( row, response.data ) unless response.success
 
+					# remove other methods' "Default" badges if this was set as default
+					if response.data.is_default
+						row.siblings().find( ".wc-#{@slug}-payment-method-default .view" ).empty().siblings( '.edit' ).find( 'input' ).prop( 'checked', false )
+
 					if response.data.html?
 						row.replaceWith( response.data.html )
 
 					if response.data.nonce?
 						@ajax_nonce = response.data.nonce
-
-					row.removeClass( 'editing' )
 
 					$( ".wc-#{@slug}-my-payment-methods" ).removeClass( 'editing' )
 
@@ -104,6 +132,11 @@ jQuery( document ).ready ($) ->
 					this.unblock_ui()
 
 
+		# Cancels editing a payment method.
+		#
+		# @since 5.1.0-dev
+		#
+		# @param [Object] event jQuery event object
 		cancel_edit: ( event ) =>
 
 			event.preventDefault()

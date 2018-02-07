@@ -72,15 +72,15 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		$this->has_tokens = ! empty( $this->tokens );
 
-		// render the My Payment Methods section
-		// TODO: merge our payment methods data into the core table and remove this in a future version {CW 2016-05-17}
-		add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render' ) );
-
-		add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render_js' ) );
-
 		// styles/scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_styles_scripts' ) );
 
+		// render the My Payment Methods section
+		// TODO: merge our payment methods data into the core table and remove this in a future version {CW 2016-05-17}
+		add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render' ) );
+		add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render_js' ) );
+
+		// save a payment method via AJAX
 		add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_save_payment_method', array( $this, 'ajax_save_payment_method' ) );
 
 		// handle payment method deletion, etc.
@@ -206,6 +206,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			'ajax_url'        => admin_url( 'admin-ajax.php' ),
 			'ajax_nonce'      => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
 			'i18n'            => array(
+				'edit_button'   => esc_html__( 'Edit', 'woocommerce-plugin-framework' ),
 				'cancel_button' => esc_html__( 'Cancel', 'woocommerce-plugin-framework' ),
 				'save_error'    => esc_html__( 'Oops, there was an error updating your payment method. Please try again.', 'woocommerce-plugin-framework' ),
 				'delete_ays'    => esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ),
@@ -352,8 +353,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$html = '<thead><tr>';
 
 		foreach ( $this->get_table_headers() as $key => $title ) {
-
-			$html .= sprintf( '<th class="sv-wc-payment-gateway-my-payment-method-table-header wc-%s-payment-method-%s"><span class="nobr">%s</span></th>', sanitize_html_class( $this->get_plugin()->get_id_dasherized() ), sanitize_html_class( $key ), esc_html( $title ) );
+			$html .= sprintf( '<th class="sv-wc-payment-gateway-my-payment-method-table-header sv-wc-payment-gateway-payment-method-header-%1$s wc-%2$s-payment-method-%1$s"><span class="nobr">%3$s</span></th>', sanitize_html_class( $key ), sanitize_html_class( $this->get_plugin()->get_id_dasherized() ), esc_html( $title ) );
 		}
 
 		$html .= '</tr></thead>';
@@ -380,11 +380,11 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	protected function get_table_headers() {
 
 		$headers = array(
-			'title'   => esc_html__( 'Method', 'woocommerce-plugin-framework' ),
-			'default' => '&nbsp;',
-			'details' => '&nbsp;',
-			'expiry'  => esc_html__( 'Expires', 'woocommerce-plugin-framework' ),
-			'actions' => '&nbsp;'
+			'title'   => __( 'Method', 'woocommerce-plugin-framework' ),
+			'details' => __( 'Details', 'woocommerce-plugin-framework' ),
+			'expiry'  => __( 'Expires', 'woocommerce-plugin-framework' ),
+			'default' => __( 'Default?', 'woocommerce-plugin-framework' ),
+			'actions' => __( 'Actions', 'woocommerce-plugin-framework' ),
 		);
 
 		/**
@@ -416,13 +416,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		if ( $this->credit_card_tokens && $this->echeck_tokens ) {
 
-			$html .= sprintf( '<tr class="sv-wc-payment-gateway-my-payment-methods-type-divider wc-%s-my-payment-methods-type-divider"><td colspan="%d">%s</td><tr>',
+			$html .= sprintf( '<tr class="sv-wc-payment-gateway-my-payment-methods-type-divider wc-%s-my-payment-methods-type-divider"><td colspan="%d">%s</td></tr>',
 				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ), count( $this->get_table_headers() ), esc_html__( 'Credit/Debit Cards', 'woocommerce-plugin-framework' )
 			);
 
 			$html .= $this->get_table_body_row_html( $this->credit_card_tokens );
 
-			$html .= sprintf( '<tr class="sv-wc-payment-gateway-my-payment-methods-type-divider wc-%s-my-payment-methods-type-divider"><td colspan="%d">%s</td><tr>',
+			$html .= sprintf( '<tr class="sv-wc-payment-gateway-my-payment-methods-type-divider wc-%s-my-payment-methods-type-divider"><td colspan="%d">%s</td></tr>',
 				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ), count( $this->get_table_headers() ), esc_html__( 'Bank Accounts', 'woocommerce-plugin-framework' )
 			);
 
@@ -465,7 +465,12 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			$method = $this->get_table_body_row_data( $token );
 
-			$html .= sprintf( '<tr class="sv-wc-payment-gateway-my-payment-methods-method wc-%1$s-my-payment-methods-method" data-token-id="%2$s">', sanitize_html_class( $this->get_plugin()->get_id_dasherized() ), esc_attr( $token->get_id() ) );
+			$html .= sprintf(
+				'<tr class="sv-wc-payment-gateway-my-payment-methods-method wc-%1$s-my-payment-methods-method %2$s" data-token-id="%3$s">',
+				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ),
+				$token->is_default() ? 'default' : '',
+				esc_attr( $token->get_id() )
+			);
 
 			// Display the row data in the order of the headers
 			foreach ( $headers as $attribute => $attribute_title ) {
@@ -801,48 +806,93 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/** Payment Method actions ************************************************/
 
 
+	/**
+	 * Saves a payment method via AJAX.
+	 *
+	 * @internal
+	 *
+	 * @since 5.1.0-dev
+	 */
 	public function ajax_save_payment_method() {
 
 		check_ajax_referer( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method', 'nonce' );
 
 		try {
 
-			$user_id  = get_current_user_id();
 			$token_id = SV_WC_Helper::get_post( 'token_id' );
 
 			if ( empty( $this->tokens[ $token_id ] ) || ! $this->tokens[ $token_id ] instanceof SV_WC_Payment_Gateway_Payment_Token ) {
 				throw new SV_WC_Payment_Gateway_Exception( 'Invalid token ID' );
 			}
 
-			$token = $this->tokens[ $token_id ];
+			$user_id  = get_current_user_id();
+			$token    = $this->tokens[ $token_id ];
+			$gateway  = $this->get_plugin()->get_gateway_from_token( $user_id, $token );
+
+			// bail if the gateway or token couldn't be found for this user
+			if ( ! $gateway || ! $gateway->get_payment_tokens_handler()->user_has_token( $user_id, $token ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Invalid token' );
+			}
 
 			$data = array();
 
 			parse_str( SV_WC_Helper::get_post( 'data' ), $data );
 
-			if ( isset( $data['nickname'] ) ) {
-				$token->set_nickname( $data['nickname'] );
+			// set the data
+			$token = $this->save_token_data( $token, $data );
+
+			 // use the handler so other methods don't remain default
+			if ( $token->is_default() ) {
+				$gateway->get_payment_tokens_handler()->set_default_token( $user_id, $token );
 			}
 
-			$token->set_default( isset( $data['default'] ) && 'yes' === $data['default'] );
-
-			$gateway = $this->get_plugin()->get_gateway_from_token( $user_id, $token );
-
-			if ( ! $gateway ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Invalid token' );
-			}
-
+			// persist the data
 			$gateway->get_payment_tokens_handler()->update_token( $user_id, $token );
 
 			wp_send_json_success( array(
-				'html'  => $this->get_table_body_row_html( array( $token ) ),
-				'nonce' => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
+				'html'       => $this->get_table_body_row_html( array( $token ) ),
+				'is_default' => $token->is_default(),
+				'nonce'      => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
 			) );
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
 			wp_send_json_error( $e->getMessage() );
 		}
+	}
+
+
+	/**
+	 * Saves data to a token.
+	 *
+	 * Gateways can override this to set their own data if they add custom Edit
+	 * fields. Note that this does not persist the data to the db, but only sets
+	 * it for the object.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
+	 * @param array $data {
+	 *    new data to store for the token
+	 *
+	 *    @type string $nickname method nickname
+	 *    @type string $default  whether the method should be set as default
+	 * }
+	 * @return SV_WC_Payment_Gateway_Payment_Token
+	 */
+	protected function save_token_data( SV_WC_Payment_Gateway_Payment_Token $token, array $data ) {
+
+		$raw_nickname   = ! empty( $data['nickname'] ) ? $data['nickname'] : '';
+		$clean_nickname = wc_clean( $raw_nickname );
+
+		// only set the nickname if there is a clean value, or it was deliberately cleared
+		if ( $clean_nickname || ! $raw_nickname ) {
+			$token->set_nickname( $clean_nickname );
+		}
+
+		$token->set_default( isset( $data['default'] ) && 'yes' === $data['default'] );
+
+		return $token;
 	}
 
 
