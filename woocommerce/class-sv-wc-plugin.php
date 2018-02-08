@@ -1278,9 +1278,26 @@ abstract class SV_WC_Plugin {
 		if ( version_compare( $installed_version, $this->get_version(), '<' ) ) {
 
 			if ( ! $installed_version ) {
+
 				$this->install();
+
+				/**
+				 * Fires after the plugin has been installed.
+				 *
+				 * @since 5.1.0-dev
+				 */
+				do_action( 'wc_' . $this->get_id() . '_installed' );
+
 			} else {
+
 				$this->upgrade( $installed_version );
+
+				/**
+				 * Fires after the plugin has been updated.
+				 *
+				 * @since 5.1.0-dev
+				 */
+				do_action( 'wc_' . $this->get_id() . '_updated' );
 			}
 
 			// new version number

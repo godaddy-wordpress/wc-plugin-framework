@@ -39,6 +39,9 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\Plugin\\
 class Lifecycle {
 
 
+	/** @var string minimum milestone version */
+	private $milestone_version;
+
 	/** @var \SkyVerge\WooCommerce\PluginFramework\v5_0_1\SV_WC_Plugin plugin instance */
 	private $plugin;
 
@@ -65,9 +68,27 @@ class Lifecycle {
 	 */
 	protected function add_hooks() {
 
+		add_action( 'wc_' . $this->get_plugin()->get_id() . '_updated', array( $this, 'do_update' ) );
+
 		add_action( 'init', array( $this, 'add_admin_notices' ) );
 
-		add_action( 'wc_' . $this->get_plugin()->get_id() . '_milestone_reached', array( $this, 'register_milestone_message' ), 10, 2 );
+		add_action( 'wc_' . $this->get_plugin()->get_id() . '_milestone_reached', array( $this, 'trigger_milestone' ), 10, 3 );
+	}
+
+
+	/**
+	 * Handles tasks after the plugin has been updated.
+	 *
+	 * @internal
+	 *
+	 * @since 5.1.0-dev
+	 */
+	public function do_update() {
+
+		// if the plugin never had any previous milestones, consider them all reached so their notices aren't displayed
+		if ( ! $this->get_milestone_version() ) {
+			$this->set_milestone_version( $this->get_plugin()->get_version() );
+		}
 	}
 
 
@@ -110,6 +131,26 @@ class Lifecycle {
 
 
 	/** Milestone Methods *****************************************************/
+
+
+	/**
+	 * Triggers a milestone.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @param string $id milestone ID
+	 * @param string $message message to display to the user
+	 * @param string $since the version since this milestone has existed in the plugin
+	 */
+	public function trigger_milestone( $id, $message, $since = '1.0.0' ) {
+
+		// if the plugin was had milestones before this milestone was added, don't trigger it
+		if ( version_compare( $this->get_milestone_version(), $since, '>' ) ) {
+			return false;
+		}
+
+		$this->register_milestone_message( $id, $message );
+	}
 
 
 	/**
@@ -162,18 +203,24 @@ class Lifecycle {
 	 */
 	public function register_milestone_message( $id, $message ) {
 
-		$messages          = $this->get_milestone_messages();
-		$dismissed_notices = array_keys( $this->get_plugin()->get_admin_notice_handler()->get_dismissed_notices() );
+		$milestone_messages = $this->get_milestone_messages();
+		$dismissed_notices  = array_keys( $this->get_plugin()->get_admin_notice_handler()->get_dismissed_notices() );
+
+		// get the total number of dismissed milestone messages
+		$dismissed_milestone_messages = array_intersect( array_keys( $milestone_messages ), $dismissed_notices );
 
 		// if the user has dismissed more than three milestone messages already, don't add any more
-		if ( count( array_intersect( array_keys( $messages ), $dismissed_notices ) ) > 3 ) {
+		if ( count( $dismissed_milestone_messages ) > 3 ) {
 			return false;
 		}
 
-		$messages[ $id ] = $message;
+		$milestone_messages[ $id ] = $message;
 
-		return update_option( 'wc_' . $this->get_plugin()->get_id() . '_milestone_messages', $messages );
+		return update_option( 'wc_' . $this->get_plugin()->get_id() . '_milestone_messages', $milestone_messages );
 	}
+
+
+	/** Utility Methods *******************************************************/
 
 
 	/**
@@ -189,7 +236,37 @@ class Lifecycle {
 	}
 
 
-	/** Utility Methods *******************************************************/
+	/**
+	 * Sets the milestone version.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @param string $version plugin version
+	 * @return bool
+	 */
+	public function set_milestone_version( $version ) {
+
+		$this->milestone_version = $version;
+
+		return update_option( 'wc_' . $this->get_plugin()->get_id() . '_milestone_version', $version );
+	}
+
+
+	/**
+	 * Gets the milestone version.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return string
+	 */
+	public function get_milestone_version() {
+
+		if ( ! $this->milestone_version ) {
+			$this->milestone_version = get_option( 'wc_' . $this->get_plugin()->get_id() . '_milestone_version', '' );
+		}
+
+		return $this->milestone_version;
+	}
 
 
 	/**
