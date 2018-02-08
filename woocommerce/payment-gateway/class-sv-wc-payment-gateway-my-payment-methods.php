@@ -977,26 +977,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 				break;
 
-				// set default payment method
-				case 'make-default':
-
-					$gateway->get_payment_tokens_handler()->set_default_token( $user_id, $token );
-
-					/* translators: Payment method as in a specific credit card, e-check or bank account */
-					SV_WC_Helper::wc_add_notice( esc_html__( 'Default payment method updated.', 'woocommerce-plugin-framework' ) );
-
-					/**
-					 * Fires after a new payment method is made default by a customer.
-					 *
-					 * @since 5.0.0
-					 *
-					 * @param string $token_id ID of the modified token
-					 * @param int $user_id user ID
-					 */
-					do_action( 'wc_payment_gateway_' . $gateway->get_id() . '_payment_method_made_default', $token, $user_id );
-
-				break;
-
 				// custom actions
 				default:
 
