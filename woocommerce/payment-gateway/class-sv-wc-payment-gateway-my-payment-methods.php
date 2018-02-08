@@ -833,6 +833,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		try {
 
+			$this->load_tokens();
+
 			$token_id = SV_WC_Helper::get_post( 'token_id' );
 
 			if ( empty( $this->tokens[ $token_id ] ) || ! $this->tokens[ $token_id ] instanceof SV_WC_Payment_Gateway_Payment_Token ) {
