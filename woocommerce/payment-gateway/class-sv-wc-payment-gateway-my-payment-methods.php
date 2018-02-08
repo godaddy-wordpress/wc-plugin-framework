@@ -67,10 +67,21 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		$this->plugin = $plugin;
 
+		add_action( 'wp', array( $this, 'init' ) );
+
+		// save a payment method via AJAX
+		add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_save_payment_method', array( $this, 'ajax_save_payment_method' ) );
+	}
+
+
+	public function init() {
+
+		if ( ! $this->is_payment_methods_page() ) {
+			return;
+		}
+
 		// load all tokens for the given plugin
 		$this->load_tokens();
-
-		$this->has_tokens = ! empty( $this->tokens );
 
 		// styles/scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_styles_scripts' ) );
@@ -79,9 +90,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		// TODO: merge our payment methods data into the core table and remove this in a future version {CW 2016-05-17}
 		add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render' ) );
 		add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render_js' ) );
-
-		// save a payment method via AJAX
-		add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_save_payment_method', array( $this, 'ajax_save_payment_method' ) );
 
 		// handle payment method deletion, etc.
 		$this->handle_payment_method_actions();
@@ -94,10 +102,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * @since 4.0.0
 	 */
 	public function maybe_enqueue_styles_scripts() {
-
-		if ( ! $this->is_payment_methods_page() ) {
-			return;
-		}
 
 		$handle = 'sv-wc-payment-gateway-my-payment-methods';
 
@@ -153,7 +157,11 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			}
 		}
 
-		return $this->tokens = array_merge( $this->credit_card_tokens, $this->echeck_tokens );
+		$this->tokens = array_merge( $this->credit_card_tokens, $this->echeck_tokens );
+
+		$this->has_tokens = ! empty( $this->tokens );
+
+		return $this->tokens;
 	}
 
 

@@ -141,7 +141,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		$this->includes();
 
 		// My Payment Methods feature
-		if ( ( ! is_admin() || is_ajax() ) && $this->supports( self::FEATURE_MY_PAYMENT_METHODS ) ) {
+		if ( $this->supports_my_payment_methods() ) {
 			add_action( 'init', array( $this, 'maybe_init_my_payment_methods' ) );
 		}
 
@@ -295,6 +295,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function maybe_init_my_payment_methods() {
 
+		// bail if not frontend or an AJAX request
+		if ( is_admin() && ! is_ajax() ) {
+			return;
+		}
+
 		if ( is_user_logged_in() && $this->tokenization_enabled() ) {
 			$this->my_payment_methods = $this->get_my_payment_methods_instance();
 		}
@@ -331,6 +336,19 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	protected function get_my_payment_methods_instance() {
 
 		return new SV_WC_Payment_Gateway_My_Payment_Methods( $this );
+	}
+
+
+	/**
+	 * Determines whether the My Payment Methods feature is supported.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return bool
+	 */
+	public function supports_my_payment_methods() {
+
+		return $this->supports( self::FEATURE_MY_PAYMENT_METHODS );
 	}
 
 
