@@ -559,7 +559,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * @since 4.0.0
 		 * @param string $button_text button text
 		 */
-		$html = sprintf( '<a class="button" style="float:right;" href="%s">%s</a>',
+		$html = sprintf( '<a class="button sv-wc-payment-gateway-payment-form-manage-payment-methods" href="%s">%s</a>',
 			esc_url( $url ),
 			/* translators: Payment method as in a specific credit card, eCheck or bank account */
 			wp_kses_post( apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_manage_payment_methods_text', esc_html__( 'Manage Payment Methods', 'woocommerce-plugin-framework' ) ) )
@@ -590,7 +590,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	protected function get_saved_payment_method_html( $token ) {
 
 		// input
-		$html = sprintf( '<input type="radio" id="wc-%1$s-payment-token-%2$s" name="wc-%1$s-payment-token" class="js-sv-wc-payment-gateway-payment-token js-wc-%1$s-payment-token" style="width:auto;" value="%2$s" %3$s/>',
+		$html = sprintf( '<input type="radio" id="wc-%1$s-payment-token-%2$s" name="wc-%1$s-payment-token" class="js-sv-wc-payment-gateway-payment-token js-wc-%1$s-payment-token" style="width:auto; margin-right:.5em;" value="%2$s" %3$s/>',
 			esc_attr( $this->get_gateway()->get_id_dasherized() ),
 			esc_attr( $token->get_id() ),
 			checked( $token->is_default(), true, false )
@@ -632,22 +632,26 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		$last_four = $token->get_last_four();
 		$type      = $token->get_type_full();
 
+		$title = '<span class="title">';
+
+		if ( $token->get_nickname() ) {
+			$title .= '<span class="nickname">' . $token->get_nickname() . '</span>';
+		}
+
 		if ( $image_url ) {
 
 			// format like "<Amex logo image> American Express"
-			$title = sprintf( '<img src="%1$s" alt="%2$s" title="%2$s" width="30" height="20" style="width: 30px; height: 20px;" />%3$s', esc_url( $image_url ), esc_attr__( $type, 'woocommerce-plugin-framework' ), esc_html__( $type, 'woocommerce-plugin-framework' ) );
+			$title .= sprintf( '<img src="%1$s" alt="%2$s" title="%2$s" width="30" height="20" style="width: 30px; height: 20px;" />', esc_url( $image_url ), esc_attr( $type ) );
 
 		} else {
 
 			// missing payment method image, format like "American Express"
-			$title = esc_html__( $type, 'woocommerce-plugin-framework' );
+			$title .= esc_html( $type );
 		}
 
 		// add "ending in XXXX" if available
 		if ( $last_four ) {
-
-			/* translators: Placeholders: %s - last four digits of card/account */
-			$title .= '&nbsp;' . sprintf( esc_html__( 'ending in %s', 'woocommerce-plugin-framework' ), $last_four );
+			$title .= '&bull; &bull; &bull; ' . esc_html( $last_four );
 		}
 
 		// add "(expires MM/YY)" if available
@@ -656,6 +660,8 @@ class SV_WC_Payment_Gateway_Payment_Form {
 			/* translators: Placeholders: %s - expiry date */
 			$title .= ' ' . sprintf( esc_html__( '(expires %s)', 'woocommerce-plugin-framework' ), $token->get_exp_date() );
 		}
+
+		$title .= '</span>';
 
 		/**
 		 * Payment Gateway Payment Form Payment Method Title.
@@ -682,7 +688,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	protected function get_use_new_payment_method_input_html() {
 
 		// input
-		$html = sprintf( '<input type="radio" id="wc-%1$s-use-new-payment-method" name="wc-%1$s-payment-token" class="js-sv-wc-payment-token js-wc-%1$s-payment-token" style="width:auto;" value="" %2$s />',
+		$html = sprintf( '<input type="radio" id="wc-%1$s-use-new-payment-method" name="wc-%1$s-payment-token" class="js-sv-wc-payment-token js-wc-%1$s-payment-token" style="width:auto; margin-right: .5em;" value="" %2$s />',
 			esc_attr( $this->get_gateway()->get_id_dasherized() ),
 			checked( $this->default_new_payment_method(), true, false )
 		);

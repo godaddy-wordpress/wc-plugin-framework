@@ -10,12 +10,23 @@ http://www.gnu.org/licenses/gpl-3.0.html
 // checkout, Order > Pay, and Add Payment Method pages
 .woocommerce-checkout #payment div.payment_box, #add_payment_method {
 
+	.sv-wc-payment-gateway-payment-form-manage-payment-methods {
+		display: block;
+		margin: 1em 0;
+		text-align: center;
+	}
+
 	.sv-wc-payment-gateway-payment-form-saved-payment-method {
-		display: inline;
+		display: inline-block;
+		margin-bottom: .5em;
+
 		img {
+			float: none;
 			width: 30px;
 			height: 20px;
+			display: inline-block;
 			margin-right: .5em;
+			vertical-align: middle;
 		}
 	}
 
@@ -23,7 +34,8 @@ http://www.gnu.org/licenses/gpl-3.0.html
 	input.js-sv-wc-payment-gateway-credit-card-form-input[type="tel"],
 	input.js-sv-wc-payment-gateway-credit-card-form-input[type="text"],
 	input.js-sv-wc-payment-gateway-echeck-form-input[type="tel"],
-	input.js-sv-wc-payment-gateway-echeck-form-input[type="text"] {
+	input.js-sv-wc-payment-gateway-echeck-form-input[type="text"],
+	input.js-sv-wc-payment-gateway-form-nickname {
 		font-size: 1.5em;
 		padding: 8px;
 	}
