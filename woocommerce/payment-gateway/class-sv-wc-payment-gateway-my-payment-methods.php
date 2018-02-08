@@ -424,14 +424,20 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		if ( $this->credit_card_tokens && $this->echeck_tokens ) {
 
-			$html .= sprintf( '<tr class="sv-wc-payment-gateway-my-payment-methods-type-divider wc-%s-my-payment-methods-type-divider"><td colspan="%d">%s</td></tr>',
-				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ), count( $this->get_table_headers() ), esc_html__( 'Credit/Debit Cards', 'woocommerce-plugin-framework' )
+			$html .= sprintf(
+				'<tr class="sv-wc-payment-gateway-my-payment-methods-type-divider wc-%s-my-payment-methods-type-divider"><td colspan="%d">%s</td></tr>',
+				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ),
+				count( $this->get_table_headers() ),
+				esc_html__( 'Credit/Debit Cards', 'woocommerce-plugin-framework' )
 			);
 
 			$html .= $this->get_table_body_row_html( $this->credit_card_tokens );
 
-			$html .= sprintf( '<tr class="sv-wc-payment-gateway-my-payment-methods-type-divider wc-%s-my-payment-methods-type-divider"><td colspan="%d">%s</td></tr>',
-				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ), count( $this->get_table_headers() ), esc_html__( 'Bank Accounts', 'woocommerce-plugin-framework' )
+			$html .= sprintf(
+				'<tr class="sv-wc-payment-gateway-my-payment-methods-type-divider wc-%s-my-payment-methods-type-divider"><td colspan="%d">%s</td></tr>',
+				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ),
+				count( $this->get_table_headers() ),
+				esc_html__( 'Bank Accounts', 'woocommerce-plugin-framework' )
 			);
 
 			$html .= $this->get_table_body_row_html( $this->echeck_tokens );
