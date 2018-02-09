@@ -375,8 +375,16 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		// Clear any cached tokens
 		$this->get_gateway()->get_payment_tokens_handler()->clear_transient( $user_id );
 
-		$stored_tokens = $this->get_gateway()->get_payment_tokens_handler()->get_tokens( $user_id );
-		$tokens        = array();
+		// get the customer ID separately so it's never auto-created from the admin
+		$customer_id = $this->get_gateway()->get_customer_id( $user_id, array(
+			'autocreate' => false,
+		) );
+
+		$stored_tokens = $this->get_gateway()->get_payment_tokens_handler()->get_tokens( $user_id, array(
+			'customer_id' => $customer_id,
+		) );
+
+		$tokens = array();
 
 		foreach( $stored_tokens as $token ) {
 
