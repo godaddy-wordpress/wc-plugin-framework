@@ -27,37 +27,47 @@ jQuery( document ).ready ($) ->
 
 		e.preventDefault()
 
+		return unless confirm( wc_payment_gateway_token_editor.actions.remove_token.ays )
+
 		editor = $( this ).closest( 'table' )
 
 		editor.block( message: null, overlayCSS: background: '#fff',opacity: 0.6 )
 
-		if ( confirm( wc_payment_gateway_token_editor.actions.remove_token.ays ) )
+		editor.find( '.error' ).remove()
 
-			row = $( this ).closest( 'tr' )
+		row = $( this ).closest( 'tr' )
 
-			# If this is an unsaved token, just remove the row
-			if ( row.hasClass( 'new-token' ) )
+		# if this is an unsaved token, just remove the row
+		return row.remove() if row.hasClass( 'new-token' )
 
-				row.remove()
+		data =
+			action:   'wc_payment_gateway_' + editor.data( 'gateway-id' ) + '_admin_remove_payment_token'
+			user_id:  $( this ).data( 'user-id' )
+			token_id: $( this ).data( 'token-id' )
+			security: wc_payment_gateway_token_editor.actions.remove_token.nonce
 
-			# Otherwise, fire up AJAX!
-			else
+		$.post wc_payment_gateway_token_editor.ajax_url, data
 
-				data =
-					action:   'wc_payment_gateway_' + editor.data( 'gateway-id' ) + '_admin_remove_payment_token'
-					user_id:  $( this ).data( 'user-id' )
-					token_id: $( this ).data( 'token-id' )
-					security: wc_payment_gateway_token_editor.actions.remove_token.nonce
+			.done ( response ) =>
 
-				$.post wc_payment_gateway_token_editor.ajax_url, data, ( response ) ->
+				return handleError( editor, response.data ) unless response.success
 
-					if response.success is true then $( row ).remove()
+				$( row ).remove()
 
-			# No more tokens? Display a message
-			if ( editor.find( 'tr.token' ).length == 0 )
-				editor.find( 'tr.no-tokens' ).show()
+				# no more tokens? Display a message
+				if ( editor.find( 'tr.token' ).length == 0 )
+					editor.find( 'tr.no-tokens' ).show()
 
-		editor.unblock()
+			.fail ( jqXHR, textStatus, error ) =>
+
+				handleError( editor, textStatus + ': ' + error )
+
+			.always =>
+
+				editor.unblock()
+
+
+
 
 	# Add a new (blank) token
 	$( 'table.sv_wc_payment_gateway_token_editor' ).on 'click', '.button[data-action="add-new"]', ( e ) ->
@@ -94,6 +104,8 @@ jQuery( document ).ready ($) ->
 
 		editor.block( message: null, overlayCSS: background: '#fff',opacity: 0.6 )
 
+		editor.find( '.error' ).remove()
+
 		body  = editor.find( 'tbody.tokens' )
 		count = body.find( 'tr.token' ).length
 
@@ -102,18 +114,26 @@ jQuery( document ).ready ($) ->
 			user_id:  $( this ).data( 'user-id' )
 			security: wc_payment_gateway_token_editor.actions.refresh.nonce
 
-		$.post wc_payment_gateway_token_editor.ajax_url, data, ( response ) ->
+		$.post wc_payment_gateway_token_editor.ajax_url, data
 
-			if ( response.success is true )
+			.done ( response ) =>
 
-				if ( response.data )
+				return handleError( editor, response.data ) unless response.success
+
+				if response.data?
 					editor.find( 'tr.no-tokens' ).hide()
 					body.html( response.data )
 				else
 					body.empty()
 					editor.find( 'tr.no-tokens' ).show()
 
-			editor.unblock()
+			.fail ( jqXHR, textStatus, error ) =>
+
+				handleError( editor, textStatus + ': ' + error )
+
+			.always =>
+
+				editor.unblock()
 
 	# Save the tokens
 	$( 'table.sv_wc_payment_gateway_token_editor' ).on 'click', '.sv-wc-payment-gateway-token-editor-action-button[data-action="save"]', ( e ) ->
@@ -152,3 +172,15 @@ jQuery( document ).ready ($) ->
 					focused = true
 
 				editor.unblock()
+
+
+	# Handles any AJAX errors.
+	#
+	# @since 5.1.0-dev
+	handleError = ( editor, error, message = '' ) ->
+
+		console.error error
+
+		message = wc_payment_gateway_token_editor.i18n.general_error unless message
+
+		editor.find( 'th.actions' ).prepend( '<span class="error">' + message + '</span>' )
