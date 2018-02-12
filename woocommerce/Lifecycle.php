@@ -102,8 +102,6 @@ class Lifecycle {
 		// display any milestone notices
 		foreach ( $this->get_milestone_messages() as $id => $message ) {
 
-			// TODO: detect upgrades so existing installs don't display these notices {CW 2018-01-30}
-
 			// bail if this notice was already dismissed
 			if ( ! $this->get_plugin()->get_admin_notice_handler()->should_display_notice( $id ) ) {
 				continue;
@@ -135,6 +133,13 @@ class Lifecycle {
 
 	/**
 	 * Triggers a milestone.
+	 *
+	 * This will only be triggered if the install's "milestone version" is lower
+	 * than $since. Plugins can specify $since as the version at which a
+	 * milestone's feature was added. This prevents existing installs from
+	 * triggering notices for milestones that have long passed, like a payment
+	 * gateway's first successful payment. Omitting $since will assume the
+	 * milestone has always existed and should only trigger for fresh installs.
 	 *
 	 * @since 5.1.0-dev
 	 *
