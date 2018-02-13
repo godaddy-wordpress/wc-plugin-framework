@@ -160,7 +160,7 @@ jQuery( document ).ready ($) ->
 		# Blocks the payment methods table UI.
 		#
 		# @since 5.1.0-dev
-		block_ui: -> $( ".wc-#{@slug}-my-payment-methods" ).parent( 'div' ).block( message: null, overlayCSS: background: '#fff',opacity: 0.6 )
+		block_ui: -> $( ".wc-#{@slug}-my-payment-methods" ).parent( 'div' ).block( message: null, overlayCSS: background: '#fff', opacity: 0.6 )
 
 
 		# Unblocks the payment methods table UI.

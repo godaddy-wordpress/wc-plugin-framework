@@ -74,6 +74,11 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	}
 
 
+	/**
+	 * Initializes the My Payment Methods table
+	 *
+	 * @since 5.1.0-dev
+	 */
 	public function init() {
 
 		if ( ! $this->is_payment_methods_page() ) {
@@ -1043,6 +1048,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	}
 
 
+	/**
+	 * Determines if we're viewing the My Account -> Payment Methods page.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return bool
+	 */
 	protected function is_payment_methods_page() {
 		global $wp;
 
