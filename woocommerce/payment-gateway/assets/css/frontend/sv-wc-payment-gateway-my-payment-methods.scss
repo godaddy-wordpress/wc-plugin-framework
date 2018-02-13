@@ -129,13 +129,6 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 	}
 }
 
-.save-payment-methods, .cancel-edit-payment-methods {
-	float: right;
-}
-.save-payment-methods {
-	margin-left: 0.5em;
-}
-
 #tiptip_holder {
 	display: none;
 	position: absolute;
@@ -218,28 +211,36 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 
 	table.sv-wc-payment-gateway-my-payment-methods-table {
 
-		tr td.sv-wc-payment-gateway-payment-method-title::before {
-			content: '';
-		}
+		.sv-wc-payment-gateway-my-payment-methods-method {
 
-		.sv-wc-payment-gateway-payment-method-title img {
-			float: left;
-		}
-
-		td.sv-wc-payment-gateway-payment-method-actions {
-			text-align: left;
-
-			&:before {
+			.sv-wc-payment-gateway-payment-method-title::before {
 				display: none;
 			}
 
-			.button {
-				float: none;
-				margin: .125em .25em .125em 0;
+			.sv-wc-payment-gateway-payment-method-expiry,
+			.sv-wc-payment-gateway-payment-method-default {
+				text-align: right;
+			}
+
+			.sv-wc-payment-gateway-payment-method-actions {
+				text-align: right;
+
+				&:before {
+					display: none;
+				}
+
+				.button {
+					float: none;
+					margin: .125em .25em .125em 0;
+				}
+
+				.edit-payment-method {
+					visibility: visible;
+				}
 			}
 		}
 
-		tr.sv-wc-payment-gateway-my-payment-methods-type-divider td:before {
+		.sv-wc-payment-gateway-my-payment-methods-type-divider td:before {
 			display: none;
 		}
 	}
