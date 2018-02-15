@@ -16,7 +16,7 @@ jQuery( document ).ready ($) ->
 
 		tokens = $( this ).find( 'tr.token' )
 
-		if ( tokens.length == 0 )
+		if ( tokens.length is 0 )
 			$( this ).find( 'tr.no-tokens' ).show()
 		else
 			$( this ).find( 'tr.no-tokens' ).hide()
@@ -55,7 +55,7 @@ jQuery( document ).ready ($) ->
 				$( row ).remove()
 
 				# no more tokens? Display a message
-				if ( editor.find( 'tr.token' ).length == 0 )
+				if ( editor.find( 'tr.token' ).length is 0 )
 					editor.find( 'tr.no-tokens' ).show()
 
 			.fail ( jqXHR, textStatus, error ) =>
