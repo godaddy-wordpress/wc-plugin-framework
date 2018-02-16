@@ -83,7 +83,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 				continue;
 			}
 
-			$this->token_editors[] = $gateway->get_payment_tokens_handler()->get_token_editor();
+			$this->token_editors[ $gateway->get_id() ] = $gateway->get_payment_tokens_handler()->get_token_editor();
 		}
 	}
 
@@ -118,6 +118,14 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	public function display_token_editors( $user ) {
 
 		foreach ( $this->get_token_editors() as $gateway_id => $editor ) {
+
+			$gateway = $this->get_plugin()->get_gateway( $gateway_id );
+
+			// if the gateway supports a customer ID but none is saved, don't display the token tables
+			if ( $gateway && $gateway->supports_customer_id() && ! $gateway->get_customer_id( $user->ID, array( 'autocreate' => false ) ) ) {
+				continue;
+			}
+
 			$editor->display( $user->ID );
 		}
 	}

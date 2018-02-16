@@ -287,26 +287,70 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 				$response = $this->get_gateway()->get_api()->remove_tokenized_payment_method( $token->get_id(), $this->get_gateway()->get_customer_id( $user_id, array( 'environment_id' => $environment_id ) ) );
 
-				if ( ! $response->transaction_approved() ) {
+				if ( ! $response->transaction_approved() && ! $this->should_delete_token( $token, $response ) ) {
 					return false;
 				}
 
 			} catch( SV_WC_Plugin_Exception $e ) {
+
 				if ( $this->get_gateway()->debug_log() ) {
-					$this->get_gateway()->get_plugin()->log( $e->getMessage() . "\n" . $e->getTraceAsString(), $this->get_gateway()->get_id() );
+					$this->get_gateway()->get_plugin()->log( $e->getMessage(), $this->get_gateway()->get_id() );
 				}
+
 				return false;
 			}
+		}
+
+		return $this->delete_token( $user_id, $token );
+	}
+
+
+	/**
+	 * Determines if a token's local meta should be deleted based on an API response.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @param SV_WC_Payment_Gateway_Payment_Token $token payment token object
+	 * @param SV_WC_Payment_Gateway_API_Response $response API response object
+	 * @return bool
+	 */
+	public function should_delete_token( SV_WC_Payment_Gateway_Payment_Token $token, SV_WC_Payment_Gateway_API_Response $response ) {
+
+		return true;
+	}
+
+
+	/**
+	 * Deletes a payment token from user meta.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @param int $user_id WordPress user ID
+	 * @param SV_WC_Payment_Gateway_Payment_Token $token payment token object
+	 * @param string $environment_id gateway environment ID
+	 * @return bool
+	 */
+	public function delete_token( $user_id, SV_WC_Payment_Gateway_Payment_Token $token, $environment_id = null ) {
+
+		// default to current environment
+		if ( is_null( $environment_id ) ) {
+			$environment_id = $this->get_environment_id();
 		}
 
 		// get existing tokens
 		$tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
 
+		if ( ! isset( $tokens[ $token->get_id() ] ) ) {
+			return false;
+		}
+
 		unset( $tokens[ $token->get_id() ] );
 
 		// if the deleted card was the default one, make another one the new default
 		if ( $token->is_default() ) {
+
 			foreach ( array_keys( $tokens ) as $key ) {
+
 				$tokens[ $key ]->set_default( true );
 				break;
 			}
