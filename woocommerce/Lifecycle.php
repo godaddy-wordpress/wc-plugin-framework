@@ -146,6 +146,7 @@ class Lifecycle {
 	 * @param string $id milestone ID
 	 * @param string $message message to display to the user
 	 * @param string $since the version since this milestone has existed in the plugin
+	 * @return bool
 	 */
 	public function trigger_milestone( $id, $message, $since = '1.0.0' ) {
 
@@ -154,7 +155,7 @@ class Lifecycle {
 			return false;
 		}
 
-		$this->register_milestone_message( $id, $message );
+		return $this->register_milestone_message( $id, $message );
 	}
 
 
