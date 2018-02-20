@@ -314,6 +314,28 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		// add API request logging
 		$this->add_api_request_logging();
+
+		// add milestone action hooks
+		$this->add_milestone_hooks();
+	}
+
+
+	/**
+	 * Adds the various milestone hooks like "payment processed".
+	 *
+	 * @since 5.1.0-dev
+	 */
+	protected function add_milestone_hooks() {
+
+		// first successful payment
+		add_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_processed', function( $order ) {
+			$this->get_plugin()->get_lifecycle_handler()->trigger_milestone( 'payment-processed', __( 'you successfully processed a payment!', 'woocommerce-plugin-framework' ) );
+		} );
+
+		// first successful refund
+		add_action( 'wc_payment_gateway_' . $this->get_id() . '_refund_processed', function( $order ) {
+			$this->get_plugin()->get_lifecycle_handler()->trigger_milestone( 'refund-processed', __( 'you successfully processed a refund!', 'woocommerce-plugin-framework' ) );
+		} );
 	}
 
 
@@ -1993,6 +2015,16 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 					$this->mark_order_as_refunded( $order );
 				}
+
+				/**
+				 * Fires after a refund is successfully processed.
+				 *
+				 * @since 5.1.0-dev
+				 *
+				 * @param \WC_Order $order order object
+				 * @param SV_WC_Payment_Gateway $gateway payment gateway instance
+				 */
+				do_action( 'wc_payment_gateway_' . $this->get_id() . '_refund_processed', $order, $this );
 
 				return true;
 

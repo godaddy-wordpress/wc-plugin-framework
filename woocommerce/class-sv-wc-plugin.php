@@ -71,6 +71,9 @@ abstract class SV_WC_Plugin {
 	/** @var string the plugin text domain */
 	private $text_domain;
 
+	/** @var Plugin\Lifecycle lifecycle handler */
+	private $lifecycle_handler;
+
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
 
@@ -276,6 +279,11 @@ abstract class SV_WC_Plugin {
 		// JSON API base
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
+
+		// Lifecycle handler
+		require_once( $framework_path . '/Lifecycle.php' );
+
+		$this->get_lifecycle_handler();
 
 		if ( is_admin() ) {
 			// instantiate the admin notice handler
@@ -532,6 +540,11 @@ abstract class SV_WC_Plugin {
 		// support url if any
 		if ( $this->get_support_url() ) {
 			$custom_actions['support'] = sprintf( '<a href="%s">%s</a>', $this->get_support_url(), esc_html_x( 'Support', 'noun', 'woocommerce-plugin-framework' ) );
+		}
+
+		// review url if any
+		if ( $this->get_reviews_url() ) {
+			$custom_actions['review'] = sprintf( '<a href="%s">%s</a>', $this->get_reviews_url(), esc_html_x( 'Review', 'verb', 'woocommerce-plugin-framework' ) );
 		}
 
 		// add the links to the front of the actions list
@@ -882,6 +895,21 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Gets the lifecycle handler instance.
+	 *
+	 * @since 5.1.0-dev
+	 */
+	public function get_lifecycle_handler() {
+
+		if ( is_null( $this->lifecycle_handler ) ) {
+			$this->lifecycle_handler = new Plugin\Lifecycle( $this );
+		}
+
+		return $this->lifecycle_handler;
+	}
+
+
+	/**
 	 * Returns the admin notice handler instance
 	 *
 	 * @since 3.0.0
@@ -1054,6 +1082,34 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Gets the plugin sales page URL.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return string
+	 */
+	public function get_sales_page_url() {
+
+		return '';
+	}
+
+
+	/**
+	 * Gets the plugin reviews page URL.
+	 *
+	 * Used for the 'Reviews' plugin action and review prompts.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return string
+	 */
+	public function get_reviews_url() {
+
+		return ( $this->get_sales_page_url() ) ? $this->get_sales_page_url() . '#comments' : '';
+	}
+
+
+	/**
 	 * Returns the plugin's path without a trailing slash, i.e.
 	 * /path/to/wp-content/plugins/plugin-directory
 	 *
@@ -1222,9 +1278,26 @@ abstract class SV_WC_Plugin {
 		if ( version_compare( $installed_version, $this->get_version(), '<' ) ) {
 
 			if ( ! $installed_version ) {
+
 				$this->install();
+
+				/**
+				 * Fires after the plugin has been installed.
+				 *
+				 * @since 5.1.0-dev
+				 */
+				do_action( 'wc_' . $this->get_id() . '_installed' );
+
 			} else {
+
 				$this->upgrade( $installed_version );
+
+				/**
+				 * Fires after the plugin has been updated.
+				 *
+				 * @since 5.1.0-dev
+				 */
+				do_action( 'wc_' . $this->get_id() . '_updated' );
 			}
 
 			// new version number
