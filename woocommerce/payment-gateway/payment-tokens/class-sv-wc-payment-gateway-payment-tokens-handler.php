@@ -316,7 +316,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 */
 	public function should_delete_token( SV_WC_Payment_Gateway_Payment_Token $token, SV_WC_Payment_Gateway_API_Response $response ) {
 
-		return true;
+		return false;
 	}
 
 
