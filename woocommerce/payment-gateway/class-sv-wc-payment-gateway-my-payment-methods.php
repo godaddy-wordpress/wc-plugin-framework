@@ -236,7 +236,27 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 */
 		$args = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_payment_methods_js_args', $args, $this );
 
-		wc_enqueue_js( sprintf( 'window.wc_%s_payment_methods_handler = new SV_WC_Payment_Methods_Handler( %s );', esc_js( $this->get_plugin()->get_id() ), json_encode( $args ) ) );
+		wc_enqueue_js( sprintf(
+			'window.wc_%1$s_payment_methods_handler = new %2$s( %3$s );',
+			esc_js( $this->get_plugin()->get_id() ),
+			esc_js( $this->get_js_handler_class() ),
+			json_encode( $args )
+		) );
+	}
+
+
+	/**
+	 * Gets the JS handler class name.
+	 *
+	 * Plugins can override this for their own JS implementations.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return string
+	 */
+	protected function get_js_handler_class() {
+
+		return 'SV_WC_Payment_Methods_Handler';
 	}
 
 
@@ -723,7 +743,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	protected function get_payment_method_actions_html( SV_WC_Payment_Gateway_Payment_Token $token ) {
 
 		$actions = array(
-			'<a href="#" class="edit-payment-method">' . esc_html__( 'Edit', 'woocommerce-plugin-framework' ) . '</a>',
+			'<a href="#" class="edit-payment-method button">' . esc_html__( 'Edit', 'woocommerce-plugin-framework' ) . '</a>',
 			'<a href="#" class="save-payment-method button" style="display:none">' . esc_html__( 'Save', 'woocommerce-plugin-framework' ) . '</a>',
 		);
 

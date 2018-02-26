@@ -83,20 +83,8 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 			}
 		}
 
-		.edit-payment-method {
-			visibility: hidden;
-		}
-
-		.edit-payment-method,
 		.cancel-edit-payment-method {
 			margin-right: 0.5em;
-		}
-
-		&:hover {
-
-			&:not(.editing) .edit-payment-method {
-				visibility: visible;
-			}
 		}
 	}
 
@@ -213,10 +201,6 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 
 		.sv-wc-payment-gateway-my-payment-methods-method {
 
-			.sv-wc-payment-gateway-payment-method-title::before {
-				display: none;
-			}
-
 			.sv-wc-payment-gateway-payment-method-expiry,
 			.sv-wc-payment-gateway-payment-method-default {
 				text-align: right;
@@ -232,10 +216,6 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 				.button {
 					float: none;
 					margin: .125em .25em .125em 0;
-				}
-
-				.edit-payment-method {
-					visibility: visible;
 				}
 			}
 		}

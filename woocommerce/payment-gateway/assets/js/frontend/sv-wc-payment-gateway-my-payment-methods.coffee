@@ -74,7 +74,7 @@ jQuery( document ).ready ($) ->
 			row.addClass( 'editing' )
 
 			# change the Edit button to "Cancel"
-			button.text( @i18n.cancel_button ).removeClass( 'edit-payment-method' ).addClass( 'cancel-edit-payment-method' )
+			button.text( @i18n.cancel_button ).removeClass( 'edit-payment-method' ).addClass( 'cancel-edit-payment-method' ).removeClass( 'button' )
 
 			button.siblings( '.save-payment-method' ).show()
 			button.siblings( '.delete-payment-method' ).hide()
@@ -149,7 +149,7 @@ jQuery( document ).ready ($) ->
 			row.removeClass( 'editing' )
 
 			# change the "Cancel" button back to "Edit"
-			button.removeClass( 'cancel-edit-payment-method' ).addClass( 'edit-payment-method' ).text( @i18n.edit_button )
+			button.removeClass( 'cancel-edit-payment-method' ).addClass( 'edit-payment-method' ).text( @i18n.edit_button ).addClass( 'button' )
 
 			button.siblings( '.save-payment-method' ).hide()
 			button.siblings( '.delete-payment-method' ).show()
