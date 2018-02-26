@@ -691,7 +691,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 */
 	protected function get_merge_attributes() {
 
-		return array( 'last_four', 'card_type', 'account_type', 'exp_month', 'exp_year' );
+		return array( 'last_four', 'card_type', 'account_type', 'exp_month', 'exp_year', 'nickname' );
 	}
 
 
