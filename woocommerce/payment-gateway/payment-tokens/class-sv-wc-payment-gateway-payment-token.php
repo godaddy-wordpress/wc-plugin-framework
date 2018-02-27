@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_0_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_1_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WC_Payment_Gateway_Payment_Token' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_0\\SV_WC_Payment_Gateway_Payment_Token' ) ) :
 
 /**
  * WooCommerce Payment Gateway Token
@@ -391,6 +391,32 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_image_url() {
 
 		return $this->img_url;
+	}
+
+
+	/**
+	 * Gets the payment method nickname.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return string
+	 */
+	public function get_nickname() {
+
+		return isset( $this->data['nickname'] ) ? $this->data['nickname'] : '';
+	}
+
+
+	/**
+	 * Sets the payment method nickname.
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @param string $value nickname value
+	 */
+	public function set_nickname( $value ) {
+
+		$this->data['nickname'] = $value;
 	}
 
 

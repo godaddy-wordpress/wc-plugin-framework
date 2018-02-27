@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_0_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_1_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_0\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
 
 /**
  * Handle the admin order screens.
@@ -63,6 +63,9 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			// bulk capture order action
 			add_action( 'admin_footer-edit.php', array( $this, 'maybe_add_capture_charge_bulk_order_action' ) );
 			add_action( 'load-edit.php',         array( $this, 'process_capture_charge_bulk_order_action' ) );
+
+			// auto-capture on order status change if enabled
+			add_action( 'woocommerce_order_status_changed', array( $this, 'maybe_capture_paid_order' ), 10, 3 );
 		}
 	}
 
@@ -363,6 +366,42 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			wp_send_json_error( array(
 				'message' => $e->getMessage(),
 			) );
+		}
+	}
+
+
+	/**
+	 * Captures an order on status change to a "paid" status.
+	 *
+	 * @since 5.0.1-dev
+	 *
+	 * @param int $order_id order ID
+	 * @param string $old_status status being changed
+	 * @param string $new_status new order status
+	 */
+	public function maybe_capture_paid_order( $order_id, $old_status, $new_status ) {
+
+		$paid_statuses = SV_WC_Plugin_Compatibility::wc_get_is_paid_statuses();
+
+		// bail if changing to a non-paid status or from a paid status
+		if ( ! in_array( $new_status, $paid_statuses, true ) || in_array( $old_status, $paid_statuses ) ) {
+			return;
+		}
+
+		$order = wc_get_order( $order_id );
+
+		if ( ! $order ) {
+			return;
+		}
+
+		$gateway = $this->get_order_gateway( $order );
+
+		if ( ! $gateway ) {
+			return;
+		}
+
+		if ( $gateway->is_paid_capture_enabled() ) {
+			$this->maybe_capture_charge( $order );
 		}
 	}
 

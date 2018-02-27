@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_0_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_1_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WC_Payment_Gateway_Admin_Payment_Token_Editor' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_0\\SV_WC_Payment_Gateway_Admin_Payment_Token_Editor' ) ) :
 
 /**
  * The token editor.
@@ -98,6 +98,9 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 				'save' => array(
 					'error' => __( 'Invalid token data', 'woocommerce-plugin-framework' ),
 				),
+			),
+			'i18n' => array(
+				'general_error' => __( 'An error occurred. Please try again.', 'woocommerce-plugin-framework' ),
 			),
 		) );
 	}
@@ -230,15 +233,32 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 */
 	public function ajax_remove_token() {
 
-		check_ajax_referer( 'wc_payment_gateway_admin_remove_payment_token', 'security' );
+		try {
 
-		$user_id  = SV_WC_Helper::get_request( 'user_id' );
-		$token_id = SV_WC_Helper::get_request( 'token_id' );
+			if ( ! check_ajax_referer( 'wc_payment_gateway_admin_remove_payment_token', 'security' ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Invalid nonce' );
+			}
 
-		if ( $this->remove_token( $user_id, $token_id ) ) {
-			wp_send_json_success();
-		} else {
-			wp_send_json_error();
+			$user_id  = SV_WC_Helper::get_request( 'user_id' );
+			$token_id = SV_WC_Helper::get_request( 'token_id' );
+
+			if ( ! $user_id ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'User ID is missing' );
+			}
+
+			if ( ! $token_id ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Token ID is missing' );
+			}
+
+			if ( $this->remove_token( $user_id, $token_id ) ) {
+				wp_send_json_success();
+			} else {
+				throw new SV_WC_Payment_Gateway_Exception( 'Could not remove token' );
+			}
+
+		} catch ( SV_WC_Plugin_Exception $e ) {
+
+			wp_send_json_error( $e->getMessage() );
 		}
 	}
 
@@ -250,11 +270,17 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 */
 	public function ajax_refresh_tokens() {
 
-		check_ajax_referer( 'wc_payment_gateway_admin_refresh_payment_tokens', 'security' );
+		try {
 
-		$user_id = SV_WC_Helper::get_request( 'user_id' );
+			if ( ! check_ajax_referer( 'wc_payment_gateway_admin_refresh_payment_tokens', 'security', false ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Invalid nonce' );
+			}
 
-		if ( $user_id ) {
+			$user_id = SV_WC_Helper::get_request( 'user_id' );
+
+			if ( ! $user_id ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'User ID is missing' );
+			}
 
 			ob_start();
 
@@ -264,9 +290,9 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 			wp_send_json_success( trim( $html ) );
 
-		} else {
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
-			wp_send_json_error();
+			wp_send_json_error( $e->getMessage() );
 		}
 	}
 
@@ -375,8 +401,16 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		// Clear any cached tokens
 		$this->get_gateway()->get_payment_tokens_handler()->clear_transient( $user_id );
 
-		$stored_tokens = $this->get_gateway()->get_payment_tokens_handler()->get_tokens( $user_id );
-		$tokens        = array();
+		// get the customer ID separately so it's never auto-created from the admin
+		$customer_id = $this->get_gateway()->get_customer_id( $user_id, array(
+			'autocreate' => false,
+		) );
+
+		$stored_tokens = $this->get_gateway()->get_payment_tokens_handler()->get_tokens( $user_id, array(
+			'customer_id' => $customer_id,
+		) );
+
+		$tokens = array();
 
 		foreach( $stored_tokens as $token ) {
 

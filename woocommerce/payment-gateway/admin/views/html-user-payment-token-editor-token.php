@@ -29,14 +29,19 @@
 
 	<?php foreach ( $fields as $field_id => $field ) : ?>
 
+		<?php $is_select = 'select' === $field['type'] && isset( $field['options'] ) && ! empty( $field['options'] ); ?>
+
 		<td class="token-<?php echo esc_attr( $field_id ); ?>">
 
 			<?php if ( ! $field['editable'] ) : ?>
 
-				<span class="token-<?php echo esc_attr( $field_id ); ?> token-attribute"><?php echo esc_attr( $token[ $field_id ] ); ?></span>
+				<?php $display_value = $is_select && ! empty( $field['options'][ $token[ $field_id ] ] ) ? $field['options'][ $token[ $field_id ] ] : $token[ $field_id ]; ?>
+
+				<span class="token-<?php echo esc_attr( $field_id ); ?> token-attribute"><?php echo esc_attr( $display_value ); ?></span>
+
 				<input name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]" value="<?php echo esc_attr( $token[ $field_id ] ); ?>" type="hidden" />
 
-			<?php elseif ( 'select' === $field['type'] && isset( $field['options'] ) && ! empty( $field['options'] ) ) : ?>
+			<?php elseif ( $is_select ) : ?>
 
 				<select name="<?php echo esc_attr( $token_input_name ); ?>[<?php echo esc_attr( $field_id ); ?>]">
 

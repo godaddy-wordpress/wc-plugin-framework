@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_0_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_1_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WC_Plugin_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_0\\SV_WC_Plugin_Compatibility' ) ) :
 
 /**
  * WooCommerce Compatibility Utility Class
@@ -48,6 +48,23 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WC_Pl
  * @since 2.0.0
  */
 class SV_WC_Plugin_Compatibility {
+
+
+	/**
+	 * Gets the statuses that are considered "paid".
+	 *
+	 * @since 5.1.0-dev
+	 *
+	 * @return array
+	 */
+	public static function wc_get_is_paid_statuses() {
+
+		if ( self::is_wc_version_gte_3_0() ) {
+			return wc_get_is_paid_statuses();
+		} else {
+			return (array) apply_filters( 'woocommerce_order_is_paid_statuses', array( 'processing', 'completed' ) );
+		}
+	}
 
 
 	/**
@@ -107,7 +124,7 @@ class SV_WC_Plugin_Compatibility {
 				$format = wc_date_format();
 			}
 
-			if ( ! is_a( $date, '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WC_DateTime' ) ) { // TODO: verify this {CW 2017-07-18}
+			if ( ! is_a( $date, '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_0\\SV_WC_DateTime' ) ) { // TODO: verify this {CW 2017-07-18}
 				return '';
 			}
 

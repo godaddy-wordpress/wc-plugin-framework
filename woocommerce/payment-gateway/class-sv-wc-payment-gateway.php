@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_0_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_1_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_0\\SV_WC_Payment_Gateway' ) ) :
 
 /**
  * WooCommerce Payment Gateway Framework
@@ -158,6 +158,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 	/** @var string configuration option: whether orders can be partially captured multiple times */
 	private $enable_partial_capture;
+
+	/** @var string configuration option: whether orders are captured when switched to a "paid" status */
+	private $enable_paid_capture;
 
 	/** @var array configuration option: card types to show images for */
 	private $card_types;
@@ -311,6 +314,28 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		// add API request logging
 		$this->add_api_request_logging();
+
+		// add milestone action hooks
+		$this->add_milestone_hooks();
+	}
+
+
+	/**
+	 * Adds the various milestone hooks like "payment processed".
+	 *
+	 * @since 5.1.0-dev
+	 */
+	protected function add_milestone_hooks() {
+
+		// first successful payment
+		add_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_processed', function( $order ) {
+			$this->get_plugin()->get_lifecycle_handler()->trigger_milestone( 'payment-processed', __( 'you successfully processed a payment!', 'woocommerce-plugin-framework' ) );
+		} );
+
+		// first successful refund
+		add_action( 'wc_payment_gateway_' . $this->get_id() . '_refund_processed', function( $order ) {
+			$this->get_plugin()->get_lifecycle_handler()->trigger_milestone( 'refund-processed', __( 'you successfully processed a refund!', 'woocommerce-plugin-framework' ) );
+		} );
 	}
 
 
@@ -1372,12 +1397,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				$( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_transaction_type' ).change( function() {
 
 					var transaction_type = $( this ).val();
-					var hidden_setting   = $( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_charge_virtual_orders, #woocommerce_<?php echo esc_js( $this->get_id() ); ?>_enable_partial_capture' ).closest( 'tr' );
+					var hidden_settings   = $( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_charge_virtual_orders, #woocommerce_<?php echo esc_js( $this->get_id() ); ?>_enable_partial_capture, #woocommerce_<?php echo esc_js( $this->get_id() ); ?>_enable_paid_capture' ).closest( 'tr' );
 
 					if ( '<?php echo esc_js( self::TRANSACTION_TYPE_AUTHORIZATION ); ?>' === transaction_type ) {
-						$( hidden_setting ).show();
+						$( hidden_settings ).show();
 					} else {
-						$( hidden_setting ).hide();
+						$( hidden_settings ).hide();
 					}
 
 				} ).change();
@@ -1990,6 +2015,16 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 					$this->mark_order_as_refunded( $order );
 				}
+
+				/**
+				 * Fires after a refund is successfully processed.
+				 *
+				 * @since 5.1.0-dev
+				 *
+				 * @param \WC_Order $order order object
+				 * @param SV_WC_Payment_Gateway $gateway payment gateway instance
+				 */
+				do_action( 'wc_payment_gateway_' . $this->get_id() . '_refund_processed', $order, $this );
 
 				return true;
 
@@ -3098,6 +3133,24 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			);
 		}
 
+		// get a list of the "paid" status names
+		$paid_statuses = array_map( 'wc_get_order_status_name', SV_WC_Plugin_Compatibility::wc_get_is_paid_statuses() );
+
+		// do some oxford comma magic
+		$last_status = array_pop( $paid_statuses );
+		array_push( $paid_statuses, "or {$last_status}" );
+		$separator = count( $last_status ) < 3 ? ' ' : ', ';
+
+		$form_fields['enable_paid_capture'] = array(
+			'label'       => __( 'Capture Paid Orders', 'woocommerce-plugin-framework' ),
+			'type'        => 'checkbox',
+			'description' => sprintf(
+				__( 'Automatically capture orders when they are changed to %s.', 'woocommerce-plugin-framework' ),
+				implode( $separator, $paid_statuses )
+		 	),
+			'default' => 'no',
+		);
+
 		return $form_fields;
 	}
 
@@ -3278,6 +3331,27 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	}
 
 
+	/**
+	 * Determines if orders should be captured when switched to a "paid" status.
+	 *
+	 * @since 5.0.1-dev
+	 *
+	 * @return bool
+	 */
+	public function is_paid_capture_enabled() {
+
+		/**
+		 * Filters whether orders should be captured when switched to a "paid" status.
+		 *
+		 * @since 5.0.1-dev
+		 *
+		 * @param bool $enabled whether "paid" capture is enabled
+		 * @param SV_WC_Payment_Gateway $gateway gateway object
+		 */
+		return apply_filters( 'wc_' . $this->get_id() . '_paid_capture_enabled', 'yes' === $this->enable_paid_capture, $this );
+	}
+
+
 	/** Add Payment Method feature ********************************************/
 
 
@@ -3341,13 +3415,14 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		assert( $this->supports_card_types() );
 
 		$form_fields['card_types'] = array(
-			'title'    => esc_html__( 'Accepted Card Types', 'woocommerce-plugin-framework' ),
-			'type'     => 'multiselect',
-			'desc_tip' => esc_html__( 'Select which card types you accept.', 'woocommerce-plugin-framework' ),
-			'default'  => array_keys( $this->get_available_card_types() ),
-			'class'    => 'wc-enhanced-select',
-			'css'      => 'width: 350px;',
-			'options'  => $this->get_available_card_types(),
+			'title'       => esc_html__( 'Accepted Card Logos', 'woocommerce-plugin-framework' ),
+			'type'        => 'multiselect',
+			'desc_tip'    => __( 'These are the card logos that are displayed to customers as accepted during checkout.', 'woocommerce-plugin-framework' ),
+			'description' => __( 'This can be configured to match those accepted by your payment processor, but does not change your merchant account configuration.', 'woocommerce-plugin-framework' ),
+			'default'     => array_keys( $this->get_available_card_types() ),
+			'class'       => 'wc-enhanced-select',
+			'css'         => 'width: 350px;',
+			'options'     => $this->get_available_card_types(),
 		);
 
 		return $form_fields;

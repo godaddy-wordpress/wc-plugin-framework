@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_0_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_1_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_0_1\\SV_WC_Admin_Notice_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_0\\SV_WC_Admin_Notice_Handler' ) ) :
 
 /**
  * SkyVerge Admin Notice Handler Class
@@ -171,7 +171,7 @@ class SV_WC_Admin_Notice_Handler {
 
 		if ( $is_visible && ! self::$admin_notice_placeholder_rendered ) {
 			// placeholder for moving delayed notices up into place
-			echo '<div class="js-wc-plugin-framework-admin-notice-placeholder"></div>';
+			echo '<div class="js-wc-' . esc_attr( $this->get_plugin()->get_id_dasherized() ) . '-admin-notice-placeholder"></div>';
 			self::$admin_notice_placeholder_rendered = true;
 		}
 
@@ -248,6 +248,8 @@ class SV_WC_Admin_Notice_Handler {
 			return;
 		}
 
+		$plugin_slug = $this->get_plugin()->get_id_dasherized();
+
 		self::$admin_notice_js_rendered = true;
 
 		ob_start();
@@ -293,7 +295,7 @@ class SV_WC_Admin_Notice_Handler {
 		}
 
 		// move any delayed notices up into position .show();
-		$( '.js-wc-plugin-framework-admin-notice:hidden' ).insertAfter( '.js-wc-plugin-framework-admin-notice-placeholder' ).show();
+		$( '.js-wc-plugin-framework-admin-notice:hidden' ).insertAfter( '.js-wc-<?php echo esc_js( $plugin_slug ); ?>-admin-notice-placeholder' ).show();
 		<?php
 		$javascript = ob_get_clean();
 
