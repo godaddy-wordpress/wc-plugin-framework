@@ -308,7 +308,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/**
 	 * Determines if a token's local meta should be deleted based on an API response.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token payment token object
 	 * @param SV_WC_Payment_Gateway_API_Response $response API response object
@@ -323,7 +323,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/**
 	 * Deletes a payment token from user meta.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param int $user_id WordPress user ID
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token payment token object

@@ -77,7 +77,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Initializes the My Payment Methods table
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 */
 	public function init() {
 
@@ -208,7 +208,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Renders the JavaScript.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 */
 	public function render_js() {
 
@@ -229,7 +229,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		/**
 		 * Filters the payment gateway payment methods JavaScript args.
 		 *
-		 * @since 5.1.0-dev
+		 * @since 5.1.0
 		 *
 		 * @param array $args arguments
 		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $handler payment methods handler
@@ -250,7 +250,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 *
 	 * Plugins can override this for their own JS implementations.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @return string
 	 */
@@ -585,7 +585,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * Get the payment method title for a given token.
 	 *
 	 * @since 4.0.0
-	 * @deprecated 5.1.0-dev
+	 * @deprecated 5.1.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return string
@@ -599,7 +599,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Get a token's payment method title HTML.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return string
@@ -629,7 +629,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		/**
 		 * Filter a token's payment method title HTML.
 		 *
-		 * @since 5.1.0-dev
+		 * @since 5.1.0
 		 *
 		 * @param string $html title HTML
 		 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
@@ -641,7 +641,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Get a token's payment method "default" flag HTML.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return string
@@ -660,7 +660,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		/**
 		 * Filter a token's payment method "default" flag HTML.
 		 *
-		 * @since 5.1.0-dev
+		 * @since 5.1.0
 		 *
 		 * @param string $html "default" flag HTML
 		 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
@@ -677,7 +677,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 *
 	 * [icon] * * * 1234 [default]
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return array
@@ -697,7 +697,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		/**
 		 * Filters a token's payment method details HTML.
 		 *
-		 * @since 5.1.0-dev
+		 * @since 5.1.0
 		 *
 		 * @param string $html details HTML
 		 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
@@ -709,7 +709,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Get a token's payment method expiration date HTML.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return string
@@ -723,7 +723,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		/**
 		 * Filter a token's payment method expiration date HTML.
 		 *
-		 * @since 5.1.0-dev
+		 * @since 5.1.0
 		 *
 		 * @param string $html expiration date HTML
 		 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
@@ -735,7 +735,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Get a token's payment method actions HTML.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return string
@@ -784,7 +784,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		/**
 		 * Filters a token's payment method actions HTML.
 		 *
-		 * @since 5.1.0-dev
+		 * @since 5.1.0
 		 *
 		 * @param string $html actions HTML
 		 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
@@ -850,7 +850,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 *
 	 * @internal
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 */
 	public function ajax_save_payment_method() {
 
@@ -910,7 +910,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * fields. Note that this does not persist the data to the db, but only sets
 	 * it for the object.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @param array $data {
@@ -1071,7 +1071,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Determines if we're viewing the My Account -> Payment Methods page.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @return bool
 	 */

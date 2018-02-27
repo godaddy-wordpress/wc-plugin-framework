@@ -176,7 +176,7 @@ jQuery( document ).ready ($) ->
 
 	# Handles any AJAX errors.
 	#
-	# @since 5.1.0-dev
+	# @since 5.1.0
 	handleError = ( editor, error, message = '' ) ->
 
 		console.error error

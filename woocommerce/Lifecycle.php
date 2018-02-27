@@ -34,7 +34,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_0\\Plugin\\
  * Registers and displays milestone notice prompts and eventually the plugin
  * install, upgrade, activation, and deactivation routines.
  *
- * @since 5.1.0-dev
+ * @since 5.1.0
  */
 class Lifecycle {
 
@@ -49,7 +49,7 @@ class Lifecycle {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_1_0\SV_WC_Plugin $plugin plugin instance
 	 */
@@ -64,7 +64,7 @@ class Lifecycle {
 	/**
 	 * Adds the action & filter hooks.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 */
 	protected function add_hooks() {
 
@@ -81,7 +81,7 @@ class Lifecycle {
 	 *
 	 * @internal
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 */
 	public function do_update() {
 
@@ -95,7 +95,7 @@ class Lifecycle {
 	/**
 	 * Adds any lifecycle admin notices.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 */
 	public function add_admin_notices() {
 
@@ -110,7 +110,7 @@ class Lifecycle {
 			/**
 			 * Filters a milestone notice message.
 			 *
-			 * @since 5.1.0-dev
+			 * @since 5.1.0
 			 *
 			 * @param string $message message text to be used for the milestone notice
 			 * @param string $id milestone ID
@@ -143,7 +143,7 @@ class Lifecycle {
 	 * gateway's first successful payment. Omitting $since will assume the
 	 * milestone has always existed and should only trigger for fresh installs.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param string $id milestone ID
 	 * @param string $message message to display to the user
@@ -164,7 +164,7 @@ class Lifecycle {
 	/**
 	 * Generates a milestone notice message.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param string $custom_message custom text that notes what milestone was completed.
 	 * @return string
@@ -202,7 +202,7 @@ class Lifecycle {
 	/**
 	 * Registers a milestone message to be displayed in the admin.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 * @see Lifecycle::generate_milestone_notice_message()
 	 *
 	 * @param string $id milestone ID
@@ -234,7 +234,7 @@ class Lifecycle {
 	/**
 	 * Gets the registered milestone messages.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @return array
 	 */
@@ -247,7 +247,7 @@ class Lifecycle {
 	/**
 	 * Sets the milestone version.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param string $version plugin version
 	 * @return bool
@@ -263,7 +263,7 @@ class Lifecycle {
 	/**
 	 * Gets the milestone version.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @return string
 	 */
@@ -280,7 +280,7 @@ class Lifecycle {
 	/**
 	 * Gets the plugin instance.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @return \SkyVerge\WooCommerce\PluginFramework\v5_1_0\SV_WC_Plugin
 	 */

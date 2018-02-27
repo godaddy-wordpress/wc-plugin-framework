@@ -53,7 +53,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Gets the statuses that are considered "paid".
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @return array
 	 */

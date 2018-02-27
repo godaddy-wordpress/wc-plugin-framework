@@ -397,7 +397,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Gets the payment method nickname.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @return string
 	 */
@@ -410,7 +410,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Sets the payment method nickname.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param string $value nickname value
 	 */

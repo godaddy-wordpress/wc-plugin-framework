@@ -1,5 +1,18 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2018.02.27 - version 5.1.0
+ * Feature - Add payment method editing support
+ * Feature - Allow users to set nicknames for their payment methods
+ * Feature - Add support for auto-capturing orders when changed to a paid status
+ * Feature - Add a Milestones API for plugins to trigger milestone messages and prompt users for feedback after key plugin events
+ * Tweak - Improve the My Account Payment Methods table on desktop and mobile
+ * Tweak - Let gateway handle their own API errors when deleting payment methods
+ * Tweak - Improve the admin token editor with better error handling and improved display
+ * Tweak - Let plugins define a "reviews" URL to be displayed with the plugin action links
+ * Tweak - Adjust the gateway "Accepted Cards" setting wording to clarify that it doesn't affect payment processor card support
+ * Tweak - Support warning and info message types in the Admin Message Handler
+ * Fix - Prevent duplicate admin notices when running alongside legacy framework versions
+
 2018.01.17 - version 5.0.1
  * Misc - Remove support for WooCommerce 2.5
  * Misc - Require WordPress 4.4 or higher

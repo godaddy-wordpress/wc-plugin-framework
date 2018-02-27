@@ -170,7 +170,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Adds a warning message.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param string $message warning message to add
 	 */
@@ -182,7 +182,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Adds a info message.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param string $message info message to add
 	 */
@@ -216,7 +216,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Gets the warning message count.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @return int warning message count
 	 */
@@ -228,7 +228,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Gets the info message count.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @return int info message count
 	 */
@@ -274,7 +274,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Gets all warning messages.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @return array
 	 */
@@ -286,7 +286,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Gets a specific warning message.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @param int $index warning message index
 	 * @return string
@@ -299,7 +299,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Gets all info messages.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @return array
 	 */

@@ -897,7 +897,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the lifecycle handler instance.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 */
 	public function get_lifecycle_handler() {
 
@@ -1084,7 +1084,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the plugin sales page URL.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @return string
 	 */
@@ -1099,7 +1099,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * Used for the 'Reviews' plugin action and review prompts.
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 *
 	 * @return string
 	 */
@@ -1284,7 +1284,7 @@ abstract class SV_WC_Plugin {
 				/**
 				 * Fires after the plugin has been installed.
 				 *
-				 * @since 5.1.0-dev
+				 * @since 5.1.0
 				 */
 				do_action( 'wc_' . $this->get_id() . '_installed' );
 
@@ -1295,7 +1295,7 @@ abstract class SV_WC_Plugin {
 				/**
 				 * Fires after the plugin has been updated.
 				 *
-				 * @since 5.1.0-dev
+				 * @since 5.1.0
 				 */
 				do_action( 'wc_' . $this->get_id() . '_updated' );
 			}

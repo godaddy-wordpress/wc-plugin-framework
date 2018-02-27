@@ -323,7 +323,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Adds the various milestone hooks like "payment processed".
 	 *
-	 * @since 5.1.0-dev
+	 * @since 5.1.0
 	 */
 	protected function add_milestone_hooks() {
 
@@ -2019,7 +2019,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				/**
 				 * Fires after a refund is successfully processed.
 				 *
-				 * @since 5.1.0-dev
+				 * @since 5.1.0
 				 *
 				 * @param \WC_Order $order order object
 				 * @param SV_WC_Payment_Gateway $gateway payment gateway instance

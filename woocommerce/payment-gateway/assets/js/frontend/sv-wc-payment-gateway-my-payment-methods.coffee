@@ -1,6 +1,6 @@
 ###
  WooCommerce SkyVerge Payment Gateway My Payment Methods CoffeeScript
- Version 5.1.0-dev
+ Version 5.1.0
 
  Copyright (c) 2014-2018, SkyVerge, Inc.
  Licensed under the GNU General Public License v3.0
@@ -11,13 +11,13 @@ jQuery( document ).ready ($) ->
 
 	# The My Payment Methods handler.
 	#
-	# @since 5.1.0-dev
+	# @since 5.1.0
 	class window.SV_WC_Payment_Methods_Handler
 
 
 		# Constructs the class.
 		#
-		# @since 5.1.0-dev
+		# @since 5.1.0
 		#
 		# @param [Object] args, with the properties:
 		#     id:         [String] plugin ID
@@ -59,7 +59,7 @@ jQuery( document ).ready ($) ->
 
 		# Edits a payment method.
 		#
-		# @since 5.1.0-dev
+		# @since 5.1.0
 		#
 		# @param [Object] event jQuery event object
 		edit_method: ( event ) =>
@@ -84,7 +84,7 @@ jQuery( document ).ready ($) ->
 
 		# Saves a payment method.
 		#
-		# @since 5.1.0-dev
+		# @since 5.1.0
 		#
 		# @param [Object] event jQuery event object
 		save_method: ( event ) =>
@@ -134,7 +134,7 @@ jQuery( document ).ready ($) ->
 
 		# Cancels editing a payment method.
 		#
-		# @since 5.1.0-dev
+		# @since 5.1.0
 		#
 		# @param [Object] event jQuery event object
 		cancel_edit: ( event ) =>
@@ -159,19 +159,19 @@ jQuery( document ).ready ($) ->
 
 		# Blocks the payment methods table UI.
 		#
-		# @since 5.1.0-dev
+		# @since 5.1.0
 		block_ui: -> $( ".wc-#{@slug}-my-payment-methods" ).parent( 'div' ).block( message: null, overlayCSS: background: '#fff', opacity: 0.6 )
 
 
 		# Unblocks the payment methods table UI.
 		#
-		# @since 5.1.0-dev
+		# @since 5.1.0
 		unblock_ui: -> $( ".wc-#{@slug}-my-payment-methods" ).parent( 'div' ).unblock()
 
 
 		# Displays an error message to the user.
 		#
-		# @since 5.1.0-dev
+		# @since 5.1.0
 		#
 		# @param [Object] row payment method table row
 		# @param [String] error raw error message
