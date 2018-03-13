@@ -232,7 +232,7 @@ class SV_WC_Framework_Plugin_Loader {
 			$this->add_admin_notice( 'update_woocommerce', 'error', sprintf(
 				'%s requires WooCommerce version %s or higher. Please %supdate WooCommerce &raquo;%s',
 				'<strong>' . self::PLUGIN_NAME . '</strong>',
-				self::MINIMUM_WP_VERSION,
+				self::MINIMUM_WC_VERSION,
 				'<a href="' . esc_url( admin_url( 'update-core.php' ) ) . '">', '</a>'
 			) );
 		}
