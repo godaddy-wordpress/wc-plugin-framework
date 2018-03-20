@@ -646,9 +646,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		foreach ( $subscriptions as $key => $subscription ) {
 
 			$payment_method  = SV_WC_Order_Compatibility::get_prop( $subscription, 'payment_method' );
-			$stored_token_id = $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), 'payment_token' );
+			$stored_token_id = (string) $this->get_gateway()->get_order_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), 'payment_token' );
 
-			if ( $stored_token_id !== $token->get_id() || $payment_method !== $this->get_gateway()->get_id() ) {
+			if ( $stored_token_id !== (string) $token->get_id() || $payment_method !== $this->get_gateway()->get_id() ) {
 				unset( $subscriptions[ $key ] );
 			}
 		}

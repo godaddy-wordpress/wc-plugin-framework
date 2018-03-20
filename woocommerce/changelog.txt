@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2018.03.20 - version 4.9.1
+ * Fix - Ensure customers can't delete subscription payment methods from gateways that use integer token IDs
+
 2018.01.14 - version 4.9.0
  * Misc - Remove support for WooCommerce 2.5
  * Misc - Require WordPress 4.4 or higher
