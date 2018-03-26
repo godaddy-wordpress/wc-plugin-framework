@@ -950,8 +950,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		foreach ( $defaults as $prop => $value ) {
 
-			if ( ! empty( $user->$prop ) ) {
-				$properties[ $prop ] = $user->$prop;
+			$value = ! empty( $user->$prop ) ? $user->$prop : $value;
+
+			if ( ! empty( $value ) ) {
+				$properties[ $prop ] = $value;
 			}
 		}
 
