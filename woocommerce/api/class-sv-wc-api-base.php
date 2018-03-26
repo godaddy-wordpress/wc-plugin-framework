@@ -98,8 +98,8 @@ abstract class SV_WC_API_Base {
 
 		$start_time = microtime( true );
 
-		// If this API requires TLS v1.2, force it
-		if ( $this->require_tls_1_2() && $this->is_tls_1_2_available() ) {
+		// if this API requires TLS v1.2, force it
+		if ( $this->require_tls_1_2() ) {
 			add_action( 'http_api_curl', array( $this, 'set_tls_1_2_request' ), 10, 3 );
 		}
 
