@@ -360,10 +360,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		$html .= '</table>';
 
-		// add a hidden "Save" & "Cancel" buttons for editing
-		$html .= '<a class="button save-payment-methods" style="display:none;">' . __( 'Save', 'woocommerce-plugin-framework' ) . '</a>';
-		$html .= '<a class="button cancel-edit-payment-methods" style="display:none;">' . __( 'Cancel', 'woocommerce-plugin-framework' ) . '</a>';
-
 		/**
 		 * My Payment Methods Table HTML Filter.
 		 *
