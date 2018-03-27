@@ -162,7 +162,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			}
 		}
 
-		$this->tokens = array_merge( $this->credit_card_tokens, $this->echeck_tokens );
+		// we don't use array_merge here since the indexes could be numeric
+		// and cause the indexes to be reset
+		$this->tokens = $this->credit_card_tokens + $this->echeck_tokens;
 
 		$this->has_tokens = ! empty( $this->tokens );
 

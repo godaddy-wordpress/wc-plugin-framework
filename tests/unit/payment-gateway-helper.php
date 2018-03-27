@@ -48,6 +48,7 @@ class Payment_Gateway_Helper extends Test_Case {
 		Mock::wpFunction( 'wp_list_pluck', array(
 			'return' => array(
 				'mastercard' => array( 'mc' ),
+				'amex'       => array( 'americanexpress' ),
 			),
 		) );
 
@@ -64,10 +65,11 @@ class Payment_Gateway_Helper extends Test_Case {
 	public function provider_test_normalize_card_type() {
 
 		return array(
-			array( 'visa',       'visa' ),       // nothing to do
-			array( 'VISA',       'visa' ),       // captalization
-			array( 'mc',         'mastercard' ), // existing variation
-			array( 'space-buck', 'space-buck' ), // unknown card type
+			array( 'visa',            'visa' ),       // nothing to do
+			array( 'VISA',            'visa' ),       // captalization
+			array( 'mc',              'mastercard' ), // existing variation
+			array( 'americanexpress', 'amex' ),
+			array( 'space-buck',      'space-buck' ), // unknown card type
 		);
 	}
 

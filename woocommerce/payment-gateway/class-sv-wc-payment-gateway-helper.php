@@ -233,7 +233,7 @@ class SV_WC_Payment_Gateway_Helper {
 			),
 			self::CARD_TYPE_AMEX => array(
 				'name'       => esc_html_x( 'American Express', 'credit card type', 'woocommerce-plugin-framework' ),
-				'variations' => array(),
+				'variations' => array( 'americanexpress' ),
 			),
 			self::CARD_TYPE_DINERSCLUB => array(
 				'name'       => esc_html_x( 'Diners Club', 'credit card type', 'woocommerce-plugin-framework' ),
