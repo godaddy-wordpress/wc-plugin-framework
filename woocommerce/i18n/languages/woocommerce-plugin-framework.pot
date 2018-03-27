@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 5.1.0\n"
+"Project-Id-Version: WooCommerce Plugin Framework 5.1.1\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -240,7 +240,7 @@ msgid "(%s)"
 msgstr ""
 
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:480
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:652
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:650
 msgid "Default"
 msgstr ""
 
@@ -286,8 +286,7 @@ msgid "Add New"
 msgstr ""
 
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:662
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:362
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:747
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:745
 msgid "Save"
 msgstr ""
 
@@ -378,8 +377,7 @@ msgid "Capture %s"
 msgstr ""
 
 #: payment-gateway/admin/views/html-order-partial-capture.php:66
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:223
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:363
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:225
 msgid "Cancel"
 msgstr ""
 
@@ -847,7 +845,7 @@ msgstr ""
 msgid "Nice! New payment method added."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-direct.php:964
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:966
 #. translators: Placeholders: %1$s - site title, %2$s - customer email. Payment
 #. method as in a specific credit card, e-check or bank account
 msgid "%1$s - Add Payment Method for %2$s"
@@ -932,92 +930,92 @@ msgstr ""
 msgid "Tokenization failed. %s"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:222
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:746
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:224
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:744
 msgid "Edit"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:224
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:226
 msgid "Oops, there was an error updating your payment method. Please try again."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:225
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:227
 msgid "Are you sure you want to delete this payment method?"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:282
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:284
 #. translators: Payment method as in a specific credit card, eCheck or bank
 #. account
 msgid "You do not have any saved payment methods."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:319
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:321
 #. translators: Payment method as in a specific credit card, eCheck or bank
 #. account
 msgid "My Payment Methods"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:327
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:329
 #. translators: Payment method as in a specific credit card, e-check or bank
 #. account
 msgid "Add New Payment Method"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:416
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:414
 msgid "Method"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:417
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:415
 msgid "Details"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:418
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:416
 msgid "Expires"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:419
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:417
 msgid "Default?"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:420
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:418
 msgid "Actions"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:456
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:454
 msgid "Credit/Debit Cards"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:465
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:463
 msgid "Bank Accounts"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:517
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:515
 msgid "N/A"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:626
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:624
 msgid "Nickname"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:807
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:805
 msgid "Delete"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:961
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:959
 msgid "Oops, you took too long, please try again."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:974
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:972
 msgid "There was an error with your request, please try again."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:987
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:985
 #. translators: Payment method as in a specific credit card, e-check or bank
 #. account
 msgid "Error removing payment method"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:992
+#: payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:990
 #. translators: Payment method as in a specific credit card, e-check or bank
 #. account
 msgid "Payment method deleted."

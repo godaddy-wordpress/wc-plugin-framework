@@ -166,7 +166,7 @@ jQuery( document ).ready ($) ->
 		# This brings proper focus to the method being edited and prevents
 		# other available buttons/actions until the editing is finished or cancelled.
 		#
-		# @since 5.1.1-dev
+		# @since 5.1.1
 		enable_editing_ui: ->
 
 			# set the methods table as 'editing'
@@ -178,7 +178,7 @@ jQuery( document ).ready ($) ->
 
 		# Sets the page UI back to the default state.
 		#
-		# @since 5.1.1-dev
+		# @since 5.1.1
 		disable_editing_ui: ->
 
 			# removes the methods table's "editing" status

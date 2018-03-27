@@ -1,5 +1,10 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2018.03.27 - version 5.1.1
+ * Tweak - Disable the Add Payment Method button when editing a method
+ * Fix - Ensure customers can't delete subscription payment methods from gateways that use integer token IDs
+ * Fix - Always pass user email to gateways when adding a payment method
+
 2018.02.27 - version 5.1.0
  * Feature - Add payment method editing support
  * Feature - Allow users to set nicknames for their payment methods
