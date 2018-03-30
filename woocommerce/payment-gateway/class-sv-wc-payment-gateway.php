@@ -3134,19 +3134,24 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		// get a list of the "paid" status names
-		$paid_statuses = array_map( 'wc_get_order_status_name', SV_WC_Plugin_Compatibility::wc_get_is_paid_statuses() );
+		$paid_statuses = array_map( 'wc_get_order_status_name', (array) SV_WC_Plugin_Compatibility::wc_get_is_paid_statuses() );
 
 		// do some oxford comma magic
-		$last_status = array_pop( $paid_statuses );
-		array_push( $paid_statuses, "or {$last_status}" );
-		$separator = count( $last_status ) < 3 ? ' ' : ', ';
+		if ( count( $paid_statuses ) > 1 ) {
+
+			$last_status = array_pop( $paid_statuses );
+
+			array_push( $paid_statuses, "or {$last_status}" );
+		}
+
+		$separator = count( $paid_statuses ) < 3 ? ' ' : ', ';
 
 		$form_fields['enable_paid_capture'] = array(
 			'label'       => __( 'Capture Paid Orders', 'woocommerce-plugin-framework' ),
 			'type'        => 'checkbox',
 			'description' => sprintf(
 				__( 'Automatically capture orders when they are changed to %s.', 'woocommerce-plugin-framework' ),
-				implode( $separator, $paid_statuses )
+				esc_html( ! empty( $paid_statuses ) ? implode( $separator, $paid_statuses ) : __( 'a paid status', 'woocommerce-plugin-framework' ) )
 		 	),
 			'default' => 'no',
 		);
