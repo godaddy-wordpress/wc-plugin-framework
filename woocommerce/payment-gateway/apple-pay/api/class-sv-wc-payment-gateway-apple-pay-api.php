@@ -56,7 +56,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 		$this->set_request_content_type_header( 'application/json' );
 		$this->set_request_accept_header( 'application/json' );
 
-		$this->set_response_handler( 'SV_WC_Payment_Gateway_Apple_Pay_API_Response' );
+		$this->set_response_handler( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_1\\SV_WC_Payment_Gateway_Apple_Pay_API_Response' );
 	}
 
 
