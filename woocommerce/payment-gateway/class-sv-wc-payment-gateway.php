@@ -3141,7 +3141,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 			$last_status = array_pop( $paid_statuses );
 
-			array_push( $paid_statuses, "or {$last_status}" );
+			/* translators: a conjuction used in the list of order status names, such as "Processing, Completed, or Shipped" */
+			array_push( $paid_statuses, __( 'or', 'woocommerce-plugin-framework' ) . ' ' . $last_status );
 		}
 
 		$separator = count( $paid_statuses ) < 3 ? ' ' : ', ';
