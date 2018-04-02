@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 5.1.1\n"
+"Project-Id-Version: WooCommerce Plugin Framework 5.1.2\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -632,6 +632,9 @@ msgid "Pay with"
 msgstr ""
 
 #: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:308
+#: payment-gateway/class-sv-wc-payment-gateway.php:3145
+#. translators: a conjuction used in the list of order status names, such as
+#. "Processing, Completed, or Shipped"
 msgid "or"
 msgstr ""
 
@@ -1439,38 +1442,42 @@ msgstr ""
 msgid "Allow orders to be partially captured multiple times."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3145
+#: payment-gateway/class-sv-wc-payment-gateway.php:3151
 msgid "Capture Paid Orders"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3148
+#: payment-gateway/class-sv-wc-payment-gateway.php:3154
 msgid "Automatically capture orders when they are changed to %s."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3418
+#: payment-gateway/class-sv-wc-payment-gateway.php:3155
+msgid "a paid status"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:3424
 msgid "Accepted Card Logos"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3420
+#: payment-gateway/class-sv-wc-payment-gateway.php:3426
 msgid ""
 "These are the card logos that are displayed to customers as accepted during "
 "checkout."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3421
+#: payment-gateway/class-sv-wc-payment-gateway.php:3427
 msgid ""
 "This can be configured to match those accepted by your payment processor, "
 "but does not change your merchant account configuration."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3509
+#: payment-gateway/class-sv-wc-payment-gateway.php:3515
 #. translators:
 #. http:www.cybersource.com/products/payment_security/payment_tokenization/ and
 #. https:en.wikipedia.org/wiki/Tokenization_(data_security)
 msgid "Tokenization"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3510
+#: payment-gateway/class-sv-wc-payment-gateway.php:3516
 msgid "Allow customers to securely save their payment details for future checkout."
 msgstr ""
 
@@ -1611,19 +1618,19 @@ msgid "Account"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:227
-#: payment-gateway/class-sv-wc-payment-gateway.php:3446
+#: payment-gateway/class-sv-wc-payment-gateway.php:3452
 msgctxt "credit card type"
 msgid "Visa"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:231
-#: payment-gateway/class-sv-wc-payment-gateway.php:3447
+#: payment-gateway/class-sv-wc-payment-gateway.php:3453
 msgctxt "credit card type"
 msgid "MasterCard"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:235
-#: payment-gateway/class-sv-wc-payment-gateway.php:3448
+#: payment-gateway/class-sv-wc-payment-gateway.php:3454
 msgctxt "credit card type"
 msgid "American Express"
 msgstr ""
@@ -1634,13 +1641,13 @@ msgid "Diners Club"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:243
-#: payment-gateway/class-sv-wc-payment-gateway.php:3449
+#: payment-gateway/class-sv-wc-payment-gateway.php:3455
 msgctxt "credit card type"
 msgid "Discover"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:247
-#: payment-gateway/class-sv-wc-payment-gateway.php:3451
+#: payment-gateway/class-sv-wc-payment-gateway.php:3457
 msgctxt "credit card type"
 msgid "JCB"
 msgstr ""
@@ -1660,7 +1667,7 @@ msgctxt "credit card type"
 msgid "Laser"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3450
+#: payment-gateway/class-sv-wc-payment-gateway.php:3456
 msgctxt "credit card type"
 msgid "Diners"
 msgstr ""
@@ -1687,7 +1694,7 @@ msgctxt "hash before order number"
 msgid "#%s"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:4046
+#: payment-gateway/class-sv-wc-payment-gateway.php:4052
 #. translators: https:www.skyverge.com/for-translators-environments/
 msgctxt "software environment"
 msgid "Production"
