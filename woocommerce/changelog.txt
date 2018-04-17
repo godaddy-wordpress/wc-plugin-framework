@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2018.04.17 - version 5.1.3
+ * Tweak - Add a method for gateways to call during failing captures
+
 2018.04.02 - version 5.1.2
  * Fix - Prevent warnings in PHP 7.2 when building the gateway settings
  * Fix - Fix namespaces in the Apple Pay framework
