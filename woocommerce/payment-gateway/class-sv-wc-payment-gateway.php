@@ -1795,6 +1795,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 			} else {
 
+				$this->do_credit_card_capture_failed( $order, $response );
+
 				$message = sprintf(
 					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount, %3$s - transaction status message. Definitions: Capture, as in capture funds from a credit card. */
 					__( '%1$s Capture Failed: %2$s - %3$s', 'woocommerce-plugin-framework' ),
@@ -1828,6 +1830,17 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			);
 		}
 	}
+
+
+	/**
+	 * Lets gateways handle any specific capture failure results for the order.
+	 *
+	 * @since 5.1.3-dev
+	 *
+	 * @param \WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response API response object
+	 */
+	protected function do_credit_card_capture_failed( \WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) { }
 
 
 	/**
