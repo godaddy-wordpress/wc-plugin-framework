@@ -299,10 +299,11 @@ jQuery( document ).ready ($) ->
 			csc_required_for_tokens  = @csc_required_for_tokens
 
 			$new_payment_method_selection = $( "div.js-wc-#{ id_dasherized }-new-payment-method-form" )
-			$csc_field = $new_payment_method_selection.find( '.js-sv-wc-payment-gateway-credit-card-form-csc' ).parent()
+			$csc_field = $new_payment_method_selection.find( '.js-sv-wc-payment-gateway-credit-card-form-csc' ).parents( '.form-row' )
 
 			# show/hide the saved payment methods when a saved payment method is de-selected/selected
 			$( "input.js-wc-#{ @id_dasherized }-payment-token" ).change ->
+
 				tokenized_payment_method_selected = $( "input.js-wc-#{ id_dasherized }-payment-token:checked" ).val()
 
 				if tokenized_payment_method_selected
@@ -322,7 +323,7 @@ jQuery( document ).ready ($) ->
 					# move the CSC field back into its regular spot
 					if csc_required_for_tokens
 						$csc_field.removeClass( 'form-row-first' ).addClass( 'form-row-last' )
-						$new_payment_method_selection.find( '.js-sv-wc-payment-gateway-credit-card-form-expiry' ).parent().after( $csc_field )
+						$new_payment_method_selection.find( '.js-sv-wc-payment-gateway-credit-card-form-expiry' ).parents( '.form-row' ).after( $csc_field )
 			.change()
 
 			# display the 'save payment method' option for guest checkouts if the 'create account' option is checked
