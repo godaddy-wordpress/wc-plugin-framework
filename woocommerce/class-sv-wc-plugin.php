@@ -517,7 +517,7 @@ abstract class SV_WC_Plugin {
 
 			$message = sprintf(
 				/* translators: Placeholders: %1$s - WooCommerce version number, %2$s - <strong>, %3$s - </strong>, %4$s - Plugin name, %5$s - <a> tag, %6$s - </a> tag */
-				__( 'Hey there! We\'ve noticed that your site is running version %1$s of WooCommerce. While this version is still supported, %2$sWooCommerce 3.0 or higher will soon be required%3$s by %4$s. We recommend you %5$supdate WooCommerce%6$s to the latest version as soon as possible.', 'woocommerce-plugin-framework' ),
+				__( 'Hey there! We\'ve noticed that your site is running version %1$s of WooCommerce, but %2$sWooCommerce 3.0 or higher will soon be required%3$s by %4$s. We recommend you %5$supdate WooCommerce%6$s to the latest version as soon as possible.', 'woocommerce-plugin-framework' ),
 				esc_html( WC_VERSION ),
 				'<strong>', '</strong>',
 				esc_html( $this->get_plugin_name() ),
