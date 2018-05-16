@@ -358,6 +358,11 @@ class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 					$gateway->update_order_meta( $order, $key, $anonymized_value );
 				}
 			}
+
+			// clear the payment token (we don't want any "[deleted]" value stored)
+			if ( $gateway->get_order_meta( $order, 'payment_token' ) ) {
+				$gateway->update_order_meta( $order, 'payment_token', '' );
+			}
 		}
 	}
 
