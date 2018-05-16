@@ -56,6 +56,10 @@ jQuery( document ).ready ($) ->
 
 			)
 
+			# don't follow the Add Payment Method button URL if it's disabled
+			$( '.button[href*="add-payment-method"]' ).click ( event ) ->
+				event.preventDefault() if $( this ).hasClass( 'disabled' )
+
 
 		# Edits a payment method.
 		#
@@ -79,7 +83,7 @@ jQuery( document ).ready ($) ->
 			button.siblings( '.save-payment-method' ).show()
 			button.siblings( '.delete-payment-method' ).hide()
 
-			$( ".wc-#{@slug}-my-payment-methods" ).addClass( 'editing' )
+			this.enable_editing_ui()
 
 
 		# Saves a payment method.
@@ -121,7 +125,7 @@ jQuery( document ).ready ($) ->
 					if response.data.nonce?
 						@ajax_nonce = response.data.nonce
 
-					$( ".wc-#{@slug}-my-payment-methods" ).removeClass( 'editing' )
+					this.disable_editing_ui()
 
 				.fail ( jqXHR, textStatus, error ) =>
 
@@ -154,7 +158,34 @@ jQuery( document ).ready ($) ->
 			button.siblings( '.save-payment-method' ).hide()
 			button.siblings( '.delete-payment-method' ).show()
 
+			this.disable_editing_ui()
+
+
+		# Sets the page UI to the "editing" state.
+		#
+		# This brings proper focus to the method being edited and prevents
+		# other available buttons/actions until the editing is finished or cancelled.
+		#
+		# @since 5.1.1
+		enable_editing_ui: ->
+
+			# set the methods table as 'editing'
+			$( ".wc-#{@slug}-my-payment-methods" ).addClass( 'editing' )
+
+			# disable the Add Payment Method button
+			$( '.button[href*="add-payment-method"]' ).addClass( 'disabled' )
+
+
+		# Sets the page UI back to the default state.
+		#
+		# @since 5.1.1
+		disable_editing_ui: ->
+
+			# removes the methods table's "editing" status
 			$( ".wc-#{@slug}-my-payment-methods" ).removeClass( 'editing' )
+
+			# re-enable the Add Payment Method button
+			$( '.button[href*="add-payment-method"]' ).removeClass( 'disabled' )
 
 
 		# Blocks the payment methods table UI.

@@ -140,6 +140,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 */
 	protected function load_framework() {
 
+
 		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Plugin' ) ) {
 			require_once( plugin_dir_path( __FILE__ ) . 'lib/skyverge/woocommerce/class-sv-wc-plugin.php' );
 		}

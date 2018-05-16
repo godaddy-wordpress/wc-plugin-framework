@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_1_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_1_3;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_0\\SV_WC_Payment_Gateway_Direct' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_3\\SV_WC_Payment_Gateway_Direct' ) ) :
 
 /**
  * # WooCommerce Payment Gateway Framework Direct Gateway
@@ -950,8 +950,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		foreach ( $defaults as $prop => $value ) {
 
-			if ( ! empty( $user->$prop ) ) {
-				$properties[ $prop ] = $user->$prop;
+			$value = ! empty( $user->$prop ) ? $user->$prop : $value;
+
+			if ( ! empty( $value ) ) {
+				$properties[ $prop ] = $value;
 			}
 		}
 

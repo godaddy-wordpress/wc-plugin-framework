@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_1_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_1_3;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_0\\SV_WC_API_Base' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_3\\SV_WC_API_Base' ) ) :
 
 /**
  * # WooCommerce Plugin Framework API Base Class
@@ -98,8 +98,8 @@ abstract class SV_WC_API_Base {
 
 		$start_time = microtime( true );
 
-		// If this API requires TLS v1.2, force it
-		if ( $this->require_tls_1_2() && $this->is_tls_1_2_available() ) {
+		// if this API requires TLS v1.2, force it
+		if ( $this->require_tls_1_2() ) {
 			add_action( 'http_api_curl', array( $this, 'set_tls_1_2_request' ), 10, 3 );
 		}
 

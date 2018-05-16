@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_1_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_1_3;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_0\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_3\\SV_WC_Payment_Gateway' ) ) :
 
 /**
  * WooCommerce Payment Gateway Framework
@@ -1795,6 +1795,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 			} else {
 
+				$this->do_credit_card_capture_failed( $order, $response );
+
 				$message = sprintf(
 					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount, %3$s - transaction status message. Definitions: Capture, as in capture funds from a credit card. */
 					__( '%1$s Capture Failed: %2$s - %3$s', 'woocommerce-plugin-framework' ),
@@ -1828,6 +1830,17 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			);
 		}
 	}
+
+
+	/**
+	 * Lets gateways handle any specific capture failure results for the order.
+	 *
+	 * @since 5.1.3-dev
+	 *
+	 * @param \WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response API response object
+	 */
+	protected function do_credit_card_capture_failed( \WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) { }
 
 
 	/**
@@ -3134,19 +3147,25 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		// get a list of the "paid" status names
-		$paid_statuses = array_map( 'wc_get_order_status_name', SV_WC_Plugin_Compatibility::wc_get_is_paid_statuses() );
+		$paid_statuses = array_map( 'wc_get_order_status_name', (array) SV_WC_Plugin_Compatibility::wc_get_is_paid_statuses() );
 
 		// do some oxford comma magic
-		$last_status = array_pop( $paid_statuses );
-		array_push( $paid_statuses, "or {$last_status}" );
-		$separator = count( $last_status ) < 3 ? ' ' : ', ';
+		if ( count( $paid_statuses ) > 1 ) {
+
+			$last_status = array_pop( $paid_statuses );
+
+			/* translators: a conjuction used in the list of order status names, such as "Processing, Completed, or Shipped" */
+			array_push( $paid_statuses, __( 'or', 'woocommerce-plugin-framework' ) . ' ' . $last_status );
+		}
+
+		$separator = count( $paid_statuses ) < 3 ? ' ' : ', ';
 
 		$form_fields['enable_paid_capture'] = array(
 			'label'       => __( 'Capture Paid Orders', 'woocommerce-plugin-framework' ),
 			'type'        => 'checkbox',
 			'description' => sprintf(
 				__( 'Automatically capture orders when they are changed to %s.', 'woocommerce-plugin-framework' ),
-				implode( $separator, $paid_statuses )
+				esc_html( ! empty( $paid_statuses ) ? implode( $separator, $paid_statuses ) : __( 'a paid status', 'woocommerce-plugin-framework' ) )
 		 	),
 			'default' => 'no',
 		);

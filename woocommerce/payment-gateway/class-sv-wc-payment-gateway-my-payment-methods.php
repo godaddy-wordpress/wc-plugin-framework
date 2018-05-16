@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_1_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_1_3;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_0\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_3\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
 
 /**
  * My Payment Methods Class
@@ -162,7 +162,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			}
 		}
 
-		$this->tokens = array_merge( $this->credit_card_tokens, $this->echeck_tokens );
+		// we don't use array_merge here since the indexes could be numeric
+		// and cause the indexes to be reset
+		$this->tokens = $this->credit_card_tokens + $this->echeck_tokens;
 
 		$this->has_tokens = ! empty( $this->tokens );
 
@@ -357,10 +359,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$html .= $this->get_table_body_html();
 
 		$html .= '</table>';
-
-		// add a hidden "Save" & "Cancel" buttons for editing
-		$html .= '<a class="button save-payment-methods" style="display:none;">' . __( 'Save', 'woocommerce-plugin-framework' ) . '</a>';
-		$html .= '<a class="button cancel-edit-payment-methods" style="display:none;">' . __( 'Cancel', 'woocommerce-plugin-framework' ) . '</a>';
 
 		/**
 		 * My Payment Methods Table HTML Filter.
