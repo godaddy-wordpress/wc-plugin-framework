@@ -53,12 +53,12 @@ class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 
 		parent::__construct( $plugin->get_plugin_name() );
 
+		// add the action & filter hooks
+		$this->add_hooks();
+
 		// add the token exporters & erasers
 		$this->add_exporter( "wc-{$plugin->get_id_dasherized()}-customer-tokens", __( "{$plugin->get_plugin_name()} Payment Tokens", 'woocommerce-plugin-framework' ), array( $this, 'customer_tokens_exporter' ) );
 		$this->add_eraser(   "wc-{$plugin->get_id_dasherized()}-customer-tokens", __( "{$plugin->get_plugin_name()} Payment Tokens", 'woocommerce-plugin-framework' ), array( $this, 'customer_tokens_eraser' ) );
-
-		// add the action & filter hooks
-		$this->add_hooks();
 	}
 
 
@@ -69,13 +69,25 @@ class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 	 */
 	protected function add_hooks() {
 
-		// add the gateway customer ID data to the customer data export
-		add_filter( 'woocommerce_privacy_export_customer_personal_data', array( $this, 'add_customer_id_data' ), 10, 2 );
+		// add the gateway data to customer data exports
+		add_filter( 'woocommerce_privacy_export_customer_personal_data', array( $this, 'add_export_customer_data' ), 10, 2 );
+
+		// removes the gateway data during a customer data erasure
+		add_action( 'woocommerce_privacy_erase_personal_data_customer', array( $this, 'remove_customer_personal_data' ), 10, 2 );
+
+		// add the gateway data to order data exports
+		add_filter( 'woocommerce_privacy_export_order_personal_data', array( $this, 'add_export_order_data' ), 10, 2 );
+
+		// removes the gateway data during an order data erasure
+		add_action( 'woocommerce_privacy_remove_order_personal_data', array( $this, 'remove_order_personal_data' ) );
 	}
 
 
+	/** Customer methods ******************************************************/
+
+
 	/**
-	 * Adds the gateway customer ID data to the customer data export.
+	 * Adds the gateway data to customer data exports.
 	 *
 	 * @internal
 	 *
@@ -85,7 +97,7 @@ class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 	 * @param \WC_Customer $customer customer object
 	 * @return array
 	 */
-	public function add_customer_id_data( $data, $customer ) {
+	public function add_export_customer_data( $data, $customer ) {
 
 		if ( $customer instanceof \WC_Customer ) {
 
@@ -107,6 +119,34 @@ class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 		}
 
 		return $data;
+	}
+
+
+	/**
+	 * Removes the gateway data during an order data erasure.
+	 *
+	 * @since 5.1.4-dev
+	 *
+	 * @param array $response customer data erasure response
+	 * @param \WC_Customer $customer customer object
+	 * @return array
+	 */
+	public function remove_customer_personal_data( $response, $customer ) {
+
+		if ( $customer instanceof \WC_Customer ) {
+
+			foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
+
+				// skip gateways that don't support customer ID
+				if ( ! $gateway->supports_customer_id() ) {
+					continue;
+				}
+
+				$gateway->remove_customer_id( $customer->get_id() );
+			}
+		}
+
+		return $response;
 	}
 
 
@@ -227,6 +267,98 @@ class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 			'messages'       => $messages,
 			'done'           => true,
 		);
+	}
+
+
+	/** Order methods *********************************************************/
+
+
+	/**
+	 * Adds the gateway data to order data exports.
+	 *
+	 * @internal
+	 *
+	 * @since 5.1.4-dev
+	 *
+	 * @param array $data order personal data to export
+	 * @param \WC_Order $order order object
+	 * @return array
+	 */
+	public function add_export_order_data( $data, $order ) {
+
+		$order = wc_get_order( $order );
+
+		// ensure we have a full order object and it belongs to the plugin's gateway
+		if ( $order && ( $gateway = $this->get_plugin()->get_gateway( $order->get_payment_method() ) ) ) {
+
+			$meta_to_export = array(
+				'account_four'     => __( 'Last Four', 'woocommerce-plugin-framework' ),
+				'account_type'     => __( 'Account Type', 'woocommerce-plugin-framework' ),
+				'card_type'        => __( 'Card Type', 'woocommerce-plugin-framework' ),
+				'card_expiry_date' => __( 'Expiry Date', 'woocommerce-plugin-framework' ),
+			);
+
+			foreach ( $meta_to_export as $key => $label ) {
+
+				if ( $value = $gateway->get_order_meta( $order, $key ) ) {
+
+					$data[] = array(
+						'name'  => $label,
+						'value' => $value,
+					);
+				}
+			}
+		}
+
+		return $data;
+	}
+
+
+	/**
+	 * Removes the gateway data during an order data erasure.
+	 *
+	 * @since 5.1.4-dev
+	 *
+	 * @param \WC_Order $order order object
+	 */
+	public function remove_order_personal_data( $order ) {
+
+		$order = wc_get_order( $order );
+
+		// ensure we have a full order object and it belongs to the plugin's gateway
+		if ( $order && ( $gateway = $this->get_plugin()->get_gateway( $order->get_payment_method() ) ) ) {
+
+			$meta_to_remove = array(
+				'account_four'     => 'XXXX',
+				'account_type'     => '',
+				'card_type'        => '',
+				'card_expiry_date' => 'XXXX',
+			);
+
+			/**
+			 * Filters the personal order meta data to remove during a customer erasure request.
+			 *
+			 * @since 5.1.4-dev
+			 *
+			 * @param array $meta_keys personal order meta data to remove during a customer erasure request, in the form of $meta_key => $anonymized_value
+			 * @param \WC_Order $order order object
+			 */
+			$meta_to_remove = apply_filters( 'wc_' . $gateway->get_id() . '_order_personal_data_to_remove', $meta_to_remove, $order );
+
+			foreach ( $meta_to_remove as $key => $anonymized_value ) {
+
+				// if the meta value already exists (don't add new meta to orders)
+				if ( $value = $gateway->get_order_meta( $order, $key ) ) {
+
+					// if no anon value was specified, let WP use its default
+					if ( empty( $anonymized_value ) && function_exists( 'wp_privacy_anonymize_data' ) ) {
+						$anonymized_value = wp_privacy_anonymize_data( 'text', $value );
+					}
+
+					$gateway->update_order_meta( $order, $key, $anonymized_value );
+				}
+			}
+		}
 	}
 
 
