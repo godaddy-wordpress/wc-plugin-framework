@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 4.9.1\n"
+"Project-Id-Version: WooCommerce Plugin Framework 4.9.2\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -187,11 +187,14 @@ msgid "Token ID"
 msgstr ""
 
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:482
+#: payment-gateway/class-sv-wc-payment-gateway-privacy.php:289
 msgid "Card Type"
 msgstr ""
 
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:487
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:523
+#: payment-gateway/class-sv-wc-payment-gateway-privacy.php:189
+#: payment-gateway/class-sv-wc-payment-gateway-privacy.php:287
 msgid "Last Four"
 msgstr ""
 
@@ -202,6 +205,7 @@ msgstr ""
 
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:515
 #: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:417
+#: payment-gateway/class-sv-wc-payment-gateway-privacy.php:288
 #. translators: e-check account type, HTML form field label
 msgid "Account Type"
 msgstr ""
@@ -231,6 +235,7 @@ msgid "Remove"
 msgstr ""
 
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-handler.php:209
+#: payment-gateway/class-sv-wc-payment-gateway-privacy.php:198
 msgid "%s Payment Tokens"
 msgstr ""
 
@@ -969,14 +974,14 @@ msgstr ""
 msgid "Securely Save to Account"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:517
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:526
 #. translators: Placeholders: %s - plugin name
 msgid ""
 "%s: WooCommerce is not being forced over SSL; your customer's payment data "
 "may be at risk."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:530
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:539
 #. translators: Placeholders: %s - payment gateway name
 msgid ""
 "%s will soon require TLS 1.2 support to process transactions and your "
@@ -985,7 +990,7 @@ msgid ""
 "and request they make any necessary updates."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:584
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:593
 #. translators: Placeholders: %1$s - plugin name, %2$s - a
 #. currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
 msgid ""
@@ -997,7 +1002,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:628
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:637
 #. translators: Placeholders: %1$s - payment gateway title (such as
 #. Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
 msgid ""
@@ -1005,7 +1010,7 @@ msgid ""
 "tokenization%3$s to activate %1$s for Subscriptions."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:646
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:655
 #. translators: Placeholders: %1$s - payment gateway title (such as
 #. Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
 msgid ""
@@ -1013,23 +1018,39 @@ msgid ""
 "tokenization%3$s to activate %1$s for Pre-Orders."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:682
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:691
 msgid ""
 "You must enable tokenization for this gateway in order to support automatic "
 "renewal payments with the WooCommerce Subscriptions extension."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:683
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:692
 msgid "Inactive"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:827
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:896
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:836
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:905
 #. translators: verb, as in "Capture credit card charge". 		 Used when an
 #. amount has been pre-authorized before, but funds have not yet been captured
 #. (taken) from the card. 		 Capturing the charge will take the money from the
 #. credit card and put it in the merchant's pockets.
 msgid "Capture Charge"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-privacy.php:112
+msgid "%s Customer ID"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-privacy.php:181
+msgid "Type"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-privacy.php:243
+msgid "Removed payment token \"%d\""
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-privacy.php:290
+msgid "Expiry Date"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway.php:415

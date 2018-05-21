@@ -963,7 +963,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Gets the privacy handler instance.
 	 *
-	 * @since 4.9.2-dev
+	 * @since 4.9.2
 	 *
 	 * @return SV_WC_Payment_Gateway_Privacy
 	 */

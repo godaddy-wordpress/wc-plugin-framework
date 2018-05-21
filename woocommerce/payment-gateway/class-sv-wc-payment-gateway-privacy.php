@@ -29,7 +29,7 @@ if ( ! class_exists( 'SV_WC_Payment_Gateway_Privacy' ) ) :
 /**
  * The payment gateway privacy handler class.
  *
- * @since 4.9.2-dev
+ * @since 4.9.2
  */
 class SV_WC_Payment_Gateway_Privacy extends WC_Abstract_Privacy {
 
@@ -41,7 +41,7 @@ class SV_WC_Payment_Gateway_Privacy extends WC_Abstract_Privacy {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 4.9.2-dev
+	 * @since 4.9.2
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin payment gateway plugin instance
 	 */
@@ -63,7 +63,7 @@ class SV_WC_Payment_Gateway_Privacy extends WC_Abstract_Privacy {
 	/**
 	 * Adds the action & filter hooks.
 	 *
-	 * @since 4.9.2-dev
+	 * @since 4.9.2
 	 */
 	protected function add_hooks() {
 
@@ -89,7 +89,7 @@ class SV_WC_Payment_Gateway_Privacy extends WC_Abstract_Privacy {
 	 *
 	 * @internal
 	 *
-	 * @since 4.9.2-dev
+	 * @since 4.9.2
 	 *
 	 * @param array $data customer personal data to export
 	 * @param \WC_Customer $customer customer object
@@ -123,7 +123,7 @@ class SV_WC_Payment_Gateway_Privacy extends WC_Abstract_Privacy {
 	/**
 	 * Removes the gateway data during an order data erasure.
 	 *
-	 * @since 4.9.2-dev
+	 * @since 4.9.2
 	 *
 	 * @param array $response customer data erasure response
 	 * @param \WC_Customer $customer customer object
@@ -268,7 +268,7 @@ class SV_WC_Payment_Gateway_Privacy extends WC_Abstract_Privacy {
 	 *
 	 * @internal
 	 *
-	 * @since 4.9.2-dev
+	 * @since 4.9.2
 	 *
 	 * @param array $data order personal data to export
 	 * @param \WC_Order $order order object
@@ -309,7 +309,7 @@ class SV_WC_Payment_Gateway_Privacy extends WC_Abstract_Privacy {
 	/**
 	 * Removes the gateway data during an order data erasure.
 	 *
-	 * @since 4.9.2-dev
+	 * @since 4.9.2
 	 *
 	 * @param \WC_Order $order order object
 	 */
@@ -332,7 +332,7 @@ class SV_WC_Payment_Gateway_Privacy extends WC_Abstract_Privacy {
 			/**
 			 * Filters the personal order meta data to remove during a customer erasure request.
 			 *
-			 * @since 4.9.2-dev
+			 * @since 4.9.2
 			 *
 			 * @param array $meta_keys personal order meta data to remove during a customer erasure request, in the form of $meta_key => $anonymized_value
 			 * @param \WC_Order $order order object
@@ -364,7 +364,7 @@ class SV_WC_Payment_Gateway_Privacy extends WC_Abstract_Privacy {
 	/**
 	 * Gets the payment gateway plugin instance.
 	 *
-	 * @since 4.9.2-dev
+	 * @since 4.9.2
 	 *
 	 * @return SV_WC_Payment_Gateway_Plugin
 	 */

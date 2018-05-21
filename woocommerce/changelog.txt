@@ -1,5 +1,11 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2018.05.21 - version 4.9.2
+ * Tweak - Add payment details to the customer data export and remove it for erasure requests
+ * Tweak - Remove payment tokens for customer data erasure requests
+ * Misc - Add support for WooCommerce 3.4
+
+
 2018.03.20 - version 4.9.1
  * Fix - Ensure customers can't delete subscription payment methods from gateways that use integer token IDs
 
