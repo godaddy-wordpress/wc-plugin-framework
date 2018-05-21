@@ -280,7 +280,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		}
 
 		// privacy
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.4' ) ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.4' ) && class_exists( 'WC_Abstract_Privacy' ) ) {
 			require_once( "{$payment_gateway_framework_path}/class-sv-wc-payment-gateway-privacy.php" );
 			$this->privacy_handler = new SV_WC_Payment_Gateway_Privacy( $this );
 		}
