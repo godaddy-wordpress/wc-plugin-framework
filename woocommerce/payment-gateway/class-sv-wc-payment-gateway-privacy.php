@@ -279,7 +279,9 @@ class SV_WC_Payment_Gateway_Privacy extends WC_Abstract_Privacy {
 		$order = wc_get_order( $order );
 
 		// ensure we have a full order object and it belongs to the plugin's gateway
-		if ( $order && ( $gateway = $this->get_plugin()->get_gateway( $order->get_payment_method() ) ) ) {
+		if ( $order && $this->get_plugin()->has_gateway( $order->get_payment_method() ) ) {
+
+			$gateway = $this->get_plugin()->get_gateway( $order->get_payment_method() );
 
 			$meta_to_export = array(
 				'account_four'     => __( 'Last Four', 'woocommerce-plugin-framework' ),
@@ -316,7 +318,9 @@ class SV_WC_Payment_Gateway_Privacy extends WC_Abstract_Privacy {
 		$order = wc_get_order( $order );
 
 		// ensure we have a full order object and it belongs to the plugin's gateway
-		if ( $order && ( $gateway = $this->get_plugin()->get_gateway( $order->get_payment_method() ) ) ) {
+		if ( $order && $this->get_plugin()->has_gateway( $order->get_payment_method() ) ) {
+
+			$gateway = $this->get_plugin()->get_gateway( $order->get_payment_method() );
 
 			$meta_to_remove = array(
 				'account_four'     => 'XXXX',
