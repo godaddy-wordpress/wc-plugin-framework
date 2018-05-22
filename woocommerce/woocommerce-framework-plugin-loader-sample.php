@@ -57,6 +57,9 @@ class SV_WC_Framework_Plugin_Loader {
 	/** minimum WooCommerce version required by this plugin */
 	const MINIMUM_WC_VERSION = '2.6';
 
+	/** SkyVerge plugin framework version used by this plugin */
+	const FRAMEWORK_VERSION = '5.1.3';
+
 	/** the plugin name, for displaying notices */
 	const PLUGIN_NAME = 'WooCommerce Framework Plugin'; // TODO: plugin name
 
@@ -137,14 +140,41 @@ class SV_WC_Framework_Plugin_Loader {
 	 */
 	protected function load_framework() {
 
-		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_3\\SV_WC_Plugin' ) ) {
+
+		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Plugin' ) ) {
 			require_once( plugin_dir_path( __FILE__ ) . 'lib/skyverge/woocommerce/class-sv-wc-plugin.php' );
 		}
 
 		// TODO: remove this if not a payment gateway
-		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_3\\SV_WC_Payment_Gateway_Plugin' ) ) {
+		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Payment_Gateway_Plugin' ) ) {
 			require_once( plugin_dir_path( __FILE__ ) . 'lib/skyverge/woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php' );
 		}
+	}
+
+
+	/**
+	 * Gets the framework version in namespace form.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	protected function get_framework_version_namespace() {
+
+		return 'v' . str_replace( '.', '_', $this->get_framework_version() );
+	}
+
+
+	/**
+	 * Gets the famework version used by this plugin.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	protected function get_framework_version() {
+
+		return self::FRAMEWORK_VERSION;
 	}
 
 
@@ -203,7 +233,7 @@ class SV_WC_Framework_Plugin_Loader {
 			$this->add_admin_notice( 'update_woocommerce', 'error', sprintf(
 				'%s requires WooCommerce version %s or higher. Please %supdate WooCommerce &raquo;%s',
 				'<strong>' . self::PLUGIN_NAME . '</strong>',
-				self::MINIMUM_WP_VERSION,
+				self::MINIMUM_WC_VERSION,
 				'<a href="' . esc_url( admin_url( 'update-core.php' ) ) . '">', '</a>'
 			) );
 		}
