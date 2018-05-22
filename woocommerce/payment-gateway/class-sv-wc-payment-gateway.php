@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_1_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_1_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_3\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_4\\SV_WC_Payment_Gateway' ) ) :
 
 /**
  * WooCommerce Payment Gateway Framework
@@ -1835,7 +1835,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Lets gateways handle any specific capture failure results for the order.
 	 *
-	 * @since 5.1.3-dev
+	 * @since 5.1.3
 	 *
 	 * @param \WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response API response object
