@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2018.nn.nn - version 5.2.0-dev
+ * Dev - Introduce dedicated plugin methods for loading after init
+
 2018.05.22 - version 5.1.4
  * Tweak - Add a gateway privacy handler to export or remove order payment data and payment tokens on request
  * Tweak - Add a warning for WooCommerce 2.6 installs that 3.0 will soon be required

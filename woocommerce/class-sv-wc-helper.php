@@ -992,6 +992,23 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_4\\SV_WC_He
 
 
 		/**
+		 * Displays a notice if the provided hook has not yet run.
+		 *
+		 * @since 5.2.0-dev
+		 *
+		 * @param string $hook action hook to check
+		 * @param string $method method/function name
+		 * @param string $version version the notice was added
+		 */
+		public static function maybe_doing_it_early( $hook, $method, $version ) {
+
+			if ( ! did_action( $hook ) ) {
+				SV_WC_Plugin_Compatibility::wc_doing_it_wrong( $method, "This should only be called after '{$hook}'", $version );
+			}
+		}
+
+
+		/**
 		 * Triggers a PHP error.
 		 *
 		 * This wrapper method ensures AJAX isn't broken in the process.

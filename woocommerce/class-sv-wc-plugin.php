@@ -36,13 +36,13 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_4\\SV_WC_Pl
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 5.1.4
+ * @version 5.2.0-dev
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.1.4';
+	const VERSION = '5.2.0-dev';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -77,9 +77,6 @@ abstract class SV_WC_Plugin {
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
 
-	/** @var bool whether to display the PHP version notice */
-	private $display_php_notice;
-
 
 	/**
 	 * Initialize the plugin.
@@ -111,20 +108,37 @@ abstract class SV_WC_Plugin {
 		$this->version = $version;
 
 		$args = wp_parse_args( $args, array(
-			'dependencies'       => array(),
-			'text_domain'        => '',
-			'display_php_notice' => false,
+			'dependencies' => array(),
+			'text_domain'  => '',
 		) );
 
 		$this->set_dependencies( $args['dependencies'] );
 
-		$this->text_domain        = $args['text_domain'];
-		$this->display_php_notice = $args['display_php_notice'];
+		$this->text_domain = $args['text_domain'];
 
 		// includes that are required to be available at all times
 		$this->includes();
 
-		$this->load_hook_deprecator();
+		// add the action & filter hooks
+		$this->add_hooks();
+	}
+
+
+	/**
+	 * Adds the action & filter hooks.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	private function add_hooks() {
+
+		// hook for translations seperately to ensure they're loaded
+		add_action( 'init', array( $this, 'load_translations' ) );
+
+		// initialize the plugin
+		add_action( 'init', array( $this, 'init_plugin' ) );
+
+		// initialize the plugin admin
+		add_action( 'admin_init', array( $this, 'init_admin' ) );
 
 		// Admin
 		if ( is_admin() && ! is_ajax() ) {
@@ -147,9 +161,6 @@ abstract class SV_WC_Plugin {
 		// automatically log HTTP requests from SV_WC_API_Base
 		$this->add_api_request_logging();
 
-		// Load translation files
-		add_action( 'init', array( $this, 'load_translations' ) );
-
 		// add any PHP incompatibilities to the system status report
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 			add_filter( 'woocommerce_system_status_environment_rows', array( $this, 'add_system_status_php_information' ) );
@@ -169,6 +180,7 @@ abstract class SV_WC_Plugin {
 		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot clone instances of %s.', 'woocommerce-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
 	}
 
+
 	/**
 	 * Unserializing instances is forbidden due to singleton pattern.
 	 *
@@ -181,7 +193,9 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Load plugin & framework text domains
+	 * Load plugin & framework text domains.
+	 *
+	 * @internal
 	 *
 	 * @since 4.2.0
 	 */
@@ -191,13 +205,7 @@ abstract class SV_WC_Plugin {
 
 		// if this plugin passes along its text domain, load its translation files
 		if ( $this->text_domain ) {
-
 			$this->load_plugin_textdomain();
-
-		// otherwise, use the backwards compatibile method
-		} elseif ( is_callable( array( $this, 'load_translation' ) ) ) {
-
-			$this->load_translation();
 		}
 	}
 
@@ -243,7 +251,37 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Include any critical files which must be available as early as possible
+	 * Initializes the plugin.
+	 *
+	 * Plugins can override this to set up any handlers after WordPress is ready.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	public function init_plugin() {
+
+		$this->hook_deprecator      = new SV_WC_Hook_Deprecator( $this->get_plugin_name(), $this->get_deprecated_hooks() );
+		$this->lifecycle_handler    = new Plugin\Lifecycle( $this );
+		$this->message_handler      = new SV_WP_Admin_Message_Handler( $this->get_id() );
+		$this->admin_notice_handler = new SV_WC_Admin_Notice_Handler( $this ); // this is intentionally loaded outside the admin
+	}
+
+
+	/**
+	 * Initializes the plugin admin.
+	 *
+	 * Plugins can override this to set up any handlers after the WordPress
+	 * admin is ready.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	public function init_admin() {
+
+		// stub
+	}
+
+
+	/**
+	 * Include any critical files which must be available as early as possible,
 	 *
 	 * @since 2.0.0
 	 */
@@ -280,28 +318,10 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
 
-		// Lifecycle handler
+		require_once( $framework_path . '/class-sv-wc-hook-deprecator.php' );
+		require_once( $framework_path . '/class-sv-wp-admin-message-handler.php' );
+		require_once( $framework_path . '/class-sv-wc-admin-notice-handler.php' );
 		require_once( $framework_path . '/Lifecycle.php' );
-
-		$this->get_lifecycle_handler();
-
-		if ( is_admin() ) {
-			// instantiate the admin notice handler
-			$this->get_admin_notice_handler();
-		}
-	}
-
-
-	/**
-	 * Load and instantiate the hook deprecator class
-	 *
-	 * @since 4.3.0
-	 */
-	private function load_hook_deprecator() {
-
-		require_once( $this->get_framework_path() . '/class-sv-wc-hook-deprecator.php' );
-
-		$this->hook_deprecator = new SV_WC_Hook_Deprecator( $this->get_plugin_name(), $this->get_deprecated_hooks() );
 	}
 
 
@@ -464,7 +484,7 @@ abstract class SV_WC_Plugin {
 		}
 
 		// add the PHP 5.6+ notice
-		if ( ! $sv_wc_php_notice_added && $this->display_php_notice && version_compare( PHP_VERSION, '5.6.0', '<' ) ) {
+		if ( ! $sv_wc_php_notice_added && version_compare( PHP_VERSION, '5.6.0', '<' ) ) {
 
 			$message = '<p>';
 
@@ -918,28 +938,40 @@ abstract class SV_WC_Plugin {
 	 */
 	public function get_lifecycle_handler() {
 
-		if ( is_null( $this->lifecycle_handler ) ) {
-			$this->lifecycle_handler = new Plugin\Lifecycle( $this );
-		}
+		// TODO: not sure about this - do these handles need to wait until init?
+		SV_WC_Helper::maybe_doing_it_early( 'init', __METHOD__, '5.2.0-dev' );
 
 		return $this->lifecycle_handler;
 	}
 
 
 	/**
-	 * Returns the admin notice handler instance
+	 * Gets the admin message handler.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return SV_WP_Admin_Message_Handler
+	 */
+	public function get_message_handler() {
+
+		SV_WC_Helper::maybe_doing_it_early( 'init', __METHOD__, '5.2.0-dev' );
+
+		return $this->message_handler;
+	}
+
+
+	/**
+	 * Gets the admin notice handler instance.
 	 *
 	 * @since 3.0.0
+	 *
+	 * @return SV_WC_Admin_Notice_Handler
 	 */
 	public function get_admin_notice_handler() {
 
-		if ( ! is_null( $this->admin_notice_handler ) ) {
-			return $this->admin_notice_handler;
-		}
+		SV_WC_Helper::maybe_doing_it_early( 'init', __METHOD__, '5.2.0-dev' );
 
-		require_once( $this->get_framework_path() . '/class-sv-wc-admin-notice-handler.php' );
-
-		return $this->admin_notice_handler = new SV_WC_Admin_Notice_Handler( $this );
+		return $this->admin_notice_handler;
 	}
 
 
@@ -1220,25 +1252,6 @@ abstract class SV_WC_Plugin {
 	public function get_framework_assets_url() {
 
 		return untrailingslashit( plugins_url( '/assets', $this->get_framework_file() ) );
-	}
-
-
-	/**
-	 * Returns the WP Admin Message Handler instance for use with
-	 * setting/displaying admin messages & errors
-	 *
-	 * @since 2.0.0
-	 * @return SV_WP_Admin_Message_Handler
-	 */
-	public function get_message_handler() {
-
-		if ( is_object( $this->message_handler ) ) {
-			return $this->message_handler;
-		}
-
-		require_once( $this->get_framework_path() . '/class-sv-wp-admin-message-handler.php' );
-
-		return $this->message_handler = new SV_WP_Admin_Message_Handler( $this->get_id() );
 	}
 
 
