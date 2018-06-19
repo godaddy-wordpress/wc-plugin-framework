@@ -1760,9 +1760,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 				$message = sprintf(
 					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount. Definitions: Capture, as in capture funds from a credit card. */
-					esc_html__( '%1$s Capture of %2$s Approved', 'woocommerce-plugin-framework' ),
+					__( '%1$s Capture of %2$s Approved', 'woocommerce-plugin-framework' ),
 					$this->get_method_title(),
-					get_woocommerce_currency_symbol() . wc_format_decimal( $order->capture->amount )
+					wc_price( $order->capture->amount, array( 'currency' => SV_WC_Order_Compatibility::get_prop( $order, 'currency', 'view' ) ) )
 				);
 
 				// adds the transaction id (if any) to the order note
