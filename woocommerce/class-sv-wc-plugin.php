@@ -65,11 +65,10 @@ abstract class SV_WC_Plugin {
 	/** @var  \SV_WP_Admin_Message_Handler instance */
 	private $message_handler;
 
-	/** @var array string names of required PHP extensions */
-	private $dependencies = array();
-
 	/** @var string the plugin text domain */
 	private $text_domain;
+
+	private $dependency_handler;
 
 	/** @var Plugin\Lifecycle lifecycle handler */
 	private $lifecycle_handler;
@@ -84,6 +83,7 @@ abstract class SV_WC_Plugin {
 	 * Child plugin classes may add their own optional arguments.
 	 *
 	 * @since 2.0.0
+	 *
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
 	 * @param array $args {
@@ -91,13 +91,11 @@ abstract class SV_WC_Plugin {
 	 *
 	 *     @type string $text_domain the plugin textdomain, used to set up translations
 	 *     @type array  $dependencies {
-	 *          the plugin's PHP dependencies
+	 *         PHP extension, function, and settings dependencies
 	 *
-	 *          $type array $extensions the required PHP extensions
-	 *          $type array $functions  the required PHP functions
-	 *          $type array $settings   the required PHP settings, as `$setting => $value`
-	 *                                  String values are treated with direct
-	 *                                  comparison, integers as minimums
+	 *         @type array $php_extensions PHP extension dependencies
+	 *         @type array $php_functions  PHP function dependencies
+	 *         @type array $php_settings   PHP settings dependencies
 	 *     }
 	 * }
 	 */
@@ -108,11 +106,9 @@ abstract class SV_WC_Plugin {
 		$this->version = $version;
 
 		$args = wp_parse_args( $args, array(
-			'dependencies' => array(),
 			'text_domain'  => '',
+			'dependencies' => array(),
 		) );
-
-		$this->set_dependencies( $args['dependencies'] );
 
 		$this->text_domain = $args['text_domain'];
 
@@ -121,6 +117,28 @@ abstract class SV_WC_Plugin {
 
 		// add the action & filter hooks
 		$this->add_hooks();
+
+		// initialize the dependencies manager
+		$this->init_dependencies( $args['dependencies'] );
+	}
+
+
+	/**
+	 * Initializes the plugin dependency handler.
+	 *
+	 * @since 5.2.0-dev
+	 *
+	 * @param array $dependencies {
+	 *     PHP extension, function, and settings dependencies
+	 *
+	 *     @type array $php_extensions PHP extension dependencies
+	 *     @type array $php_functions  PHP function dependencies
+	 *     @type array $php_settings   PHP settings dependencies
+	 * }
+	 */
+	private function init_dependencies( $dependencies ) {
+
+		$this->dependency_handler = new SV_WC_Plugin_Dependencies( $this, $dependencies );
 	}
 
 
@@ -318,6 +336,7 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
 
+		require_once( $framework_path . '/class-sv-wc-plugin-dependencies.php' );
 		require_once( $framework_path . '/class-sv-wc-hook-deprecator.php' );
 		require_once( $framework_path . '/class-sv-wp-admin-message-handler.php' );
 		require_once( $framework_path . '/class-sv-wc-admin-notice-handler.php' );
@@ -370,8 +389,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function add_admin_notices() {
 
-		// notices for any missing dependencies
-		$this->add_dependencies_admin_notices();
+
 	}
 
 
@@ -383,171 +401,6 @@ abstract class SV_WC_Plugin {
 	 */
 	public function add_delayed_admin_notices() {
 		// stub method
-	}
-
-
-	/**
-	 * Checks if required PHP extensions are not loaded and adds a dismissible admin
-	 * notice if so.  Notice will not be rendered to the admin user once dismissed
-	 * unless on the plugin settings page, if any
-	 *
-	 * @since 3.0.0
-	 */
-	protected function add_dependencies_admin_notices() {
-		global $sv_wc_php_notice_added;
-
-		// report any missing extensions
-		$missing_extensions = $this->get_missing_extension_dependencies();
-
-		if ( count( $missing_extensions ) > 0 ) {
-
-			$message = sprintf(
-				/* translators: Placeholders: %1$s - plugin name, %2$s - a PHP extension/comma-separated list of PHP extensions */
-				_n(
-					'%1$s requires the %2$s PHP extension to function. Contact your host or server administrator to install and configure the missing extension.',
-					'%1$s requires the following PHP extensions to function: %2$s. Contact your host or server administrator to install and configure the missing extensions.',
-					count( $missing_extensions ),
-					'woocommerce-plugin-framework'
-				),
-				$this->get_plugin_name(),
-				'<strong>' . implode( ', ', $missing_extensions ) . '</strong>'
-			);
-
-			$this->get_admin_notice_handler()->add_admin_notice( $message, 'missing-extensions', array(
-				'notice_class' => 'error',
-			) );
-
-		}
-
-		// report any missing functions
-		$missing_functions = $this->get_missing_function_dependencies();
-
-		if ( count( $missing_functions ) > 0 ) {
-
-			$message = sprintf(
-				/* translators: Placeholders: %1$s - plugin name, %2$s - a PHP function/comma-separated list of PHP functions */
-				_n(
-					'%1$s requires the %2$s PHP function to exist.  Contact your host or server administrator to install and configure the missing function.',
-					'%1$s requires the following PHP functions to exist: %2$s.  Contact your host or server administrator to install and configure the missing functions.',
-					count( $missing_functions ),
-					'woocommerce-plugin-framework'
-				),
-				$this->get_plugin_name(),
-				'<strong>' . implode( ', ', $missing_functions ) . '</strong>'
-			);
-
-			$this->get_admin_notice_handler()->add_admin_notice( $message, 'missing-functions', array(
-				'notice_class' => 'error',
-			) );
-
-		}
-
-		// if on the settings page, report any incompatible PHP settings
-		if ( $this->is_plugin_settings() || ( ! $this->get_settings_url() && $this->is_general_configuration_page() ) ) {
-
-			$bad_settings = $this->get_incompatible_php_settings();
-
-			if ( count( $bad_settings ) > 0 ) {
-
-				$message = sprintf(
-					/* translators: Placeholders: %s - plugin name */
-					__( '%s may behave unexpectedly because the following PHP configuration settings are required:' ),
-					'<strong>' . $this->get_plugin_name() . '</strong>'
-				);
-
-				$message .= '<ul>';
-
-					foreach ( $bad_settings as $setting => $values ) {
-
-						$setting_message = '<code>' . $setting . ' = ' . $values['expected'] . '</code>';
-
-						if ( ! empty( $values['type'] ) && 'min' === $values['type'] ) {
-
-							$setting_message = sprintf(
-								/** translators: Placeholders: %s - a PHP setting value */
-								__( '%s or higher', 'woocommerce-plugin-framework' ),
-								$setting_message
-							);
-						}
-
-						$message .= '<li>' . $setting_message . '</li>';
-					}
-
-				$message .= '</ul>';
-
-				$message .= __( 'Please contact your hosting provider or server administrator to configure these settings.', 'woocommerce-plugin-framework' );
-
-				$this->get_admin_notice_handler()->add_admin_notice( $message, 'bad-php-configuration', array(
-					'notice_class' => 'error',
-				) );
-			}
-		}
-
-		// add the PHP 5.6+ notice
-		if ( ! $sv_wc_php_notice_added && version_compare( PHP_VERSION, '5.6.0', '<' ) ) {
-
-			$message = '<p>';
-
-			$message .= sprintf(
-				/* translators: Placeholders: %1$s - <strong>, %2$s - </strong> */
-				__( 'Hey there! We\'ve noticed that your server is running %1$san outdated version of PHP%2$s, which is the programming language that WooCommerce and its extensions are built on.
-					The PHP version that is currently used for your site is no longer maintained, nor %1$sreceives security updates%2$s; newer versions are faster and more secure.', 'woocommerce-plugin-framework' ),
-				'<strong>', '</strong>'
-			);
-
-			$message .= '</p><p>';
-
-			$deadline = strtotime( 'May 2018' );
-
-			if ( time() < $deadline ) {
-
-				$message .= sprintf(
-					/* translators: Placeholders: %1$s - WooCommerce plugin name, %2$s - a month and year, such as May 2018 */
-					__( 'As a result, %1$s will no longer support this version starting %2$s and you should upgrade PHP prior to this date.', 'woocommerce-plugin-framework' ),
-					$this->get_plugin_name(),
-					'<strong>' . date_i18n( 'F Y', $deadline ) . '</strong>'
-				);
-
-			} else {
-
-				$message .= sprintf(
-					/* translators: Placeholders: %s - WooCommerce plugin name */
-					__( 'As a result, %s no longer supports this version and you should upgrade PHP as soon as possible.', 'woocommerce-plugin-framework' ),
-					$this->get_plugin_name()
-				);
-			}
-
-			$message .= ' ' . sprintf(
-				/* translators: Placeholders: %1$s - <a>, %2$s - </a> */
-				__( 'Your hosting provider can do this for you. %1$sHere are some resources to help you upgrade%2$s and to explain PHP versions further.', 'woocommerce-plugin-framework' ),
-				'<a href="http://skyver.ge/upgradephp">', '</a>'
-			);
-
-			$message .= '</p>';
-
-			$this->get_admin_notice_handler()->add_admin_notice( $message, 'sv-wc-outdated-php-version', array(
-				'notice_class' => 'error',
-			) );
-
-			$sv_wc_php_notice_added = true;
-		}
-
-		// display a notice that WC < 3.0 support will soon be dropped
-		if ( 'wc-settings' === SV_WC_Helper::get_request( 'page' ) && SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.0' ) ) {
-
-			$message = sprintf(
-				/* translators: Placeholders: %1$s - WooCommerce version number, %2$s - <strong>, %3$s - </strong>, %4$s - Plugin name, %5$s - <a> tag, %6$s - </a> tag */
-				__( 'Hey there! We\'ve noticed that your site is running version %1$s of WooCommerce, but %2$sWooCommerce 3.0 or higher will soon be required%3$s by %4$s. We recommend you %5$supdate WooCommerce%6$s to the latest version as soon as possible.', 'woocommerce-plugin-framework' ),
-				esc_html( WC_VERSION ),
-				'<strong>', '</strong>',
-				esc_html( $this->get_plugin_name() ),
-				'<a href="' . esc_url( admin_url( 'update-core.php' ) ) . '">', '</a>'
-			);
-
-			$this->get_admin_notice_handler()->add_admin_notice( $message, 'sv-wc-deprecated-wc-version', array(
-				'notice_class' => 'notice-warning',
-			) );
-		}
 	}
 
 
@@ -646,121 +499,13 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Gets the string name of any required PHP extensions that are not loaded.
-	 *
-	 * @deprecated since 4.5.0
-	 *
-	 * @since 2.0.0
-	 * @return array of missing dependencies
-	 */
-	public function get_missing_dependencies() {
-
-		return $this->get_missing_extension_dependencies();
-	}
-
-
-	/**
-	 * Gets the string name of any required PHP extensions that are not loaded
-	 *
-	 * @since 4.5.0
-	 * @return array of missing dependencies
-	 */
-	public function get_missing_extension_dependencies() {
-
-		$missing_extensions = array();
-
-		foreach ( $this->get_extension_dependencies() as $ext ) {
-
-			if ( ! extension_loaded( $ext ) ) {
-				$missing_extensions[] = $ext;
-			}
-		}
-
-		return $missing_extensions;
-	}
-
-
-	/**
-	 * Gets the string name of any required PHP functions that are not loaded
-	 *
-	 * @since 2.1.0
-	 * @return array of missing functions
-	 */
-	public function get_missing_function_dependencies() {
-
-		$missing_functions = array();
-
-		foreach ( $this->get_function_dependencies() as $fcn ) {
-
-			if ( ! function_exists( $fcn ) ) {
-				$missing_functions[] = $fcn;
-			}
-		}
-
-		return $missing_functions;
-	}
-
-
-	/**
-	 * Gets the string name of any required PHP extensions that are not loaded
-	 *
-	 * @since 4.5.0
-	 * @return array of missing dependencies
-	 */
-	public function get_incompatible_php_settings() {
-
-		$incompatible_settings = array();
-
-		$dependences = $this->get_php_settings_dependencies();
-
-		if ( function_exists( 'ini_get' ) && ! empty( $dependences ) ) {
-
-			foreach ( $dependences as $setting => $expected ) {
-
-				$actual = ini_get( $setting );
-
-				if ( ! $actual ) {
-					continue;
-				}
-
-				if ( is_integer( $expected ) ) {
-
-					// determine if this is a size string, like "10MB"
-					$is_size = ! is_numeric( substr( $actual, -1 ) );
-
-					$actual_num = $is_size ? wc_let_to_num( $actual ) : $actual;
-
-					if ( $actual_num < $expected ) {
-
-						$incompatible_settings[ $setting ] = array(
-							'expected' => $is_size ? size_format( $expected ) : $expected,
-							'actual'   => $is_size ? size_format( $actual_num ) : $actual,
-							'type'     => 'min',
-						);
-					}
-
-				} elseif ( $actual !== $expected ) {
-
-					$incompatible_settings[ $setting ] = array(
-						'expected' => $expected,
-						'actual'   => $actual,
-					);
-				}
-			}
-		}
-
-		return $incompatible_settings;
-	}
-
-
-	/**
 	 * Adds any PHP incompatibilities to the system status report.
 	 *
 	 * @since 4.5.0
 	 */
 	public function add_system_status_php_information( $rows ) {
 
-		foreach ( $this->get_incompatible_php_settings() as $setting => $values ) {
+		foreach ( $this->get_dependency_handler()->get_incompatible_php_settings() as $setting => $values ) {
 
 			if ( isset( $values['type'] ) && 'min' === $values['type'] ) {
 
@@ -792,43 +537,6 @@ abstract class SV_WC_Plugin {
 		}
 
 		return $rows;
-	}
-
-
-	/**
-	 * Sets the plugin dependencies.
-	 *
-	 * @since 4.5.0
-	 * @param array $dependencies the environment dependencies
-	 */
-	protected function set_dependencies( $dependencies = array() ) {
-
-		$default_dependencies = array(
-			'extensions' => array(),
-			'functions'  => array(),
-			'settings'   => array(
-				'suhosin.post.max_array_index_length'    => 256,
-				'suhosin.post.max_totalname_length'      => 65535,
-				'suhosin.post.max_vars'                  => 1024,
-				'suhosin.request.max_array_index_length' => 256,
-				'suhosin.request.max_totalname_length'   => 65535,
-				'suhosin.request.max_vars'               => 1024,
-			),
-		);
-
-		if ( isset( $dependencies[0] ) ) {
-
-			$dependencies = array(
-				'extensions' => $dependencies,
-			);
-		}
-
-		// override any default settings requirements if the plugin specifies them
-		if ( ! empty( $dependencies['settings'] ) ) {
-			$dependencies['settings'] = array_merge( $default_dependencies['settings'], $dependencies['settings'] );
-		}
-
-		$this->dependencies = wp_parse_args( $dependencies, $default_dependencies );
 	}
 
 
@@ -931,6 +639,22 @@ abstract class SV_WC_Plugin {
 	abstract public function get_plugin_name();
 
 
+	/** Handler methods *******************************************************/
+
+
+	/**
+	 * Gets the dependency handler.
+	 *
+	 * @since 5.2.0-dev.1
+	 *
+	 * @return SV_WC_Plugin_Dependencies
+	 */
+	public function get_dependency_handler() {
+
+		return $this->dependency_handler;
+	}
+
+
 	/**
 	 * Gets the lifecycle handler instance.
 	 *
@@ -994,50 +718,6 @@ abstract class SV_WC_Plugin {
 	 */
 	public function get_version() {
 		return $this->version;
-	}
-
-
-	/**
-	 * Get the PHP dependencies.
-	 *
-	 * @since 2.0.0
-	 * @return array
-	 */
-	protected function get_dependencies() {
-		return $this->dependencies;
-	}
-
-
-	/**
-	 * Get the PHP extension dependencies.
-	 *
-	 * @since 4.5.0
-	 * @return array
-	 */
-	protected function get_extension_dependencies() {
-		return $this->dependencies['extensions'];
-	}
-
-
-	/**
-	 * Get the PHP function dependencies.
-	 *
-	 * @since 2.1.0
-	 * @return array
-	 */
-	protected function get_function_dependencies() {
-		return $this->dependencies['functions'];
-	}
-
-
-	/**
-	 * Get the PHP settings dependencies.
-	 *
-	 * @since 4.5.0
-	 * @return array
-	 */
-	protected function get_php_settings_dependencies() {
-		return $this->dependencies['settings'];
 	}
 
 
@@ -1393,6 +1073,135 @@ abstract class SV_WC_Plugin {
 	 */
 	public function deactivate() {
 		// stub
+	}
+
+
+	/** Deprecated methods ****************************************************/
+
+
+	/**
+	 * Gets the string name of any required PHP extensions that are not loaded.
+	 *
+	 * @since 4.5.0
+	 * @deprecated 5.2.0-dev
+	 *
+	 * @return array
+	 */
+	public function get_missing_extension_dependencies() {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_dependency_handler() ) . '::get_missing_php_extensions()' );
+
+		return $this->get_dependency_handler()->get_missing_php_extensions();
+	}
+
+
+	/**
+	 * Gets the string name of any required PHP functions that are not loaded.
+	 *
+	 * @since 2.1.0
+	 * @deprecated 5.2.0-dev
+	 *
+	 * @return array
+	 */
+	public function get_missing_function_dependencies() {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_dependency_handler() ) . '::get_missing_php_functions()' );
+
+		return $this->get_dependency_handler()->get_missing_php_functions();
+	}
+
+
+	/**
+	 * Gets the string name of any required PHP extensions that are not loaded.
+	 *
+	 * @since 4.5.0
+	 * @deprecated 5.2.0-dev
+	 *
+	 * @return array
+	 */
+	public function get_incompatible_php_settings() {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_dependency_handler() ) . '::get_incompatible_php_settings()' );
+
+		return $this->get_dependency_handler()->get_incompatible_php_settings();
+	}
+
+
+	/**
+	 * Gets the PHP dependencies.
+	 *
+	 * @since 2.0.0
+	 * @deprecated 5.2.0-dev
+	 *
+	 * @return array
+	 */
+	protected function get_dependencies() {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev' );
+
+		return array();
+	}
+
+
+	/**
+	 * Gets the PHP extension dependencies.
+	 *
+	 * @since 4.5.0
+	 * @deprecated 5.2.0-dev
+	 *
+	 * @return array
+	 */
+	protected function get_extension_dependencies() {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_dependency_handler() ) . '::get_php_extensions()' );
+
+		return $this->get_dependency_handler()->get_php_extensions();
+	}
+
+
+	/**
+	 * Gets the PHP function dependencies.
+	 *
+	 * @since 2.1.0
+	 * @deprecated 5.2.0-dev
+	 *
+	 * @return array
+	 */
+	protected function get_function_dependencies() {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_dependency_handler() ) . '::get_php_functions()' );
+
+		return $this->get_dependency_handler()->get_php_functions();
+	}
+
+
+	/**
+	 * Gets the PHP settings dependencies.
+	 *
+	 * @since 4.5.0
+	 * @deprecated 5.2.0-dev
+	 *
+	 * @return array
+	 */
+	protected function get_php_settings_dependencies() {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_dependency_handler() ) . '::get_php_settings()' );
+
+		return $this->get_dependency_handler()->get_php_settings();
+	}
+
+
+	/**
+	 * Sets the plugin dependencies.
+	 *
+	 * @since 4.5.0
+	 * @deprecated 5.2.0-dev
+	 *
+	 * @param array $dependencies the environment dependencies
+	 */
+	protected function set_dependencies( $dependencies = array() ) {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev' );
 	}
 
 

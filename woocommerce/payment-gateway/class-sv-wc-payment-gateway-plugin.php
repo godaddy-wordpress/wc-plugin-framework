@@ -160,6 +160,12 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		// adjust the available gateways in certain cases
 		add_filter( 'woocommerce_available_payment_gateways', array( $this, 'adjust_available_gateways' ) );
 
+		// my payment methods feature
+		add_action( 'init', array( $this, 'maybe_init_my_payment_methods' ) );
+
+		// apple pay feature
+		add_action( 'init', array( $this, 'maybe_init_apple_pay' ) );
+
 		// TODO: move these to Subscriptions integration
 		if ( $this->is_subscriptions_active() ) {
 
@@ -170,26 +176,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// add gateway information to the system status report
 		add_action( 'woocommerce_system_status_report', array( $this, 'add_system_status_information' ) );
-	}
-
-
-	/**
-	 * Initializes the plugin.
-	 *
-	 * @internal
-	 * @see SV_WC_Plugin::init()
-	 *
-	 * @since 5.2.0-dev
-	 */
-	public function init_plugin() {
-
-		parent::init_plugin();
-
-		if ( $this->supports_my_payment_methods() ) {
-			$this->maybe_init_my_payment_methods();
-		}
-
-		$this->maybe_init_apple_pay();
 	}
 
 
@@ -333,7 +319,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Instantiates the My Payment Methods table class instance when a user is
 	 * logged in on an account page and tokenization is enabled for at least
-	 * one of the active gateways
+	 * one of the active gateways.
+	 *
+	 * @internal
 	 *
 	 * @since 4.0.0
 	 */
@@ -344,7 +332,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			return;
 		}
 
-		if ( is_user_logged_in() && $this->tokenization_enabled() ) {
+		if ( $this->supports_my_payment_methods() && $this->tokenization_enabled() && is_user_logged_in() ) {
 			$this->my_payment_methods = $this->get_my_payment_methods_instance();
 		}
 	}
