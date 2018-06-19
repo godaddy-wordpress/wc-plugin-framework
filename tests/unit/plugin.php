@@ -124,10 +124,12 @@ MSG;
 			'mock',
 			'7.7.7',
 			array(
-				'dependencies'          => array( 'json' ),
-				'function_dependencies' => array( 'ftp_ssl_connect' ),
-				'text_domain'           => 'mock',
-				'display_php_notice'    => true,
+				'dependencies' => array(
+					'php_extensions' => array( 'json' ),
+					'php_functions'  => array(),
+					'php_settings'   => array(),
+				),
+				'text_domain' => 'mock',
 			),
 		);
 
