@@ -1495,7 +1495,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		// all plugin dependencies met
-		if ( count( $this->get_plugin()->get_missing_extension_dependencies() ) > 0 ) {
+		if ( count( $this->get_plugin()->get_dependency_handler()->get_missing_php_extensions() ) > 0 ) {
 			$is_available = false;
 		}
 
