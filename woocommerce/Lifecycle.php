@@ -171,7 +171,6 @@ class Lifecycle {
 	protected function upgrade( $installed_version ) {
 
 		// stub
-		wp_var_log( "upgrading from {$installed_version}" );
 	}
 
 
