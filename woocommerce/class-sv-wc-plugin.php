@@ -226,19 +226,8 @@ abstract class SV_WC_Plugin {
 		// initialize the plugin admin
 		add_action( 'admin_init', array( $this, 'init_admin' ) );
 
-		// Admin
-		if ( is_admin() && ! is_ajax() ) {
-
-			// add a 'Configure' link to the plugin action links
-			add_filter( 'plugin_action_links_' . plugin_basename( $this->get_plugin_file() ), array( $this, 'plugin_action_links' ) );
-
-			// defer until WP/WC has fully loaded
-			add_action( 'wp_loaded', array( $this, 'do_install' ) );
-
-			// register activation/deactivation hooks for convenience
-			register_activation_hook(   $this->get_plugin_file(), array( $this, 'activate' ) );
-			register_deactivation_hook( $this->get_plugin_file(), array( $this, 'deactivate' ) );
-		}
+		// add a 'Configure' link to the plugin action links
+		add_filter( 'plugin_action_links_' . plugin_basename( $this->get_plugin_file() ), array( $this, 'plugin_action_links' ) );
 
 		// automatically log HTTP requests from SV_WC_API_Base
 		$this->add_api_request_logging();
@@ -760,7 +749,8 @@ abstract class SV_WC_Plugin {
 	 * @since 2.0.0
 	 * @return string the plugin version name
 	 */
-	protected function get_plugin_version_name() {
+	public function get_plugin_version_name() {
+
 		return 'wc_' . $this->get_id() . '_version';
 	}
 
@@ -1027,86 +1017,36 @@ abstract class SV_WC_Plugin {
 	}
 
 
-	/** Lifecycle methods ******************************************************/
+	/** Deprecated methods ****************************************************/
 
 
 	/**
-	 * Handles version checking
+	 * Handles version checking.
 	 *
 	 * @since 2.0.0
+	 * @deprecated 5.2.0-dev
 	 */
 	public function do_install() {
 
-		$installed_version = get_option( $this->get_plugin_version_name() );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_lifecycle_handler() ) . '::init()' );
 
-		// installed version lower than plugin version?
-		if ( version_compare( $installed_version, $this->get_version(), '<' ) ) {
-
-			if ( ! $installed_version ) {
-
-				$this->install();
-
-				/**
-				 * Fires after the plugin has been installed.
-				 *
-				 * @since 5.1.0
-				 */
-				do_action( 'wc_' . $this->get_id() . '_installed' );
-
-			} else {
-
-				$this->upgrade( $installed_version );
-
-				/**
-				 * Fires after the plugin has been updated.
-				 *
-				 * @since 5.1.0
-				 */
-				do_action( 'wc_' . $this->get_id() . '_updated' );
-			}
-
-			// new version number
-			update_option( $this->get_plugin_version_name(), $this->get_version() );
-		}
+		$this->get_lifecycle_handler()->init();
 	}
 
 
 	/**
-	 * Helper method to install default settings for a plugin
+	 * Helper method to install default settings for a plugin.
 	 *
 	 * @since 4.2.0
+	 * @deprecated 5.2.0-dev
+	 *
 	 * @param array $settings array of settings in format required by WC_Admin_Settings
 	 */
 	public function install_default_settings( array $settings ) {
 
-		foreach ( $settings as $setting ) {
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_lifecycle_handler() ) . '::install_default_settings()' );
 
-			if ( isset( $setting['id'] ) && isset( $setting['default'] ) ) {
-
-				update_option( $setting['id'], $setting['default'] );
-			}
-		}
-	}
-
-
-	/**
-	 * Plugin install method.  Perform any installation tasks here
-	 *
-	 * @since 2.0.0
-	 */
-	protected function install() {
-		// stub
-	}
-
-
-	/**
-	 * Plugin upgrade method.  Perform any required upgrades here
-	 *
-	 * @since 2.0.0
-	 * @param string $installed_version the currently installed version
-	 */
-	protected function upgrade( $installed_version ) {
-		// stub
+		$this->get_lifecycle_handler()->install_default_settings( $settings );
 	}
 
 
@@ -1115,9 +1055,11 @@ abstract class SV_WC_Plugin {
 	 * Note that this _does not_ run during upgrades.
 	 *
 	 * @since 4.2.0
+	 * @deprecated 5.2.0-dev
 	 */
 	public function activate() {
-		// stub
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev' );
 	}
 
 
@@ -1125,13 +1067,12 @@ abstract class SV_WC_Plugin {
 	 * Plugin deactivation method. Perform any deactivation tasks here.
 	 *
 	 * @since 4.2.0
+	 * @deprecated 5.2.0-dev
 	 */
 	public function deactivate() {
-		// stub
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev' );
 	}
-
-
-	/** Deprecated methods ****************************************************/
 
 
 	/**

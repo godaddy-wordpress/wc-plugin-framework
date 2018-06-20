@@ -68,27 +68,110 @@ class Lifecycle {
 	 */
 	protected function add_hooks() {
 
-		add_action( 'wc_' . $this->get_plugin()->get_id() . '_updated', array( $this, 'do_update' ) );
+		if ( is_admin() && ! is_ajax() ) {
 
-		add_action( 'init', array( $this, 'add_admin_notices' ) );
+			// initialize the plugin lifecycle
+			add_action( 'wp_loaded', array( $this, 'init' ) );
 
+			// add the admin notices
+			add_action( 'init', array( $this, 'add_admin_notices' ) );
+		}
+
+		// catch any milestones triggered by action
 		add_action( 'wc_' . $this->get_plugin()->get_id() . '_milestone_reached', array( $this, 'trigger_milestone' ), 10, 3 );
 	}
 
 
 	/**
-	 * Handles tasks after the plugin has been updated.
+	 * Initializes the plugin lifecycle.
 	 *
-	 * @internal
-	 *
-	 * @since 5.1.0
+	 * @since 5.2.0-dev
 	 */
-	public function do_update() {
+	public function init() {
 
-		// if the plugin never had any previous milestones, consider them all reached so their notices aren't displayed
-		if ( ! $this->get_milestone_version() ) {
-			$this->set_milestone_version( $this->get_plugin()->get_version() );
+		$installed_version = $this->get_installed_version();
+		$plugin_version    = $this->get_plugin()->get_version();
+
+		// installed version lower than plugin version?
+		if ( version_compare( $installed_version, $plugin_version, '<' ) ) {
+
+			if ( ! $installed_version ) {
+
+				$this->install();
+
+				/**
+				 * Fires after the plugin has been installed.
+				 *
+				 * @since 5.1.0
+				 */
+				do_action( 'wc_' . $this->get_plugin()->get_id() . '_installed' );
+
+			} else {
+
+				$this->upgrade( $installed_version );
+
+				// if the plugin never had any previous milestones, consider them all reached so their notices aren't displayed
+				if ( ! $this->get_milestone_version() ) {
+					$this->set_milestone_version( $plugin_version );
+				}
+
+				/**
+				 * Fires after the plugin has been updated.
+				 *
+				 * @since 5.1.0
+				 *
+				 * @param string $installed_version previously installed version
+				 */
+				do_action( 'wc_' . $this->get_plugin()->get_id() . '_updated', $installed_version );
+			}
+
+			// new version number
+			$this->set_installed_version( $plugin_version );
 		}
+	}
+
+
+	/**
+	 * Helper method to install default settings for a plugin.
+	 *
+	 * @since 5.2.0-dev
+	 *
+	 * @param array $settings settings in format required by WC_Admin_Settings
+	 */
+	public function install_default_settings( array $settings ) {
+
+		foreach ( $settings as $setting ) {
+
+			if ( isset( $setting['id'] ) && isset( $setting['default'] ) ) {
+
+				update_option( $setting['id'], $setting['default'] );
+			}
+		}
+	}
+
+
+	/**
+	 * Performs any install tasks.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	protected function install() {
+
+		// stub
+	}
+
+
+	/**
+	 * Performs any upgrade tasks based on the provided installed version.
+	 *
+	 * @since 5.2.0-dev
+	 *
+	 * @param string $installed_version installed version
+	 */
+	protected function upgrade( $installed_version ) {
+
+		// stub
+		wp_var_log( "upgrading from {$installed_version}" );
 	}
 
 
@@ -278,6 +361,32 @@ class Lifecycle {
 
 
 	/**
+	 * Gets the currently installed plugin version.
+	 *
+	 * @since 5.2.0-dev
+	 *
+	 * @return string
+	 */
+	protected function get_installed_version() {
+
+		return get_option( $this->get_plugin()->get_plugin_version_name() );
+	}
+
+
+	/**
+	 * Sets the installed plugin version.
+	 *
+	 * @since 5.2.0-dev
+	 *
+	 * @param string $version version to set
+	 */
+	protected function set_installed_version( $version ) {
+
+		update_option( $this->get_plugin()->get_plugin_version_name(), $version );
+	}
+
+
+	/**
 	 * Gets the plugin instance.
 	 *
 	 * @since 5.1.0
@@ -287,6 +396,22 @@ class Lifecycle {
 	private function get_plugin() {
 
 		return $this->plugin;
+	}
+
+
+	/** Deprecated methods ****************************************************/
+
+
+	/**
+	 * Handles tasks after the plugin has been updated.
+	 *
+	 * @internal
+	 *
+	 * @since 5.1.0
+	 */
+	public function do_update() {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev' );
 	}
 
 
