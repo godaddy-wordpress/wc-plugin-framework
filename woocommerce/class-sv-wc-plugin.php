@@ -115,12 +115,27 @@ abstract class SV_WC_Plugin {
 		// includes that are required to be available at all times
 		$this->includes();
 
-		// add the action & filter hooks
-		$this->add_hooks();
-
 		// initialize the dependencies manager
 		$this->init_dependencies( $args['dependencies'] );
+
+		// build the admin message handler instance
+		$this->init_admin_message_handler();
+
+		// build the admin notice handler instance
+		$this->init_admin_notice_handler();
+
+		// build the hook deprecator instance
+		$this->init_hook_deprecator();
+
+		// build the lifecycle handler instance
+		$this->init_lifecycle_handler();
+
+		// add the action & filter hooks
+		$this->add_hooks();
 	}
+
+
+	/** Init methods **********************************************************/
 
 
 	/**
@@ -136,9 +151,62 @@ abstract class SV_WC_Plugin {
 	 *     @type array $php_settings   PHP settings dependencies
 	 * }
 	 */
-	private function init_dependencies( $dependencies ) {
+	protected function init_dependencies( $dependencies ) {
 
 		$this->dependency_handler = new SV_WC_Plugin_Dependencies( $this, $dependencies );
+	}
+
+
+	/**
+	 * Builds the admin message handler instance.
+	 *
+	 * Plugins can override this with their own handler.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	protected function init_admin_message_handler() {
+
+		$this->message_handler = new SV_WP_Admin_Message_Handler( $this->get_id() );
+	}
+
+
+	/**
+	 * Builds the admin notice handler instance.
+	 *
+	 * Plugins can override this with their own handler.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	protected function init_admin_notice_handler() {
+
+		$this->admin_notice_handler = new SV_WC_Admin_Notice_Handler( $this );
+	}
+
+
+	/**
+	 * Builds the hook deprecator instance.
+	 *
+	 * Plugins can override this with their own handler.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	protected function init_hook_deprecator() {
+
+		$this->hook_deprecator = new SV_WC_Hook_Deprecator( $this->get_plugin_name(), $this->get_deprecated_hooks() );
+	}
+
+
+	/**
+	 * Builds the lifecycle handler instance.
+	 *
+	 * Plugins can override this with their own handler to perform install and
+	 * upgrade routines.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	protected function init_lifecycle_handler() {
+
+		$this->lifecycle_handler = new Plugin\Lifecycle( $this );
 	}
 
 
@@ -160,10 +228,6 @@ abstract class SV_WC_Plugin {
 
 		// Admin
 		if ( is_admin() && ! is_ajax() ) {
-
-			// render any admin notices, delayed notices, and
-			add_action( 'admin_notices', array( $this, 'add_admin_notices'            ), 10 );
-			add_action( 'admin_footer',  array( $this, 'add_delayed_admin_notices'    ), 10 );
 
 			// add a 'Configure' link to the plugin action links
 			add_filter( 'plugin_action_links_' . plugin_basename( $this->get_plugin_file() ), array( $this, 'plugin_action_links' ) );
@@ -277,10 +341,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function init_plugin() {
 
-		$this->hook_deprecator      = new SV_WC_Hook_Deprecator( $this->get_plugin_name(), $this->get_deprecated_hooks() );
-		$this->lifecycle_handler    = new Plugin\Lifecycle( $this );
-		$this->message_handler      = new SV_WP_Admin_Message_Handler( $this->get_id() );
-		$this->admin_notice_handler = new SV_WC_Admin_Notice_Handler( $this ); // this is intentionally loaded outside the admin
+		// stub
 	}
 
 
@@ -294,7 +355,8 @@ abstract class SV_WC_Plugin {
 	 */
 	public function init_admin() {
 
-		// stub
+		$this->add_admin_notices();
+		$this->add_delayed_admin_notices();
 	}
 
 
@@ -662,9 +724,6 @@ abstract class SV_WC_Plugin {
 	 */
 	public function get_lifecycle_handler() {
 
-		// TODO: not sure about this - do these handles need to wait until init?
-		SV_WC_Helper::maybe_doing_it_early( 'init', __METHOD__, '5.2.0-dev' );
-
 		return $this->lifecycle_handler;
 	}
 
@@ -678,8 +737,6 @@ abstract class SV_WC_Plugin {
 	 */
 	public function get_message_handler() {
 
-		SV_WC_Helper::maybe_doing_it_early( 'init', __METHOD__, '5.2.0-dev' );
-
 		return $this->message_handler;
 	}
 
@@ -692,8 +749,6 @@ abstract class SV_WC_Plugin {
 	 * @return SV_WC_Admin_Notice_Handler
 	 */
 	public function get_admin_notice_handler() {
-
-		SV_WC_Helper::maybe_doing_it_early( 'init', __METHOD__, '5.2.0-dev' );
 
 		return $this->admin_notice_handler;
 	}
