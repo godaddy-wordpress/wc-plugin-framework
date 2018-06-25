@@ -94,7 +94,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @param \WC_Order $order The order object
 	 * @param \SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response Optional. Payment token API response, or null if the request should be made
 	 * @param string $environment_id Optional. Environment ID. Default: the current environment.
-	 * @throws \SV_WC_Payment_Gateway_Exception on transaction failure
+	 * @throws \SV_WC_Plugin_Exception on transaction failure
 	 * @return \WC_Order The order object
 	 */
 	public function create_token( \WC_Order $order, $response = null, $environment_id = null ) {

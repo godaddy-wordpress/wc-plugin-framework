@@ -548,7 +548,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @param WC_Order $order the order object
 	 * @return SV_WC_Payment_Gateway_API_Response the response
-	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
+	 * @throws SV_WC_Plugin_Exception network timeouts, etc
 	 */
 	protected function do_check_transaction( $order ) {
 
@@ -605,7 +605,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @param WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response optional credit card transaction response
 	 * @return SV_WC_Payment_Gateway_API_Response the response
-	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
+	 * @throws SV_WC_Plugin_Exception network timeouts, etc
 	 */
 	protected function do_credit_card_transaction( $order, $response = null ) {
 
@@ -810,6 +810,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * @since 4.0.0
 	 * @return array result with success/error message and request status (success/failure)
+	 * @throws SV_WC_Plugin_Exception
 	 */
 	protected function do_add_payment_method_transaction( \WC_Order $order ) {
 
