@@ -759,6 +759,48 @@ MSG;
 
 
 	/**
+	 * Test \SV_WC_Helper::list_array_items()
+	 *
+	 * @see \SV_WC_Helper::list_array_items()
+	 *
+	 * @since 5.2.0-dev
+	 *
+	 * @dataProvider provider_test_list_array_items
+	 */
+	public function test_list_array_items( $items, $conjunction, $separator, $expected ) {
+
+		$this->assertEquals( $expected, PluginFramework\SV_WC_Helper::list_array_items( $items, $conjunction, $separator ) );
+	}
+
+
+	/**
+	 * Data provider for test_list_array_items()
+	 *
+	 * @since 5.2.0-dev
+	 *
+	 * @return array
+	 */
+	public function provider_test_list_array_items() {
+
+		$items = [ 'one', 'two', 'three', 'four', 'five' ];
+
+		return [
+			[ $items, null, '', 'one, two, three, four, and five' ],                         // method defaults
+			[ $items, new \stdClass(), new \stdClass(), 'one, two, three, four, and five' ], // bad param types
+			[ $items, 'or', '', 'one, two, three, four, or five' ],                          // custom conjunction
+			[ $items, '', '; ', 'one; two; three; four; five' ],                             // empty conjunction, custom separator
+			[ $items, 'with', '; ', 'one; two; three; four; with five' ],                    // custom conjunction, custom separator
+			[ array_slice( $items, 0, 3 ), null, '', 'one, two, and three' ],                // 3 items
+			[ array_slice( $items, 0, 2 ), null, '', 'one and two' ],                        // 2 items
+			[ array_slice( $items, 0, 2 ), 'or', '', 'one or two' ],                         // 2 items, custom conjunction
+			[ array_slice( $items, 0, 2 ), 'or', '; ', 'one or two' ],                       // 2 items, custom conjunction, custom separator
+			[ [ 'one' ], '', '', 'one' ],                                                    // 1 item
+			[ [], 'or', '; ', '' ],                                                          // no items
+		];
+	}
+
+
+	/**
 	 * Test \SV_WC_Helper::number_format()
 	 *
 	 * @see \SV_WC_Helper::number_format()
