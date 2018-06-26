@@ -413,13 +413,13 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_4\\SV_WC_He
 				$last_item = array_pop( $items );
 
 				array_push( $items, trim( "{$conjunction} {$last_item}" ) );
-			}
 
-			// only use a comma if needed and no separator was passed
-			if ( count( $items ) < 3 ) {
-				$separator = ' ';
-			} elseif ( ! is_string( $separator ) || '' === $separator ) {
-				$separator = ', ';
+				// only use a comma if needed and no separator was passed
+				if ( count( $items ) < 3 ) {
+					$separator = ' ';
+				} elseif ( ! is_string( $separator ) || '' === $separator ) {
+					$separator = ', ';
+				}
 			}
 
 			return implode( $separator, $items );
