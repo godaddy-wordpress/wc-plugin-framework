@@ -222,10 +222,14 @@ abstract class SV_WC_Plugin {
 		add_action( 'init', array( $this, 'load_translations' ) );
 
 		// initialize the plugin
-		add_action( 'init', array( $this, 'init_plugin' ) );
+		add_action( 'init', array( $this, 'init_plugin' ), 0 );
 
 		// initialize the plugin admin
-		add_action( 'admin_init', array( $this, 'init_admin' ) );
+		add_action( 'admin_init', array( $this, 'init_admin' ), 0 );
+
+		// add the admin notices
+		add_action( 'admin_init', array( $this, 'add_admin_notices' ) );
+		add_action( 'admin_init', array( $this, 'add_delayed_admin_notices' ) );
 
 		// add a 'Configure' link to the plugin action links
 		add_filter( 'plugin_action_links_' . plugin_basename( $this->get_plugin_file() ), array( $this, 'plugin_action_links' ) );
@@ -345,8 +349,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function init_admin() {
 
-		$this->add_admin_notices();
-		$this->add_delayed_admin_notices();
+		// stub
 	}
 
 
