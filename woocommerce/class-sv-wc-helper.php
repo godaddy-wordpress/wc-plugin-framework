@@ -388,6 +388,44 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_4\\SV_WC_He
 		}
 
 
+		/**
+		 * Lists an array as text.
+		 *
+		 * Takes an array and returns a list like "one, two, three, and four"
+		 * with a (mandatory) oxford comma.
+		 *
+		 * @since 5.2.0-dev
+		 *
+		 * @param array $items items to list
+		 * @param string|null $conjunction coordinating conjunction, like "or" or "and"
+		 * @param string $separator list separator, like a comma
+		 * @return string
+		 */
+		public static function list_array_items( array $items, $conjunction = null, $separator = '' ) {
+
+			if ( ! is_string( $conjunction ) ) {
+				$conjunction = _x( 'and', 'coordinating conjunction for a list of items: a, b, and c', 'woocommerce-plugin-framework' );
+			}
+
+			// append the conjunction to the last item
+			if ( count( $items ) > 1 ) {
+
+				$last_item = array_pop( $items );
+
+				array_push( $items, trim( "{$conjunction} {$last_item}" ) );
+
+				// only use a comma if needed and no separator was passed
+				if ( count( $items ) < 3 ) {
+					$separator = ' ';
+				} elseif ( ! is_string( $separator ) || '' === $separator ) {
+					$separator = ', ';
+				}
+			}
+
+			return implode( $separator, $items );
+		}
+
+
 		/** Number helper functions *******************************************/
 
 
