@@ -245,13 +245,13 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 						'redirect' => $this->get_gateway()->get_return_url( $order ),
 				);
 
-			} catch( SV_WC_Payment_Gateway_Exception $e ) {
+			} catch( SV_WC_Plugin_Exception $e ) {
 
 				$this->get_gateway()->mark_order_as_failed( $order, sprintf( __( 'Pre-Order Tokenization attempt failed (%s)', 'woocommerce-plugin-framework' ), $this->get_gateway()->get_method_title(), $e->getMessage() ) );
 
 				$result = array(
-						'result'  => 'failure',
-						'message' => $e->getMessage(),
+					'result'  => 'failure',
+					'message' => $e->getMessage(),
 				);
 			}
 		}

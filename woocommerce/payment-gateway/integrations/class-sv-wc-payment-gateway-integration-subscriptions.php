@@ -364,7 +364,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 				'redirect' => $subscription->get_view_order_url(),
 			);
 
-		} catch( SV_WC_Payment_Gateway_Exception $e ) {
+		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			/* translators: Placeholders: %1$s - payment gateway title, %2$s - error message; e.g. Order Note: [Payment method] Payment Change failed [error] */
 			$note = sprintf( __( '%1$s Payment Change Failed (%2$s)', 'woocommerce-plugin-framework' ), $gateway->get_method_title(), $e->getMessage() );
