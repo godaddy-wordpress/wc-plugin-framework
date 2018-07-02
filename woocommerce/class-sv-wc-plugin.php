@@ -71,6 +71,9 @@ abstract class SV_WC_Plugin {
 	/** @var SV_WC_Plugin_Dependencies dependency handler instance */
 	private $dependency_handler;
 
+	/** @var SV_WC_Hook_Deprecator hook deprecator instance */
+	private $hook_deprecator;
+
 	/** @var Plugin\Lifecycle lifecycle handler */
 	private $lifecycle_handler;
 
