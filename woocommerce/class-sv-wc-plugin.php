@@ -62,12 +62,13 @@ abstract class SV_WC_Plugin {
 	/** @var \WC_Logger instance */
 	private $logger;
 
-	/** @var  \SV_WP_Admin_Message_Handler instance */
+	/** @var  SV_WP_Admin_Message_Handler instance */
 	private $message_handler;
 
 	/** @var string the plugin text domain */
 	private $text_domain;
 
+	/** @var SV_WC_Plugin_Dependencies dependency handler instance */
 	private $dependency_handler;
 
 	/** @var Plugin\Lifecycle lifecycle handler */
@@ -553,6 +554,9 @@ abstract class SV_WC_Plugin {
 	 * Adds any PHP incompatibilities to the system status report.
 	 *
 	 * @since 4.5.0
+	 *
+	 * @param array $rows WooCommerce system status rows
+	 * @return array
 	 */
 	public function add_system_status_php_information( $rows ) {
 
@@ -815,7 +819,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function is_general_configuration_page() {
 
-		return isset( $_GET['page'] ) && 'wc-settings' == $_GET['page'] && ( ! isset( $_GET['tab'] ) || 'general' == $_GET['tab'] );
+		return isset( $_GET['page'] ) && 'wc-settings' === $_GET['page'] && ( ! isset( $_GET['tab'] ) || 'general' === $_GET['tab'] );
 	}
 
 
@@ -879,7 +883,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function get_reviews_url() {
 
-		return ( $this->get_sales_page_url() ) ? $this->get_sales_page_url() . '#comments' : '';
+		return $this->get_sales_page_url() ? $this->get_sales_page_url() . '#comments' : '';
 	}
 
 

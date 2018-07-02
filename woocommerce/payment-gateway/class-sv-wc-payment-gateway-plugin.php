@@ -87,19 +87,16 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/** @var SV_WC_Payment_Gateway_Privacy payment gateway privacy handler instance */
 	protected $privacy_handler;
 
-	/** @var \SV_WC_Payment_Gateway_Admin_Order order handler instance */
+	/** @var SV_WC_Payment_Gateway_Admin_Order order handler instance */
 	protected $admin_order_handler;
 
-	/** @var SV_WC_Payment_Gateway_Admin_User_Edit_Handler adds admin user edit payment gateway functionality */
-	private $admin_user_edit_handler;
-
-	/** @var \SV_WC_Payment_Gateway_Admin_User_Handler user handler instance */
+	/** @var SV_WC_Payment_Gateway_Admin_User_Handler user handler instance */
 	protected $admin_user_handler;
 
 	/** @var SV_WC_Payment_Gateway_My_Payment_Methods adds My Payment Method functionality */
 	private $my_payment_methods;
 
-	/** @var \SV_WC_Payment_Gateway_Apple_Pay the Apple Pay handler instance */
+	/** @var SV_WC_Payment_Gateway_Apple_Pay the Apple Pay handler instance */
 	private $apple_pay;
 
 
