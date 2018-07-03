@@ -392,7 +392,7 @@ class Lifecycle {
 	 *
 	 * @return \SkyVerge\WooCommerce\PluginFramework\v5_2_0\SV_WC_Plugin
 	 */
-	private function get_plugin() {
+	protected function get_plugin() {
 
 		return $this->plugin;
 	}
