@@ -75,7 +75,7 @@ abstract class SV_WC_Plugin {
 	private $hook_deprecator;
 
 	/** @var Plugin\Lifecycle lifecycle handler */
-	private $lifecycle_handler;
+	protected $lifecycle_handler;
 
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
