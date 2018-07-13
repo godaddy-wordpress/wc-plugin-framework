@@ -68,6 +68,12 @@ class Lifecycle {
 	 */
 	protected function add_hooks() {
 
+		// handle activation
+		add_action( 'admin_init', array( $this, 'handle_activation' ) );
+
+		// handle deactivation
+		add_action( 'deactivate_' . $this->get_plugin()->get_plugin_file(), array( $this, 'handle_deactivation' ) );
+
 		if ( is_admin() && ! is_ajax() ) {
 
 			// initialize the plugin lifecycle
@@ -88,6 +94,9 @@ class Lifecycle {
 	 * @since 5.2.0-dev
 	 */
 	public function init() {
+
+		// potentially handle a new activation
+		$this->handle_activation();
 
 		$installed_version = $this->get_installed_version();
 		$plugin_version    = $this->get_plugin()->get_version();
@@ -128,6 +137,89 @@ class Lifecycle {
 			// new version number
 			$this->set_installed_version( $plugin_version );
 		}
+	}
+
+
+	/**
+	 * Triggers plugin activation.
+	 *
+	 * We don't use register_activation_hook() as that can't be called inside
+	 * the 'plugins_loaded' action. Instead, we rely on setting to track the
+	 * plugin's activation status.
+	 *
+	 * @internal
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/register_activation_hook/#comment-2100
+	 *
+	 * @since 5.2.0-dev
+	 */
+	public function handle_activation() {
+
+		if ( ! get_option( 'wc_' . $this->get_plugin()->get_id() . '_is_active', false ) ) {
+
+			$this->activate();
+
+			/**
+			 * Fires when the plugin is activated.
+			 *
+			 * @since 5.2.0-dev
+			 */
+			do_action( 'wc_' . $this->get_plugin()->get_id() . '_activated' );
+
+			update_option( 'wc_' . $this->get_plugin()->get_id() . '_is_active', 'yes' );
+		}
+	}
+
+
+	/**
+	 * Triggers plugin deactivation.
+	 *
+	 * @internal
+	 *
+	 * @since 5.2.0-dev
+	 */
+	public function handle_deactivation() {
+
+		$this->deactivate();
+
+		/**
+		 * Fires when the plugin is deactivated.
+		 *
+		 * @since 5.2.0-dev
+		 */
+		do_action( 'wc_' . $this->get_plugin()->get_id() . '_deactivated' );
+
+		delete_option( 'wc_' . $this->get_plugin()->get_id() . '_is_active' );
+	}
+
+
+	/**
+	 * Handles plugin activation.
+	 *
+	 * Plugins can override this to run their own activation tasks.
+	 *
+	 * Important Note: operations here should never be destructive for existing
+	 * data. Since we rely on an option to track activation, it's possible for
+	 * this to run outside of genuine activations.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	public function activate() {
+
+		// stub
+	}
+
+
+	/**
+	 * Handles plugin deactivation.
+	 *
+	 * Plugins can override this to run their own deactivation tasks.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	public function deactivate() {
+
+		// stub
 	}
 
 
