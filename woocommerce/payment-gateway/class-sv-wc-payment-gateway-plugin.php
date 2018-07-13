@@ -145,6 +145,23 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
+	 * Builds the REST API handler instance.
+	 *
+	 * Gateway plugins can override this to add their own data and/or routes.
+	 *
+	 * @see SV_WC_Plugin::init_rest_api_handler()
+	 *
+	 * @since 5.2.0-dev
+	 */
+	protected function init_rest_api_handler() {
+
+		require_once( $this->get_payment_gateway_framework_path() . '/rest-api/class-sv-wc-payment-gateway-plugin-rest-api.php' );
+
+		$this->rest_api_handler = new Payment_Gateway\REST_API( $this );
+	}
+
+
+	/**
 	 * Adds the action & filter hooks.
 	 *
 	 * @since 5.2.0-dev

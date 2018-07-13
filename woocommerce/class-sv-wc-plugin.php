@@ -77,6 +77,9 @@ abstract class SV_WC_Plugin {
 	/** @var Plugin\Lifecycle lifecycle handler */
 	protected $lifecycle_handler;
 
+	/** @var REST_API REST API handler */
+	protected $rest_api_handler;
+
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
 
@@ -133,6 +136,9 @@ abstract class SV_WC_Plugin {
 
 		// build the lifecycle handler instance
 		$this->init_lifecycle_handler();
+
+		// build the REST API handler instance
+		$this->init_rest_api_handler();
 
 		// add the action & filter hooks
 		$this->add_hooks();
@@ -211,6 +217,19 @@ abstract class SV_WC_Plugin {
 	protected function init_lifecycle_handler() {
 
 		$this->lifecycle_handler = new Plugin\Lifecycle( $this );
+	}
+
+
+	/**
+	 * Builds the REST API handler instance.
+	 *
+	 * Plugins can override this to add their own data and/or routes.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	protected function init_rest_api_handler() {
+
+		$this->rest_api_handler = new REST_API( $this );
 	}
 
 
@@ -394,11 +413,13 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
 
+		// Handlers
 		require_once( $framework_path . '/class-sv-wc-plugin-dependencies.php' );
 		require_once( $framework_path . '/class-sv-wc-hook-deprecator.php' );
 		require_once( $framework_path . '/class-sv-wp-admin-message-handler.php' );
 		require_once( $framework_path . '/class-sv-wc-admin-notice-handler.php' );
 		require_once( $framework_path . '/Lifecycle.php' );
+		require_once( $framework_path . '/rest-api/class-sv-wc-plugin-rest-api.php' );
 	}
 
 
