@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2018.nn.nn - version 5.2.0-dev
+ * Dev - Introduce dedicated plugin methods for loading after init
+
 2018.06.25 - version 5.1.5
  * Fix - Ensure exceptions are caught for Subscriptions "change payment" and Pre-Orders tokenization failures
 

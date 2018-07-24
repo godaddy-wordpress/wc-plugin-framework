@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_1_5;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_5\\SV_WC_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Helper' ) ) :
 
 	/**
 	 * SkyVerge Helper Class
@@ -385,6 +385,44 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_5\\SV_WC_He
 
 				return;
 			}
+		}
+
+
+		/**
+		 * Lists an array as text.
+		 *
+		 * Takes an array and returns a list like "one, two, three, and four"
+		 * with a (mandatory) oxford comma.
+		 *
+		 * @since 5.2.0-dev
+		 *
+		 * @param array $items items to list
+		 * @param string|null $conjunction coordinating conjunction, like "or" or "and"
+		 * @param string $separator list separator, like a comma
+		 * @return string
+		 */
+		public static function list_array_items( array $items, $conjunction = null, $separator = '' ) {
+
+			if ( ! is_string( $conjunction ) ) {
+				$conjunction = _x( 'and', 'coordinating conjunction for a list of items: a, b, and c', 'woocommerce-plugin-framework' );
+			}
+
+			// append the conjunction to the last item
+			if ( count( $items ) > 1 ) {
+
+				$last_item = array_pop( $items );
+
+				array_push( $items, trim( "{$conjunction} {$last_item}" ) );
+
+				// only use a comma if needed and no separator was passed
+				if ( count( $items ) < 3 ) {
+					$separator = ' ';
+				} elseif ( ! is_string( $separator ) || '' === $separator ) {
+					$separator = ', ';
+				}
+			}
+
+			return implode( $separator, $items );
 		}
 
 
@@ -988,6 +1026,23 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_5\\SV_WC_He
 			}
 
 			return isset( $countries[ $code ] ) ? $countries[ $code ] : $code;
+		}
+
+
+		/**
+		 * Displays a notice if the provided hook has not yet run.
+		 *
+		 * @since 5.2.0-dev
+		 *
+		 * @param string $hook action hook to check
+		 * @param string $method method/function name
+		 * @param string $version version the notice was added
+		 */
+		public static function maybe_doing_it_early( $hook, $method, $version ) {
+
+			if ( ! did_action( $hook ) ) {
+				SV_WC_Plugin_Compatibility::wc_doing_it_wrong( $method, "This should only be called after '{$hook}'", $version );
+			}
 		}
 
 

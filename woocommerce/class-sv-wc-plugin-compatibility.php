@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_1_5;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_5\\SV_WC_Plugin_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Plugin_Compatibility' ) ) :
 
 /**
  * WooCommerce Compatibility Utility Class
@@ -124,7 +124,7 @@ class SV_WC_Plugin_Compatibility {
 				$format = wc_date_format();
 			}
 
-			if ( ! is_a( $date, '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_5\\SV_WC_DateTime' ) ) { // TODO: verify this {CW 2017-07-18}
+			if ( ! is_a( $date, '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_DateTime' ) ) { // TODO: verify this {CW 2017-07-18}
 				return '';
 			}
 
@@ -168,7 +168,7 @@ class SV_WC_Plugin_Compatibility {
 	 * @since 3.0.0
 	 * @return string woocommerce version number or null
 	 */
-	protected static function get_wc_version() {
+	public static function get_wc_version() {
 
 		return defined( 'WC_VERSION' ) && WC_VERSION ? WC_VERSION : null;
 	}

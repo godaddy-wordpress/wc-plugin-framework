@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_1_5\Plugin;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0\Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_5\\Plugin\\Lifecycle' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\Plugin\\Lifecycle' ) ) :
 
 /**
  * Plugin lifecycle handler.
@@ -42,7 +42,7 @@ class Lifecycle {
 	/** @var string minimum milestone version */
 	private $milestone_version;
 
-	/** @var \SkyVerge\WooCommerce\PluginFramework\v5_1_5\SV_WC_Plugin plugin instance */
+	/** @var \SkyVerge\WooCommerce\PluginFramework\v5_2_0\SV_WC_Plugin plugin instance */
 	private $plugin;
 
 
@@ -51,9 +51,9 @@ class Lifecycle {
 	 *
 	 * @since 5.1.0
 	 *
-	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_1_5\SV_WC_Plugin $plugin plugin instance
+	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_2_0\SV_WC_Plugin $plugin plugin instance
 	 */
-	public function __construct( \SkyVerge\WooCommerce\PluginFramework\v5_1_5\SV_WC_Plugin $plugin ) {
+	public function __construct( \SkyVerge\WooCommerce\PluginFramework\v5_2_0\SV_WC_Plugin $plugin ) {
 
 		$this->plugin = $plugin;
 
@@ -68,27 +68,201 @@ class Lifecycle {
 	 */
 	protected function add_hooks() {
 
-		add_action( 'wc_' . $this->get_plugin()->get_id() . '_updated', array( $this, 'do_update' ) );
+		// handle activation
+		add_action( 'admin_init', array( $this, 'handle_activation' ) );
 
-		add_action( 'init', array( $this, 'add_admin_notices' ) );
+		// handle deactivation
+		add_action( 'deactivate_' . $this->get_plugin()->get_plugin_file(), array( $this, 'handle_deactivation' ) );
 
+		if ( is_admin() && ! is_ajax() ) {
+
+			// initialize the plugin lifecycle
+			add_action( 'wp_loaded', array( $this, 'init' ) );
+
+			// add the admin notices
+			add_action( 'init', array( $this, 'add_admin_notices' ) );
+		}
+
+		// catch any milestones triggered by action
 		add_action( 'wc_' . $this->get_plugin()->get_id() . '_milestone_reached', array( $this, 'trigger_milestone' ), 10, 3 );
 	}
 
 
 	/**
-	 * Handles tasks after the plugin has been updated.
+	 * Initializes the plugin lifecycle.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	public function init() {
+
+		// potentially handle a new activation
+		$this->handle_activation();
+
+		$installed_version = $this->get_installed_version();
+		$plugin_version    = $this->get_plugin()->get_version();
+
+		// installed version lower than plugin version?
+		if ( version_compare( $installed_version, $plugin_version, '<' ) ) {
+
+			if ( ! $installed_version ) {
+
+				$this->install();
+
+				/**
+				 * Fires after the plugin has been installed.
+				 *
+				 * @since 5.1.0
+				 */
+				do_action( 'wc_' . $this->get_plugin()->get_id() . '_installed' );
+
+			} else {
+
+				$this->upgrade( $installed_version );
+
+				// if the plugin never had any previous milestones, consider them all reached so their notices aren't displayed
+				if ( ! $this->get_milestone_version() ) {
+					$this->set_milestone_version( $plugin_version );
+				}
+
+				/**
+				 * Fires after the plugin has been updated.
+				 *
+				 * @since 5.1.0
+				 *
+				 * @param string $installed_version previously installed version
+				 */
+				do_action( 'wc_' . $this->get_plugin()->get_id() . '_updated', $installed_version );
+			}
+
+			// new version number
+			$this->set_installed_version( $plugin_version );
+		}
+	}
+
+
+	/**
+	 * Triggers plugin activation.
+	 *
+	 * We don't use register_activation_hook() as that can't be called inside
+	 * the 'plugins_loaded' action. Instead, we rely on setting to track the
+	 * plugin's activation status.
 	 *
 	 * @internal
 	 *
-	 * @since 5.1.0
+	 * @link https://developer.wordpress.org/reference/functions/register_activation_hook/#comment-2100
+	 *
+	 * @since 5.2.0-dev
 	 */
-	public function do_update() {
+	public function handle_activation() {
 
-		// if the plugin never had any previous milestones, consider them all reached so their notices aren't displayed
-		if ( ! $this->get_milestone_version() ) {
-			$this->set_milestone_version( $this->get_plugin()->get_version() );
+		if ( ! get_option( 'wc_' . $this->get_plugin()->get_id() . '_is_active', false ) ) {
+
+			$this->activate();
+
+			/**
+			 * Fires when the plugin is activated.
+			 *
+			 * @since 5.2.0-dev
+			 */
+			do_action( 'wc_' . $this->get_plugin()->get_id() . '_activated' );
+
+			update_option( 'wc_' . $this->get_plugin()->get_id() . '_is_active', 'yes' );
 		}
+	}
+
+
+	/**
+	 * Triggers plugin deactivation.
+	 *
+	 * @internal
+	 *
+	 * @since 5.2.0-dev
+	 */
+	public function handle_deactivation() {
+
+		$this->deactivate();
+
+		/**
+		 * Fires when the plugin is deactivated.
+		 *
+		 * @since 5.2.0-dev
+		 */
+		do_action( 'wc_' . $this->get_plugin()->get_id() . '_deactivated' );
+
+		delete_option( 'wc_' . $this->get_plugin()->get_id() . '_is_active' );
+	}
+
+
+	/**
+	 * Handles plugin activation.
+	 *
+	 * Plugins can override this to run their own activation tasks.
+	 *
+	 * Important Note: operations here should never be destructive for existing
+	 * data. Since we rely on an option to track activation, it's possible for
+	 * this to run outside of genuine activations.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	public function activate() {
+
+		// stub
+	}
+
+
+	/**
+	 * Handles plugin deactivation.
+	 *
+	 * Plugins can override this to run their own deactivation tasks.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	public function deactivate() {
+
+		// stub
+	}
+
+
+	/**
+	 * Helper method to install default settings for a plugin.
+	 *
+	 * @since 5.2.0-dev
+	 *
+	 * @param array $settings settings in format required by WC_Admin_Settings
+	 */
+	public function install_default_settings( array $settings ) {
+
+		foreach ( $settings as $setting ) {
+
+			if ( isset( $setting['id'] ) && isset( $setting['default'] ) ) {
+
+				update_option( $setting['id'], $setting['default'] );
+			}
+		}
+	}
+
+
+	/**
+	 * Performs any install tasks.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	protected function install() {
+
+		// stub
+	}
+
+
+	/**
+	 * Performs any upgrade tasks based on the provided installed version.
+	 *
+	 * @since 5.2.0-dev
+	 *
+	 * @param string $installed_version installed version
+	 */
+	protected function upgrade( $installed_version ) {
+
+		// stub
 	}
 
 
@@ -278,15 +452,57 @@ class Lifecycle {
 
 
 	/**
+	 * Gets the currently installed plugin version.
+	 *
+	 * @since 5.2.0-dev
+	 *
+	 * @return string
+	 */
+	protected function get_installed_version() {
+
+		return get_option( $this->get_plugin()->get_plugin_version_name() );
+	}
+
+
+	/**
+	 * Sets the installed plugin version.
+	 *
+	 * @since 5.2.0-dev
+	 *
+	 * @param string $version version to set
+	 */
+	protected function set_installed_version( $version ) {
+
+		update_option( $this->get_plugin()->get_plugin_version_name(), $version );
+	}
+
+
+	/**
 	 * Gets the plugin instance.
 	 *
 	 * @since 5.1.0
 	 *
-	 * @return \SkyVerge\WooCommerce\PluginFramework\v5_1_5\SV_WC_Plugin
+	 * @return \SkyVerge\WooCommerce\PluginFramework\v5_2_0\SV_WC_Plugin
 	 */
-	private function get_plugin() {
+	protected function get_plugin() {
 
 		return $this->plugin;
+	}
+
+
+	/** Deprecated methods ****************************************************/
+
+
+	/**
+	 * Handles tasks after the plugin has been updated.
+	 *
+	 * @internal
+	 *
+	 * @since 5.1.0
+	 */
+	public function do_update() {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev' );
 	}
 
 

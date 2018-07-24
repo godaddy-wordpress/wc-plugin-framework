@@ -1,10 +1,9 @@
 {
     "name": "skyverge/wc-plugin-framework",
     "require-dev": {
-        "10up/wp_mock": "dev-master",
-        "phpunit/phpunit": "4.7.*",
-        "satooshi/php-coveralls": "dev-master",
-        "antecedent/patchwork": "1.4.0",
-        "whatthejeff/nyancat-phpunit-resultprinter": "~1.2"
+        "10up/wp_mock": "0.3.0",
+        "phpunit/phpunit": "6.0.*",
+        "php-coveralls/php-coveralls": "v2.1.0",
+        "antecedent/patchwork": "^2.1"
     }
 }

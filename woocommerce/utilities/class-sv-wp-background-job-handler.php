@@ -23,11 +23,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_1_5;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_5\\SV_WP_Background_Job_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WP_Background_Job_Handler' ) ) :
 
 /**
  * SkyVerge WordPress Background Job Handler class
@@ -206,7 +206,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 */
 	protected function is_process_running() {
 
-		// add a random artificial delay to prevent a race condition if 2 or more processes are trying to 
+		// add a random artificial delay to prevent a race condition if 2 or more processes are trying to
 		// process the job queue at the very same moment in time and neither of them have yet set the lock
 		// before the others are calling this method
 		usleep( rand( 100000, 300000 ) );
@@ -914,7 +914,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	protected function schedule_event() {
 
 		if ( ! wp_next_scheduled( $this->cron_hook_identifier ) ) {
-			
+
 			// schedule the health check to fire after 30 seconds from now, as to not create a race condition
 			// with job process lock on servers that fire & handle cron events instantly
 			wp_schedule_event( time() + 30, $this->cron_interval_identifier, $this->cron_hook_identifier );

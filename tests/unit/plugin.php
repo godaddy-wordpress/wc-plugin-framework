@@ -3,7 +3,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
-use \SkyVerge\WooCommerce\PluginFramework\v5_1_5 as PluginFramework;
+use \SkyVerge\WooCommerce\PluginFramework\v5_2_0 as PluginFramework;
 
 /**
  * Plugin Test
@@ -15,7 +15,7 @@ class Plugin extends Test_Case {
 
 	public function test_constructor() {
 
-		$this->assertInstanceOf( '\SkyVerge\WooCommerce\PluginFramework\v5_1_5\SV_WC_Plugin', $this->plugin() );
+		$this->assertInstanceOf( '\SkyVerge\WooCommerce\PluginFramework\v5_2_0\SV_WC_Plugin', $this->plugin() );
 	}
 
 	public function test_clone() {
@@ -59,6 +59,8 @@ class Plugin extends Test_Case {
 	}
 
 	public function test_get_plugin_version_name() {
+
+		$this->assertEquals( 'wc_mock_version', $this->plugin()->get_plugin_version_name() );
 	}
 
 	public function test_get_api_log_message() {
@@ -124,14 +126,16 @@ MSG;
 			'mock',
 			'7.7.7',
 			array(
-				'dependencies'          => array( 'json' ),
-				'function_dependencies' => array( 'ftp_ssl_connect' ),
-				'text_domain'           => 'mock',
-				'display_php_notice'    => true,
+				'dependencies' => array(
+					'php_extensions' => array( 'json' ),
+					'php_functions'  => array(),
+					'php_settings'   => array(),
+				),
+				'text_domain' => 'mock',
 			),
 		);
 
-		return $this->getMockBuilder( '\SkyVerge\WooCommerce\PluginFramework\v5_1_5\SV_WC_Plugin' )
+		return $this->getMockBuilder( '\SkyVerge\WooCommerce\PluginFramework\v5_2_0\SV_WC_Plugin' )
 							 ->setConstructorArgs( $args )
 							 ->getMockForAbstractClass();
 	}

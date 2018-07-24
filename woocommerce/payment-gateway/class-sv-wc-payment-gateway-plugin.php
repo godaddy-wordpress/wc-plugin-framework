@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_1_5;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_1_5\\SV_WC_Payment_Gateway_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Payment_Gateway_Plugin' ) ) :
 
 /**
  * # WooCommerce Payment Gateway Plugin Framework
@@ -87,19 +87,16 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/** @var SV_WC_Payment_Gateway_Privacy payment gateway privacy handler instance */
 	protected $privacy_handler;
 
-	/** @var \SV_WC_Payment_Gateway_Admin_Order order handler instance */
+	/** @var SV_WC_Payment_Gateway_Admin_Order order handler instance */
 	protected $admin_order_handler;
 
-	/** @var SV_WC_Payment_Gateway_Admin_User_Edit_Handler adds admin user edit payment gateway functionality */
-	private $admin_user_edit_handler;
-
-	/** @var \SV_WC_Payment_Gateway_Admin_User_Handler user handler instance */
+	/** @var SV_WC_Payment_Gateway_Admin_User_Handler user handler instance */
 	protected $admin_user_handler;
 
 	/** @var SV_WC_Payment_Gateway_My_Payment_Methods adds My Payment Method functionality */
 	private $my_payment_methods;
 
-	/** @var \SV_WC_Payment_Gateway_Apple_Pay the Apple Pay handler instance */
+	/** @var SV_WC_Payment_Gateway_Apple_Pay the Apple Pay handler instance */
 	private $apple_pay;
 
 
@@ -123,60 +120,103 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		parent::__construct( $id, $version, $args );
 
-		// optional parameters: the supported gateways
-		if ( isset( $args['gateways'] ) ) {
+		$args = wp_parse_args( $args, array(
+			'gateways'    => array(),
+			'currencies'  => array(),
+			'supports'    => array(),
+			'require_ssl' => false,
+		) );
 
-			foreach ( $args['gateways'] as $gateway_id => $gateway_class_name ) {
-				$this->add_gateway( $gateway_id, $gateway_class_name );
-			}
-		}
-
-		if ( isset( $args['currencies'] ) ) {
-			$this->currencies   = $args['currencies'];
-		}
-		if ( isset( $args['supports'] ) ) {
-			$this->supports     = $args['supports'];
-		}
-		if ( isset( $args['require_ssl'] ) ) {
-			$this->require_ssl  = $args['require_ssl'];
+		// add each gateway
+		foreach ( $args['gateways'] as $gateway_id => $gateway_class_name ) {
+			$this->add_gateway( $gateway_id, $gateway_class_name );
 		}
 
+		$this->currencies  = (array) $args['currencies'];
+		$this->supports    = (array) $args['supports'];
+		$this->require_ssl = (array) $args['require_ssl'];
+
+		// require the files
 		$this->includes();
 
-		// My Payment Methods feature
-		if ( $this->supports_my_payment_methods() ) {
-			add_action( 'init', array( $this, 'maybe_init_my_payment_methods' ) );
-		}
-
-		// Apple Pay feature
-		add_action( 'init', array( $this, 'maybe_init_apple_pay' ) );
-
-		// Admin
-		if ( is_admin() && ! is_ajax() ) {
-
-			if ( $this->is_subscriptions_active() ) {
-
-				// filter the payment gateway table on the checkout settings screen to indicate if a gateway can support Subscriptions but requires tokenization to be enabled
-				add_action( 'admin_print_styles', array( $this, 'subscriptions_add_renewal_support_status_inline_style' ) );
-				add_filter( 'woocommerce_payment_gateways_renewal_support_status_html', array( $this, 'subscriptions_maybe_edit_renewal_support_status' ), 10, 2 );
-			}
-
-			// Add gateway information to the system status report
-			add_action( 'woocommerce_system_status_report', array( $this, 'add_system_status_information' ) );
-		}
-
-		// Add classes to WC Payment Methods
-		add_filter( 'woocommerce_payment_gateways', array( $this, 'load_gateways' ) );
-
-		// Adjust the available gateways in certain cases
-		add_filter( 'woocommerce_available_payment_gateways', array( $this, 'adjust_available_gateways' ) );
+		// add the action & filter hooks
+		$this->add_hooks();
 	}
 
 
 	/**
-	 * Adds any gateways supported by this plugin to the list of available payment gateways
+	 * Builds the REST API handler instance.
+	 *
+	 * Gateway plugins can override this to add their own data and/or routes.
+	 *
+	 * @see SV_WC_Plugin::init_rest_api_handler()
+	 *
+	 * @since 5.2.0-dev
+	 */
+	protected function init_rest_api_handler() {
+
+		require_once( $this->get_payment_gateway_framework_path() . '/rest-api/class-sv-wc-payment-gateway-plugin-rest-api.php' );
+
+		$this->rest_api_handler = new Payment_Gateway\REST_API( $this );
+	}
+
+
+	/**
+	 * Adds the action & filter hooks.
+	 *
+	 * @since 5.2.0-dev
+	 */
+	private function add_hooks() {
+
+		// add classes to WC Payment Methods
+		add_filter( 'woocommerce_payment_gateways', array( $this, 'load_gateways' ) );
+
+		// adjust the available gateways in certain cases
+		add_filter( 'woocommerce_available_payment_gateways', array( $this, 'adjust_available_gateways' ) );
+
+		// my payment methods feature
+		add_action( 'init', array( $this, 'maybe_init_my_payment_methods' ) );
+
+		// apple pay feature
+		add_action( 'init', array( $this, 'maybe_init_apple_pay' ) );
+
+		// TODO: move these to Subscriptions integration
+		if ( $this->is_subscriptions_active() ) {
+
+			// filter the payment gateway table on the checkout settings screen to indicate if a gateway can support Subscriptions but requires tokenization to be enabled
+			add_action( 'admin_print_styles', array( $this, 'subscriptions_add_renewal_support_status_inline_style' ) );
+			add_filter( 'woocommerce_payment_gateways_renewal_support_status_html', array( $this, 'subscriptions_maybe_edit_renewal_support_status' ), 10, 2 );
+		}
+
+		// add gateway information to the system status report
+		add_action( 'woocommerce_system_status_report', array( $this, 'add_system_status_information' ) );
+	}
+
+
+	/**
+	 * Initializes the plugin admin.
+	 *
+	 * @internal
+	 * @see SV_WC_Plugin::init_admin()
+	 *
+	 * @since 5.2.0-dev
+	 */
+	public function init_admin() {
+
+		parent::init_admin();
+
+		$this->admin_order_handler = new SV_WC_Payment_Gateway_Admin_Order( $this );
+		$this->admin_user_handler  = new SV_WC_Payment_Gateway_Admin_User_Handler( $this );
+	}
+
+
+	/**
+	 * Adds any gateways supported by this plugin to the list of available payment gateways.
+	 *
+	 * @internal
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $gateways
 	 * @return array $gateways
 	 */
@@ -211,10 +251,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Include required library files
+	 * Include required files.
+	 *
+	 * @internal
 	 *
 	 * @since 1.0.0
-	 * @see SV_WC_Plugin::lib_includes()
 	 */
 	private function includes() {
 
@@ -251,7 +292,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php" );
 		require_once( "{$payment_gateway_framework_path}/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-payment-response.php" );
 
-
 		// payment tokens
 		require_once( $payment_gateway_framework_path . '/payment-tokens/class-sv-wc-payment-gateway-payment-token.php' );
 		require_once( $payment_gateway_framework_path . '/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php' );
@@ -259,6 +299,12 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		// helpers
 		require_once( $payment_gateway_framework_path . '/api/class-sv-wc-payment-gateway-api-response-message-helper.php' );
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-helper.php' );
+
+		// admin
+		require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-order.php' );
+		require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-user-handler.php' );
+		require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php' );
+
 
 		// integrations
 		require_once( $payment_gateway_framework_path . '/integrations/abstract-sv-wc-payment-gateway-integration.php' );
@@ -278,17 +324,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			require_once( "{$payment_gateway_framework_path}/class-sv-wc-payment-gateway-privacy.php" );
 			$this->privacy_handler = new SV_WC_Payment_Gateway_Privacy( $this );
 		}
-
-		// Admin user handler
-		if ( is_admin() ) {
-
-			require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-order.php' );
-			require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-user-handler.php' );
-			require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php' );
-
-			$this->admin_order_handler = new SV_WC_Payment_Gateway_Admin_Order( $this );
-			$this->admin_user_handler  = new SV_WC_Payment_Gateway_Admin_User_Handler( $this );
-		}
 	}
 
 
@@ -298,7 +333,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Instantiates the My Payment Methods table class instance when a user is
 	 * logged in on an account page and tokenization is enabled for at least
-	 * one of the active gateways
+	 * one of the active gateways.
+	 *
+	 * @internal
 	 *
 	 * @since 4.0.0
 	 */
@@ -309,7 +346,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			return;
 		}
 
-		if ( is_user_logged_in() && $this->tokenization_enabled() ) {
+		if ( $this->supports_my_payment_methods() && $this->tokenization_enabled() && is_user_logged_in() ) {
 			$this->my_payment_methods = $this->get_my_payment_methods_instance();
 		}
 	}
