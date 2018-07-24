@@ -3,6 +3,7 @@
     "require-dev": {
         "10up/wp_mock": "0.3.0",
         "phpunit/phpunit": "6.0.*",
+        "php-coveralls/php-coveralls": "v2.1.0",
         "antecedent/patchwork": "^2.1"
     }
 }
