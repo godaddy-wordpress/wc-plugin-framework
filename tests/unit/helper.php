@@ -763,7 +763,7 @@ MSG;
 	 *
 	 * @see \SV_WC_Helper::list_array_items()
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @dataProvider provider_test_list_array_items
 	 */
@@ -776,7 +776,7 @@ MSG;
 	/**
 	 * Data provider for test_list_array_items()
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @return array
 	 */

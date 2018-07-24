@@ -394,7 +394,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_He
 		 * Takes an array and returns a list like "one, two, three, and four"
 		 * with a (mandatory) oxford comma.
 		 *
-		 * @since 5.2.0-dev
+		 * @since 5.2.0
 		 *
 		 * @param array $items items to list
 		 * @param string|null $conjunction coordinating conjunction, like "or" or "and"
@@ -1032,7 +1032,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_He
 		/**
 		 * Displays a notice if the provided hook has not yet run.
 		 *
-		 * @since 5.2.0-dev
+		 * @since 5.2.0
 		 *
 		 * @param string $hook action hook to check
 		 * @param string $method method/function name

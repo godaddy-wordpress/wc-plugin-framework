@@ -311,7 +311,7 @@ class SV_WP_Admin_Message_Handler {
 	/**
 	 * Gets a specific info message.
 	 *
-	 * @since 5.0.0-dev
+	 * @since 5.0.0
 	 *
 	 * @param int $index info message index
 	 * @return string

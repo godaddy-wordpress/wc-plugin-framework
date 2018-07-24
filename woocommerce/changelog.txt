@@ -1,7 +1,12 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2018.nn.nn - version 5.2.0-dev
+2018.07.24 - version 5.2.0
+ * Fix - Use the order currency for the gateway capture message currency symbol
  * Dev - Introduce dedicated plugin methods for loading after init
+ * Dev - Move plugin lifecycle methods to the Lifecycle handler
+ * Dev - Introduce a dependency handler for PHP compatibility notices
+ * Dev - Introduce a REST API handler base
+ * Misc - Add default plugin and gateway data to the WooCommerce REST API System Status response
 
 2018.06.25 - version 5.1.5
  * Fix - Ensure exceptions are caught for Subscriptions "change payment" and Pre-Orders tokenization failures

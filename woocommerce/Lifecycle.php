@@ -91,7 +91,7 @@ class Lifecycle {
 	/**
 	 * Initializes the plugin lifecycle.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	public function init() {
 
@@ -151,7 +151,7 @@ class Lifecycle {
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/register_activation_hook/#comment-2100
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	public function handle_activation() {
 
@@ -162,7 +162,7 @@ class Lifecycle {
 			/**
 			 * Fires when the plugin is activated.
 			 *
-			 * @since 5.2.0-dev
+			 * @since 5.2.0
 			 */
 			do_action( 'wc_' . $this->get_plugin()->get_id() . '_activated' );
 
@@ -176,7 +176,7 @@ class Lifecycle {
 	 *
 	 * @internal
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	public function handle_deactivation() {
 
@@ -185,7 +185,7 @@ class Lifecycle {
 		/**
 		 * Fires when the plugin is deactivated.
 		 *
-		 * @since 5.2.0-dev
+		 * @since 5.2.0
 		 */
 		do_action( 'wc_' . $this->get_plugin()->get_id() . '_deactivated' );
 
@@ -202,7 +202,7 @@ class Lifecycle {
 	 * data. Since we rely on an option to track activation, it's possible for
 	 * this to run outside of genuine activations.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	public function activate() {
 
@@ -215,7 +215,7 @@ class Lifecycle {
 	 *
 	 * Plugins can override this to run their own deactivation tasks.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	public function deactivate() {
 
@@ -226,7 +226,7 @@ class Lifecycle {
 	/**
 	 * Helper method to install default settings for a plugin.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @param array $settings settings in format required by WC_Admin_Settings
 	 */
@@ -245,7 +245,7 @@ class Lifecycle {
 	/**
 	 * Performs any install tasks.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	protected function install() {
 
@@ -256,7 +256,7 @@ class Lifecycle {
 	/**
 	 * Performs any upgrade tasks based on the provided installed version.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @param string $installed_version installed version
 	 */
@@ -454,7 +454,7 @@ class Lifecycle {
 	/**
 	 * Gets the currently installed plugin version.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @return string
 	 */
@@ -467,7 +467,7 @@ class Lifecycle {
 	/**
 	 * Sets the installed plugin version.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @param string $version version to set
 	 */
@@ -502,7 +502,7 @@ class Lifecycle {
 	 */
 	public function do_update() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
 	}
 
 

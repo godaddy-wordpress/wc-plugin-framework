@@ -34,7 +34,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\Payment_
  *
  * @see \SkyVerge\WooCommerce\PluginFramework\v5_2_0\REST_API
  *
- * @since 5.2.0-dev
+ * @since 5.2.0
  */
 class REST_API extends Plugin_REST_API {
 
@@ -46,7 +46,7 @@ class REST_API extends Plugin_REST_API {
 	 *
 	 * @see \SkyVerge\WooCommerce\PluginFramework\v5_2_0\REST_API::get_system_status_data()
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @return array
 	 */

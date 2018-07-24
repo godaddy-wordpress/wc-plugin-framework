@@ -36,13 +36,13 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Pl
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 5.2.0-dev
+ * @version 5.2.0
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.2.0-dev';
+	const VERSION = '5.2.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -151,7 +151,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Initializes the plugin dependency handler.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @param array $dependencies {
 	 *     PHP extension, function, and settings dependencies
@@ -172,7 +172,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * Plugins can override this with their own handler.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	protected function init_admin_message_handler() {
 
@@ -185,7 +185,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * Plugins can override this with their own handler.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	protected function init_admin_notice_handler() {
 
@@ -198,7 +198,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * Plugins can override this with their own handler.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	protected function init_hook_deprecator() {
 
@@ -212,7 +212,7 @@ abstract class SV_WC_Plugin {
 	 * Plugins can override this with their own handler to perform install and
 	 * upgrade routines.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	protected function init_lifecycle_handler() {
 
@@ -225,7 +225,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * Plugins can override this to add their own data and/or routes.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	protected function init_rest_api_handler() {
 
@@ -236,7 +236,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Adds the action & filter hooks.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	private function add_hooks() {
 
@@ -353,7 +353,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * Plugins can override this to set up any handlers after WordPress is ready.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	public function init_plugin() {
 
@@ -367,7 +367,7 @@ abstract class SV_WC_Plugin {
 	 * Plugins can override this to set up any handlers after the WordPress
 	 * admin is ready.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	public function init_admin() {
 
@@ -727,7 +727,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the dependency handler.
 	 *
-	 * @since 5.2.0-dev.1
+	 * @since 5.2.0.1
 	 *
 	 * @return SV_WC_Plugin_Dependencies
 	 */
@@ -1055,11 +1055,11 @@ abstract class SV_WC_Plugin {
 	 * Handles version checking.
 	 *
 	 * @since 2.0.0
-	 * @deprecated 5.2.0-dev
+	 * @deprecated 5.2.0
 	 */
 	public function do_install() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_lifecycle_handler() ) . '::init()' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_lifecycle_handler() ) . '::init()' );
 
 		$this->get_lifecycle_handler()->init();
 	}
@@ -1069,13 +1069,13 @@ abstract class SV_WC_Plugin {
 	 * Helper method to install default settings for a plugin.
 	 *
 	 * @since 4.2.0
-	 * @deprecated 5.2.0-dev
+	 * @deprecated 5.2.0
 	 *
 	 * @param array $settings array of settings in format required by WC_Admin_Settings
 	 */
 	public function install_default_settings( array $settings ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_lifecycle_handler() ) . '::install_default_settings()' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_lifecycle_handler() ) . '::install_default_settings()' );
 
 		$this->get_lifecycle_handler()->install_default_settings( $settings );
 	}
@@ -1086,11 +1086,11 @@ abstract class SV_WC_Plugin {
 	 * Note that this _does not_ run during upgrades.
 	 *
 	 * @since 4.2.0
-	 * @deprecated 5.2.0-dev
+	 * @deprecated 5.2.0
 	 */
 	public function activate() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
 	}
 
 
@@ -1098,11 +1098,11 @@ abstract class SV_WC_Plugin {
 	 * Plugin deactivation method. Perform any deactivation tasks here.
 	 *
 	 * @since 4.2.0
-	 * @deprecated 5.2.0-dev
+	 * @deprecated 5.2.0
 	 */
 	public function deactivate() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
 	}
 
 
@@ -1110,13 +1110,13 @@ abstract class SV_WC_Plugin {
 	 * Gets the string name of any required PHP extensions that are not loaded.
 	 *
 	 * @since 4.5.0
-	 * @deprecated 5.2.0-dev
+	 * @deprecated 5.2.0
 	 *
 	 * @return array
 	 */
 	public function get_missing_extension_dependencies() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_dependency_handler() ) . '::get_missing_php_extensions()' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_missing_php_extensions()' );
 
 		return $this->get_dependency_handler()->get_missing_php_extensions();
 	}
@@ -1126,13 +1126,13 @@ abstract class SV_WC_Plugin {
 	 * Gets the string name of any required PHP functions that are not loaded.
 	 *
 	 * @since 2.1.0
-	 * @deprecated 5.2.0-dev
+	 * @deprecated 5.2.0
 	 *
 	 * @return array
 	 */
 	public function get_missing_function_dependencies() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_dependency_handler() ) . '::get_missing_php_functions()' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_missing_php_functions()' );
 
 		return $this->get_dependency_handler()->get_missing_php_functions();
 	}
@@ -1142,13 +1142,13 @@ abstract class SV_WC_Plugin {
 	 * Gets the string name of any required PHP extensions that are not loaded.
 	 *
 	 * @since 4.5.0
-	 * @deprecated 5.2.0-dev
+	 * @deprecated 5.2.0
 	 *
 	 * @return array
 	 */
 	public function get_incompatible_php_settings() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_dependency_handler() ) . '::get_incompatible_php_settings()' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_incompatible_php_settings()' );
 
 		return $this->get_dependency_handler()->get_incompatible_php_settings();
 	}
@@ -1158,13 +1158,13 @@ abstract class SV_WC_Plugin {
 	 * Gets the PHP dependencies.
 	 *
 	 * @since 2.0.0
-	 * @deprecated 5.2.0-dev
+	 * @deprecated 5.2.0
 	 *
 	 * @return array
 	 */
 	protected function get_dependencies() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
 
 		return array();
 	}
@@ -1174,13 +1174,13 @@ abstract class SV_WC_Plugin {
 	 * Gets the PHP extension dependencies.
 	 *
 	 * @since 4.5.0
-	 * @deprecated 5.2.0-dev
+	 * @deprecated 5.2.0
 	 *
 	 * @return array
 	 */
 	protected function get_extension_dependencies() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_dependency_handler() ) . '::get_php_extensions()' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_php_extensions()' );
 
 		return $this->get_dependency_handler()->get_php_extensions();
 	}
@@ -1190,13 +1190,13 @@ abstract class SV_WC_Plugin {
 	 * Gets the PHP function dependencies.
 	 *
 	 * @since 2.1.0
-	 * @deprecated 5.2.0-dev
+	 * @deprecated 5.2.0
 	 *
 	 * @return array
 	 */
 	protected function get_function_dependencies() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_dependency_handler() ) . '::get_php_functions()' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_php_functions()' );
 
 		return $this->get_dependency_handler()->get_php_functions();
 	}
@@ -1206,13 +1206,13 @@ abstract class SV_WC_Plugin {
 	 * Gets the PHP settings dependencies.
 	 *
 	 * @since 4.5.0
-	 * @deprecated 5.2.0-dev
+	 * @deprecated 5.2.0
 	 *
 	 * @return array
 	 */
 	protected function get_php_settings_dependencies() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev', get_class( $this->get_dependency_handler() ) . '::get_php_settings()' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_php_settings()' );
 
 		return $this->get_dependency_handler()->get_php_settings();
 	}
@@ -1222,13 +1222,13 @@ abstract class SV_WC_Plugin {
 	 * Sets the plugin dependencies.
 	 *
 	 * @since 4.5.0
-	 * @deprecated 5.2.0-dev
+	 * @deprecated 5.2.0
 	 *
 	 * @param array $dependencies the environment dependencies
 	 */
 	protected function set_dependencies( $dependencies = array() ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0-dev' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
 	}
 
 

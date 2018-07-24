@@ -35,7 +35,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\REST_API
  * This is responsible for hooking in to the WC REST API to add data for existing
  * routes and/or register new routes.
  *
- * @since 5.2.0-dev
+ * @since 5.2.0
  */
 class REST_API {
 
@@ -47,7 +47,7 @@ class REST_API {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @param SV_WC_Plugin $plugin plugin instance
 	 */
@@ -62,7 +62,7 @@ class REST_API {
 	/**
 	 * Adds the action and filter hooks.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	protected function add_hooks() {
 
@@ -79,7 +79,7 @@ class REST_API {
 	 *
 	 * @internal
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @param \WP_REST_Response $response REST API response object
 	 * @param array $system_status system status data
@@ -97,7 +97,7 @@ class REST_API {
 		/**
 		 * Filters the data added to the WooCommerce REST API System Status response.
 		 *
-		 * @since 5.2.0-dev
+		 * @since 5.2.0
 		 *
 		 * @param array $data system status response data
 		 * @param \WP_REST_Response $response REST API response object
@@ -116,7 +116,7 @@ class REST_API {
 	 *
 	 * Plugins can override this to add their own data.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @return array
 	 */
@@ -129,7 +129,7 @@ class REST_API {
 	/**
 	 * Registers new WC REST API routes.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	public function register_routes() {
 
@@ -140,7 +140,7 @@ class REST_API {
 	/**
 	 * Gets the plugin instance.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @return SV_WC_Plugin
 	 */

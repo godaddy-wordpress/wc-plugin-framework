@@ -151,7 +151,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @see SV_WC_Plugin::init_rest_api_handler()
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	protected function init_rest_api_handler() {
 
@@ -164,7 +164,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Adds the action & filter hooks.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	private function add_hooks() {
 
@@ -199,7 +199,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * @internal
 	 * @see SV_WC_Plugin::init_admin()
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	public function init_admin() {
 

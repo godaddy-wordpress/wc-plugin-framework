@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 5.1.5\n"
+"Project-Id-Version: WooCommerce Plugin Framework 5.2.0\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -12,27 +12,27 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: Lifecycle.php:180
+#: Lifecycle.php:354
 msgid "Awesome"
 msgstr ""
 
-#: Lifecycle.php:181
+#: Lifecycle.php:355
 msgid "Fantastic"
 msgstr ""
 
-#: Lifecycle.php:182
+#: Lifecycle.php:356
 msgid "Cowabunga"
 msgstr ""
 
-#: Lifecycle.php:183
+#: Lifecycle.php:357
 msgid "Congratulations"
 msgstr ""
 
-#: Lifecycle.php:184
+#: Lifecycle.php:358
 msgid "Hot dog"
 msgstr ""
 
-#: Lifecycle.php:191
+#: Lifecycle.php:365
 #. translators: Placeholders: %1$s - plugin name, %2$s - <a> tag, %3$s - </a>
 #. tag, %4$s - <a> tag, %5$s - </a> tag
 msgid ""
@@ -88,17 +88,7 @@ msgstr ""
 msgid "WooCommerce"
 msgstr ""
 
-#: class-sv-wc-plugin.php:169
-#. translators: Placeholders: %s - plugin name
-msgid "You cannot clone instances of %s."
-msgstr ""
-
-#: class-sv-wc-plugin.php:179
-#. translators: Placeholders: %s - plugin name
-msgid "You cannot unserialize instances of %s."
-msgstr ""
-
-#: class-sv-wc-plugin.php:386
+#: class-sv-wc-plugin-dependencies.php:148
 #. translators: Placeholders: %1$s - plugin name, %2$s - a PHP
 #. extension/comma-separated list of PHP extensions
 msgid ""
@@ -111,7 +101,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: class-sv-wc-plugin.php:409
+#: class-sv-wc-plugin-dependencies.php:176
 #. translators: Placeholders: %1$s - plugin name, %2$s - a PHP
 #. function/comma-separated list of PHP functions
 msgid ""
@@ -123,24 +113,24 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: class-sv-wc-plugin.php:434
+#: class-sv-wc-plugin-dependencies.php:206
 #. translators: Placeholders: %s - plugin name
 msgid ""
 "%s may behave unexpectedly because the following PHP configuration settings "
 "are required:"
 msgstr ""
 
-#: class-sv-wc-plugin.php:448
+#: class-sv-wc-plugin-dependencies.php:220
 msgid "%s or higher"
 msgstr ""
 
-#: class-sv-wc-plugin.php:458
+#: class-sv-wc-plugin-dependencies.php:230
 msgid ""
 "Please contact your hosting provider or server administrator to configure "
 "these settings."
 msgstr ""
 
-#: class-sv-wc-plugin.php:473
+#: class-sv-wc-plugin-dependencies.php:252
 #. translators: Placeholders: %1$s - <strong>, %2$s - </strong>
 msgid ""
 "Hey there! We've noticed that your server is running %1$san outdated "
@@ -148,32 +138,14 @@ msgid ""
 "its extensions are built on.\n"
 "\t\t\t\t\tThe PHP version that is currently used for your site is no longer "
 "maintained, nor %1$sreceives security updates%2$s; newer versions are "
-"faster and more secure."
+"faster and more secure.\n"
+"\t\t\t\t\tAs a result, %3$s no longer supports this version and you should "
+"upgrade PHP as soon as possible.\n"
+"\t\t\t\t\tYour hosting provider can do this for you. %4$sHere are some "
+"resources to help you upgrade%5$s and to explain PHP versions further."
 msgstr ""
 
-#: class-sv-wc-plugin.php:486
-#. translators: Placeholders: %1$s - WooCommerce plugin name, %2$s - a month
-#. and year, such as May 2018
-msgid ""
-"As a result, %1$s will no longer support this version starting %2$s and you "
-"should upgrade PHP prior to this date."
-msgstr ""
-
-#: class-sv-wc-plugin.php:495
-#. translators: Placeholders: %s - WooCommerce plugin name
-msgid ""
-"As a result, %s no longer supports this version and you should upgrade PHP "
-"as soon as possible."
-msgstr ""
-
-#: class-sv-wc-plugin.php:502
-#. translators: Placeholders: %1$s - <a>, %2$s - </a>
-msgid ""
-"Your hosting provider can do this for you. %1$sHere are some resources to "
-"help you upgrade%2$s and to explain PHP versions further."
-msgstr ""
-
-#: class-sv-wc-plugin.php:520
+#: class-sv-wc-plugin-dependencies.php:271
 #. translators: Placeholders: %1$s - WooCommerce version number, %2$s -
 #. <strong>, %3$s - </strong>, %4$s - Plugin name, %5$s - <a> tag, %6$s - </a>
 #. tag
@@ -184,20 +156,30 @@ msgid ""
 "soon as possible."
 msgstr ""
 
-#: class-sv-wc-plugin.php:554
+#: class-sv-wc-plugin.php:278
+#. translators: Placeholders: %s - plugin name
+msgid "You cannot clone instances of %s."
+msgstr ""
+
+#: class-sv-wc-plugin.php:289
+#. translators: Placeholders: %s - plugin name
+msgid "You cannot unserialize instances of %s."
+msgstr ""
+
+#: class-sv-wc-plugin.php:506
 #. translators: Docs as in Documentation
 msgid "Docs"
 msgstr ""
 
-#: class-sv-wc-plugin.php:752
+#: class-sv-wc-plugin.php:599
 msgid "%1$s - A minimum of %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:761
+#: class-sv-wc-plugin.php:608
 msgid "Set as %1$s - %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:1028
+#: class-sv-wc-plugin.php:816
 msgid "Configure"
 msgstr ""
 
@@ -648,9 +630,6 @@ msgid "Pay with"
 msgstr ""
 
 #: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:308
-#: payment-gateway/class-sv-wc-payment-gateway.php:3158
-#. translators: a conjuction used in the list of order status names, such as
-#. "Processing, Completed, or Shipped"
 msgid "or"
 msgstr ""
 
@@ -844,27 +823,27 @@ msgstr ""
 msgid "Oops, adding your new payment method failed: %s"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-direct.php:829
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:830
 #. translators: Payment method as in a specific credit card. Placeholders: %1$s
 #. - card type (visa, mastercard, ...), %2$s - last four digits of the card,
 #. %3$s - card expiry date
 msgid "Nice! New payment method added: %1$s ending in %2$s (expires %3$s)"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-direct.php:839
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:840
 #. translators: Payment method as in a specific e-check account. Placeholders:
 #. %1$s - account type (checking/savings), %2$s - last four digits of the
 #. account
 msgid "Nice! New payment method added: %1$s account ending in %2$s"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-direct.php:846
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:847
 #. translators: Payment method as in a specific credit card, e-check or bank
 #. account
 msgid "Nice! New payment method added."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-direct.php:966
+#: payment-gateway/class-sv-wc-payment-gateway-direct.php:967
 #. translators: Placeholders: %1$s - site title, %2$s - customer email. Payment
 #. method as in a specific credit card, e-check or bank account
 msgid "%1$s - Add Payment Method for %2$s"
@@ -1096,14 +1075,14 @@ msgstr ""
 msgid "Securely Save to Account"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:541
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:578
 #. translators: Placeholders: %s - plugin name
 msgid ""
 "%s: WooCommerce is not being forced over SSL; your customer's payment data "
 "may be at risk."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:554
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:591
 #. translators: Placeholders: %s - payment gateway name
 msgid ""
 "%s will soon require TLS 1.2 support to process transactions and your "
@@ -1112,7 +1091,7 @@ msgid ""
 "and request they make any necessary updates."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:608
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:645
 #. translators: Placeholders: %1$s - plugin name, %2$s - a
 #. currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
 msgid ""
@@ -1124,7 +1103,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:652
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:689
 #. translators: Placeholders: %1$s - payment gateway title (such as
 #. Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
 msgid ""
@@ -1132,7 +1111,7 @@ msgid ""
 "tokenization%3$s to activate %1$s for Subscriptions."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:670
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:707
 #. translators: Placeholders: %1$s - payment gateway title (such as
 #. Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
 msgid ""
@@ -1140,13 +1119,13 @@ msgid ""
 "tokenization%3$s to activate %1$s for Pre-Orders."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:706
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:743
 msgid ""
 "You must enable tokenization for this gateway in order to support automatic "
 "renewal payments with the WooCommerce Subscriptions extension."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:707
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:744
 msgid "Inactive"
 msgstr ""
 
@@ -1475,42 +1454,42 @@ msgstr ""
 msgid "Allow orders to be partially captured multiple times."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3164
+#: payment-gateway/class-sv-wc-payment-gateway.php:3154
 msgid "Capture Paid Orders"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3167
+#: payment-gateway/class-sv-wc-payment-gateway.php:3157
 msgid "Automatically capture orders when they are changed to %s."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3168
+#: payment-gateway/class-sv-wc-payment-gateway.php:3158
 msgid "a paid status"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3437
+#: payment-gateway/class-sv-wc-payment-gateway.php:3427
 msgid "Accepted Card Logos"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3439
+#: payment-gateway/class-sv-wc-payment-gateway.php:3429
 msgid ""
 "These are the card logos that are displayed to customers as accepted during "
 "checkout."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3440
+#: payment-gateway/class-sv-wc-payment-gateway.php:3430
 msgid ""
 "This can be configured to match those accepted by your payment processor, "
 "but does not change your merchant account configuration."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3528
+#: payment-gateway/class-sv-wc-payment-gateway.php:3518
 #. translators:
 #. http:www.cybersource.com/products/payment_security/payment_tokenization/ and
 #. https:en.wikipedia.org/wiki/Tokenization_(data_security)
 msgid "Tokenization"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3529
+#: payment-gateway/class-sv-wc-payment-gateway.php:3519
 msgid "Allow customers to securely save their payment details for future checkout."
 msgstr ""
 
@@ -1615,12 +1594,17 @@ msgid ""
 "has loopback connections enabled."
 msgstr ""
 
-#: class-sv-wc-plugin.php:559
+#: class-sv-wc-helper.php:407
+msgctxt "coordinating conjunction for a list of items: a, b, and c"
+msgid "and"
+msgstr ""
+
+#: class-sv-wc-plugin.php:511
 msgctxt "noun"
 msgid "Support"
 msgstr ""
 
-#: class-sv-wc-plugin.php:564
+#: class-sv-wc-plugin.php:516
 msgctxt "verb"
 msgid "Review"
 msgstr ""
@@ -1651,19 +1635,19 @@ msgid "Account"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:227
-#: payment-gateway/class-sv-wc-payment-gateway.php:3465
+#: payment-gateway/class-sv-wc-payment-gateway.php:3455
 msgctxt "credit card type"
 msgid "Visa"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:231
-#: payment-gateway/class-sv-wc-payment-gateway.php:3466
+#: payment-gateway/class-sv-wc-payment-gateway.php:3456
 msgctxt "credit card type"
 msgid "MasterCard"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:235
-#: payment-gateway/class-sv-wc-payment-gateway.php:3467
+#: payment-gateway/class-sv-wc-payment-gateway.php:3457
 msgctxt "credit card type"
 msgid "American Express"
 msgstr ""
@@ -1674,13 +1658,13 @@ msgid "Diners Club"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:243
-#: payment-gateway/class-sv-wc-payment-gateway.php:3468
+#: payment-gateway/class-sv-wc-payment-gateway.php:3458
 msgctxt "credit card type"
 msgid "Discover"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:247
-#: payment-gateway/class-sv-wc-payment-gateway.php:3470
+#: payment-gateway/class-sv-wc-payment-gateway.php:3460
 msgctxt "credit card type"
 msgid "JCB"
 msgstr ""
@@ -1700,7 +1684,7 @@ msgctxt "credit card type"
 msgid "Laser"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3469
+#: payment-gateway/class-sv-wc-payment-gateway.php:3459
 msgctxt "credit card type"
 msgid "Diners"
 msgstr ""
@@ -1727,7 +1711,14 @@ msgctxt "hash before order number"
 msgid "#%s"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:4065
+#: payment-gateway/class-sv-wc-payment-gateway.php:3151
+msgctxt ""
+"coordinating conjunction for a list of order statuses: on-hold, processing, "
+"or completed"
+msgid "or"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:4055
 #. translators: https:www.skyverge.com/for-translators-environments/
 msgctxt "software environment"
 msgid "Production"

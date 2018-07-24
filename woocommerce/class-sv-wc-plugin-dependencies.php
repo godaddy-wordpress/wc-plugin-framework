@@ -74,7 +74,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Parses the dependency arguments and sets defaults.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @param array $args dependency args
 	 * @return array
@@ -108,7 +108,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Adds the action & filter hooks.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	protected function add_hooks() {
 
@@ -120,7 +120,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Adds the admin dependency notices.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	public function add_admin_notices() {
 
@@ -135,7 +135,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Adds notices for any missing PHP extensions.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	public function add_php_extension_notices() {
 
@@ -163,7 +163,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Adds notices for any missing PHP functions.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	public function add_php_function_notices() {
 
@@ -191,7 +191,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Adds notices for any incompatible PHP settings.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	public function add_php_settings_notices() {
 
@@ -238,7 +238,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Gets any deprecated warning notices.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 */
 	protected function add_deprecated_notices() {
 
@@ -283,7 +283,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Adds an admin notice.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @param string $id notice ID
 	 * @param string $message notice message
@@ -325,7 +325,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Gets any missing PHP extensions.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @return array
 	 */
@@ -347,7 +347,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Gets the required PHP extensions.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @return array
 	 */
@@ -360,7 +360,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Gets any missing PHP functions.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @return array
 	 */
@@ -382,7 +382,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Gets the required PHP functions.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @return array
 	 */
@@ -395,7 +395,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Gets any incompatible PHP settings.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @return array
 	 */
@@ -448,7 +448,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Gets the required PHP settings.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @return array
 	 */
@@ -461,7 +461,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Gets the plugin instance.
 	 *
-	 * @since 5.2.0-dev
+	 * @since 5.2.0
 	 *
 	 * @return SV_WC_Plugin
 	 */
