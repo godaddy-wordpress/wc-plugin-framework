@@ -596,7 +596,7 @@ class Helper extends Test_Case {
 	 * @return \PHPUnit_Framework_MockObject_Builder_InvocationMocker
 	 */
 	protected function get_wc_product_mock() {
-		return $this->getMockBuilder( 'WC_Product' )->getMock()->method( 'get_sku' )->willReturn( 'SKYSHIRT' );
+		return $this->getMockBuilder( 'WC_Product' )->setMethods( [ 'get_sku' ] )->getMock()->method( 'get_sku' )->willReturn( 'SKYSHIRT' );
 	}
 
 

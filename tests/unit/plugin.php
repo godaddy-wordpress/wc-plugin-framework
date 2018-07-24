@@ -59,6 +59,8 @@ class Plugin extends Test_Case {
 	}
 
 	public function test_get_plugin_version_name() {
+
+		$this->assertEquals( 'wc_mock_version', $this->plugin()->get_plugin_version_name() );
 	}
 
 	public function test_get_api_log_message() {

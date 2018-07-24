@@ -2,7 +2,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
-class Test_Case extends \PHPUnit_Framework_TestCase {
+class Test_Case extends \PHPUnit\Framework\TestCase {
 
 
 	public function setUp() {
