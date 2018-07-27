@@ -1,0 +1,47 @@
+.sv-wc-plugin-admin-setup-content {
+
+	.error {
+		background: #dc3232;
+		color: white;
+		padding: 1em;
+		border-radius: 5px;
+	}
+
+	.sv-wc-plugin-admin-setup-control {
+		margin-bottom: 20px;
+
+		label {
+			color: #666;
+			font-size: 15px;
+			font-weight: 500;
+			margin-bottom: .5em;
+			margin-top: .85em;
+			display: inline-block;
+		}
+
+		input[type="text"],
+		input[type="password"],
+		select {
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			height: 30px;
+			width: calc(100% - 8px - 24px - 2px);
+			padding-left: 8px;
+			padding-right: 24px;
+			font-size: 16px;
+			color: #444;
+			background-color: #fff;
+			display: inline-block;
+		}
+
+		select {
+			width: 100%;
+		}
+
+		.description {
+			margin: 5px 0 0;
+			font-size: 13px;
+			color: #888;
+		}
+	}
+}
