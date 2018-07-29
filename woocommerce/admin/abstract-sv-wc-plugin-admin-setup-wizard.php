@@ -765,6 +765,8 @@ abstract class Setup_Wizard {
 
 		} catch ( Framework\SV_WC_Plugin_Exception $exception ) {
 
+			Framework\SV_WC_Plugin_Compatibility::wc_doing_it_wrong( __METHOD__, $exception->getMessage(), '5.3.0-dev' );
+
 			return false;
 		}
 	}
