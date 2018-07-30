@@ -642,16 +642,12 @@ abstract class Setup_Wizard {
 	 */
 	protected function render_step( $step_id ) {
 
+		call_user_func( $this->steps[ $step_id ]['view'], $this );
+
 		?>
-
-		<h1><?php echo esc_html( $this->steps[ $step_id ]['name'] ); ?></h1>
-
-		<?php call_user_func( $this->steps[ $step_id ]['view'], $this ); ?>
-
 		<p class="wc-setup-actions step">
 			<button type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'woocommerce-plugin-framework' ); ?>" name="save"><?php esc_html_e( 'Continue', 'woocommerce-plugin-framework' ); ?></button>
 		</p>
-
 		<?php
 	}
 
