@@ -140,6 +140,9 @@ abstract class SV_WC_Plugin {
 		// build the REST API handler instance
 		$this->init_rest_api_handler();
 
+		// build the setup handler instance
+		$this->init_setup_handler();
+
 		// add the action & filter hooks
 		$this->add_hooks();
 	}
@@ -230,6 +233,17 @@ abstract class SV_WC_Plugin {
 	protected function init_rest_api_handler() {
 
 		$this->rest_api_handler = new REST_API( $this );
+	}
+
+
+	/**
+	 * Plugins can override and extend this method to add their own setup wizard.
+	 *
+	 * @since 5.3.0-dev
+	 */
+	protected function init_setup_handler() {
+
+		require_once( $this->get_framework_path() . '/admin/abstract-sv-wc-plugin-admin-setup-wizard.php' );
 	}
 
 
