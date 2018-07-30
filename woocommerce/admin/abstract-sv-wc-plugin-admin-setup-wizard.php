@@ -417,22 +417,14 @@ abstract class Setup_Wizard {
 
 			<?php else : ?>
 
-				<?php // if just getting started, render the welcome message ?>
-				<?php if ( $this->is_started() ) : ?>
-					<?php $this->render_welcome(); ?>
-				<?php endif; ?>
-
 				<?php // render any error message from a previous save ?>
 				<?php if ( ! empty( $error_message ) ) : ?>
 					<?php $this->render_error( $error_message ); ?>
 				<?php endif; ?>
 
 				<form method="post">
-
 					<?php $this->render_step( $this->current_step ); ?>
-
 					<?php wp_nonce_field( "wc_{$this->id}_setup_wizard_save", 'nonce' ); ?>
-
 				</form>
 
 			<?php endif; ?>
@@ -604,29 +596,6 @@ abstract class Setup_Wizard {
 		}
 
 		return $actions;
-	}
-
-
-	/**
-	 * Renders the welcome message.
-	 *
-	 * @since 5.3.0-dev
-	 */
-	protected function render_welcome() {
-
-		?>
-
-		<p class="welcome">
-
-			<?php printf(
-				/* translators: Placeholders: %s - plugin name */
-				esc_html__( 'The following wizard will help you configure %s and get you started quickly.', 'woocommerce-plugin-framework' ),
-				$this->get_plugin()->get_plugin_name()
-			); ?>
-
-		</p>
-
-		<?php
 	}
 
 
