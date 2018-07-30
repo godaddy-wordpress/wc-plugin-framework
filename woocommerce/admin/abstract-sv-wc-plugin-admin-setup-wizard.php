@@ -50,10 +50,10 @@ abstract class Setup_Wizard {
 	protected $required_capability = 'manage_woocommerce';
 
 	/** @var string the current step ID */
-	private $current_step = '';
+	protected $current_step = '';
 
 	/** @var array registered steps to be displayed */
-	private $steps = array();
+	protected $steps = array();
 
 	/** @var string setup handler ID  */
 	private $id;
@@ -113,21 +113,13 @@ abstract class Setup_Wizard {
 	 *
 	 * @since 5.3.0-dev
 	 */
-	protected function register_steps() {
-
-		$this->register_step(
-			'welcome',
-			__( 'Get Started', 'woocommerce-pip' ),
-			array( $this, 'render_welcome_step' )
-		);
-	}
+	abstract protected function register_steps();
 
 
 	/**
 	 * Adds a 'Setup' link to the plugin action links if the wizard hasn't been completed.
 	 *
-	 * This will override the plugin's standard "Configure" link with a link to
-	 * this setup wizard.
+	 * This will override the plugin's standard "Configure" link with a link to this setup wizard.
 	 *
 	 * @internal
 	 *
@@ -185,10 +177,9 @@ abstract class Setup_Wizard {
 
 
 	/**
-	 * Adds the page to WP core.
+	 * Adds the page to WordPress core.
 	 *
-	 * While this doesn't output any markup/menu items, it is essential to officially register the page to avoid
-	 * permissions issues.
+	 * While this doesn't output any markup/menu items, it is essential to officially register the page to avoid permissions issues.
 	 *
 	 * @internal
 	 *
@@ -209,10 +200,11 @@ abstract class Setup_Wizard {
 	 */
 	public function render_page() {
 
-		$this->enqueue_scripts();
+		// maybe save and move onto the next step
+		$error_message = Framework\SV_WC_Helper::get_post( 'save_step' ) ? $this->save_step( $this->current_step ) : '';
 
 		$page_title = sprintf(
-			/** translators: Placeholders: %s - plugin name */
+		/** translators: Placeholders: %s - plugin name */
 			__( '%s &rsaquo; Setup', 'woocommerce-plugin-framework' ),
 			$this->get_plugin()->get_plugin_name()
 		);
@@ -222,10 +214,9 @@ abstract class Setup_Wizard {
 			$page_title .= " &rsaquo; {$this->steps[ $this->current_step ]['name']}";
 		}
 
-		ob_start();
+		$this->enqueue_scripts();
 
-		// handle save
-		$error_message = Framework\SV_WC_Helper::get_post( 'save' ) ? $this->save_step( $this->current_step ) : '';
+		ob_start();
 
 		?>
 		<!DOCTYPE html>
@@ -270,10 +261,14 @@ abstract class Setup_Wizard {
 				throw new Framework\SV_WC_Plugin_Exception( $error_message );
 			}
 
-			if ( $this->has_step( $step_id ) && is_callable( $this->steps[ $step_id ]['save'] ) ) {
+			if ( $this->has_step( $step_id ) ) {
 
-				call_user_func( $this->steps[ $step_id ]['save'], $this );
+				// if the step has a saving callback defined, save the form fields
+				if ( is_callable( $this->steps[ $step_id ]['save'] ) ) {
+					call_user_func( $this->steps[ $step_id ]['save'], $this );
+				}
 
+				// move to the next step
 				wp_safe_redirect( $this->get_next_step_url( $step_id ) );
 				exit;
 			}
@@ -424,6 +419,11 @@ abstract class Setup_Wizard {
 
 			<?php else : ?>
 
+				<?php // render a welcome message if the current is the first step ?>
+				<?php if ( $this->is_started() ) : ?>
+					<?php $this->render_welcome(); ?>
+				<?php endif; ?>
+
 				<?php // render any error message from a previous save ?>
 				<?php if ( ! empty( $error_message ) ) : ?>
 					<?php $this->render_error( $error_message ); ?>
@@ -457,24 +457,17 @@ abstract class Setup_Wizard {
 
 
 	/**
-	 * Renders the initial default step.
+	 * Renders a default welcome note.
 	 *
 	 * @since 5.3.0-dev
 	 */
-	protected function render_welcome_step() {
+	protected function render_welcome() {
 
 		?>
 		<h1><?php printf(
 				/* translators: Placeholder: %s - plugin name */
 				esc_html__( 'Welcome to %s!', 'woocommerce-plugin-framework' ), $this->get_plugin()->get_plugin_name() ); ?></h1>
-		<p class="welcome">
-			<?php printf(
-				/* translators: Placeholders: %1$s - plugin name, %2$s - the store name */
-				esc_html__( 'Thank you for choosing %1$s to enhance %2$s!', 'woocommerce-plugin-framework' ) .  '<br /><br />' . esc_html__( 'This quick setup wizard will help you configure the basic settings and get you started.', 'woocommerce-plugin-framework' ),
-				$this->get_plugin()->get_plugin_name(),
-				get_bloginfo( 'name' )
-			); ?>
-		</p>
+		<p class="welcome"><?php esc_html_e( 'This quick setup wizard will help you configure the basic settings and get you started.', 'woocommerce-plugin-framework' ); ?></p>
 		<?php
 	}
 
@@ -648,8 +641,9 @@ abstract class Setup_Wizard {
 			<?php $label = $this->is_started() ? __( "Let's go!", 'woocommerce-plugin-framework' ) : __( 'Continue', 'woocommerce-plugin-framework' ); ?>
 			<button
 				type="submit"
-				name="save"
-				class="button-primary button button-large button-next"><?php
+				name="save_step"
+				class="button-primary button button-large button-next"
+				value="<?php echo esc_html( $label ); ?>"><?php
 				echo esc_html( $label ); ?></button>
 		</p>
 		<?php
@@ -683,7 +677,7 @@ abstract class Setup_Wizard {
 			$args['custom_attributes']['required'] = true;
 		}
 
-		// enhanced selects
+		// all dropdowns are treated as enhanced selects
 		if ( isset( $args['type'] ) && 'select' === $args['type'] ) {
 			$args['input_class'][] = 'wc-enhanced-select';
 		}
@@ -781,6 +775,20 @@ abstract class Setup_Wizard {
 	public function is_setup_page() {
 
 		return is_admin() && $this->get_slug() === Framework\SV_WC_Helper::get_request( 'page' );
+	}
+
+
+	/**
+	 * Determines if a step is the current one displayed.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @param string $step_id step ID
+	 * @return bool
+	 */
+	public function is_current_step( $step_id ) {
+
+		return $this->current_step === $step_id;
 	}
 
 
@@ -976,7 +984,7 @@ abstract class Setup_Wizard {
 	 */
 	protected function get_dashboard_url() {
 
-	    $settings_url  = $this->get_plugin()->get_settings_url();
+		$settings_url  = $this->get_plugin()->get_settings_url();
 		$dashboard_url = ! empty( $settings_url ) ? $settings_url : admin_url();
 
 		return add_query_arg( "wc_{$this->id}_setup_wizard_complete", true, $dashboard_url );
