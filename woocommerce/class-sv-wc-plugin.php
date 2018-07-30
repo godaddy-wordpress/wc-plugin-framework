@@ -74,11 +74,14 @@ abstract class SV_WC_Plugin {
 	/** @var SV_WC_Hook_Deprecator hook deprecator instance */
 	private $hook_deprecator;
 
-	/** @var Plugin\Lifecycle lifecycle handler */
+	/** @var Plugin\Lifecycle lifecycle handler instance */
 	protected $lifecycle_handler;
 
-	/** @var REST_API REST API handler */
+	/** @var REST_API REST API handler instance */
 	protected $rest_api_handler;
+
+	/** @var Admin\Setup_Wizard handler instance */
+	protected $setup_wizard_handler;
 
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
@@ -237,6 +240,8 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Builds the Setup Wizard handler instance.
+	 *
 	 * Plugins can override and extend this method to add their own setup wizard.
 	 *
 	 * @since 5.3.0-dev
@@ -755,10 +760,25 @@ abstract class SV_WC_Plugin {
 	 * Gets the lifecycle handler instance.
 	 *
 	 * @since 5.1.0
+	 *
+	 * @return Plugin\Lifecycle
 	 */
 	public function get_lifecycle_handler() {
 
 		return $this->lifecycle_handler;
+	}
+
+
+	/**
+	 * Gets the Setup Wizard handler instance.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return null|Admin\Setup_Wizard
+	 */
+	public function get_setup_wizard_handler() {
+
+		return $this->setup_wizard_handler;
 	}
 
 
