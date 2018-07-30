@@ -221,7 +221,6 @@ abstract class Setup_Wizard {
 		$error_message = Framework\SV_WC_Helper::get_post( 'save' ) ? $this->save_step( $this->current_step ) : '';
 
 		?>
-
 		<!DOCTYPE html>
 		<html <?php language_attributes(); ?>>
 			<head>
@@ -239,8 +238,8 @@ abstract class Setup_Wizard {
 				<?php $this->render_footer(); ?>
 			</body>
 		</html>
-
 		<?php
+
 		exit;
 	}
 
@@ -251,14 +250,17 @@ abstract class Setup_Wizard {
 	 * @since 5.3.0-dev
 	 *
 	 * @param string $step_id the step ID being saved
+     * @return void|string redirects upon success, returns an error message upon failure
 	 */
 	protected function save_step( $step_id ) {
+
+		$error_message = __( 'Oops! An error occurred, please try again.', 'woocommerce-plugin-framework' );
 
 		try {
 
 			// bail early if the nonce is bad
 			if ( ! wp_verify_nonce( Framework\SV_WC_Helper::get_post( 'nonce' ), "wc_{$this->id}_setup_wizard_save" ) ) {
-				throw new Framework\SV_WC_Plugin_Exception();
+				throw new Framework\SV_WC_Plugin_Exception( $error_message );
 			}
 
 			if ( $this->has_step( $step_id ) && is_callable( $this->steps[ $step_id ]['save'] ) ) {
@@ -271,7 +273,7 @@ abstract class Setup_Wizard {
 
 		} catch ( Framework\SV_WC_Plugin_Exception $exception ) {
 
-			return $exception->getMessage() ? $exception->getMessage() : __( 'Oops! An error occurred, please try again.', 'woocommerce-plugin-framework' );
+			return $exception->getMessage() ? $exception->getMessage() : $error_message;
 		}
 	}
 
@@ -331,18 +333,15 @@ abstract class Setup_Wizard {
 		$image_url = $this->get_header_image_url();
 
 		$header_content = $image_url ? '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr( $title ) . '" />' : $title;
+
 		?>
-
 		<h1 id="wc-logo">
-
 			<?php if ( $link_url ) : ?>
 				<a href="<?php echo esc_url( $link_url ); ?>" target="_blank"><?php echo $header_content; ?></a>
 			<?php else : ?>
 				<?php echo esc_html( $header_content ); ?>
 			<?php endif; ?>
-
 		</h1>
-
 		<?php
 	}
 
@@ -372,7 +371,6 @@ abstract class Setup_Wizard {
 	protected function render_steps() {
 
 		?>
-
 		<ol class="wc-setup-steps">
 
 			<?php foreach ( $this->steps as $id => $step ) : ?>
@@ -390,7 +388,6 @@ abstract class Setup_Wizard {
 			<li class="<?php echo $this->is_finished() ? 'done' : ''; ?>"><?php esc_html_e( 'Done!', 'woocommerce-plugin-framework' ); ?></li>
 
 		</ol>
-
 		<?php
 	}
 
@@ -404,11 +401,12 @@ abstract class Setup_Wizard {
 	 * This will display the welcome screen, finished screen, or a specific step's markup.
 	 *
 	 * @since 5.3.0-dev
+     *
+     * @param string $error_message custom error message
 	 */
 	protected function render_content( $error_message = '' ) {
 
 		?>
-
 		<div class="wc-setup-content sv-wc-plugin-admin-setup-content">
 
 			<?php if ( $this->is_finished() ) : ?>
@@ -419,13 +417,13 @@ abstract class Setup_Wizard {
 
 			<?php else : ?>
 
-				<?php // if just getting started, render the welcome message
-				if ( $this->is_started() ) : ?>
+				<?php // if just getting started, render the welcome message ?>
+				<?php if ( $this->is_started() ) : ?>
 					<?php $this->render_welcome(); ?>
 				<?php endif; ?>
 
-				<?php // render any error message from a previous save
-				if ( ! empty( $error_message ) ) : ?>
+				<?php // render any error message from a previous save ?>
+				<?php if ( ! empty( $error_message ) ) : ?>
 					<?php $this->render_error( $error_message ); ?>
 				<?php endif; ?>
 
@@ -440,7 +438,6 @@ abstract class Setup_Wizard {
 			<?php endif; ?>
 
 		</div>
-
 		<?php
 	}
 
@@ -491,10 +488,9 @@ abstract class Setup_Wizard {
 		$next_steps         = $this->get_next_steps();
 		$additional_actions = $this->get_additional_actions();
 
-		if ( ! empty( $next_steps ) || ! empty( $additional_actions ) ) {
+		if ( ! empty( $next_steps ) || ! empty( $additional_actions ) ) :
 
 			?>
-
 			<ul class="wc-wizard-next-steps">
 
 				<?php foreach ( $next_steps as $step ) : ?>
@@ -547,9 +543,9 @@ abstract class Setup_Wizard {
 				<?php endif; ?>
 
 			</ul>
-
 			<?php
-		}
+
+		endif;
 	}
 
 
@@ -599,7 +595,7 @@ abstract class Setup_Wizard {
 			$actions[ __( 'Review Your Settings', 'woocommerce-plugin-framework' ) ] = $this->get_plugin()->get_settings_url();
 		}
 
-		if ( $this->get_plugin()->get_documentation_url() && empty( $next_steps['view-docs'] ) ) {
+		if ( empty( $next_steps['view-docs'] ) && $this->get_plugin()->get_documentation_url() ) {
 			$actions[ __( 'View the Docs', 'woocommerce-plugin-framework' ) ] = $this->get_plugin()->get_documentation_url();
 		}
 
@@ -625,7 +621,7 @@ abstract class Setup_Wizard {
 			<?php printf(
 				/* translators: Placeholders: %s - plugin name */
 				esc_html__( 'The following wizard will help you configure %s and get you started quickly.', 'woocommerce-plugin-framework' ),
-				esc_html( $this->get_plugin()->get_plugin_name() )
+				$this->get_plugin()->get_plugin_name()
 			); ?>
 
 		</p>
@@ -646,7 +642,7 @@ abstract class Setup_Wizard {
 	 */
 	protected function render_step( $step_id ) {
 
-	    ?>
+		?>
 
 		<h1><?php echo esc_html( $this->steps[ $step_id ]['name'] ); ?></h1>
 
@@ -942,9 +938,10 @@ abstract class Setup_Wizard {
 	 */
 	protected function get_dashboard_url() {
 
-		$url = $this->get_plugin()->get_settings_url() ? $this->get_plugin()->get_settings_url() : admin_url();
+	    $settings_url  = $this->get_plugin()->get_settings_url();
+		$dashboard_url = ! empty( $settings_url ) ? $settings_url : admin_url();
 
-		return add_query_arg( "wc_{$this->id}_setup_wizard_complete", true, $url );
+		return add_query_arg( "wc_{$this->id}_setup_wizard_complete", true, $dashboard_url );
 	}
 
 
