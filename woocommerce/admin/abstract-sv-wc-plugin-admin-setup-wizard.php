@@ -771,6 +771,13 @@ abstract class Setup_Wizard {
 	/** Conditional Methods *******************************************************************************************/
 
 
+	/**
+     * Determines if the current page is the setup wizard page.
+     *
+     * @since 5.3.0-dev
+     *
+	 * @return bool
+	 */
 	public function is_setup_page() {
 
 		return is_admin() && $this->get_slug() === Framework\SV_WC_Helper::get_request( 'page' );
