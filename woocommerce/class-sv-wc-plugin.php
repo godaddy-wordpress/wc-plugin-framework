@@ -144,7 +144,7 @@ abstract class SV_WC_Plugin {
 		$this->init_rest_api_handler();
 
 		// build the setup handler instance
-		$this->init_setup_handler();
+		$this->init_setup_wizard_handler();
 
 		// add the action & filter hooks
 		$this->add_hooks();
@@ -246,7 +246,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.3.0-dev
 	 */
-	protected function init_setup_handler() {
+	protected function init_setup_wizard_handler() {
 
 		require_once( $this->get_framework_path() . '/admin/abstract-sv-wc-plugin-admin-setup-wizard.php' );
 	}
