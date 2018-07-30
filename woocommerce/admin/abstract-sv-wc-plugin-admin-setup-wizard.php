@@ -859,6 +859,37 @@ abstract class Setup_Wizard {
 	/** Getter Methods ************************************************************************************************/
 
 
+	/**
+     * Gets a given step's title.
+     *
+     * @since 5.3.0-dev
+     *
+	 * @param string $step_id step ID (optional: will assume the current step if unspecified)
+	 * @return string
+	 */
+	public function get_step_title( $step_id = '' ) {
+
+		$step_title = '';
+
+		if ( ! $step_id ) {
+			$step_id = $this->current_step;
+		}
+
+		if ( isset( $this->steps[ $step_id ]['name'] ) ) {
+			$step_title = $this->steps[ $step_id ]['name'];
+		}
+
+		return $step_title;
+	}
+
+
+	/**
+     * Gets the Setup Wizard URL.
+     *
+     * @since 5.3.0-dev
+     *
+	 * @return string
+	 */
 	public function get_setup_url() {
 
 		return add_query_arg( 'page', $this->get_slug(), admin_url( 'index.php' ) );
