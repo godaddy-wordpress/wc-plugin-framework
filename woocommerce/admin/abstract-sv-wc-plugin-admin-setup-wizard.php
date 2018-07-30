@@ -109,11 +109,18 @@ abstract class Setup_Wizard {
 	/**
 	 * Registers the setup steps.
 	 *
-	 * Plugins should override this to register their own steps.
+	 * Plugins should extend this to register their own steps.
 	 *
 	 * @since 5.3.0-dev
 	 */
-	abstract protected function register_steps();
+	protected function register_steps() {
+
+		$this->register_step(
+			'welcome',
+			__( 'Get Started', 'woocommerce-pip' ),
+			array( $this, 'render_welcome_step' )
+		);
+	}
 
 
 	/**
@@ -450,6 +457,29 @@ abstract class Setup_Wizard {
 
 
 	/**
+	 * Renders the initial default step.
+	 *
+	 * @since 5.3.0-dev
+	 */
+	protected function render_welcome_step() {
+
+		?>
+		<h1><?php printf(
+				/* translators: Placeholder: %s - plugin name */
+				esc_html__( 'Welcome to %s!', 'woocommerce-plugin-framework' ), $this->get_plugin()->get_plugin_name() ); ?></h1>
+		<p class="welcome">
+			<?php printf(
+				/* translators: Placeholders: %1$s - plugin name, %2$s - the store name */
+				esc_html__( 'Thank you for choosing %1$s to enhance %2$s!', 'woocommerce-plugin-framework' ) .  '<br /><br />' . esc_html__( 'This quick setup wizard will help you configure the basic settings and get you started.', 'woocommerce-plugin-framework' ),
+				$this->get_plugin()->get_plugin_name(),
+				get_bloginfo( 'name' )
+			); ?>
+		</p>
+		<?php
+	}
+
+
+	/**
 	 * Renders the finished screen markup.
 	 *
 	 * This is what gets displayed after all of the steps have been completed or skipped.
@@ -615,7 +645,12 @@ abstract class Setup_Wizard {
 
 		?>
 		<p class="wc-setup-actions step">
-			<button type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'woocommerce-plugin-framework' ); ?>" name="save"><?php esc_html_e( 'Continue', 'woocommerce-plugin-framework' ); ?></button>
+			<?php $label = $this->is_started() ? __( "Let's go!", 'woocommerce-plugin-framework' ) : __( 'Continue', 'woocommerce-plugin-framework' ); ?>
+			<button
+				type="submit"
+				name="save"
+				class="button-primary button button-large button-next"><?php
+				echo esc_html( $label ); ?></button>
 		</p>
 		<?php
 	}
