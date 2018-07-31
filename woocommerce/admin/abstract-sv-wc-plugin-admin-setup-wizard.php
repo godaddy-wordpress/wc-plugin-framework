@@ -230,7 +230,7 @@ abstract class Setup_Wizard {
 				<?php do_action( 'admin_print_styles' ); ?>
 				<?php do_action( 'admin_head' ); ?>
 			</head>
-			<body class="wc-setup wp-core-ui <?php echo $this->get_slug(); ?>">
+			<body class="wc-setup wp-core-ui <?php echo esc_attr( $this->get_slug() ); ?>">
 				<?php $this->render_header(); ?>
 				<?php $this->render_steps(); ?>
 				<?php $this->render_content( $error_message ); ?>
@@ -410,13 +410,13 @@ abstract class Setup_Wizard {
 	 * This will display the welcome screen, finished screen, or a specific step's markup.
 	 *
 	 * @since 5.3.0-dev
-     *
-     * @param string $error_message custom error message
+	 *
+	 * @param string $error_message custom error message
 	 */
 	protected function render_content( $error_message = '' ) {
 
 		?>
-		<div class="wc-setup-content sv-wc-plugin-admin-setup-content <?php echo $this->get_slug() . '-content'; ?>">
+		<div class="wc-setup-content sv-wc-plugin-admin-setup-content <?php echo esc_attr( $this->get_slug() ) . '-content'; ?>">
 
 			<?php if ( $this->is_finished() ) : ?>
 
