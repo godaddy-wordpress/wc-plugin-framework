@@ -323,6 +323,7 @@ abstract class Setup_Wizard {
 
 		// framework bundled styles
 		wp_enqueue_style( 'sv-wc-admin-setup', $this->get_plugin()->get_framework_assets_url() . '/css/admin/sv-wc-plugin-admin-setup-wizard.min.css', array( 'wc-setup' ), $this->get_plugin()->get_version() );
+		wp_enqueue_script( 'sv-wc-admin-setup', $this->get_plugin()->get_framework_assets_url() . '/js/admin/sv-wc-plugin-admin-setup-wizard.min.js', array( 'wc-setup' ), $this->get_plugin()->get_version() );
 	}
 
 
