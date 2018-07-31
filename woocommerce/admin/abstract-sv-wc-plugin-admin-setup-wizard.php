@@ -214,7 +214,7 @@ abstract class Setup_Wizard {
 			$page_title .= " &rsaquo; {$this->steps[ $this->current_step ]['name']}";
 		}
 
-		$this->enqueue_scripts();
+		$this->load_scripts_styles();
 
 		ob_start();
 
@@ -226,10 +226,11 @@ abstract class Setup_Wizard {
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 				<title><?php echo esc_html( $page_title ); ?></title>
 				<?php wp_print_scripts( 'wc-setup' ); ?>
+				<?php do_action( 'admin_print_scripts' ); ?>
 				<?php do_action( 'admin_print_styles' ); ?>
 				<?php do_action( 'admin_head' ); ?>
 			</head>
-			<body class="wc-setup wp-core-ui">
+			<body class="wc-setup wp-core-ui <?php echo $this->get_slug(); ?>">
 				<?php $this->render_header(); ?>
 				<?php $this->render_steps(); ?>
 				<?php $this->render_content( $error_message ); ?>
@@ -281,16 +282,18 @@ abstract class Setup_Wizard {
 
 
 	/**
-	 * Enqueues the scripts and styles.
+	 * Registers and enqueues the wizard's scripts and styles.
 	 *
 	 * @since 5.3.0-dev
 	 */
-	protected function enqueue_scripts() {
+	protected function load_scripts_styles() {
 
+		// block UI
 		wp_register_script( 'jquery-blockui', WC()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI.min.js', array( 'jquery' ), '2.70', true );
+
+		// enhanced dropdowns
 		wp_register_script( 'selectWoo', WC()->plugin_url() . '/assets/js/selectWoo/selectWoo.full.min.js', array( 'jquery' ), '1.0.0' );
 		wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select.min.js', array( 'jquery', 'selectWoo' ), $this->get_plugin()->get_version() );
-
 		wp_localize_script(
 			'wc-enhanced-select',
 			'wc_enhanced_select_params',
@@ -311,12 +314,15 @@ abstract class Setup_Wizard {
 			)
 		);
 
+		// WooCommerce Setup core scripts
+		wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui' ), $this->get_plugin()->get_version() );
+
+		// WooCommerce Setup core styles
 		wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', array(), $this->get_plugin()->get_version() );
 		wp_enqueue_style( 'wc-setup', WC()->plugin_url() . '/assets/css/wc-setup.css', array( 'dashicons', 'install' ), $this->get_plugin()->get_version() );
 
-		wp_enqueue_style( 'sv-wc-admin-setup', $this->get_plugin()->get_framework_assets_url() . '/css/admin/sv-wc-plugin-admin-setup-wizard.min.css', $this->get_plugin()->get_version() );
-
-		wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui' ), $this->get_plugin()->get_version() );
+		// framework bundled styles
+		wp_enqueue_style( 'sv-wc-admin-setup', $this->get_plugin()->get_framework_assets_url() . '/css/admin/sv-wc-plugin-admin-setup-wizard.min.css', array( 'wc-setup' ), $this->get_plugin()->get_version() );
 	}
 
 
@@ -331,7 +337,7 @@ abstract class Setup_Wizard {
 	protected function render_header() {
 
 		$title     = $this->get_plugin()->get_plugin_name();
-		$link_url  = $this->get_plugin()->get_sales_page_url(); // TODO: sales or docs page?
+		$link_url  = $this->get_plugin()->get_sales_page_url();
 		$image_url = $this->get_header_image_url();
 
 		$header_content = $image_url ? '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr( $title ) . '" />' : $title;
@@ -409,7 +415,7 @@ abstract class Setup_Wizard {
 	protected function render_content( $error_message = '' ) {
 
 		?>
-		<div class="wc-setup-content sv-wc-plugin-admin-setup-content">
+		<div class="wc-setup-content sv-wc-plugin-admin-setup-content <?php echo $this->get_slug() . '-content'; ?>">
 
 			<?php if ( $this->is_finished() ) : ?>
 
@@ -696,13 +702,17 @@ abstract class Setup_Wizard {
 	 */
 	protected function render_footer() {
 
-		if ( $this->is_finished() ) : ?>
+		?>
+		<?php if ( $this->is_finished() ) : ?>
 			<a class="wc-setup-footer-links" href="<?php echo esc_url( $this->get_dashboard_url() ); ?>"><?php esc_html_e( 'Return to the WordPress Dashboard', 'woocommerce-plugin-framework' ); ?></a>
 		<?php elseif ( $this->is_started() ) : ?>
 			<a class="wc-setup-footer-links" href="<?php echo esc_url( $this->get_dashboard_url() ); ?>"><?php esc_html_e( 'Not right now', 'woocommerce-plugin-framework' ); ?></a>
 		<?php else : ?>
 			<a class="wc-setup-footer-links" href="<?php echo esc_url( $this->get_next_step_url() ); ?>"><?php esc_html_e( 'Skip this step', 'woocommerce-plugin-framework' ); ?></a>
-		<?php endif;
+		<?php endif; ?>
+		<?php
+
+		do_action( 'wp_print_footer_scripts' );
 	}
 
 

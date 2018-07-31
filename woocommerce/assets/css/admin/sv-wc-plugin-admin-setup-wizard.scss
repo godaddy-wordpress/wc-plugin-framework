@@ -2,9 +2,9 @@
 
 	.error {
 		background: #dc3232;
+		border-radius: 5px;
 		color: white;
 		padding: 1em;
-		border-radius: 5px;
 	}
 
 	.sv-wc-plugin-admin-setup-control {
@@ -13,26 +13,26 @@
 
 		label {
 			color: #666;
+			display: inline-block;
 			font-size: 15px;
 			font-weight: 500;
-			margin-bottom: .5em;
 			margin-top: .85em;
-			display: inline-block;
+			margin-bottom: .5em;
 		}
 
 		input[type="text"],
+		input[type="number"],
 		input[type="password"],
 		select {
+			background-color: #fff;
 			border: 1px solid #ddd;
 			border-radius: 4px;
-			height: 30px;
-			width: calc(100% - 8px - 24px - 2px);
-			padding-left: 8px;
-			padding-right: 24px;
-			font-size: 16px;
 			color: #444;
-			background-color: #fff;
 			display: inline-block;
+			font-size: 16px;
+			height: 30px;
+			padding: 0 24px 0 8px;
+			width: calc(100% - 8px - 24px - 2px);
 		}
 
 		select {
@@ -40,9 +40,9 @@
 		}
 
 		.description {
-			margin: 5px 0 0;
-			font-size: 13px;
 			color: #888;
+			font-size: 13px;
+			margin: 5px 0 0;
 		}
 	}
 }
