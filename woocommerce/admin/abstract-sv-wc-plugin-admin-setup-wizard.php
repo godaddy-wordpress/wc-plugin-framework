@@ -691,7 +691,98 @@ abstract class Setup_Wizard {
 		// always echo the field
 		$args['return'] = false;
 
-		woocommerce_form_field( $key, $args, $value );
+		if ( isset( $args['type'] ) && 'checkbox' === $args['type'] ) {
+			$this->render_toggle_form_field( $key, $args, $value );
+		} else {
+			woocommerce_form_field( $key, $args, $value );
+		}
+	}
+
+
+	/**
+	 * Renders the toggle form field.
+	 *
+	 * This requires special markup for the toggle UI.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @param string $key field key
+	 * @param array $args field args - @see woocommerce_form_field()
+	 * @param string|null $value field value
+	 */
+	public function render_toggle_form_field( $key, $args, $value ) {
+
+		$defaults = array(
+			'type'              => 'text',
+			'label'             => '',
+			'description'       => '',
+			'required'          => false,
+			'id'                => $key,
+			'class'             => array(),
+			'label_class'       => array(),
+			'input_class'       => array(),
+			'custom_attributes' => array(),
+			'default'           => false,
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$args['class'][] = 'toggle';
+
+		if ( $args['required'] ) {
+			$args['class'][] = 'validate-required';
+		}
+
+		if ( is_string( $args['label_class'] ) ) {
+			$args['label_class'] = array( $args['label_class'] );
+		}
+
+		if ( null === $value ) {
+			$value = $args['default'];
+		}
+
+		$custom_attributes         = array();
+		$args['custom_attributes'] = array_filter( (array) $args['custom_attributes'], 'strlen' );
+
+		if ( $args['description'] ) {
+			$args['custom_attributes']['aria-describedby'] = $args['id'] . '-description';
+		}
+
+		if ( ! empty( $args['custom_attributes'] ) && is_array( $args['custom_attributes'] ) ) {
+			foreach ( $args['custom_attributes'] as $attribute => $attribute_value ) {
+				$custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $attribute_value ) . '"';
+			}
+		}
+
+		$enabled = $value || $args['default'];
+
+		if ( $enabled ) {
+			$args['class'][] = 'enabled';
+		}
+
+		?>
+
+		<div class="form-row <?php echo esc_attr( implode( ' ', $args['class'] ) ); ?>">
+
+			<p class="name"><?php echo esc_html( $args['label'] ); ?></p>
+			<p class="description"><?php echo esc_html( $args['description'] ); ?></p>
+
+			<div class="enable">
+				<span class="toggle <?php echo $enabled ? '' : 'disabled'; ?>">
+					<input
+						id="<?php echo esc_attr( $args['id'] ); ?>"
+						type="checkbox"
+						class="input-checkbox <?php echo esc_attr( implode( ' ', $args['input_class'] ) ); ?>"
+						name="<?php echo esc_attr( $key ); ?>"
+						value="yes" <?php checked( true, $value ); ?>
+					/>
+					<label for="<?php echo esc_attr( $args['id'] ); ?>">
+				</span>
+			</div>
+
+		</div>
+
+		<?php
 	}
 
 
