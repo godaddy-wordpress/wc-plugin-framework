@@ -100,7 +100,7 @@ abstract class Setup_Wizard {
 			if ( $this->is_setup_page() ) {
 				$this->init_setup();
 			} elseif ( Framework\SV_WC_Helper::get_request( "wc_{$this->id}_setup_wizard_complete" ) ) {
-				update_option( "wc_{$this->id}_setup_wizard_complete", 'yes' );
+				$this->complete_setup();
 			}
 		}
 	}
@@ -173,6 +173,19 @@ abstract class Setup_Wizard {
 			// renders the entire setup page markup
 			add_action( 'admin_init', array( $this, 'render_page' ) );
 		}
+	}
+
+
+	/**
+	 * Marks the setup as complete.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return bool
+	 */
+	public function complete_setup() {
+
+		return update_option( "wc_{$this->id}_setup_wizard_complete", 'yes' );
 	}
 
 
