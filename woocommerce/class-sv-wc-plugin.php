@@ -269,8 +269,8 @@ abstract class SV_WC_Plugin {
 		add_action( 'admin_init', array( $this, 'init_admin' ), 0 );
 
 		// add the admin notices
-		add_action( 'admin_init', array( $this, 'add_admin_notices' ) );
-		add_action( 'admin_init', array( $this, 'add_delayed_admin_notices' ) );
+		add_action( 'admin_notices', array( $this, 'add_admin_notices' ) );
+		add_action( 'admin_footer',  array( $this, 'add_delayed_admin_notices' ) );
 
 		// add a 'Configure' link to the plugin action links
 		add_filter( 'plugin_action_links_' . plugin_basename( $this->get_plugin_file() ), array( $this, 'plugin_action_links' ) );
