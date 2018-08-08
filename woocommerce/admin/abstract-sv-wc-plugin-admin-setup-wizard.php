@@ -89,18 +89,23 @@ abstract class Setup_Wizard {
 		 */
 		$this->steps = apply_filters( "wc_{$this->id}_setup_wizard_steps", $this->steps, $this );
 
-		// only load the wizard if there are registered steps
-		if ( ! empty( $this->steps ) ) {
+		// only continue if there are registered steps
+		if ( $this->has_steps() ) {
 
-			// add a 'Setup' link to the plugin action links if the wizard hasn't been completed
-			if ( ! $this->is_complete() ) {
-				add_filter( 'plugin_action_links_' . plugin_basename( $this->get_plugin()->get_plugin_file() ), array( $this, 'add_setup_link' ), 20 );
-			}
-
+			// if requesting the wizard
 			if ( $this->is_setup_page() ) {
+
 				$this->init_setup();
-			} elseif ( Framework\SV_WC_Helper::get_request( "wc_{$this->id}_setup_wizard_complete" ) ) {
-				$this->complete_setup();
+
+			// otherwise, add the hooks for customizing the regular admin
+			} else {
+
+				$this->add_hooks();
+
+				// mark the wizard as complete if specifically requested
+				if ( Framework\SV_WC_Helper::get_request( "wc_{$this->id}_setup_wizard_complete" ) ) {
+					$this->complete_setup();
+				}
 			}
 		}
 	}
@@ -114,6 +119,100 @@ abstract class Setup_Wizard {
 	 * @since 5.3.0-dev
 	 */
 	abstract protected function register_steps();
+
+
+	/**
+	 * Adds the action & filter hooks.
+	 *
+	 * @since 5.3.0-dev
+	 */
+	protected function add_hooks() {
+
+		// add any admin notices
+		add_action( 'admin_notices', array( $this, 'add_admin_notices' ) );
+
+		// add a 'Setup' link to the plugin action links if the wizard hasn't been completed
+		if ( ! $this->is_complete() ) {
+			add_filter( 'plugin_action_links_' . plugin_basename( $this->get_plugin()->get_plugin_file() ), array( $this, 'add_setup_link' ), 20 );
+		}
+	}
+
+
+	/**
+	 * Adds any admin notices.
+	 *
+	 * @since 5.3.0-dev
+	 */
+	public function add_admin_notices() {
+
+		$current_screen = get_current_screen();
+
+		if ( ( $current_screen && 'plugins' === $current_screen->id ) || $this->get_plugin()->is_plugin_settings() ) {
+
+			if ( $this->is_complete() && $this->get_documentation_notice_message() ) {
+				$notice_id = "wc_{$this->id}_docs";
+				$message   = $this->get_documentation_notice_message();
+			} else {
+				$notice_id = "wc_{$this->id}_setup";
+				$message   = $this->get_setup_notice_message();
+			}
+
+			$this->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $notice_id, array(
+				'always_show_on_settings' => false,
+			) );
+		}
+	}
+
+
+	/**
+	 * Gets the new installation documentation notice message.
+	 *
+	 * This prompts users to read the docs and is displayed if the wizard has
+	 * already been completed.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return string
+	 */
+	protected function get_documentation_notice_message() {
+
+		if ( $this->get_plugin()->get_documentation_url() ) {
+
+			$message = sprintf(
+				/** translators: Placeholders: %1$s - plugin name, %2$s - <a> tag, %3$s - </a> tag */
+				__( 'Thanks for installing %1$s! To get started, take a minute to %2$sread the documentation%3$s :)', 'woocommerce-plugin-framework' ),
+				esc_html( $this->get_plugin()->get_plugin_name() ),
+				'<a href="' . esc_url( $this->get_plugin()->get_documentation_url() )  . '" target="_blank">', '</a>'
+			);
+
+		} else {
+
+			$message = '';
+		}
+
+		return $message;
+	}
+
+
+	/**
+	 * Gets the new installation setup notice message.
+	 *
+	 * This prompts users to start the setup wizard and is displayed if the
+	 * wizard has not yet been completed.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return string
+	 */
+	protected function get_setup_notice_message() {
+
+		return sprintf(
+			/** translators: Placeholders: %1$s - plugin name, %2$s - <a> tag, %3$s - </a> tag */
+			__( 'Thanks for installing %1$s! To get started, take a minute to complete these %2$squick and easy setup steps%3$s :)', 'woocommerce-plugin-framework' ),
+			esc_html( $this->get_plugin()->get_plugin_name() ),
+			'<a href="' . esc_url( $this->get_setup_url() )  . '">', '</a>'
+		);
+	}
 
 
 	/**
@@ -148,44 +247,28 @@ abstract class Setup_Wizard {
 	 */
 	protected function init_setup() {
 
-		if ( ! empty( $this->steps ) ) {
+		// get a step ID from $_GET
+		$current_step   = sanitize_key( Framework\SV_WC_Helper::get_request( 'step' ) );
+		$current_action = sanitize_key( Framework\SV_WC_Helper::get_request( 'action' ) );
 
-			// get a step ID from $_GET
-			$current_step   = sanitize_key( Framework\SV_WC_Helper::get_request( 'step' ) );
-			$current_action = sanitize_key( Framework\SV_WC_Helper::get_request( 'action' ) );
+		if ( ! $current_action ) {
 
-			if ( ! $current_action ) {
-
-				if ( $this->has_step( $current_step ) ) {
-					$this->current_step = $current_step;
-				} elseif ( $first_step_url = $this->get_step_url( key( $this->steps ) ) ) {
-					wp_safe_redirect( $first_step_url );
-					exit;
-				} else {
-					wp_safe_redirect( $this->get_dashboard_url() );
-					exit;
-				}
+			if ( $this->has_step( $current_step ) ) {
+				$this->current_step = $current_step;
+			} elseif ( $first_step_url = $this->get_step_url( key( $this->steps ) ) ) {
+				wp_safe_redirect( $first_step_url );
+				exit;
+			} else {
+				wp_safe_redirect( $this->get_dashboard_url() );
+				exit;
 			}
-
-			// add the page to WP core
-			add_action( 'admin_menu', array( $this, 'add_page' ) );
-
-			// renders the entire setup page markup
-			add_action( 'admin_init', array( $this, 'render_page' ) );
 		}
-	}
 
+		// add the page to WP core
+		add_action( 'admin_menu', array( $this, 'add_page' ) );
 
-	/**
-	 * Marks the setup as complete.
-	 *
-	 * @since 5.3.0-dev
-	 *
-	 * @return bool
-	 */
-	public function complete_setup() {
-
-		return update_option( "wc_{$this->id}_setup_wizard_complete", 'yes' );
+		// renders the entire setup page markup
+		add_action( 'admin_init', array( $this, 'render_page' ) );
 	}
 
 
@@ -435,7 +518,7 @@ abstract class Setup_Wizard {
 
 				<?php $this->render_finished(); ?>
 
-				<?php update_option( "wc_{$this->id}_setup_wizard_complete", 'yes' ); ?>
+				<?php $this->complete_setup(); ?>
 
 			<?php else : ?>
 
@@ -877,6 +960,19 @@ abstract class Setup_Wizard {
 	}
 
 
+	/**
+	 * Marks the setup as complete.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return bool
+	 */
+	public function complete_setup() {
+
+		return update_option( "wc_{$this->id}_setup_wizard_complete", 'yes' );
+	}
+
+
 	/** Conditional Methods *******************************************************************************************/
 
 
@@ -962,6 +1058,19 @@ abstract class Setup_Wizard {
 	public function is_step_complete( $step_id ) {
 
 		return array_search( $this->current_step, array_keys( $this->steps ), true ) > array_search( $step_id, array_keys( $this->steps ), true ) || $this->is_finished();
+	}
+
+
+	/**
+	 * Determines if the wizard has steps to display.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return bool
+	 */
+	public function has_steps() {
+
+		return is_array( $this->steps ) && ! empty( $this->steps );
 	}
 
 
