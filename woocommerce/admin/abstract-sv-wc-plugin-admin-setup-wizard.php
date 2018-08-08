@@ -748,9 +748,8 @@ abstract class Setup_Wizard {
 			<button
 				type="submit"
 				name="save_step"
-				class="button-primary button button-large button-next"
-				value="<?php echo esc_html__( 'Continue', 'woocommerce-plugin-framework' ); ?>">
-				<?php echo esc_html( $label ); ?>
+				class="button-primary button button-large button-next">
+				<?php echo esc_html__( 'Continue', 'woocommerce-plugin-framework' ); ?>
 			</button>
 		</p>
 		<?php
