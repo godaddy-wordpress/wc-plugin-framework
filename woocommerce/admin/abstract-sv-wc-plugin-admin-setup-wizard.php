@@ -745,12 +745,24 @@ abstract class Setup_Wizard {
 
 		?>
 		<p class="wc-setup-actions step">
-			<button
-				type="submit"
-				name="save_step"
-				class="button-primary button button-large button-next">
-				<?php echo esc_html__( 'Continue', 'woocommerce-plugin-framework' ); ?>
-			</button>
+
+			<?php $label = __( 'Continue', 'woocommerce-plugin-framework' ); ?>
+
+			<?php if ( is_callable( $this->steps[ $step_id ]['save'] ) ) : ?>
+
+				<button
+					type="submit"
+					name="save_step"
+					class="button-primary button button-large button-next"
+					value="<?php echo esc_attr( $label ); ?>">
+					<?php echo esc_html( $label ); ?>
+				</button>
+
+			<?php else : ?>
+
+				<a class="button-primary button button-large button-next" href="<?php echo esc_url( $this->get_next_step_url( $step_id ) ); ?>"><?php echo esc_html( $label ); ?></a>
+
+			<?php endif; ?>
 		</p>
 		<?php
 	}
