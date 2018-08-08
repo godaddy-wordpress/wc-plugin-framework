@@ -300,7 +300,7 @@ abstract class Setup_Wizard {
 		$error_message = Framework\SV_WC_Helper::get_post( 'save_step' ) ? $this->save_step( $this->current_step ) : '';
 
 		$page_title = sprintf(
-		/** translators: Placeholders: %s - plugin name */
+			/* translators: Placeholders: %s - plugin name */
 			__( '%s &rsaquo; Setup', 'woocommerce-plugin-framework' ),
 			$this->get_plugin()->get_plugin_name()
 		);
@@ -567,9 +567,13 @@ abstract class Setup_Wizard {
 	protected function render_welcome() {
 
 		?>
-		<h1><?php printf(
+		<h1>
+			<?php printf(
 				/* translators: Placeholder: %s - plugin name */
-				esc_html__( 'Welcome to %s!', 'woocommerce-plugin-framework' ), $this->get_plugin()->get_plugin_name() ); ?></h1>
+				esc_html__( 'Welcome to %s!', 'woocommerce-plugin-framework' ),
+				$this->get_plugin()->get_plugin_name()
+			); ?>
+		</h1>
 		<p class="welcome"><?php esc_html_e( 'This quick setup wizard will help you configure the basic settings and get you started.', 'woocommerce-plugin-framework' ); ?></p>
 		<?php
 	}
@@ -741,13 +745,13 @@ abstract class Setup_Wizard {
 
 		?>
 		<p class="wc-setup-actions step">
-			<?php $label = $this->is_started() ? __( "Let's go!", 'woocommerce-plugin-framework' ) : __( 'Continue', 'woocommerce-plugin-framework' ); ?>
 			<button
 				type="submit"
 				name="save_step"
 				class="button-primary button button-large button-next"
-				value="<?php echo esc_html( $label ); ?>"><?php
-				echo esc_html( $label ); ?></button>
+				value="<?php echo esc_html__( 'Continue', 'woocommerce-plugin-framework' ); ?>">
+				<?php echo esc_html( $label ); ?>
+			</button>
 		</p>
 		<?php
 	}
