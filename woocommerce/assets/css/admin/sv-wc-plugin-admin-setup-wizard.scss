@@ -9,14 +9,18 @@
 
 	h1#wc-logo.sv-wc-plugin-logo {
 
-		color: #444444;
 		font-size: 28px;
 		font-weight: bold;
-		text-decoration: none;
 
-		&:hover {
-			color: #222222;
+		a {
+
+			color: #444444;
 			text-decoration: none;
+
+			&:hover {
+				color: #222222;
+				text-decoration: none;
+			}
 		}
 	}
 
