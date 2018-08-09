@@ -47,85 +47,94 @@ msgid ""
 "happy to help -- please %4$sreach out to our support team%5$s."
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:137
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:183
+msgid ""
+"Thanks for installing %1$s! To get started, take a minute to %2$sread the "
+"documentation%3$s :)"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:211
+msgid ""
+"Thanks for installing %1$s! To get started, take a minute to complete these "
+"%2$squick and easy setup steps%3$s :)"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:236
 msgid "Setup"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:208
+#. translators: Placeholders: %s - plugin name
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:304
 msgid "%s &rsaquo; Setup"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:256
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:352
 #, fuzzy
 msgid "Oops! An error occurred, please try again."
 msgstr "Sinu päringuga esines viga, palun proovi uuesti."
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:396
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:493
 msgid "Done!"
 msgstr ""
 
 #. translators: Placeholder: %s - plugin name
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:475
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:573
 msgid "Welcome to %s!"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:476
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:577
 msgid ""
 "This quick setup wizard will help you configure the basic settings and get "
 "you started."
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:494
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:595
 msgid "%s is ready!"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:522
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:623
 msgid "Next step"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:546
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:647
 msgid "You can also:"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:590
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:620
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:691
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:721
 msgid "View the Docs"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:591
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:692
 msgid "See more setup options"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:592
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:693
 msgid "Learn more about customizing the plugin"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:616
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:717
 msgid "Review Your Settings"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:624
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:725
 msgid "Leave a Review"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:647
-msgid "Let's go!"
-msgstr ""
-
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:647
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:749
 #: payment-gateway/class-sv-wc-payment-gateway.php:651
 msgid "Continue"
 msgstr "Jätka"
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:707
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:910
 msgid "Return to the WordPress Dashboard"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:709
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:912
 msgid "Not right now"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:711
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:914
 msgid "Skip this step"
 msgstr ""
 
@@ -1767,52 +1776,52 @@ msgid ""
 "loopback connections enabled."
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:301
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:397
 msgctxt "enhanced select"
 msgid "No matches found"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:302
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:398
 msgctxt "enhanced select"
 msgid "Loading failed"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:303
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:399
 msgctxt "enhanced select"
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:304
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:400
 msgctxt "enhanced select"
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:305
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:401
 msgctxt "enhanced select"
 msgid "Please delete 1 character"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:306
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:402
 msgctxt "enhanced select"
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:307
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:403
 msgctxt "enhanced select"
 msgid "You can only select 1 item"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:308
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:404
 msgctxt "enhanced select"
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:309
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:405
 msgctxt "enhanced select"
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:310
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:406
 msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""

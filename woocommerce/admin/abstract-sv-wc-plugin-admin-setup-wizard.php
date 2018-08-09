@@ -440,7 +440,7 @@ abstract class Setup_Wizard {
 		$header_content = $image_url ? '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr( $title ) . '" />' : $title;
 
 		?>
-		<h1 id="wc-logo">
+		<h1 id="wc-logo" class="sv-wc-plugin-logo <?php echo esc_attr( $this->get_plugin()->get_id_dasherized() . '-logo' ); ?>">
 			<?php if ( $link_url ) : ?>
 				<a href="<?php echo esc_url( $link_url ); ?>" target="_blank"><?php echo $header_content; ?></a>
 			<?php else : ?>

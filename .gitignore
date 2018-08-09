@@ -5,6 +5,7 @@
 
 # NPM packages used by Grunt.js
 /node_modules
+package-lock.json
 
 # NPM debug log
 npm-debug.log
