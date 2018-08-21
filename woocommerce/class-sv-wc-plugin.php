@@ -275,7 +275,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function __clone() {
 		/* translators: Placeholders: %s - plugin name */
-		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot clone instances of %s.', 'woocommerce-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
+		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot clone instances of %s.', 'woocommerce-plugin-framework' ), esc_html( $this->get_plugin_name() ) ), '3.1.0' );
 	}
 
 
@@ -286,7 +286,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function __wakeup() {
 		/* translators: Placeholders: %s - plugin name */
-		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot unserialize instances of %s.', 'woocommerce-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
+		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot unserialize instances of %s.', 'woocommerce-plugin-framework' ), esc_html( $this->get_plugin_name() ) ), '3.1.0' );
 	}
 
 
