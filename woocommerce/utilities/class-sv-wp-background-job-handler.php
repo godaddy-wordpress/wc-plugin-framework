@@ -23,11 +23,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_2_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WP_Background_Job_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_1\\SV_WP_Background_Job_Handler' ) ) :
 
 /**
  * SkyVerge WordPress Background Job Handler class
@@ -1057,10 +1057,10 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	public function run_debug_tool() {
 
 		if ( $this->test_connection() ) {
-			$this->debug_message = __( 'Success! You should be able to process background jobs.', 'woocommerce-plugin-framework' );
+			$this->debug_message = esc_html__( 'Success! You should be able to process background jobs.', 'woocommerce-plugin-framework' );
 			$result = true;
 		} else {
-			$this->debug_message = __( 'Could not connect. Please ask your hosting company to ensure your server has loopback connections enabled.', 'woocommerce-plugin-framework' );
+			$this->debug_message = esc_html__( 'Could not connect. Please ask your hosting company to ensure your server has loopback connections enabled.', 'woocommerce-plugin-framework' );
 			$result = false;
 		}
 

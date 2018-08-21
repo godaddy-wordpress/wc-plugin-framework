@@ -271,7 +271,7 @@ class SV_WC_Framework_Bootstrap {
 				// add a incompatible plugin list
 				echo '<ul>';
 					foreach ( $this->incompatible_framework_plugins as $plugin ) {
-						printf( '<li>%s</li>', $plugin['plugin_name'] );
+						printf( '<li>%s</li>', esc_html( $plugin['plugin_name'] ) );
 					}
 				echo '</ul>';
 
@@ -290,7 +290,7 @@ class SV_WC_Framework_Bootstrap {
 				// add the list of active plugins
 				echo '<ul>';
 					foreach ( $this->active_plugins as $plugin ) {
-						printf( '<li>%s</li>', $plugin['plugin_name'] );
+						printf( '<li>%s</li>', esc_html( $plugin['plugin_name'] ) );
 					}
 				echo '</ul>';
 
@@ -305,11 +305,11 @@ class SV_WC_Framework_Bootstrap {
 			foreach ( $this->incompatible_wc_version_plugins as $plugin ) {
 
 				/* translators: Placeholders: %1$s - plugin name, %2$s - WooCommerce version number */
-				echo '<li>' . sprintf( esc_html__( '%1$s requires WooCommerce %2$s or newer', 'woocommerce-plugin-framework' ), $plugin['plugin_name'], $plugin['args']['minimum_wc_version'] ) . '</li>';
+				echo '<li>' . sprintf( esc_html__( '%1$s requires WooCommerce %2$s or newer', 'woocommerce-plugin-framework' ), esc_html( $plugin['plugin_name'] ), esc_html( $plugin['args']['minimum_wc_version'] ) ) . '</li>';
 			}
 
 			/* translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag */
-			echo '</ul><p>' . sprintf( esc_html__( 'Please %1$supdate WooCommerce%2$s', 'woocommerce-plugin-framework' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
+			echo '</ul><p>' . sprintf( esc_html__( 'Please %1$supdate WooCommerce%2$s', 'woocommerce-plugin-framework' ), '<a href="' . esc_url( admin_url( 'update-core.php' ) ) . '">', '&nbsp;&raquo;</a>' ) . '</p></div>';
 		}
 
 		// must update WP notice
@@ -318,10 +318,10 @@ class SV_WC_Framework_Bootstrap {
 			printf( '<div class="error"><p>%s</p><ul>', count( $this->incompatible_wp_version_plugins ) > 1 ? 'The following plugins are inactive because they require a newer version of WordPress:' : 'The following plugin is inactive because it requires a newer version of WordPress:' );
 
 			foreach ( $this->incompatible_wp_version_plugins as $plugin ) {
-				printf( '<li>%s requires WordPress %s or newer</li>', $plugin['plugin_name'], $plugin['args']['minimum_wp_version'] );
+				printf( '<li>%s requires WordPress %s or newer</li>', esc_html( $plugin['plugin_name'] ), esc_html( $plugin['args']['minimum_wp_version'] ) );
 			}
 
-			echo '</ul><p>Please <a href="' . admin_url( 'update-core.php' ) . '">update WordPress&nbsp;&raquo;</a></p></div>';
+			echo '</ul><p>Please <a href="' . esc_url( admin_url( 'update-core.php' ) ) . '">update WordPress&nbsp;&raquo;</a></p></div>';
 		}
 	}
 

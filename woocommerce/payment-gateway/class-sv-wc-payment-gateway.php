@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_2_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_1\\SV_WC_Payment_Gateway' ) ) :
 
 /**
  * WooCommerce Payment Gateway Framework
@@ -327,14 +327,16 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	protected function add_milestone_hooks() {
 
+		$plugin = $this->get_plugin();
+
 		// first successful payment
-		add_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_processed', function( $order ) {
-			$this->get_plugin()->get_lifecycle_handler()->trigger_milestone( 'payment-processed', __( 'you successfully processed a payment!', 'woocommerce-plugin-framework' ) );
+		add_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_processed', function( $order ) use ( &$plugin ) {
+			$plugin->get_lifecycle_handler()->trigger_milestone( 'payment-processed', __( 'you successfully processed a payment!', 'woocommerce-plugin-framework' ) );
 		} );
 
 		// first successful refund
-		add_action( 'wc_payment_gateway_' . $this->get_id() . '_refund_processed', function( $order ) {
-			$this->get_plugin()->get_lifecycle_handler()->trigger_milestone( 'refund-processed', __( 'you successfully processed a refund!', 'woocommerce-plugin-framework' ) );
+		add_action( 'wc_payment_gateway_' . $this->get_id() . '_refund_processed', function( $order ) use ( &$plugin ) {
+			$plugin->get_lifecycle_handler()->trigger_milestone( 'refund-processed', __( 'you successfully processed a refund!', 'woocommerce-plugin-framework' ) );
 		} );
 	}
 
