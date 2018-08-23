@@ -309,5 +309,21 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 		$this->assertEquals( 'http://example.com/1234.jpg', $token->get_image_url() );
 	}
 
+	/**
+	 * Tests \SV_WC_Payment_Gateway_Payment_Token::set_nickname()
+	 *
+	 * Also provides coverage for \SV_WC_Payment_Gateway_Payment_Token::get_nickname()
+	 *
+	 * @since 5.2.1
+	 */
+	public function test_set_nickname() {
+
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
+
+		$token->set_nickname( 'new-payment-method' );
+
+		$this->assertEquals( 'new-payment-method', $token->get_nickname() );
+	}
+
 
 }
