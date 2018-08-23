@@ -14,7 +14,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests for \SV_WC_Payment_Gateway_Helper::__construct()
+	 * Tests for \SV_WC_Payment_Gateway_Payment_Token::__construct()
 	 *
 	 * Simply tests that the token ID and data are set.
 	 *
@@ -34,7 +34,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests for \SV_WC_Payment_Gateway_Helper::__construct()
+	 * Tests for \SV_WC_Payment_Gateway_Payment_Token::__construct()
 	 *
 	 * Tests that the card type is correctly set in all situations.
 	 *
@@ -68,9 +68,9 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests \SV_WC_Payment_Gateway_Helper::set_default()
+	 * Tests \SV_WC_Payment_Gateway_Payment_Token::set_default()
 	 *
-	 * Also provides coverage for \SV_WC_Payment_Gateway_Helper::is_default()
+	 * Also provides coverage for \SV_WC_Payment_Gateway_Payment_Token::is_default()
 	 *
 	 * @since 4.5.0
 	 */
@@ -87,7 +87,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests true for \SV_WC_Payment_Gateway_Helper::is_credit_card()
+	 * Tests true for \SV_WC_Payment_Gateway_Payment_Token::is_credit_card()
 	 *
 	 * @since 4.5.0
 	 */
@@ -102,7 +102,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests false for \SV_WC_Payment_Gateway_Helper::is_credit_card()
+	 * Tests false for \SV_WC_Payment_Gateway_Payment_Token::is_credit_card()
 	 *
 	 * @since 4.5.0
 	 */
@@ -117,7 +117,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests true for \SV_WC_Payment_Gateway_Helper::is_echeck()
+	 * Tests true for \SV_WC_Payment_Gateway_Payment_Token::is_echeck()
 	 *
 	 * @since 4.5.0
 	 */
@@ -132,7 +132,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests false for \SV_WC_Payment_Gateway_Helper::is_check()
+	 * Tests false for \SV_WC_Payment_Gateway_Payment_Token::is_check()
 	 *
 	 * @since 4.5.0
 	 */
@@ -147,9 +147,9 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests \SV_WC_Payment_Gateway_Helper::set_card_type()
+	 * Tests \SV_WC_Payment_Gateway_Payment_Token::set_card_type()
 	 *
-	 * Also provides coverage for \SV_WC_Payment_Gateway_Helper::get_account_type()
+	 * Also provides coverage for \SV_WC_Payment_Gateway_Payment_Token::get_account_type()
 	 *
 	 * @since 4.5.0
 	 */
@@ -166,9 +166,9 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests \SV_WC_Payment_Gateway_Helper::set_account_type()
+	 * Tests \SV_WC_Payment_Gateway_Payment_Token::set_account_type()
 	 *
-	 * Also provides coverage for \SV_WC_Payment_Gateway_Helper::get_account_type()
+	 * Also provides coverage for \SV_WC_Payment_Gateway_Payment_Token::get_account_type()
 	 *
 	 * @since 4.5.0
 	 */
@@ -185,7 +185,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests for \SV_WC_Payment_Gateway_Helper::get_type_full()
+	 * Tests for \SV_WC_Payment_Gateway_Payment_Token::get_type_full()
 	 *
 	 * @since 4.5.0
 	 * @dataProvider provider_test_get_type_full
@@ -221,9 +221,9 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests \SV_WC_Payment_Gateway_Helper::set_last_four()
+	 * Tests \SV_WC_Payment_Gateway_Payment_Token::set_last_four()
 	 *
-	 * Also provides coverage for \SV_WC_Payment_Gateway_Helper::get_last_four()
+	 * Also provides coverage for \SV_WC_Payment_Gateway_Payment_Token::get_last_four()
 	 *
 	 * @since 4.5.0
 	 */
@@ -240,9 +240,9 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests \SV_WC_Payment_Gateway_Helper::set_exp_month()
+	 * Tests \SV_WC_Payment_Gateway_Payment_Token::set_exp_month()
 	 *
-	 * Also provides coverage for \SV_WC_Payment_Gateway_Helper::get_exp_month()
+	 * Also provides coverage for \SV_WC_Payment_Gateway_Payment_Token::get_exp_month()
 	 *
 	 * @since 4.5.0
 	 */
@@ -259,9 +259,9 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests \SV_WC_Payment_Gateway_Helper::set_exp_year()
+	 * Tests \SV_WC_Payment_Gateway_Payment_Token::set_exp_year()
 	 *
-	 * Also provides coverage for \SV_WC_Payment_Gateway_Helper::get_exp_year()
+	 * Also provides coverage for \SV_WC_Payment_Gateway_Payment_Token::get_exp_year()
 	 *
 	 * @since 4.5.0
 	 */
@@ -278,7 +278,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests \SV_WC_Payment_Gateway_Helper::get_exp_date()
+	 * Tests \SV_WC_Payment_Gateway_Payment_Token::get_exp_date()
 	 *
 	 * @since 4.5.0
 	 */
@@ -294,9 +294,9 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests \SV_WC_Payment_Gateway_Helper::set_image_url()
+	 * Tests \SV_WC_Payment_Gateway_Payment_Token::set_image_url()
 	 *
-	 * Also provides coverage for \SV_WC_Payment_Gateway_Helper::get_image_url()
+	 * Also provides coverage for \SV_WC_Payment_Gateway_Payment_Token::get_image_url()
 	 *
 	 * @since 4.5.0
 	 */
