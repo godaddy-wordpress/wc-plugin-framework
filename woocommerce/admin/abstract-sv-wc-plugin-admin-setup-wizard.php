@@ -554,6 +554,7 @@ abstract class Setup_Wizard {
 	protected function render_error( $message ) {
 
 		if ( ! empty( $message ) ) {
+
 			printf( '<p class="error">%s</p>', esc_html( $message ) );
 		}
 	}
@@ -567,15 +568,35 @@ abstract class Setup_Wizard {
 	protected function render_welcome() {
 
 		?>
-		<h1>
-			<?php printf(
-				/* translators: Placeholder: %s - plugin name */
-				esc_html__( 'Welcome to %s!', 'woocommerce-plugin-framework' ),
-				$this->get_plugin()->get_plugin_name()
-			); ?>
-		</h1>
-		<p class="welcome"><?php esc_html_e( 'This quick setup wizard will help you configure the basic settings and get you started.', 'woocommerce-plugin-framework' ); ?></p>
+		<h1><?php $this->render_welcome_heading()?></h1>
+		<p class="welcome"><?php $this->render_welcome_text(); ?></p>
 		<?php
+	}
+
+
+	/**
+	 * Renders the default welcome note heading.
+	 *
+	 * @since 5.3.0-dev
+	 */
+	protected function render_welcome_heading() {
+
+		printf(
+			/* translators: Placeholder: %s - plugin name */
+			esc_html__( 'Welcome to %s!', 'woocommerce-plugin-framework' ),
+			$this->get_plugin()->get_plugin_name()
+		);
+	}
+
+
+	/**
+	 * Renders the default welcome note text.
+	 *
+	 * @since 5.3.0-dev
+	 */
+	protected function render_welcome_text() {
+
+		esc_html_e( 'This quick setup wizard will help you configure the basic settings and get you started.', 'woocommerce-plugin-framework' );
 	}
 
 
