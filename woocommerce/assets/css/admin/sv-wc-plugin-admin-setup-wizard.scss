@@ -18,10 +18,19 @@ h1#wc-logo.sv-wc-plugin-logo {
 .sv-wc-plugin-admin-setup-content {
 
 	.error {
+
 		background: #dc3232;
 		border-radius: 5px;
-		color: white;
+		color: #fff;
 		padding: 1em;
+
+		a {
+			color: #fff;
+			text-decoration: none;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
 	}
 
 	.sv-wc-plugin-admin-setup-control {

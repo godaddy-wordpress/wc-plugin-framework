@@ -70,64 +70,64 @@ msgstr ""
 msgid "Done!"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:573
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:586
 #. translators: Placeholder: %s - plugin name
 msgid "Welcome to %s!"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:577
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:599
 msgid ""
 "This quick setup wizard will help you configure the basic settings and get "
 "you started."
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:595
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:616
 msgid "%s is ready!"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:623
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:644
 msgid "Next step"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:647
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:668
 msgid "You can also:"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:691
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:721
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:712
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:742
 msgid "View the Docs"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:692
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:713
 msgid "See more setup options"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:693
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:714
 msgid "Learn more about customizing the plugin"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:717
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:738
 msgid "Review Your Settings"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:725
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:746
 msgid "Leave a Review"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:749
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:770
 #: payment-gateway/class-sv-wc-payment-gateway.php:651
 msgid "Continue"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:910
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:932
 msgid "Return to the WordPress Dashboard"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:912
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:934
 msgid "Not right now"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:914
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:936
 msgid "Skip this step"
 msgstr ""
 
