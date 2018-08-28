@@ -824,7 +824,7 @@ abstract class Setup_Wizard {
 		// always echo the field
 		$args['return'] = false;
 
-		if ( isset( $args['type'] ) && 'checkbox' === $args['type'] ) {
+		if ( isset( $args['type'] ) && 'toggle' === $args['type'] ) {
 			$this->render_toggle_form_field( $key, $args, $value );
 		} else {
 			woocommerce_form_field( $key, $args, $value );
@@ -856,6 +856,7 @@ abstract class Setup_Wizard {
 			'input_class'       => array(),
 			'custom_attributes' => array(),
 			'default'           => false,
+			'allow_html'        => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -897,8 +898,8 @@ abstract class Setup_Wizard {
 
 		<div class="form-row <?php echo esc_attr( implode( ' ', $args['class'] ) ); ?>">
 
-			<p class="name"><?php echo esc_html( $args['label'] ); ?></p>
-			<p class="description"><?php echo esc_html( $args['description'] ); ?></p>
+			<p class="name"><?php echo true === $args['allow_html'] ? $args['label'] : esc_html( $args['label'] ); ?></p>
+			<p class="description"><?php echo true === $args['allow_html'] ? $args['description'] : esc_html( $args['description'] ); ?></p>
 
 			<div class="enable">
 				<span class="toggle <?php echo $enabled ? '' : 'disabled'; ?>">
