@@ -908,6 +908,7 @@ abstract class Setup_Wizard {
 						class="input-checkbox <?php echo esc_attr( implode( ' ', $args['input_class'] ) ); ?>"
 						name="<?php echo esc_attr( $key ); ?>"
 						value="yes" <?php checked( true, $value ); ?>
+						<?php implode( ' ', $custom_attributes ); ?>
 					/>
 					<label for="<?php echo esc_attr( $args['id'] ); ?>">
 				</span>
