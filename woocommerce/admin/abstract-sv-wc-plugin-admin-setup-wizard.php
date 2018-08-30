@@ -845,7 +845,7 @@ abstract class Setup_Wizard {
 	 */
 	public function render_toggle_form_field( $key, $args, $value ) {
 
-		$defaults = array(
+		$args = wp_parse_args( $args, array(
 			'type'              => 'text',
 			'label'             => '',
 			'description'       => '',
@@ -857,18 +857,12 @@ abstract class Setup_Wizard {
 			'custom_attributes' => array(),
 			'default'           => false,
 			'allow_html'        => false,
-		);
-
-		$args = wp_parse_args( $args, $defaults );
+		) );
 
 		$args['class'][] = 'toggle';
 
 		if ( $args['required'] ) {
 			$args['class'][] = 'validate-required';
-		}
-
-		if ( is_string( $args['label_class'] ) ) {
-			$args['label_class'] = array( $args['label_class'] );
 		}
 
 		if ( null === $value ) {
@@ -895,28 +889,31 @@ abstract class Setup_Wizard {
 		}
 
 		?>
-
 		<div class="form-row <?php echo esc_attr( implode( ' ', $args['class'] ) ); ?>">
 
 			<p class="name"><?php echo true === $args['allow_html'] ? $args['label'] : esc_html( $args['label'] ); ?></p>
-			<p class="description"><?php echo true === $args['allow_html'] ? $args['description'] : esc_html( $args['description'] ); ?></p>
+
+			<?php if ( true === $args['allow_html'] ) : ?>
+				<div class="content"><p class="description"><?php echo $args['description']; ?></p></div>
+			<?php else : ?>
+				<p class="content description"><?php echo esc_html( $args['description'] ); ?></p>
+			<?php endif; ?>
 
 			<div class="enable">
 				<span class="toggle <?php echo $enabled ? '' : 'disabled'; ?>">
 					<input
-						id="<?php echo esc_attr( $args['id'] ); ?>"
-						type="checkbox"
-						class="input-checkbox <?php echo esc_attr( implode( ' ', $args['input_class'] ) ); ?>"
-						name="<?php echo esc_attr( $key ); ?>"
-						value="yes" <?php checked( true, $value ); ?>
+							id="<?php echo esc_attr( $args['id'] ); ?>"
+							type="checkbox"
+							class="input-checkbox <?php echo esc_attr( implode( ' ', $args['input_class'] ) ); ?>"
+							name="<?php echo esc_attr( $key ); ?>"
+							value="yes" <?php checked( true, $value ); ?>
 						<?php implode( ' ', $custom_attributes ); ?>
 					/>
-					<label for="<?php echo esc_attr( $args['id'] ); ?>">
+					<label for="<?php echo esc_attr( $args['id'] ); ?>" class="<?php implode(  ' ', (array) $args['label_class'] ); ?>">
 				</span>
 			</div>
 
 		</div>
-
 		<?php
 	}
 

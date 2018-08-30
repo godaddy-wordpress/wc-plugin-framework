@@ -119,15 +119,15 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:932
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:930
 msgid "Return to the WordPress Dashboard"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:934
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:932
 msgid "Not right now"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:936
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:934
 msgid "Skip this step"
 msgstr ""
 
