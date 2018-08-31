@@ -902,11 +902,11 @@ abstract class Setup_Wizard {
 			<div class="enable">
 				<span class="toggle <?php echo $enabled ? '' : 'disabled'; ?>">
 					<input
-							id="<?php echo esc_attr( $args['id'] ); ?>"
-							type="checkbox"
-							class="input-checkbox <?php echo esc_attr( implode( ' ', $args['input_class'] ) ); ?>"
-							name="<?php echo esc_attr( $key ); ?>"
-							value="yes" <?php checked( true, $value ); ?>
+						id="<?php echo esc_attr( $args['id'] ); ?>"
+						type="checkbox"
+						class="input-checkbox <?php echo esc_attr( implode( ' ', $args['input_class'] ) ); ?>"
+						name="<?php echo esc_attr( $key ); ?>"
+						value="yes" <?php checked( true, $value ); ?>
 						<?php implode( ' ', $custom_attributes ); ?>
 					/>
 					<label for="<?php echo esc_attr( $args['id'] ); ?>" class="<?php implode(  ' ', (array) $args['label_class'] ); ?>">
@@ -951,10 +951,9 @@ abstract class Setup_Wizard {
 	 * @param string $name step name for display
 	 * @param string|array $view_callback callback to render the step's content HTML
 	 * @param string|array|null $save_callback callback to save the step's form values
-	 * @param string $insert_after the step ID that should precede this new step
 	 * @return bool whether the step was successfully added
 	 */
-	public function register_step( $id, $name, $view_callback, $save_callback = null, $insert_after = '' ) {
+	public function register_step( $id, $name, $view_callback, $save_callback = null ) {
 
 	    try {
 
