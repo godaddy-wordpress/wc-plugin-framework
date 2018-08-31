@@ -675,7 +675,7 @@ abstract class Setup_Wizard {
 							<p class="wc-setup-actions step">
 								<?php $button_class = isset( $step['button_class'] ) ? $step['button_class'] : 'button button-primary button-large'; ?>
 								<?php $button_class = is_string( $button_class ) || is_array( $button_class ) ? array_map( 'sanitize_html_class', explode( ' ', implode( ' ', (array) $button_class ) ) ) : ''; ?>
-								<a class="<?php echo $button_class; ?>" href="<?php echo esc_url( $step['url'] ); ?>">
+								<a class="<?php echo implode( ' ', $button_class ); ?>" href="<?php echo esc_url( $step['url'] ); ?>">
 									<?php echo esc_html( $step['name'] ); ?>
 								</a>
 							</p>
