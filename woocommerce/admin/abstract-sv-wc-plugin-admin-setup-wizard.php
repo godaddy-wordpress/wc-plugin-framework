@@ -490,7 +490,7 @@ abstract class Setup_Wizard {
 
 			<?php endforeach; ?>
 
-			<li class="<?php echo $this->is_finished() ? 'done' : ''; ?>"><?php esc_html_e( 'Done!', 'woocommerce-plugin-framework' ); ?></li>
+			<li class="<?php echo $this->is_finished() ? 'done' : ''; ?>"><?php esc_html_e( 'Ready!', 'woocommerce-plugin-framework' ); ?></li>
 
 		</ol>
 		<?php
