@@ -609,15 +609,36 @@ abstract class Setup_Wizard {
 	 */
 	protected function render_finished() {
 
-		// TODO: determine what we want here, and what needs to be defined by the plugin
-
 		?>
-
 		<h1><?php printf( esc_html__( '%s is ready!', 'woocommerce-plugin-framework' ), esc_html( $this->get_plugin()->get_plugin_name() ) ); ?></h1>
-
+		<?php $this->render_before_next_steps(); ?>
 		<?php $this->render_next_steps(); ?>
-
+		<?php $this->render_after_next_steps(); ?>
 		<?php
+	}
+
+
+	/**
+	 * Renders HTML before the next steps in the finished step screen.
+	 *
+	 * Plugins can implement this method to output additional HTML before the next steps are printed.
+	 *
+	 * @since 5.3.0-dev
+	 */
+	protected function render_before_next_steps() {
+		// stub method
+	}
+
+
+	/**
+	 * Renders HTML after the next steps in the finished step screen.
+	 *
+	 * Plugins can implement this method to output additional HTML after the next steps are printed.
+	 *
+	 * @since 5.3.0-dev
+	 */
+	protected function render_after_next_steps() {
+		// stub method
 	}
 
 
