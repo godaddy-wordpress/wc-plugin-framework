@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_2_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_1\\SV_WC_Plugin' ) ) :
 
 /**
  * # WooCommerce Plugin Framework
@@ -36,13 +36,13 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Pl
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 5.2.0
+ * @version 5.2.1
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.2.0';
+	const VERSION = '5.2.1';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -259,14 +259,14 @@ abstract class SV_WC_Plugin {
 	 */
 	private function add_hooks() {
 
-		// hook for translations seperately to ensure they're loaded
-		add_action( 'init', array( $this, 'load_translations' ) );
-
 		// initialize the plugin
-		add_action( 'init', array( $this, 'init_plugin' ), 0 );
+		add_action( 'plugins_loaded', array( $this, 'init_plugin' ), 15 );
 
 		// initialize the plugin admin
 		add_action( 'admin_init', array( $this, 'init_admin' ), 0 );
+
+		// hook for translations seperately to ensure they're loaded
+		add_action( 'init', array( $this, 'load_translations' ) );
 
 		// add the admin notices
 		add_action( 'admin_notices', array( $this, 'add_admin_notices' ) );
@@ -294,7 +294,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function __clone() {
 		/* translators: Placeholders: %s - plugin name */
-		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot clone instances of %s.', 'woocommerce-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
+		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot clone instances of %s.', 'woocommerce-plugin-framework' ), esc_html( $this->get_plugin_name() ) ), '3.1.0' );
 	}
 
 
@@ -305,7 +305,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function __wakeup() {
 		/* translators: Placeholders: %s - plugin name */
-		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot unserialize instances of %s.', 'woocommerce-plugin-framework' ), $this->get_plugin_name() ), '3.1.0' );
+		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot unserialize instances of %s.', 'woocommerce-plugin-framework' ), esc_html( $this->get_plugin_name() ) ), '3.1.0' );
 	}
 
 

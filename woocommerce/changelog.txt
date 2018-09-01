@@ -1,5 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2018.08.21 - version 5.2.1
+ * Fix - Prevent errors when triggering payment gateway payment and refund milestones
+ * Fix - Add escaping to some admin notice messages
+
 2018.07.24 - version 5.2.0
  * Fix - Use the order currency for the gateway capture message currency symbol
  * Dev - Introduce dedicated plugin methods for loading after init
