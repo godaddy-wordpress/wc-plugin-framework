@@ -21,20 +21,20 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_1\Payment_Gateway\Admin;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2\Payment_Gateway\Admin;
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_2_1 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_2_2 as Framework;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_1\\Payment_Gateway\\Admin\\Setup_Wizard' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\Payment_Gateway\\Admin\\Setup_Wizard' ) ) :
 
 /**
  * The payment gateway plugin Setup Wizard class.
  *
  * Extends the base plugin class to add common gateway functionality.
  *
- * @since 5.3.0-dev
+ * @since 5.2.2
  */
 abstract class Setup_Wizard extends Framework\Admin\Setup_Wizard {
 
@@ -47,7 +47,7 @@ abstract class Setup_Wizard extends Framework\Admin\Setup_Wizard {
 	 *
 	 * @internal
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @param array $action_links plugin action links
 	 * @return array

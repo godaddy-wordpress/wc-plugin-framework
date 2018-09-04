@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2018.09.04 - version 5.2.2
+ * Tweak - Provide an abstract Setup Wizard for plugins to implement for easier onboarding
+
 2018.08.21 - version 5.2.1
  * Fix - Prevent errors when triggering payment gateway payment and refund milestones
  * Fix - Add escaping to some admin notice messages

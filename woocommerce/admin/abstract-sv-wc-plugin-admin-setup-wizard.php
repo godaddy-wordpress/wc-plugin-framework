@@ -21,13 +21,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_1\Admin;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2\Admin;
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_2_1 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_2_2 as Framework;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_1\\Admin\\Setup_Wizard' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\Admin\\Setup_Wizard' ) ) :
 
 /**
  * The plugin Setup Wizard class.
@@ -37,7 +37,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_1\\Admin\\S
  *
  * Based on WooCommerce's \WC_Admin_Setup_Wizard
  *
- * @since 5.3.0-dev
+ * @since 5.2.2
  */
 abstract class Setup_Wizard {
 
@@ -83,7 +83,7 @@ abstract class Setup_Wizard {
 		/**
 		 * Filters the registered setup wizard steps.
 		 *
-		 * @since 5.3.0-dev
+		 * @since 5.2.2
 		 *
 		 * @param array $steps registered steps
 		 */
@@ -116,7 +116,7 @@ abstract class Setup_Wizard {
 	 *
 	 * Plugins should extend this to register their own steps.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	abstract protected function register_steps();
 
@@ -124,7 +124,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Adds the action & filter hooks.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	protected function add_hooks() {
 
@@ -141,7 +141,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Adds any admin notices.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	public function add_admin_notices() {
 
@@ -170,7 +170,7 @@ abstract class Setup_Wizard {
 	 * This prompts users to read the docs and is displayed if the wizard has
 	 * already been completed.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return string
 	 */
@@ -200,7 +200,7 @@ abstract class Setup_Wizard {
 	 * This prompts users to start the setup wizard and is displayed if the
 	 * wizard has not yet been completed.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return string
 	 */
@@ -222,7 +222,7 @@ abstract class Setup_Wizard {
 	 *
 	 * @internal
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @param array $action_links plugin action links
 	 * @return array
@@ -243,7 +243,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Initializes setup.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	protected function init_setup() {
 
@@ -279,7 +279,7 @@ abstract class Setup_Wizard {
 	 *
 	 * @internal
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	public function add_page() {
 
@@ -292,7 +292,7 @@ abstract class Setup_Wizard {
 	 *
 	 * @internal
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	public function render_page() {
 
@@ -342,7 +342,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Saves a step.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @param string $step_id the step ID being saved
      * @return void|string redirects upon success, returns an error message upon failure
@@ -380,7 +380,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Registers and enqueues the wizard's scripts and styles.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	protected function load_scripts_styles() {
 
@@ -429,7 +429,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Renders the header markup.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	protected function render_header() {
 
@@ -456,7 +456,7 @@ abstract class Setup_Wizard {
 	 *
 	 * Plugins can override this to point to their own branding image URL.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return string
 	 */
@@ -471,7 +471,7 @@ abstract class Setup_Wizard {
 	 *
 	 * This displays a list of steps, marking them as complete or upcoming as sort of a progress bar.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	protected function render_steps() {
 
@@ -505,7 +505,7 @@ abstract class Setup_Wizard {
 	 *
 	 * This will display the welcome screen, finished screen, or a specific step's markup.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @param string $error_message custom error message
 	 */
@@ -547,7 +547,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Renders a save error.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @param string $message error message to render
 	 */
@@ -563,7 +563,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Renders a default welcome note.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	protected function render_welcome() {
 
@@ -577,7 +577,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Renders the default welcome note heading.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	protected function render_welcome_heading() {
 
@@ -592,7 +592,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Renders the default welcome note text.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	protected function render_welcome_text() {
 
@@ -605,7 +605,7 @@ abstract class Setup_Wizard {
 	 *
 	 * This is what gets displayed after all of the steps have been completed or skipped.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	protected function render_finished() {
 
@@ -623,7 +623,7 @@ abstract class Setup_Wizard {
 	 *
 	 * Plugins can implement this method to output additional HTML before the next steps are printed.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	protected function render_before_next_steps() {
 		// stub method
@@ -635,7 +635,7 @@ abstract class Setup_Wizard {
 	 *
 	 * Plugins can implement this method to output additional HTML after the next steps are printed.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	protected function render_after_next_steps() {
 		// stub method
@@ -645,7 +645,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Renders the next steps.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	protected function render_next_steps() {
 
@@ -721,7 +721,7 @@ abstract class Setup_Wizard {
 	 * These are major actions a user can take after finishing the setup wizard.
 	 * For instance, things like "Create your first Add-On" could go here.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return array
 	 */
@@ -748,7 +748,7 @@ abstract class Setup_Wizard {
 	 *
 	 * These are secondary actions.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return array
 	 */
@@ -779,7 +779,7 @@ abstract class Setup_Wizard {
 	 * This will display a title, whatever get's rendered by the step's view
 	 * callback, then the navigation buttons.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @param string $step_id step ID to render
 	 */
@@ -817,7 +817,7 @@ abstract class Setup_Wizard {
 	 *
 	 * Call this in the same way as woocommerce_form_field().
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @param string $key field key
 	 * @param array $args field args - @see woocommerce_form_field()
@@ -860,7 +860,7 @@ abstract class Setup_Wizard {
 	 *
 	 * This requires special markup for the toggle UI.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @param string $key field key
 	 * @param array $args field args - @see woocommerce_form_field()
@@ -944,7 +944,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Renders the setup footer.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	protected function render_footer() {
 
@@ -968,7 +968,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Registers a step.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @param string $id unique step ID
 	 * @param string $name step name for display
@@ -1010,7 +1010,7 @@ abstract class Setup_Wizard {
 
 		} catch ( Framework\SV_WC_Plugin_Exception $exception ) {
 
-			Framework\SV_WC_Plugin_Compatibility::wc_doing_it_wrong( __METHOD__, $exception->getMessage(), '5.3.0-dev' );
+			Framework\SV_WC_Plugin_Compatibility::wc_doing_it_wrong( __METHOD__, $exception->getMessage(), '5.2.2' );
 
 			return false;
 		}
@@ -1020,7 +1020,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Marks the setup as complete.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return bool
 	 */
@@ -1036,7 +1036,7 @@ abstract class Setup_Wizard {
 	/**
      * Determines if the current page is the setup wizard page.
      *
-     * @since 5.3.0-dev
+     * @since 5.2.2
      *
 	 * @return bool
 	 */
@@ -1049,7 +1049,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Determines if a step is the current one displayed.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @param string $step_id step ID
 	 * @return bool
@@ -1063,7 +1063,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Determines if setup has started.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return bool
 	 */
@@ -1078,7 +1078,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Determines if setup has completed all of the steps.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return bool
 	 */
@@ -1094,7 +1094,7 @@ abstract class Setup_Wizard {
 	 * This will be true if any user has been redirected back to the regular
 	 * WordPress dashboard, either manually or after finishing the steps.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return bool
 	 */
@@ -1107,7 +1107,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Determines if the given step has been completed.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @param string $step_id step ID to check
 	 * @return bool
@@ -1121,7 +1121,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Determines if the wizard has steps to display.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return bool
 	 */
@@ -1134,7 +1134,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Determines if this setup handler has a given step.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @param string $step_id step ID to check
 	 * @return bool
@@ -1151,7 +1151,7 @@ abstract class Setup_Wizard {
 	/**
      * Gets a given step's title.
      *
-     * @since 5.3.0-dev
+     * @since 5.2.2
      *
 	 * @param string $step_id step ID (optional: will assume the current step if unspecified)
 	 * @return string
@@ -1175,7 +1175,7 @@ abstract class Setup_Wizard {
 	/**
      * Gets the Setup Wizard URL.
      *
-     * @since 5.3.0-dev
+     * @since 5.2.2
      *
 	 * @return string
 	 */
@@ -1188,7 +1188,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Gets the URL for the next step based on a current step.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @param string $step_id step ID to base "next" off of - defaults to this class's internal pointer
 	 * @return string
@@ -1223,7 +1223,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Gets a given step's URL.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @param string $step_id step ID
 	 * @return string|false
@@ -1243,7 +1243,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Gets the "finish" action URL.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return string
 	 */
@@ -1259,7 +1259,7 @@ abstract class Setup_Wizard {
 	 * Can be used to return the user to the dashboard. The plugin's settings URL
 	 * will be used if it exists, otherwise the general dashboard URL.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return string
 	 */
@@ -1275,7 +1275,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Gets the setup setup handler's slug.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return string
 	 */
@@ -1288,7 +1288,7 @@ abstract class Setup_Wizard {
 	/**
 	 * Gets the plugin instance.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return Framework\SV_WC_Plugin
 	 */

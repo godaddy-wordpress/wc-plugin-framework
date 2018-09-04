@@ -3,7 +3,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
-use \SkyVerge\WooCommerce\PluginFramework\v5_2_1 as PluginFramework;
+use \SkyVerge\WooCommerce\PluginFramework\v5_2_2 as PluginFramework;
 
 /**
  * Unit tests for \SV_WC_Payment_Gateway_Payment_Token
@@ -309,12 +309,13 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 		$this->assertEquals( 'http://example.com/1234.jpg', $token->get_image_url() );
 	}
 
+
 	/**
 	 * Tests \SV_WC_Payment_Gateway_Payment_Token::set_nickname()
 	 *
 	 * Also provides coverage for \SV_WC_Payment_Gateway_Payment_Token::get_nickname()
 	 *
-	 * @since 5.2.1
+	 * @since 5.2.2
 	 */
 	public function test_set_nickname() {
 

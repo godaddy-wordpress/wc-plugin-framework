@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 5.2.1\n"
+"Project-Id-Version: WooCommerce Plugin Framework 5.2.2\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -67,7 +67,7 @@ msgid "Oops! An error occurred, please try again."
 msgstr ""
 
 #: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:493
-msgid "Done!"
+msgid "Ready!"
 msgstr ""
 
 #: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:586
@@ -81,53 +81,53 @@ msgid ""
 "you started."
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:616
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:613
 msgid "%s is ready!"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:644
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:665
 msgid "Next step"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:668
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:691
 msgid "You can also:"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:712
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:742
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:735
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:765
 msgid "View the Docs"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:713
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:736
 msgid "See more setup options"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:714
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:737
 msgid "Learn more about customizing the plugin"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:738
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:761
 msgid "Review Your Settings"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:746
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:769
 msgid "Leave a Review"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:770
-#: payment-gateway/class-sv-wc-payment-gateway.php:651
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:793
+#: payment-gateway/class-sv-wc-payment-gateway.php:653
 msgid "Continue"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:930
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:953
 msgid "Return to the WordPress Dashboard"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:932
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:955
 msgid "Not right now"
 msgstr ""
 
-#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:934
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:957
 msgid "Skip this step"
 msgstr ""
 
@@ -1253,10 +1253,6 @@ msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway.php:477
 msgid "Drivers license number is missing"
-msgstr ""
-
-#: payment-gateway/class-sv-wc-payment-gateway.php:651
-msgid "Continue"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway.php:653
