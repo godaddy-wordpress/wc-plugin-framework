@@ -74,11 +74,14 @@ abstract class SV_WC_Plugin {
 	/** @var SV_WC_Hook_Deprecator hook deprecator instance */
 	private $hook_deprecator;
 
-	/** @var Plugin\Lifecycle lifecycle handler */
+	/** @var Plugin\Lifecycle lifecycle handler instance */
 	protected $lifecycle_handler;
 
-	/** @var REST_API REST API handler */
+	/** @var REST_API REST API handler instance */
 	protected $rest_api_handler;
+
+	/** @var Admin\Setup_Wizard handler instance */
+	protected $setup_wizard_handler;
 
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
@@ -139,6 +142,9 @@ abstract class SV_WC_Plugin {
 
 		// build the REST API handler instance
 		$this->init_rest_api_handler();
+
+		// build the setup handler instance
+		$this->init_setup_wizard_handler();
 
 		// add the action & filter hooks
 		$this->add_hooks();
@@ -234,6 +240,19 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Builds the Setup Wizard handler instance.
+	 *
+	 * Plugins can override and extend this method to add their own setup wizard.
+	 *
+	 * @since 5.3.0-dev
+	 */
+	protected function init_setup_wizard_handler() {
+
+		require_once( $this->get_framework_path() . '/admin/abstract-sv-wc-plugin-admin-setup-wizard.php' );
+	}
+
+
+	/**
 	 * Adds the action & filter hooks.
 	 *
 	 * @since 5.2.0
@@ -251,7 +270,7 @@ abstract class SV_WC_Plugin {
 
 		// add the admin notices
 		add_action( 'admin_notices', array( $this, 'add_admin_notices' ) );
-		add_action( 'admin_footer', array( $this, 'add_delayed_admin_notices' ) );
+		add_action( 'admin_footer',  array( $this, 'add_delayed_admin_notices' ) );
 
 		// add a 'Configure' link to the plugin action links
 		add_filter( 'plugin_action_links_' . plugin_basename( $this->get_plugin_file() ), array( $this, 'plugin_action_links' ) );
@@ -741,10 +760,25 @@ abstract class SV_WC_Plugin {
 	 * Gets the lifecycle handler instance.
 	 *
 	 * @since 5.1.0
+	 *
+	 * @return Plugin\Lifecycle
 	 */
 	public function get_lifecycle_handler() {
 
 		return $this->lifecycle_handler;
+	}
+
+
+	/**
+	 * Gets the Setup Wizard handler instance.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return null|Admin\Setup_Wizard
+	 */
+	public function get_setup_wizard_handler() {
+
+		return $this->setup_wizard_handler;
 	}
 
 

@@ -41,6 +41,96 @@ msgid ""
 "happy to help -- please %4$sreach out to our support team%5$s."
 msgstr ""
 
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:183
+msgid ""
+"Thanks for installing %1$s! To get started, take a minute to %2$sread the "
+"documentation%3$s :)"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:211
+msgid ""
+"Thanks for installing %1$s! To get started, take a minute to complete these "
+"%2$squick and easy setup steps%3$s :)"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:236
+msgid "Setup"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:304
+#. translators: Placeholders: %s - plugin name
+msgid "%s &rsaquo; Setup"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:352
+msgid "Oops! An error occurred, please try again."
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:493
+msgid "Done!"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:586
+#. translators: Placeholder: %s - plugin name
+msgid "Welcome to %s!"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:599
+msgid ""
+"This quick setup wizard will help you configure the basic settings and get "
+"you started."
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:616
+msgid "%s is ready!"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:644
+msgid "Next step"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:668
+msgid "You can also:"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:712
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:742
+msgid "View the Docs"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:713
+msgid "See more setup options"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:714
+msgid "Learn more about customizing the plugin"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:738
+msgid "Review Your Settings"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:746
+msgid "Leave a Review"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:770
+#: payment-gateway/class-sv-wc-payment-gateway.php:651
+msgid "Continue"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:930
+msgid "Return to the WordPress Dashboard"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:932
+msgid "Not right now"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:934
+msgid "Skip this step"
+msgstr ""
+
 #: class-sv-wc-framework-bootstrap.php:268
 msgid ""
 "The following plugin is disabled because it is out of date and incompatible "
@@ -156,30 +246,30 @@ msgid ""
 "soon as possible."
 msgstr ""
 
-#: class-sv-wc-plugin.php:278
+#: class-sv-wc-plugin.php:297
 #. translators: Placeholders: %s - plugin name
 msgid "You cannot clone instances of %s."
 msgstr ""
 
-#: class-sv-wc-plugin.php:289
+#: class-sv-wc-plugin.php:308
 #. translators: Placeholders: %s - plugin name
 msgid "You cannot unserialize instances of %s."
 msgstr ""
 
-#: class-sv-wc-plugin.php:506
+#: class-sv-wc-plugin.php:525
 #. translators: Docs as in Documentation
 msgid "Docs"
 msgstr ""
 
-#: class-sv-wc-plugin.php:599
+#: class-sv-wc-plugin.php:618
 msgid "%1$s - A minimum of %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:608
+#: class-sv-wc-plugin.php:627
 msgid "Set as %1$s - %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:816
+#: class-sv-wc-plugin.php:850
 msgid "Configure"
 msgstr ""
 
@@ -1165,7 +1255,7 @@ msgstr ""
 msgid "Drivers license number is missing"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:653
+#: payment-gateway/class-sv-wc-payment-gateway.php:651
 msgid "Continue"
 msgstr ""
 
@@ -1594,17 +1684,67 @@ msgid ""
 "has loopback connections enabled."
 msgstr ""
 
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:397
+msgctxt "enhanced select"
+msgid "No matches found"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:398
+msgctxt "enhanced select"
+msgid "Loading failed"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:399
+msgctxt "enhanced select"
+msgid "Please enter 1 or more characters"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:400
+msgctxt "enhanced select"
+msgid "Please enter %qty% or more characters"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:401
+msgctxt "enhanced select"
+msgid "Please delete 1 character"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:402
+msgctxt "enhanced select"
+msgid "Please delete %qty% characters"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:403
+msgctxt "enhanced select"
+msgid "You can only select 1 item"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:404
+msgctxt "enhanced select"
+msgid "You can only select %qty% items"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:405
+msgctxt "enhanced select"
+msgid "Loading more results&hellip;"
+msgstr ""
+
+#: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:406
+msgctxt "enhanced select"
+msgid "Searching&hellip;"
+msgstr ""
+
 #: class-sv-wc-helper.php:407
 msgctxt "coordinating conjunction for a list of items: a, b, and c"
 msgid "and"
 msgstr ""
 
-#: class-sv-wc-plugin.php:511
+#: class-sv-wc-plugin.php:530
 msgctxt "noun"
 msgid "Support"
 msgstr ""
 
-#: class-sv-wc-plugin.php:516
+#: class-sv-wc-plugin.php:535
 msgctxt "verb"
 msgid "Review"
 msgstr ""
