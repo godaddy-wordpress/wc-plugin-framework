@@ -956,6 +956,32 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_He
 
 
 		/**
+		 * Generates an MD5 hash of an address.
+		 *
+		 * @since 5.3.0-dev
+		 *
+		 * @param Addresses\Customer_Address $address
+		 * @return string
+		 */
+		public static function generate_address_hash( Addresses\Customer_Address $address ) {
+
+			$data = array(
+				$address->get_first_name(),
+				$address->get_last_name(),
+				$address->get_line_1(),
+				$address->get_line_2(),
+				$address->get_line_3(),
+				$address->get_locality(),
+				$address->get_region(),
+				$address->get_country(),
+				$address->get_postcode(),
+			);
+
+			return md5( json_encode( $data ) );
+		}
+
+
+		/**
 		 * Convert a 2-character country code into its 3-character equivalent, or
 		 * vice-versa, e.g.
 		 *

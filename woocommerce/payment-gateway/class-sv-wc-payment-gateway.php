@@ -189,7 +189,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/** @var array of shared setting names, if any.  This can be used for instance when a single plugin supports both credit card and echeck payments, and the same credentials can be used for both gateways */
 	private $shared_settings = array();
 
-	/** @var \SV_WC_Payment_Gateway_Payment_Tokens_Handler payment tokens handler instance */
+	/** @var SV_WC_Payment_Gateway_Payment_Tokens_Handler payment tokens handler instance */
 	protected $payment_tokens_handler;
 
 	/** @var array of SV_WC_Payment_Gateway_Integration objects for Subscriptions, Pre-Orders, etc. */
@@ -781,7 +781,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Payment_Tokens_Handler
+	 * @return SV_WC_Payment_Gateway_Payment_Tokens_Handler
 	 */
 	protected function build_payment_tokens_handler() {
 
@@ -794,7 +794,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Payment_Tokens_Handler
+	 * @return SV_WC_Payment_Gateway_Payment_Tokens_Handler
 	 */
 	public function get_payment_tokens_handler() {
 

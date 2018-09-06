@@ -421,6 +421,32 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Gets the billing address hash.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return string
+	 */
+	public function get_billing_hash() {
+
+		return isset( $this->data['billing_hash'] ) ? $this->data['billing_hash'] : '';
+	}
+
+
+	/**
+	 * Sets the billing hash.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @param string $value billing hash
+	 */
+	public function set_billing_hash( $value ) {
+
+		$this->data['billing_hash'] = $value;
+	}
+
+
+	/**
 	 * Returns a representation of this token suitable for persisting to a
 	 * datastore
 	 *

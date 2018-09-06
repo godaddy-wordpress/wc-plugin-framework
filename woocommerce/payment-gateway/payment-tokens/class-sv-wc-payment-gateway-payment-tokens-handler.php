@@ -42,12 +42,16 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/** @var array array of cached user id to array of \SV_WC_Payment_Gateway_Payment_Token token objects */
 	protected $tokens;
 
+	/** @var SV_WC_Payment_Gateway gateway instance */
+	protected $gateway;
+
 
 	/**
 	 * Build the class.
 	 *
 	 * @since 4.3.0
-	 * @param \SV_WC_Payment_Gateway_Direct $gateway The gateway instance
+	 *
+	 * @param SV_WC_Payment_Gateway $gateway gateway instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway $gateway ) {
 
@@ -92,9 +96,9 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @since 1.0.0
 	 *
 	 * @param \WC_Order $order The order object
-	 * @param \SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response Optional. Payment token API response, or null if the request should be made
+	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response Optional. Payment token API response, or null if the request should be made
 	 * @param string $environment_id Optional. Environment ID. Default: the current environment.
-	 * @throws \SV_WC_Plugin_Exception on transaction failure
+	 * @throws SV_WC_Plugin_Exception on transaction failure
 	 * @return \WC_Order The order object
 	 */
 	public function create_token( \WC_Order $order, $response = null, $environment_id = null ) {
@@ -114,7 +118,16 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		if ( $response->transaction_approved() ) {
 
 			// add the token to the order object for processing
-			$token                 = $response->get_payment_token();
+			$token   = $response->get_payment_token();
+			$address = new Addresses\Customer_Address();
+
+			// generate an address from the order
+			$address->set_from_order( $order );
+
+			// store the billing hash on the token for later use in case it needs to be updated
+			$token->set_billing_hash( SV_WC_Helper::generate_address_hash( $address ) );
+
+			// set the resulting token on the order
 			$order->payment->token = $token->get_id();
 
 			// for credit card transactions add the card type, if known (some gateways return the credit card type as part of the response, others may require it as part of the request, and still others it may never be known)
@@ -232,15 +245,16 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * Update a single token by persisting it to user meta
 	 *
 	 * @since since 4.0.0
-	 * @param int $user_id WP user ID
-	 * @param SV_WC_Payment_Gateway_Payment_Token $token token to update
-	 * @param string $environment_id optional environment id, defaults to plugin current environment
+	 *
+	 * @param int $user_id WordPress user ID
+	 * @param SV_WC_Payment_Gateway_Payment_Token $token token to store
+	 * @param string $environment_id optional environment ID, defaults to plugin current environment
 	 * @return string|int updated user meta ID
 	 */
 	public function update_token( $user_id, $token, $environment_id = null ) {
 
 		// default to current environment
-		if ( is_null( $environment_id ) ) {
+		if ( null === $environment_id ) {
 			$environment_id = $this->get_environment_id();
 		}
 
@@ -849,11 +863,15 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * Get the gateway instance.
 	 *
 	 * @since 4.3.0
-	 * @return \SV_WC_Payment_Gateway_Direct The gateway instance
+	 *
+	 * @return SV_WC_Payment_Gateway_Direct gateway instance
 	 */
 	protected function get_gateway() {
+
 		return $this->gateway;
 	}
+
+
 }
 
 endif;
