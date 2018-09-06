@@ -14,6 +14,13 @@ module.exports = function( grunt ) {
 			files: [
 				{
 					expand: true,
+					cwd: '<%= dirs.general.css %>/admin/',
+					dest: '<%= dirs.general.css %>/admin/',
+					src: ['*.scss', '!_*.scss'],
+					ext: '.min.css'
+				},
+				{
+					expand: true,
 					cwd: '<%= dirs.gateway.css %>/admin/',
 					dest: '<%= dirs.gateway.css %>/admin/',
 					src: ['*.scss', '!_*.scss'],
