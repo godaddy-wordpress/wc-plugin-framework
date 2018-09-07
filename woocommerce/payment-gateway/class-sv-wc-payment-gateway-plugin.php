@@ -101,7 +101,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Initialize the plugin
+	 * Initializes the plugin.
 	 *
 	 * Optional args:
 	 *
@@ -111,6 +111,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * + `supports` - array named features that this gateway supports, including 'tokenization', 'transaction_link', 'customer_id', 'capture_charge'
 	 *
 	 * @since 1.0.0
+	 *
 	 * @see SV_WC_Plugin::__construct()
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
@@ -230,6 +231,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Adjust the available gateways in certain cases.
 	 *
 	 * @since 4.4.0
+	 *
 	 * @param array $available_gateways the available payment gateways
 	 * @return array
 	 */
@@ -357,6 +359,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * active gateway
 	 *
 	 * @since 4.2.0
+	 *
 	 * @return bool
 	 */
 	public function tokenization_enabled() {
@@ -373,11 +376,13 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Returns the My Payment Methods table instance, overrideable by concrete
-	 * gateway plugins to return a custom instance as needed
+	 * Gets the My Payment Methods table instance.
+	 *
+	 * Overrideable by concrete gateway plugins to return a custom instance as needed
 	 *
 	 * @since 4.0.0
-	 * @return \SV_WC_Payment_Gateway_My_Payment_Methods
+	 *
+	 * @return SV_WC_Payment_Gateway_My_Payment_Methods
 	 */
 	protected function get_my_payment_methods_instance() {
 
@@ -430,7 +435,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Apple_Pay
+	 * @return SV_WC_Payment_Gateway_Apple_Pay
 	 */
 	protected function build_apple_pay_instance() {
 
@@ -443,7 +448,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Apple_Pay
+	 * @return SV_WC_Payment_Gateway_Apple_Pay
 	 */
 	public function get_apple_pay_instance() {
 
@@ -477,13 +482,14 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Return the plugin action links.  This will only be called if the plugin
-	 * is active.
+	 * Adds the gateway plugin action links.
+	 *
+	 * @see SV_WC_Plugin::plugin_action_links()
 	 *
 	 * @since 1.0.0
-	 * @see SV_WC_Plugin::plugin_action_links()
-	 * @param array $actions associative array of action names to anchor tags
-	 * @return array associative array of plugin action links
+	 *
+	 * @param string[] $actions associative array of action names to anchor tags
+	 * @return string[]
 	 */
 	public function plugin_action_links( $actions ) {
 
@@ -507,12 +513,14 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Returns true if on the admin gateway settings page for this plugin.
+	 * Determines if on the admin gateway settings screen for this plugin.
+	 *
 	 * Multi-gateway plugins will return true if on either settings page
 	 *
 	 * @since 2.0.0
+	 *
 	 * @see SV_WC_Plugin::is_plugin_settings()
-	 * @return boolean true if on the admin gateway settings page
+	 * @return bool
 	 */
 	public function is_plugin_settings() {
 
@@ -528,9 +536,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 	/**
 	 * Convenience method to add delayed admin notices, which may depend upon
-	 * some setting being saved prior to determining whether to render
+	 * some setting being saved prior to determining whether to render.
 	 *
 	 * @since 3.0.0
+	 *
 	 * @see SV_WC_Plugin::add_delayed_admin_notices()
 	 */
 	public function add_delayed_admin_notices() {
@@ -558,11 +567,13 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
+	 * Adds any SSL admin notices.
+	 *
 	 * Checks if SSL is required and not available and adds a dismissible admin
-	 * notice if so.  Notice will not be rendered to the admin user once dismissed
-	 * unless on the plugin settings page, if any
+	 * notice if so.
 	 *
 	 * @since 3.0.0
+	 *
 	 * @see SV_WC_Payment_Gateway_Plugin::add_admin_notices()
 	 */
 	protected function add_ssl_admin_notices() {
@@ -612,11 +623,13 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
+	 * Adds any currency admin notices.
+	 *
 	 * Checks if a particular currency is required and not being used and adds a
-	 * dismissible admin notice if so.  Notice will not be rendered to the admin
-	 * user once dismissed unless on the plugin settings page, if any
+	 * dismissible admin notice if so.
 	 *
 	 * @since 3.0.0
+	 *
 	 * @see SV_WC_Payment_Gateway_Plugin::render_admin_notices()
 	 */
 	protected function add_currency_admin_notices() {
@@ -766,8 +779,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * is not enabled
 	 *
 	 * @since 4.1.0
+	 *
 	 * @param string $html column content
-	 * @param \WC_Payment_Gateway|\SV_WC_Payment_Gateway $gateway payment gateway being checked for support
+	 * @param \WC_Payment_Gateway|SV_WC_Payment_Gateway $gateway payment gateway being checked for support
 	 * @return string html
 	 */
 	public function subscriptions_maybe_edit_renewal_support_status( $html, $gateway ) {
@@ -874,7 +888,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Get the admin order handler instance.
 	 *
 	 * @since 5.0.0
-	 * @return \SV_WC_Payment_Gateway_Admin_Order
+	 *
+	 * @return SV_WC_Payment_Gateway_Admin_Order
 	 */
 	public function get_admin_order_handler() {
 		return $this->admin_order_handler;
@@ -885,7 +900,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Get the admin user handler instance.
 	 *
 	 * @since 4.3.0
-	 * @return \SV_WC_Payment_Gateway_Admin_User_Handler
+	 *
+	 * @return SV_WC_Payment_Gateway_Admin_User_Handler
 	 */
 	public function get_admin_user_handler() {
 		return $this->admin_user_handler;
@@ -897,6 +913,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Defaults to woocommerce_{gateway id}_settings
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $gateway_id
 	 * @return string the gateway settings option name
 	 */
@@ -912,6 +929,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * will not include any defaults if the gateway has yet to be saved
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $gateway_id gateway identifier
 	 * @return array settings array
 	 */
@@ -925,6 +943,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns true if this plugin requires SSL to function properly
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return boolean true if this plugin requires ssl
 	 */
 	protected function requires_ssl() {
@@ -936,6 +955,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Gets the plugin configuration URL
 	 *
 	 * @since 1.0.0
+	 *
 	 * @see SV_WC_Plugin::get_settings_url()
 	 * @param string $gateway_id the gateway identifier
 	 * @return string gateway settings URL
@@ -956,6 +976,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns the admin configuration url for a gateway
 	 *
 	 * @since 3.0.0
+	 *
 	 * @param string $gateway_id the gateway ID
 	 * @return string admin configuration url for the gateway
 	 */
@@ -969,6 +990,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns true if the current page is the admin configuration page for a gateway
 	 *
 	 * @since 3.0.0
+	 *
 	 * @param string $gateway_id the gateway ID
 	 * @return boolean true if the current page is the admin configuration page for the gateway
 	 */
@@ -1005,6 +1027,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * supported by this plugin
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $gateway_id the gateway identifier
 	 * @param string $gateway_class_name the corresponding gateway class name
 	 */
@@ -1019,6 +1042,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * unless the plugin supports credit card and echeck variations
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return array of string gateway class names
 	 */
 	public function get_gateway_class_names() {
@@ -1039,6 +1063,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Gets the gateway class name for the given gateway id
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $gateway_id the gateway identifier
 	 * @return string gateway class name
 	 */
@@ -1055,7 +1080,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * unless the plugin supports credit card and echeck variations
 	 *
 	 * @since 1.0.0
-	 * @return array of SV_WC_Payment_Gateway gateway objects
+	 *
+	 * @return SV_WC_Payment_Gateway[]
 	 */
 	public function get_gateways() {
 
@@ -1075,6 +1101,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Adds the given $gateway to the internal gateways store
 	 *
 	 * @since 2.2.0
+	 *
 	 * @param string $gateway_id the gateway identifier
 	 * @param SV_WC_Payment_Gateway $gateway the gateway object
 	 */
@@ -1087,6 +1114,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns the identified gateway object
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $gateway_id optional gateway identifier, defaults to first gateway, which will be the credit card gateway in plugins with support for both credit cards and echecks
 	 * @return SV_WC_Payment_Gateway the gateway object
 	 */
@@ -1113,6 +1141,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns true if the plugin supports this gateway
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $gateway_id the gateway identifier
 	 * @return boolean true if the plugin has this gateway available, false otherwise
 	 */
@@ -1125,6 +1154,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns all available gateway ids for the plugin
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return array of gateway id strings
 	 */
 	public function get_gateway_ids() {
@@ -1139,9 +1169,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns the gateway for a given token
 	 *
 	 * @since 4.0.0
+	 *
 	 * @param string|int $user_id the user ID associated with the token
 	 * @param string $token the token string
-	 * @return \SV_WC_Payment_Gateway|\SV_WC_Payment_Gateway_Direct|null gateway if found, null otherwise
+	 * @return SV_WC_Payment_Gateway|null gateway if found, null otherwise
 	 */
 	public function get_gateway_from_token( $user_id, $token ) {
 
@@ -1162,6 +1193,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * files separated by gateway ID
 	 *
 	 * @see SV_WC_Plugin::add_api_request_logging()
+	 *
 	 * @since 2.2.0
 	 */
 	public function add_api_request_logging() { }
@@ -1173,6 +1205,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * any gateways this plugin supports.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return array of accepted currencies
 	 */
 	public function get_accepted_currencies() {
@@ -1184,6 +1217,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Checks is WooCommerce Subscriptions is active
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return bool true if the WooCommerce Subscriptions plugin is active, false if not active
 	 */
 	public function is_subscriptions_active() {
@@ -1200,6 +1234,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Checks is WooCommerce Pre-Orders is active
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return bool true if WC Pre-Orders is active, false if not active
 	 */
 	public function is_pre_orders_active() {
@@ -1216,6 +1251,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns the loaded payment gateway framework __FILE__
 	 *
 	 * @since 4.0.0
+	 *
 	 * @return string
 	 */
 	public function get_payment_gateway_framework_file() {
@@ -1231,6 +1267,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * the bootstrap.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @return string
 	 */
 	public function get_payment_gateway_framework_path() {
@@ -1244,6 +1281,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * directory, without a trailing slash
 	 *
 	 * @since 4.0.0
+	 *
 	 * @return string relative path to framework image directory
 	 */
 	public function get_payment_gateway_framework_assets_path() {
@@ -1256,6 +1294,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * Returns the loaded payment gateway framework assets URL, without a trailing slash
 	 *
 	 * @since 4.0.0
+	 *
 	 * @return string
 	 */
 	public function get_payment_gateway_framework_assets_url() {
