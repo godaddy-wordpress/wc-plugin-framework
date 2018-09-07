@@ -39,7 +39,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/** @var string the gateway environment ID */
 	protected $environment_id;
 
-	/** @var array array of cached user id to array of \SV_WC_Payment_Gateway_Payment_Token token objects */
+	/** @var array array of cached user id to array of SV_WC_Payment_Gateway_Payment_Token token objects */
 	protected $tokens;
 
 
@@ -47,7 +47,8 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * Build the class.
 	 *
 	 * @since 4.3.0
-	 * @param \SV_WC_Payment_Gateway_Direct $gateway The gateway instance
+	 *
+	 * @param SV_WC_Payment_Gateway $gateway payment gateway instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway $gateway ) {
 
@@ -63,6 +64,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * payment token implementation.
 	 *
 	 * @since 4.3.0
+	 *
 	 * @param string $token payment token
 	 * @param array $data {
 	 *     Payment token data.
@@ -92,10 +94,10 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @since 1.0.0
 	 *
 	 * @param \WC_Order $order The order object
-	 * @param \SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response Optional. Payment token API response, or null if the request should be made
+	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response|null $response payment token API response, or null if the request should be made
 	 * @param string $environment_id Optional. Environment ID. Default: the current environment.
-	 * @throws \SV_WC_Plugin_Exception on transaction failure
 	 * @return \WC_Order The order object
+	 * @throws SV_WC_Plugin_Exception on transaction failure
 	 */
 	public function create_token( \WC_Order $order, $response = null, $environment_id = null ) {
 
@@ -170,12 +172,13 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * Add a payment method and token as user meta.
+	 * Adds a payment method and token as user meta.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token the token
-	 * @param string $environment_id optional environment id, defaults to plugin current environment
+	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
 	 * @return bool|int false if token not added, user meta ID if added
 	 */
 	public function add_token( $user_id, $token, $environment_id = null ) {
@@ -208,9 +211,10 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * identified by $user_id
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $user_id WordPress user identifier, or 0 for guest
 	 * @param string $token payment token
-	 * @param string $environment_id optional environment id, defaults to plugin current environment
+	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
 	 * @return SV_WC_Payment_Gateway_Payment_Token payment token object or null
 	 */
 	public function get_token( $user_id, $token, $environment_id = null ) {
@@ -229,12 +233,13 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * Update a single token by persisting it to user meta
+	 * Updates a single token by persisting it to user meta
 	 *
 	 * @since since 4.0.0
+	 *
 	 * @param int $user_id WP user ID
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token to update
-	 * @param string $environment_id optional environment id, defaults to plugin current environment
+	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
 	 * @return string|int updated user meta ID
 	 */
 	public function update_token( $user_id, $token, $environment_id = null ) {
@@ -255,12 +260,13 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * Delete a credit card token from user meta
+	 * Deletes a credit card token from user meta
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token|string $token the payment token to delete
-	 * @param string $environment_id optional environment id, defaults to plugin current environment
+	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
 	 * @return bool|int false if not deleted, updated user meta ID if deleted
 	 */
 	public function remove_token( $user_id, $token, $environment_id = null ) {
@@ -327,7 +333,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 *
 	 * @param int $user_id WordPress user ID
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token payment token object
-	 * @param string $environment_id gateway environment ID
+	 * @param string|null $environment_id gateway environment ID
 	 * @return bool
 	 */
 	public function delete_token( $user_id, SV_WC_Payment_Gateway_Payment_Token $token, $environment_id = null ) {
@@ -362,13 +368,15 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * Set the default token for a user. This is shown as "Default Card" in the
-	 * frontend and will be auto-selected during checkout
+	 * Sets the default token for a user.
+	 *
+	 * This is shown as "Default Card" in the frontend and will be auto-selected during checkout.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token|string $token the token to make default
-	 * @param string $environment_id optional environment id, defaults to plugin current environment
+	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
 	 * @return string|bool false if not set, updated user meta ID if set
 	 */
 	public function set_default_token( $user_id, $token, $environment_id = null ) {
@@ -411,10 +419,11 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * Get the available payment tokens for a user as an associative array of
+	 * Gets the available payment tokens for a user as an associative array of
 	 * payment token to SV_WC_Payment_Gateway_Payment_Token
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $user_id WordPress user identifier, or 0 for guest
 	 * @param array $args optional arguments, can include
 	 *  	`customer_id` - if not provided, this will be looked up based on $user_id
@@ -520,8 +529,9 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		 * Fired when payment tokens have been completely loaded.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param array $tokens array of SV_WC_Payment_Gateway_Payment_Tokens
-		 * @param \SV_WC_Payment_Gateway_Direct direct gateway class instance
+		 * @param SV_WC_Payment_Gateway gateway class instance
 		 */
 		do_action( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_payment_tokens_loaded', $this->tokens[ $environment_id ][ $user_id ], $this );
 
@@ -533,9 +543,10 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * Updates the given payment tokens for the identified user, in the database.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $user_id WP user ID
 	 * @param array $tokens array of tokens
-	 * @param string $environment_id optional environment id, defaults to plugin current environment
+	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
 	 * @return string updated user meta id
 	 */
 	public function update_tokens( $user_id, $tokens, $environment_id = null ) {
@@ -564,7 +575,8 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * Get the admin token editor instance.
 	 *
 	 * @since 4.3.0
-	 * @return \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor
+	 *
+	 * @return SV_WC_Payment_Gateway_Admin_Payment_Token_Editor
 	 */
 	public function get_token_editor() {
 		return new SV_WC_Payment_Gateway_Admin_Payment_Token_Editor( $this->get_gateway() );
@@ -575,13 +587,14 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * Returns true if the identified user has the given payment token
+	 * Determines if the identified user has the given payment token
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $user_id WordPress user identifier, or 0 for guest
 	 * @param string|SV_WC_Payment_Gateway_Payment_Token $token payment token
-	 * @param string $environment_id optional environment id, defaults to plugin current environment
-	 * @return boolean true if the user has the payment token, false otherwise
+	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
+	 * @return bool
 	 */
 	public function user_has_token( $user_id, $token, $environment_id = null ) {
 
@@ -600,25 +613,29 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * Returns true if the current payment method should be tokenized: whether
-	 * requested by customer or otherwise forced.  This parameter is passed from
+	 * Determines if the current payment method should be tokenized.
+	 *
+	 * Whether requested by customer or otherwise forced. This parameter is passed from
 	 * the checkout page/payment form.
 	 *
 	 * @since 1.0.0
-	 * @return boolean true if the current payment method should be tokenized
+	 *
+	 * @return bool
 	 */
 	public function should_tokenize() {
+
 		return SV_WC_Helper::get_post( 'wc-' . $this->get_gateway()->get_id_dasherized() . '-tokenize-payment-method' ) && ! SV_WC_Helper::get_post( 'wc-' . $this->get_gateway()->get_id_dasherized() . '-payment-token' );
 	}
 
 
 	/**
-	 * Returns true if tokenization should be forced on the checkout page,
-	 * false otherwise.  This is most useful to force tokenization for a
-	 * subscription or pre-orders initial transaction.
+	 * Determines if tokenization should be forced on the checkout page.
+	 *
+	 * This is most useful to force tokenization for a subscription or pre-orders initial transaction.
 	 *
 	 * @since 1.0.0
-	 * @return boolean true if tokenization should be forced on the checkout page, false otherwise
+	 *
+	 * @return bool
 	 */
 	public function tokenization_forced() {
 
@@ -629,8 +646,9 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		 * checkout.
 		 *
 		 * @since 1.0.0
+		 *
 		 * @param bool $force true to force tokenization, false otherwise
-		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 * @param SV_WC_Payment_Gateway $this instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_tokenization_forced', false, $this->get_gateway() );
 	}
@@ -640,10 +658,12 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * Merge remote token data with local tokens, sometimes local tokens can provide
-	 * additional detail that's not provided remotely
+	 * Merges remote token data with local tokens.
+	 *
+	 * Sometimes local tokens can provide additional detail that's not provided remotely.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @param array $local_tokens local tokens
 	 * @param array $remote_tokens remote tokens
 	 * @return array associative array of string token to SV_WC_Payment_Gateway_Payment_Token objects
@@ -678,7 +698,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * Return the attributes that should be used to merge local token data into
+	 * Returns the attributes that should be used to merge local token data into
 	 * a remote token.
 	 *
 	 * Gateways can override this method to add their own attributes, but must
@@ -687,6 +707,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * See Authorize.net CIM for an example implementation.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @return array associative array of string token to SV_WC_Payment_Gateway_Payment_Token objects
 	 */
 	protected function get_merge_attributes() {
@@ -696,12 +717,12 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * Return the payment token transient key for the given user, gateway,
-	 * and environment
+	 * Gets the payment token transient key for the given user, gateway and environment.
 	 *
 	 * Payment token transients can be disabled by using the filter below.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @param string|int $user_id
 	 * @return string transient key
 	 */
@@ -726,7 +747,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		 *
 		 * @since 4.0.0
 		 * @param string $key transient key (must be 45 chars or less)
-		 * @param \SV_WC_Payment_Gateway_Direct $this direct gateway class instance
+		 * @param SV_WC_Payment_Gateway $this direct gateway class instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_payment_tokens_transient_key', $key, $user_id, $this->get_gateway() );
 	}
@@ -740,6 +761,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * only cleared when the tokens are updated. @MR July 2015
 	 *
 	 * @since 4.0.0
+	 *
 	 * @param int|string $user_id
 	 */
 	public function clear_transient( $user_id ) {
@@ -750,6 +772,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 	/**
 	 * Returns the payment token user meta name for persisting the payment tokens.
+	 *
 	 * Defaults to _wc_{gateway id}_payment_tokens for the production environment,
 	 * and _wc_{gateway id}_payment_tokens_{environment} for any other environment.
 	 *
@@ -759,7 +782,8 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * tokens will be distinct between them
 	 *
 	 * @since 1.0.0
-	 * @param string $environment_id optional environment id, defaults to plugin current environment
+	 *
+	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
 	 * @return string payment token user meta name
 	 */
 	public function get_user_meta_name( $environment_id = null ) {
@@ -775,11 +799,12 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * Get the order note message when a customer saves their payment method
+	 * Gets the order note message when a customer saves their payment method
 	 * to their account
 	 *
 	 * @since 4.1.2
-	 * @param \SV_WC_Payment_Gateway_Payment_Token $token the payment token being saved
+	 *
+	 * @param SV_WC_Payment_Gateway_Payment_Token $token the payment token being saved
 	 * @return string
 	 */
 	protected function get_order_note( $token ) {
@@ -818,6 +843,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * Returns $tokens in a format suitable for data storage
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $tokens array of SV_WC_Payment_Gateway_Payment_Token tokens
 	 * @return array data storage version of $tokens
 	 */
@@ -838,6 +864,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * Get the gateway environment ID.
 	 *
 	 * @since 4.3.0
+	 *
 	 * @return string
 	 */
 	protected function get_environment_id() {
@@ -846,12 +873,14 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * Get the gateway instance.
+	 * Gets the gateway instance.
 	 *
 	 * @since 4.3.0
-	 * @return \SV_WC_Payment_Gateway_Direct The gateway instance
+	 *
+	 * @return SV_WC_Payment_Gateway The gateway instance
 	 */
 	protected function get_gateway() {
+
 		return $this->gateway;
 	}
 }
