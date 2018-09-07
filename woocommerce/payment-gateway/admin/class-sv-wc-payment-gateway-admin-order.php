@@ -63,9 +63,6 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			// bulk capture order action
 			add_action( 'admin_footer-edit.php', array( $this, 'maybe_add_capture_charge_bulk_order_action' ) );
 			add_action( 'load-edit.php',         array( $this, 'process_capture_charge_bulk_order_action' ) );
-
-			// auto-capture on order status change if enabled
-			add_action( 'woocommerce_order_status_changed', array( $this, 'maybe_capture_paid_order' ), 10, 3 );
 		}
 	}
 
@@ -197,7 +194,9 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 				$order = wc_get_order( $order_id );
 
-				$this->maybe_capture_charge( $order );
+				if ( $order && $gateway = $this->get_order_gateway( $order ) ) {
+					$gateway->get_capture_handler()->maybe_perform_capture( $order );
+				}
 			}
 		}
 	}
@@ -237,13 +236,13 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			return;
 		}
 
-		if ( ! $this->is_order_ready_for_capture( $order ) ) {
-			return;
-		}
-
 		$gateway = $this->get_order_gateway( $order );
 
 		if ( ! $gateway ) {
+			return;
+		}
+
+		if ( ! $gateway->get_capture_handler()->is_order_ready_for_capture( $order ) ) {
 			return;
 		}
 
@@ -257,19 +256,19 @@ class SV_WC_Payment_Gateway_Admin_Order {
 		// indicate if the partial-capture UI can be shown
 		if ( $gateway->supports_credit_card_partial_capture() && $gateway->is_partial_capture_enabled() ) {
 			$classes[] = 'partial-capture';
-		} elseif ( $gateway->authorization_valid_for_capture( $order ) ) {
+		} elseif ( $gateway->get_capture_handler()->order_can_be_captured( $order ) ) {
 			$classes[] = 'button-primary';
 		}
 
 		// ensure that the authorization is still valid for capture
-		if ( ! $gateway->authorization_valid_for_capture( $order ) ) {
+		if ( ! $gateway->get_capture_handler()->order_can_be_captured( $order ) ) {
 
 			$classes[] = 'tips disabled';
 
 			// add some tooltip wording explaining why this cannot be captured
-			if ( 'yes' === $gateway->get_order_meta( $order, 'charge_captured' ) ) {
+			if ( $gateway->get_capture_handler()->is_order_fully_captured( $order ) ) {
 				$tooltip = __( 'This charge has been fully captured.', 'woocommerce-plugin-framework' );
-			} elseif ( $gateway->get_order_meta( $order, 'trans_date' ) && $gateway->has_authorization_expired( $order ) ) {
+			} elseif ( $gateway->get_order_meta( $order, 'trans_date' ) && $gateway->get_capture_handler()->has_order_authorization_expired( $order ) ) {
 				$tooltip = __( 'This charge can no longer be captured.', 'woocommerce-plugin-framework' );
 			} else {
 				$tooltip = __( 'This charge cannot be captured.', 'woocommerce-plugin-framework' );
@@ -299,9 +298,9 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 */
 	protected function output_partial_capture_html( \WC_Order $order, SV_WC_Payment_Gateway $gateway ) {
 
-		$authorization_total = $gateway->get_order_authorization_amount( $order );
+		$authorization_total = $gateway->get_capture_handler()->get_order_authorization_amount( $order );
 		$total_captured      = $gateway->get_order_meta( $order, 'capture_total' );
-		$remaining_total       = SV_WC_Helper::number_format( (float) $order->get_total() - (float) $total_captured );
+		$remaining_total     = SV_WC_Helper::number_format( (float) $order->get_total() - (float) $total_captured );
 
 		include( $this->get_plugin()->get_payment_gateway_framework_path() . '/admin/views/html-order-partial-capture.php' );
 	}
@@ -351,9 +350,9 @@ class SV_WC_Payment_Gateway_Admin_Order {
 				$amount = $order->get_total();
 			}
 
-			$result = $this->maybe_capture_charge( $order, $amount );
+			$result = $gateway->get_capture_handler()->perform_capture( $order, $amount );
 
-			if ( 'success' !== $result['result'] ) {
+			if ( ! empty( $result['success'] ) ) {
 				throw new SV_WC_Payment_Gateway_Exception( $result['message'] );
 			}
 
@@ -371,111 +370,12 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 
 	/**
-	 * Captures an order on status change to a "paid" status.
-	 *
-	 * @since 5.0.1-dev
-	 *
-	 * @param int $order_id order ID
-	 * @param string $old_status status being changed
-	 * @param string $new_status new order status
-	 */
-	public function maybe_capture_paid_order( $order_id, $old_status, $new_status ) {
-
-		$paid_statuses = SV_WC_Plugin_Compatibility::wc_get_is_paid_statuses();
-
-		// bail if changing to a non-paid status or from a paid status
-		if ( ! in_array( $new_status, $paid_statuses, true ) || in_array( $old_status, $paid_statuses ) ) {
-			return;
-		}
-
-		$order = wc_get_order( $order_id );
-
-		if ( ! $order ) {
-			return;
-		}
-
-		$gateway = $this->get_order_gateway( $order );
-
-		if ( ! $gateway ) {
-			return;
-		}
-
-		if ( $gateway->is_paid_capture_enabled() ) {
-			$this->maybe_capture_charge( $order );
-		}
-	}
-
-
-	/**
-	 * Capture a credit card charge for a prior authorization if this payment
-	 * method was used for the given order, the charge hasn't already been
-	 * captured, and the gateway supports issuing a capture request
-	 *
-	 * @since 5.0.0
-	 *
-	 * @param \WC_Order|int $order the order identifier or order object
-	 */
-	protected function maybe_capture_charge( $order, $amount = null ) {
-
-		if ( ! is_object( $order ) ) {
-			$order = wc_get_order( $order );
-		}
-
-		// don't try to capture cancelled/fully refunded transactions
-		if ( ! $this->is_order_ready_for_capture( $order ) ) {
-			return;
-		}
-
-		$gateway = $this->get_order_gateway( $order );
-
-		if ( ! $gateway ) {
-			return;
-		}
-
-		// ensure the authorization is still valid for capture
-		if ( ! $gateway->authorization_valid_for_capture( $order ) ) {
-			return;
-		}
-
-		// if no amount is specified, and the authorization has already been captured for the original amount, bail
-		if ( ! $amount && $gateway->get_order_meta( $order, 'capture_total' ) >= $gateway->get_order_authorization_amount( $order ) ) {
-			return;
-		}
-
-		// remove order status change actions, otherwise we get a whole bunch of capture calls and errors
-		remove_action( 'woocommerce_order_action_wc_' . $this->get_plugin()->get_id() . '_capture_charge', array( $this, 'maybe_capture_charge' ) );
-
-		// since a capture results in an update to the post object (by updating
-		// the paid date) we need to unhook the meta box save action, otherwise we
-		// can get boomeranged and change the status back to on-hold
-		remove_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Data::save', 40 );
-
-		// perform the capture
-		return $gateway->do_credit_card_capture( $order, $amount );
-	}
-
-
-	/**
-	 * Determines if an order is ready for capture.
-	 *
-	 * @since 5.0.0
-	 *
-	 * @param \WC_Order $order order object
-	 * @return bool
-	 */
-	protected function is_order_ready_for_capture( \WC_Order $order ) {
-
-		return ! in_array( $order->get_status(), array( 'cancelled', 'refunded' ), true );
-	}
-
-
-	/**
 	 * Gets the gateway object from an order.
 	 *
 	 * @since 5.0.0
 	 *
 	 * @param \WC_Order $order order object
-	 * @return \SV_WC_Payment_Gateway
+	 * @return SV_WC_Payment_Gateway
 	 */
 	protected function get_order_gateway( \WC_Order $order ) {
 
@@ -507,6 +407,89 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	protected function get_plugin() {
 
 		return $this->plugin;
+	}
+
+
+	/** Deprecated Methods ********************************************************************************************/
+
+
+	/**
+	 * Capture a credit card charge for a prior authorization if this payment
+	 * method was used for the given order, the charge hasn't already been
+	 * captured, and the gateway supports issuing a capture request
+	 *
+	 * @since 5.0.0
+	 * @deprecated 5.3.0-dev
+	 *
+	 * @param \WC_Order|int $order the order identifier or order object
+	 */
+	protected function maybe_capture_charge( $order, $amount = null ) {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev' );
+
+		if ( ! is_object( $order ) ) {
+			$order = wc_get_order( $order );
+		}
+
+		$gateway = $this->get_order_gateway( $order );
+
+		if ( ! $gateway ) {
+			return;
+		}
+
+		// don't try to capture cancelled/fully refunded transactions
+		if ( ! $gateway->get_capture_handler()->is_order_ready_for_capture( $order ) ) {
+			return;
+		}
+
+		// since a capture results in an update to the post object (by updating
+		// the paid date) we need to unhook the meta box save action, otherwise we
+		// can get boomeranged and change the status back to on-hold
+		remove_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Data::save', 40 );
+
+		// perform the capture
+		$gateway->get_capture_handler()->maybe_perform_capture( $order, $amount );
+	}
+
+
+	/**
+	 * Captures an order on status change to a "paid" status.
+	 *
+	 * @internal
+	 *
+	 * @since 5.0.1-dev
+	 * @deprecated 5.3.0-dev
+	 *
+	 * @param int $order_id order ID
+	 * @param string $old_status status being changed
+	 * @param string $new_status new order status
+	 */
+	public function maybe_capture_paid_order( $order_id, $old_status, $new_status ) {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev' );
+	}
+
+
+	/**
+	 * Determines if an order is ready for capture.
+	 *
+	 * @since 5.0.0
+	 * @deprecated 5.3.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @return bool
+	 */
+	protected function is_order_ready_for_capture( \WC_Order $order ) {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev' );
+
+		$gateway = $this->get_order_gateway( $order );
+
+		if ( ! $gateway ) {
+			return false;
+		}
+
+		return $gateway->get_capture_handler()->is_order_ready_for_capture( $order );
 	}
 
 
