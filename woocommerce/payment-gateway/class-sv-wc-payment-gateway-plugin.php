@@ -537,6 +537,12 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		parent::add_delayed_admin_notices();
 
+		// reload all gateway settings so notices are correct after saving the settings
+		foreach ( $this->get_gateways() as $gateway ) {
+			$gateway->init_settings();
+			$gateway->load_settings();
+		}
+
 		// notices for ssl requirement
 		$this->add_ssl_admin_notices();
 
