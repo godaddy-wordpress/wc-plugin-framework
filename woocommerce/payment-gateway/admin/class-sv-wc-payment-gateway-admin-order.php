@@ -232,7 +232,8 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 */
 	public function add_capture_button( $order ) {
 
-		if ( ! $order instanceof \WC_Order ) {
+		// only display the button for core orders
+		if ( ! $order instanceof \WC_Order || 'shop_order' !== get_post_type( SV_WC_Order_Compatibility::get_prop( $order, 'id' ) ) ) {
 			return;
 		}
 
