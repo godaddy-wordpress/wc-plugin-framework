@@ -685,6 +685,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				$is_gateway_settings = $this->is_payment_gateway_configuration_page( $gateway->get_id() );
 
 				$message = sprintf(
+					/* translators: Placeholders: %1$s - payment gateway name, %2$s - opening <a> tag, %3$s - closing </a> tag */
 					__( 'Heads up! %1$s is currently configured to log transaction data for debugging purposes. If you are not experiencing any problems with payment processing, we recommend %2$sturning off Debug Mode%3$s', 'woocommerce-plugin-framework' ),
 					$gateway->get_method_title(),
 					! $is_gateway_settings ? '<a href="' . esc_url( $this->get_payment_gateway_configuration_url( $gateway->get_id() ) ) . '">' : '', ! $is_gateway_settings ? ' &raquo;</a>' : ''
