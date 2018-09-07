@@ -537,6 +537,12 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		parent::add_delayed_admin_notices();
 
+		// reload all gateway settings so notices are correct after saving the settings
+		foreach ( $this->get_gateways() as $gateway ) {
+			$gateway->init_settings();
+			$gateway->load_settings();
+		}
+
 		// notices for ssl requirement
 		$this->add_ssl_admin_notices();
 
@@ -545,6 +551,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// notices for subscriptions/pre-orders
 		$this->add_integration_requires_tokenization_notices();
+
+		// add notices about enabled debug logging
+		$this->add_debug_setting_notices();
 	}
 
 
@@ -658,6 +667,36 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				'notice_class' => 'error',
 			) );
 
+		}
+	}
+
+
+	/**
+	 * Adds notices about enabled debug logging.
+	 *
+	 * @since 5.3.0-dev
+	 */
+	protected function add_debug_setting_notices() {
+
+		foreach ( $this->get_gateways() as $gateway ) {
+
+			if ( $gateway->is_enabled() && $gateway->is_production_environment() && ! $gateway->debug_off() ) {
+
+				$is_gateway_settings = $this->is_payment_gateway_configuration_page( $gateway->get_id() );
+
+				$message = sprintf(
+					/* translators: Placeholders: %1$s - payment gateway name, %2$s - opening <a> tag, %3$s - closing </a> tag */
+					__( 'Heads up! %1$s is currently configured to log transaction data for debugging purposes. If you are not experiencing any problems with payment processing, we recommend %2$sturning off Debug Mode%3$s', 'woocommerce-plugin-framework' ),
+					$gateway->get_method_title(),
+					! $is_gateway_settings ? '<a href="' . esc_url( $this->get_payment_gateway_configuration_url( $gateway->get_id() ) ) . '">' : '', ! $is_gateway_settings ? ' &raquo;</a>' : ''
+				);
+
+				$this->get_admin_notice_handler()->add_admin_notice( $message, 'debug-in-production', array(
+					'notice_class' => 'notice-warning',
+				) );
+
+				break;
+			}
 		}
 	}
 
