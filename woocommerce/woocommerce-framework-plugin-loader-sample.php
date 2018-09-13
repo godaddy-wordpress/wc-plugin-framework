@@ -231,10 +231,11 @@ class SV_WC_Framework_Plugin_Loader {
 		if ( ! $this->is_wc_compatible() ) {
 
 			$this->add_admin_notice( 'update_woocommerce', 'error', sprintf(
-				'%s requires WooCommerce version %s or higher. Please %supdate WooCommerce &raquo;%s',
+				'%1$s requires WooCommerce version %2$s or higher. Please %3$supdate WooCommerce%4$s to the latest version, or %5$sdownload the minimum required version &raquo;%6$s',
 				'<strong>' . self::PLUGIN_NAME . '</strong>',
 				self::MINIMUM_WC_VERSION,
-				'<a href="' . esc_url( admin_url( 'update-core.php' ) ) . '">', '</a>'
+				'<a href="' . esc_url( admin_url( 'update-core.php' ) ) . '">', '</a>',
+				'<a href="' . esc_url( 'https://downloads.wordpress.org/plugin/woocommerce.' . self::MINIMUM_WC_VERSION . '.zip' ) . '">', '</a>'
 			) );
 		}
 	}
