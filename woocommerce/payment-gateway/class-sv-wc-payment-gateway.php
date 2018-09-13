@@ -346,7 +346,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 1.0.0
 	 */
-	protected function load_settings() {
+	public function load_settings() {
 
 		// define user set variables
 		foreach ( $this->settings as $setting_key => $setting ) {

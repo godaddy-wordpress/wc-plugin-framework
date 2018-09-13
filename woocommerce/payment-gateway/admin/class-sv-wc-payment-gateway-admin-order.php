@@ -358,7 +358,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			}
 
 			wp_send_json_success( array(
-				'message' => html_entity_decode( $result['message'] ),
+				'message' => html_entity_decode( wp_strip_all_tags( $result['message'] ) ), // ensure any HTML tags are removed and the currency symbol entity is decoded
 			) );
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
