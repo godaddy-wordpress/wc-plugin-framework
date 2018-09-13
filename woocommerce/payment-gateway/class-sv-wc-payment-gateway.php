@@ -2757,7 +2757,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * to the customer
 	 *
 	 * @since 1.0.0
-	 * @param WC_Order $order the order
+	 * @param \WC_Order $order the order
 	 * @param string $message a message to display within the order note
 	 * @param SV_WC_Payment_Gateway_API_Response $response optional, the transaction response object
 	 */
@@ -2769,17 +2769,28 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		/**
 		 * Held Order Status Filter.
 		 *
-		 * Actors may use this to change the order status that is used when an order
-		 * status should be marked as held. Held orders are usually a result of an
-		 * authorize-only transaction.
+		 * This filter is deprecated. Use wc_<gateway_id>_held_order_status instead.
 		 *
 		 * @since 4.0.1
+		 * @deprecated 5.3.0-dev
+		 *
 		 * @param string $order_status 'on-hold' by default
 		 * @param \WC_Order $order WC order
-		 * @param \SV_WC_Payment_Gateway_API_Response $response instance
-		 * @param \SV_WC_Payment_Gateway $this gateway instance
+		 * @param SV_WC_Payment_Gateway_API_Response $response instance
+		 * @param SV_WC_Payment_Gateway $gateway gateway instance
 		 */
 		$order_status = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_held_order_status', 'on-hold', $order, $response, $this );
+
+		/**
+		 * Filters the order status that's considered to be "held".
+		 *
+		 * @since 5.3.0-dev
+		 *
+		 * @param string $status held order status
+		 * @param \WC_Order $order order object
+		 * @param SV_WC_Payment_Gateway_API_Response|null $response API response object, if any
+		 */
+		$order_status = apply_filters( 'wc_' . $this->get_id() . '_held_order_status', $order_status, $order, $response );
 
 		// mark order as held
 		if ( ! $order->has_status( $order_status ) ) {
