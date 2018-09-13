@@ -3002,19 +3002,22 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			);
 		}
 
-		// get a list of the "paid" status names
-		$paid_statuses = array_map( 'wc_get_order_status_name', (array) SV_WC_Plugin_Compatibility::wc_get_is_paid_statuses() );
-		$conjuction    = _x( 'or', 'coordinating conjunction for a list of order statuses: on-hold, processing, or completed', 'woocommerce-plugin-framework' );
+		if ( $this->supports_credit_card_capture() ) {
 
-		$form_fields['enable_paid_capture'] = array(
-			'label'       => __( 'Capture Paid Orders', 'woocommerce-plugin-framework' ),
-			'type'        => 'checkbox',
-			'description' => sprintf(
-				__( 'Automatically capture orders when they are changed to %s.', 'woocommerce-plugin-framework' ),
-				esc_html( ! empty( $paid_statuses ) ? SV_WC_Helper::list_array_items( $paid_statuses, $conjuction ) : __( 'a paid status', 'woocommerce-plugin-framework' ) )
-		 	),
-			'default' => 'no',
-		);
+			// get a list of the "paid" status names
+			$paid_statuses = array_map( 'wc_get_order_status_name', (array) SV_WC_Plugin_Compatibility::wc_get_is_paid_statuses() );
+			$conjuction    = _x( 'or', 'coordinating conjunction for a list of order statuses: on-hold, processing, or completed', 'woocommerce-plugin-framework' );
+
+			$form_fields['enable_paid_capture'] = array(
+				'label'       => __( 'Capture Paid Orders', 'woocommerce-plugin-framework' ),
+				'type'        => 'checkbox',
+				'description' => sprintf(
+					__( 'Automatically capture orders when they are changed to %s.', 'woocommerce-plugin-framework' ),
+					esc_html( ! empty( $paid_statuses ) ? SV_WC_Helper::list_array_items( $paid_statuses, $conjuction ) : __( 'a paid status', 'woocommerce-plugin-framework' ) )
+				),
+				'default' => 'no',
+			);
+		}
 
 		return $form_fields;
 	}
