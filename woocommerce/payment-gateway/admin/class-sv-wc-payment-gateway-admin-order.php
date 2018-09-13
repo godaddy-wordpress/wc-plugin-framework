@@ -376,7 +376,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 			$result = $gateway->get_capture_handler()->perform_capture( $order, $amount );
 
-			if ( ! empty( $result['success'] ) ) {
+			if ( empty( $result['success'] ) ) {
 				throw new SV_WC_Payment_Gateway_Exception( $result['message'] );
 			}
 
