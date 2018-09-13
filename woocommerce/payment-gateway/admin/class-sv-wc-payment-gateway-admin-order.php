@@ -78,28 +78,51 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 */
 	public function enqueue_scripts( $hook_suffix ) {
 
-		if ( 'shop_order' === get_post_type() && 'post.php' === $hook_suffix ) {
+		// Order screen assets
+		if ( 'shop_order' === get_post_type() ) {
 
-			wp_enqueue_script( 'sv-wc-payment-gateway-admin-order', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/admin/sv-wc-payment-gateway-admin-order.min.js', array( 'jquery' ), SV_WC_Plugin::VERSION, true );
+			// Edit Order screen assets
+			if ( 'post.php' === $hook_suffix ) {
 
-			$order = wc_get_order( SV_WC_Helper::get_request( 'post' ) );
+				$order = wc_get_order( SV_WC_Helper::get_request( 'post' ) );
 
-			if ( ! $order ) {
-				return;
+				if ( ! $order ) {
+					return;
+				}
+
+				// bail if the order payment method doesn't belong to this plugin
+				if ( ! $this->get_order_gateway( $order ) ) {
+					return;
+				}
+
+				$this->enqueue_edit_order_assets( $order );
 			}
-
-			wp_localize_script( 'sv-wc-payment-gateway-admin-order', 'sv_wc_payment_gateway_admin_order', array(
-				'ajax_url'       => admin_url( 'admin-ajax.php' ),
-				'gateway_id'     => SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' ),
-				'order_id'       => SV_WC_Order_Compatibility::get_prop( $order, 'id' ),
-				'capture_ays'    => __( 'Are you sure you wish to process this capture? The action cannot be undone.', 'woocommerce-plugin-framework' ),
-				'capture_action' => 'wc_' . $this->get_plugin()->get_id() . '_capture_charge',
-				'capture_nonce'  => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_capture_charge' ),
-				'capture_error'  => __( 'Something went wrong, and the capture could no be completed. Please try again.', 'woocommerce-plugin-framework' ),
-			) );
-
-			wp_enqueue_style( 'sv-wc-payment-gateway-admin-order', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/admin/sv-wc-payment-gateway-admin-order.min.css', SV_WC_Plugin::VERSION );
 		}
+	}
+
+
+	/**
+	 * Enqueues the assets for the Edit Order screen.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 */
+	protected function enqueue_edit_order_assets( \WC_Order $order ) {
+
+		wp_enqueue_script( 'sv-wc-payment-gateway-admin-order', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/admin/sv-wc-payment-gateway-admin-order.min.js', array( 'jquery' ), SV_WC_Plugin::VERSION, true );
+
+		wp_localize_script( 'sv-wc-payment-gateway-admin-order', 'sv_wc_payment_gateway_admin_order', array(
+			'ajax_url'       => admin_url( 'admin-ajax.php' ),
+			'gateway_id'     => SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' ),
+			'order_id'       => SV_WC_Order_Compatibility::get_prop( $order, 'id' ),
+			'capture_ays'    => __( 'Are you sure you wish to process this capture? The action cannot be undone.', 'woocommerce-plugin-framework' ),
+			'capture_action' => 'wc_' . $this->get_plugin()->get_id() . '_capture_charge',
+			'capture_nonce'  => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_capture_charge' ),
+			'capture_error'  => __( 'Something went wrong, and the capture could no be completed. Please try again.', 'woocommerce-plugin-framework' ),
+		) );
+
+		wp_enqueue_style( 'sv-wc-payment-gateway-admin-order', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/admin/sv-wc-payment-gateway-admin-order.min.css', SV_WC_Plugin::VERSION );
 	}
 
 
