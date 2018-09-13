@@ -2955,7 +2955,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @return bool
 	 */
 	public function supports_credit_card_partial_capture() {
-		return $this->supports( self::FEATURE_CREDIT_CARD_PARTIAL_CAPTURE );
+		return $this->supports_credit_card_capture() && $this->supports( self::FEATURE_CREDIT_CARD_PARTIAL_CAPTURE );
 	}
 
 
