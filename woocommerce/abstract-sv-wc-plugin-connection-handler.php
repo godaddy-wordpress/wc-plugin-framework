@@ -137,17 +137,16 @@ abstract class Connection_Handler {
 
 
 	/**
-	 * Returns the connection status.
+	 * Gets a connection error message.
 	 *
-	 * This can be useful to output a verbose error message when connection fails.
-	 * For services that do not provide a standardized API response, this method should mock one by outputting an object with a status code and a message.
+	 * The error should point out why the connection failed.
 	 *
 	 * @since 1.1.0-dev.1
 	 *
 	 * @param mixed|array $args optional arguments
-	 * @return Framework\SV_WC_API_Response|\stdClass
+	 * @return false|string returns false if there is no error
 	 */
-	abstract public function get_status( $args = null );
+	abstract public function get_connection_error( $args = null );
 
 
 	/**
