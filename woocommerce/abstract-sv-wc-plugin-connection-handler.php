@@ -144,7 +144,7 @@ abstract class Connection_Handler {
 	 * @since 1.1.0-dev.1
 	 *
 	 * @param mixed|array $args optional arguments
-	 * @return false|string returns false if there is no error
+	 * @return string
 	 */
 	abstract public function get_connection_error( $args = null );
 
