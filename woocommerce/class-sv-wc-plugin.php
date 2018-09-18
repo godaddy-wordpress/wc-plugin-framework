@@ -263,7 +263,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * Plugins can override and extend this method to add their own setup wizard.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 */
 	protected function init_setup_wizard_handler() {
 

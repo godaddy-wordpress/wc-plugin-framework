@@ -43,9 +43,6 @@ abstract class Connection_Handler {
 	/** @var Framework\SV_WC_Plugin main plugin class */
 	private $plugin;
 
-	/** @var string the plugin ID */
-	private $connection_key;
-
 	/** @var bool whether the plugin is connected to an external service */
 	protected $is_connected;
 
@@ -61,9 +58,6 @@ abstract class Connection_Handler {
 
 		// parent plugin
 		$this->plugin = $plugin;
-
-		// option key name for storing connection status
-		$this->connection_key = $plugin->get_id() . '_connected';
 
 		// default state
 		$this->is_connected = $this->is_connected();
@@ -92,8 +86,6 @@ abstract class Connection_Handler {
 	 */
 	public function connect( $args = null ) {
 
-		update_option( $this->connection_key, 'yes' );
-
 		$this->is_connected = true;
 
 		return $this->is_connected;
@@ -112,8 +104,6 @@ abstract class Connection_Handler {
 	 */
 	public function disconnect( $args = null ) {
 
-		update_option( $this->connection_key, 'no' );
-
 		$this->is_connected = false;
 
 		return $this->is_connected;
@@ -130,7 +120,7 @@ abstract class Connection_Handler {
 	 */
 	public function is_connected( $args = null ) {
 
-		return 'yes' === get_option( $this->connection_key );
+		return true === $this->is_connected;
 	}
 
 
@@ -150,31 +140,17 @@ abstract class Connection_Handler {
 
 
 	/**
-	 * Determines whether the connection has some errors to display.
+	 * Returns the connection status.
 	 *
-	 * @since 5.3.0-dev
+	 * This can be useful to output a verbose error message when connection fails.
+	 * For services that do not provide a standardized API response, this method should mock one by outputting an object with a status code and a message.
 	 *
-	 * @return bool
+	 * @since 1.1.0-dev.1
+	 *
+	 * @param mixed|array $args optional arguments
+	 * @return Framework\SV_WC_API_Response|\stdClass
 	 */
-	public function has_errors() {
-
-		$errors = $this->get_errors();
-
-		return ! empty( $errors );
-	}
-
-
-	/**
-	 * Returns errors that may be shown when connection was unsuccessful.
-	 *
-	 * @since 5.3.0-dev
-	 *
-	 * @return array|string[] associative array of error codes and messages or array of string messages
-	 */
-	public function get_errors() {
-
-		return array();
-	}
+	abstract public function get_status( $args = null );
 
 
 	/**
