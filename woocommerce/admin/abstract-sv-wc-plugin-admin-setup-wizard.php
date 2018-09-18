@@ -786,7 +786,7 @@ abstract class Setup_Wizard {
 		?>
 		<p class="wc-setup-actions step">
 
-			<?php $label = __( 'Continue', 'woocommerce-plugin-framework' ); ?>
+			<?php $label = $this->get_step_button_label( $step_id ); ?>
 
 			<?php if ( is_callable( $this->steps[ $step_id ]['save'] ) ) : ?>
 
@@ -970,9 +970,10 @@ abstract class Setup_Wizard {
 	 * @param string $name step name for display
 	 * @param string|array $view_callback callback to render the step's content HTML
 	 * @param string|array|null $save_callback callback to save the step's form values
+	 * @param array $options step additional settings (optional)
 	 * @return bool whether the step was successfully added
 	 */
-	public function register_step( $id, $name, $view_callback, $save_callback = null ) {
+	public function register_step( $id, $name, $view_callback, $save_callback = null, $options = array() ) {
 
 	    try {
 
@@ -1001,6 +1002,10 @@ abstract class Setup_Wizard {
 				'view' => $view_callback,
 				'save' => $save_callback,
 			);
+
+			if ( ! empty( $options['button_label'] ) ) {
+				$this->steps[ $id ]['button_label'] = $options['button_label'];
+			}
 
 			return true;
 
@@ -1165,6 +1170,30 @@ abstract class Setup_Wizard {
 		}
 
 		return $step_title;
+	}
+
+
+	/**
+	 * Gets a given step's button label.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @param string $step_id step ID (optional: will assume the current step if unspecified)
+	 * @return string
+	 */
+	public function get_step_button_label( $step_id = '' ) {
+
+		if ( ! $step_id ) {
+			$step_id = $this->current_step;
+		}
+
+		if ( isset( $this->steps[ $step_id ]['button_label'] ) && is_string( $this->steps[ $step_id ]['button_label'] ) ) {
+			$label = trim( $this->steps[ $step_id ]['button_label'] );
+		} else {
+			$label = __( 'Continue', 'woocommerce-plugin-framework' );
+		}
+
+		return $label;
 	}
 
 
