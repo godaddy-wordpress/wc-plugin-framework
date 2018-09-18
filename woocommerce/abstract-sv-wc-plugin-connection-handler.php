@@ -87,9 +87,10 @@ abstract class Connection_Handler {
 	 *
 	 * @since 5.3.0-dev
 	 *
+	 * @param null|mixed|array $args optional arguments that implementations could use to pass crendentials for connecting
 	 * @return bool
 	 */
-	public function connect() {
+	public function connect( $args = null ) {
 
 		update_option( $this->connection_key, 'yes' );
 
@@ -106,9 +107,10 @@ abstract class Connection_Handler {
 	 *
 	 * @since 5.3.0-dev
 	 *
+	 * @param null|mixed|array $args optional arguments that may be required when disconnecting
 	 * @return bool
 	 */
-	public function disconnect() {
+	public function disconnect( $args = null ) {
 
 		update_option( $this->connection_key, 'no' );
 
@@ -123,9 +125,10 @@ abstract class Connection_Handler {
 	 *
 	 * @since 5.3.0-dev
 	 *
+	 * @param null|mixed|array $args optional argument that could be used in implementations when a plugin may connect to multiple services
 	 * @return bool
 	 */
-	public function is_connected() {
+	public function is_connected( $args = null ) {
 
 		return 'yes' === get_option( $this->connection_key );
 	}
@@ -136,9 +139,11 @@ abstract class Connection_Handler {
 	 *
 	 * @since 5.3.0-dev
 	 *
+	 *
+	 * @param null|mixed|array $args optional argument that could be used in implementations when a plugin may connect to multiple services
 	 * @return bool
 	 */
-	public function is_disconnected() {
+	public function is_disconnected( $args = null ) {
 
 		return ! $this->is_connected();
 	}
