@@ -65,6 +65,8 @@ abstract class Setup_Wizard {
 	/**
 	 * Constructs the class.
 	 *
+	 * @since 5.2.2
+	 *
 	 * @param Framework\SV_WC_Plugin $plugin plugin instance
 	 */
 	public function __construct( Framework\SV_WC_Plugin $plugin ) {
@@ -176,6 +178,8 @@ abstract class Setup_Wizard {
 	 */
 	protected function get_documentation_notice_message() {
 
+		$message = '';
+
 		if ( $this->get_plugin()->get_documentation_url() ) {
 
 			$message = sprintf(
@@ -184,10 +188,6 @@ abstract class Setup_Wizard {
 				esc_html( $this->get_plugin()->get_plugin_name() ),
 				'<a href="' . esc_url( $this->get_plugin()->get_documentation_url() )  . '" target="_blank">', '</a>'
 			);
-
-		} else {
-
-			$message = '';
 		}
 
 		return $message;
@@ -625,9 +625,7 @@ abstract class Setup_Wizard {
 	 *
 	 * @since 5.2.2
 	 */
-	protected function render_before_next_steps() {
-		// stub method
-	}
+	protected function render_before_next_steps() {}
 
 
 	/**
@@ -637,9 +635,7 @@ abstract class Setup_Wizard {
 	 *
 	 * @since 5.2.2
 	 */
-	protected function render_after_next_steps() {
-		// stub method
-	}
+	protected function render_after_next_steps() {}
 
 
 	/**
