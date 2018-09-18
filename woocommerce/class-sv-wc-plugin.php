@@ -68,9 +68,6 @@ abstract class SV_WC_Plugin {
 	/** @var string the plugin text domain */
 	private $text_domain;
 
-	/** @var array flags supported components or features */
-	private $supports;
-
 	/** @var SV_WC_Plugin_Dependencies dependency handler instance */
 	private $dependency_handler;
 
@@ -106,13 +103,6 @@ abstract class SV_WC_Plugin {
 	 *     optional plugin arguments
 	 *
 	 *     @type string $text_domain the plugin textdomain, used to set up translations
-	 *     @type array  $supports {
-	 *         features and components supported (will default to false)
-	 *
-	 *         @type bool $external_service Connects to an external service
-	 *         @type bool $rest_api         Provides REST API routes
-	 *         @type bool $setup_wizard     Implements a Setup Wizard
-	 *     }
 	 *     @type array  $dependencies {
 	 *         PHP extension, function, and settings dependencies
 	 *
@@ -130,12 +120,10 @@ abstract class SV_WC_Plugin {
 
 		$args = wp_parse_args( $args, array(
 			'text_domain'  => '',
-			'supports'     => array(),
 			'dependencies' => array(),
 		) );
 
 		$this->text_domain = $args['text_domain'];
-		$this->supports    = is_array( $args['supports'] ) ? $args['supports'] : array();
 
 		// includes that are required to be available at all times
 		$this->includes();
@@ -155,20 +143,14 @@ abstract class SV_WC_Plugin {
 		// build the lifecycle handler instance
 		$this->init_lifecycle_handler();
 
-		// maybe build the REST API handler instance
-		if ( $this->has_rest_api() ) {
-			$this->init_rest_api_handler();
-		}
+		// build the REST API handler instance
+		$this->init_rest_api_handler();
 
-		// maybe build the connection handler instance
-		if ( $this->has_external_service() ) {
-			$this->init_connection_handler();
-		}
+		// build the connection handler instance
+		$this->init_connection_handler();
 
-		// maybe build the setup handler instance
-		if ( $this->has_setup_wizard() ) {
-			$this->init_setup_wizard_handler();
-		}
+		// build the setup handler instance
+		$this->init_setup_wizard_handler();
 
 		// add the action & filter hooks
 		$this->add_hooks();
@@ -251,19 +233,6 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Determines if the plugin provides WooCommerce REST API routes.
-	 *
-	 * @since 5.3.0-dev
-	 *
-	 * @return bool
-	 */
-	public function has_rest_api() {
-
-		return isset( $this->supports['rest_api'] ) && true === $this->supports['rest_api'];
-	}
-
-
-	/**
 	 * Builds the REST API handler instance.
 	 *
 	 * Plugins can override this to add their own data and/or routes.
@@ -277,19 +246,6 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Determines if the plugin connects to an external service.
-	 *
-	 * @since 5.3.0-dev
-	 *
-	 * @return bool
-	 */
-	public function has_external_service() {
-
-		return isset( $this->supports['external_service'] ) && true === $this->supports['external_service'];
-	}
-
-
-	/**
 	 * Builds the connection handler instance.
 	 *
 	 * Plugins can override and extend this method to add their own handler.
@@ -299,19 +255,6 @@ abstract class SV_WC_Plugin {
 	protected function init_connection_handler() {
 
 		require_once( $this->get_framework_path() . '/abstract-sv-wc-plugin-connection-handler.php' );
-	}
-
-
-	/**
-	 * Determines if the plugin has a Setup Wizard.
-	 *
-	 * @since 5.3.0-dev
-	 *
-	 * @return bool
-	 */
-	public function has_setup_wizard() {
-
-		return isset( $this->supports['setup_wizard'] ) && true === $this->supports['setup_wizard'];
 	}
 
 
@@ -341,7 +284,7 @@ abstract class SV_WC_Plugin {
 		// initialize the plugin admin
 		add_action( 'admin_init', array( $this, 'init_admin' ), 0 );
 
-		// hook for translations seperately to ensure they're loaded
+		// hook for translations separately to ensure they're loaded
 		add_action( 'init', array( $this, 'load_translations' ) );
 
 		// add the admin notices
@@ -450,10 +393,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.2.0
 	 */
-	public function init_plugin() {
-
-		// stub
-	}
+	public function init_plugin() {}
 
 
 	/**
@@ -464,10 +404,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.2.0
 	 */
-	public function init_admin() {
-
-		// stub
-	}
+	public function init_admin() {}
 
 
 	/**
@@ -854,6 +791,19 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Determines if the plugin connects to an external service.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return bool
+	 */
+	public function has_external_service() {
+
+		return null !== $this->connection_handler;
+	}
+
+
+	/**
 	 * Gets the Setup Wizard handler instance.
 	 *
 	 * @since 5.3.0-dev
@@ -863,6 +813,19 @@ abstract class SV_WC_Plugin {
 	public function get_setup_wizard_handler() {
 
 		return $this->setup_wizard_handler;
+	}
+
+
+	/**
+	 * Determines if the plugin has a Setup Wizard.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return bool
+	 */
+	public function has_setup_wizard() {
+
+		return null === $this->setup_wizard_handler;
 	}
 
 
