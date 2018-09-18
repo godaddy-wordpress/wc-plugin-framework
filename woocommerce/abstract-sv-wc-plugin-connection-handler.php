@@ -48,7 +48,7 @@ abstract class Connection_Handler {
 
 
 	/**
-	 * Initializes the Connection Handler and sets the default connection state.
+	 * Sets up the Connection Handler.
 	 *
 	 * @since 5.3.0-dev
 	 *
@@ -58,9 +58,6 @@ abstract class Connection_Handler {
 
 		// parent plugin
 		$this->plugin = $plugin;
-
-		// default state
-		$this->is_connected = $this->is_connected();
 	}
 
 
