@@ -166,6 +166,21 @@ abstract class Connection_Handler {
 	}
 
 
+	/**
+	 * Gets the documentation URL to help setting a connection with the service.
+	 *
+	 * The abstract method returns the plugin's documentation URL by default, but this could be a subsection of the general documentation, or a different page.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return string URL
+	 */
+	public function get_documentation_url() {
+
+		return $this->get_plugin()->get_documentation_url();
+	}
+
+
 }
 
 endif;
