@@ -189,8 +189,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/** @var array of shared setting names, if any.  This can be used for instance when a single plugin supports both credit card and echeck payments, and the same credentials can be used for both gateways */
 	private $shared_settings = array();
 
-	/** @var \SV_WC_Payment_Gateway_Payment_Tokens_Handler payment tokens handler instance */
+	/** @var SV_WC_Payment_Gateway_Payment_Tokens_Handler payment tokens handler instance */
 	protected $payment_tokens_handler;
+
+	/** @var Payment_Gateway\Handlers\Capture capture handler instance */
+	protected $capture_handler;
 
 	/** @var array of SV_WC_Payment_Gateway_Integration objects for Subscriptions, Pre-Orders, etc. */
 	protected $integrations;
@@ -295,6 +298,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$this->init_payment_tokens_handler();
 
 		$this->init_integrations();
+
+		// initialize the capture handler
+		$this->init_capture_handler();
 
 		// pay page fallback
 		$this->add_pay_page_handler();
@@ -1740,131 +1746,46 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	}
 
 
-	/** Capture feature *******************************************************/
+	/** Capture Methods ***********************************************************************************************/
 
 
 	/**
-	 * Perform a credit card capture for an order.
+	 * Builds the capture handler instance.
 	 *
-	 * @since 4.5.0
-	 * @param \WC_Order $order the order object
-	 * @return \SV_WC_Payment_Gateway_API_Response|null
+	 * @since 5.3.0-dev
 	 */
-	public function do_credit_card_capture( $order, $amount = null ) {
+	public function init_capture_handler() {
 
-		$order = $this->get_order_for_capture( $order, $amount );
-
-		try {
-
-			$response = $this->get_api()->credit_card_capture( $order );
-
-			if ( $response->transaction_approved() ) {
-
-				$message = sprintf(
-					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount. Definitions: Capture, as in capture funds from a credit card. */
-					__( '%1$s Capture of %2$s Approved', 'woocommerce-plugin-framework' ),
-					$this->get_method_title(),
-					wc_price( $order->capture->amount, array( 'currency' => SV_WC_Order_Compatibility::get_prop( $order, 'currency', 'view' ) ) )
-				);
-
-				// adds the transaction id (if any) to the order note
-				if ( $response->get_transaction_id() ) {
-					$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
-				}
-
-				$order->add_order_note( $message );
-
-				// add the standard capture data to the order
-				$this->add_capture_data( $order, $response );
-
-				// let payment gateway implementations add their own data
-				$this->add_payment_gateway_capture_data( $order, $response );
-
-				// if the original auth amount has been captured, complete payment
-				if ( $this->get_order_meta( $order, 'capture_total' ) >= SV_WC_Helper::number_format( $this->get_order_authorization_amount( $order ) ) ) {
-
-					// prevent stock from being reduced when payment is completed as this is done when the charge was authorized
-					add_filter( 'woocommerce_payment_complete_reduce_order_stock', '__return_false', 100 );
-
-					// complete the order
-					$order->payment_complete();
-				}
-
-				return array(
-					'result'  => 'success',
-					'message' => $message,
-				);
-
-			} else {
-
-				$this->do_credit_card_capture_failed( $order, $response );
-
-				$message = sprintf(
-					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount, %3$s - transaction status message. Definitions: Capture, as in capture funds from a credit card. */
-					__( '%1$s Capture Failed: %2$s - %3$s', 'woocommerce-plugin-framework' ),
-					$this->get_method_title(),
-					$response->get_status_code(),
-					$response->get_status_message()
-				);
-
-				$order->add_order_note( $message );
-
-				return array(
-					'result'  => 'failure',
-					'message' => $message,
-				);
-			}
-
-		} catch ( SV_WC_Plugin_Exception $e ) {
-
-			$message = sprintf(
-				/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - failure message. Definitions: "capture" as in capturing funds from a credit card. */
-				__( '%1$s Capture Failed: %2$s', 'woocommerce-plugin-framework' ),
-				$this->get_method_title(),
-				$e->getMessage()
-			);
-
-			$order->add_order_note( $message );
-
-			return array(
-				'result'  => 'failure',
-				'message' => $message,
-			);
-		}
+		$this->capture_handler = new Payment_Gateway\Handlers\Capture( $this );
 	}
 
 
 	/**
-	 * Lets gateways handle any specific capture failure results for the order.
+	 * Gets the capture handler instance.
 	 *
-	 * @since 5.1.3
+	 * @since 5.3.0-dev
 	 *
-	 * @param \WC_Order $order the order object
-	 * @param SV_WC_Payment_Gateway_API_Response $response API response object
+	 * @return Payment_Gateway\Handlers\Capture
 	 */
-	protected function do_credit_card_capture_failed( \WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) { }
+	public function get_capture_handler() {
+
+		return $this->capture_handler;
+	}
 
 
 	/**
-	 * Gets an order object with payment data added for use in credit card
-	 * capture transactions. Standard information can include:
+	 * Gets an order object with payment data added for use in credit card capture transactions.
 	 *
-	 * $order->capture->amount      - amount to capture (partial captures are not supported by the framework yet)
-	 * $order->capture->description - capture description
-	 * $order->capture->trans_id    - transaction ID for the order being captured
-	 *
-	 * included for backwards compat (4.1 and earlier)
-	 *
-	 * $order->capture->amount
-	 * $order->capture->description
+	 * This was intentionally not moved to the capture handler since we'll likely be refactoring how this information is
+	 * set in the future, and plenty of gateways override it.
 	 *
 	 * @since 4.5.0
 	 *
 	 * @param \WC_Order|int $order the order being processed
-	 * @param float $amount amount to capture
+	 * @param float|null $amount amount to capture or null for the full order amount
 	 * @return \WC_Order
 	 */
-	protected function get_order_for_capture( $order, $amount = null ) {
+	public function get_order_for_capture( $order, $amount = null ) {
 
 		if ( is_numeric( $order ) ) {
 			$order = wc_get_order( $order );
@@ -1893,77 +1814,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 *
 		 * @since 2.0.0
 		 * @param \WC_Order $order order object
-		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 * @param SV_WC_Payment_Gateway $this instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_capture', $order, $this );
 	}
-
-
-	/**
-	 * Gets the maximum amount that can be captured from an order.
-	 *
-	 * Gateways can override this for an value above or below the order total.
-	 * For instance, some processors allow capturing an amount a certain
-	 * percentage higher than the payment total.
-	 *
-	 * @since 5.0.0
-	 *
-	 * @param \WC_Order $order order object
-	 * @return float
-	 */
-	public function get_order_capture_maximum( \WC_Order $order ) {
-
-		return $this->get_order_authorization_amount( $order );
-	}
-
-
-	/**
-	 * Gets the amount originally authorized for an order.
-	 *
-	 * @since 5.0.0
-	 *
-	 * @param \WC_Order $order order object
-	 * @return float
-	 */
-	public function get_order_authorization_amount( \WC_Order $order ) {
-
-		// if a specific auth amount was stored, use it
-		// otherwise, use the order total
-		$amount = ( $this->get_order_meta( $order, 'authorization_amount' ) ) ? $this->get_order_meta( $order, 'authorization_amount' ) : $order->get_total();
-
-		return (float) $amount;
-	}
-
-
-	/**
-	 * Adds the standard capture data to an order.
-	 *
-	 * @since 4.5.0
-	 * @param \WC_Order $order the order object
-	 * @param \SV_WC_Payment_Gateway_API_Response $response the transaction response
-	 */
-	protected function add_capture_data( $order, $response ) {
-
-		$total_captured = (float) $this->get_order_meta( $order, 'capture_total' ) + (float) $order->capture->amount;
-
-		$this->update_order_meta( $order, 'capture_total',   SV_WC_Helper::number_format( $total_captured ) );
-		$this->update_order_meta( $order, 'charge_captured', $this->supports_credit_card_partial_capture() && $this->is_partial_capture_enabled() && $total_captured < (float) $this->get_order_capture_maximum( $order ) ? 'partial' : 'yes' );
-
-		// add capture transaction ID
-		if ( $response && $response->get_transaction_id() ) {
-			$this->update_order_meta( $order, 'capture_trans_id', $response->get_transaction_id() );
-		}
-	}
-
-
-	/**
-	 * Adds any gateway-specific data to the order after a capture is performed.
-	 *
-	 * @since 4.5.0
-	 * @param \WC_Order $order the order object
-	 * @param \SV_WC_Payment_Gateway_API_Response $response the transaction response
-	 */
-	protected function add_payment_gateway_capture_data( $order, $response ) { }
 
 
 	/** Refund feature ********************************************************/
@@ -2001,7 +1855,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		// if captures are supported and the order has an authorized, but not captured charge, void it instead
-		if ( $this->supports_voids() && ! $this->authorization_captured( $order ) ) {
+		if ( $this->supports_voids() && ! $this->get_capture_handler()->is_order_captured( $order ) ) {
 			return $this->process_void( $order );
 		}
 
@@ -3101,7 +2955,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @return bool
 	 */
 	public function supports_credit_card_partial_capture() {
-		return $this->supports( self::FEATURE_CREDIT_CARD_PARTIAL_CAPTURE );
+		return $this->supports_credit_card_capture() && $this->supports( self::FEATURE_CREDIT_CARD_PARTIAL_CAPTURE );
 	}
 
 
@@ -3148,102 +3002,24 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			);
 		}
 
-		// get a list of the "paid" status names
-		$paid_statuses = array_map( 'wc_get_order_status_name', (array) SV_WC_Plugin_Compatibility::wc_get_is_paid_statuses() );
-		$conjuction    = _x( 'or', 'coordinating conjunction for a list of order statuses: on-hold, processing, or completed', 'woocommerce-plugin-framework' );
+		if ( $this->supports_credit_card_capture() ) {
 
-		$form_fields['enable_paid_capture'] = array(
-			'label'       => __( 'Capture Paid Orders', 'woocommerce-plugin-framework' ),
-			'type'        => 'checkbox',
-			'description' => sprintf(
-				__( 'Automatically capture orders when they are changed to %s.', 'woocommerce-plugin-framework' ),
-				esc_html( ! empty( $paid_statuses ) ? SV_WC_Helper::list_array_items( $paid_statuses, $conjuction ) : __( 'a paid status', 'woocommerce-plugin-framework' ) )
-		 	),
-			'default' => 'no',
-		);
+			// get a list of the "paid" status names
+			$paid_statuses = array_map( 'wc_get_order_status_name', (array) SV_WC_Plugin_Compatibility::wc_get_is_paid_statuses() );
+			$conjuction    = _x( 'or', 'coordinating conjunction for a list of order statuses: on-hold, processing, or completed', 'woocommerce-plugin-framework' );
+
+			$form_fields['enable_paid_capture'] = array(
+				'label'       => __( 'Capture Paid Orders', 'woocommerce-plugin-framework' ),
+				'type'        => 'checkbox',
+				'description' => sprintf(
+					__( 'Automatically capture orders when they are changed to %s.', 'woocommerce-plugin-framework' ),
+					esc_html( ! empty( $paid_statuses ) ? SV_WC_Helper::list_array_items( $paid_statuses, $conjuction ) : __( 'a paid status', 'woocommerce-plugin-framework' ) )
+				),
+				'default' => 'no',
+			);
+		}
 
 		return $form_fields;
-	}
-
-
-	/**
-	 * Returns true if the authorization for $order is still valid for capture
-	 *
-	 * @since 2.0.0
-	 * @param WC_Order $order the order
-	 * @return boolean true if the authorization is valid for capture, false otherwise
-	 */
-	public function authorization_valid_for_capture( $order ) {
-
-		$order_id = SV_WC_Order_Compatibility::get_prop( $order, 'id' );
-
-		// check whether the charge has already been captured by this gateway
-		$charge_captured = $this->get_order_meta( $order_id, 'charge_captured' );
-
-		if ( $this->authorization_fully_captured( $order ) ) {
-			return false;
-		}
-
-		// if for any reason the authorization can not be captured
-		$auth_can_be_captured = $this->get_order_meta( $order_id, 'auth_can_be_captured' );
-
-		if ( 'no' == $auth_can_be_captured ) {
-			return false;
-		}
-
-		// authorization hasn't already been captured, but has it expired?
-		return ! $this->has_authorization_expired( $order );
-	}
-
-
-	/**
-	 * Determines if an order's authorization has been captured, event partially.
-	 *
-	 * @since 5.0.0
-	 *
-	 * @param \WC_Order $order order object
-	 * @return bool
-	 */
-	public function authorization_captured( $order ) {
-
-		return in_array( $this->get_order_meta( $order, 'charge_captured' ), array( 'yes', 'partial' ), true );
-	}
-
-
-	/**
-	 * Determines if an order's authorization has been fully captured.
-	 *
-	 * @since 5.0.0
-	 *
-	 * @param \WC_Order $order order object
-	 * @return bool
-	 */
-	public function authorization_fully_captured( $order ) {
-
-		$captured = 'yes' === $this->get_order_meta( $order, 'charge_captured' );
-
-		if ( ! $captured && $this->supports_credit_card_partial_capture() && $this->is_partial_capture_enabled() ) {
-			$captured = (float) $this->get_order_meta( $order, 'capture_total' ) >= (float) $this->get_order_capture_maximum( $order );
-		}
-
-		return $captured;
-	}
-
-
-	/**
-	 * Returns true if the authorization for $order has expired
-	 *
-	 * @since 2.0.0
-	 * @param WC_Order $order the order
-	 * @return boolean true if the authorization has expired, false otherwise
-	 */
-	public function has_authorization_expired( $order ) {
-
-		$transaction_date = $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'trans_date' );
-
-		$transaction_time = strtotime( $transaction_date );
-
-		return $transaction_date && floor( ( time() - $transaction_time ) / 3600 ) > $this->get_authorization_time_window();
 	}
 
 
@@ -3257,7 +3033,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @since 2.2.0
 	 * @return int hours
 	 */
-	protected function get_authorization_time_window() {
+	public function get_authorization_time_window() {
 
 		return 720;
 	}
@@ -4309,6 +4085,187 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		global $wp;
 
 		return isset( $wp->query_vars['order-received'] ) ? absint( $wp->query_vars['order-received'] ) : 0;
+	}
+
+
+	/** Deprecated Methods ********************************************************************************************/
+
+
+	/**
+	 * Determines if the authorization for $order is still valid for capture.
+	 *
+	 * @since 2.0.0
+	 * @deprecated 5.3.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @return bool
+	 */
+	public function authorization_valid_for_capture( $order ) {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev', get_class( $this->get_capture_handler() ) . '::order_can_be_captured()' );
+
+		return $this->get_capture_handler()->order_can_be_captured( $order );
+	}
+
+
+	/**
+	 * Determines if an order's authorization has been captured, event partially.
+	 *
+	 * @since 5.0.0
+	 * @deprecated 5.3.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @return bool
+	 */
+	public function authorization_captured( $order ) {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev', get_class( $this->get_capture_handler() ) . '::is_order_captured()' );
+
+		return $this->get_capture_handler()->is_order_captured( $order );
+	}
+
+
+	/**
+	 * Returns true if the authorization for $order has expired
+	 *
+	 * @since 2.0.0
+	 * @deprecated 5.3.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @return bool
+	 */
+	public function has_authorization_expired( $order ) {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev', get_class( $this->get_capture_handler() ) . '::has_order_authorization_expired()' );
+
+		return $this->get_capture_handler()->has_order_authorization_expired( $order );
+	}
+
+
+	/**
+	 * Determines if an order's authorization has been fully captured.
+	 *
+	 * @since 5.0.0
+	 * @deprecated 5.3.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @return bool
+	 */
+	public function authorization_fully_captured( $order ) {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev', get_class( $this->get_capture_handler() ) . '::is_order_fully_captured()' );
+
+		return $this->get_capture_handler()->is_order_fully_captured( $order );
+	}
+
+
+	/**
+	 * Perform a credit card capture for an order.
+	 *
+	 * @since 4.5.0
+	 * @deprecated 5.3.0-dev
+	 *
+	 * @param \WC_Order $order the order object
+	 * @param float|null $amount amount to capture
+	 * @return array
+	 */
+	public function do_credit_card_capture( $order, $amount = null ) {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev', get_class( $this->get_capture_handler() ) . '::perform_capture()' );
+
+		$result = $this->get_capture_handler()->perform_capture( $order, $amount );
+
+		// convert to the deprecated format
+		$result['result'] = $result['success'] ? 'success' : 'failure';
+
+		return $result;
+	}
+
+
+	/**
+	 * Lets gateways handle any specific capture failure results for the order.
+	 *
+	 * @since 5.1.3
+	 * @deprecated 5.3.0-dev
+	 *
+	 * @param \WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response API response object
+	 */
+	protected function do_credit_card_capture_failed( \WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev', get_class( $this->get_capture_handler() ) . '::do_capture_failed()' );
+
+		$this->get_capture_handler()->do_capture_failed( $order, $response );
+	}
+
+
+	/**
+	 * Gets the maximum amount that can be captured from an order.
+	 *
+	 * Gateways can override this for an value above or below the order total.
+	 * For instance, some processors allow capturing an amount a certain
+	 * percentage higher than the payment total.
+	 *
+	 * @since 5.0.0
+	 * @deprecated 5.3.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @return float
+	 */
+	public function get_order_capture_maximum( \WC_Order $order ) {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev', get_class( $this->get_capture_handler() ) . '::get_order_capture_maximum()' );
+
+		return $this->get_capture_handler()->get_order_capture_maximum( $order );
+	}
+
+
+	/**
+	 * Gets the amount originally authorized for an order.
+	 *
+	 * @since 5.0.0
+	 * @deprecated 5.3.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @return float
+	 */
+	public function get_order_authorization_amount( \WC_Order $order ) {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev', get_class( $this->get_capture_handler() ) . '::get_order_authorization_amount()' );
+
+		return $this->get_capture_handler()->get_order_authorization_amount( $order );
+	}
+
+
+	/**
+	 * Adds the standard capture data to an order.
+	 *
+	 * @since 4.5.0
+	 * @deprecated 5.3.0-dev
+	 *
+	 * @param \WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
+	 */
+	protected function add_capture_data( $order, $response ) {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev', get_class( $this->get_capture_handler() ) . '::do_capture_success()' );
+
+		$this->get_capture_handler()->do_capture_success( $order, $response );
+	}
+
+
+	/**
+	 * Adds any gateway-specific data to the order after a capture is performed.
+	 *
+	 * @since 4.5.0
+	 * @deprecated 5.3.0-dev
+	 *
+	 * @param \WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
+	 */
+	protected function add_payment_gateway_capture_data( $order, $response ) {
+
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev' );
 	}
 
 
