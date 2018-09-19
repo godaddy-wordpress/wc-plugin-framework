@@ -217,7 +217,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 				$order = wc_get_order( $order_id );
 
-				if ( $order && $gateway = $this->get_order_gateway( $order ) ) {
+				if ( $order && ( $gateway = $this->get_order_gateway( $order ) ) ) {
 					$gateway->get_capture_handler()->maybe_perform_capture( $order );
 				}
 			}
@@ -446,6 +446,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * @deprecated 5.3.0-dev
 	 *
 	 * @param \WC_Order|int $order the order identifier or order object
+	 * @param float|null $amount capture amount
 	 */
 	protected function maybe_capture_charge( $order, $amount = null ) {
 

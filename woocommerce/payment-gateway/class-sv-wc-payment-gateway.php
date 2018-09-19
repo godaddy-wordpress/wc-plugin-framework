@@ -1782,7 +1782,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @since 4.5.0
 	 *
 	 * @param \WC_Order|int $order the order being processed
-	 * @param float $amount amount to capture
+	 * @param float|null $amount amount to capture or null for the full order amount
 	 * @return \WC_Order
 	 */
 	public function get_order_for_capture( $order, $amount = null ) {
