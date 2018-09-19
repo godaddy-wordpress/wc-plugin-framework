@@ -327,4 +327,21 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 	}
 
 
+	/**
+	 * Tests \SV_WC_Payment_Gateway_Payment_Token::set_billing_hash()
+	 *
+	 * Also provides coverage for \SV_WC_Payment_Gateway_Payment_Token::get_billing_hash()
+	 *
+	 * @since 5.3.0-dev
+	 */
+	public function test_set_billing_hash() {
+
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
+
+		$token->set_billing_hash( 'hash' );
+
+		$this->assertEquals( 'hash', $token->get_billing_hash() );
+	}
+
+
 }

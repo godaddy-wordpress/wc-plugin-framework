@@ -126,7 +126,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$address->set_from_order( $order );
 
 			// store the billing hash on the token for later use in case it needs to be updated
-			$token->set_billing_hash( SV_WC_Helper::generate_address_hash( $address ) );
+			$token->set_billing_hash( $address->get_hash() );
 
 			// set the resulting token on the order
 			$order->payment->token = $token->get_id();

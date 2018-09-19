@@ -29,6 +29,16 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\Addresses\\Customer_Address' ) ) :
 
+/**
+ * The customer address data class.
+ *
+ * Adds customer-specific data to a base address, as used for a billing or shipping address that can include first
+ * and last name.
+ *
+ * @see Address
+ *
+ * @since 5.3.0-dev
+ */
 class Customer_Address extends Address {
 
 
@@ -68,6 +78,27 @@ class Customer_Address extends Address {
 	}
 
 
+	/**
+	 * Gets the data used to generate a hash for the address.
+	 *
+	 * @see Address::get_hash_data()
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return string[]
+	 */
+	protected function get_hash_data() {
+
+		// add the first & last name to data used to generate the hash
+		$data = array_merge( array(
+			$this->get_first_name(),
+			$this->get_last_name(),
+		), parent::get_hash_data() );
+
+		return $data;
+	}
+
+
 	/** Setter Methods ************************************************************************************************/
 
 
@@ -102,7 +133,7 @@ class Customer_Address extends Address {
 	 *
 	 * @since 5.3.0-dev
 	 *
-	 * @param \WC_Order $order
+	 * @param \WC_Order $order WooCommerce order object
 	 * @param string $type address type, like billing or shipping
 	 */
 	public function set_from_order( \WC_Order $order, $type = 'billing' ) {

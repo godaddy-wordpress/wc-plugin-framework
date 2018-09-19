@@ -28,6 +28,14 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\Addresses\\Address' ) ) :
 
+/**
+ * The base address data class.
+ *
+ * This serves as a standard address object to be passed around by plugins whenever dealing with address data, and
+ * eliminates the need to rely on WooCommerce's address arrays.
+ *
+ * @since 5.3.0-dev
+ */
 class Address {
 
 
@@ -144,6 +152,42 @@ class Address {
 	public function get_postcode() {
 
 		return $this->postcode;
+	}
+
+
+	/**
+	 * Gets the hash representation of this address.
+	 *
+	 * @see Address::get_hash_data()
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return string
+	 */
+	public function get_hash() {
+
+		return md5( json_encode( $this->get_hash_data() ) );
+	}
+
+
+	/**
+	 * Gets the data used to generate a hash for the address.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return string[]
+	 */
+	protected function get_hash_data() {
+
+		return array(
+			$this->get_line_1(),
+			$this->get_line_2(),
+			$this->get_line_3(),
+			$this->get_locality(),
+			$this->get_region(),
+			$this->get_country(),
+			$this->get_postcode(),
+		);
 	}
 
 

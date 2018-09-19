@@ -444,7 +444,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$address  = new Addresses\Customer_Address();
 		$address->set_from_order( $order );
 
-		$new_billing_hash = SV_WC_Helper::generate_address_hash( $address );
+		$new_billing_hash = $address->get_hash();
 
 		// if the address & token hash don't match, update
 		if ( $token->get_billing_hash() !== $new_billing_hash ) {
