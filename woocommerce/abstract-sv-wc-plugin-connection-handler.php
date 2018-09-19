@@ -164,13 +164,14 @@ abstract class Connection_Handler {
 	 * @since 1.1.0-dev.1
 	 *
 	 * @param null|mixed $args optional arguments
+	 * @param \stdClass $status response object (optional, will get the service status if unspecified)
 	 * @return null|string
 	 */
-	public function get_service_error( $args = null ) {
+	public function get_service_error_message( $args = null, $status = null ) {
 
-		$status = $this->get_service_status( $args );
+		$status = null === $status ? $this->get_service_status( $args ) : $status;
 
-		return $this->has_service_error( $status, $args ) ? $status->message : null;
+		return $this->has_service_error( $args, $status ) ? $status->message : null;
 	}
 
 
@@ -179,11 +180,11 @@ abstract class Connection_Handler {
 	 *
 	 * @since 5.3.0-dev
 	 *
+	 * @param mixed|null $args optional arguments to get the service status
 	 * @param \stdClass $status response object (optional, will get the service status if unspecified)
-	 * @param mixed|null optional arguments to get the service status
 	 * @return bool
 	 */
-	public function has_service_error( $status = null, $args = null ) {
+	public function has_service_error( $args = null, $status = null ) {
 
 		$status = null === $status ? $this->get_service_status( $args ) : $status;
 
