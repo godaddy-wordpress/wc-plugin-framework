@@ -43,6 +43,9 @@ abstract class Connection_Handler {
 	/** @var Framework\SV_WC_Plugin main plugin class */
 	private $plugin;
 
+	/** @var string optional section name (without the prepending # pound sign) that the documentation uses for configuring the external service */
+	protected $documentation_url_section = '';
+
 	/** @var bool whether the plugin is connected to an external service */
 	protected $is_connected;
 
@@ -69,6 +72,23 @@ abstract class Connection_Handler {
 	 * @return string e.g. "Google", "MailChimp", etc.
 	 */
 	abstract public function get_service_name();
+
+
+	/**
+	 * Makes and returns an ID for the service the plugin connects to.
+	 *
+	 * @since 5.3.0-dev.1
+	 *
+	 * @return string e.g. "Google" becomes 'wc_<plugin_id>_google', "MailChimp" becomes 'wc_<plugin_id>_mailchimp"
+	 */
+	public function get_service_id() {
+
+		$plugin_id    = $this->get_plugin()->get_id();
+		$service_name = $this->get_service_name();
+		$service_id   = "wc_{$plugin_id}_{$service_name}";
+
+		return str_replace( '-', '_', sanitize_title( $service_id ) );
+	}
 
 
 	/**
@@ -143,10 +163,41 @@ abstract class Connection_Handler {
 	 *
 	 * @since 1.1.0-dev.1
 	 *
-	 * @param mixed|array $args optional arguments
-	 * @return string
+	 * @param null|mixed $args optional arguments
+	 * @return null|string
 	 */
-	abstract public function get_connection_error( $args = null );
+	public function get_service_error( $args = null ) {
+
+		$status = $this->get_service_status( $args );
+
+		return $this->has_service_error( $status, $args ) ? $status->message : null;
+	}
+
+
+	/**
+	 * Determines whether the service has a connection issue.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @param \stdClass $status response object (optional, will get the service status if unspecified)
+	 * @param mixed|null optional arguments to get the service status
+	 * @return bool
+	 */
+	public function has_service_error( $status = null, $args = null ) {
+
+		$status = null === $status ? $this->get_service_status( $args ) : $status;
+
+		return (int) $status->code >= 300;
+	}
+
+
+	/**
+	 * Gets a service status response.
+	 *
+	 * @param null|mixed $args optional arguments
+	 * @return \stdClass the returned object should have 2 mandatory properties `code` and `message`
+	 */
+	abstract public function get_service_status( $args = null );
 
 
 	/**
@@ -173,7 +224,9 @@ abstract class Connection_Handler {
 	 */
 	public function get_documentation_url() {
 
-		return $this->get_plugin()->get_documentation_url();
+		$section = ! empty( $this->documentation_url_section ) ? "#{$this->documentation_url_section}" : '';
+
+		return sprintf( '%s' . $section, $this->get_plugin()->get_documentation_url() );
 	}
 
 
