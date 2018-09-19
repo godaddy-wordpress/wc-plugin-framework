@@ -195,6 +195,11 @@ abstract class Connection_Handler {
 	/**
 	 * Gets a service status response.
 	 *
+	 * Different external services may return connection status in different ways, or not offer a connection status ping at all.
+	 * This method is supposed to normalize those responses or help offering one for services that do not, providing a response code and a message that is supposed to mock data from an API status response.
+	 *
+	 * Child implementations can perform any action in the method body that would ping the external service and assess whether a connection is working or not.
+	 *
 	 * @param null|mixed $args optional arguments
 	 * @return \stdClass the returned object should have 2 mandatory properties `code` and `message`
 	 */
