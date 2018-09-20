@@ -874,7 +874,22 @@ abstract class SV_WC_API_Base {
 	 */
 	public function is_connected() {
 
-		return true;
+		return ! $this->needs_authentication() || $this->is_configured();
+	}
+
+
+	/**
+	 * Checks if the plugin can connect to the external API service.
+	 *
+	 * Child implementations should override this method with a request to the external service and throw exception if errors occur.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return bool
+	 */
+	public function test_connection() {
+
+		return ! $this->needs_authentication() || $this->is_connected();
 	}
 
 
