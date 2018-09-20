@@ -78,6 +78,9 @@ abstract class SV_WC_API_Base {
 	/** @var object response */
 	protected $response;
 
+	/** @var bool flags whether the plugin needs a form of authentication to connect to the API */
+	protected $needs_authentication;
+
 
 	/**
 	 * Perform the request and return the parsed response
@@ -841,7 +844,7 @@ abstract class SV_WC_API_Base {
 	 */
 	public function needs_authentication() {
 
-		return false;
+		return ! empty( $this->needs_authentication );
 	}
 
 

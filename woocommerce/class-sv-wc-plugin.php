@@ -758,7 +758,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the Setup Wizard handler instance.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.2.2
 	 *
 	 * @return null|Admin\Setup_Wizard
 	 */
