@@ -867,6 +867,7 @@ abstract class SV_WC_API_Base {
 	 * Determines whether the plugin is able to connect to an external API.
 	 *
 	 * Child implementations could ping the external service and ensure there's an expected response, such as a ping.
+	 * @see SV_WC_API_Base::test_connection() for testing the connection with a new set of credentials.
 	 *
 	 * @since 5.3.0-dev
 	 *
@@ -882,12 +883,14 @@ abstract class SV_WC_API_Base {
 	 * Checks if the plugin can connect to the external API service.
 	 *
 	 * Child implementations should override this method with a request to the external service and throw exception if errors occur.
+	 * @see SV_WC_API_Base::is_connected() - the difference with this method is that test_connection() should be able to perform a connetion test without changing settings or save new authentication credentials.
 	 *
 	 * @since 5.3.0-dev
 	 *
+	 * @param mixed $args optional arguments to test
 	 * @return bool
 	 */
-	public function test_connection() {
+	public function test_connection( $args = null ) {
 
 		return ! $this->needs_authentication() || $this->is_connected();
 	}
