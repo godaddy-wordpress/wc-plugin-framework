@@ -884,6 +884,7 @@ abstract class SV_WC_API_Base {
 	 *
 	 * Child implementations should override this method with a request to the external service and throw exception if errors occur.
 	 * @see SV_WC_API_Base::is_connected() - the difference with this method is that test_connection() should be able to perform a connetion test without changing settings or save new authentication credentials.
+	 * Also, exceptions thrown by this method would offer the user a feedback about any connection error.
 	 *
 	 * @since 5.3.0-dev
 	 *
