@@ -827,6 +827,54 @@ abstract class SV_WC_API_Base {
 	}
 
 
+	/** Connection Handlers ******************************************************/
+
+
+	/**
+	 * Flags whether the plugin needs authentication to connect to an external API, such as an API key.
+	 *
+	 * Child implementations should return true if that's the case.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return bool
+	 */
+	public function needs_authentication() {
+
+		return false;
+	}
+
+
+	/**
+	 * Determines whether the plugin is configured to connect to an external API.
+	 *
+	 * Child implementations could check if a setting is present, such as an API key.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return bool
+	 */
+	public function is_configured() {
+
+		return true;
+	}
+
+
+	/**
+	 * Determines whether the plugin is able to connect to an external API.
+	 *
+	 * Child implementations could ping the external service and ensure there's an expected response, such as a ping.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return bool
+	 */
+	public function is_connected() {
+
+		return true;
+	}
+
+
 }
 
 endif;

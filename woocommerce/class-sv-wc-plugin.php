@@ -80,9 +80,6 @@ abstract class SV_WC_Plugin {
 	/** @var REST_API REST API handler instance */
 	protected $rest_api_handler;
 
-	/** @var Plugin\Connection_Handler instance*/
-	protected $connection_handler;
-
 	/** @var Admin\Setup_Wizard handler instance */
 	protected $setup_wizard_handler;
 
@@ -140,14 +137,8 @@ abstract class SV_WC_Plugin {
 		// build the hook deprecator instance
 		$this->init_hook_deprecator();
 
-		// build the lifecycle handler instance
-		$this->init_lifecycle_handler();
-
 		// build the REST API handler instance
 		$this->init_rest_api_handler();
-
-		// build the connection handler instance
-		$this->init_connection_handler();
 
 		// build the setup handler instance
 		$this->init_setup_wizard_handler();
@@ -242,19 +233,6 @@ abstract class SV_WC_Plugin {
 	protected function init_rest_api_handler() {
 
 		$this->rest_api_handler = new REST_API( $this );
-	}
-
-
-	/**
-	 * Builds the connection handler instance.
-	 *
-	 * Plugins can override and extend this method to add their own handler.
-	 *
-	 * @since 5.3.0-dev
-	 */
-	protected function init_connection_handler() {
-
-		require_once( $this->get_framework_path() . '/abstract-sv-wc-plugin-connection-handler.php' );
 	}
 
 
@@ -778,32 +756,6 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Gets the connection handler instance.
-	 *
-	 * @since 5.3.0-dev
-	 *
-	 * @return null|Plugin\Connection_Handler
-	 */
-	public function get_connection_handler() {
-
-		return $this->connection_handler;
-	}
-
-
-	/**
-	 * Determines if the plugin connects to an external service.
-	 *
-	 * @since 5.3.0-dev
-	 *
-	 * @return bool
-	 */
-	public function has_external_service() {
-
-		return null !== $this->connection_handler;
-	}
-
-
-	/**
 	 * Gets the Setup Wizard handler instance.
 	 *
 	 * @since 5.3.0-dev
@@ -813,19 +765,6 @@ abstract class SV_WC_Plugin {
 	public function get_setup_wizard_handler() {
 
 		return $this->setup_wizard_handler;
-	}
-
-
-	/**
-	 * Determines if the plugin has a Setup Wizard.
-	 *
-	 * @since 5.3.0-dev
-	 *
-	 * @return bool
-	 */
-	public function has_setup_wizard() {
-
-		return null === $this->setup_wizard_handler;
 	}
 
 
