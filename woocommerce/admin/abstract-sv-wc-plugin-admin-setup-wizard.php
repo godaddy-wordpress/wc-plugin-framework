@@ -56,7 +56,7 @@ abstract class Setup_Wizard {
 	protected $steps = array();
 
 	/** @var string setup handler ID  */
-	private $id;
+	protected $id;
 
 	/** @var Framework\SV_WC_Plugin plugin instance */
 	private $plugin;
