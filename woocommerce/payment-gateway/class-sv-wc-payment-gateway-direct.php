@@ -377,7 +377,18 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					$this->add_transaction_data( $order );
 				}
 
-				if ( $order->has_status( 'on-hold' ) ) {
+				/**
+				 * Filters the order status that's considered to be "held".
+				 *
+				 * @since 5.3.0-dev
+				 *
+				 * @param string $status held order status
+				 * @param \WC_Order $order order object
+				 * @param SV_WC_Payment_Gateway_API_Response|null $response API response object, if any
+				 */
+				$held_order_status = apply_filters( 'wc_' . $this->get_id() . '_held_order_status', 'on-hold', $order, null );
+
+				if ( $order->has_status( $held_order_status ) ) {
 					SV_WC_Order_Compatibility::reduce_stock_levels( $order ); // reduce stock for held orders, but don't complete payment
 				} else {
 					$order->payment_complete(); // mark order as having received payment
