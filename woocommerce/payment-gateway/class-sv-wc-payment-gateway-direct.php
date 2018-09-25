@@ -350,7 +350,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 * @since 1.0.0
 		 * @param bool $result default true
 		 * @param int|string $order_id order ID for the payment
-		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 * @param SV_WC_Payment_Gateway_Direct $this instance
 		 */
 		if ( is_array( $result = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_process_payment', true, $order_id, $this ) ) ) {
 			return $result;
@@ -361,10 +361,19 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		try {
 
-			// registered customer checkout (already logged in or creating account at checkout)
-			if ( $this->supports_tokenization() && 0 != $order->get_user_id() && $this->get_payment_tokens_handler()->should_tokenize() &&
-				( '0.00' === $order->payment_total || $this->tokenize_before_sale() ) ) {
-				$order = $this->get_payment_tokens_handler()->create_token( $order );
+			// handle creating or updating a payment method for registered customers if tokenization is enabled
+			if ( $this->supports_tokenization() && 0 !== (int) $order->get_user_id() ) {
+
+				// if already paying with an existing method, try and updated it locally and remotely
+				if ( ! empty( $order->payment->token ) ) {
+
+					$this->update_transaction_payment_method( $order );
+
+				// otherwise, create a new token if desired
+				} elseif ( $this->get_payment_tokens_handler()->should_tokenize() && ( '0.00' === $order->payment_total || $this->tokenize_before_sale() ) ) {
+
+					$order = $this->get_payment_tokens_handler()->create_token( $order );
+				}
 			}
 
 			// payment failures are handled internally by do_transaction()
@@ -406,7 +415,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				 *
 				 * @since 4.1.0
 				 * @param \WC_Order $order order object
-				 * @param \SV_WC_Payment_Gateway_Direct $this instance
+				 * @param SV_WC_Payment_Gateway_Direct $this instance
 				 */
 				do_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_processed', $order, $this );
 
@@ -427,6 +436,80 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		return $default;
+	}
+
+
+	/**
+	 * Handles updating a user's payment method during payment.
+	 *
+	 * This allows us to check the billing address against the last used so we can determine if it needs an update.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @param \WC_Order $order
+	 * @return \WC_Order
+	 */
+	protected function update_transaction_payment_method( \WC_Order $order ) {
+
+		$token    = $this->get_payment_tokens_handler()->get_token( $order->get_user_id(), $order->payment->token );
+		$address  = new Addresses\Customer_Address();
+		$address->set_from_order( $order );
+
+		$new_billing_hash = $address->get_hash();
+
+		// if the address & token hash don't match, update
+		if ( $token->get_billing_hash() !== $new_billing_hash ) {
+
+			// if the API supports it, update remotely
+			if ( $this->get_api()->supports_update_tokenized_payment_method() ) {
+
+				$response = null;
+
+				try {
+
+					$response = $this->get_api()->update_tokenized_payment_method( $order );
+
+					// if an address was passed and the token was updated remotely, update the billing hash
+					if ( $response->transaction_approved() ) {
+
+						$token->set_billing_hash( $new_billing_hash );
+
+					} else {
+
+						if ( $response->get_status_message() ) {
+							$message = $response->get_status_code() ? $response->get_status_code() . ' - ' . $response->get_status_message() : $response->get_status_message();
+						} else {
+							$message = __( 'Unknown error', 'woocommerce-plugin-framework' );
+						}
+
+						throw new SV_WC_Plugin_Exception( $message );
+					}
+
+				} catch ( SV_WC_Plugin_Exception $exception ) {
+
+					$message = sprintf(
+						__( 'Payment method address could not be updated. %s', 'woocommerce-plugin-framework' ),
+						$exception->getMessage()
+					);
+
+					$order->add_order_note( $message );
+
+					if ( $this->debug_log() ) {
+						$this->get_plugin()->log( $message, $this->get_id() );
+					}
+				}
+
+			} else {
+
+				// updating remotely isn't supported, so just update the hash locally
+				$token->set_billing_hash( $new_billing_hash );
+			}
+		}
+
+		// don't halt payment if this fails
+		$this->get_payment_tokens_handler()->update_token( $order->get_user_id(), $token );
+
+		return $order;
 	}
 
 
@@ -458,7 +541,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @see SV_WC_Payment_Gateway::get_order()
 	 * @param int|\WC_Order $order_id order ID being processed
-	 * @return WC_Order object with payment and transaction information attached
+	 * @return \WC_Order object with payment and transaction information attached
 	 */
 	public function get_order( $order_id ) {
 
@@ -693,12 +776,13 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 
 	/**
-	 * Create a transaction
+	 * Create a transaction.
 	 *
 	 * @since 1.0.0
-	 * @param WC_Order $order the order object
-	 * @return bool true if transaction was successful, false otherwise
-	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
+	 *
+	 * @param \WC_Order $order the order object
+	 * @return bool
+	 * @throws SV_WC_Plugin_Exception
 	 */
 	protected function do_transaction( $order ) {
 

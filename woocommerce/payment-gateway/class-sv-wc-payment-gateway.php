@@ -787,7 +787,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Payment_Tokens_Handler
+	 * @return SV_WC_Payment_Gateway_Payment_Tokens_Handler
 	 */
 	protected function build_payment_tokens_handler() {
 
@@ -800,7 +800,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Payment_Tokens_Handler
+	 * @return SV_WC_Payment_Gateway_Payment_Tokens_Handler
 	 */
 	public function get_payment_tokens_handler() {
 

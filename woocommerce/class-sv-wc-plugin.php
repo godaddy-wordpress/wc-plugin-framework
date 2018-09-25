@@ -406,6 +406,10 @@ abstract class SV_WC_Plugin {
 		// common exception class
 		require_once(  $framework_path . '/class-sv-wc-plugin-exception.php' );
 
+		// addresses
+		require_once(  $framework_path . '/Addresses/Address.php' );
+		require_once(  $framework_path . '/Addresses/Customer_Address.php' );
+
 		// common utility methods
 		require_once( $framework_path . '/class-sv-wc-helper.php' );
 

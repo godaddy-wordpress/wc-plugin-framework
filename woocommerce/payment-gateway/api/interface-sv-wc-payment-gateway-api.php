@@ -133,6 +133,30 @@ interface SV_WC_Payment_Gateway_API {
 
 
 	/**
+	 * Updates a tokenized payment method.
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @param \WC_Order $order order object
+	 * @return SV_WC_Payment_Gateway_API_Response
+	 * @throws SV_WC_Plugin_Exception
+	 */
+	public function update_tokenized_payment_method( \WC_Order $order );
+
+
+	/**
+	 * Determines if this API supports updating tokenized payment methods.
+	 *
+	 * @see SV_WC_Payment_Gateway_API::update_tokenized_payment_method()
+	 *
+	 * @since 5.3.0-dev
+	 *
+	 * @return bool
+	 */
+	public function supports_update_tokenized_payment_method();
+
+
+	/**
 	 * Removes the tokenized payment method.  This method should not be invoked
 	 * unless supports_remove_tokenized_payment_method() returns true, otherwise
 	 * the results are undefined.
@@ -170,7 +194,7 @@ interface SV_WC_Payment_Gateway_API {
 	 * @see SV_WC_Payment_Gateway_API::supports_get_tokenized_payment_methods()
 	 *
 	 * @param string $customer_id unique customer id
-	 * @return SV_WC_API_Get_Tokenized_Payment_Methods_Response response containing any payment tokens for the customer
+	 * @return SV_WC_Payment_Gateway_API_Get_Tokenized_Payment_Methods_Response response containing any payment tokens for the customer
 	 * @throws SV_WC_Payment_Gateway_Exception network timeouts, etc
 	 */
 	public function get_tokenized_payment_methods( $customer_id );
@@ -194,7 +218,7 @@ interface SV_WC_Payment_Gateway_API {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_API_Request the most recent request object
+	 * @return SV_WC_Payment_Gateway_API_Request the most recent request object
 	 */
 	public function get_request();
 
@@ -204,7 +228,7 @@ interface SV_WC_Payment_Gateway_API {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_API_Response the most recent response object
+	 * @return SV_WC_Payment_Gateway_API_Response the most recent response object
 	 */
 	public function get_response();
 
