@@ -3,7 +3,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit\Addresses;
 
 use SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
-use \SkyVerge\WooCommerce\PluginFramework\v5_2_2 as PluginFramework;
+use \SkyVerge\WooCommerce\PluginFramework\v5_3_0 as PluginFramework;
 
 /**
  * Unit tests for PluginFramework\Addresses\Address

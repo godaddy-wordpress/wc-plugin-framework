@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2\Plugin;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_3_0\Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\Plugin\\Lifecycle' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\Plugin\\Lifecycle' ) ) :
 
 /**
  * Plugin lifecycle handler.
@@ -42,7 +42,7 @@ class Lifecycle {
 	/** @var string minimum milestone version */
 	private $milestone_version;
 
-	/** @var \SkyVerge\WooCommerce\PluginFramework\v5_2_2\SV_WC_Plugin plugin instance */
+	/** @var \SkyVerge\WooCommerce\PluginFramework\v5_3_0\SV_WC_Plugin plugin instance */
 	private $plugin;
 
 
@@ -51,9 +51,9 @@ class Lifecycle {
 	 *
 	 * @since 5.1.0
 	 *
-	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_2_2\SV_WC_Plugin $plugin plugin instance
+	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_3_0\SV_WC_Plugin $plugin plugin instance
 	 */
-	public function __construct( \SkyVerge\WooCommerce\PluginFramework\v5_2_2\SV_WC_Plugin $plugin ) {
+	public function __construct( \SkyVerge\WooCommerce\PluginFramework\v5_3_0\SV_WC_Plugin $plugin ) {
 
 		$this->plugin = $plugin;
 
@@ -482,7 +482,7 @@ class Lifecycle {
 	 *
 	 * @since 5.1.0
 	 *
-	 * @return \SkyVerge\WooCommerce\PluginFramework\v5_2_2\SV_WC_Plugin
+	 * @return \SkyVerge\WooCommerce\PluginFramework\v5_3_0\SV_WC_Plugin
 	 */
 	protected function get_plugin() {
 
