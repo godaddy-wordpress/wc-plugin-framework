@@ -47,7 +47,6 @@ if ( ! is_woocommerce_active() ) {
  */
 class SV_WC_Framework_Plugin_Loader {
 
-
 	/** minimum PHP version required by this plugin */
 	const MINIMUM_PHP_VERSION = '5.3.0';
 
@@ -98,6 +97,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 * @since 1.0.0
 	 */
 	public function __clone() {
+
 		_doing_it_wrong( __FUNCTION__, sprintf( 'You cannot clone instances of %s.', get_class( $this ) ), '1.0.0' );
 	}
 
@@ -108,6 +108,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 * @since 1.0.0
 	 */
 	public function __wakeup() {
+
 		_doing_it_wrong( __FUNCTION__, sprintf( 'You cannot unserialize instances of %s.', get_class( $this ) ), '1.0.0' );
 	}
 
@@ -139,7 +140,6 @@ class SV_WC_Framework_Plugin_Loader {
 	 * @since 1.0.0
 	 */
 	protected function load_framework() {
-
 
 		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Plugin' ) ) {
 			require_once( plugin_dir_path( __FILE__ ) . 'lib/skyverge/woocommerce/class-sv-wc-plugin.php' );
