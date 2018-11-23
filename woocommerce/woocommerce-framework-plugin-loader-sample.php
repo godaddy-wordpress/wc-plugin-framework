@@ -166,7 +166,7 @@ class SV_WC_Framework_Plugin_Loader {
 
 
 	/**
-	 * Gets the famework version used by this plugin.
+	 * Gets the framework version used by this plugin.
 	 *
 	 * @since 1.0.0
 	 *
