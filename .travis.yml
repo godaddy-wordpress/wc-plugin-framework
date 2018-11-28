@@ -1,0 +1,98 @@
+sudo: false
+
+language: php
+
+notifications:
+  email: false
+
+php:
+  - '7.0'
+
+matrix:
+  fast_finish: true
+
+services:
+  - mysql
+
+cache:
+  apt: false
+
+env:
+  global:
+    # the WordPress configuration must match the env variables in codeception.travis.yml
+    - WP_ROOT_FOLDER="/tmp/wordpress"
+    - WP_ADMIN_PATH="/wp-admin"
+    - WP_URL="http://127.0.0.1:8888"
+    - WP_DOMAIN="127.0.0.1:8888"
+    - TABLE_PREFIX="wp_"
+    - DB_NAME="memberships_acceptance"
+    - DB_HOST="127.0.0.1"
+    - DB_USER="root"
+    - DB_PASSWORD="" # intentionally blank
+    - TEST_DB_NAME="memberships_integration"
+    - TEST_DB_HOST="127.0.0.1"
+    - TEST_DB_USER="root"
+    - TEST_DB_PASSWORD="" # intentionally blank
+    - TEST_TABLE_PREFIX="wp_"
+    - ADMIN_EMAIL="admin@localhost.test"
+    - ADMIN_USERNAME="admin"
+    - ADMIN_PASSWORD="password"
+  matrix:
+    - WP_VERSION=latest
+
+before_install:
+  # create the databases that will be used in the tests
+  - mysql -e "create database IF NOT EXISTS $DB_NAME;" -uroot
+  - mysql -e "create database IF NOT EXISTS $TEST_DB_NAME;" -uroot
+  # set up folders
+  - mkdir -p $WP_ROOT_FOLDER
+  - mkdir tools
+  # install wp-cli in the `tools` folder
+  - wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -P $(pwd)/tools/
+  - chmod +x tools/wp-cli.phar && mv tools/wp-cli.phar tools/wp
+  # append the `tools` folder to the PATH
+  - export PATH=$PATH:$(pwd)/tools
+  # prepend the `vendor/bin` folder the PATH
+  - export PATH=vendor/bin:$PATH
+
+install:
+  - composer install --prefer-dist
+  - cd $WP_ROOT_FOLDER
+
+  # install and configure WordPress
+  - wp core download --version=$WP_VERSION
+  - wp config create --dbname="$DB_NAME" --dbuser="$DB_USER" --dbpass="$DB_PASSWORD" --dbhost="$DB_HOST" --dbprefix="$TABLE_PREFIX"
+  - wp core install --url="$WP_URL" --title="Test" --admin_user="$ADMIN_USERNAME" --admin_password="$ADMIN_PASSWORD" --admin_email="$ADMIN_EMAIL" --skip-email
+  - wp rewrite structure '/%postname%/' --hard
+  - wp core update-db
+
+  # copy the plugin to the plugins directory
+  - cp -r $TRAVIS_BUILD_DIR/tests/_support/plugins/test-plugin $WP_ROOT_FOLDER/wp-content/plugins/
+  - cp -r $TRAVIS_BUILD_DIR/woocommerce $WP_ROOT_FOLDER/wp-content/plugins/wc-plugin-framework
+
+  # install & activate WooCommerce & the plugin
+  - wp plugin install woocommerce --activate
+  - wp plugin activate test-plugin
+
+  # verify the active plugins
+  - wp plugin list --status=active
+
+  # generate the db export
+  - wp db export $TRAVIS_BUILD_DIR/tests/_data/dump.sql
+
+  # make sure directory is writeable
+  - cd $TRAVIS_BUILD_DIR
+  - chmod -R 777 $WP_ROOT_FOLDER
+
+before_script:
+  - php -S "$WP_DOMAIN" -t "$WP_ROOT_FOLDER" >/dev/null 2>&1 &
+  - phantomjs --webdriver=4444 >/dev/null 2>&1 &
+
+script:
+  - codecept build
+  - codecept run integration
+
+# change this when merged
+branches:
+  only:
+    - master
