@@ -57,12 +57,6 @@ class PluginTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
-	public function test_get_settings_link() {
-
-		$this->assertEmpty( $this->get_plugin()->get_settings_link() );
-	}
-
-
 	/**
 	 * Tests get_plugin_file.
 	 */
