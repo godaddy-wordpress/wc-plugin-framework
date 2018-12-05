@@ -89,7 +89,6 @@ before_script:
   - phantomjs --webdriver=4444 >/dev/null 2>&1 &
 
 script:
-  - codecept build
   - codecept run integration
 
 # change this when merged
