@@ -41,6 +41,12 @@ class Plugin extends Framework\SV_WC_Plugin {
 	}
 
 
+	public function get_settings_url( $plugin_id = null ) {
+
+		return admin_url( 'admin.php?page=wc-settings' );
+	}
+
+
 	public function get_plugin_name() {
 
 		return 'Plugin Framework Test';

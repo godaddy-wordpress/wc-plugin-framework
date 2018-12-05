@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: WooCommerce Framework Plugin
+ * Plugin Name: Test Plugin
  * Plugin URI: http://www.woocommerce.com/products/
  * Description: Tests plugin
  * Author: SkyVerge
  * Author URI: https://skyverge.com
  * Version: 1.0.0
- * Text Domain: sv-wc-test-plugin
+ * Text Domain: test-plugin
  * Domain Path: /i18n/languages/
  *
  * Copyright: (c) 2011-2018, SkyVerge, Inc. (info@skyverge.com)
@@ -128,7 +128,7 @@ class SV_WC_Framework_Test_Plugin_Loader {
 
 
 		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Plugin' ) ) {
-			require_once( dirname( __DIR__ ) . '/wc-plugin-framework/class-sv-wc-plugin.php' );
+			require_once( __DIR__ . '/vendor/skyverge/wc-plugin-framework/woocommerce/class-sv-wc-plugin.php' );
 		}
 
 		// TODO: remove this if not a payment gateway

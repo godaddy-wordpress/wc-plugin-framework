@@ -124,7 +124,7 @@ class PluginTest extends \Codeception\TestCase\WPTestCase {
 
 		$path = $this->get_plugin()->get_framework_path();
 
-		$this->assertStringEndsWith( 'wp-content/plugins/wc-plugin-framework', $path );
+		$this->assertStringEndsWith( 'vendor/skyverge/wc-plugin-framework/woocommerce', $path );
 		$this->assertStringStartsNotWith( 'http', $path );
 	}
 
@@ -136,7 +136,7 @@ class PluginTest extends \Codeception\TestCase\WPTestCase {
 
 		$url = $this->get_plugin()->get_framework_assets_url();
 
-		$this->assertStringEndsWith( 'wp-content/plugins/wc-plugin-framework/assets', $url );
+		$this->assertStringEndsWith( 'vendor/skyverge/wc-plugin-framework/woocommerce/assets', $url );
 		$this->assertStringStartsWith( 'http', $url );
 	}
 
@@ -148,7 +148,7 @@ class PluginTest extends \Codeception\TestCase\WPTestCase {
 
 		$path = $this->get_plugin()->get_framework_assets_path();
 
-		$this->assertStringEndsWith( 'wp-content/plugins/wc-plugin-framework/assets', $path );
+		$this->assertStringEndsWith( 'vendor/skyverge/wc-plugin-framework/woocommerce/assets', $path );
 		$this->assertStringStartsNotWith( 'http', $path );
 	}
 
