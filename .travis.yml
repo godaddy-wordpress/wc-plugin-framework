@@ -74,9 +74,6 @@ install:
   - wp plugin install woocommerce --activate
   - wp plugin activate test-plugin
 
-  # remove the install notice/setup wizard
-  - wp option delete woocommerce_admin_notice_install
-
   # verify the active plugins
   - wp plugin list --status=active
 

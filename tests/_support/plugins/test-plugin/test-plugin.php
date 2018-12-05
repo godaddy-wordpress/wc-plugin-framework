@@ -66,6 +66,8 @@ class SV_WC_Framework_Test_Plugin_Loader {
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ), 15 );
 
+		add_filter( 'woocommerce_prevent_automatic_wizard_redirect', '__return_true' );
+
 		// if the environment check fails, initialize the plugin
 		if ( $this->is_environment_compatible() ) {
 			add_action( 'plugins_loaded', array( $this, 'init_plugin' ) );
