@@ -16,7 +16,7 @@ extensions:
         - Codeception\Command\GenerateWPAjax
         - Codeception\Command\GenerateWPCanonical
         - Codeception\Command\GenerateWPXMLRPC
-        - Codeception\Command\DbSnapshot
+        #- Codeception\Command\DbSnapshot
         - tad\Codeception\Command\SearchReplace
 params:
     - env

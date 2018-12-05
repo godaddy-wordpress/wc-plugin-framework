@@ -90,6 +90,7 @@ before_script:
 
 script:
   - codecept run integration
+  - codecept run acceptance
 
 # change this when merged
 branches:
