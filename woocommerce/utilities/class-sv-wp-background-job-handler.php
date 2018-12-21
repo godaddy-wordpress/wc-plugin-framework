@@ -307,12 +307,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			$memory_limit = '128M';
 		}
 
-		if ( ! $memory_limit || -1 == $memory_limit ) {
+		if ( ! $memory_limit || -1 === (int) $memory_limit ) {
 			// unlimited, set to 32GB
-			$memory_limit = '32000M';
+			$memory_limit = '32G';
 		}
 
-		return intval( $memory_limit ) * 1024 * 1024;
+		return SV_WC_Plugin_Compatibility::convert_hr_to_bytes( $memory_limit );
 	}
 
 
