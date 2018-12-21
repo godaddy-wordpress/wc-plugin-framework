@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: WooCommerce Framework Plugin TODO: plugin name
- * Plugin URI: http://www.woocommerce.com/products/ TODO: product URL
- * Description: TODO: plugin description
+ * Plugin Name: Test Plugin
+ * Plugin URI: http://www.woocommerce.com/products/
+ * Description: Tests plugin
  * Author: SkyVerge
- * Author URI: http://www.woocommerce.com
- * Version: 1.0.0 TODO: plugin version
- * Text Domain: TODO: plugin textdomain
+ * Author URI: https://skyverge.com
+ * Version: 1.0.0
+ * Text Domain: test-plugin
  * Domain Path: /i18n/languages/
  *
  * Copyright: (c) 2011-2018, SkyVerge, Inc. (info@skyverge.com)
@@ -14,38 +14,20 @@
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  *
- * @package   TODO: package
  * @author    SkyVerge
  * @copyright Copyright (c) 2011-2018, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
- *
- * Woo: 99999:00000000000000000000000000000000 TODO: updater keys
  */
 
 defined( 'ABSPATH' ) or exit;
 
-// Required functions
-if ( ! function_exists( 'woothemes_queue_update' ) ) {
-	require_once( plugin_dir_path( __FILE__ ) . 'woo-includes/woo-functions.php' );
-}
-
-// Plugin updates
-woothemes_queue_update( plugin_basename( __FILE__ ), '00000000000000000000000000000000', '99999' ); // TODO: updater keys
-
-// WC active check
-if ( ! is_woocommerce_active() ) {
-	return;
-}
-
 /**
  * The plugin loader class.
  *
- * TODO: Rename the class, and replace all instances of SV_WC_Framework_Plugin_Loader
- * TODO: Update all version numbers and @since tags to the plugin version
- *
  * @since 1.0.0
  */
-class SV_WC_Framework_Plugin_Loader {
+class SV_WC_Framework_Test_Plugin_Loader {
+
 
 	/** minimum PHP version required by this plugin */
 	const MINIMUM_PHP_VERSION = '5.3.0';
@@ -60,10 +42,10 @@ class SV_WC_Framework_Plugin_Loader {
 	const FRAMEWORK_VERSION = '5.2.2';
 
 	/** the plugin name, for displaying notices */
-	const PLUGIN_NAME = 'WooCommerce Framework Plugin'; // TODO: plugin name
+	const PLUGIN_NAME = 'WooCommerce Framework Test Plugin';
 
 
-	/** @var SV_WC_Plugin_Loader single instance of this class */
+	/** @var SV_WC_Framework_Test_Plugin_Loader single instance of this class */
 	protected static $instance;
 
 	/** @var array the admin notices to add */
@@ -84,6 +66,8 @@ class SV_WC_Framework_Plugin_Loader {
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ), 15 );
 
+		add_filter( 'woocommerce_prevent_automatic_wizard_redirect', '__return_true' );
+
 		// if the environment check fails, initialize the plugin
 		if ( $this->is_environment_compatible() ) {
 			add_action( 'plugins_loaded', array( $this, 'init_plugin' ) );
@@ -97,7 +81,6 @@ class SV_WC_Framework_Plugin_Loader {
 	 * @since 1.0.0
 	 */
 	public function __clone() {
-
 		_doing_it_wrong( __FUNCTION__, sprintf( 'You cannot clone instances of %s.', get_class( $this ) ), '1.0.0' );
 	}
 
@@ -108,7 +91,6 @@ class SV_WC_Framework_Plugin_Loader {
 	 * @since 1.0.0
 	 */
 	public function __wakeup() {
-
 		_doing_it_wrong( __FUNCTION__, sprintf( 'You cannot unserialize instances of %s.', get_class( $this ) ), '1.0.0' );
 	}
 
@@ -126,11 +108,16 @@ class SV_WC_Framework_Plugin_Loader {
 
 		$this->load_framework();
 
-		// load the main plugin class
-		require_once( plugin_dir_path( __FILE__ ) . 'class-wc-framework-plugin.php' ); // TODO: main plugin class file
+		// autoload plugin and vendor files
+		$loader = require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
+
+		// register plugin namespace with autoloader
+		$loader->addPsr4( 'SkyVerge\\WooCommerce\\TestPlugin\\', __DIR__ . '/includes' );
+
+		require_once( plugin_dir_path( __FILE__ ) . 'includes/Functions.php' );
 
 		// fire it up!
-		wc_framework_plugin(); // TODO: call the main plugin method
+		sv_wc_test_plugin();
 	}
 
 
@@ -141,13 +128,14 @@ class SV_WC_Framework_Plugin_Loader {
 	 */
 	protected function load_framework() {
 
+
 		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Plugin' ) ) {
-			require_once( plugin_dir_path( __FILE__ ) . 'lib/skyverge/woocommerce/class-sv-wc-plugin.php' );
+			require_once( __DIR__ . '/vendor/skyverge/wc-plugin-framework/woocommerce/class-sv-wc-plugin.php' );
 		}
 
 		// TODO: remove this if not a payment gateway
 		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Payment_Gateway_Plugin' ) ) {
-			require_once( plugin_dir_path( __FILE__ ) . 'lib/skyverge/woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php' );
+			#require_once( plugin_dir_path( __FILE__ ) . 'vendor/skyverge/woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php' );
 		}
 	}
 
@@ -166,7 +154,7 @@ class SV_WC_Framework_Plugin_Loader {
 
 
 	/**
-	 * Gets the framework version used by this plugin.
+	 * Gets the famework version used by this plugin.
 	 *
 	 * @since 1.0.0
 	 *
@@ -318,7 +306,7 @@ class SV_WC_Framework_Plugin_Loader {
 
 
 	/**
-	 * Displays any admin notices added with \SV_WC_Framework_Plugin_Loader::add_admin_notice()
+	 * Displays any admin notices added with \SV_WC_Framework_Test_Plugin_Loader::add_admin_notice()
 	 *
 	 * @since 1.0.0
 	 */
@@ -327,7 +315,7 @@ class SV_WC_Framework_Plugin_Loader {
 		foreach ( (array) $this->notices as $notice_key => $notice ) {
 
 			echo "<div class='" . esc_attr( $notice['class'] ) . "'><p>";
-				echo wp_kses( $notice['message'], array( 'a' => array( 'href' => array() ) ) );
+			echo wp_kses( $notice['message'], array( 'a' => array( 'href' => array() ) ) );
 			echo "</p></div>";
 		}
 	}
@@ -364,17 +352,17 @@ class SV_WC_Framework_Plugin_Loader {
 
 
 	/**
-	 * Gets the main \SV_WC_Framework_Plugin_Loader instance.
+	 * Gets the main \SV_WC_Framework_Test_Plugin_Loader instance.
 	 *
 	 * Ensures only one instance can be loaded.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return \SV_WC_Framework_Plugin_Loader
+	 * @return \SV_WC_Framework_Test_Plugin_Loader
 	 */
 	public static function instance() {
 
-		if ( is_null( self::$instance ) ) {
+		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
 
@@ -385,4 +373,4 @@ class SV_WC_Framework_Plugin_Loader {
 }
 
 // fire it up!
-SV_WC_Framework_Plugin_Loader::instance();
+SV_WC_Framework_Test_Plugin_Loader::instance();

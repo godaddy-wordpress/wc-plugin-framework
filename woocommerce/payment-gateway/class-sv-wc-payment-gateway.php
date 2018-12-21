@@ -3216,7 +3216,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			'title'       => esc_html__( 'Accepted Card Logos', 'woocommerce-plugin-framework' ),
 			'type'        => 'multiselect',
 			'desc_tip'    => __( 'These are the card logos that are displayed to customers as accepted during checkout.', 'woocommerce-plugin-framework' ),
-			'description' => __( 'This can be configured to match those accepted by your payment processor, but does not change your merchant account configuration.', 'woocommerce-plugin-framework' ),
+			'description' => sprintf(
+				/* translators: Placeholders: %1$s - <strong> tag, %2$s - </strong> tag */
+				__( 'This setting %1$sdoes not%2$s change which card types the gateway will accept. Accepted cards are configured from your payment processor account.', 'woocommerce-plugin-framework' ),
+				'<strong>',
+				'</strong>'
+			),
 			'default'     => array_keys( $this->get_available_card_types() ),
 			'class'       => 'wc-enhanced-select',
 			'css'         => 'width: 350px;',
