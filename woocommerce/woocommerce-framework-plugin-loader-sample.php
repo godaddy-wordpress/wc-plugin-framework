@@ -57,7 +57,7 @@ class SV_WC_Framework_Plugin_Loader {
 	const MINIMUM_WC_VERSION = '2.6';
 
 	/** SkyVerge plugin framework version used by this plugin */
-	const FRAMEWORK_VERSION = '5.2.2';
+	const FRAMEWORK_VERSION = '5.3.0'; // TODO: framework version
 
 	/** the plugin name, for displaying notices */
 	const PLUGIN_NAME = 'WooCommerce Framework Plugin'; // TODO: plugin name
