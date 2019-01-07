@@ -41,7 +41,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return object
+	 * @return array
 	 */
 	public function get_payment_data() {
 
@@ -145,7 +145,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	 *
 	 * @since 4.7.0
 	 *
-	 * @param object $contact the address to prepare
+	 * @param \stdClass|object $contact the address to prepare
 	 * @return array
 	 */
 	protected function prepare_address( $contact ) {

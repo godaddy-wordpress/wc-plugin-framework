@@ -39,7 +39,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/** @var string the gateway environment ID */
 	protected $environment_id;
 
-	/** @var array array of cached user id to array of SV_WC_Payment_Gateway_Payment_Token token objects */
+	/** @var array|SV_WC_Payment_Gateway_Payment_Token[] array of cached user id to array of SV_WC_Payment_Gateway_Payment_Token token objects */
 	protected $tokens;
 
 	/** @var SV_WC_Payment_Gateway gateway instance */
@@ -440,7 +440,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @param array $args optional arguments, can include
 	 *  	`customer_id` - if not provided, this will be looked up based on $user_id
 	 *  	`environment_id` - defaults to plugin current environment
-	 * @return array associative array of string token to SV_WC_Payment_Gateway_Payment_Token object
+	 * @return array|SV_WC_Payment_Gateway_Payment_Token[] associative array of string token to SV_WC_Payment_Gateway_Payment_Token object
 	 */
 	public function get_tokens( $user_id, $args = array() ) {
 

@@ -35,9 +35,10 @@ interface SV_WC_Payment_Gateway_API_Create_Payment_Token_Response extends SV_WC_
 
 
 	/**
-	 * Returns the payment token
+	 * Returns the payment token.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return SV_WC_Payment_Gateway_Payment_Token payment token
 	 */
 	public function get_payment_token();

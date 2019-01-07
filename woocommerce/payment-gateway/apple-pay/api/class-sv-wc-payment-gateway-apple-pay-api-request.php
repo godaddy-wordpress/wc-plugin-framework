@@ -82,7 +82,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Request extends SV_WC_API_JSON_Request
 		 *     @var string $domainName         the verified domain name
 		 *     @var string $displayName        the merchant display name
 		 * }
-		 * @param \SV_WC_Payment_Gateway_Apple_Pay_API_Request the request object
+		 * @param SV_WC_Payment_Gateway_Apple_Pay_API_Request the request object
 		 */
 		$this->data = apply_filters( 'sv_wc_apple_pay_api_merchant_data', $data, $this );
 	}

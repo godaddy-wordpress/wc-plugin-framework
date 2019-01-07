@@ -63,7 +63,7 @@ class SV_WC_Framework_Plugin_Loader {
 	const PLUGIN_NAME = 'WooCommerce Framework Plugin'; // TODO: plugin name
 
 
-	/** @var SV_WC_Plugin_Loader single instance of this class */
+	/** @var SV_WC_Framework_Plugin_Loader single instance of this class // TODO: replace with loader class name */
 	protected static $instance;
 
 	/** @var array the admin notices to add */
@@ -307,6 +307,10 @@ class SV_WC_Framework_Plugin_Loader {
 	 * Adds an admin notice to be displayed.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param string $slug the notice slug
+	 * @param string $class the notice class
+	 * @param string $message the message body text
 	 */
 	public function add_admin_notice( $slug, $class, $message ) {
 

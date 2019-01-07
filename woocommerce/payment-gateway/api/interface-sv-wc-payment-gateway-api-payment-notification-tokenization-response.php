@@ -118,7 +118,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	/**
 	 * Determines whether the overall payment tokenization was successful.
 	 *
-	 * Gatewways can check that the payment method was tokenized, and if a new
+	 * Gateways can check that the payment method was tokenized, and if a new
 	 * customer was created, that was successful.
 	 *
 	 * @since 5.0.0
@@ -153,7 +153,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	 *
 	 * @since 5.0.0
 	 *
-	 * @return array
+	 * @return array|SV_WC_Payment_Gateway_Payment_Token[]
 	 */
 	public function get_edited_payment_tokens();
 
@@ -163,7 +163,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	 *
 	 * @since 5.0.0
 	 *
-	 * @return array
+	 * @return array|SV_WC_Payment_Gateway_Payment_Token[]
 	 */
 	public function get_deleted_payment_tokens();
 

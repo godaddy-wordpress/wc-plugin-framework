@@ -309,7 +309,6 @@ class SV_WC_Admin_Notice_Handler {
 	 * @since 3.0.0
 	 * @param string $message_id the message identifier
 	 * @param int $user_id optional user identifier, defaults to current user
-	 * @return boolean true if the message has been dismissed by the admin user
 	 */
 	public function dismiss_notice( $message_id, $user_id = null ) {
 

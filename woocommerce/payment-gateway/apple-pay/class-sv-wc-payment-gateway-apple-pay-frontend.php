@@ -36,13 +36,13 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\SV_WC_Pa
 class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 
-	/** @var \SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance */
+	/** @var SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance */
 	protected $plugin;
 
-	/** @var \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance */
+	/** @var SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance */
 	protected $handler;
 
-	/** @var \SV_WC_Payment_Gateway $gateway the gateway instance */
+	/** @var SV_WC_Payment_Gateway $gateway the gateway instance */
 	protected $gateway;
 
 
@@ -51,8 +51,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @param \SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance
-	 * @param \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance
+	 * @param SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance
+	 * @param SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, SV_WC_Payment_Gateway_Apple_Pay $handler ) {
 
@@ -319,7 +319,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway
+	 * @return SV_WC_Payment_Gateway
 	 */
 	protected function get_gateway() {
 
@@ -332,7 +332,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Plugin
+	 * @return SV_WC_Payment_Gateway_Plugin
 	 */
 	protected function get_plugin() {
 
@@ -344,7 +344,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Apple_Pay
+	 * @return SV_WC_Payment_Gateway_Apple_Pay
 	 */
 	protected function get_handler() {
 

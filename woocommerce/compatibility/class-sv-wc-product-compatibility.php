@@ -77,7 +77,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @param \WC_Product $object the product object
 	 * @param array $props the new properties as $key => $value
-	 * @return \WC_Product
+	 * @return \WC_Data|\WC_Product
 	 */
 	public static function set_props( $object, $props, $compat_props = array() ) {
 
