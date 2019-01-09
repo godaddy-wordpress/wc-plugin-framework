@@ -108,7 +108,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * @since  4.6.0
 	 *
-	 * @param \WC_DateTime|\SV_WC_DateTime $date date object
+	 * @param \WC_DateTime|SV_WC_DateTime $date date object
 	 * @param string $format date format
 	 * @return string
 	 */
@@ -278,6 +278,50 @@ class SV_WC_Plugin_Compatibility {
 		$prefix = sanitize_title( __( 'WooCommerce', 'woocommerce' ) );
 
 		return $prefix . '_page_' . $slug;
+	}
+
+
+	/**
+	 * Converts a shorthand byte value to an integer byte value.
+	 *
+	 * Wrapper for wp_convert_hr_to_bytes(), moved to load.php in WordPress 4.6 from media.php
+	 *
+	 * Based on ActionScheduler's compat wrapper for the same function:
+	 * ActionScheduler_Compatibility::convert_hr_to_bytes()
+	 *
+	 * @link https://secure.php.net/manual/en/function.ini-get.php
+	 * @link https://secure.php.net/manual/en/faq.using.php#faq.using.shorthandbytes
+	 *
+	 * @since 5.3.1-dev.1
+	 *
+	 * @param string $value A (PHP ini) byte value, either shorthand or ordinary.
+	 * @return int An integer byte value.
+	 */
+	public static function convert_hr_to_bytes( $value ) {
+
+		if ( function_exists( 'wp_convert_hr_to_bytes' ) ) {
+
+			return wp_convert_hr_to_bytes( $value );
+		}
+
+		$value = strtolower( trim( $value ) );
+		$bytes = (int) $value;
+
+		if ( false !== strpos( $value, 'g' ) ) {
+
+			$bytes *= GB_IN_BYTES;
+
+		} elseif ( false !== strpos( $value, 'm' ) ) {
+
+			$bytes *= MB_IN_BYTES;
+
+		} elseif ( false !== strpos( $value, 'k' ) ) {
+
+			$bytes *= KB_IN_BYTES;
+		}
+
+		// deal with large (float) values which run into the maximum integer size
+		return min( $bytes, PHP_INT_MAX );
 	}
 
 

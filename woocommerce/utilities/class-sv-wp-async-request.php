@@ -76,7 +76,7 @@ abstract class SV_WP_Async_Request {
 	 *
 	 * @since 4.4.0
 	 * @param array $data
-	 * @return \SV_WP_Async_Request
+	 * @return SV_WP_Async_Request
 	 */
 	public function set_data( $data ) {
 		$this->data = $data;
@@ -89,7 +89,7 @@ abstract class SV_WP_Async_Request {
 	 * Dispatch the async request
 	 *
 	 * @since 4.4.0
-	 * @return array|WP_Error
+	 * @return array|\WP_Error
 	 */
 	public function dispatch() {
 

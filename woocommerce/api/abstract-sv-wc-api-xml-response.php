@@ -39,7 +39,7 @@ abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 	/** @var string string representation of this response */
 	protected $raw_response_xml;
 
-	/** @var SimpleXMLElement XML object */
+	/** @var \SimpleXMLElement XML object */
 	protected $response_xml;
 
 	/** @var array|mixed|object XML data after conversion into an usable object */

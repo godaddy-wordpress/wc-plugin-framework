@@ -41,7 +41,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 	 *
 	 * @since 4.1.0
 	 *
-	 * @param \SV_WC_Payment_Gateway $gateway gateway object
+	 * @param SV_WC_Payment_Gateway|SV_WC_Payment_Gateway_Direct $gateway gateway object
 	 */
 	public function __construct( SV_WC_Payment_Gateway $gateway ) {
 
@@ -111,12 +111,16 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 
 
 	/**
-	 * Adds pre-orders data to the order object.  Filtered onto SV_WC_Payment_Gateway::get_order()
+	 * Adds pre-orders data to the order object.
+	 *
+	 * Filtered onto SV_WC_Payment_Gateway::get_order()
+	 *
+	 * @see SV_WC_Payment_Gateway::get_order()
 	 *
 	 * @since 4.1.0
-	 * @see SV_WC_Payment_Gateway::get_order()
-	 * @param WC_Order $order the order
-	 * @return WC_Order the orders
+	 *
+	 * @param \WC_Order $order the order
+	 * @return \WC_Order
 	 */
 	public function get_order( $order ) {
 
@@ -278,10 +282,12 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 
 
 	/**
-	 * Process a pre-order payment when the pre-order is released
+	 * Processes a pre-order payment when the pre-order is released.
 	 *
 	 * @since 4.1.0
+	 *
 	 * @param \WC_Order $order original order containing the pre-order
+	 * @throws SV_WC_Payment_Gateway_Exception
 	 */
 	public function process_release_payment( $order ) {
 

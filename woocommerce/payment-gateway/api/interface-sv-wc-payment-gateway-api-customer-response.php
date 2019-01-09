@@ -35,9 +35,10 @@ if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\SV_W
 
 
 		/**
-		 * Returns the customer ID
+		 * Returns the customer ID.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @return string customer ID returned by the gateway
 		 */
 		public function get_customer_id();

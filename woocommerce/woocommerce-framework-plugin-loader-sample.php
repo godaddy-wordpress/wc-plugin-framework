@@ -64,7 +64,7 @@ class SV_WC_Framework_Plugin_Loader {
 	const PLUGIN_NAME = 'WooCommerce Framework Plugin'; // TODO: plugin name
 
 
-	/** @var SV_WC_Plugin_Loader single instance of this class */
+	/** @var SV_WC_Framework_Plugin_Loader single instance of this class // TODO: replace with loader class name */
 	private static $instance;
 
 	/** @var array the admin notices to add */

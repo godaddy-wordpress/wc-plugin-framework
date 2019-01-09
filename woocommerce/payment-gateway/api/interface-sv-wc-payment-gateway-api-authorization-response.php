@@ -43,33 +43,37 @@ interface SV_WC_Payment_Gateway_API_Authorization_Response extends SV_WC_Payment
 	 * indicate that the charge will be paid by the card issuer.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return string credit card authorization code
 	 */
 	public function get_authorization_code();
 
 
 	/**
-	 * Returns the result of the AVS check
+	 * Returns the result of the AVS check.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return string result of the AVS check, if any
 	 */
 	public function get_avs_result();
 
 
 	/**
-	 * Returns the result of the CSC check
+	 * Returns the result of the CSC check.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return string result of CSC check
 	 */
 	public function get_csc_result();
 
 
 	/**
-	 * Returns true if the CSC check was successful
+	 * Returns true if the CSC check was successful.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return boolean true if the CSC check was successful
 	 */
 	public function csc_match();

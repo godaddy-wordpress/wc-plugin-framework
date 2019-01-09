@@ -36,7 +36,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\SV_WC_Pa
 class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 
-	/** @var \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance */
+	/** @var SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance */
 	protected $handler;
 
 
@@ -45,7 +45,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @param \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance
+	 * @param SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Apple_Pay $handler ) {
 
@@ -248,7 +248,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Apple_Pay
+	 * @return SV_WC_Payment_Gateway_Apple_Pay
 	 */
 	protected function get_handler() {
 
