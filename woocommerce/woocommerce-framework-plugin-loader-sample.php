@@ -47,6 +47,7 @@ if ( ! is_woocommerce_active() ) {
  */
 class SV_WC_Framework_Plugin_Loader {
 
+
 	/** minimum PHP version required by this plugin */
 	const MINIMUM_PHP_VERSION = '5.3.0';
 
@@ -64,10 +65,10 @@ class SV_WC_Framework_Plugin_Loader {
 
 
 	/** @var SV_WC_Framework_Plugin_Loader single instance of this class // TODO: replace with loader class name */
-	protected static $instance;
+	private static $instance;
 
 	/** @var array the admin notices to add */
-	protected $notices = array();
+	private $notices = array();
 
 
 	/**
@@ -126,8 +127,14 @@ class SV_WC_Framework_Plugin_Loader {
 
 		$this->load_framework();
 
-		// load the main plugin class
-		require_once( plugin_dir_path( __FILE__ ) . 'class-wc-framework-plugin.php' ); // TODO: main plugin class file
+		// autoload plugin and vendor files
+		$loader = require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
+
+		// register plugin namespace with autoloader
+		$loader->addPsr4( 'SkyVerge\\WooCommerce\\Plugin_Name\\', __DIR__ . '/includes' ); // TODO: plugin namespace here
+
+		// depending on how the plugin is structured, you may need to manually load the file that contains the initial plugin function
+		// require_once( plugin_dir_path( __FILE__ ) . 'includes/Functions.php' ); // TODO: maybe load a file to call your initialization function
 
 		// fire it up!
 		wc_framework_plugin(); // TODO: call the main plugin method
@@ -308,9 +315,9 @@ class SV_WC_Framework_Plugin_Loader {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $slug the notice slug
-	 * @param string $class the notice class
-	 * @param string $message the message body text
+	 * @param string $slug the slug for the notice
+	 * @param string $class the css class for the notice
+	 * @param string $message the notice message
 	 */
 	public function add_admin_notice( $slug, $class, $message ) {
 
@@ -330,9 +337,13 @@ class SV_WC_Framework_Plugin_Loader {
 
 		foreach ( (array) $this->notices as $notice_key => $notice ) {
 
-			echo "<div class='" . esc_attr( $notice['class'] ) . "'><p>";
-				echo wp_kses( $notice['message'], array( 'a' => array( 'href' => array() ) ) );
-			echo "</p></div>";
+			?>
+			<div class="<?php echo esc_attr( $notice['class'] ); ?>">
+				<p>
+					<?php echo wp_kses( $notice['message'], array( 'a' => array( 'href' => array() ) ) ); ?>
+				</p>
+			</div>
+			<?php
 		}
 	}
 
@@ -378,7 +389,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 */
 	public static function instance() {
 
-		if ( is_null( self::$instance ) ) {
+		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
 
