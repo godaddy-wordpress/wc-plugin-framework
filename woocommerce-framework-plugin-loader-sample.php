@@ -9,14 +9,14 @@
  * Text Domain: TODO: plugin textdomain
  * Domain Path: /i18n/languages/
  *
- * Copyright: (c) 2011-2018, SkyVerge, Inc. (info@skyverge.com)
+ * Copyright: (c) 2011-2019, SkyVerge, Inc. (info@skyverge.com)
  *
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * @package   TODO: package
  * @author    SkyVerge
- * @copyright Copyright (c) 2011-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2011-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  *
  * Woo: 99999:00000000000000000000000000000000 TODO: updater keys
