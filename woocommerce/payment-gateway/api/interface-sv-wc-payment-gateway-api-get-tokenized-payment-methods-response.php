@@ -35,10 +35,11 @@ interface SV_WC_Payment_Gateway_API_Get_Tokenized_Payment_Methods_Response exten
 
 
 	/**
-	 * Returns any payment tokens
+	 * Returns any payment tokens.
 	 *
 	 * @since 1.0.0
-	 * @return array array of SV_WC_Payment_Gateway_Payment_Token payment tokens, keyed by the token ID
+	 *
+	 * @return SV_WC_Payment_Gateway_Payment_Token[] array of SV_WC_Payment_Gateway_Payment_Token payment tokens, keyed by the token ID
 	 */
 	public function get_payment_tokens();
 

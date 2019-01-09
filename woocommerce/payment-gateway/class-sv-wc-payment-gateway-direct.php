@@ -124,7 +124,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 *
 		 * @since 4.3.0
 		 * @param bool $is_valid true for validation to pass
-		 * @param \SV_WC_Payment_Gateway_Direct $this direct gateway class instance
+		 * @param SV_WC_Payment_Gateway_Direct $this direct gateway class instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_validate_credit_card_fields', $is_valid, $this );
 	}
@@ -322,19 +322,22 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 *
 		 * @since 4.3.0
 		 * @param bool $is_valid true for validation to pass
-		 * @param \SV_WC_Payment_Gateway_Direct $this direct gateway class instance
+		 * @param SV_WC_Payment_Gateway_Direct $this direct gateway class instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_validate_echeck_fields', $is_valid, $this );
 	}
 
 
 	/**
-	 * Handles payment processing
+	 * Handles payment processing.
+	 *
+	 * @see WC_Payment_Gateway::process_payment()
 	 *
 	 * @since 1.0.0
-	 * @see WC_Payment_Gateway::process_payment()
+	 *
 	 * @param int|string $order_id
 	 * @return array associative array with members 'result' and 'redirect'
+	 * @throws \Exception
 	 */
 	public function process_payment( $order_id ) {
 
@@ -629,18 +632,18 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 *
 		 * @since 1.0.0
 		 * @param \WC_Order $order order object
-		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 * @param SV_WC_Payment_Gateway_Direct $this instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order', $order, $this );
 	}
 
 
 	/**
-	 * Performs a check transaction for the given order and returns the
-	 * result
+	 * Performs a check transaction for the given order and returns the result.
 	 *
 	 * @since 1.0.0
-	 * @param WC_Order $order the order object
+	 *
+	 * @param \WC_Order $order the order object
 	 * @return SV_WC_Payment_Gateway_API_Response the response
 	 * @throws SV_WC_Plugin_Exception network timeouts, etc
 	 */
@@ -675,10 +678,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			 * is approved.
 			 *
 			 * @since 4.1.0
+			 *
 			 * @param string $message order note
 			 * @param \WC_Order $order order object
-			 * @param \SV_WC_Payment_Gateway_API_Response $response transaction response
-			 * @param \SV_WC_Payment_Gateway_Direct $this instance
+			 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
+			 * @param SV_WC_Payment_Gateway_Direct $this instance
 			 */
 			$message = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_check_transaction_approved_order_note', $message, $order, $response, $this );
 
@@ -692,11 +696,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 
 	/**
-	 * Performs a credit card transaction for the given order and returns the
-	 * result
+	 * Performs a credit card transaction for the given order and returns the result.
 	 *
 	 * @since 1.0.0
-	 * @param WC_Order $order the order object
+	 *
+	 * @param \WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response optional credit card transaction response
 	 * @return SV_WC_Payment_Gateway_API_Response the response
 	 * @throws SV_WC_Plugin_Exception network timeouts, etc
@@ -759,10 +763,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			 * is approved.
 			 *
 			 * @since 4.1.0
+			 *
 			 * @param string $message order note
 			 * @param \WC_Order $order order object
-			 * @param \SV_WC_Payment_Gateway_API_Response $response transaction response
-			 * @param \SV_WC_Payment_Gateway_Direct $this instance
+			 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
+			 * @param SV_WC_Payment_Gateway_Direct $this instance
 			 */
 			$message = apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_credit_card_transaction_approved_order_note', $message, $order, $response, $this );
 
@@ -955,7 +960,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			 *
 			 * @param string $token_id new token ID
 			 * @param int $user_id user ID
-			 * @param \SV_WC_Payment_Gateway_API_Response $response API response object
+			 * @param SV_WC_Payment_Gateway_API_Response $response API response object
 			 */
 			do_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_method_added', $token->get_id(), $order->get_user_id(), $response );
 
@@ -989,9 +994,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 *   @type string $message notice message to render
 		 *   @type bool $success true to redirect to my account, false to stay on page
 		 * }
-		 * @param \SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response instance
+		 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response instance
 		 * @param \WC_Order $order order instance
-		 * @param \SV_WC_Payment_Gateway_Direct $this direct gateway instance
+		 * @param SV_WC_Payment_Gateway_Direct $this direct gateway instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_add_payment_method_transaction_result', $result, $response, $order, $this );
 	}
@@ -1116,7 +1121,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * + transaction environment
 	 *
 	 * @since 4.0.0
-	 * @param \SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response
+	 *
+	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response
 	 */
 	protected function add_add_payment_method_transaction_data( $response ) {
 

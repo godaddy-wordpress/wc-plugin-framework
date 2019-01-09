@@ -410,16 +410,13 @@ abstract class Setup_Wizard {
 			)
 		);
 
-		// WooCommerce Setup core scripts
-		wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui' ), $this->get_plugin()->get_version() );
-
 		// WooCommerce Setup core styles
 		wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', array(), $this->get_plugin()->get_version() );
 		wp_enqueue_style( 'wc-setup', WC()->plugin_url() . '/assets/css/wc-setup.css', array( 'dashicons', 'install' ), $this->get_plugin()->get_version() );
 
 		// framework bundled styles
 		wp_enqueue_style( 'sv-wc-admin-setup', $this->get_plugin()->get_framework_assets_url() . '/css/admin/sv-wc-plugin-admin-setup-wizard.min.css', array( 'wc-setup' ), $this->get_plugin()->get_version() );
-		wp_enqueue_script( 'sv-wc-admin-setup', $this->get_plugin()->get_framework_assets_url() . '/js/admin/sv-wc-plugin-admin-setup-wizard.min.js', array( 'wc-setup' ), $this->get_plugin()->get_version() );
+		wp_enqueue_script( 'sv-wc-admin-setup', $this->get_plugin()->get_framework_assets_url() . '/js/admin/sv-wc-plugin-admin-setup-wizard.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui' ), $this->get_plugin()->get_version() );
 	}
 
 
@@ -1290,7 +1287,7 @@ abstract class Setup_Wizard {
 	 *
 	 * @since 5.2.2
 	 *
-	 * @return Framework\SV_WC_Plugin
+	 * @return Framework\SV_WC_Plugin|Framework\SV_WC_Payment_Gateway_Plugin
 	 */
 	protected function get_plugin() {
 

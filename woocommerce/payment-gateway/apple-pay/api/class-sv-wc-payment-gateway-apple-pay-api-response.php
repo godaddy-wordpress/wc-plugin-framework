@@ -67,7 +67,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API_Response extends SV_WC_API_JSON_Respon
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return array
+	 * @return string|array
 	 */
 	public function get_merchant_session() {
 

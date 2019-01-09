@@ -208,16 +208,17 @@ class SV_WC_Payment_Gateway_Helper {
 
 
 	/**
-	 * Get the known card types and their variations.
+	 * Gets the known card types and their variations.
 	 *
 	 * Returns the card types in the format:
 	 *
 	 * 'mastercard' {
-	 *     'name'      => 'MasterCard',
-	 *     'varations' => array( 'mc' ),
+	 *     'name'       => 'MasterCard',
+	 *     'variations' => array( 'mc' ),
 	 * }
 	 *
 	 * @since 4.5.0
+	 *
 	 * @return array
 	 */
 	public static function get_card_types() {

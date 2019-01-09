@@ -142,7 +142,7 @@ class REST_API {
 	 *
 	 * @since 5.2.0
 	 *
-	 * @return SV_WC_Plugin
+	 * @return SV_WC_Plugin|SV_WC_Payment_Gateway_Plugin
 	 */
 	protected function get_plugin() {
 

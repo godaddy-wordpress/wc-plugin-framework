@@ -49,10 +49,11 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 
 	/**
-	 * Setup Class
+	 * Sets up class.
 	 *
-	 * @param \SV_WC_Payment_Gateway|\SV_WC_Payment_Gateway_Direct $gateway gateway for form
 	 * @since 4.0.0
+	 *
+	 * @param SV_WC_Payment_Gateway|SV_WC_Payment_Gateway_Direct $gateway gateway for form
 	 */
 	public function __construct( $gateway ) {
 
@@ -67,9 +68,10 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 
 	/**
-	 * Add hooks for rendering the payment form
+	 * Adds hooks for rendering the payment form.
 	 *
 	 * @see SV_WC_Payment_Gateway_Payment_Form::render()
+	 *
 	 * @since 4.0.0
 	 */
 	protected function add_hooks() {
@@ -137,12 +139,14 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 
 	/**
-	 * Return the gateway for this form
+	 * Returns the gateway for this form.
 	 *
 	 * @since 4.0.0
-	 * @return \SV_WC_Payment_Gateway|\SV_WC_Payment_Gateway_Direct
+	 *
+	 * @return SV_WC_Payment_Gateway|SV_WC_Payment_Gateway_Direct
 	 */
 	public function get_gateway() {
+
 		return $this->gateway;
 	}
 
@@ -184,8 +188,9 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * Filters whether tokenization is allowed for the payment form.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param bool $tokenization_allowed
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_tokenization_allowed', $tokenization_allowed, $this );
 	}
@@ -216,8 +221,9 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * Filters whether tokenization is forced for the payment form.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param bool $tokenization_forced
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_tokenization_forced', $tokenization_forced, $this );
 	}
@@ -268,8 +274,9 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * for a non-standard payment type (like PayPal Express)
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param array $fields in the format supported by woocommerce_form_fields()
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_default_payment_form_fields', $fields, $this );
 	}
@@ -355,8 +362,9 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * Filters the default field data for credit card gateways.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param array $fields in the format supported by woocommerce_form_fields()
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_default_credit_card_fields', $fields, $this );
 	}
@@ -439,8 +447,9 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * Filters the default field data for eCheck gateways.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param array $fields in the format supported by woocommerce_form_fields()
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_default_echeck_fields', $fields, $this );
 	}
@@ -472,8 +481,9 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * Filters the HTML rendered for payment form description.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $html
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_description', $description, $this );
 	}
@@ -497,8 +507,9 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * Filters the HTML rendered for the same eCheck image.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $html
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_sample_check_html', $html, $this );
 	}
@@ -530,11 +541,12 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		/**
 		 * Payment Gateway Payment Form Saved Payment Methods HTML.
 		 *
-		 * Filters the HTML rendered for the entired saved payment methods section.
+		 * Filters the HTML rendered for the entire saved payment methods section.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $html
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_saved_payment_methods_html', $html, $this );
 	}
@@ -571,8 +583,9 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * Filters the HTML rendered for the "Manage Payment Methods" button.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $html
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_manage_payment_methods_button_html', $html, $this );
 	}
@@ -610,8 +623,9 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * Filters the HTML rendered for a saved payment method, like "Amex ending in 6666".
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $html
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_payment_method_html', $html, $token, $this );
 	}
@@ -669,9 +683,10 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * Filters the text/HTML rendered for a saved payment method, like "Amex ending in 6666".
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $title
-		 * @param \SV_WC_Payment_Gateway_Payment_Token $token
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param SV_WC_Payment_Gateway_Payment_Token $token
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_payment_method_title', $title, $token, $this );
 	}
@@ -706,7 +721,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 *
 		 * @since 4.0.0
 		 * @param string $html
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_new_payment_method_input_html', $html, $this );
 	}
@@ -737,12 +752,12 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				/**
 				 * Payment Form Default Tokenize Payment Method Checkbox to Checked Filter.
 				 *
-				 * Allow actors to default the tokenize payment method checkbox state to
-				 * checked.
+				 * Allow actors to default the tokenize payment method checkbox state to checked.
 				 *
 				 * @since 4.2.0
+				 *
 				 * @param bool $checked default false, set to true to change the checkbox state to checked
-				 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+				 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 				 */
 				$checked = apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_default_tokenize_payment_method_checkbox_to_checked', false, $this );
 
@@ -755,6 +770,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				 * text rendered on the payment form on the checkout page.
 				 *
 				 * @since 4.0.0
+				 *
 				 * @param string $checkbox_text checkbox text
 				 */
 				/* translators: account as in customer's account on the eCommerce site */
@@ -769,8 +785,9 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * Filters the HTML rendered for the "save payment method" checkbox.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $html
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_save_payment_method_checkbox_html', $html, $this );
 	}
@@ -797,7 +814,8 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * @hooked SV_WC_Payment_Gateway_Payment_Form::render_fieldset_start() - 30 (outputs opening fieldset tag and starting payment fields div)
 		 *
 		 * @since 4.0.0
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 *
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		do_action( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_start', $this );
 
@@ -810,7 +828,8 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * @hooked SV_WC_Payment_Gateway_Payment_Form::render_payment_fields() - 0 (outputs payment fields like account number, expiry, etc)
 		 *
 		 * @since 4.0.0
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 *
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		do_action( 'wc_' . $this->get_gateway()->get_id() . '_payment_form', $this );
 
@@ -824,7 +843,8 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 * @hooked SV_WC_Payment_Gateway_Payment_Form::render_js() - 5 (outputs JS for instantiating payment form JS class)
 		 *
 		 * @since 4.0.0
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 *
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		do_action( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_end', $this );
 	}
@@ -973,7 +993,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		 *   @type string $type gateway payment type (e.g. 'credit-card')
 		 *   @type bool $csc_required true if CSC field display is required
 		 * }
-		 * @param \SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
 		 */
 		$args = apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_js_args', $args, $this );
 

@@ -40,19 +40,21 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_eCheck_Response extends
 
 
 	/**
-	 * Returns the account type, one of 'checking' or 'savings', if available
+	 * Returns the account type, one of 'checking' or 'savings', if available.
 	 *
 	 * @since 2.2.0
+	 *
 	 * @return string account type, one of 'checking' or 'savings'
 	 */
 	public function get_account_type();
 
 
 	/**
-	 * Returns the check number used, if available
+	 * Returns the check number used, if available.
 	 *
 	 * @since 2.2.0
-	 * @return int check number, or null
+	 *
+	 * @return int|null check number, or null
 	 */
 	public function get_check_number();
 
