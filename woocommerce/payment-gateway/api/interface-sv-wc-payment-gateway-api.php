@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_3_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_3_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\SV_WC_Payment_Gateway_API' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\SV_WC_Payment_Gateway_API' ) ) :
 
 /**
  * WooCommerce Direct Payment Gateway API
@@ -135,7 +135,7 @@ interface SV_WC_Payment_Gateway_API {
 	/**
 	 * Updates a tokenized payment method.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return SV_WC_Payment_Gateway_API_Response
@@ -149,7 +149,7 @@ interface SV_WC_Payment_Gateway_API {
 	 *
 	 * @see SV_WC_Payment_Gateway_API::update_tokenized_payment_method()
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return bool
 	 */

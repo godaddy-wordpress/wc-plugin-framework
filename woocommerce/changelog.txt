@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2018.nn.nn - version 5.3.1-dev
+2019.01.09 - version 5.3.1
  * Fix - Fix a JavaScript error in the welcome wizard for missing parameters
  * Fix - Correctly handle memory_limit shorthand from php.ini
  * Misc - Adjust the Accepted Card Logos setting description to further clarify its purpose

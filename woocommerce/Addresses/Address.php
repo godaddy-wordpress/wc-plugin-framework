@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_3_0\Addresses;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_3_1\Addresses;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\Addresses\\Address' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\Addresses\\Address' ) ) :
 
 /**
  * The base address data class.
@@ -34,7 +34,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\Addresse
  * This serves as a standard address object to be passed around by plugins whenever dealing with address data, and
  * eliminates the need to rely on WooCommerce's address arrays.
  *
- * @since 5.3.0-dev
+ * @since 5.3.0
  */
 class Address {
 
@@ -67,7 +67,7 @@ class Address {
 	/**
 	 * Gets line 1 of the street address.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return string
 	 */
@@ -80,7 +80,7 @@ class Address {
 	/**
 	 * Gets line 2 of the street address.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return string
 	 */
@@ -93,7 +93,7 @@ class Address {
 	/**
 	 * Gets line 3 of the street address.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return string
 	 */
@@ -106,7 +106,7 @@ class Address {
 	/**
 	 * Gets the locality or city.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return string
 	 */
@@ -119,7 +119,7 @@ class Address {
 	/**
 	 * Gets the region or state.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return string
 	 */
@@ -132,7 +132,7 @@ class Address {
 	/**
 	 * Gets the country.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return string
 	 */
@@ -145,7 +145,7 @@ class Address {
 	/**
 	 * Gets the postcode.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return string
 	 */
@@ -160,7 +160,7 @@ class Address {
 	 *
 	 * @see Address::get_hash_data()
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return string
 	 */
@@ -173,7 +173,7 @@ class Address {
 	/**
 	 * Gets the data used to generate a hash for the address.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return string[]
 	 */
@@ -197,7 +197,7 @@ class Address {
 	/**
 	 * Sets line 1 of the street address.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param string $value line 1 value
 	 */
@@ -210,7 +210,7 @@ class Address {
 	/**
 	 * Sets line 2 of the street address.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param string $value line 2 value
 	 */
@@ -223,7 +223,7 @@ class Address {
 	/**
 	 * Gets line 3 of the street address.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param string $value line 3 value
 	 */
@@ -236,7 +236,7 @@ class Address {
 	/**
 	 * Gets the locality or city.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param string $value locality value
 	 */
@@ -249,7 +249,7 @@ class Address {
 	/**
 	 * Gets the region or state.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param string $value region value
 	 */
@@ -262,7 +262,7 @@ class Address {
 	/**
 	 * Sets the country.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param string $value country value
 	 */
@@ -275,7 +275,7 @@ class Address {
 	/**
 	 * Sets the postcode.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param string $value postcode value
 	 */

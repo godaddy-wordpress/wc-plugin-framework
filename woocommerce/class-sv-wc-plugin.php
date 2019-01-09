@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_3_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_3_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\SV_WC_Plugin' ) ) :
 
 /**
  * # WooCommerce Plugin Framework
@@ -36,13 +36,13 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\SV_WC_Pl
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 5.3.1-dev.1
+ * @version 5.3.1
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.3.1-dev';
+	const VERSION = '5.3.1';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -244,7 +244,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * Plugins can override and extend this method to add their own setup wizard.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 */
 	protected function init_setup_wizard_handler() {
 
@@ -776,7 +776,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the Setup Wizard handler instance.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return null|Admin\Setup_Wizard
 	 */

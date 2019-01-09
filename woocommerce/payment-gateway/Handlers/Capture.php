@@ -22,18 +22,18 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_3_0\Payment_Gateway\Handlers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_3_1\Payment_Gateway\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_3_0 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_3_1 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\Payment_Gateway\\Handlers\\Capture' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\Payment_Gateway\\Handlers\\Capture' ) ) :
 
 /**
  * The transaction capture handler.
  *
- * @since 5.3.0-dev
+ * @since 5.3.0
  */
 class Capture {
 
@@ -45,7 +45,7 @@ class Capture {
 	/**
 	 * Capture constructor.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param Framework\SV_WC_Payment_Gateway $gateway payment gateway instance
 	 */
@@ -65,7 +65,7 @@ class Capture {
 	 *
 	 * @internal
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param int $order_id order ID
 	 * @param string $old_status status being changed
@@ -102,7 +102,7 @@ class Capture {
 	 * This acts as a wrapper for when the process should just bail without logging any errors or order notes, like when
 	 * performing capture via bulk action.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param float|null $amount amount to capture
@@ -124,7 +124,7 @@ class Capture {
 	/**
 	 * Performs a credit card capture for an order.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order WooCommerce order object
 	 * @param float|null $amount amount to capture
@@ -147,7 +147,7 @@ class Capture {
 
 				$message = "{$this->get_gateway()->get_method_title()} does not support payment captures";
 
-				Framework\SV_WC_Plugin_Compatibility::wc_doing_it_wrong( __METHOD__, $message, '5.3.0-dev' );
+				Framework\SV_WC_Plugin_Compatibility::wc_doing_it_wrong( __METHOD__, $message, '5.3.0' );
 
 				throw new Framework\SV_WC_Payment_Gateway_Exception( $message, 500 );
 			}
@@ -243,7 +243,7 @@ class Capture {
 	/**
 	 * Adds the standard capture data to an order.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order the order object
 	 * @param Framework\SV_WC_Payment_Gateway_API_Response $response transaction response
@@ -265,7 +265,7 @@ class Capture {
 	/**
 	 * Lets gateways handle any specific capture failure results for the order.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order WooCommerce order object
 	 * @param Framework\SV_WC_Payment_Gateway_API_Response $response API response object
@@ -279,7 +279,7 @@ class Capture {
 	/**
 	 * Determines if an order is eligible for capture.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return bool
@@ -304,7 +304,7 @@ class Capture {
 	/**
 	 * Determines if an order is ready for capture.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return bool
@@ -318,7 +318,7 @@ class Capture {
 	/**
 	 * Determines if an order has been fully captured
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order
 	 * @return bool
@@ -338,7 +338,7 @@ class Capture {
 	/**
 	 * Determines if an order's authorization has expired.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order
 	 * @return bool
@@ -356,7 +356,7 @@ class Capture {
 	/**
 	 * Determines if an order's authorization has been captured, even partially.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return bool
@@ -377,7 +377,7 @@ class Capture {
 	 * For instance, some processors allow capturing an amount a certain
 	 * percentage higher than the payment total.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order WooCommerce order object
 	 * @return float
@@ -391,7 +391,7 @@ class Capture {
 	/**
 	 * Gets the amount originally authorized for an order.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return float
@@ -409,7 +409,7 @@ class Capture {
 	/**
 	 * Gets the payment gateway instance.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return Framework\SV_WC_Payment_Gateway
 	 */

@@ -3,7 +3,7 @@
 ###*
 # WooCommerce Plugin Framework Setup Wizard scripts.
 #
-# @since 5.3.0-dev
+# @since 5.3.0
 ###
 jQuery( document ).ready ( $ ) ->
 

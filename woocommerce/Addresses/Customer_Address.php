@@ -22,12 +22,12 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_3_0\Addresses;
-use SkyVerge\WooCommerce\PluginFramework\v5_3_0 as Framework;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_3_1\Addresses;
+use SkyVerge\WooCommerce\PluginFramework\v5_3_1 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\Addresses\\Customer_Address' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\Addresses\\Customer_Address' ) ) :
 
 /**
  * The customer address data class.
@@ -37,7 +37,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\Addresse
  *
  * @see Address
  *
- * @since 5.3.0-dev
+ * @since 5.3.0
  */
 class Customer_Address extends Address {
 
@@ -55,7 +55,7 @@ class Customer_Address extends Address {
 	/**
 	 * Gets the customer first name.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return string
 	 */
@@ -68,7 +68,7 @@ class Customer_Address extends Address {
 	/**
 	 * Gets the customer first name.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return string
 	 */
@@ -83,7 +83,7 @@ class Customer_Address extends Address {
 	 *
 	 * @see Address::get_hash_data()
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @return string[]
 	 */
@@ -105,7 +105,7 @@ class Customer_Address extends Address {
 	/**
 	 * Sets the customer first name.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param string $value first name value
 	 */
@@ -118,7 +118,7 @@ class Customer_Address extends Address {
 	/**
 	 * Sets the customer last name.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param string $value first name value
 	 */
@@ -131,7 +131,7 @@ class Customer_Address extends Address {
 	/**
 	 * Sets the full address based on a WooCommerce order.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order WooCommerce order object
 	 * @param string $type address type, like billing or shipping

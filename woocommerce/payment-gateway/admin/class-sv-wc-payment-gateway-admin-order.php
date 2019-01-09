@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_3_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_3_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
 
 /**
  * Handle the admin order screens.
@@ -104,7 +104,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Enqueues the assets for the Edit Order screen.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order order object
 	 */
@@ -443,14 +443,14 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * captured, and the gateway supports issuing a capture request
 	 *
 	 * @since 5.0.0
-	 * @deprecated 5.3.0-dev
+	 * @deprecated 5.3.0
 	 *
 	 * @param \WC_Order|int $order the order identifier or order object
 	 * @param float|null $amount capture amount
 	 */
 	protected function maybe_capture_charge( $order, $amount = null ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0' );
 
 		if ( ! is_object( $order ) ) {
 			$order = wc_get_order( $order );
@@ -483,7 +483,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * @internal
 	 *
 	 * @since 5.0.1-dev
-	 * @deprecated 5.3.0-dev
+	 * @deprecated 5.3.0
 	 *
 	 * @param int $order_id order ID
 	 * @param string $old_status status being changed
@@ -491,7 +491,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 */
 	public function maybe_capture_paid_order( $order_id, $old_status, $new_status ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0' );
 	}
 
 
@@ -499,14 +499,14 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * Determines if an order is ready for capture.
 	 *
 	 * @since 5.0.0
-	 * @deprecated 5.3.0-dev
+	 * @deprecated 5.3.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return bool
 	 */
 	protected function is_order_ready_for_capture( \WC_Order $order ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0-dev' );
+		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0' );
 
 		$gateway = $this->get_order_gateway( $order );
 

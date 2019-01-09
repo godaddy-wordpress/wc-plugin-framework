@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_3_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_3_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\SV_WC_Payment_Gateway_Direct' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\SV_WC_Payment_Gateway_Direct' ) ) :
 
 /**
  * # WooCommerce Payment Gateway Framework Direct Gateway
@@ -392,7 +392,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				/**
 				 * Filters the order status that's considered to be "held".
 				 *
-				 * @since 5.3.0-dev
+				 * @since 5.3.0
 				 *
 				 * @param string $status held order status
 				 * @param \WC_Order $order order object
@@ -447,7 +447,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * This allows us to check the billing address against the last used so we can determine if it needs an update.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order
 	 * @return \WC_Order
