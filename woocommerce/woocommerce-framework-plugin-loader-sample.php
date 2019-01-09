@@ -127,6 +127,8 @@ class SV_WC_Framework_Plugin_Loader {
 
 		$this->load_framework();
 
+		/** If the plugin is structured for PSR-4, do the following:
+
 		// autoload plugin and vendor files
 		$loader = require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
 
@@ -135,6 +137,15 @@ class SV_WC_Framework_Plugin_Loader {
 
 		// depending on how the plugin is structured, you may need to manually load the file that contains the initial plugin function
 		// require_once( plugin_dir_path( __FILE__ ) . 'includes/Functions.php' ); // TODO: maybe load a file to call your initialization function
+
+		/******************/
+
+		/** Otherwise, for plugins that use the traditional WordPress class-class-name.php structure, simply include the main plugin file:
+
+		// load the main plugin class
+		require_once( plugin_dir_path( __FILE__ ) . 'class-wc-framework-plugin.php' ); // TODO: main plugin class file
+
+		*******************/
 
 		// fire it up!
 		wc_framework_plugin(); // TODO: call the main plugin method
