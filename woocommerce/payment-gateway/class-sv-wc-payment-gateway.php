@@ -626,7 +626,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Returns true if on the pay page and this is the currently selected gateway
 	 *
 	 * @since 1.0.0
-	 * @return mixed true if on pay page and is currently selected gateways, false if on pay page and not the selected gateway, null otherwise
+	 *
+	 * @return null|bool true if on pay page and is currently selected gateways, false if on pay page and not the selected gateway, null otherwise
 	 */
 	public function is_pay_page_gateway() {
 
@@ -728,10 +729,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Get the payment form class instance
+	 * Gets the payment form class instance.
 	 *
 	 * @since 4.1.2
-	 * @return \SV_WC_Payment_Gateway_Payment_Form
+	 *
+	 * @return SV_WC_Payment_Gateway_Payment_Form
 	 */
 	public function get_payment_form_instance() {
 
@@ -881,7 +883,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 * initialized.
 		 *
 		 * @since 4.1.0
-		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 *
+		 * @param SV_WC_Payment_Gateway_Direct $this instance
 		 */
 		do_action( 'wc_payment_gateway_' . $this->get_id() . '_init_integrations', $this );
 	}
@@ -905,7 +908,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @since 5.0.0
 	 *
 	 * @param string $id the integration ID, e.g. subscriptions
-	 * @return \SV_WC_Payment_Gateway_Integration|null
+	 * @return SV_WC_Payment_Gateway_Integration|null
 	 */
 	public function get_integration( $id ) {
 
@@ -920,7 +923,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Integration_Subscriptions
+	 * @return SV_WC_Payment_Gateway_Integration_Subscriptions
 	 */
 	protected function build_subscriptions_integration() {
 
@@ -933,7 +936,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Integration_Subscriptions|null
+	 * @return SV_WC_Payment_Gateway_Integration_Subscriptions|null
 	 */
 	public function get_subscriptions_integration() {
 
@@ -948,7 +951,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Integration_Pre_Orders
+	 * @return SV_WC_Payment_Gateway_Integration_Pre_Orders
 	 */
 	protected function build_pre_orders_integration() {
 
@@ -961,7 +964,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Integration_Pre_Orders|null
+	 * @return SV_WC_Payment_Gateway_Integration_Pre_Orders|null
 	 */
 	public function get_pre_orders_integration() {
 
@@ -1072,7 +1075,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @since 4.7.0
 	 *
 	 * @param \WC_Order the order object
-	 * @param \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response authorized payment response
+	 * @param SV_WC_Payment_Gateway_Apple_Pay_Payment_Response authorized payment response
 	 * @return \WC_Order
 	 */
 	public function get_order_for_apple_pay( \WC_Order $order, SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $response ) {
@@ -1361,10 +1364,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Display settings page with some additional javascript for hiding conditional fields
+	 * Displays settings page with some additional javascript for hiding conditional fields.
+	 *
+	 * @see \WC_Settings_API::admin_options()
 	 *
 	 * @since 1.0.0
-	 * @see WC_Settings_API::admin_options()
 	 */
 	public function admin_options() {
 
@@ -1683,14 +1687,15 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$order = $this->get_order_with_unique_transaction_ref( $order );
 
 		/**
-		 * Filter the base order for a payment transaction
+		 * Filters the base order for a payment transaction.
 		 *
 		 * Actors can use this filter to adjust or add additional information to
 		 * the order object that gateways use for processing transactions.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param \WC_Order $order order object
-		 * @param \SV_WC_Payment_Gateway $this payment gateway instance
+		 * @param SV_WC_Payment_Gateway $this payment gateway instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_base', $order, $this );
 	}
@@ -1705,6 +1710,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @param \WC_Order $order order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response response object
+	 * @throws \Exception
 	 */
 	protected function complete_payment( \WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
 
@@ -1836,13 +1842,14 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Process refund
+	 * Processes a refund.
 	 *
 	 * @since 3.1.0
+	 *
 	 * @param int $order_id order being refunded
 	 * @param float $amount refund amount
 	 * @param string $reason user-entered reason text for refund
-	 * @return bool|WP_Error true on success, or a WP_Error object on failure/error
+	 * @return bool|\WP_Error true on success, or a WP_Error object on failure/error
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 
@@ -1929,10 +1936,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * refund-specific data
 	 *
 	 * @since 3.1.0
-	 * @param WC_Order|int $order order being processed
+	 *
+	 * @param \WC_Order|int $order order being processed
 	 * @param float $amount refund amount
 	 * @param string $reason optional refund reason text
-	 * @return WC_Order object with refund information attached
+	 * @return \WC_Order|\WP_Error object with refund information attached
 	 */
 	protected function get_order_for_refund( $order, $amount, $reason ) {
 
@@ -1956,21 +1964,23 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 * Allow actors to modify the order object used for refund transactions.
 		 *
 		 * @since 3.1.0
-		 * @param \WC_Order $order order object
-		 * @param \SV_WC_Payment_Gateway $this instance
+		 *
+		 * @param \WC_Order|\WP_Error $order order object
+		 * @param SV_WC_Payment_Gateway $this instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_refund', $order, $this );
 	}
 
 
 	/**
-	 * Adds the standard refund transaction data to the order
+	 * Adds the standard refund transaction data to the order.
 	 *
 	 * Note that refunds can be performed multiple times for a single order so
 	 * transaction IDs keys are not unique
 	 *
 	 * @since 3.1.0
-	 * @param WC_Order $order the order object
+	 *
+	 * @param \WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
 	 */
 	protected function add_refund_data( \WC_Order $order, $response ) {
@@ -1986,10 +1996,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Adds any gateway-specific data to the order after a refund is performed
+	 * Adds any gateway-specific data to the order after a refund is performed.
 	 *
 	 * @since 3.1.0
-	 * @param WC_Order $order the order object
+	 *
+	 * @param \WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
 	 */
 	protected function add_payment_gateway_refund_data( \WC_Order $order, $response ) {
@@ -1998,10 +2009,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Adds an order note with the amount and (optional) refund transaction ID
+	 * Adds an order note with the amount and (optional) refund transaction ID.
 	 *
 	 * @since 3.1.0
-	 * @param WC_Order $order order object
+	 *
+	 * @param \WC_Order $order order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
 	 */
 	protected function add_refund_order_note( \WC_Order $order, $response ) {
@@ -2023,12 +2035,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Build the WP_Error object for a failed refund
+	 * Builds the WP_Error object for a failed refund.
 	 *
 	 * @since 3.1.0
+	 *
 	 * @param int|string $error_code error code
 	 * @param string $error_message error message
-	 * @return WP_Error suitable for returning from the process_refund() method
+	 * @return \WP_Error suitable for returning from the process_refund() method
 	 */
 	protected function get_refund_failed_wp_error( $error_code, $error_message ) {
 
@@ -2058,7 +2071,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * amount has been refunded.
 	 *
 	 * @since 3.1.0
-	 * @param WC_Order $order order object
+	 *
+	 * @param \WC_Order $order order object
 	 */
 	public function mark_order_as_refunded( $order ) {
 
@@ -2095,8 +2109,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * charge that has not yet settled (e.g. Authorize.net AIM/CIM)
 	 *
 	 * @since 4.0.0
+	 *
 	 * @param \WC_Order $order order
-	 * @param \SV_WC_Payment_Gateway_API_Response $response refund response
+	 * @param SV_WC_Payment_Gateway_API_Response $response refund response
 	 * @return boolean true if a void should be performed for the given order/response
 	 */
 	protected function maybe_void_instead_of_refund( $order, $response ) {
@@ -2106,11 +2121,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Process a void
+	 * Processes a void order.
 	 *
 	 * @since 3.1.0
-	 * @param WC_Order $order order object (with refund class member already added)
-	 * @return bool|WP_Error true on success, or a WP_Error object on failure/error
+	 *
+	 * @param \WC_Order $order order object (with refund class member already added)
+	 * @return bool|\WP_Error true on success, or a WP_Error object on failure/error
 	 */
 	protected function process_void( \WC_Order $order ) {
 
@@ -2157,10 +2173,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Adds the standard void transaction data to the order
+	 * Adds the standard void transaction data to the order.
 	 *
 	 * @since 3.1.0
-	 * @param WC_Order $order the order object
+	 *
+	 * @param \WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
 	 */
 	protected function add_void_data( \WC_Order $order, $response ) {
@@ -2176,10 +2193,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Adds any gateway-specific data to the order after a void is performed
+	 * Adds any gateway-specific data to the order after a void is performed.
 	 *
 	 * @since 3.1.0
-	 * @param WC_Order $order the order object
+	 *
+	 * @param \WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
 	 */
 	protected function add_payment_gateway_void_data( \WC_Order $order, $response ) {
@@ -2188,12 +2206,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Build the WP_Error object for a failed void
+	 * Builds the WP_Error object for a failed void.
 	 *
 	 * @since 3.1.0
+	 *
 	 * @param int|string $error_code error code
 	 * @param string $error_message error message
-	 * @return WP_Error suitable for returning from the process_refund() method
+	 * @return \WP_Error suitable for returning from the process_refund() method
 	 */
 	protected function get_void_failed_wp_error( $error_code, $error_message ) {
 
@@ -2219,11 +2238,14 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Mark an order as voided. Because WC has no status for "void", we use
-	 * refunded.
+	 * Marks an order as voided.
+	 *
+	 * Because WC has no status for "void", we use refunded.
 	 *
 	 * @since 3.1.0
-	 * @param WC_Order $order order object
+	 *
+	 * @param \WC_Order $order order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response object
 	 */
 	public function mark_order_as_voided( $order, $response ) {
 
@@ -2280,11 +2302,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Returns the $order object with a unique transaction ref member added
+	 * Returns the $order object with a unique transaction ref member added.
 	 *
 	 * @since 2.2.0
-	 * @param WC_Order $order the order object
-	 * @return WC_Order order object with member named unique_transaction_ref
+	 *
+	 * @param \WC_Order $order the order object
+	 * @return \WC_Order order object with member named unique_transaction_ref
 	 */
 	protected function get_order_with_unique_transaction_ref( $order ) {
 
@@ -2310,12 +2333,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Called after an unsuccessful transaction attempt
+	 * Called after an unsuccessful transaction attempt.
 	 *
 	 * @since 1.0.0
-	 * @param WC_Order $order the order
+	 *
+	 * @param \WC_Order $order the order
 	 * @param SV_WC_Payment_Gateway_API_Response $response the transaction response
-	 * @return boolean false
+	 * @return false
 	 */
 	protected function do_transaction_failed_result( \WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
 
@@ -2345,10 +2369,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Adds the standard transaction data to the order
+	 * Adds the standard transaction data to the order.
 	 *
 	 * @since 1.0.0
-	 * @param WC_Order $order the order object
+	 *
+	 * @param \WC_Order $order the order object
 	 * @param SV_WC_Payment_Gateway_API_Response|null $response optional transaction response
 	 */
 	public function add_transaction_data( $order, $response = null ) {
@@ -2437,20 +2462,22 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 * transactional data to an order given the transaction response object.
 		 *
 		 * @since 4.1.0
+		 *
 		 * @param \WC_Order $order order object
-		 * @param \SV_WC_Payment_Gateway_API_Response|null $response transaction response
-		 * @param \SV_WC_Payment_Gateway $this instance
+		 * @param SV_WC_Payment_Gateway_API_Response|null $response transaction response
+		 * @param SV_WC_Payment_Gateway $this instance
 		 */
 		do_action( 'wc_payment_gateway_' . $this->get_id() . '_add_transaction_data', $order, $response, $this );
 	}
 
 
 	/**
-	 * Adds any gateway-specific transaction data to the order
+	 * Adds any gateway-specific transaction data to the order.
 	 *
 	 * @since 1.0.0
-	 * @param WC_Order $order the order object
-	 * @param \SV_WC_Payment_Gateway_API_Customer_Response $response the transaction response
+	 *
+	 * @param \WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Customer_Response $response the transaction response
 	 */
 	public function add_payment_gateway_transaction_data( $order, $response ) {
 		// Optional method
@@ -2462,8 +2489,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * response
 	 *
 	 * @since 4.0.0
+	 *
 	 * @param \WC_Order $order order
-	 * @param \SV_WC_Payment_Gateway_API_Customer_Response $response
+	 * @param SV_WC_Payment_Gateway_API_Customer_Response $response
 	 */
 	protected function add_customer_data( $order, $response = null ) {
 
@@ -2498,6 +2526,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @param \WC_Order $order order object
 	 * @param SV_WC_Payment_Gateway_API_Response $response response object
 	 * @return string
+	 * @throws \Exception
 	 */
 	public function get_credit_card_transaction_approved_message( \WC_Order $order, $response ) {
 
@@ -2553,10 +2582,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 * is approved.
 		 *
 		 * @since 4.1.0
+		 *
 		 * @param string $message order note
 		 * @param \WC_Order $order order object
-		 * @param \SV_WC_Payment_Gateway_API_Response $response transaction response
-		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
+		 * @param SV_WC_Payment_Gateway_Direct $this instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_credit_card_transaction_approved_order_note', $message, $order, $response, $this );
 	}
@@ -2597,20 +2627,21 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 * is approved.
 		 *
 		 * @since 4.1.0
+		 *
 		 * @param string $message order note
 		 * @param \WC_Order $order order object
-		 * @param \SV_WC_Payment_Gateway_API_Response $response transaction response
-		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 * @param SV_WC_Payment_Gateway_API_Response $response transaction response
+		 * @param SV_WC_Payment_Gateway_Direct $this instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_check_transaction_approved_order_note', $message, $order, $response, $this );
 	}
 
 
 	/**
-	 * Mark the given order as 'on-hold', set an order note and display a message
-	 * to the customer
+	 * Marks the given order as 'on-hold', set an order note and display a message to the customer.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param \WC_Order $order the order
 	 * @param string $message a message to display within the order note
 	 * @param SV_WC_Payment_Gateway_API_Response $response optional, the transaction response object
@@ -2677,8 +2708,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * additionally include more detailed information.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @param string $text order received text
-	 * @param WC_Order|null $order order object
+	 * @param \WC_Order|null $order order object
 	 * @return string
 	 */
 	public function maybe_render_held_order_received_text( $text, $order ) {
@@ -2695,10 +2727,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Mark the given order as failed and set the order note
+	 * Marks the given order as failed and set the order note.
 	 *
 	 * @since 1.0.0
-	 * @param WC_Order $order the order
+	 *
+	 * @param \WC_Order $order the order
 	 * @param string $error_message a message to display inside the "Payment Failed" order note
 	 * @param SV_WC_Payment_Gateway_API_Response optional $response the transaction response object
 	 */
@@ -2729,11 +2762,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Mark the given order as cancelled and set the order note
+	 * Marks the given order as cancelled and set the order note.
 	 *
 	 * @since 2.1.0
-	 * @param WC_Order $order the order
-	 * @param string $error_message a message to display inside the "Payment Cancelled" order note
+	 *
+	 * @param \WC_Order $order the order
+	 * @param string $message a message to display inside the "Payment Cancelled" order note
 	 * @param SV_WC_Payment_Gateway_API_Response optional $response the transaction response object
 	 */
 	public function mark_order_as_cancelled( $order, $message, $response = null ) {
@@ -2862,7 +2896,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * support a customer id
 	 *
 	 * @since 1.0.0
-	 * @param WC_Order $order order object
+	 *
+	 * @param \WC_Order $order order object
 	 * @return string payment gateway guest customer id
 	 */
 	public function get_guest_customer_id( \WC_Order $order ) {
@@ -3054,8 +3089,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Determines if a credit card transaction should result in a charge.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param \WC_Order $order Optional. The order being charged
-	 * @throws Exception
 	 * @return bool
 	 */
 	public function perform_credit_card_charge( \WC_Order $order = null ) {
@@ -3072,9 +3107,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 * Filters whether a credit card transaction should result in a charge.
 		 *
 		 * @since 4.5.0
+		 *
 		 * @param bool $perform whether the transaction should result in a charge
 		 * @param \WC_Order|null $order the order being charged
-		 * @param \SV_WC_Payment_Gateway $gateway the gateway object
+		 * @param SV_WC_Payment_Gateway $gateway the gateway object
 		 */
 		return apply_filters( 'wc_' . $this->get_id() . '_perform_credit_card_charge', $perform, $order, $this );
 	}
@@ -3084,8 +3120,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Determines if a credit card transaction should result in an authorization.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param \WC_Order $order Optional. The order being authorized
-	 * @throws Exception
 	 * @return bool
 	 */
 	public function perform_credit_card_authorization( \WC_Order $order = null ) {
@@ -3100,7 +3136,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 * @since 4.5.0
 		 * @param bool $perform whether the transaction should result in an authorization
 		 * @param \WC_Order|null $order the order being authorized
-		 * @param \SV_WC_Payment_Gateway $gateway the gateway object
+		 * @param SV_WC_Payment_Gateway $gateway the gateway object
 		 */
 		return apply_filters( 'wc_' . $this->get_id() . '_perform_credit_card_authorization', $perform, $order, $this );
 	}
@@ -3520,11 +3556,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Adds order meta data.
 	 *
 	 * @since 2.2.0
+	 *
 	 * @param \WC_Order|int the order to add meta to
 	 * @param string $key meta key (already prefixed with gateway ID)
 	 * @param mixed $value meta value
 	 * @param bool $unique whether the meta value should be unique
-	 * @return bool|int
+	 * @return false|void
 	 */
 	public function add_order_meta( $order, $key, $value, $unique = false ) {
 
@@ -3568,10 +3605,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Updates order meta data.
 	 *
 	 * @since 2.2.0
+	 *
 	 * @param \WC_Order|int the order to update meta for
 	 * @param string $key meta key
 	 * @param mixed $value meta value
-	 * @return bool|int
+	 * @return false|void
 	 */
 	public function update_order_meta( $order, $key, $value ) {
 
@@ -3653,9 +3691,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Returns the parent plugin object
 	 *
 	 * @since 1.0.0
-	 * @return \SV_WC_Payment_Gateway_Plugin the parent plugin object
+	 *
+	 * @return SV_WC_Payment_Gateway_Plugin the parent plugin object
 	 */
 	public function get_plugin() {
+
 		return $this->plugin;
 	}
 
@@ -3766,7 +3806,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				 * (including ourselves) to take action when support is declared.
 				 *
 				 * @since 1.0.0
-				 * @param \SV_WC_Payment_Gateway $this instance
+				 *
+				 * @param SV_WC_Payment_Gateway $this instance
 				 * @param string $name of supported feature being added
 				 */
 				do_action( 'wc_payment_gateway_' . $this->get_id() . '_supports_' . str_replace( '-', '_', $name ), $this, $name );
@@ -3799,7 +3840,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			 * (including ourselves) to take action when support is removed.
 			 *
 			 * @since 4.1.0
-			 * @param \SV_WC_Payment_Gateway $this instance
+			 *
+			 * @param SV_WC_Payment_Gateway $this instance
 			 * @param string $name of supported feature being removed
 			 */
 			do_action( 'wc_payment_gateway_' . $this->get_id() . '_removed_support_' . str_replace( '-', '_', $name ), $this, $name );
@@ -3883,7 +3925,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Returns true if the current environment is $environment_id
+	 * Returns true if the current environment is $environment_id.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string|mixed $environment_id
+	 * @return bool
 	 */
 	public function is_environment( $environment_id ) {
 		return $environment_id == $this->get_environment();

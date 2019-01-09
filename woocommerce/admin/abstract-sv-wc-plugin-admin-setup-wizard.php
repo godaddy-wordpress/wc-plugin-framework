@@ -1287,7 +1287,7 @@ abstract class Setup_Wizard {
 	 *
 	 * @since 5.2.2
 	 *
-	 * @return Framework\SV_WC_Plugin
+	 * @return Framework\SV_WC_Plugin|Framework\SV_WC_Payment_Gateway_Plugin
 	 */
 	protected function get_plugin() {
 

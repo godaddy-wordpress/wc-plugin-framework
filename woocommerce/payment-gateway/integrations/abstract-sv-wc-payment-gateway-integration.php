@@ -36,15 +36,16 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\SV_WC_Pa
 abstract class SV_WC_Payment_Gateway_Integration {
 
 
-	/** @var \SV_WC_Payment_Gateway_Direct direct gateway instance */
+	/** @var SV_WC_Payment_Gateway direct gateway instance */
 	protected $gateway;
 
 
 	/**
-	 * Boostrap class
+	 * Bootstraps the class.
 	 *
 	 * @since 4.1.0
-	 * @param \SV_WC_Payment_Gateway_Direct $gateway direct gateway instance
+	 *
+	 * @param SV_WC_Payment_Gateway $gateway direct gateway instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway $gateway ) {
 
@@ -56,7 +57,7 @@ abstract class SV_WC_Payment_Gateway_Integration {
 	 * Return the gateway for the integration
 	 *
 	 * @since 4.1.0
-	 * @return \SV_WC_Payment_Gateway_Direct
+	 * @return SV_WC_Payment_Gateway
 	 */
 	public function get_gateway() {
 

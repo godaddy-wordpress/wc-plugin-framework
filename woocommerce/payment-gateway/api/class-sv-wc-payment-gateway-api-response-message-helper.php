@@ -61,7 +61,8 @@ class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 	 * info.
 	 *
 	 * @since 2.2.0
-	 * @param array $message_ids array of string $message_id's which identify the message(s) to return
+	 *
+	 * @param string[] $message_ids array of string $message_id's which identify the message(s) to return
 	 * @return string a user message, combining all $message_ids
 	 */
 	public function get_user_messages( $message_ids ) {
@@ -145,7 +146,7 @@ class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 		 * @since 2.2.0
 		 * @param string $message message to show to user
 		 * @param string $message_id machine code for the message, e.g. card_expired
-		 * @param \SV_WC_Payment_Gateway_API_Response_Message_Helper $this instance
+		 * @param SV_WC_Payment_Gateway_API_Response_Message_Helper $this instance
 		 */
 		return apply_filters( 'wc_payment_gateway_transaction_response_user_message', $message, $message_id, $this );
 	}

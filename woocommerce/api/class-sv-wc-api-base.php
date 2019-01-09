@@ -57,7 +57,7 @@ abstract class SV_WC_API_Base {
 	/** @var string request duration */
 	protected $request_duration;
 
-	/** @var object request */
+	/** @var SV_WC_API_Request|object request */
 	protected $request;
 
 	/** @var string response code */
@@ -75,7 +75,7 @@ abstract class SV_WC_API_Base {
 	/** @var string response handler class name */
 	protected $response_handler;
 
-	/** @var object response */
+	/** @var SV_WC_API_Response|object response */
 	protected $response;
 
 
@@ -83,10 +83,10 @@ abstract class SV_WC_API_Base {
 	 * Perform the request and return the parsed response
 	 *
 	 * @since 2.2.0
-	 * @param object $request class instance which implements \SV_WC_API_Request
-	 * @throws Exception
-	 * @throws \SV_WC_API_Exception
-	 * @return object class instance which implements \SV_WC_API_Response
+	 *
+	 * @param SV_WC_API_Request|object $request class instance which implements SV_WC_API_Request
+	 * @return SV_WC_API_Response|object class instance which implements SV_WC_API_Response
+	 * @throws SV_WC_API_Exception may be thrown in implementations
 	 */
 	protected function perform_request( $request ) {
 
@@ -132,11 +132,13 @@ abstract class SV_WC_API_Base {
 	 * cURL implementation
 	 *
 	 * @since 2.2.0
+	 *
 	 * @param string $request_uri
 	 * @param string $request_args
-	 * @return array|WP_Error
+	 * @return array|\WP_Error
 	 */
 	protected function do_remote_request( $request_uri, $request_args ) {
+
 		return wp_safe_remote_request( $request_uri, $request_args );
 	}
 
@@ -145,9 +147,9 @@ abstract class SV_WC_API_Base {
 	 * Handle and parse the response
 	 *
 	 * @since 2.2.0
-	 * @param array|WP_Error $response response data
-	 * @throws \SV_WC_API_Exception network issues, timeouts, API errors, etc
-	 * @return object request class instance that implements SV_WC_API_Request
+	 * @param array|\WP_Error $response response data
+	 * @throws SV_WC_API_Exception network issues, timeouts, API errors, etc
+	 * @return SV_WC_API_Request|object request class instance that implements SV_WC_API_Request
 	 */
 	protected function handle_response( $response ) {
 
@@ -232,7 +234,7 @@ abstract class SV_WC_API_Base {
 	 *
 	 * @since 2.2.0
 	 * @param string $raw_response_body
-	 * @return object response class instance which implements SV_WC_API_Request
+	 * @return object|SV_WC_API_Request response class instance which implements SV_WC_API_Request
 	 */
 	protected function get_parsed_response( $raw_response_body ) {
 
@@ -287,7 +289,7 @@ abstract class SV_WC_API_Base {
 		 *     @type string $headers response HTTP headers
 		 *     @type string $body response body
 		 * }
-		 * @param \SV_WC_API_Base $this instance
+		 * @param SV_WC_API_Base $this instance
 		 */
 		do_action( 'wc_' . $this->get_api_id() . '_api_request_performed', $request_data, $response_data, $this );
 	}
@@ -345,8 +347,9 @@ abstract class SV_WC_API_Base {
 		 * method.
 		 *
 		 * @since 4.1.0
+		 *
 		 * @param string $uri current request URI
-		 * @param \SV_WC_API_Base class instance
+		 * @param SV_WC_API_Base class instance
 		 */
 		return apply_filters( 'wc_' . $this->get_api_id() . '_api_request_uri', $uri, $this );
 	}
@@ -393,7 +396,8 @@ abstract class SV_WC_API_Base {
 	 * Get the request arguments in the format required by wp_remote_request()
 	 *
 	 * @since 2.2.0
-	 * @return mixed|void
+	 *
+	 * @return array
 	 */
 	protected function get_request_args() {
 
@@ -419,7 +423,7 @@ abstract class SV_WC_API_Base {
 		 *
 		 * @since 2.2.0
 		 * @param array $args request arguments
-		 * @param \SV_WC_API_Base class instance
+		 * @param SV_WC_API_Base class instance
 		 */
 		return apply_filters( 'wc_' . $this->get_api_id() . '_http_request_args', $args, $this );
 	}
@@ -617,25 +621,27 @@ abstract class SV_WC_API_Base {
 
 
 	/**
-	 * Returns the most recent request object
+	 * Returns the most recent request object.
 	 *
 	 * @since 2.2.0
-	 * @see \SV_WC_API_Request
-	 * @return object the most recent request object
+	 *
+	 * @return SV_WC_API_Request|object the most recent request object
 	 */
 	public function get_request() {
+
 		return $this->request;
 	}
 
 
 	/**
-	 * Returns the most recent response object
+	 * Returns the most recent response object.
 	 *
 	 * @since 2.2.0
-	 * @see \SV_WC_API_Response
-	 * @return object the most recent response object
+	 *
+	 * @return SV_WC_API_Response|object the most recent response object
 	 */
 	public function get_response() {
+
 		return $this->response;
 	}
 
@@ -662,8 +668,9 @@ abstract class SV_WC_API_Base {
 	 * to self::perform_request() by your concrete API methods
 	 *
 	 * @since 2.2.0
+	 *
 	 * @param array $args optional request arguments
-	 * @return \SV_WC_API_Request
+	 * @return SV_WC_API_Request|object
 	 */
 	abstract protected function get_new_request( $args = array() );
 
@@ -677,7 +684,8 @@ abstract class SV_WC_API_Base {
 	 * as the plugin name used for the default user agent.
 	 *
 	 * @since 2.2.0
-	 * @return \SV_WC_Plugin
+	 *
+	 * @return SV_WC_Plugin
 	 */
 	abstract protected function get_plugin();
 
@@ -756,10 +764,11 @@ abstract class SV_WC_API_Base {
 	 * Note the class should implement SV_WC_API
 	 *
 	 * @since 2.2.0
+	 *
 	 * @param string $handler handle class name
-	 * @return array
 	 */
 	protected function set_response_handler( $handler ) {
+
 		$this->response_handler = $handler;
 	}
 
@@ -768,6 +777,10 @@ abstract class SV_WC_API_Base {
 	 * Maybe force TLS v1.2 requests.
 	 *
 	 * @since 4.4.0
+	 *
+	 * @param resource $handle the cURL handle returned by curl_init() (passed by reference)
+	 * @param array $r the HTTP request arguments
+	 * @param $url string the request URL
 	 */
 	public function set_tls_1_2_request( $handle, $r, $url ) {
 
@@ -821,7 +834,7 @@ abstract class SV_WC_API_Base {
 		 * @since 4.7.1
 		 *
 		 * @param bool $is_available whether TLS 1.2 is available
-		 * @param \SV_WC_API_Base $api API class instance
+		 * @param SV_WC_API_Base $api API class instance
 		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_api_is_tls_1_2_available', $is_available, $this );
 	}

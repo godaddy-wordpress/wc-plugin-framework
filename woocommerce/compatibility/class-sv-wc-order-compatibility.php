@@ -201,7 +201,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @since 4.6.0
 	 * @param \WC_Order $object the order object
 	 * @param array $props the new properties as $key => $value
-	 * @return \WC_Order
+	 * @return \WC_Data|\WC_Order
 	 */
 	public static function set_props( $object, $props, $compat_props = array() ) {
 

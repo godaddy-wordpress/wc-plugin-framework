@@ -108,7 +108,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * @since  4.6.0
 	 *
-	 * @param \WC_DateTime|\SV_WC_DateTime $date date object
+	 * @param \WC_DateTime|SV_WC_DateTime $date date object
 	 * @param string $format date format
 	 * @return string
 	 */

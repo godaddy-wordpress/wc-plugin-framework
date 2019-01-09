@@ -95,7 +95,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * @since 4.7.0
 	 *
 	 * @return array
-	 * @throws \SV_WC_Payment_Gateway_Exception
+	 * @throws \Exception
 	 */
 	public function process_payment() {
 
@@ -170,7 +170,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * @since 4.7.0
 	 *
 	 * @param int $user_id WordPress user ID
-	 * @param \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $payment_response payment response object
+	 * @param SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $payment_response payment response object
 	 */
 	protected function update_customer_addresses( $user_id, SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $payment_response ) {
 
@@ -218,13 +218,12 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * Gets a single product payment request.
 	 *
 	 * @since 4.7.0
-	 * @see \SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
+	 * @see SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
 	 *
 	 * @param \WC_Product $product product object
 	 * @param bool $in_cart whether to generate a cart for this request
 	 * @return array
-	 *
-	 * @throws \SV_WC_Payment_Gateway_Exception
+	 * @throws SV_WC_Payment_Gateway_Exception
 	 */
 	public function get_product_payment_request( \WC_Product $product, $in_cart = false ) {
 
@@ -286,12 +285,11 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * Gets a payment request based on WooCommerce cart data.
 	 *
 	 * @since 4.7.0
-	 * @see \SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
+	 * @see SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
 	 *
 	 * @param \WC_Cart $cart cart object
 	 * @return array
-	 *
-	 * @throws \SV_WC_Payment_Gateway_Exception
+	 * @throws SV_WC_Payment_Gateway_Exception
 	 */
 	public function get_cart_payment_request( \WC_Cart $cart ) {
 
@@ -340,8 +338,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * @since 4.7.0
 	 *
 	 * @return array
-	 *
-	 * @throws \SV_WC_Payment_Gateway_Exception
+	 * @throws SV_WC_Payment_Gateway_Exception
 	 */
 	public function recalculate_totals() {
 
@@ -526,6 +523,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *     @type float $fees     fees total
 	 *     @type float $taxes    tax total
 	 * }
+	 * @return array
 	 */
 	public function build_payment_request_lines( $totals ) {
 
@@ -625,7 +623,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response|false
+	 * @return false|SV_WC_Payment_Gateway_Apple_Pay_Payment_Response|false
 	 */
 	public function get_stored_payment_response() {
 
@@ -643,6 +641,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * Stores payment request data for later use.
 	 *
 	 * @since 4.7.0
+	 *
+	 * @param mixed|array $data
 	 */
 	public function store_payment_request( $data ) {
 
@@ -654,6 +654,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * Stores payment response data for later use.
 	 *
 	 * @since 4.7.0
+	 *
+	 * @param mixed|array $data
 	 */
 	public function store_payment_response( $data ) {
 
@@ -736,7 +738,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Apple_Pay_API
+	 * @return SV_WC_Payment_Gateway_Apple_Pay_API
 	 */
 	public function get_api() {
 
@@ -968,7 +970,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		 * @since 4.7.0
 		 *
 		 * @param array $networks the supported networks
-		 * @param \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler
+		 * @param SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler
 		 */
 		return apply_filters( 'sv_wc_apple_pay_supported_networks', array_values( $networks ), $this );
 	}
@@ -1002,7 +1004,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway|null
+	 * @return SV_WC_Payment_Gateway|null
 	 */
 	public function get_processing_gateway() {
 
@@ -1032,7 +1034,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Plugin
+	 * @return SV_WC_Payment_Gateway_Plugin
 	 */
 	public function get_plugin() {
 

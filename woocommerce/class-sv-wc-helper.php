@@ -220,8 +220,9 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\SV_WC_He
 		 * pattern definitions from http://www.regular-expressions.info/unicode.html
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $string
-		 * @return mixed
+		 * @return string
 		 */
 		public static function str_to_sane_utf8( $string ) {
 
@@ -464,7 +465,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\SV_WC_He
 		 *
 		 * @since 3.0.0
 		 * @param \WC_Order $order
-		 * @return array
+		 * @return \stdClass[] array of line item objects
 		 */
 		public static function get_order_line_items( $order ) {
 

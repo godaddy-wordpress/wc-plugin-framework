@@ -36,15 +36,16 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_0\\SV_WC_Pa
 class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 
-	/** @var \SV_WC_Payment_Gateway_Direct the gateway object **/
+	/** @var SV_WC_Payment_Gateway_Direct the gateway object **/
 	protected $gateway;
 
 
 	/**
-	 * Construct the editor.
+	 * Constructs the editor.
 	 *
 	 * @since 4.3.0
-	 * @param \SV_WC_Payment_Gateway_Direct the gateway object
+	 *
+	 * @param SV_WC_Payment_Gateway_Direct the gateway object
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Direct $gateway ) {
 
@@ -304,10 +305,11 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 * See Authorize.net CIM for an example.
 	 *
 	 * @since 4.3.0
+	 *
 	 * @param int $user_id the user ID
 	 * @param string $token_id the token ID
 	 * @param array $data the token data
-	 * @return \SV_WC_Payment_Gateway_Payment_Token the payment token object
+	 * @return SV_WC_Payment_Gateway_Payment_Token the payment token object
 	 */
 	protected function build_token( $user_id, $token_id, $data ) {
 
@@ -452,11 +454,12 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		}
 
 		/**
-		 * Filter the token editor name.
+		 * Filters the token editor name.
 		 *
 		 * @since 4.3.0
+		 *
 		 * @param string $title the editor title
-		 * @param \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
+		 * @param SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_title', $title, $this );
 	}
@@ -481,11 +484,12 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		$columns['actions'] = '';
 
 		/**
-		 * Filter the admin token editor columns.
+		 * Filters the admin token editor columns.
 		 *
 		 * @since 4.3.0
+		 *
 		 * @param array $columns
-		 * @param \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
+		 * @param SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
 		 */
 		$columns = apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_columns', $columns, $this );
 
@@ -585,11 +589,12 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		}
 
 		/**
-		 * Filter the admin token editor fields.
+		 * Filters the admin token editor fields.
 		 *
 		 * @since 4.3.0
+		 *
 		 * @param array $fields
-		 * @param \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
+		 * @param SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
 		 */
 		$fields = apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_fields', $fields, $this );
 
@@ -662,11 +667,12 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		$actions['save'] = __( 'Save', 'woocommerce-plugin-framework' );
 
 		/**
-		 * Filter the payment token editor actions.
+		 * Filters the payment token editor actions.
 		 *
 		 * @since 4.3.0
+		 *
 		 * @param array $actions the actions
-		 * @param \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
+		 * @param SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_actions', $actions, $this );
 	}
@@ -685,25 +691,30 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 		);
 
 		/**
-		 * Filter the token actions.
+		 * Filters the token actions.
 		 *
 		 * @since 4.3.0
+		 *
 		 * @param array $actions the token actions
-		 * @param \SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
+		 * @param SV_WC_Payment_Gateway_Admin_Payment_Token_Editor $editor the editor object
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_token_editor_token_actions', $actions, $this );
 	}
 
 
 	/**
-	 * Get the gateway object.
+	 * Gets the gateway object.
 	 *
 	 * @since 4.3.0
-	 * @return \SV_WC_Payment_Gateway_Direct the gateway object
+	 *
+	 * @return SV_WC_Payment_Gateway_Direct the gateway object
 	 */
 	protected function get_gateway() {
+
 		return $this->gateway;
 	}
+
+
 }
 
 endif;
