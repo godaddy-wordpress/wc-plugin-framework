@@ -39,6 +39,9 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\Plugin\\
 class Lifecycle {
 
 
+	/** @var array the version numbers that have an upgrade routine */
+	protected $upgrade_versions = [];
+
 	/** @var string minimum milestone version */
 	private $milestone_version;
 
@@ -234,8 +237,7 @@ class Lifecycle {
 
 		foreach ( $settings as $setting ) {
 
-			if ( isset( $setting['id'] ) && isset( $setting['default'] ) ) {
-
+			if ( isset( $setting['id'], $setting['default'] ) ) {
 				update_option( $setting['id'], $setting['default'] );
 			}
 		}
@@ -262,7 +264,19 @@ class Lifecycle {
 	 */
 	protected function upgrade( $installed_version ) {
 
-		// stub
+		foreach ( $this->upgrade_versions as $upgrade_version ) {
+
+			$upgrade_method = 'upgrade_to_' . str_replace( [ '.', '-' ], '_', $upgrade_version );
+
+			if ( version_compare( $installed_version, $upgrade_version, '<' ) && is_callable( [ $this, $upgrade_method ] ) ) {
+
+				$this->get_plugin()->log( "Starting upgrade to v{$upgrade_version}" );
+
+				$this->$upgrade_method( $installed_version );
+
+				$this->get_plugin()->log( "Upgrade to v{$upgrade_version} complete" );
+			}
+		}
 	}
 
 
@@ -502,7 +516,7 @@ class Lifecycle {
 	 */
 	public function do_update() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
+		wc_deprecated_function( __METHOD__, '5.2.0' );
 	}
 
 
