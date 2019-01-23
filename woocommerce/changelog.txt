@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2019.nn.nn - version 5.4.0-dev
+
+
 2019.01.09 - version 5.3.1
  * Fix - Fix a JavaScript error in the welcome wizard for missing parameters
  * Fix - Correctly handle memory_limit shorthand from php.ini
