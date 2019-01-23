@@ -90,6 +90,7 @@ class REST_API {
 
 		$data = array(
 			'is_payment_gateway' => $this->get_plugin() instanceof SV_WC_Payment_Gateway_Plugin,
+			'lifecycle_events'   => $this->get_plugin()->get_lifecycle_handler()->get_event_history(),
 		);
 
 		$data = array_merge( $data, $this->get_system_status_data() );

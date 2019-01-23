@@ -111,6 +111,9 @@ class Lifecycle {
 
 				$this->install();
 
+				// store the upgrade event regardless if there was a routine for it
+				$this->store_event( 'install', $plugin_version );
+
 				/**
 				 * Fires after the plugin has been installed.
 				 *
@@ -121,6 +124,11 @@ class Lifecycle {
 			} else {
 
 				$this->upgrade( $installed_version );
+
+				// store the upgrade event regardless if there was a routine for it
+				$this->store_event( 'upgrade', $plugin_version, [
+					'upgrade_from' => $installed_version,
+				] );
 
 				// if the plugin never had any previous milestones, consider them all reached so their notices aren't displayed
 				if ( ! $this->get_milestone_version() ) {
@@ -413,6 +421,94 @@ class Lifecycle {
 		$milestone_messages[ $id ] = $message;
 
 		return update_option( 'wc_' . $this->get_plugin()->get_id() . '_milestone_messages', $milestone_messages );
+	}
+
+
+	/** Event history methods *****************************************************************************************/
+
+
+	/**
+	 * Logs a lifecycle event.
+	 *
+	 * This can be used to log installs, upgrades, etc...
+	 *
+	 * Uses a direct database query to avoid cache issues.
+	 *
+	 * @since 5.4.0-dev
+	 *
+	 * @param string $name lifecycle event name
+	 * @param string $current_version current version of the plugin
+	 * @param array $data any extra data to store
+	 * @return false|int
+	 */
+	public function store_event( $name, $current_version, array $data = [] ) {
+		global $wpdb;
+
+		$history      = $this->get_event_history();
+		$current_time = (int) current_time( 'timestamp' );
+
+		$history[ $current_time ] = [
+			'name'    => wc_clean( $name ),
+			'version' => wc_clean( $current_version ),
+		];
+
+		if ( ! empty( $data ) ) {
+			$history[ $current_time ]['data'] = wc_clean( $data );
+		}
+
+		return $wpdb->replace(
+			$wpdb->options,
+			[
+				'option_name'  => $this->get_event_history_option_name(),
+				'option_value' => json_encode( $history ),
+				'autoload'     => 'no',
+			],
+			[
+				'%s',
+				'%s',
+			]
+		);
+	}
+
+
+	/**
+	 * Gets the lifecycle event history.
+	 *
+	 * Uses a direct database query to avoid cache issues.
+	 *
+	 * @since 5.4.0-dev
+	 *
+	 * @return array
+	 */
+	public function get_event_history() {
+		global $wpdb;
+
+		$history = [];
+
+		$results = $wpdb->get_var( $wpdb->prepare( "
+			SELECT option_value
+			FROM {$wpdb->options}
+			WHERE option_name = %s
+		", $this->get_event_history_option_name() ) );
+
+		if ( $results ) {
+			$history = json_decode( $results, true );
+		}
+
+		return is_array( $history ) ? $history : [];
+	}
+
+
+	/**
+	 * Gets the event history option name.
+	 *
+	 * @since 5.4.0-dev
+	 *
+	 * @return string
+	 */
+	protected function get_event_history_option_name() {
+
+		return 'wc_' . $this->get_plugin()->get_id() . '_lifecycle_events';
 	}
 
 
