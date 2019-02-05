@@ -40,14 +40,14 @@ class SV_WC_Plugin_Dependencies {
 	/** @var array required PHP settings */
 	protected $php_settings = array();
 
-	/** @var SV_WC_Plugin plugin instance */
+	/** @var Plugin plugin instance */
 	protected $plugin;
 
 
 	/**
 	 * Constructs the class.
 	 *
-	 * @param SV_WC_Plugin $plugin plugin instance
+	 * @param Plugin $plugin plugin instance
 	 * @param array $args {
 	 *     PHP extension, function, and settings dependencies
 	 *
@@ -56,7 +56,7 @@ class SV_WC_Plugin_Dependencies {
 	 *     @type array $php_settings   PHP settings dependencies
 	 * }
 	 */
-	public function __construct( SV_WC_Plugin $plugin, $args = array() ) {
+	public function __construct( Plugin $plugin, $args = array() ) {
 
 		$this->plugin = $plugin;
 
@@ -463,7 +463,7 @@ class SV_WC_Plugin_Dependencies {
 	 *
 	 * @since 5.2.0
 	 *
-	 * @return SV_WC_Plugin
+	 * @return Plugin
 	 */
 	protected function get_plugin() {
 

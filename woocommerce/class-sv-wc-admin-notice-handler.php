@@ -40,7 +40,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\SV_WC_Ad
 class SV_WC_Admin_Notice_Handler {
 
 
-	/** @var SV_WC_Plugin the plugin */
+	/** @var Plugin the plugin */
 	private $plugin;
 
 	/** @var array associative array of id to notice text */
@@ -419,7 +419,7 @@ class SV_WC_Admin_Notice_Handler {
 	 * Get the plugin
 	 *
 	 * @since 3.0.0
-	 * @return SV_WC_Plugin returns the plugin instance
+	 * @return Plugin returns the plugin instance
 	 */
 	protected function get_plugin() {
 		return $this->plugin;
