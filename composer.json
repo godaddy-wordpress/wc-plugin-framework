@@ -4,13 +4,5 @@
     "version": "5.4.0-dev",
     "require-dev": {
         "lucatume/wp-browser": "^2.1"
-    },
-    "autoload": {
-        "psr-4": {
-            "SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\": "woocommerce/"
-        },
-        "files": [
-            "woocommerce/deprecated.php"
-        ]
     }
 }

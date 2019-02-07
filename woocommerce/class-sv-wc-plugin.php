@@ -62,7 +62,7 @@ abstract class SV_WC_Plugin {
 	/** @var \WC_Logger instance */
 	private $logger;
 
-	/** @var  Admin\Message_Handler instance */
+	/** @var  SV_WP_Admin_Message_Handler instance */
 	private $message_handler;
 
 	/** @var string the plugin text domain */
@@ -182,7 +182,7 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function init_admin_message_handler() {
 
-		$this->message_handler = new Admin\Message_Handler( $this->get_id() );
+		$this->message_handler = new SV_WP_Admin_Message_Handler( $this->get_id() );
 	}
 
 
@@ -439,6 +439,7 @@ abstract class SV_WC_Plugin {
 		// Handlers
 		require_once( $framework_path . '/class-sv-wc-plugin-dependencies.php' );
 		require_once( $framework_path . '/class-sv-wc-hook-deprecator.php' );
+		require_once( $framework_path . '/class-sv-wp-admin-message-handler.php' );
 		require_once( $framework_path . '/class-sv-wc-admin-notice-handler.php' );
 		require_once( $framework_path . '/Lifecycle.php' );
 		require_once( $framework_path . '/rest-api/class-sv-wc-plugin-rest-api.php' );
@@ -790,7 +791,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return Admin\Message_Handler
+	 * @return SV_WP_Admin_Message_Handler
 	 */
 	public function get_message_handler() {
 

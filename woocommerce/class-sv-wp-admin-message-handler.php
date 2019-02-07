@@ -22,11 +22,11 @@
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_3_1\Admin;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_3_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\Admin\\Message_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\SV_WP_Admin_Message_Handler' ) ) :
 
 /**
  * # WordPress Admin Message Handler Class
@@ -51,7 +51,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\Admin\\M
  *
  * @version 1.0.1
  */
-class Message_Handler {
+class SV_WP_Admin_Message_Handler {
 
 
 	/** transient message prefix */
