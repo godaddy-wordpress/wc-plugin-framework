@@ -3,7 +3,7 @@
 /**
  * Tests for the base plugin class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_3_1\Plugin
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_3_1\SV_WC_Plugin
  */
 class PluginTest extends \Codeception\TestCase\WPTestCase {
 
@@ -107,7 +107,7 @@ class PluginTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function test_get_framework_file() {
 
-		$this->assertStringEndsWith( 'Plugin.php', $this->get_plugin()->get_framework_file() );
+		$this->assertStringEndsWith( 'class-sv-wc-plugin.php', $this->get_plugin()->get_framework_file() );
 	}
 
 

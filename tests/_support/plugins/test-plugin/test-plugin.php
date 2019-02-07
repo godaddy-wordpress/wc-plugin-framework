@@ -106,11 +106,10 @@ class SV_WC_Framework_Test_Plugin_Loader {
 			return;
 		}
 
+		$this->load_framework();
+
 		// autoload plugin and vendor files
 		$loader = require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
-
-		// register plugin namespace with autoloader
-		$loader->addPsr4( 'SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\', __DIR__ . '/vendor/skyverge/wc-plugin-framework/woocommerce' );
 
 		// register plugin namespace with autoloader
 		$loader->addPsr4( 'SkyVerge\\WooCommerce\\TestPlugin\\', __DIR__ . '/includes' );
@@ -119,6 +118,25 @@ class SV_WC_Framework_Test_Plugin_Loader {
 
 		// fire it up!
 		sv_wc_test_plugin();
+	}
+
+
+	/**
+	 * Loads the base framework classes.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function load_framework() {
+
+
+		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Plugin' ) ) {
+			require_once( __DIR__ . '/vendor/skyverge/wc-plugin-framework/woocommerce/class-sv-wc-plugin.php' );
+		}
+
+		// TODO: remove this if not a payment gateway
+		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Payment_Gateway_Plugin' ) ) {
+			#require_once( plugin_dir_path( __FILE__ ) . 'vendor/skyverge/woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php' );
+		}
 	}
 
 

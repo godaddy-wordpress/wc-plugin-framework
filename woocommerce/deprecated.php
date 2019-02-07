@@ -30,6 +30,4 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_3_1;
  * TODO: remove support for these classes on 2020-11-03
  */
 
-class_alias( Plugin::class, SV_WC_Plugin::class );
-
 class_alias( Admin\Message_Handler::class, SV_WP_Admin_Message_Handler::class );

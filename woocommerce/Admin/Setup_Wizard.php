@@ -58,16 +58,16 @@ abstract class Setup_Wizard {
 	/** @var string setup handler ID  */
 	private $id;
 
-	/** @var Framework\Plugin plugin instance */
+	/** @var Framework\SV_WC_Plugin plugin instance */
 	private $plugin;
 
 
 	/**
 	 * Constructs the class.
 	 *
-	 * @param Framework\Plugin $plugin plugin instance
+	 * @param Framework\SV_WC_Plugin $plugin plugin instance
 	 */
-	public function __construct( Framework\Plugin $plugin ) {
+	public function __construct( Framework\SV_WC_Plugin $plugin ) {
 
 		// sanity check for admin and permissions
 		if ( ! is_admin() || ! current_user_can( $this->required_capability ) ) {
@@ -1287,7 +1287,7 @@ abstract class Setup_Wizard {
 	 *
 	 * @since 5.2.2
 	 *
-	 * @return Framework\Plugin|Framework\SV_WC_Payment_Gateway_Plugin
+	 * @return Framework\SV_WC_Plugin|Framework\SV_WC_Payment_Gateway_Plugin
 	 */
 	protected function get_plugin() {
 

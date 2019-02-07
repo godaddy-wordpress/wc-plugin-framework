@@ -42,7 +42,7 @@ class SV_WP_Job_Batch_Handler {
 	/** @var SV_WP_Background_Job_Handler job handler instance */
 	protected $job_handler;
 
-	/** @var Plugin $plugin WC plugin instance */
+	/** @var SV_WC_Plugin $plugin WC plugin instance */
 	protected $plugin;
 
 	/** @var int default items per batch */
@@ -55,9 +55,9 @@ class SV_WP_Job_Batch_Handler {
 	 * @since 4.8.0
 	 *
 	 * @param SV_WP_Background_Job_Handler $job_handler job handler instance
-	 * @param Plugin $plugin WC plugin instance
+	 * @param SV_WC_Plugin $plugin WC plugin instance
 	 */
-	public function __construct( $job_handler, Plugin $plugin ) {
+	public function __construct( $job_handler, SV_WC_Plugin $plugin ) {
 
 		if ( ! is_admin() ) {
 			return;
@@ -295,7 +295,7 @@ class SV_WP_Job_Batch_Handler {
 	 *
 	 * @since 4.8.0
 	 *
-	 * @return Plugin
+	 * @return SV_WC_Plugin
 	 */
 	protected function get_plugin() {
 

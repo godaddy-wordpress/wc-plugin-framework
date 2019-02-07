@@ -54,7 +54,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\SV_WC_Pa
  *
  * @version 2.0.0
  */
-abstract class SV_WC_Payment_Gateway_Plugin extends Plugin {
+abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/** Customer ID feature */
@@ -112,8 +112,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends Plugin {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @see Plugin::__construct()
-	 *
+	 * @see SV_WC_Plugin::__construct()
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
 	 * @param array $args plugin arguments
@@ -151,7 +150,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends Plugin {
 	 *
 	 * Gateway plugins can override this to add their own data and/or routes.
 	 *
-	 * @see Plugin::init_rest_api_handler()
+	 * @see SV_WC_Plugin::init_rest_api_handler()
 	 *
 	 * @since 5.2.0
 	 */
@@ -199,7 +198,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends Plugin {
 	 * Initializes the plugin admin.
 	 *
 	 * @internal
-	 * @see Plugin::init_admin()
+	 * @see SV_WC_Plugin::init_admin()
 	 *
 	 * @since 5.2.0
 	 */
@@ -490,12 +489,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends Plugin {
 	/**
 	 * Adds the gateway plugin action links.
 	 *
-	 * @see Plugin::plugin_action_links()
+	 * @see SV_WC_Plugin::plugin_action_links()
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param string[] $actions associative array of action names to anchor tags
-	 *
 	 * @return string[]
 	 */
 	public function plugin_action_links( $actions ) {
@@ -526,7 +524,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends Plugin {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @see Plugin::is_plugin_settings()
+	 * @see SV_WC_Plugin::is_plugin_settings()
 	 * @return bool
 	 */
 	public function is_plugin_settings() {
@@ -547,7 +545,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends Plugin {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @see Plugin::add_delayed_admin_notices()
+	 * @see SV_WC_Plugin::add_delayed_admin_notices()
 	 */
 	public function add_delayed_admin_notices() {
 
@@ -963,10 +961,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends Plugin {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @see Plugin::get_settings_url()
-	 *
+	 * @see SV_WC_Plugin::get_settings_url()
 	 * @param string $gateway_id the gateway identifier
-	 *
 	 * @return string gateway settings URL
 	 */
 	public function get_settings_url( $gateway_id = null ) {
@@ -1201,7 +1197,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends Plugin {
 	 * implement its own request logging. This is primarily done to keep the log
 	 * files separated by gateway ID
 	 *
-	 * @see Plugin::add_api_request_logging()
+	 * @see SV_WC_Plugin::add_api_request_logging()
 	 *
 	 * @since 2.2.0
 	 */

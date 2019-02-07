@@ -26,7 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_3_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\SV_WC_Plugin' ) ) :
 
 /**
  * # WooCommerce Plugin Framework
@@ -38,7 +38,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\Plugin' 
  *
  * @version 5.4.0-dev
  */
-abstract class Plugin {
+abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
@@ -248,7 +248,7 @@ abstract class Plugin {
 	 */
 	protected function init_setup_wizard_handler() {
 
-		// set $this->setup_wizard_handler as an instance of Admin\Setup_Wizard here
+		require_once( $this->get_framework_path() . '/admin/abstract-sv-wc-plugin-admin-setup-wizard.php' );
 	}
 
 
@@ -839,12 +839,10 @@ abstract class Plugin {
 	 * settings page (if any)
 	 *
 	 * @since 2.0.0
-	 * @see Plugin::get_settings_url()
-	 *
+	 * @see SV_WC_Plugin::get_settings_url()
 	 * @param string $plugin_id optional plugin identifier.  Note that this can be a
 	 *        sub-identifier for plugins with multiple parallel settings pages
 	 *        (ie a gateway that supports both credit cards and echecks)
-	 *
 	 * @return string plugin configure link
 	 */
 	public function get_settings_link( $plugin_id = null ) {
@@ -864,12 +862,10 @@ abstract class Plugin {
 	 * Gets the plugin configuration URL
 	 *
 	 * @since 2.0.0
-	 * @see Plugin::get_settings_link()
-	 *
+	 * @see SV_WC_Plugin::get_settings_link()
 	 * @param string $plugin_id optional plugin identifier.  Note that this can be a
 	 *        sub-identifier for plugins with multiple parallel settings pages
 	 *        (ie a gateway that supports both credit cards and echecks)
-	 *
 	 * @return string plugin settings URL
 	 */
 	public function get_settings_url( $plugin_id = null ) {

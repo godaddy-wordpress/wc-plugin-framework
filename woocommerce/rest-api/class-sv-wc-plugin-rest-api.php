@@ -40,7 +40,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\REST_API
 class REST_API {
 
 
-	/** @var Plugin plugin instance */
+	/** @var SV_WC_Plugin plugin instance */
 	private $plugin;
 
 
@@ -49,9 +49,9 @@ class REST_API {
 	 *
 	 * @since 5.2.0
 	 *
-	 * @param Plugin $plugin plugin instance
+	 * @param SV_WC_Plugin $plugin plugin instance
 	 */
-	public function __construct( Plugin $plugin ) {
+	public function __construct( SV_WC_Plugin $plugin ) {
 
 		$this->plugin = $plugin;
 
@@ -143,7 +143,7 @@ class REST_API {
 	 *
 	 * @since 5.2.0
 	 *
-	 * @return Plugin|SV_WC_Payment_Gateway_Plugin
+	 * @return SV_WC_Plugin|SV_WC_Payment_Gateway_Plugin
 	 */
 	protected function get_plugin() {
 

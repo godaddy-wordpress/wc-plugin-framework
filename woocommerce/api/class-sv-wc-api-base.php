@@ -685,7 +685,7 @@ abstract class SV_WC_API_Base {
 	 *
 	 * @since 2.2.0
 	 *
-	 * @return Plugin
+	 * @return SV_WC_Plugin
 	 */
 	abstract protected function get_plugin();
 

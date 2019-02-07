@@ -222,7 +222,6 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * + `shared_settings` - array of shared setting names, if any.  This can be used for instance when a single plugin supports both credit card and echeck payments, and the same credentials can be used for both gateways
 	 *
 	 * @since 1.0.0
-	 *
 	 * @param string $id the gateway id
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the parent plugin class
 	 * @param array $args gateway arguments
@@ -440,10 +439,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$handle = 'sv-wc-payment-gateway-payment-form';
 
 		// Frontend JS
-		wp_enqueue_script( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', array( 'jquery-payment' ), Plugin::VERSION, true );
+		wp_enqueue_script( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
 
 		// Frontend CSS
-		wp_enqueue_style( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), Plugin::VERSION );
+		wp_enqueue_style( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), SV_WC_Plugin::VERSION );
 
 		// localized JS params
 		$this->localize_script( $handle, $this->get_payment_form_js_localized_script_params() );
@@ -3400,7 +3399,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * eCheck) and make use of the payment gateway-specific add_debug_message() method
 	 *
 	 * @since 2.2.0
-	 * @see Plugin::add_api_request_logging()
+	 * @see SV_WC_Plugin::add_api_request_logging()
 	 */
 	public function add_api_request_logging() {
 
