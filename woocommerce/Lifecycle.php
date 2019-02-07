@@ -112,7 +112,7 @@ class Lifecycle {
 				$this->install();
 
 				// store the upgrade event regardless if there was a routine for it
-				$this->store_event( 'install', $plugin_version );
+				$this->store_event( 'install' );
 
 				/**
 				 * Fires after the plugin has been installed.
@@ -126,9 +126,7 @@ class Lifecycle {
 				$this->upgrade( $installed_version );
 
 				// store the upgrade event regardless if there was a routine for it
-				$this->store_event( 'upgrade', $plugin_version, [
-					'upgrade_from' => $installed_version,
-				] );
+				$this->add_upgrade_event( $installed_version );
 
 				// if the plugin never had any previous milestones, consider them all reached so their notices aren't displayed
 				if ( ! $this->get_milestone_version() ) {
@@ -428,7 +426,47 @@ class Lifecycle {
 
 
 	/**
-	 * Logs a lifecycle event.
+	 * Adds an upgrade lifecycle event.
+	 *
+	 * @since 5.4.0-dev
+	 *
+	 * @param string $from_version version upgrading from
+	 * @param array $data extra data to add
+	 * @return false|int
+	 */
+	public function add_upgrade_event( $from_version, array $data = [] ) {
+
+		$data = array_merge( [
+			'from_version' => $from_version,
+		], $data );
+
+		return $this->store_event( 'upgrade', $data );
+	}
+
+
+	/**
+	 * Adds a migration lifecycle event.
+	 *
+	 * @since 5.4.0-dev
+	 *
+	 * @param string $from_plugin plugin migrating from
+	 * @param string $from_version version migrating from
+	 * @param array $data extra data to add
+	 * @return false|int
+	 */
+	public function add_migrate_event( $from_plugin, $from_version = '', array $data = [] ) {
+
+		$data = array_merge( [
+			'from_plugin'  => $from_plugin,
+			'from_version' => $from_version,
+		], $data );
+
+		return $this->store_event( 'migrate', $data );
+	}
+
+
+	/**
+	 * Stores a lifecycle event.
 	 *
 	 * This can be used to log installs, upgrades, etc...
 	 *
@@ -437,24 +475,28 @@ class Lifecycle {
 	 * @since 5.4.0-dev
 	 *
 	 * @param string $name lifecycle event name
-	 * @param string $current_version current version of the plugin
 	 * @param array $data any extra data to store
 	 * @return false|int
 	 */
-	public function store_event( $name, $current_version, array $data = [] ) {
+	public function store_event( $name, array $data = [] ) {
 		global $wpdb;
 
-		$history      = $this->get_event_history();
-		$current_time = (int) current_time( 'timestamp' );
+		$history = $this->get_event_history();
 
-		$history[ $current_time ] = [
+		$event = [
 			'name'    => wc_clean( $name ),
-			'version' => wc_clean( $current_version ),
+			'time'    => (int) current_time( 'timestamp' ),
+			'version' => wc_clean( $this->get_plugin()->get_version() ),
 		];
 
 		if ( ! empty( $data ) ) {
-			$history[ $current_time ]['data'] = wc_clean( $data );
+			$event['data'] = wc_clean( $data );
 		}
+
+		array_unshift( $history, $event );
+
+		// limit to the last 30 events
+		$history = array_slice( $history, 0, 29 );
 
 		return $wpdb->replace(
 			$wpdb->options,
@@ -474,7 +516,7 @@ class Lifecycle {
 	/**
 	 * Gets the lifecycle event history.
 	 *
-	 * Uses a direct database query to avoid cache issues.
+	 * The last 30 events are stored, with the latest first.
 	 *
 	 * @since 5.4.0-dev
 	 *
