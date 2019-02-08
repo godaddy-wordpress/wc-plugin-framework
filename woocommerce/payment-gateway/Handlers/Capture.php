@@ -152,7 +152,7 @@ class Capture {
 				throw new Framework\SV_WC_Payment_Gateway_Exception( $message, 500 );
 			}
 
-			// don't try to capture cancelled/fully refunded transactions
+			// don't try to capture failed/cancelled/fully refunded transactions
 			if ( ! $this->is_order_ready_for_capture( $order ) ) {
 				throw new Framework\SV_WC_Payment_Gateway_Exception( __( 'Order cannot be captured', 'woocommerce-plugin-framework' ), 400 );
 			}
@@ -311,7 +311,7 @@ class Capture {
 	 */
 	public function is_order_ready_for_capture( \WC_Order $order ) {
 
-		return ! in_array( $order->get_status(), array( 'cancelled', 'refunded' ), true );
+		return ! in_array( $order->get_status(), array( 'cancelled', 'refunded', 'failed' ), true );
 	}
 
 
