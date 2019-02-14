@@ -599,8 +599,12 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 				if ( $gateway->is_production_environment() && $this->get_admin_notice_handler()->should_display_notice( 'ssl-required' ) ) {
 
-					/* translators: Placeholders: %s - plugin name */
-					$message = sprintf( esc_html__( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", 'woocommerce-plugin-framework' ), '<strong>' . $this->get_plugin_name() . '</strong>' );
+					/* translators: Placeholders: %1$s - plugin name, %2$s - <a> tag, %3$s - </a> tag */
+					$message = sprintf( esc_html__( '%1$s: WooCommerce is not being forced over SSL; your customers\' payment data may be at risk. %2$sVerify your site URLs here%3$s', 'woocommerce-plugin-framework' ),
+						'<strong>' . $this->get_plugin_name() . '</strong>',
+						'<a href="' . admin_url( 'options-general.php' ) . '">',
+						' &raquo;</a>'
+					);
 
 					$this->get_admin_notice_handler()->add_admin_notice( $message, 'ssl-required', array(
 						'notice_class' => 'error',
