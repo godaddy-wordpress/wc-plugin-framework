@@ -40,7 +40,7 @@ class Lifecycle {
 
 
 	/** @var array the version numbers that have an upgrade routine */
-	protected $upgrade_versions = [];
+	protected $upgrade_versions = array();
 
 	/** @var string minimum milestone version */
 	private $milestone_version;
@@ -272,9 +272,9 @@ class Lifecycle {
 
 		foreach ( $this->upgrade_versions as $upgrade_version ) {
 
-			$upgrade_method = 'upgrade_to_' . str_replace( [ '.', '-' ], '_', $upgrade_version );
+			$upgrade_method = 'upgrade_to_' . str_replace( array( '.', '-' ), '_', $upgrade_version );
 
-			if ( version_compare( $installed_version, $upgrade_version, '<' ) && is_callable( [ $this, $upgrade_method ] ) ) {
+			if ( version_compare( $installed_version, $upgrade_version, '<' ) && is_callable( array( $this, $upgrade_method ) ) ) {
 
 				$this->get_plugin()->log( "Starting upgrade to v{$upgrade_version}" );
 
@@ -434,11 +434,11 @@ class Lifecycle {
 	 * @param array $data extra data to add
 	 * @return false|int
 	 */
-	public function add_upgrade_event( $from_version, array $data = [] ) {
+	public function add_upgrade_event( $from_version, array $data = array() ) {
 
-		$data = array_merge( [
+		$data = array_merge( array(
 			'from_version' => $from_version,
-		], $data );
+		), $data );
 
 		return $this->store_event( 'upgrade', $data );
 	}
@@ -454,12 +454,12 @@ class Lifecycle {
 	 * @param array $data extra data to add
 	 * @return false|int
 	 */
-	public function add_migrate_event( $from_plugin, $from_version = '', array $data = [] ) {
+	public function add_migrate_event( $from_plugin, $from_version = '', array $data = array() ) {
 
-		$data = array_merge( [
+		$data = array_merge( array(
 			'from_plugin'  => $from_plugin,
 			'from_version' => $from_version,
-		], $data );
+		), $data );
 
 		return $this->store_event( 'migrate', $data );
 	}
@@ -478,16 +478,16 @@ class Lifecycle {
 	 * @param array $data any extra data to store
 	 * @return false|int
 	 */
-	public function store_event( $name, array $data = [] ) {
+	public function store_event( $name, array $data = array() ) {
 		global $wpdb;
 
 		$history = $this->get_event_history();
 
-		$event = [
+		$event = array(
 			'name'    => wc_clean( $name ),
 			'time'    => (int) current_time( 'timestamp' ),
 			'version' => wc_clean( $this->get_plugin()->get_version() ),
-		];
+		);
 
 		if ( ! empty( $data ) ) {
 			$event['data'] = wc_clean( $data );
@@ -500,15 +500,15 @@ class Lifecycle {
 
 		return $wpdb->replace(
 			$wpdb->options,
-			[
+			array(
 				'option_name'  => $this->get_event_history_option_name(),
 				'option_value' => json_encode( $history ),
 				'autoload'     => 'no',
-			],
-			[
+			),
+			array(
 				'%s',
 				'%s',
-			]
+			)
 		);
 	}
 
@@ -525,7 +525,7 @@ class Lifecycle {
 	public function get_event_history() {
 		global $wpdb;
 
-		$history = [];
+		$history = array();
 
 		$results = $wpdb->get_var( $wpdb->prepare( "
 			SELECT option_value
@@ -537,7 +537,7 @@ class Lifecycle {
 			$history = json_decode( $results, true );
 		}
 
-		return is_array( $history ) ? $history : [];
+		return is_array( $history ) ? $history : array();
 	}
 
 
@@ -654,7 +654,7 @@ class Lifecycle {
 	 */
 	public function do_update() {
 
-		wc_deprecated_function( __METHOD__, '5.2.0' );
+		\SkyVerge\WooCommerce\PluginFramework\v5_3_1\SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
 	}
 
 

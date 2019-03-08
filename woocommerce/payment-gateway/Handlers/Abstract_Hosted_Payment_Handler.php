@@ -103,7 +103,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	 */
 	public function get_order_payment_params( \WC_Order $order ) {
 
-		return [];
+		return array();
 	}
 
 
