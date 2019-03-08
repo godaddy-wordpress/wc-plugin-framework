@@ -64,6 +64,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	 *
 	 * @param \WC_Order $order order object
 	 * @return array
+	 * @throws FrameworkBase\SV_WC_Plugin_Exception
 	 */
 	public function process_order_payment( \WC_Order $order ) {
 
