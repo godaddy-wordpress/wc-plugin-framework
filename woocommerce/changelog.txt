@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2019.nn.nn - version 5.4.0
+2019.03.13 - version 5.4.0
  * Feature - Add abstract handlers for hosted payment processing
  * Feature - Revamp the Lifecycle handler for easier upgrade routines and add event logging for important lifecycle events
  * Tweak - Adjust the no-HTTPS notice to point to where the merchant can fix the problem
