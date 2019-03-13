@@ -302,7 +302,7 @@ abstract class Abstract_Payment_Handler {
 	 */
 	public function mark_order_as_paid( \WC_Order $order, FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
 
-		$this->get_gateway()->add_transaction_data( $order );
+		$this->get_gateway()->add_transaction_data( $order, $response );
 
 		// let gateways easily add their own data
 		$this->get_gateway()->add_payment_gateway_transaction_data( $order, $response );
