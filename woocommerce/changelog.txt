@@ -1,7 +1,11 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2019.nn.nn - version 5.4.0-dev
-
+ * Feature - Add abstract handlers for hosted payment processing
+ * Feature - Revamp the Lifecycle handler for easier upgrade routines and add event logging for important lifecycle events
+ * Tweak - Adjust the no-HTTPS notice to point to where the merchant can fix the problem
+ * Fix - Prevent the Capture button from showing on failed orders or orders without an original transaction ID
+ * Fix - Use the current order total when determining whether a captured order should change status
 
 2019.01.09 - version 5.3.1
  * Fix - Fix a JavaScript error in the welcome wizard for missing parameters
