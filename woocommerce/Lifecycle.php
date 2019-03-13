@@ -39,6 +39,9 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\Plugin\\
 class Lifecycle {
 
 
+	/** @var array the version numbers that have an upgrade routine */
+	protected $upgrade_versions = array();
+
 	/** @var string minimum milestone version */
 	private $milestone_version;
 
@@ -108,6 +111,9 @@ class Lifecycle {
 
 				$this->install();
 
+				// store the upgrade event regardless if there was a routine for it
+				$this->store_event( 'install' );
+
 				/**
 				 * Fires after the plugin has been installed.
 				 *
@@ -118,6 +124,9 @@ class Lifecycle {
 			} else {
 
 				$this->upgrade( $installed_version );
+
+				// store the upgrade event regardless if there was a routine for it
+				$this->add_upgrade_event( $installed_version );
 
 				// if the plugin never had any previous milestones, consider them all reached so their notices aren't displayed
 				if ( ! $this->get_milestone_version() ) {
@@ -234,8 +243,7 @@ class Lifecycle {
 
 		foreach ( $settings as $setting ) {
 
-			if ( isset( $setting['id'] ) && isset( $setting['default'] ) ) {
-
+			if ( isset( $setting['id'], $setting['default'] ) ) {
 				update_option( $setting['id'], $setting['default'] );
 			}
 		}
@@ -262,7 +270,19 @@ class Lifecycle {
 	 */
 	protected function upgrade( $installed_version ) {
 
-		// stub
+		foreach ( $this->upgrade_versions as $upgrade_version ) {
+
+			$upgrade_method = 'upgrade_to_' . str_replace( array( '.', '-' ), '_', $upgrade_version );
+
+			if ( version_compare( $installed_version, $upgrade_version, '<' ) && is_callable( array( $this, $upgrade_method ) ) ) {
+
+				$this->get_plugin()->log( "Starting upgrade to v{$upgrade_version}" );
+
+				$this->$upgrade_method( $installed_version );
+
+				$this->get_plugin()->log( "Upgrade to v{$upgrade_version} complete" );
+			}
+		}
 	}
 
 
@@ -402,6 +422,138 @@ class Lifecycle {
 	}
 
 
+	/** Event history methods *****************************************************************************************/
+
+
+	/**
+	 * Adds an upgrade lifecycle event.
+	 *
+	 * @since 5.4.0-dev
+	 *
+	 * @param string $from_version version upgrading from
+	 * @param array $data extra data to add
+	 * @return false|int
+	 */
+	public function add_upgrade_event( $from_version, array $data = array() ) {
+
+		$data = array_merge( array(
+			'from_version' => $from_version,
+		), $data );
+
+		return $this->store_event( 'upgrade', $data );
+	}
+
+
+	/**
+	 * Adds a migration lifecycle event.
+	 *
+	 * @since 5.4.0-dev
+	 *
+	 * @param string $from_plugin plugin migrating from
+	 * @param string $from_version version migrating from
+	 * @param array $data extra data to add
+	 * @return false|int
+	 */
+	public function add_migrate_event( $from_plugin, $from_version = '', array $data = array() ) {
+
+		$data = array_merge( array(
+			'from_plugin'  => $from_plugin,
+			'from_version' => $from_version,
+		), $data );
+
+		return $this->store_event( 'migrate', $data );
+	}
+
+
+	/**
+	 * Stores a lifecycle event.
+	 *
+	 * This can be used to log installs, upgrades, etc...
+	 *
+	 * Uses a direct database query to avoid cache issues.
+	 *
+	 * @since 5.4.0-dev
+	 *
+	 * @param string $name lifecycle event name
+	 * @param array $data any extra data to store
+	 * @return false|int
+	 */
+	public function store_event( $name, array $data = array() ) {
+		global $wpdb;
+
+		$history = $this->get_event_history();
+
+		$event = array(
+			'name'    => wc_clean( $name ),
+			'time'    => (int) current_time( 'timestamp' ),
+			'version' => wc_clean( $this->get_plugin()->get_version() ),
+		);
+
+		if ( ! empty( $data ) ) {
+			$event['data'] = wc_clean( $data );
+		}
+
+		array_unshift( $history, $event );
+
+		// limit to the last 30 events
+		$history = array_slice( $history, 0, 29 );
+
+		return $wpdb->replace(
+			$wpdb->options,
+			array(
+				'option_name'  => $this->get_event_history_option_name(),
+				'option_value' => json_encode( $history ),
+				'autoload'     => 'no',
+			),
+			array(
+				'%s',
+				'%s',
+			)
+		);
+	}
+
+
+	/**
+	 * Gets the lifecycle event history.
+	 *
+	 * The last 30 events are stored, with the latest first.
+	 *
+	 * @since 5.4.0-dev
+	 *
+	 * @return array
+	 */
+	public function get_event_history() {
+		global $wpdb;
+
+		$history = array();
+
+		$results = $wpdb->get_var( $wpdb->prepare( "
+			SELECT option_value
+			FROM {$wpdb->options}
+			WHERE option_name = %s
+		", $this->get_event_history_option_name() ) );
+
+		if ( $results ) {
+			$history = json_decode( $results, true );
+		}
+
+		return is_array( $history ) ? $history : array();
+	}
+
+
+	/**
+	 * Gets the event history option name.
+	 *
+	 * @since 5.4.0-dev
+	 *
+	 * @return string
+	 */
+	protected function get_event_history_option_name() {
+
+		return 'wc_' . $this->get_plugin()->get_id() . '_lifecycle_events';
+	}
+
+
 	/** Utility Methods *******************************************************/
 
 
@@ -502,7 +654,7 @@ class Lifecycle {
 	 */
 	public function do_update() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
+		\SkyVerge\WooCommerce\PluginFramework\v5_3_1\SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
 	}
 
 

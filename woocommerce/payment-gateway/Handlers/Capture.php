@@ -152,7 +152,7 @@ class Capture {
 				throw new Framework\SV_WC_Payment_Gateway_Exception( $message, 500 );
 			}
 
-			// don't try to capture cancelled/fully refunded transactions
+			// don't try to capture failed/cancelled/fully refunded transactions
 			if ( ! $this->is_order_ready_for_capture( $order ) ) {
 				throw new Framework\SV_WC_Payment_Gateway_Exception( __( 'Order cannot be captured', 'woocommerce-plugin-framework' ), 400 );
 			}
@@ -201,7 +201,7 @@ class Capture {
 			$this->do_capture_success( $order, $response );
 
 			// if the original auth amount has been captured, complete payment
-			if ( $this->get_gateway()->get_order_meta( $order, 'capture_total' ) >= Framework\SV_WC_Helper::number_format( $this->get_order_authorization_amount( $order ) ) ) {
+			if ( $this->get_gateway()->get_order_meta( $order, 'capture_total' ) >= $order->get_total() ) {
 
 				// prevent stock from being reduced when payment is completed as this is done when the charge was authorized
 				add_filter( 'woocommerce_payment_complete_reduce_order_stock', '__return_false', 100 );
@@ -311,7 +311,7 @@ class Capture {
 	 */
 	public function is_order_ready_for_capture( \WC_Order $order ) {
 
-		return ! in_array( $order->get_status(), array( 'cancelled', 'refunded' ), true );
+		return ! in_array( $order->get_status(), array( 'cancelled', 'refunded', 'failed' ), true );
 	}
 
 

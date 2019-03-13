@@ -337,7 +337,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 *
 	 * @param int|string $order_id
 	 * @return array associative array with members 'result' and 'redirect'
-	 * @throws \Exception
 	 */
 	public function process_payment( $order_id ) {
 
@@ -1008,7 +1007,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * request.
 	 *
 	 * @since 4.0.0
-	 * @return WC_Order generated order object
+	 * @return \WC_Order generated order object
 	 */
 	protected function get_order_for_add_payment_method() {
 
@@ -1077,7 +1076,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 *
 		 * @since 4.0.0
 		 * @param \WC_Order $order order object
-		 * @param \SV_WC_Payment_Gateway_Direct $this instance
+		 * @param SV_WC_Payment_Gateway_Direct $this instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_get_order_for_add_payment_method', $order, $this );
 	}
@@ -1088,7 +1087,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * customer ID
 	 *
 	 * @since 4.0.0
-	 * @param WC_Order $order mock order
+	 * @param \WC_Order $order mock order
 	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response
 	 */
 	protected function add_add_payment_method_customer_data( $order, $response ) {

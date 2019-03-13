@@ -91,7 +91,6 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	 *
 	 * @param int $order_id the order to process
 	 * @return array with keys 'result' and 'redirect'
-	 * @throws SV_WC_Payment_Gateway_Exception if payment processing must be halted, and a message displayed to the customer
 	 */
 	public function process_payment( $order_id ) {
 
