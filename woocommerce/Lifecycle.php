@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_3_1\Plugin;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0\Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_3_1\\Plugin\\Lifecycle' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\Plugin\\Lifecycle' ) ) :
 
 /**
  * Plugin lifecycle handler.
@@ -45,7 +45,7 @@ class Lifecycle {
 	/** @var string minimum milestone version */
 	private $milestone_version;
 
-	/** @var \SkyVerge\WooCommerce\PluginFramework\v5_3_1\SV_WC_Plugin plugin instance */
+	/** @var \SkyVerge\WooCommerce\PluginFramework\v5_4_0\SV_WC_Plugin plugin instance */
 	private $plugin;
 
 
@@ -54,9 +54,9 @@ class Lifecycle {
 	 *
 	 * @since 5.1.0
 	 *
-	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_3_1\SV_WC_Plugin $plugin plugin instance
+	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_4_0\SV_WC_Plugin $plugin plugin instance
 	 */
-	public function __construct( \SkyVerge\WooCommerce\PluginFramework\v5_3_1\SV_WC_Plugin $plugin ) {
+	public function __construct( \SkyVerge\WooCommerce\PluginFramework\v5_4_0\SV_WC_Plugin $plugin ) {
 
 		$this->plugin = $plugin;
 
@@ -428,7 +428,7 @@ class Lifecycle {
 	/**
 	 * Adds an upgrade lifecycle event.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param string $from_version version upgrading from
 	 * @param array $data extra data to add
@@ -447,7 +447,7 @@ class Lifecycle {
 	/**
 	 * Adds a migration lifecycle event.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param string $from_plugin plugin migrating from
 	 * @param string $from_version version migrating from
@@ -472,7 +472,7 @@ class Lifecycle {
 	 *
 	 * Uses a direct database query to avoid cache issues.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param string $name lifecycle event name
 	 * @param array $data any extra data to store
@@ -518,7 +518,7 @@ class Lifecycle {
 	 *
 	 * The last 30 events are stored, with the latest first.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @return array
 	 */
@@ -544,7 +544,7 @@ class Lifecycle {
 	/**
 	 * Gets the event history option name.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @return string
 	 */
@@ -634,7 +634,7 @@ class Lifecycle {
 	 *
 	 * @since 5.1.0
 	 *
-	 * @return \SkyVerge\WooCommerce\PluginFramework\v5_3_1\SV_WC_Plugin
+	 * @return \SkyVerge\WooCommerce\PluginFramework\v5_4_0\SV_WC_Plugin
 	 */
 	protected function get_plugin() {
 
@@ -654,7 +654,7 @@ class Lifecycle {
 	 */
 	public function do_update() {
 
-		\SkyVerge\WooCommerce\PluginFramework\v5_3_1\SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
+		\SkyVerge\WooCommerce\PluginFramework\v5_4_0\SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
 	}
 
 

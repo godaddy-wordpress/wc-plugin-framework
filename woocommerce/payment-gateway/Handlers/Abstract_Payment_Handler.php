@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_3_1\Payment_Gateway\Handlers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0\Payment_Gateway\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_3_1 as FrameworkBase;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_0 as FrameworkBase;
+
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\Payment_Gateway\\Handlers\\Abstract_Payment_Handler' ) ) :
 
 /**
  * The base payment handler class.
@@ -35,7 +37,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_3_1 as FrameworkBase;
  *
  * @see Abstract_Hosted_Payment_Handler
  *
- * @since 5.4.0-dev
+ * @since 5.4.0
  */
 abstract class Abstract_Payment_Handler {
 
@@ -53,7 +55,7 @@ abstract class Abstract_Payment_Handler {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param FrameworkBase\SV_WC_Payment_Gateway $gateway
 	 */
@@ -68,7 +70,7 @@ abstract class Abstract_Payment_Handler {
 	/**
 	 * Adds any action and filter hooks required by the handler.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 */
 	protected function add_hooks() {
 
@@ -80,7 +82,7 @@ abstract class Abstract_Payment_Handler {
 	/**
 	 * Renders a custom held order message if available.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param string $text default text
 	 * @param \WC_Order $order order object
@@ -103,7 +105,7 @@ abstract class Abstract_Payment_Handler {
 	/**
 	 * Processes payment for an order.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return array
@@ -115,7 +117,7 @@ abstract class Abstract_Payment_Handler {
 	/**
 	 * Processes a gateway API payment response and handles the order accordingly.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response $response
 	 * @param \WC_Order $order
@@ -186,7 +188,7 @@ abstract class Abstract_Payment_Handler {
 	 * This ensures duplicate or fraudulent responses aren't processed. Implementations can add exceptions to this for
 	 * things like invalid hashes, etc...
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response $response API response object
@@ -211,7 +213,7 @@ abstract class Abstract_Payment_Handler {
 	/**
 	 * Handles actions after an approved transaction.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response $response API response object
@@ -247,7 +249,7 @@ abstract class Abstract_Payment_Handler {
 	/**
 	 * Handles actions after a held transaction.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response $response API response object
@@ -277,7 +279,7 @@ abstract class Abstract_Payment_Handler {
 	/**
 	 * Handles actions after a failed transaction.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param string $message failure message
@@ -295,7 +297,7 @@ abstract class Abstract_Payment_Handler {
 	/**
 	 * Marks an order as paid.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response API response object
@@ -330,7 +332,7 @@ abstract class Abstract_Payment_Handler {
 	/**
 	 * Marks an order as approved.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param string $message message for the order note
@@ -347,7 +349,7 @@ abstract class Abstract_Payment_Handler {
 	 *
 	 * Adds an order note and transitions to a held status.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param string $message order note message
@@ -376,7 +378,7 @@ abstract class Abstract_Payment_Handler {
 	/**
 	 * Gets the order status used for held orders.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response API response object
@@ -418,7 +420,7 @@ abstract class Abstract_Payment_Handler {
 	/**
 	 * Marks an order as failed.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param string $message order note message
@@ -445,7 +447,7 @@ abstract class Abstract_Payment_Handler {
 	/**
 	 * Marks an order as cancelled.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @param string $message order note message
@@ -481,7 +483,7 @@ abstract class Abstract_Payment_Handler {
 	/**
 	 * Gets the gateway object.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @return FrameworkBase\SV_WC_Payment_Gateway
 	 */
@@ -495,3 +497,5 @@ abstract class Abstract_Payment_Handler {
 
 
 }
+
+endif;

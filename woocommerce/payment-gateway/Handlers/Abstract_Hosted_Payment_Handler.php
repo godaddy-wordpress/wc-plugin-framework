@@ -22,16 +22,18 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_3_1\Payment_Gateway\Handlers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0\Payment_Gateway\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_3_1 as FrameworkBase;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_0 as FrameworkBase;
+
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\Payment_Gateway\\Handlers\\Abstract_Hosted_Payment_Handler' ) ) :
 
 /**
  * The base hosted payment handler.
  *
  * Gateways can use this for common hosted response handling.
  *
- * @since 5.4.0-dev
+ * @since 5.4.0
  */
 abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler {
 
@@ -60,7 +62,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	 *
 	 * This simply gets the URL for a redirect.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return array
@@ -97,7 +99,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	/**
 	 * Gets payment params for the given order object.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return array
@@ -111,7 +113,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	/**
 	 * Gets the URL for the hosted payment page or form.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @return string
 	 */
@@ -121,7 +123,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	/**
 	 * Gets the response handler URL.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @return string
 	 */
@@ -134,7 +136,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	/**
 	 * Handles a transaction response request via the wc-api endpoint.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 */
 	public function handle_transaction_response_request() {
 
@@ -185,7 +187,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	/**
 	 * Handles the response when processing is complete.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order|null $order order object, if any
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response API response object, if any
@@ -199,7 +201,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	/**
 	 * Handles the response when processing has failed.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order|null $order order object, if any
 	 * @param string $message error message, for logging
@@ -225,7 +227,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	 *
 	 * This will trigger when there is no way to salvage the payment, i.e. when the response data is invalid.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param \WC_Order|null $order order object, if any
 	 * @param string $message error message, for logging
@@ -255,7 +257,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	 * This is the final step after all payment verification and processing, and runs regardless of the transaction
 	 * result.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response
 	 * @param string $url
@@ -276,7 +278,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	/**
 	 * Logs a transaction response request.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param string $request data to log
 	 * @param string $message prefix message, like Request: or Response:
@@ -299,7 +301,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	/**
 	 * Gets an order object from an API response.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Payment_Notification_Response $response
 	 * @return \WC_Order
@@ -342,7 +344,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	/**
 	 * Gets an API response object for the given data.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @param array $request_response_data the current request response data
 	 * @return FrameworkBase\SV_WC_Payment_Gateway_API_Payment_Notification_Response API response object
@@ -357,7 +359,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	/**
 	 * Determines whether the payment response is IPN.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @return bool
 	 */
@@ -370,7 +372,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	/**
 	 * Determines whether this is a redirect hosted form.
 	 *
-	 * @since 5.4.0-dev
+	 * @since 5.4.0
 	 *
 	 * @return bool
 	 */
@@ -381,3 +383,5 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 
 
 }
+
+endif;
