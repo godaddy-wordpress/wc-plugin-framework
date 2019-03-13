@@ -304,6 +304,8 @@ class Capture {
 	/**
 	 * Determines if an order is ready for capture.
 	 *
+	 * The base implementation of this method checks for a valid order status and that a transaction ID is set.
+	 *
 	 * @since 5.3.0
 	 *
 	 * @param \WC_Order $order order object
@@ -311,7 +313,7 @@ class Capture {
 	 */
 	public function is_order_ready_for_capture( \WC_Order $order ) {
 
-		return ! in_array( $order->get_status(), array( 'cancelled', 'refunded', 'failed' ), true );
+		return ! in_array( $order->get_status(), array( 'cancelled', 'refunded', 'failed' ), true ) && $this->get_gateway()->get_order_meta( $order, 'trans_id' );
 	}
 
 
