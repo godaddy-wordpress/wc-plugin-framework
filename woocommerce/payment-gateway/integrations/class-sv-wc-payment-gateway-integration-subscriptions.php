@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Payment_Gateway_Integration_Subscriptions' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Payment_Gateway_Integration_Subscriptions' ) ) :
 
 /**
  * Subscriptions Integration
@@ -41,10 +41,11 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 
 	/**
-	 * Bootstrap class
+	 * Bootstraps the class.
 	 *
 	 * @since 4.1.0
-	 * @param \SV_WC_Payment_Gateway_Direct $gateway
+	 *
+	 * @param SV_WC_Payment_Gateway|SV_WC_Payment_Gateway_Direct $gateway
 	 */
 	public function __construct( SV_WC_Payment_Gateway $gateway ) {
 
@@ -334,7 +335,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 *
 	 * @param bool|array $result result from any others filtering this
 	 * @param int $order_id an order or subscription ID
-	 * @param \SV_WC_Payment_Gateway_Direct $gateway gateway object
+	 * @param SV_WC_Payment_Gateway_Direct $gateway gateway object
 	 * @return array $result change payment result
 	 */
 	public function process_change_payment( $result, $order_id, $gateway ) {
@@ -576,12 +577,13 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 
 	/**
-	 * Disable the "Delete" My Payment Methods method action button if there is an associated subscription.
+	 * Disables the "Delete" My Payment Methods method action button if there is an associated subscription.
 	 *
 	 * @since 4.3.0
+	 *
 	 * @param array $actions the token actions
-	 * @param \SV_WC_Payment_Gateway_Payment_Token the token object
-	 * @param \SV_WC_Payment_Gateway_My_Payment_Methods the my payment methods instance
+	 * @param SV_WC_Payment_Gateway_Payment_Token the token object
+	 * @param SV_WC_Payment_Gateway_My_Payment_Methods the my payment methods instance
 	 * @return array
 	 */
 	public function disable_my_payment_methods_table_method_delete( $actions, $token, $handler ) {
@@ -610,11 +612,12 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 
 	/**
-	 * Get the subscriptions tied to a user payment token.
+	 * Gets the subscriptions tied to a user payment token.
 	 *
 	 * @since 4.3.0
+	 *
 	 * @param int $user_id the user
-	 * @param \SV_WC_Payment_Gateway_Payment_Token the token object
+	 * @param SV_WC_Payment_Gateway_Payment_Token the token object
 	 * @return array the subscriptions or an empty array
 	 */
 	protected function get_payment_token_subscriptions( $user_id, $token ) {
@@ -672,8 +675,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * payments for a customer via the Edit Subscriptions screen in 2.0.x
 	 *
 	 * @since 4.1.0
+	 *
 	 * @param array $meta associative array of meta data required for automatic payments
-	 * @throws Exception if payment token or customer ID is missing or blank
+	 * @throws \Exception if payment token or customer ID is missing or blank
 	 */
 	public function admin_validate_payment_meta( $meta ) {
 

@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
 
 /**
  * My Payment Methods Class
@@ -42,13 +42,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/** @var SV_WC_Payment_Gateway_Plugin */
 	protected $plugin;
 
-	/** @var array of SV_WC_Payment_Gateway_Token objects */
+	/** @var SV_WC_Payment_Gateway_Payment_Token[] array of token objects */
 	protected $tokens;
 
-	/** @var array of credit card SV_WC_Payment_Gateway_Token objects */
+	/** @var SV_WC_Payment_Gateway_Payment_Token[] array of token objects */
 	protected $credit_card_tokens;
 
-	/** @var array of eCheck SV_WC_Payment_Gateway_Token objects */
+	/** @var SV_WC_Payment_Gateway_Payment_Token[] array of token objects */
 	protected $echeck_tokens;
 
 	/** @var bool true if there are tokens */
@@ -187,7 +187,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			 * Fired before the My Payment Methods table HTML is rendered.
 			 *
 			 * @since 4.0.0
-			 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+			 *
+			 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 			 */
 			do_action( 'wc_' . $this->get_plugin()->get_id() . '_before_my_payment_method_table', $this );
 
@@ -199,7 +200,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			 * Fired after the My Payment Methods table HTML is rendered.
 			 *
 			 * @since 4.0.0
-			 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+			 *
+			 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 			 */
 			do_action( 'wc_' . $this->get_plugin()->get_id() . '_after_my_payment_method_table', $this );
 
@@ -277,8 +279,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 * present.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $message no methods text
-		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
 		/* translators: Payment method as in a specific credit card, eCheck or bank account */
 		$html = '<p>' . apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_no_payment_methods_text', esc_html__( 'You do not have any saved payment methods.', 'woocommerce-plugin-framework' ), $this ) . '</p>';
@@ -290,8 +293,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 * present.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $html no methods HTML
-		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_no_payment_methods_html', $html, $this );
 	}
@@ -314,8 +318,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 * Allow actors to modify the my payment methods table heading text.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $message table heading text
-		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
 		/* translators: Payment method as in a specific credit card, eCheck or bank account */
 		$title = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_title', esc_html__( 'My Payment Methods', 'woocommerce-plugin-framework' ), $this );
@@ -337,8 +342,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 * Allow actors to modify the table title HTML.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $html table title HTML
-		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_title_html', $html, $this );
 	}
@@ -366,8 +372,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 * Allow actors to modify the table HTML.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $html table HTML
-		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_html', $html, $this );
 	}
@@ -395,8 +402,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 * Allow actors to modify the table head HTML.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $html table head HTML
-		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_head_html', $html, $this );
 	}
@@ -429,7 +437,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 *     @type string $expiry
 		 *     @type string $actions
 		 * }
-		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_headers', $headers, $this );
 	}
@@ -478,17 +486,20 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 * Allow actors to modify the table body HTML.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $html table body HTML
-		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_body_html', $html, $this );
 	}
 
 
 	/**
-	 * Return the table body row HTML, each row represents a single payment method
+	 * Returns the table body row HTML, each row represents a single payment method.
 	 *
 	 * @since 4.0.0
+	 *
+	 * @param SV_WC_Payment_Gateway_Payment_Token[] $tokens token objects
 	 * @return string table tbody > tr HTML
 	 */
 	protected function get_table_body_row_html( $tokens ) {
@@ -532,9 +543,10 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 * Allow actors to modify the table row HTML.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $html table row HTML
-		 * @param array $tokens simple array of SV_WC_Payment_Gateway_Payment_Token objects
-		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 * @param SV_WC_Payment_Gateway_Payment_Token[] $tokens simple array of token objects
+		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_row_html', $html, $tokens, $this );
 	}
@@ -544,7 +556,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * Return the payment method data for a given token
 	 *
 	 * @since 4.0.0
-	 * @param \SV_WC_Payment_Gateway_Payment_Token the token object
+	 *
+	 * @param SV_WC_Payment_Gateway_Payment_Token $token the token object
 	 * @return array payment method data suitable for HTML output
 	 */
 	protected function get_table_body_row_data( $token ) {
@@ -567,13 +580,14 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 * Allow actors to modify the table body row data.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param array $methods {
 		 *     @type string $title payment method title
 		 *     @type string $expiry payment method expiry
 		 *     @type string $actions actions for payment method
 		 * }
 		 * @param array $token simple array of SV_WC_Payment_Gateway_Payment_Token objects
-		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_body_row_data', $method, $token, $this );
 	}
@@ -833,8 +847,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 *     @type string $class action button class
 		 *     @type string $name action button name
 		 * }
-		 * @param \SV_WC_Payment_Gateway_Payment_Token $token
-		 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 * @param SV_WC_Payment_Gateway_Payment_Token $token
+		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_actions', $actions, $token, $this );
 	}
@@ -1039,9 +1053,11 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * using filters
 	 *
 	 * @since 4.0.0
-	 * @return \SV_WC_Payment_Gateway_Plugin
+	 *
+	 * @return SV_WC_Payment_Gateway_Plugin
 	 */
 	public function get_plugin() {
+
 		return $this->plugin;
 	}
 

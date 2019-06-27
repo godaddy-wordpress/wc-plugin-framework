@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Payment_Gateway_Apple_Pay_AJAX' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Payment_Gateway_Apple_Pay_AJAX' ) ) :
 
 /**
  * The Apple Pay AJAX handler.
@@ -36,7 +36,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Pa
 class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 
-	/** @var \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance */
+	/** @var SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance */
 	protected $handler;
 
 
@@ -45,7 +45,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @param \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance
+	 * @param SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Apple_Pay $handler ) {
 
@@ -248,7 +248,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Apple_Pay
+	 * @return SV_WC_Payment_Gateway_Apple_Pay
 	 */
 	protected function get_handler() {
 

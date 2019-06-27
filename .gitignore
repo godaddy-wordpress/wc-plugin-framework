@@ -19,3 +19,8 @@ npm-debug.log
 # Misc
 *.zip
 .sass-cache*
+
+# Tests
+codeception.yml
+.env
+/tests/_data/dump.sql

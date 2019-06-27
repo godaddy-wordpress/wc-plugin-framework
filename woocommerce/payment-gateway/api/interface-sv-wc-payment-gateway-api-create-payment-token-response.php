@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/API
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Payment_Gateway_API_Create_Payment_Token_Response' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Payment_Gateway_API_Create_Payment_Token_Response' ) ) :
 
 /**
  * WooCommerce Direct Payment Gateway API Create Payment Token Response
@@ -35,9 +35,10 @@ interface SV_WC_Payment_Gateway_API_Create_Payment_Token_Response extends SV_WC_
 
 
 	/**
-	 * Returns the payment token
+	 * Returns the payment token.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return SV_WC_Payment_Gateway_Payment_Token payment token
 	 */
 	public function get_payment_token();

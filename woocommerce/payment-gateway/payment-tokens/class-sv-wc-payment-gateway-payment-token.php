@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Payment_Gateway_Payment_Token' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Payment_Gateway_Payment_Token' ) ) :
 
 /**
  * WooCommerce Payment Gateway Token
@@ -417,6 +417,32 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function set_nickname( $value ) {
 
 		$this->data['nickname'] = $value;
+	}
+
+
+	/**
+	 * Gets the billing address hash.
+	 *
+	 * @since 5.3.0
+	 *
+	 * @return string
+	 */
+	public function get_billing_hash() {
+
+		return isset( $this->data['billing_hash'] ) ? $this->data['billing_hash'] : '';
+	}
+
+
+	/**
+	 * Sets the billing hash.
+	 *
+	 * @since 5.3.0
+	 *
+	 * @param string $value billing hash
+	 */
+	public function set_billing_hash( $value ) {
+
+		$this->data['billing_hash'] = $value;
 	}
 
 

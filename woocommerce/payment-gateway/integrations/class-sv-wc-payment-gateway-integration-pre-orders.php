@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Payment_Gateway_Integration_Pre_Orders' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Payment_Gateway_Integration_Pre_Orders' ) ) :
 
 /**
  * Pre-Orders Integration
@@ -41,7 +41,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 	 *
 	 * @since 4.1.0
 	 *
-	 * @param \SV_WC_Payment_Gateway $gateway gateway object
+	 * @param SV_WC_Payment_Gateway|SV_WC_Payment_Gateway_Direct $gateway gateway object
 	 */
 	public function __construct( SV_WC_Payment_Gateway $gateway ) {
 
@@ -111,12 +111,16 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 
 
 	/**
-	 * Adds pre-orders data to the order object.  Filtered onto SV_WC_Payment_Gateway::get_order()
+	 * Adds pre-orders data to the order object.
+	 *
+	 * Filtered onto SV_WC_Payment_Gateway::get_order()
+	 *
+	 * @see SV_WC_Payment_Gateway::get_order()
 	 *
 	 * @since 4.1.0
-	 * @see SV_WC_Payment_Gateway::get_order()
-	 * @param WC_Order $order the order
-	 * @return WC_Order the orders
+	 *
+	 * @param \WC_Order $order the order
+	 * @return \WC_Order
 	 */
 	public function get_order( $order ) {
 
@@ -278,10 +282,12 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 
 
 	/**
-	 * Process a pre-order payment when the pre-order is released
+	 * Processes a pre-order payment when the pre-order is released.
 	 *
 	 * @since 4.1.0
+	 *
 	 * @param \WC_Order $order original order containing the pre-order
+	 * @throws SV_WC_Payment_Gateway_Exception
 	 */
 	public function process_release_payment( $order ) {
 

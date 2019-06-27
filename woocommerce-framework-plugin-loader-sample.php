@@ -9,14 +9,14 @@
  * Text Domain: TODO: plugin textdomain
  * Domain Path: /i18n/languages/
  *
- * Copyright: (c) 2011-2018, SkyVerge, Inc. (info@skyverge.com)
+ * Copyright: (c) 2011-2019, SkyVerge, Inc. (info@skyverge.com)
  *
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * @package   TODO: package
  * @author    SkyVerge
- * @copyright Copyright (c) 2011-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2011-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  *
  * Woo: 99999:00000000000000000000000000000000 TODO: updater keys
@@ -58,17 +58,17 @@ class SV_WC_Framework_Plugin_Loader {
 	const MINIMUM_WC_VERSION = '2.6';
 
 	/** SkyVerge plugin framework version used by this plugin */
-	const FRAMEWORK_VERSION = '5.2.2';
+	const FRAMEWORK_VERSION = '5.3.1'; // TODO: framework version
 
 	/** the plugin name, for displaying notices */
 	const PLUGIN_NAME = 'WooCommerce Framework Plugin'; // TODO: plugin name
 
 
-	/** @var SV_WC_Plugin_Loader single instance of this class */
-	protected static $instance;
+	/** @var SV_WC_Framework_Plugin_Loader single instance of this class // TODO: replace with loader class name */
+	private static $instance;
 
 	/** @var array the admin notices to add */
-	protected $notices = array();
+	private $notices = array();
 
 
 	/**
@@ -98,6 +98,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 * @since 1.0.0
 	 */
 	public function __clone() {
+
 		_doing_it_wrong( __FUNCTION__, sprintf( 'You cannot clone instances of %s.', get_class( $this ) ), '1.0.0' );
 	}
 
@@ -108,6 +109,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 * @since 1.0.0
 	 */
 	public function __wakeup() {
+
 		_doing_it_wrong( __FUNCTION__, sprintf( 'You cannot unserialize instances of %s.', get_class( $this ) ), '1.0.0' );
 	}
 
@@ -125,8 +127,25 @@ class SV_WC_Framework_Plugin_Loader {
 
 		$this->load_framework();
 
+		/** If the plugin is structured for PSR-4, do the following:
+
+		// autoload plugin and vendor files
+		$loader = require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
+
+		// register plugin namespace with autoloader
+		$loader->addPsr4( 'SkyVerge\\WooCommerce\\Plugin_Name\\', __DIR__ . '/includes' ); // TODO: plugin namespace here
+
+		// depending on how the plugin is structured, you may need to manually load the file that contains the initial plugin function
+		// require_once( plugin_dir_path( __FILE__ ) . 'includes/Functions.php' ); // TODO: maybe load a file to call your initialization function
+
+		/******************/
+
+		/** Otherwise, for plugins that use the traditional WordPress class-class-name.php structure, simply include the main plugin file:
+
 		// load the main plugin class
 		require_once( plugin_dir_path( __FILE__ ) . 'class-wc-framework-plugin.php' ); // TODO: main plugin class file
+
+		*******************/
 
 		// fire it up!
 		wc_framework_plugin(); // TODO: call the main plugin method
@@ -139,7 +158,6 @@ class SV_WC_Framework_Plugin_Loader {
 	 * @since 1.0.0
 	 */
 	protected function load_framework() {
-
 
 		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Plugin' ) ) {
 			require_once( plugin_dir_path( __FILE__ ) . 'lib/skyverge/woocommerce/class-sv-wc-plugin.php' );
@@ -166,7 +184,7 @@ class SV_WC_Framework_Plugin_Loader {
 
 
 	/**
-	 * Gets the famework version used by this plugin.
+	 * Gets the framework version used by this plugin.
 	 *
 	 * @since 1.0.0
 	 *
@@ -307,6 +325,10 @@ class SV_WC_Framework_Plugin_Loader {
 	 * Adds an admin notice to be displayed.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param string $slug the slug for the notice
+	 * @param string $class the css class for the notice
+	 * @param string $message the notice message
 	 */
 	public function add_admin_notice( $slug, $class, $message ) {
 
@@ -326,9 +348,13 @@ class SV_WC_Framework_Plugin_Loader {
 
 		foreach ( (array) $this->notices as $notice_key => $notice ) {
 
-			echo "<div class='" . esc_attr( $notice['class'] ) . "'><p>";
-				echo wp_kses( $notice['message'], array( 'a' => array( 'href' => array() ) ) );
-			echo "</p></div>";
+			?>
+			<div class="<?php echo esc_attr( $notice['class'] ); ?>">
+				<p>
+					<?php echo wp_kses( $notice['message'], array( 'a' => array( 'href' => array() ) ) ); ?>
+				</p>
+			</div>
+			<?php
 		}
 	}
 
@@ -374,7 +400,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 */
 	public static function instance() {
 
-		if ( is_null( self::$instance ) ) {
+		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
 

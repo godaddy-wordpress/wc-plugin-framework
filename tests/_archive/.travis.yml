@@ -1,0 +1,13 @@
+language: php
+
+php:
+  - '7.1'
+  - '7.2'
+
+install:
+  - composer install
+
+script: php vendor/bin/phpunit --testsuite unit --configuration phpunit.travis.xml
+
+after_script:
+  - php vendor/bin/php-coveralls -v

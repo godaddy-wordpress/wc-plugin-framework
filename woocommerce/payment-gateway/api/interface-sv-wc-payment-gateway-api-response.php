@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/API
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Payment_Gateway_API_Response' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Payment_Gateway_API_Response' ) ) :
 
 /**
  * WooCommerce Direct Payment Gateway API Response
@@ -35,9 +35,10 @@ interface SV_WC_Payment_Gateway_API_Response extends SV_WC_API_Response {
 
 
 	/**
-	 * Checks if the transaction was successful
+	 * Checks if the transaction was successful.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return bool true if approved, false otherwise
 	 */
 	public function transaction_approved();
@@ -49,6 +50,7 @@ interface SV_WC_Payment_Gateway_API_Response extends SV_WC_API_Response {
 	 * did not pass a fraud check and should be reviewed.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return bool true if the transaction was held, false otherwise
 	 */
 	public function transaction_held();
@@ -59,6 +61,7 @@ interface SV_WC_Payment_Gateway_API_Response extends SV_WC_API_Response {
 	 * associated with this transaction.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return string status message
 	 */
 	public function get_status_message();
@@ -69,6 +72,7 @@ interface SV_WC_Payment_Gateway_API_Response extends SV_WC_API_Response {
 	 * associated with this transaction.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return string status code
 	 */
 	public function get_status_code();
@@ -79,6 +83,7 @@ interface SV_WC_Payment_Gateway_API_Response extends SV_WC_API_Response {
 	 * associated with this transaction.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return string transaction id
 	 */
 	public function get_transaction_id();
@@ -100,8 +105,10 @@ interface SV_WC_Payment_Gateway_API_Response extends SV_WC_API_Response {
 	 * issue on their own, but not enough to help nefarious folks fishing for
 	 * info.
 	 *
-	 * @since 2.2.0
 	 * @see SV_WC_Payment_Gateway_API_Response_Message_Helper
+	 *
+	 * @since 2.2.0
+	 *
 	 * @return string user message, if there is one
 	 */
 	public function get_user_message();

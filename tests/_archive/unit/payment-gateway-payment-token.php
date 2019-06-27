@@ -3,7 +3,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
-use \SkyVerge\WooCommerce\PluginFramework\v5_2_2 as PluginFramework;
+use \SkyVerge\WooCommerce\PluginFramework\v5_4_0 as PluginFramework;
 
 /**
  * Unit tests for \SV_WC_Payment_Gateway_Payment_Token
@@ -324,6 +324,23 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 		$token->set_nickname( 'new-payment-method' );
 
 		$this->assertEquals( 'new-payment-method', $token->get_nickname() );
+	}
+
+
+	/**
+	 * Tests \SV_WC_Payment_Gateway_Payment_Token::set_billing_hash()
+	 *
+	 * Also provides coverage for \SV_WC_Payment_Gateway_Payment_Token::get_billing_hash()
+	 *
+	 * @since 5.3.0-dev
+	 */
+	public function test_set_billing_hash() {
+
+		$token = new PluginFramework\SV_WC_Payment_Gateway_Payment_Token( 'mock-token', array() );
+
+		$token->set_billing_hash( 'hash' );
+
+		$this->assertEquals( 'hash', $token->get_billing_hash() );
 	}
 
 

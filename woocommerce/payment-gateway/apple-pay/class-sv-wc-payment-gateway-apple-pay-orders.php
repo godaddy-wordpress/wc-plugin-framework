@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Payment_Gateway_Apple_Pay_Orders' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Payment_Gateway_Apple_Pay_Orders' ) ) :
 
 /**
  * The Apple Pay order handler.
@@ -42,8 +42,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 	 * @since 4.7.0
 	 *
 	 * @param \WC_Cart $cart cart object
-	 *
-	 * @throws \SV_WC_Payment_Gateway_Exception
+	 * @return \WC_Order|void
+	 * @throws SV_WC_Payment_Gateway_Exception
+	 * @throws \Exception
 	 */
 	public static function create_order( \WC_Cart $cart ) {
 
@@ -154,8 +155,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 	 *
 	 * @param array $order_data the order data
 	 * @return \WC_Order
-	 *
-	 * @throws \SV_WC_Payment_Gateway_Exception
+	 * @throws SV_WC_Payment_Gateway_Exception
 	 */
 	public static function get_order_object( $order_data ) {
 

@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/API
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Payment_Gateway_API_Response_Message_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Payment_Gateway_API_Response_Message_Helper' ) ) :
 
 /**
  * WooCommerce Payment Gateway API Response Message Helper
@@ -61,7 +61,8 @@ class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 	 * info.
 	 *
 	 * @since 2.2.0
-	 * @param array $message_ids array of string $message_id's which identify the message(s) to return
+	 *
+	 * @param string[] $message_ids array of string $message_id's which identify the message(s) to return
 	 * @return string a user message, combining all $message_ids
 	 */
 	public function get_user_messages( $message_ids ) {
@@ -145,7 +146,7 @@ class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 		 * @since 2.2.0
 		 * @param string $message message to show to user
 		 * @param string $message_id machine code for the message, e.g. card_expired
-		 * @param \SV_WC_Payment_Gateway_API_Response_Message_Helper $this instance
+		 * @param SV_WC_Payment_Gateway_API_Response_Message_Helper $this instance
 		 */
 		return apply_filters( 'wc_payment_gateway_transaction_response_user_message', $message, $message_id, $this );
 	}

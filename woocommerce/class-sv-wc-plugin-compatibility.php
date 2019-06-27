@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Plugin_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Plugin_Compatibility' ) ) :
 
 /**
  * WooCommerce Compatibility Utility Class
@@ -108,7 +108,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * @since  4.6.0
 	 *
-	 * @param \WC_DateTime|\SV_WC_DateTime $date date object
+	 * @param \WC_DateTime|SV_WC_DateTime $date date object
 	 * @param string $format date format
 	 * @return string
 	 */
@@ -124,7 +124,7 @@ class SV_WC_Plugin_Compatibility {
 				$format = wc_date_format();
 			}
 
-			if ( ! is_a( $date, '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_DateTime' ) ) { // TODO: verify this {CW 2017-07-18}
+			if ( ! is_a( $date, '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_DateTime' ) ) { // TODO: verify this {CW 2017-07-18}
 				return '';
 			}
 
@@ -278,6 +278,50 @@ class SV_WC_Plugin_Compatibility {
 		$prefix = sanitize_title( __( 'WooCommerce', 'woocommerce' ) );
 
 		return $prefix . '_page_' . $slug;
+	}
+
+
+	/**
+	 * Converts a shorthand byte value to an integer byte value.
+	 *
+	 * Wrapper for wp_convert_hr_to_bytes(), moved to load.php in WordPress 4.6 from media.php
+	 *
+	 * Based on ActionScheduler's compat wrapper for the same function:
+	 * ActionScheduler_Compatibility::convert_hr_to_bytes()
+	 *
+	 * @link https://secure.php.net/manual/en/function.ini-get.php
+	 * @link https://secure.php.net/manual/en/faq.using.php#faq.using.shorthandbytes
+	 *
+	 * @since 5.3.1
+	 *
+	 * @param string $value A (PHP ini) byte value, either shorthand or ordinary.
+	 * @return int An integer byte value.
+	 */
+	public static function convert_hr_to_bytes( $value ) {
+
+		if ( function_exists( 'wp_convert_hr_to_bytes' ) ) {
+
+			return wp_convert_hr_to_bytes( $value );
+		}
+
+		$value = strtolower( trim( $value ) );
+		$bytes = (int) $value;
+
+		if ( false !== strpos( $value, 'g' ) ) {
+
+			$bytes *= GB_IN_BYTES;
+
+		} elseif ( false !== strpos( $value, 'm' ) ) {
+
+			$bytes *= MB_IN_BYTES;
+
+		} elseif ( false !== strpos( $value, 'k' ) ) {
+
+			$bytes *= KB_IN_BYTES;
+		}
+
+		// deal with large (float) values which run into the maximum integer size
+		return min( $bytes, PHP_INT_MAX );
 	}
 
 

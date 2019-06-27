@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Payment_Gateway_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Payment_Gateway_Plugin' ) ) :
 
 /**
  * # WooCommerce Payment Gateway Plugin Framework
@@ -285,6 +285,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-hosted.php' );
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-payment-form.php' );
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-my-payment-methods.php' );
+
+		// handlers
+		require_once( $payment_gateway_framework_path . '/Handlers/Abstract_Payment_Handler.php' );
+		require_once( $payment_gateway_framework_path . '/Handlers/Abstract_Hosted_Payment_Handler.php' );
+		require_once( $payment_gateway_framework_path . '/Handlers/Capture.php' );
 
 		// apple pay
 		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay.php" );
@@ -594,8 +599,12 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 				if ( $gateway->is_production_environment() && $this->get_admin_notice_handler()->should_display_notice( 'ssl-required' ) ) {
 
-					/* translators: Placeholders: %s - plugin name */
-					$message = sprintf( esc_html__( "%s: WooCommerce is not being forced over SSL; your customer's payment data may be at risk.", 'woocommerce-plugin-framework' ), '<strong>' . $this->get_plugin_name() . '</strong>' );
+					/* translators: Placeholders: %1$s - plugin name, %2$s - <a> tag, %3$s - </a> tag */
+					$message = sprintf( esc_html__( '%1$s: WooCommerce is not being forced over SSL; your customers\' payment data may be at risk. %2$sVerify your site URLs here%3$s', 'woocommerce-plugin-framework' ),
+						'<strong>' . $this->get_plugin_name() . '</strong>',
+						'<a href="' . admin_url( 'options-general.php' ) . '">',
+						' &raquo;</a>'
+					);
 
 					$this->get_admin_notice_handler()->add_admin_notice( $message, 'ssl-required', array(
 						'notice_class' => 'error',
@@ -687,7 +696,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Adds notices about enabled debug logging.
 	 *
-	 * @since 5.3.0-dev
+	 * @since 5.3.0
 	 */
 	protected function add_debug_setting_notices() {
 

@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Helper' ) ) :
 
 	/**
 	 * SkyVerge Helper Class
@@ -220,8 +220,9 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_He
 		 * pattern definitions from http://www.regular-expressions.info/unicode.html
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $string
-		 * @return mixed
+		 * @return string
 		 */
 		public static function str_to_sane_utf8( $string ) {
 
@@ -464,7 +465,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_He
 		 *
 		 * @since 3.0.0
 		 * @param \WC_Order $order
-		 * @return array
+		 * @return \stdClass[] array of line item objects
 		 */
 		public static function get_order_line_items( $order ) {
 

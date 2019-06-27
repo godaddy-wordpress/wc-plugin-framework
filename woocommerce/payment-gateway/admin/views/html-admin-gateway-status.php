@@ -18,7 +18,7 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Gateway/Admin/Views
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 ?>
@@ -43,7 +43,8 @@
 			 * Allow actors to add info the start of the gateway system status section.
 			 *
 			 * @since 4.3.0
-			 * @param \SV_WC_Payment_Gateway $gateway
+			 *
+			 * @param SV_WC_Payment_Gateway $gateway
 			 */
 			do_action( 'wc_payment_gateway_' . $gateway->get_id() . '_system_status_start', $gateway );
 		?>

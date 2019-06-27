@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Payment_Gateway_Apple_Pay_Admin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Payment_Gateway_Apple_Pay_Admin' ) ) :
 
 /**
  * Sets up the Apple Pay settings screen.
@@ -36,7 +36,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Pa
 class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 
 
-	/** @var \SV_WC_Payment_Gateway_Apple_Pay the Apple Pay handler instance */
+	/** @var SV_WC_Payment_Gateway_Apple_Pay the Apple Pay handler instance */
 	protected $handler;
 
 
@@ -44,6 +44,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	 * Construct the class.
 	 *
 	 * @since 4.7.0
+	 *
+	 * @param SV_WC_Payment_Gateway_Apple_Pay $handler main Apple Pay handler instance
 	 */
 	public function __construct( $handler ) {
 
@@ -218,8 +220,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	 * @internal
 	 *
 	 * @since 4.7.0
-	 *
-	 * @return array
 	 */
 	public function add_settings() {
 		global $current_section;
@@ -240,7 +240,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	 * @global string $current_section The current settings section.
 	 */
 	public function save_settings() {
-
 		global $current_section;
 
 		// Output the general settings

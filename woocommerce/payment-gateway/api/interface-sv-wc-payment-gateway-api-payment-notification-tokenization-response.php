@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/API
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response' ) ) :
 
 /**
  * WooCommerce Payment Gateway API Payment Credit Card Notification Response
@@ -118,7 +118,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	/**
 	 * Determines whether the overall payment tokenization was successful.
 	 *
-	 * Gatewways can check that the payment method was tokenized, and if a new
+	 * Gateways can check that the payment method was tokenized, and if a new
 	 * customer was created, that was successful.
 	 *
 	 * @since 5.0.0
@@ -153,7 +153,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	 *
 	 * @since 5.0.0
 	 *
-	 * @return array
+	 * @return array|SV_WC_Payment_Gateway_Payment_Token[]
 	 */
 	public function get_edited_payment_tokens();
 
@@ -163,7 +163,7 @@ interface SV_WC_Payment_Gateway_Payment_Notification_Tokenization_Response exten
 	 *
 	 * @since 5.0.0
 	 *
-	 * @return array
+	 * @return array|SV_WC_Payment_Gateway_Payment_Token[]
 	 */
 	public function get_deleted_payment_tokens();
 

@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Payment-Tokens
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Payment_Gateway_Payment_Tokens_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Payment_Gateway_Payment_Tokens_Handler' ) ) :
 
 /**
  * Handle the payment tokenization related functionality.
@@ -39,8 +39,11 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/** @var string the gateway environment ID */
 	protected $environment_id;
 
-	/** @var array array of cached user id to array of SV_WC_Payment_Gateway_Payment_Token token objects */
+	/** @var array|SV_WC_Payment_Gateway_Payment_Token[] array of cached user id to array of SV_WC_Payment_Gateway_Payment_Token token objects */
 	protected $tokens;
+
+	/** @var SV_WC_Payment_Gateway gateway instance */
+	protected $gateway;
 
 
 	/**
@@ -93,10 +96,10 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param \WC_Order $order The order object
+	 * @param \WC_Order $order order object
 	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response|null $response payment token API response, or null if the request should be made
-	 * @param string $environment_id Optional. Environment ID. Default: the current environment.
-	 * @return \WC_Order The order object
+	 * @param string $environment_id optional environment ID, defaults to the current environment
+	 * @return \WC_Order order object
 	 * @throws SV_WC_Plugin_Exception on transaction failure
 	 */
 	public function create_token( \WC_Order $order, $response = null, $environment_id = null ) {
@@ -116,7 +119,16 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		if ( $response->transaction_approved() ) {
 
 			// add the token to the order object for processing
-			$token                 = $response->get_payment_token();
+			$token   = $response->get_payment_token();
+			$address = new Addresses\Customer_Address();
+
+			// generate an address from the order
+			$address->set_from_order( $order );
+
+			// store the billing hash on the token for later use in case it needs to be updated
+			$token->set_billing_hash( $address->get_hash() );
+
+			// set the resulting token on the order
 			$order->payment->token = $token->get_id();
 
 			// for credit card transactions add the card type, if known (some gateways return the credit card type as part of the response, others may require it as part of the request, and still others it may never be known)
@@ -239,13 +251,13 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 *
 	 * @param int $user_id WP user ID
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token to update
-	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
+	 * @param string|null $environment_id optional environment ID, defaults to plugin current environment
 	 * @return string|int updated user meta ID
 	 */
 	public function update_token( $user_id, $token, $environment_id = null ) {
 
 		// default to current environment
-		if ( is_null( $environment_id ) ) {
+		if ( null === $environment_id ) {
 			$environment_id = $this->get_environment_id();
 		}
 
@@ -428,7 +440,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @param array $args optional arguments, can include
 	 *  	`customer_id` - if not provided, this will be looked up based on $user_id
 	 *  	`environment_id` - defaults to plugin current environment
-	 * @return array associative array of string token to SV_WC_Payment_Gateway_Payment_Token object
+	 * @return array|SV_WC_Payment_Gateway_Payment_Token[] associative array of string token to SV_WC_Payment_Gateway_Payment_Token object
 	 */
 	public function get_tokens( $user_id, $args = array() ) {
 
@@ -877,12 +889,14 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 *
 	 * @since 4.3.0
 	 *
-	 * @return SV_WC_Payment_Gateway The gateway instance
+	 * @return SV_WC_Payment_Gateway gateway instance
 	 */
 	protected function get_gateway() {
 
 		return $this->gateway;
 	}
+
+
 }
 
 endif;

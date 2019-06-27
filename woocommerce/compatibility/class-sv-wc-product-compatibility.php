@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Compatibility
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_2\\SV_WC_Product_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Product_Compatibility' ) ) :
 
 /**
  * WooCommerce product compatibility class.
@@ -77,7 +77,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @param \WC_Product $object the product object
 	 * @param array $props the new properties as $key => $value
-	 * @return \WC_Product
+	 * @return \WC_Data|\WC_Product
 	 */
 	public static function set_props( $object, $props, $compat_props = array() ) {
 
