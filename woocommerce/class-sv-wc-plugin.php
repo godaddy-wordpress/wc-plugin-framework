@@ -497,6 +497,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function add_admin_notices() {
 
+		// bail if there's no defined versions to compare
 		if ( empty( $this->latest_wc_versions ) || ! is_numeric( $this->latest_wc_versions ) || (float) $this->latest_wc_versions <= 0 ) {
 			return;
 		}
@@ -504,10 +505,12 @@ abstract class SV_WC_Plugin {
 		$latest_wc_versions = SV_WC_Plugin_Compatibility::get_latest_wc_versions();
 		$current_wc_version = SV_WC_Plugin_Compatibility::get_wc_version();
 
+		// bail if the latest WooCommerce version or the current WooCommerce versions can't be determined
 		if ( empty( $latest_wc_versions ) || empty( $current_wc_version ) ) {
 			return;
 		}
 
+		// grab semver parts
 		$supported_wc_version = current( $latest_wc_versions );
 		$latest_semver        = explode( '.', $supported_wc_version );
 		$supported_semver     = explode( '.', (string) $this->latest_wc_versions );
@@ -518,6 +521,7 @@ abstract class SV_WC_Plugin {
 		// loop known WooCommerce versions from the most recent until we get the oldest supported one
 		foreach ( $latest_wc_versions as $older_wc_version ) {
 
+			// as we loop through versions, the latest one before we break the loop will be the minimum supported one
 			$supported_wc_version = $older_wc_version;
 
 			$older_semver = explode( '.', $older_wc_version );
@@ -540,7 +544,7 @@ abstract class SV_WC_Plugin {
 			$supported_minor--;
 		}
 
-		// for correct comparison, we strip the patch version from the determined versions and compare only major, minor versions
+		// for strict comparison, we strip the patch version from the determined versions and compare only major, minor versions, ignoring patches
 		$current_wc_version   = substr( $current_wc_version, 0, strpos( $current_wc_version, '.', strpos( $current_wc_version, '.' ) + 1 ) );
 		$supported_wc_version = substr( $supported_wc_version, 0, strpos( $supported_wc_version, '.', strpos( $supported_wc_version, '.' ) + 1 ) );
 		$compared_wc_version  = $current_wc_version && $supported_wc_version ? version_compare( $current_wc_version, $supported_wc_version ) : null;
