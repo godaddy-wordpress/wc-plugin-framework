@@ -163,6 +163,50 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
+	 * Retrieves a list of the latest available WooCommerce versions.
+	 *
+	 * Excludes betas, release candidates and development versions.
+	 * Versions are sorted from most recent to least recent.
+	 *
+	 * @since 5.4.1-dev.1
+	 *
+	 * @return string[] array of semver strings
+	 */
+	public static function get_latest_wc_versions() {
+
+		$latest_wc_versions = get_transient( 'sv_wc_plugin_wc_versions' );
+
+		if ( ! is_array( $latest_wc_versions ) ) {
+
+			/** @link https://codex.wordpress.org/WordPress.org_API */
+			$wp_org_request = wp_remote_get( 'https://api.wordpress.org/plugins/info/1.0/woocommerce.json', [ 'timeout' => 1 ] );
+
+			if ( is_array( $wp_org_request ) && isset( $wp_org_request['body'] ) ) {
+
+				$plugin_info = json_decode( $wp_org_request['body'], true );
+
+				if ( is_array( $plugin_info ) && ! empty( $plugin_info['versions'] ) && is_array( $plugin_info['versions'] ) ) {
+
+					$latest_wc_versions = [];
+
+					// reverse array as WordPress supplies oldest version first, newest last
+					foreach ( array_keys( array_reverse( $plugin_info['versions'] ) ) as $wc_version ) {
+						// skip trunk, release candidates, betas and other non-final versions
+						if ( 'trunk' !== $wc_version && false === strpos( $wc_version, '-' ) ) {
+							$latest_wc_versions[] = $wc_version;
+						}
+					}
+
+					set_transient( 'sv_wc_plugin_wc_versions', $latest_wc_versions, WEEK_IN_SECONDS );
+				}
+			}
+		}
+
+		return is_array( $latest_wc_versions ) ? $latest_wc_versions : [];
+	}
+
+
+	/**
 	 * Helper method to get the version of the currently installed WooCommerce
 	 *
 	 * @since 3.0.0
