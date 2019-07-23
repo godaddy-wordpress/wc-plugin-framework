@@ -510,6 +510,11 @@ abstract class SV_WC_Plugin {
 			return;
 		}
 
+		// bail to prevent further overhead if the current user has already dismissed unsupported WooCommerce notices
+		if ( $this->get_admin_notice_handler()->is_notice_dismissed( $this->get_id() . '-unsupported-wc-version' ) ) {
+			return;
+		}
+
 		// grab semver parts
 		$supported_wc_version = current( $latest_wc_versions );
 		$latest_semver        = explode( '.', $supported_wc_version );
