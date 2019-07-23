@@ -510,11 +510,6 @@ abstract class SV_WC_Plugin {
 			return;
 		}
 
-		// bail to prevent further overhead if the current user has already dismissed unsupported WooCommerce notices
-		if ( $this->get_admin_notice_handler()->is_notice_dismissed( $this->get_id() . '-unsupported-wc-version' ) ) {
-			return;
-		}
-
 		// grab semver parts
 		$supported_wc_version = current( $latest_wc_versions );
 		$latest_semver        = explode( '.', $supported_wc_version );
@@ -549,7 +544,7 @@ abstract class SV_WC_Plugin {
 			$supported_minor--;
 		}
 
-		// for strict comparison, we strip the patch version from the determined versions and compare only major, minor versions, ignoring patches
+		// for strict comparison, we strip the patch version from the determined versions and compare only major, minor versions, ignoring patches (i.e. 1.2.3 becomes 1.2)
 		$current_wc_version   = substr( $current_wc_version, 0, strpos( $current_wc_version, '.', strpos( $current_wc_version, '.' ) + 1 ) );
 		$supported_wc_version = substr( $supported_wc_version, 0, strpos( $supported_wc_version, '.', strpos( $supported_wc_version, '.' ) + 1 ) );
 		$compared_wc_version  = $current_wc_version && $supported_wc_version ? version_compare( $current_wc_version, $supported_wc_version ) : null;
@@ -565,12 +560,14 @@ abstract class SV_WC_Plugin {
 					$supported_wc_version,
 					'<a href="' . esc_url( admin_url( 'update-core.php' ) ) .'">', '</a>'
 				),
-				$this->get_id() . '-unsupported-wc-version',
+				$this->get_id() . '-deprecated-wc-version-' . str_replace( '.', '_', $current_wc_version ),
 				[ 'notice_class' => 'warning' ]
 			);
 
 		// installed version is older than the last supported version (default: 2 minor versions behind)
 		} elseif ( -1 === $compared_wc_version ) {
+
+			$this->get_admin_notice_handler()->dismiss_notice( $this->get_id() . '-deprecated-wc-version-' . str_replace( '.', '_', $current_wc_version ) );
 
 			$this->get_admin_notice_handler()->add_admin_notice(
 				sprintf(
@@ -580,7 +577,7 @@ abstract class SV_WC_Plugin {
 					$current_wc_version,
 					'<a href="' . esc_url( admin_url( 'update-core.php' ) ) .'">', '</a>'
 				),
-				$this->get_id() . '-unsupported-wc-version',
+				$this->get_id() . '-unsupported-wc-version-' . str_replace( '.', '_', $current_wc_version ),
 				[ 'notice_class' => 'error' ]
 			);
 		}
