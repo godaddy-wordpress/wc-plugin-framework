@@ -561,7 +561,7 @@ abstract class SV_WC_Plugin {
 					'<a href="' . esc_url( admin_url( 'update-core.php' ) ) .'">', '</a>'
 				),
 				$this->get_id() . '-deprecated-wc-version-' . str_replace( '.', '_', $current_wc_version ),
-				[ 'notice_class' => 'warning' ]
+				[ 'notice_class' => 'notice-warning' ]
 			);
 
 		// installed version is older than the last supported version (default: 2 minor versions behind)
