@@ -194,6 +194,39 @@ class SV_WC_Admin_Notice_Handler {
 
 
 	/**
+	 * Gets an admin note by ID or name.
+	 *
+	 * @since 5.4.1-dev.1
+	 *
+	 * @param int|string $message_id note ID or name
+	 * @return \WC_Admin_Note
+	 */
+	public function get_admin_note( $message_id ) {
+
+		if ( is_int( $message_id ) ) {
+
+			$found_note = \WC_Admin_Notes::get_note( $message_id );
+
+		} else {
+
+			try {
+				/** @var \WC_Admin_Notes_Data_Store $data_store check if an identical note already exists in db */
+				$data_store = \WC_Data_Store::load( 'admin-note' );
+				$found_note = $data_store ? $data_store->get_notes_with_name( $message_id ) : null;
+			} catch ( \Exception $e ) {
+				$found_note = null;
+			}
+
+			if ( is_array( $found_note ) ) {
+				$found_note = current( $found_note );
+			}
+		}
+
+		return $found_note instanceof \WC_Admin_Note ? $found_note : null;
+	}
+
+
+	/**
 	 * Adds a message to be displayed as an admin notice.
 	 *
 	 * If WooCommerce Admin is used, the notice will be passed as an admin note instead.
@@ -212,15 +245,7 @@ class SV_WC_Admin_Notice_Handler {
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_admin_available() ) {
 
-			try {
-				/** @var \WC_Admin_Notes_Data_Store $data_store check if an identical note already exists in db */
-				$data_store = \WC_Data_Store::load( 'admin-note' );
-				$found_note = $data_store ? $data_store->get_notes_with_name( $message_id ) : null;
-			} catch ( \Exception $e ) {
-				$found_note = null;
-			}
-
-			if ( empty( $found_note ) ) {
+			if ( ! $this->get_admin_note( $message_id ) ) {
 				$this->add_admin_note( $message_id, $message, $args );
 			}
 
@@ -430,25 +455,44 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function dismiss_notice( $message_id, $user_id = null ) {
 
+		$dismissed = false;
+
 		if ( null === $user_id ) {
 			$user_id = get_current_user_id();
 		}
 
-		$dismissed_notices = $this->get_dismissed_notices( $user_id );
+		if ( SV_WC_Plugin_Compatibility::is_wc_admin_available() ) {
 
-		$dismissed_notices[ $message_id ] = true;
+			if ( $found_note = $this->get_admin_note( $message_id ) ) {
 
-		update_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', $dismissed_notices );
+				$found_note->set_status( $found_note::E_WC_ADMIN_NOTE_ACTIONED );
 
-		/**
-		 * Fired when a user dismisses an admin notice.
-		 *
-		 * @since 3.0.0
-		 *
-		 * @param string $message_id notice identifier
-		 * @param int $user_id user identifier
-		 */
-		do_action( 'wc_' . $this->get_plugin()->get_id(). '_dismiss_notice', $message_id, $user_id );
+				$dismissed = (bool) $found_note->save();
+			}
+
+		} else {
+
+			$dismissed_notices = $this->get_dismissed_notices( $user_id );
+
+			$dismissed_notices[ $message_id ] = true;
+
+			update_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', $dismissed_notices );
+
+			$dismissed = true;
+		}
+
+		if ( $dismissed ) {
+
+			/**
+			 * Fired when a user dismisses an admin notice.
+			 *
+			 * @since 3.0.0
+			 *
+			 * @param string $message_id notice identifier
+			 * @param int $user_id user identifier
+			 */
+			do_action( 'wc_' . $this->get_plugin()->get_id(). '_dismiss_notice', $message_id, $user_id );
+		}
 	}
 
 
@@ -462,15 +506,25 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function undismiss_notice( $message_id, $user_id = null ) {
 
-		if ( null === $user_id ) {
-			$user_id = get_current_user_id();
+		if ( SV_WC_Plugin_Compatibility::is_wc_admin_available() ) {
+
+			if ( $found_note = $this->get_admin_note( $message_id ) ) {
+				$found_note->set_status( $found_note::E_WC_ADMIN_NOTE_UNACTIONED );
+				$found_note->save();
+			}
+
+		} else {
+
+			if ( null === $user_id ) {
+				$user_id = get_current_user_id();
+			}
+
+			$dismissed_notices = $this->get_dismissed_notices( $user_id );
+
+			$dismissed_notices[ $message_id ] = false;
+
+			update_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', $dismissed_notices );
 		}
-
-		$dismissed_notices = $this->get_dismissed_notices( $user_id );
-
-		$dismissed_notices[ $message_id ] = false;
-
-		update_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', $dismissed_notices );
 	}
 
 
@@ -485,9 +539,21 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function is_notice_dismissed( $message_id, $user_id = null ) {
 
-		$dismissed_notices = $this->get_dismissed_notices( $user_id );
+		if ( SV_WC_Plugin_Compatibility::is_wc_admin_available() ) {
 
-		return isset( $dismissed_notices[ $message_id ] ) && $dismissed_notices[ $message_id ];
+			if ( $found_note = $this->get_admin_note( $message_id ) ) {
+				$is_dismissed = $found_note::E_WC_ADMIN_NOTE_ACTIONED === $found_note->get_status();
+			} else {
+				$is_dismissed = false;
+			}
+
+		} else {
+
+			$dismissed_notices = $this->get_dismissed_notices( $user_id );
+			$is_dismissed      = isset( $dismissed_notices[ $message_id ] ) && $dismissed_notices[ $message_id ];
+		}
+
+		return $is_dismissed;
 	}
 
 
