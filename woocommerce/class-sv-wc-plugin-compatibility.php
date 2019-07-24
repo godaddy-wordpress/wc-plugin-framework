@@ -258,6 +258,20 @@ class SV_WC_Plugin_Compatibility {
 	}
 
 
+	/**
+	 * Determines whether the next generation WooCommerce Admin is available.
+	 *
+	 * @since 5.4.1-dev.1
+	 *
+	 * @return bool
+	 */
+	public static function is_wc_admin_available() {
+
+		// TODO in the future when the feature plugin is going to be merged into WooCommerce core, consider adding an alternative WooCommerce version check {FN:2019-07-24}
+		return class_exists( 'WC_Admin_Install' ) && class_exists( 'WC_Admin_Note' );
+	}
+
+
 	/** WordPress core ******************************************************/
 
 
