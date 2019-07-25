@@ -243,7 +243,7 @@ class SV_WC_Admin_Notice_Handler {
 			try {
 				/** @var \WC_Admin_Notes_Data_Store $data_store check if an identical note already exists in db */
 				$data_store = \WC_Data_Store::load( 'admin-note' );
-				$found_note = $data_store ? $data_store->get_notes_with_name( $note_id ) : null;
+				$found_note = $data_store ? $data_store->get_notes_with_name( $note ) : null;
 			} catch ( \Exception $e ) {
 				$found_note = null;
 			}
@@ -376,6 +376,7 @@ class SV_WC_Admin_Notice_Handler {
 		$display = false;
 
 		if ( self::should_use_admin_notes() ) {
+
 
 			$note    = $this->get_admin_note( $message_id );
 			$display = ! $note || ! $this->is_notice_dismissed( $note );
