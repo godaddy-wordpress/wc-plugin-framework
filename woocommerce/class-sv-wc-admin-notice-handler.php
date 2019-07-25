@@ -434,7 +434,7 @@ class SV_WC_Admin_Notice_Handler {
 		if ( self::should_use_admin_notes() ) {
 
 			$note    = $this->get_admin_note( $message_id );
-			$display = ! $note || ! $this->is_notice_dismissed( $note );
+			$display = ! $note || ! $this->is_notice_dismissed( $note->get_id() );
 
 		} elseif ( current_user_can( 'manage_woocommerce' ) ) {
 
@@ -744,7 +744,7 @@ class SV_WC_Admin_Notice_Handler {
 
 			foreach ( $notes as $note ) {
 				if ( ! array_key_exists( $note->get_name(), $notes ) ) {
-					$items[ $note->get_name() ] = $this->is_notice_dismissed( $note );
+					$items[ $note->get_name() ] = $this->is_notice_dismissed( $note->get_id() );
 				}
 			}
 		}
