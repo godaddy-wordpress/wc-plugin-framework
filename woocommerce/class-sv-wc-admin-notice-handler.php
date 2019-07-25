@@ -349,19 +349,36 @@ class SV_WC_Admin_Notice_Handler {
 	 * @since 5.4.1-dev.1
 	 *
 	 * @param int|string|\WC_Admin_Note $note admin note by ID or name
+	 * @param string $action current action (optional argument set in hook)
 	 * @return bool success
 	 */
-	public function delete_admin_note( $note ) {
+	public function delete_admin_note( $note, $action = '' ) {
 
 		if ( get_option( self::$admin_note_lock ) ) {
-			return $this->delete_admin_note( $note );
+			return $this->delete_admin_note( $note, $action );
 		}
 
 		$note   = $this->get_admin_note( $note );
 		$delete = false;
 
 		if ( $note && $this->get_plugin()->get_id_dasherized() === $note->get_source() ) {
-			$delete = $note->delete( true );
+
+			switch( current_action() ) {
+				case 'woocommerce_admin_note_action':
+					$has_dismiss_action = true;
+				break;
+				case 'woocommerce_admin_note_action_dismiss' :
+					$has_dismiss_action = true;
+					$action             = 'dismiss';
+				break;
+				default :
+					$has_dismiss_action = false;
+				break;
+			}
+
+			if ( ! $has_dismiss_action || ( $has_dismiss_action && 'dismiss' === $action ) ) {
+				$delete = $note->delete( true );
+			}
 		}
 
 		return $delete;
