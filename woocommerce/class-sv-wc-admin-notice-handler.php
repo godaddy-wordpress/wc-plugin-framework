@@ -200,12 +200,14 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function add_admin_note( $content, $name = '', array $data = [] ) {
 
-		$note = new \WC_Admin_Note( wp_parse_args( self::normalize_notice_arguments( $data ), [
+		$data = wp_parse_args( self::normalize_notice_arguments( $data ), [
 			'name'    => empty( trim( $name ) ) ? uniqid( $this->get_plugin()->get_id_dasherized(), false ) : $name,
 			'title'   => $this->get_plugin()->get_plugin_name(),
 			'content' => $content,
 			'source'  => $this->get_plugin()->get_id_dasherized(),
-		] ) );
+		] );
+
+		$note = new \WC_Admin_Note( $data );
 
 		// maybe set an action to dismiss the note
 		if ( ! isset( $data['actions'] ) && $note::E_WC_ADMIN_NOTE_UNACTIONED === $note->get_status() && empty( $note->get_actions() )  ) {
