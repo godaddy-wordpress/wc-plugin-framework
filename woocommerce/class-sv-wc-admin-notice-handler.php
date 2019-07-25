@@ -240,7 +240,7 @@ class SV_WC_Admin_Notice_Handler {
 					'name'    => '',
 					'label'   => '',
 					'url'     => '',
-					'status'  => $note::E_WC_ADMIN_NOTE_UNACTIONED,
+					'status'  => $note::E_WC_ADMIN_NOTE_ACTIONED,
 					'primary' => false,
 				] );
 
