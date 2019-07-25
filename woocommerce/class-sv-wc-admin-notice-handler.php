@@ -74,6 +74,7 @@ class SV_WC_Admin_Notice_Handler {
 		add_action( 'wp_ajax_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismiss_notice', [ $this, 'handle_dismiss_notice' ] );
 
 		// deletes an action that has been dismissed via dismiss action button
+		add_action( 'woocommerce_admin_note_action',         [ $this, 'delete_admin_note'] );
 		add_action( 'woocommerce_admin_note_action_dismiss', [ $this, 'delete_admin_note' ] );
 	}
 
