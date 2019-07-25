@@ -87,8 +87,11 @@ class SV_WC_Admin_Notice_Handler {
 		if ( self::should_use_admin_notes() ) {
 
 			$args = wp_parse_args( $args, [
-				'is_snoozable' => isset( $args['dismissible'] ) ? (bool) $args['dismissible'] : true,
-				'type'         => self::normalize_notice_type( $args ),
+				'locale'        => 'en_US',
+				'date_reminder' => '',
+				'content_data'  => new \stdClass(),
+				'is_snoozable'  => isset( $args['dismissible'] ) ? (bool) $args['dismissible'] : true,
+				'type'          => self::normalize_notice_type( $args ),
 			] );
 
 			if ( empty( $args['icon'] ) ) {
@@ -200,14 +203,26 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function add_admin_note( $content, $name = '', array $data = [] ) {
 
+		update_option( 'sv_wc_admin_create_note_lock', true );
+
 		$data = wp_parse_args( self::normalize_notice_arguments( $data ), [
-			'name'    => empty( trim( $name ) ) ? uniqid( $this->get_plugin()->get_id_dasherized(), false ) : $name,
-			'title'   => $this->get_plugin()->get_plugin_name(),
-			'content' => $content,
-			'source'  => $this->get_plugin()->get_id_dasherized(),
+			'name'         => empty( trim( $name ) ) ? uniqid( $this->get_plugin()->get_id_dasherized(), false ) : $name,
+			'title'        => $this->get_plugin()->get_plugin_name(),
+			'content'      => $content,
+			'source'       => $this->get_plugin()->get_id_dasherized(),
 		] );
 
 		$note = new \WC_Admin_Note( $data );
+
+		$note->set_status( empty( $data['status'] ) ? $note::E_WC_ADMIN_NOTE_UNACTIONED : $data['status'] );
+		$note->set_source( $data['source'] );
+		$note->set_type( $data['type'] );
+		$note->set_icon( $data['icon'] );
+		$note->set_title( $data['title'] );
+		$note->set_content( $data['content'] );
+		$note->set_content_data( $data['content_data'] );
+		$note->set_date_created( $data['date_created'] );
+		$note->set_date_reminder( $data['date_reminder'] );
 
 		// maybe set an action to dismiss the note
 		if ( ! isset( $data['actions'] ) && $note::E_WC_ADMIN_NOTE_UNACTIONED === $note->get_status() && empty( $note->get_actions() )  ) {
@@ -217,9 +232,28 @@ class SV_WC_Admin_Notice_Handler {
 			if ( $is_dismissible ) {
 				$note->add_action( 'dismiss', __( 'Dismiss', 'woocommerce-plugin-framework' ) );
 			}
+
+		} elseif ( ! empty( $data['actions'] ) && is_array( $data['actions'] ) ) {
+
+			foreach ( $data['actions'] as $action ) {
+
+				$action = wp_parse_args( $action, [
+					'name'    => '',
+					'label'   => '',
+					'url'     => '',
+					'status'  => $note::E_WC_ADMIN_NOTE_UNACTIONED,
+					'primary' => false,
+				] );
+
+				$note->add_action( $action['name'], $action['label'], $action['url'], $action['status'], $action['primary'] );
+			}
 		}
 
-		return ! $this->get_admin_note( $data['name'] ) ? $note->save() : null;
+		$note_id = $note->save();
+
+		delete_option( 'sv_wc_admin_create_note_lock' );
+
+		return $note_id;
 	}
 
 
@@ -232,6 +266,11 @@ class SV_WC_Admin_Notice_Handler {
 	 * @return \WC_Admin_Note
 	 */
 	public function get_admin_note( $note ) {
+
+		// introduce recursion to avoid race conditions
+		if ( get_option( 'sv_wc_admin_create_note_lock' ) ) {
+			return $this->get_admin_note( $note );
+		}
 
 		$found_note = $note;
 
@@ -271,6 +310,10 @@ class SV_WC_Admin_Notice_Handler {
 	 * @return \WC_Admin_Note[] associative array of note names and objects
 	 */
 	public function get_admin_notes( array $args = [], $context = 'view' ) {
+
+		if ( get_option( 'sv_wc_admin_create_note_lock' ) ) {
+			return $this->get_admin_notes( $args, $context );
+		}
 
 		$notes = [];
 		$args  = wp_parse_args( $args, [
@@ -328,7 +371,9 @@ class SV_WC_Admin_Notice_Handler {
 
 		if ( self::should_use_admin_notes() ) {
 
-			$this->add_admin_note( $message, $message_id, $args );
+			if ( ! $this->get_admin_note( $message_id ) ) {
+				$this->add_admin_note( $message, $message_id, $args );
+			}
 
 		} elseif ( $this->should_display_notice( $message_id, $args ) ) {
 
