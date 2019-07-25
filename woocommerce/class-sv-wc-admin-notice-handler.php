@@ -111,7 +111,7 @@ class SV_WC_Admin_Notice_Handler {
 
 			if ( empty( $args['date_created'] ) ) {
 				try {
-					$datetime             = new \DateTime( 'now', new \DateTimeZone( 'UTC' ) );
+					$datetime             = new \DateTime( date( 'Y-m-d H:i:s', current_time( 'timestamp', true ) ), new \DateTimeZone( 'UTC' ) );
 					$args['date_created'] = $datetime->format( 'c' );
 				} catch ( \Exception $e ) {
 					$args['date_created'] = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) );
