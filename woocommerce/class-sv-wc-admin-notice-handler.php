@@ -194,6 +194,19 @@ class SV_WC_Admin_Notice_Handler {
 
 
 	/**
+	 * Gets the source identifier for admin notes.
+	 *
+	 * @since 5.4.1-dev.1
+	 *
+	 * @return string
+	 */
+	public function get_admin_note_source() {
+
+		return sprintf( 'woocommerce-%s', $this->get_plugin()->get_id_dasherized() );
+	}
+
+
+	/**
 	 * Adds a message to be displayed as a WooCommerce Admin Note.
 	 *
 	 * @see \WC_Admin_Note::__construct() for available arguments
@@ -211,11 +224,11 @@ class SV_WC_Admin_Notice_Handler {
 
 		$note = new \WC_Admin_Note();
 		$args = wp_parse_args( self::normalize_notice_arguments( $args ), [
-			'name'         => empty( trim( $name ) ) ? uniqid( $this->get_plugin()->get_id_dasherized(), false ) : $name,
+			'name'         => empty( trim( $name ) ) ? $this->get_admin_note_source() . '-note' : $name,
 			'title'        => $this->get_plugin()->get_plugin_name(),
 			'content'      => $content,
 			'status'       => $note::E_WC_ADMIN_NOTE_UNACTIONED,
-			'source'       => $this->get_plugin()->get_id_dasherized(),
+			'source'       => $this->get_admin_note_source(),
 		] );
 
 		foreach ( $args as $prop => $data ) {
@@ -233,7 +246,7 @@ class SV_WC_Admin_Notice_Handler {
 			$is_dismissible = ! isset( $args['dismissible'] ) || true === $args['dismissible'];
 
 			if ( $is_dismissible ) {
-				$note->add_action( 'dismiss', __( 'Dismiss', 'woocommerce-plugin-framework' ) );
+				$note->add_action( 'dismiss', __( 'Dismiss', 'woocommerce-plugin-framework' ), '#' );
 			}
 
 		} elseif ( ! empty( $args['actions'] ) && is_array( $args['actions'] ) ) {
@@ -243,7 +256,7 @@ class SV_WC_Admin_Notice_Handler {
 				$action = wp_parse_args( $action, [
 					'name'    => '',
 					'label'   => '',
-					'url'     => '',
+					'url'     => '#',
 					'status'  => $note::E_WC_ADMIN_NOTE_ACTIONED,
 					'primary' => false,
 				] );
@@ -325,7 +338,7 @@ class SV_WC_Admin_Notice_Handler {
 		$notes = [];
 		$args  = wp_parse_args( $args, [
 			'per_page' => PHP_INT_MAX,
-			'source'   => $this->get_plugin()->get_id_dasherized(),
+			'source'   => $this->get_admin_note_source(),
 		] );
 
 		/** @var \WC_Admin_Note[] $results */
@@ -354,14 +367,10 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function delete_admin_note( $note, $action = '' ) {
 
-		if ( get_option( self::$admin_note_lock ) ) {
-			return $this->delete_admin_note( $note, $action );
-		}
-
 		$note   = $this->get_admin_note( $note );
 		$delete = false;
 
-		if ( $note && $this->get_plugin()->get_id_dasherized() === $note->get_source() ) {
+		if ( $note && $this->get_admin_note_source() === $note->get_source() ) {
 
 			switch( current_action() ) {
 				case 'woocommerce_admin_note_action':
