@@ -90,7 +90,7 @@ class SV_WC_Admin_Notice_Handler {
 		if ( self::should_use_admin_notes() ) {
 
 			$args = wp_parse_args( $args, [
-				'is_snoozable'  => isset( $args['dismissible'] ) ? (bool) $args['dismissible'] : true,
+				'is_snoozable'  => empty( $args['dismissible'] ),
 				'type'          => self::normalize_notice_type( $args ),
 			] );
 
@@ -224,17 +224,17 @@ class SV_WC_Admin_Notice_Handler {
 		}
 
 		// maybe set an action to dismiss the note
-		if ( ! isset( $data['actions'] ) && $note::E_WC_ADMIN_NOTE_UNACTIONED === $note->get_status() && empty( $note->get_actions() )  ) {
+		if ( ! isset( $args['actions'] ) && $note::E_WC_ADMIN_NOTE_UNACTIONED === $note->get_status() && empty( $note->get_actions() )  ) {
 
-			$is_dismissible = ! isset( $data['dismissible'] ) || true === $data['dismissible'];
+			$is_dismissible = ! isset( $args['dismissible'] ) || true === $args['dismissible'];
 
 			if ( $is_dismissible ) {
 				$note->add_action( 'dismiss', __( 'Dismiss', 'woocommerce-plugin-framework' ) );
 			}
 
-		} elseif ( ! empty( $data['actions'] ) && is_array( $data['actions'] ) ) {
+		} elseif ( ! empty( $args['actions'] ) && is_array( $args['actions'] ) ) {
 
-			foreach ( $data['actions'] as $action ) {
+			foreach ( $args['actions'] as $action ) {
 
 				$action = wp_parse_args( $action, [
 					'name'    => '',
@@ -317,7 +317,7 @@ class SV_WC_Admin_Notice_Handler {
 		$notes = [];
 		$args  = wp_parse_args( $args, [
 			'per_page' => PHP_INT_MAX,
-			'source'   => $this->get_plugin()->get_id_dasherized(), // this filter may not be applicable yet
+			'source'   => $this->get_plugin()->get_id_dasherized(),
 		] );
 
 		/** @var \WC_Admin_Note[] $results */
@@ -690,18 +690,18 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function is_notice_dismissed( $message_id, $user_id = null ) {
 
-		if ( self::should_use_admin_notes() ) {
+		if ( null === $user_id ) {
+			$user_id = get_current_user_id();
+		}
 
-			if ( $found_note = $this->get_admin_note( $message_id ) ) {
-				$is_dismissed = $found_note::E_WC_ADMIN_NOTE_ACTIONED === $found_note->get_status();
-			} else {
-				$is_dismissed = false;
-			}
+		// always check for legacy notices first
+		$dismissed_notices = get_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', true );
+		$is_dismissed      = is_array( $dismissed_notices ) && isset( $dismissed_notices[ $message_id ] ) && $dismissed_notices[ $message_id ];
 
-		} else {
-
-			$dismissed_notices = $this->get_dismissed_notices( $user_id );
-			$is_dismissed      = isset( $dismissed_notices[ $message_id ] ) && $dismissed_notices[ $message_id ];
+		// this avoids introducing notes which have been previously dismissed as notices, such as milestones
+		if ( ! $is_dismissed && self::should_use_admin_notes() ) {
+			$found_note   = $this->get_admin_note( $message_id );
+			$is_dismissed = $found_note && in_array( $found_note->get_status(), [ $found_note::E_WC_ADMIN_NOTE_ACTIONED, $found_note::E_WC_ADMIN_NOTE_SNOOZED ], true );
 		}
 
 		return $is_dismissed;
@@ -718,26 +718,26 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function get_dismissed_notices( $user_id = null ) {
 
+		if ( null === $user_id ) {
+			$user_id = get_current_user_id();
+		}
+
+		// get legacy admin notices first
+		$items = get_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', true );
+		$items = is_array( $items ) ? $items : [];
+
 		if ( self::should_use_admin_notes() ) {
 
-			$items = [];
 			$notes = $this->get_admin_notes();
 
 			foreach ( $notes as $note ) {
-				$items[ $note->get_name() ] = $this->is_notice_dismissed( $note );
+				if ( ! array_key_exists( $note->get_name(), $notes ) ) {
+					$items[ $note->get_name() ] = $this->is_notice_dismissed( $note );
+				}
 			}
-
-		} else {
-
-			if ( null === $user_id ) {
-				$user_id = get_current_user_id();
-			}
-
-			$items = get_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', true );
 		}
 
-
-		return empty( $items ) || ! is_array( $items ) ? [] : $items;
+		return $items;
 	}
 
 

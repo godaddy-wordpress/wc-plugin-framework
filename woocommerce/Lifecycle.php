@@ -313,9 +313,11 @@ class Lifecycle {
 
 			if ( $message ) {
 
-				$this->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $id, array(
+				$this->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $id, [
 					'always_show_on_settings' => false,
-				) );
+					'is_snoozable'            => false,
+					'type'                    => 'info',
+				] );
 
 				// only display one notice at a time
 				break;
