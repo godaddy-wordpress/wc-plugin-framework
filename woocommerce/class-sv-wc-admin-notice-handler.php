@@ -290,6 +290,10 @@ class SV_WC_Admin_Notice_Handler {
 			if ( is_array( $found_note ) ) {
 				$found_note = current( $found_note );
 			}
+
+			if ( is_numeric( $found_note ) ) {
+				$found_note = new \WC_Admin_Note( $found_note );
+			}
 		}
 
 		return $found_note instanceof \WC_Admin_Note ? $found_note : null;
