@@ -84,7 +84,7 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	private static function normalize_notice_arguments( $args ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_admin_available() ) {
+		if ( self::should_use_admin_notes() ) {
 
 			$args = wp_parse_args( $args, [
 				'locale'       => get_locale(),
@@ -152,16 +152,35 @@ class SV_WC_Admin_Notice_Handler {
 		$accepted_types = [
 			'error',
 			'info',
+			'success',
+			'warning',
 			'notice',
+			'notice-error',
 			'notice-info',
+			'notice-success',
 			'notice-warning',
 			'updated',
 		];
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_admin_available() ) {
+		if ( self::should_use_admin_notes() ) {
+
 			$note           = new \WC_Admin_Note();
 			$accepted_types = $note::get_allowed_types();
 			$default_type   = $note::E_WC_ADMIN_NOTE_INFORMATIONAL;
+
+			// map legacy types
+			switch ( $notice_type ) {
+				case 'notice-error' :
+					$notice_type = $note::E_WC_ADMIN_NOTE_ERROR;
+				break;
+				case 'notice-warning' :
+					$notice_type = $note::E_WC_ADMIN_NOTE_WARNING;
+				break;
+				case 'notice-updated' :
+				case 'updated' :
+					$notice_type = $note::E_WC_ADMIN_NOTE_UPDATE;
+				break;
+			}
 		}
 
 		return in_array( $notice_type, $accepted_types, true ) ? $notice_type : $default_type;
@@ -175,19 +194,29 @@ class SV_WC_Admin_Notice_Handler {
 	 *
 	 * @since 5.4.1-dev.1
 	 *
-	 * @param string $name note slug identifier
 	 * @param string $content note content
+	 * @param string $name note slug identifier
 	 * @param array $data additional arguments
-	 * @return int the added note ID
+	 * @return int the added note ID on success
 	 */
-	public function add_admin_note( $name, $content, $data ) {
+	public function add_admin_note( $content, $name = '', array $data = [] ) {
 
 		$note = new \WC_Admin_Note( self::normalize_notice_arguments( wp_parse_args( $data, [
-			'name'    => $name,
+			'name'    => empty( trim( $name ) ) ? uniqid( $this->get_plugin()->get_id_dasherized(), false ) : $name,
 			'title'   => $this->get_plugin()->get_plugin_name(),
 			'content' => $content,
 			'source'  => $this->get_plugin()->get_id_dasherized(),
 		] ) ) );
+
+		// maybe set an action to dismiss the note
+		if ( ! isset( $data['actions'] ) && $note::E_WC_ADMIN_NOTE_UNACTIONED === $note->get_status() && empty( $note->get_actions() )  ) {
+
+			$is_dismissible = ! isset( $data['dismissible'] ) || true === $data['dismissible'];
+
+			if ( $is_dismissible ) {
+				$note->add_action( 'dismiss', __( 'Dismiss', 'woocommerce-plugin-framework' ) );
+			}
+		}
 
 		return $note->save();
 	}
@@ -198,21 +227,23 @@ class SV_WC_Admin_Notice_Handler {
 	 *
 	 * @since 5.4.1-dev.1
 	 *
-	 * @param int|string $message_id note ID or name
+	 * @param int|string|\WC_Admin_Note $note note ID or name
 	 * @return \WC_Admin_Note
 	 */
-	public function get_admin_note( $message_id ) {
+	public function get_admin_note( $note ) {
 
-		if ( is_int( $message_id ) ) {
+		$found_note = $note;
 
-			$found_note = \WC_Admin_Notes::get_note( $message_id );
+		if ( is_int( $note ) ) {
 
-		} else {
+			$found_note = \WC_Admin_Notes::get_note( $note );
+
+		} elseif ( is_string( $note ) ) {
 
 			try {
 				/** @var \WC_Admin_Notes_Data_Store $data_store check if an identical note already exists in db */
 				$data_store = \WC_Data_Store::load( 'admin-note' );
-				$found_note = $data_store ? $data_store->get_notes_with_name( $message_id ) : null;
+				$found_note = $data_store ? $data_store->get_notes_with_name( $note_id ) : null;
 			} catch ( \Exception $e ) {
 				$found_note = null;
 			}
@@ -223,6 +254,60 @@ class SV_WC_Admin_Notice_Handler {
 		}
 
 		return $found_note instanceof \WC_Admin_Note ? $found_note : null;
+	}
+
+
+	/**
+	 * Gets admin notes for the current plugin.
+	 *
+	 * @see \WC_Admin_Notes::get_notes()
+	 * @see \WC_Admin_Notes_Data_Store::get_notes()
+	 *
+	 * @since 5.4.1-dev.1
+	 *
+	 * @param array $args array of arguments
+	 * @param string $context optional, view or edit
+	 * @return \WC_Admin_Note[] associative array of note names and objects
+	 */
+	public function get_admin_notes( array $args = [], $context = 'view' ) {
+
+		$args = wp_parse_args( $args, [
+			'per_page' => PHP_INT_MAX,
+			'source'   => $this->get_plugin()->get_id_dasherized(), // this filter may not be applicable yet
+		] );
+
+		/** @var \WC_Admin_Note[] $objects */
+		$objects = \WC_Admin_Notes::get_notes( $context, $args );
+		$notes   = [];
+
+		if ( ! empty( $objects ) ) {
+
+			foreach ( $objects as $i => $note ) {
+
+				if ( $args['source'] !== $note->get_source() ) {
+
+					$notes[ $note->get_name() ] = $note;
+				}
+			}
+		}
+
+		return $notes;
+	}
+
+
+	/**
+	 * Deletes an admin note.
+	 *
+	 * @since 5.4.1-dev.1
+	 *
+	 * @param int|string|\WC_Admin_Note $note admin note by ID or name
+	 * @return bool success
+	 */
+	public function delete_admin_note( $note ) {
+
+		$note = $this->get_admin_note( $note );
+
+		return $note ? $note->delete() : false;
 	}
 
 
@@ -243,7 +328,7 @@ class SV_WC_Admin_Notice_Handler {
 
 		$args = self::normalize_notice_arguments( $args );
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_admin_available() ) {
+		if ( self::should_use_admin_notes() ) {
 
 			if ( ! $this->get_admin_note( $message_id ) ) {
 				$this->add_admin_note( $message_id, $message, $args );
@@ -257,6 +342,19 @@ class SV_WC_Admin_Notice_Handler {
 				'params'   => $args,
 			];
 		}
+	}
+
+
+	/**
+	 * Determines whether admin note should be used instead of admin notices.
+	 *
+	 * @since 5.4.1-dev.1
+	 *
+	 * @return bool
+	 */
+	private static function should_use_admin_notes() {
+
+		return SV_WC_Plugin_Compatibility::is_wc_admin_available();
 	}
 
 
@@ -275,25 +373,30 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function should_display_notice( $message_id, $args = [] ) {
 
-		// bail out if user is not a shop manager
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			return false;
+		$display = false;
+
+		if ( self::should_use_admin_notes() ) {
+
+			$note    = $this->get_admin_note( $message_id );
+			$display = ! $note || ! $this->is_notice_dismissed( $note );
+
+		} elseif ( current_user_can( 'manage_woocommerce' ) ) {
+
+			$args = self::normalize_notice_arguments( $args );
+
+			if ( $args['always_show_on_settings'] && $this->get_plugin()->is_plugin_settings() ) {
+				// if the notice is always shown on the settings page, and we're on the settings page
+				$display = true;
+			} elseif ( ! $args['dismissible'] ) {
+				// non-dismissible, always display
+				$display = true;
+			} else {
+				// dismissible: display if notice has not been dismissed
+				$display = ! $this->is_notice_dismissed( $message_id );
+			}
 		}
 
-		$args = self::normalize_notice_arguments( $args );
-
-		// if the notice is always shown on the settings page, and we're on the settings page
-		if ( $args['always_show_on_settings'] && $this->get_plugin()->is_plugin_settings() ) {
-			return true;
-		}
-
-		// non-dismissible, always display
-		if ( ! $args['dismissible'] ) {
-			return true;
-		}
-
-		// dismissible: display if notice has not been dismissed
-		return ! $this->is_notice_dismissed( $message_id );
+		return $display;
 	}
 
 
@@ -305,6 +408,10 @@ class SV_WC_Admin_Notice_Handler {
 	 * @param bool
 	 */
 	public function render_admin_notices( $is_visible = true ) {
+
+		if ( self::should_use_admin_notes() ) {
+			return;
+		}
 
 		// default for actions
 		if ( ! is_bool( $is_visible ) ) {
@@ -355,6 +462,10 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function render_admin_notice( $message, $message_id, $args = [] ) {
 
+		if ( self::should_use_admin_notes() ) {
+			return;
+		}
+
 		$args    = self::normalize_notice_arguments( $args );
 		$classes = [
 			'notice',
@@ -386,8 +497,11 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function render_admin_notice_js() {
 
-		// if there were no notices, or we've already rendered the js, there's nothing to do
-		if ( empty( $this->admin_notices ) || self::$admin_notice_js_rendered ) {
+		// bail if any of the following is true:
+		// - there are no notices to display
+		// - notices JavaScript code was already rendered
+		// - admin notes are being used in place of admin notices
+		if ( empty( $this->admin_notices ) || self::$admin_notice_js_rendered || self::should_use_admin_notes() ) {
 			return;
 		}
 
@@ -455,33 +569,25 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function dismiss_notice( $message_id, $user_id = null ) {
 
-		$dismissed = false;
-
-		if ( null === $user_id ) {
-			$user_id = get_current_user_id();
-		}
-
-		if ( SV_WC_Plugin_Compatibility::is_wc_admin_available() ) {
+		if ( self::should_use_admin_notes() ) {
 
 			if ( $found_note = $this->get_admin_note( $message_id ) ) {
 
 				$found_note->set_status( $found_note::E_WC_ADMIN_NOTE_ACTIONED );
-
-				$dismissed = (bool) $found_note->save();
+				$found_note->save();
 			}
 
 		} else {
+
+			if ( null === $user_id ) {
+				$user_id = get_current_user_id();
+			}
 
 			$dismissed_notices = $this->get_dismissed_notices( $user_id );
 
 			$dismissed_notices[ $message_id ] = true;
 
 			update_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', $dismissed_notices );
-
-			$dismissed = true;
-		}
-
-		if ( $dismissed ) {
 
 			/**
 			 * Fired when a user dismisses an admin notice.
@@ -506,9 +612,10 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function undismiss_notice( $message_id, $user_id = null ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_admin_available() ) {
+		if ( self::should_use_admin_notes() ) {
 
 			if ( $found_note = $this->get_admin_note( $message_id ) ) {
+
 				$found_note->set_status( $found_note::E_WC_ADMIN_NOTE_UNACTIONED );
 				$found_note->save();
 			}
@@ -539,7 +646,7 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function is_notice_dismissed( $message_id, $user_id = null ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_admin_available() ) {
+		if ( self::should_use_admin_notes() ) {
 
 			if ( $found_note = $this->get_admin_note( $message_id ) ) {
 				$is_dismissed = $found_note::E_WC_ADMIN_NOTE_ACTIONED === $found_note->get_status();
@@ -567,13 +674,26 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function get_dismissed_notices( $user_id = null ) {
 
-		if ( null === $user_id ) {
-			$user_id = get_current_user_id();
+		if ( self::should_use_admin_notes() ) {
+
+			$items = [];
+			$notes = $this->get_admin_notes();
+
+			foreach ( $notes as $note ) {
+				$items[ $note->get_name() ] = $this->is_notice_dismissed( $note );
+			}
+
+		} else {
+
+			if ( null === $user_id ) {
+				$user_id = get_current_user_id();
+			}
+
+			$items = get_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', true );
 		}
 
-		$dismissed_notices = get_user_meta( $user_id, '_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages', true );
 
-		return empty( $dismissed_notices ) || ! is_array( $dismissed_notices ) ? [] : $dismissed_notices;
+		return empty( $items ) || ! is_array( $items ) ? [] : $items;
 	}
 
 
@@ -582,6 +702,8 @@ class SV_WC_Admin_Notice_Handler {
 
 	/**
 	 * Dismisses the identified notice.
+	 *
+	 * @internal
 	 *
 	 * @since 3.0.0
 	 */
