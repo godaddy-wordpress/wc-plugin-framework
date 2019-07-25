@@ -45,10 +45,13 @@ class SV_WC_Admin_Notice_Handler {
 	private $admin_notices = [];
 
 	/** @var boolean static member to enforce a single rendering of the admin notice placeholder element */
-	static private $admin_notice_placeholder_rendered = false;
+	private static $admin_notice_placeholder_rendered = false;
 
 	/** @var boolean static member to enforce a single rendering of the admin notice javascript */
-	static private $admin_notice_js_rendered = false;
+	private static $admin_notice_js_rendered = false;
+
+	/** @var string option key */
+	private static $admin_note_lock = 'sv_wc_admin_create_note_lock';
 
 
 	/**
@@ -87,9 +90,6 @@ class SV_WC_Admin_Notice_Handler {
 		if ( self::should_use_admin_notes() ) {
 
 			$args = wp_parse_args( $args, [
-				'locale'        => 'en_US',
-				'date_reminder' => '',
-				'content_data'  => new \stdClass(),
 				'is_snoozable'  => isset( $args['dismissible'] ) ? (bool) $args['dismissible'] : true,
 				'type'          => self::normalize_notice_type( $args ),
 			] );
@@ -198,31 +198,30 @@ class SV_WC_Admin_Notice_Handler {
 	 *
 	 * @param string $content note content
 	 * @param string $name note slug identifier
-	 * @param array $data additional arguments
+	 * @param array $args note arguments
 	 * @return int|null the added note ID on success, null on failure
 	 */
-	public function add_admin_note( $content, $name = '', array $data = [] ) {
+	public function add_admin_note( $content, $name = '', array $args = [] ) {
 
-		update_option( 'sv_wc_admin_create_note_lock', true );
+		update_option( self::$admin_note_lock, true );
 
-		$data = wp_parse_args( self::normalize_notice_arguments( $data ), [
+		$note = new \WC_Admin_Note();
+		$args = wp_parse_args( self::normalize_notice_arguments( $args ), [
 			'name'         => empty( trim( $name ) ) ? uniqid( $this->get_plugin()->get_id_dasherized(), false ) : $name,
 			'title'        => $this->get_plugin()->get_plugin_name(),
 			'content'      => $content,
+			'status'       => $note::E_WC_ADMIN_NOTE_UNACTIONED,
 			'source'       => $this->get_plugin()->get_id_dasherized(),
 		] );
 
-		$note = new \WC_Admin_Note( $data );
+		foreach ( $args as $prop => $data ) {
 
-		$note->set_status( empty( $data['status'] ) ? $note::E_WC_ADMIN_NOTE_UNACTIONED : $data['status'] );
-		$note->set_source( $data['source'] );
-		$note->set_type( $data['type'] );
-		$note->set_icon( $data['icon'] );
-		$note->set_title( $data['title'] );
-		$note->set_content( $data['content'] );
-		$note->set_content_data( $data['content_data'] );
-		$note->set_date_created( $data['date_created'] );
-		$note->set_date_reminder( $data['date_reminder'] );
+			$set_prop = "set_{$prop}";
+
+			if ( 'actions' !== $prop && is_callable( [ $note, $set_prop ] ) ) {
+				$note->$set_prop( $data );
+			}
+		}
 
 		// maybe set an action to dismiss the note
 		if ( ! isset( $data['actions'] ) && $note::E_WC_ADMIN_NOTE_UNACTIONED === $note->get_status() && empty( $note->get_actions() )  ) {
@@ -251,7 +250,7 @@ class SV_WC_Admin_Notice_Handler {
 
 		$note_id = $note->save();
 
-		delete_option( 'sv_wc_admin_create_note_lock' );
+		delete_option( self::$admin_note_lock );
 
 		return $note_id;
 	}
@@ -268,7 +267,7 @@ class SV_WC_Admin_Notice_Handler {
 	public function get_admin_note( $note ) {
 
 		// introduce recursion to avoid race conditions
-		if ( get_option( 'sv_wc_admin_create_note_lock' ) ) {
+		if ( get_option( self::$admin_note_lock ) ) {
 			return $this->get_admin_note( $note );
 		}
 
@@ -311,7 +310,7 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function get_admin_notes( array $args = [], $context = 'view' ) {
 
-		if ( get_option( 'sv_wc_admin_create_note_lock' ) ) {
+		if ( get_option( self::$admin_note_lock ) ) {
 			return $this->get_admin_notes( $args, $context );
 		}
 
@@ -345,6 +344,10 @@ class SV_WC_Admin_Notice_Handler {
 	 * @return bool success
 	 */
 	public function delete_admin_note( $note ) {
+
+		if ( get_option( self::$admin_note_lock ) ) {
+			return $this->delete_admin_note( $note );
+		}
 
 		$note = $this->get_admin_note( $note );
 
