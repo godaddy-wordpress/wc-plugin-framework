@@ -72,6 +72,9 @@ class SV_WC_Admin_Notice_Handler {
 
 		// AJAX handler to dismiss any warning/error notices
 		add_action( 'wp_ajax_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismiss_notice', [ $this, 'handle_dismiss_notice' ] );
+
+		// deletes an action that has been dismissed via dismiss action button
+		add_action( 'woocommerce_admin_note_action_dismiss', [ $this, 'delete_admin_note' ] );
 	}
 
 
@@ -340,7 +343,7 @@ class SV_WC_Admin_Notice_Handler {
 
 
 	/**
-	 * Deletes an admin note.
+	 * Deletes an admin note left by the current plugin.
 	 *
 	 * @since 5.4.1-dev.1
 	 *
@@ -353,9 +356,14 @@ class SV_WC_Admin_Notice_Handler {
 			return $this->delete_admin_note( $note );
 		}
 
-		$note = $this->get_admin_note( $note );
+		$note   = $this->get_admin_note( $note );
+		$delete = false;
 
-		return $note ? $note->delete() : false;
+		if ( $note && $this->get_plugin()->get_id_dasherized() === $note->get_source() ) {
+			$delete = $note->delete( true );
+		}
+
+		return $delete;
 	}
 
 
