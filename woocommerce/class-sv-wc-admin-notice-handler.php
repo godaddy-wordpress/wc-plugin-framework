@@ -397,8 +397,16 @@ class SV_WC_Admin_Notice_Handler {
 	 * @return bool
 	 */
 	private static function should_use_admin_notes() {
+		global $current_screen;
 
-		return SV_WC_Plugin_Compatibility::is_wc_admin_available();
+		// keep displaying notices on the WordPress plugins page
+		if ( $current_screen && 'plugins' === $current_screen->id ) {
+			$use_admin_notes = false;
+		} else {
+			$use_admin_notes = SV_WC_Plugin_Compatibility::is_wc_admin_available();
+		}
+
+		return $use_admin_notes;
 	}
 
 

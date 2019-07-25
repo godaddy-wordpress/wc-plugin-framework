@@ -87,7 +87,7 @@ class Lifecycle {
 		}
 
 		// catch any milestones triggered by action
-		add_action( 'wc_' . $this->get_plugin()->get_id() . '_milestone_reached', array( $this, 'trigger_milestone' ), 10, 3 );
+		add_action( 'wc_' . $this->get_plugin()->get_id() . '_milestone_reached', array( $this, 'trigger_milestone' ), 10, 4 );
 	}
 
 
@@ -301,6 +301,13 @@ class Lifecycle {
 				continue;
 			}
 
+			$args = [];
+
+			if ( is_array( $message ) ) {
+				$message = key( $message );
+				$args    = current( $message );
+			}
+
 			/**
 			 * Filters a milestone notice message.
 			 *
@@ -311,13 +318,19 @@ class Lifecycle {
 			 */
 			$message = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_milestone_message', $this->generate_milestone_notice_message( $message ), $id );
 
-			if ( $message ) {
+			if ( '' !== $message && is_string( $message ) ) {
 
-				$this->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $id, [
-					'always_show_on_settings' => false,
-					'is_snoozable'            => false,
-					'type'                    => 'info',
-				] );
+				/**
+				 * Filters milestone notice arguments.
+				 *
+				 * @since 5.4.1-dev.1
+				 *
+				 * @param array $args optional arguments
+				 * @param string $id milestone ID
+				 */
+				$args = (array) apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_milestone_args', $this->generate_milestone_notice_args( $args ), $id );
+
+				$this->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $id, $args );
 
 				// only display one notice at a time
 				break;
@@ -344,16 +357,17 @@ class Lifecycle {
 	 * @param string $id milestone ID
 	 * @param string $message message to display to the user
 	 * @param string $since the version since this milestone has existed in the plugin
+	 * @param array $args optional arguments used in admin notes
 	 * @return bool
 	 */
-	public function trigger_milestone( $id, $message, $since = '1.0.0' ) {
+	public function trigger_milestone( $id, $message, $since = '1.0.0', array $args = [] ) {
 
 		// if the plugin was had milestones before this milestone was added, don't trigger it
 		if ( version_compare( $this->get_milestone_version(), $since, '>' ) ) {
 			return false;
 		}
 
-		return $this->register_milestone_message( $id, $message );
+		return $this->register_milestone_message( $id, $message, $args );
 	}
 
 
@@ -396,6 +410,46 @@ class Lifecycle {
 
 
 	/**
+	 * Generates arguments for a milestone notice.
+	 *
+	 * @since 5.4.1-dev.1
+	 *
+	 * @param array $args notice arguments
+	 * @return array associative array
+	 */
+	protected function generate_milestone_notice_args( $args ) {
+
+		$args = wp_parse_args( $args, [
+			'always_show_on_settings' => false,
+			'is_snoozable'            => false,
+			'type'                    => 'info',
+		] );
+
+		if ( ! isset( $args['actions'] ) ) {
+			$args['actions'] = [
+				[
+					'name'    => 'leave-review',
+					'label'   => __( 'Leave a review', 'woocommerce-plugin-framework' ),
+					'url'     => $this->get_plugin()->get_reviews_url(),
+					'primary' => true,
+				],
+				[
+					'name'    => 'get-support',
+					'label'   => __( 'Get support', 'woocommerce-plugin-framework' ),
+					'url'     => $this->get_plugin()->get_support_url(),
+				],
+				[
+					'name'    => 'dismiss',
+					'label'   => __( 'Dismiss', 'woocommerce-plugin-framework' ),
+				]
+			];
+		}
+
+		return $args;
+	}
+
+
+	/**
 	 * Registers a milestone message to be displayed in the admin.
 	 *
 	 * @since 5.1.0
@@ -403,9 +457,10 @@ class Lifecycle {
 	 *
 	 * @param string $id milestone ID
 	 * @param string $message message to display to the user
+	 * @param array $args associative array of optional arguments for admin notes
 	 * @return bool whether the message was successfully registered
 	 */
-	public function register_milestone_message( $id, $message ) {
+	public function register_milestone_message( $id, $message, array $args = [] ) {
 
 		$milestone_messages = $this->get_milestone_messages();
 		$dismissed_notices  = array_keys( $this->get_plugin()->get_admin_notice_handler()->get_dismissed_notices() );
@@ -418,7 +473,7 @@ class Lifecycle {
 			return false;
 		}
 
-		$milestone_messages[ $id ] = $message;
+		$milestone_messages[ $id ] = [ $message => $args ];
 
 		return update_option( 'wc_' . $this->get_plugin()->get_id() . '_milestone_messages', $milestone_messages );
 	}
@@ -568,7 +623,7 @@ class Lifecycle {
 	 */
 	protected function get_milestone_messages() {
 
-		return get_option( 'wc_' . $this->get_plugin()->get_id() . '_milestone_messages', array() );
+		return get_option( 'wc_' . $this->get_plugin()->get_id() . '_milestone_messages', [] );
 	}
 
 
