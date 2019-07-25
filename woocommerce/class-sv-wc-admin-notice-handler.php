@@ -87,8 +87,7 @@ class SV_WC_Admin_Notice_Handler {
 		if ( self::should_use_admin_notes() ) {
 
 			$args = wp_parse_args( $args, [
-				'locale'       => get_locale(),
-				'is_snoozable' => isset( $args['dismissible'] ) ? $args['dismissible'] : true,
+				'is_snoozable' => isset( $args['dismissible'] ) ? (bool) $args['dismissible'] : true,
 				'type'         => self::normalize_notice_type( $args ),
 			] );
 
@@ -120,7 +119,7 @@ class SV_WC_Admin_Notice_Handler {
 
 			$args = wp_parse_args( $args, [
 				'always_show_on_settings' => true,
-				'dismissible'             => isset( $args['is_snoozable'] ) ? $args['is_snoozable'] : true,
+				'dismissible'             => isset( $args['is_snoozable'] ) ? (bool) $args['is_snoozable'] : true,
 				'notice_class'            => self::normalize_notice_type( $args ),
 				'is_visible'              => true,
 			] );
@@ -197,7 +196,7 @@ class SV_WC_Admin_Notice_Handler {
 	 * @param string $content note content
 	 * @param string $name note slug identifier
 	 * @param array $data additional arguments
-	 * @return int the added note ID on success
+	 * @return int|null the added note ID on success, null on failure
 	 */
 	public function add_admin_note( $content, $name = '', array $data = [] ) {
 
@@ -218,7 +217,7 @@ class SV_WC_Admin_Notice_Handler {
 			}
 		}
 
-		return $note->save();
+		return ! $this->get_admin_note( $data['name'] ) ? $note->save() : null;
 	}
 
 
@@ -271,21 +270,18 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function get_admin_notes( array $args = [], $context = 'view' ) {
 
-		$args = wp_parse_args( $args, [
+		$notes = [];
+		$args  = wp_parse_args( $args, [
 			'per_page' => PHP_INT_MAX,
 			'source'   => $this->get_plugin()->get_id_dasherized(), // this filter may not be applicable yet
 		] );
 
-		/** @var \WC_Admin_Note[] $objects */
-		$objects = \WC_Admin_Notes::get_notes( $context, $args );
-		$notes   = [];
+		/** @var \WC_Admin_Note[] $results */
+		$results = \WC_Admin_Notes::get_notes( $context, $args );
 
-		if ( ! empty( $objects ) ) {
-
-			foreach ( $objects as $i => $note ) {
-
+		if ( ! empty( $results ) ) {
+			foreach ( $results as $note ) {
 				if ( $args['source'] !== $note->get_source() ) {
-
 					$notes[ $note->get_name() ] = $note;
 				}
 			}
@@ -330,9 +326,7 @@ class SV_WC_Admin_Notice_Handler {
 
 		if ( self::should_use_admin_notes() ) {
 
-			if ( ! $this->get_admin_note( $message_id ) ) {
-				$this->add_admin_note( $message_id, $message, $args );
-			}
+			$this->add_admin_note( $message, $message_id, $args );
 
 		} elseif ( $this->should_display_notice( $message_id, $args ) ) {
 
@@ -376,7 +370,6 @@ class SV_WC_Admin_Notice_Handler {
 		$display = false;
 
 		if ( self::should_use_admin_notes() ) {
-
 
 			$note    = $this->get_admin_note( $message_id );
 			$display = ! $note || ! $this->is_notice_dismissed( $note );
