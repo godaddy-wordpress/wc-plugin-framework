@@ -277,7 +277,7 @@ class SV_WC_Admin_Notice_Handler {
 			$is_dismissible = ! isset( $args['dismissible'] ) || true === $args['dismissible'];
 
 			if ( $is_dismissible ) {
-				$note->add_action( 'dismiss', __( 'Dismiss', 'woocommerce-plugin-framework' ), '#' );
+				$note->add_action( 'dismiss', __( 'Dismiss', 'woocommerce-plugin-framework' ) );
 			}
 
 		} elseif ( ! empty( $args['actions'] ) && is_array( $args['actions'] ) ) {
@@ -287,7 +287,7 @@ class SV_WC_Admin_Notice_Handler {
 				$action = wp_parse_args( $action, [
 					'name'    => '',
 					'label'   => '',
-					'url'     => '#',
+					'url'     => '',
 					'status'  => $note::E_WC_ADMIN_NOTE_ACTIONED,
 					'primary' => false,
 				] );
