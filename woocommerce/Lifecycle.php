@@ -87,7 +87,7 @@ class Lifecycle {
 		}
 
 		// catch any milestones triggered by action
-		add_action( 'wc_' . $this->get_plugin()->get_id() . '_milestone_reached', array( $this, 'trigger_milestone' ), 10, 4 );
+		add_action( 'wc_' . $this->get_plugin()->get_id() . '_milestone_reached', [ $this, 'trigger_milestone' ], 10, 4 );
 	}
 
 
@@ -441,6 +441,7 @@ class Lifecycle {
 				[
 					'name'    => 'dismiss',
 					'label'   => __( 'Dismiss', 'woocommerce-plugin-framework' ),
+					'url'     => '#',
 				]
 			];
 		}
