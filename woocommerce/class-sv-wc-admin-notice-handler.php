@@ -474,9 +474,23 @@ class SV_WC_Admin_Notice_Handler {
 	 * @return bool
 	 */
 	private static function should_use_admin_notes() {
+		global $current_screen;
 
-		return SV_WC_Plugin_Compatibility::is_wc_admin_available()
-			&& \WC_Admin_Page_Controller::get_instance()->is_connected_page();
+		if ( $current_screen && 'plugins' === $current_screen->id ) {
+
+			$use_admin_notes = false;
+
+		} else {
+
+			$use_admin_notes = SV_WC_Plugin_Compatibility::is_wc_admin_available();
+
+			if ( $use_admin_notes && function_exists( 'get_current_screen' ) ) {
+
+				$use_admin_notes = \WC_Admin_Page_Controller::get_instance()->is_connected_page();
+			}
+		}
+
+		return $use_admin_notes;
 	}
 
 
