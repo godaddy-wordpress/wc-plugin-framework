@@ -284,7 +284,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function connect_wc_admin_page( $options ) {
 
-		if ( self::is_wc_admin_available() ) {
+		if ( function_exists( 'get_current_screen' ) && self::is_wc_admin_available() ) {
 			\WC_Admin_Page_Controller::get_instance()->connect_page( $options );
 		}
 	}
