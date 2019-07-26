@@ -282,7 +282,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * @param array $options associative array of arguments
 	 */
-	public static function _wc_admin_page( $options ) {
+	public static function connect_wc_admin_page( $options ) {
 
 		if ( self::is_wc_admin_available() ) {
 			\WC_Admin_Page_Controller::get_instance()->connect_page( $options );
