@@ -467,21 +467,16 @@ class SV_WC_Admin_Notice_Handler {
 	/**
 	 * Determines whether admin note should be used instead of admin notices.
 	 *
+	 * This method will check if WooCommerce Admin is available and the current page can display admin notes.
+	 *
 	 * @since 5.4.1-dev.1
 	 *
 	 * @return bool
 	 */
 	private static function should_use_admin_notes() {
-		global $current_screen;
 
-		// keep displaying notices on the WordPress plugins page
-		if ( $current_screen && 'plugins' === $current_screen->id ) {
-			$use_admin_notes = false;
-		} else {
-			$use_admin_notes = SV_WC_Plugin_Compatibility::is_wc_admin_available();
-		}
-
-		return $use_admin_notes;
+		return SV_WC_Plugin_Compatibility::is_wc_admin_available()
+			&& \WC_Admin_Page_Controller::get_instance()->is_connected_page();
 	}
 
 

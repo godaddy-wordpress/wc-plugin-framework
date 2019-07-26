@@ -268,7 +268,8 @@ class SV_WC_Plugin_Compatibility {
 	public static function is_wc_admin_available() {
 
 		// TODO in the future when the feature plugin is going to be merged into WooCommerce core, consider adding an alternative WooCommerce version check {FN:2019-07-24}
-		return class_exists( 'WC_Admin_Install' ) && class_exists( 'WC_Admin_Note' );
+		return class_exists( 'WC_Admin_Page_Controller', false )
+			&& class_exists( 'WC_Admin_Note', false );
 	}
 
 
