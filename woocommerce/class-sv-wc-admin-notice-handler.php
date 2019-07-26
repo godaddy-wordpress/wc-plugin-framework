@@ -80,6 +80,19 @@ class SV_WC_Admin_Notice_Handler {
 
 
 	/**
+	 * Gets the plugin main instance.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return SV_WC_Plugin returns the plugin instance
+	 */
+	protected function get_plugin() {
+
+		return $this->plugin;
+	}
+
+
+	/**
 	 * Normalizes admin notices arguments.
 	 *
 	 * @see \WC_Admin_Note::__construct() for available properties when using WooCommerce Admin
@@ -122,11 +135,13 @@ class SV_WC_Admin_Notice_Handler {
 				}
 			}
 
+			unset( $args['params'], $args['dismissible'], $args['always_show_on_settings'], $args['is_visible'], $args['notice_class'] );
+
 		} else {
 
 			$args = wp_parse_args( $args, [
 				'always_show_on_settings' => true,
-				'dismissible'             => isset( $args['is_snoozable'] ) ? (bool) $args['is_snoozable'] : true,
+				'dismissible'             => empty( $args['is_snoozable'] ),
 				'notice_class'            => self::normalize_notice_type( $args ),
 				'is_visible'              => true,
 			] );
@@ -156,11 +171,6 @@ class SV_WC_Admin_Notice_Handler {
 
 		$default_type   = 'updated';
 		$accepted_types = [
-			'error',
-			'info',
-			'success',
-			'warning',
-			'notice',
 			'notice-error',
 			'notice-info',
 			'notice-success',
@@ -174,7 +184,7 @@ class SV_WC_Admin_Notice_Handler {
 			$accepted_types = $note::get_allowed_types();
 			$default_type   = $note::E_WC_ADMIN_NOTE_INFORMATIONAL;
 
-			// map legacy types
+			// map legacy classes to admin note types
 			switch ( $notice_type ) {
 				case 'notice-error' :
 					$notice_type = $note::E_WC_ADMIN_NOTE_ERROR;
@@ -182,9 +192,28 @@ class SV_WC_Admin_Notice_Handler {
 				case 'notice-warning' :
 					$notice_type = $note::E_WC_ADMIN_NOTE_WARNING;
 				break;
+				case 'notice-success' :
 				case 'notice-updated' :
 				case 'updated' :
 					$notice_type = $note::E_WC_ADMIN_NOTE_UPDATE;
+				break;
+				case 'notice-info' :
+				default :
+					$notice_type = $note::E_WC_ADMIN_NOTE_INFORMATIONAL;
+				break;
+			}
+
+		} else {
+
+			// map new admin note types to legacy classes
+			switch ( $notice_type ) {
+				case 'info' :
+				case 'error' :
+				case 'warning' :
+					$notice_type = "notice-{$notice_type}";
+				break;
+				case 'update' :
+					$notice_type = 'notice-success';
 				break;
 			}
 		}
@@ -202,6 +231,7 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function get_admin_note_source() {
 
+		// woocommerce-<plugin-id>
 		return sprintf( 'woocommerce-%s', $this->get_plugin()->get_id_dasherized() );
 	}
 
@@ -220,6 +250,7 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function add_admin_note( $content, $name = '', array $args = [] ) {
 
+		// a lock may be necessary as legacy admin notices may try to create similar notes on each thread
 		update_option( self::$admin_note_lock, true );
 
 		$note = new \WC_Admin_Note();
@@ -283,7 +314,7 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function get_admin_note( $note ) {
 
-		// introduce recursion to avoid race conditions
+		// introduce recursion to avoid race conditions while a note is being created at the same time
 		if ( get_option( self::$admin_note_lock ) ) {
 			return $this->get_admin_note( $note );
 		}
@@ -331,14 +362,16 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function get_admin_notes( array $args = [], $context = 'view' ) {
 
+		// introduce recursion to avoid race conditions while a note is being created at the same time
 		if ( get_option( self::$admin_note_lock ) ) {
 			return $this->get_admin_notes( $args, $context );
 		}
 
 		$notes = [];
 		$args  = wp_parse_args( $args, [
-			'per_page' => PHP_INT_MAX,
+			// TODO the following query parameter does not seem to be supported yet, ideally we would like to get all admin notes for the current plugin though {FN 2019-07-26}
 			'source'   => $this->get_admin_note_source(),
+			'per_page' => PHP_INT_MAX,
 		] );
 
 		/** @var \WC_Admin_Note[] $results */
@@ -346,6 +379,7 @@ class SV_WC_Admin_Notice_Handler {
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $note ) {
+				// ensure to grab only notes left by the current plugin if so specified
 				if ( $args['source'] !== $note->get_source() ) {
 					$notes[ $note->get_name() ] = $note;
 				}
@@ -372,6 +406,7 @@ class SV_WC_Admin_Notice_Handler {
 
 		if ( $note && $this->get_admin_note_source() === $note->get_source() ) {
 
+			// detect whether this is a callback for an action hook
 			switch( current_action() ) {
 				case 'woocommerce_admin_note_action':
 					$has_dismiss_action = true;
@@ -385,6 +420,7 @@ class SV_WC_Admin_Notice_Handler {
 				break;
 			}
 
+			// if not a dismiss action hook, method has probably been called directly
 			if ( ! $has_dismiss_action || ( $has_dismiss_action && 'dismiss' === $action ) ) {
 				$delete = $note->delete( true );
 			}
@@ -500,6 +536,7 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function render_admin_notices( $is_visible = true ) {
 
+		// bail if using notes
 		if ( self::should_use_admin_notes() ) {
 			return;
 		}
@@ -553,6 +590,7 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function render_admin_notice( $message, $message_id, $args = [] ) {
 
+		// bail if using notes
 		if ( self::should_use_admin_notes() ) {
 			return;
 		}
@@ -653,6 +691,9 @@ class SV_WC_Admin_Notice_Handler {
 	/**
 	 * Marks the identified admin notice as dismissed for the given user.
 	 *
+	 * For admin notes, this moves them to 'actioned' status.
+	 * May not trigger an `woocommerce_admin_note_action` action hook then.
+	 *
 	 * @since 3.0.0
 	 *
 	 * @param string $message_id the message identifier
@@ -695,6 +736,8 @@ class SV_WC_Admin_Notice_Handler {
 
 	/**
 	 * Marks the identified admin notice as not dismissed for the identified user.
+	 *
+	 * For admin notes, this moves them to 'unactioned' status.
 	 *
 	 * @since 3.0.0
 	 *
@@ -788,11 +831,8 @@ class SV_WC_Admin_Notice_Handler {
 	}
 
 
-	/** AJAX methods ******************************************************/
-
-
 	/**
-	 * Dismisses the identified notice.
+	 * Dismisses the identified notice (AJAX callback).
 	 *
 	 * @internal
 	 *
@@ -800,23 +840,10 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function handle_dismiss_notice() {
 
-		$this->dismiss_notice( $_REQUEST['messageid'] );
-	}
+		if ( isset( $_REQUEST['messageid'] ) ) {
 
-
-	/** Getter methods ******************************************************/
-
-
-	/**
-	 * Gets the plugin main instance.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return SV_WC_Plugin returns the plugin instance
-	 */
-	protected function get_plugin() {
-
-		return $this->plugin;
+			$this->dismiss_notice( $_REQUEST['messageid'] );
+		}
 	}
 
 
