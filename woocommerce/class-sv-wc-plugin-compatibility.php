@@ -273,23 +273,6 @@ class SV_WC_Plugin_Compatibility {
 	}
 
 
-	/**
-	 * Connects a page to WooCommerce Admin, if available.
-	 *
-	 * @since 5.4.1-dev.1
-	 *
-	 * @see \WC_Admin_Page_Controller::connect_page() for $options
-	 *
-	 * @param array $options associative array of arguments
-	 */
-	public static function connect_wc_admin_page( $options ) {
-
-		if ( function_exists( 'get_current_screen' ) && self::is_wc_admin_available() ) {
-			\WC_Admin_Page_Controller::get_instance()->connect_page( $options );
-		}
-	}
-
-
 	/** WordPress core ******************************************************/
 
 
