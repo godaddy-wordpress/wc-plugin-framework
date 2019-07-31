@@ -69,7 +69,7 @@ abstract class SV_WC_Plugin {
 	private $text_domain;
 
 	/** @var int|float minimum supported WooCommerce versions before the latest (units for major releases, decimals for minor) */
-	private $latest_wc_versions;
+	private $min_wc_semver;
 
 	/** @var SV_WC_Plugin_Dependencies dependency handler instance */
 	private $dependency_handler;
@@ -120,13 +120,13 @@ abstract class SV_WC_Plugin {
 		$this->version = $version;
 
 		$args = wp_parse_args( $args, [
-			'latest_wc_versions' => 0.2, // by default, 2 minor versions behind the latest published are supported
-			'text_domain'        => '',
-			'dependencies'       => [],
+			'min_wc_semver' => 0.2, // by default, 2 minor versions behind the latest published are supported
+			'text_domain'   => '',
+			'dependencies'  => [],
 		] );
 
-		$this->latest_wc_versions = abs( $args['latest_wc_versions'] );
-		$this->text_domain        = $args['text_domain'];
+		$this->min_wc_semver = is_numeric( $args['min_wc_semver'] ) ? abs( $args['min_wc_semver'] ) : null;
+		$this->text_domain   = $args['text_domain'];
 
 		// includes that are required to be available at all times
 		$this->includes();
@@ -498,7 +498,7 @@ abstract class SV_WC_Plugin {
 	public function add_admin_notices() {
 
 		// bail if there's no defined versions to compare
-		if ( empty( $this->latest_wc_versions ) || ! is_numeric( $this->latest_wc_versions ) || (float) $this->latest_wc_versions <= 0 ) {
+		if ( empty( $this->min_wc_semver ) || ! is_numeric( $this->min_wc_semver ) ) {
 			return;
 		}
 
@@ -510,10 +510,12 @@ abstract class SV_WC_Plugin {
 			return;
 		}
 
+		// grab latest published version
+		$supported_wc_version = $latest_wc_version = current( $latest_wc_versions );
+
 		// grab semver parts
-		$supported_wc_version = current( $latest_wc_versions );
-		$latest_semver        = explode( '.', $supported_wc_version );
-		$supported_semver     = explode( '.', (string) $this->latest_wc_versions );
+		$latest_semver        = explode( '.', $latest_wc_version );
+		$supported_semver     = explode( '.', (string) $this->min_wc_semver );
 		$supported_major      = max( 0,  (int) $latest_semver[0] - (int) $supported_semver[0] );
 		$supported_minor      = isset( $supported_semver[1] ) ? (int) $supported_semver[1] : 0;
 		$previous_minor       = null;
@@ -549,8 +551,25 @@ abstract class SV_WC_Plugin {
 		$supported_wc_version = substr( $supported_wc_version, 0, strpos( $supported_wc_version, '.', strpos( $supported_wc_version, '.' ) + 1 ) );
 		$compared_wc_version  = $current_wc_version && $supported_wc_version ? version_compare( $current_wc_version, $supported_wc_version ) : null;
 
+		// TODO remove the first conditional below after WC 3.8 has been published {FN 2019-07-31}
+
+		// installed version is at least 2 versions older, but the latest WooCommerce version available is still 3.7, for now just issue a warning about future support deprecation policy change
+		if ( 1 !== $compared_wc_version && false !== strpos( $latest_wc_version, '3.7' ) ) {
+
+			$this->get_admin_notice_handler()->add_admin_notice(
+				sprintf(
+					/* translators: Placeholders: %1$s - plugin name, %2$s - WooCommerce version number, %3$s - opening <a> HTML link tag, %4$s - closing </a> HTML link tag */
+					__( 'Heads up! In the future, %1$s will remove support for WooCommerce that is 3 minor versions older than the latest available version. Please %3$supdate WooCommerce%4$s.', 'woocommerce-plugin-framework' ),
+					$this->get_plugin_name(),
+					$supported_wc_version,
+					'<a href="' . esc_url( admin_url( 'update-core.php' ) ) .'">', '</a>'
+				),
+				$this->get_id_dasherized() . '-wc-version-support-policy-change',
+				[ 'notice_class' => 'notice-warning' ]
+			);
+
 		// installed version is exactly as the last supported version (default: 2 minor versions behind)
-		if ( 0 === $compared_wc_version ) {
+		} elseif ( 0 === $compared_wc_version ) {
 
 			$this->get_admin_notice_handler()->add_admin_notice(
 				sprintf(
@@ -560,14 +579,14 @@ abstract class SV_WC_Plugin {
 					$supported_wc_version,
 					'<a href="' . esc_url( admin_url( 'update-core.php' ) ) .'">', '</a>'
 				),
-				$this->get_id() . '-deprecated-wc-version-' . str_replace( '.', '_', $current_wc_version ),
+				$this->get_id_dasherized() . '-deprecated-wc-version-as-of-' . str_replace( '.', '-', $supported_wc_version ),
 				[ 'notice_class' => 'notice-warning' ]
 			);
 
 		// installed version is older than the last supported version (default: 2 minor versions behind)
 		} elseif ( -1 === $compared_wc_version ) {
 
-			$this->get_admin_notice_handler()->dismiss_notice( $this->get_id() . '-deprecated-wc-version-' . str_replace( '.', '_', $current_wc_version ) );
+			$this->get_admin_notice_handler()->dismiss_notice( $this->get_id_dasherized() . '-deprecated-wc-version-as-of-' . str_replace( '.', '-', $supported_wc_version ) );
 
 			$this->get_admin_notice_handler()->add_admin_notice(
 				sprintf(
@@ -577,8 +596,8 @@ abstract class SV_WC_Plugin {
 					$current_wc_version,
 					'<a href="' . esc_url( admin_url( 'update-core.php' ) ) .'">', '</a>'
 				),
-				$this->get_id() . '-unsupported-wc-version-' . str_replace( '.', '_', $current_wc_version ),
-				[ 'notice_class' => 'error' ]
+				$this->get_id_dasherized() . '-unsupported-wc-version-as-of-' . str_replace( '.', '-', $supported_wc_version ),
+				[ 'notice_class' => 'notice-error' ]
 			);
 		}
 	}
