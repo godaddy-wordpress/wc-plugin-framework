@@ -191,8 +191,14 @@ class SV_WC_Plugin_Compatibility {
 
 					// reverse array as WordPress supplies oldest version first, newest last
 					foreach ( array_keys( array_reverse( $plugin_info['versions'] ) ) as $wc_version ) {
-						// skip trunk, release candidates, betas and other non-final versions
-						if ( 'trunk' !== $wc_version && false === strpos( $wc_version, '-' ) ) {
+
+						// skip trunk, release candidates, betas and other non-final or irregular versions
+						if (
+							   is_string( $wc_version )
+							&& '' !== $wc_version
+							&& is_numeric( $wc_version[0] )
+							&& false === strpos( $wc_version, '-' )
+						) {
 							$latest_wc_versions[] = $wc_version;
 						}
 					}
