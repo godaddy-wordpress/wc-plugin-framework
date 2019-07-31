@@ -553,8 +553,8 @@ abstract class SV_WC_Plugin {
 
 		// TODO remove the first conditional below after WC 3.8 has been published {FN 2019-07-31}
 
-		// installed version is at least 2 versions older, but the latest WooCommerce version available is still 3.7, for now just issue a warning about future support deprecation policy change
-		if ( 1 !== $compared_wc_version && false !== strpos( $latest_wc_version, '3.7' ) ) {
+		// installed version is at least 2 versions older, but the latest WooCommerce version available is still 3.6 or 3.7, for now just issue a warning about future support deprecation policy change
+		if ( 1 !== $compared_wc_version && ( false !== strpos( $latest_wc_version, '3.6' ) || false !== strpos( $latest_wc_version, '3.7' ) ) ) {
 
 			$this->get_admin_notice_handler()->add_admin_notice(
 				sprintf(
