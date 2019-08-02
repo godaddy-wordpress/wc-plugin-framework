@@ -551,53 +551,21 @@ abstract class SV_WC_Plugin {
 		$supported_wc_version = substr( $supported_wc_version, 0, strpos( $supported_wc_version, '.', strpos( $supported_wc_version, '.' ) + 1 ) );
 		$compared_wc_version  = $current_wc_version && $supported_wc_version ? version_compare( $current_wc_version, $supported_wc_version ) : null;
 
-		// TODO remove the first conditional below after WC 3.8 has been published {FN 2019-07-31}
-
-		// installed version is at least 2 versions older, but the latest WooCommerce version available is still 3.6 or 3.7, for now just issue a warning about future support deprecation policy change
-		if ( 1 !== $compared_wc_version && ( false !== strpos( $latest_wc_version, '3.6' ) || false !== strpos( $latest_wc_version, '3.7' ) ) ) {
-
-			$this->get_admin_notice_handler()->add_admin_notice(
-				sprintf(
-					/* translators: Placeholders: %1$s - plugin name, %2$s - WooCommerce version number, %3$s - opening <a> HTML link tag, %4$s - closing </a> HTML link tag */
-					__( 'Heads up! In the future, %1$s will remove support for WooCommerce that is 3 minor versions older than the latest available version. Please %3$supdate WooCommerce%4$s.', 'woocommerce-plugin-framework' ),
-					$this->get_plugin_name(),
-					$supported_wc_version,
-					'<a href="' . esc_url( admin_url( 'update-core.php' ) ) .'">', '</a>'
-				),
-				$this->get_id_dasherized() . '-wc-version-support-policy-change',
-				[ 'notice_class' => 'notice-warning' ]
-			);
-
-		// installed version is exactly as the last supported version (default: 2 minor versions behind)
-		} elseif ( 0 === $compared_wc_version ) {
-
-			$this->get_admin_notice_handler()->add_admin_notice(
-				sprintf(
-					/* translators: Placeholders: %1$s - plugin name, %2$s - WooCommerce version number, %3$s - opening <a> HTML link tag, %4$s - closing </a> HTML link tag */
-					__( 'Heads up! %1$s will remove support for WooCommerce %2$s in a future version. Please %3$supdate WooCommerce%4$s.', 'woocommerce-plugin-framework' ),
-					$this->get_plugin_name(),
-					$supported_wc_version,
-					'<a href="' . esc_url( admin_url( 'update-core.php' ) ) .'">', '</a>'
-				),
-				$this->get_id_dasherized() . '-deprecated-wc-version-as-of-' . str_replace( '.', '-', $supported_wc_version ),
-				[ 'notice_class' => 'notice-warning' ]
-			);
-
-		// installed version is older than the last supported version (default: 2 minor versions behind)
-		} elseif ( -1 === $compared_wc_version ) {
+		// installed version is at more than 2 minor versions ($min_wc_semver value) behind the last published version
+		if ( -1 === $compared_wc_version ) {
 
 			$this->get_admin_notice_handler()->dismiss_notice( $this->get_id_dasherized() . '-deprecated-wc-version-as-of-' . str_replace( '.', '-', $supported_wc_version ) );
 
 			$this->get_admin_notice_handler()->add_admin_notice(
 				sprintf(
 					/* translators: Placeholders: %1$s - plugin name, %2$s - WooCommerce version number, %3$s - opening <a> HTML link tag, %4$s - closing </a> HTML link tag */
-					__( 'Heads up! %1$s no longer supports WooCommerce %2$s. Please %3$supdate WooCommerce%4$s.', 'woocommerce-plugin-framework' ),
+					__( 'Heads up! %1$s will remove support for WooCommerce %2$s in a future upcoming version. Please %3$supdate WooCommerce%4$s.', 'woocommerce-plugin-framework' ),
 					$this->get_plugin_name(),
-					$current_wc_version,
+					$supported_wc_version,
 					'<a href="' . esc_url( admin_url( 'update-core.php' ) ) .'">', '</a>'
 				),
-				$this->get_id_dasherized() . '-unsupported-wc-version-as-of-' . str_replace( '.', '-', $supported_wc_version ),
-				[ 'notice_class' => 'notice-error' ]
+				$this->get_id_dasherized() . '-deprecated-wc-version-as-of-' . str_replace( '.', '-', $supported_wc_version ),
+				[ 'notice_class' => 'notice-warning' ]
 			);
 		}
 	}
