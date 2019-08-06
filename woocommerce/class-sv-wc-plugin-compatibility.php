@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Plugin_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_1\\SV_WC_Plugin_Compatibility' ) ) :
 
 /**
  * WooCommerce Compatibility Utility Class
@@ -124,7 +124,7 @@ class SV_WC_Plugin_Compatibility {
 				$format = wc_date_format();
 			}
 
-			if ( ! is_a( $date, '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_DateTime' ) ) { // TODO: verify this {CW 2017-07-18}
+			if ( ! is_a( $date, '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_1\\SV_WC_DateTime' ) ) { // TODO: verify this {CW 2017-07-18}
 				return '';
 			}
 
@@ -159,6 +159,56 @@ class SV_WC_Plugin_Compatibility {
 				_deprecated_function( $function, $version, $replacement );
 			}
 		}
+	}
+
+
+	/**
+	 * Retrieves a list of the latest available WooCommerce versions.
+	 *
+	 * Excludes betas, release candidates and development versions.
+	 * Versions are sorted from most recent to least recent.
+	 *
+	 * @since 5.4.1-dev.1
+	 *
+	 * @return string[] array of semver strings
+	 */
+	public static function get_latest_wc_versions() {
+
+		$latest_wc_versions = get_transient( 'sv_wc_plugin_wc_versions' );
+
+		if ( ! is_array( $latest_wc_versions ) ) {
+
+			/** @link https://codex.wordpress.org/WordPress.org_API */
+			$wp_org_request = wp_remote_get( 'https://api.wordpress.org/plugins/info/1.0/woocommerce.json', [ 'timeout' => 1 ] );
+
+			if ( is_array( $wp_org_request ) && isset( $wp_org_request['body'] ) ) {
+
+				$plugin_info = json_decode( $wp_org_request['body'], true );
+
+				if ( is_array( $plugin_info ) && ! empty( $plugin_info['versions'] ) && is_array( $plugin_info['versions'] ) ) {
+
+					$latest_wc_versions = [];
+
+					// reverse array as WordPress supplies oldest version first, newest last
+					foreach ( array_keys( array_reverse( $plugin_info['versions'] ) ) as $wc_version ) {
+
+						// skip trunk, release candidates, betas and other non-final or irregular versions
+						if (
+							   is_string( $wc_version )
+							&& '' !== $wc_version
+							&& is_numeric( $wc_version[0] )
+							&& false === strpos( $wc_version, '-' )
+						) {
+							$latest_wc_versions[] = $wc_version;
+						}
+					}
+
+					set_transient( 'sv_wc_plugin_wc_versions', $latest_wc_versions, WEEK_IN_SECONDS );
+				}
+			}
+		}
+
+		return is_array( $latest_wc_versions ) ? $latest_wc_versions : [];
 	}
 
 
