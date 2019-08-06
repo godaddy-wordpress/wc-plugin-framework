@@ -554,18 +554,16 @@ abstract class SV_WC_Plugin {
 		// installed version is at more than 2 minor versions ($min_wc_semver value) behind the last published version
 		if ( -1 === $compared_wc_version ) {
 
-			$this->get_admin_notice_handler()->dismiss_notice( $this->get_id_dasherized() . '-deprecated-wc-version-as-of-' . str_replace( '.', '-', $supported_wc_version ) );
-
 			$this->get_admin_notice_handler()->add_admin_notice(
 				sprintf(
 					/* translators: Placeholders: %1$s - plugin name, %2$s - WooCommerce version number, %3$s - opening <a> HTML link tag, %4$s - closing </a> HTML link tag */
 					__( 'Heads up! %1$s will soon discontinue support for WooCommerce %2$s. Please %3$supdate WooCommerce%4$s to take advantage of the latest updates and features.', 'woocommerce-plugin-framework' ),
 					$this->get_plugin_name(),
-					$supported_wc_version,
+					$current_wc_version,
 					'<a href="' . esc_url( admin_url( 'update-core.php' ) ) .'">', '</a>'
 				),
 				$this->get_id_dasherized() . '-deprecated-wc-version-as-of-' . str_replace( '.', '-', $supported_wc_version ),
-				[ 'notice_class' => 'notice-warning' ]
+				[ 'notice_class' => 'notice-info' ]
 			);
 		}
 	}
