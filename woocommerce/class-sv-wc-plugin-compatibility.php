@@ -168,7 +168,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Excludes betas, release candidates and development versions.
 	 * Versions are sorted from most recent to least recent.
 	 *
-	 * @since 5.4.1-dev.1
+	 * @since 5.4.1
 	 *
 	 * @return string[] array of semver strings
 	 */
