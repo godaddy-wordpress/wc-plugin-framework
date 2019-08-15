@@ -144,10 +144,9 @@ abstract class Setup_Wizard {
 	 * @since 5.2.2
 	 */
 	public function add_admin_notices() {
+		global $current_screen;
 
-		$current_screen = get_current_screen();
-
-		if ( ( $current_screen && 'plugins' === $current_screen->id ) || $this->get_plugin()->is_plugin_settings() ) {
+		if ( ( isset( $current_screen->id ) && 'plugins' === $current_screen->id ) || $this->get_plugin()->is_plugin_settings() ) {
 
 			if ( $this->is_complete() && $this->get_documentation_notice_message() ) {
 				$notice_id = "wc_{$this->id}_docs";
