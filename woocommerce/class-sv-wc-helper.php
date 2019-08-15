@@ -963,7 +963,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_He
 		 *
 		 * @since 5.4.2-dev.1
 		 *
-		 * @return null
+		 * @return \WP_Screen|null
 		 */
 		public static function get_current_screen() {
 			global $current_screen;
