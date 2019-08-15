@@ -145,9 +145,7 @@ abstract class Setup_Wizard {
 	 */
 	public function add_admin_notices() {
 
-		$current_screen = get_current_screen();
-
-		if ( ( $current_screen && 'plugins' === $current_screen->id ) || $this->get_plugin()->is_plugin_settings() ) {
+		if ( Framework\SV_WC_Helper::is_current_screen( 'plugins' ) || $this->get_plugin()->is_plugin_settings() ) {
 
 			if ( $this->is_complete() && $this->get_documentation_notice_message() ) {
 				$notice_id = "wc_{$this->id}_docs";
