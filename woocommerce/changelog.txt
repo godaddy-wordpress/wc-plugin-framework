@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2019.nn.nn - version 5.4.2-dev.1
+ * Tweak - Add a standard set of data to orders for subscription details
 
 2019.08.06 - version 5.4.1
  * Misc - Add a configurable admin notice for plugins running deprecated WooCommerce versions

@@ -81,6 +81,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		// save token/customer ID to subscription objects
 		add_action( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_add_transaction_data', array( $this, 'save_payment_meta' ), 10, 2 );
 
+		// add additional subscription details to orders along with payment data
+		add_action( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_get_order_base', [ $this, 'add_subscription_details_to_order' ], 10, 2 );
+
 		// process renewal payments
 		add_action( 'woocommerce_scheduled_subscription_payment_' . $this->get_gateway()->get_id(), array( $this, 'process_renewal_payment' ), 10, 2 );
 
@@ -190,6 +193,90 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 				update_post_meta( SV_WC_Order_Compatibility::get_prop( $subscription, 'id' ), $this->get_gateway()->get_order_meta_prefix() . 'customer_id', $order->customer_id );
 			}
 		}
+	}
+
+
+	/**
+	 * Adds subscription details to order base data.
+	 *
+	 * Subscription data added to payment object:
+	 * \stdClass $order->payment->subscription {
+	 *  int $id the subscription's ID
+	 *  bool $is_renewal whether the order is for a subscription renewal
+	 *  bool $is_installment whether the subscription is for an installment
+	 *  bool $is_first whether it is the first payment for an installment series
+	 *  bool $is_last whether it is the last payment for an installment series
+	 *}
+	 *
+	 * @internal
+	 *
+	 * @since 5.4.2-dev.1
+	 *
+	 * @param \WC_Order $order order object
+	 * @param SV_WC_Payment_Gateway $gateway payment gateway
+	 * @return \WC_Order
+	 */
+	public function add_subscription_details_to_order( $order, $gateway ) {
+
+		if ( isset( $order->payment ) ) {
+
+			$subscription = null;
+
+			// defaults
+			$order->payment->subscription                 = new \stdClass();
+			$order->payment->subscription->id             = 0;
+			$order->payment->subscription->is_installment = $order->payment->subscription->is_first = $order->payment->subscription->is_last = $order->payment->subscription->is_renewal = false;
+
+			// if the order contains a subscription (but is not a renewal)
+			if ( wcs_order_contains_subscription( $order ) ) {
+
+				$order->payment->recurring = true;
+
+				$subscriptions = wcs_get_subscriptions_for_order( $order );
+
+				// we can only use the first subscription if there are multiple
+				if ( ! empty( $subscriptions ) ) {
+
+					$subscription = current( $subscriptions );
+				}
+
+			// order is for a subscription renewal
+			} elseif ( wcs_order_contains_renewal( $order ) ) {
+
+				$order->payment->recurring = true;
+
+				$subscriptions = wcs_get_subscriptions_for_renewal_order( $order );
+
+				// we can only use the first subscription if there are multiple
+				if ( ! empty( $subscriptions ) ) {
+
+					$subscription = current( $subscriptions );
+
+					$order->payment->subscription->is_renewal = true;
+				}
+			}
+
+			if ( $subscription instanceof \WC_Subscription ) {
+
+				$order->payment->subscription->id             = SV_WC_Order_Compatibility::get_prop( $subscription, 'id' );
+				$order->payment->subscription->is_installment = (bool) $subscription->get_date( 'end' );
+
+				if ( $order->payment->subscription->is_installment ) {
+
+					// if this is not a renewal, but the subscription has an end date, then this must be the first installment
+					if ( ! $order->payment->subscription->is_renewal ) {
+						$order->payment->subscription->is_first = true;
+					}
+
+					// if the subscription has an end date, but there is no next payment date set, this must be the last installment
+					if ( ! (bool) $subscription->get_date( 'next_payment' ) ) {
+						$order->payment->subscription->is_last = true;
+					}
+				}
+			}
+		}
+
+		return $order;
 	}
 
 
