@@ -822,7 +822,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function subscriptions_add_renewal_support_status_inline_style() {
 
-		if ( SV_WC_Plugin_Compatibility::normalize_wc_screen_id() === get_current_screen()->id ) {
+		if ( SV_WC_Helper::is_current_screen( SV_WC_Plugin_Compatibility::normalize_wc_screen_id() ) ) {
 			wp_add_inline_style( 'woocommerce_admin_styles', '.sv-wc-payment-gateway-renewal-status-inactive{font-size:1.4em;display:block;text-indent:-9999px;position:relative;height:1em;width:1em;cursor:pointer}.sv-wc-payment-gateway-renewal-status-inactive:before{line-height:1;margin:0;position:absolute;width:100%;height:100%;content:"\e016";color:#ffba00;font-family:WooCommerce;speak:none;font-weight:400;font-variant:normal;text-transform:none;-webkit-font-smoothing:antialiased;text-indent:0;top:0;left:0;text-align:center}' );
 		}
 	}
