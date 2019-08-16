@@ -1539,13 +1539,14 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Returns true if the gateway is properly configured to perform transactions
+	 * Determines whether the gateway is properly configured to perform transactions.
 	 *
 	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::is_configured()
-	 * @return boolean true if the gateway is properly configured
+	 *
+	 * @return bool
 	 */
-	protected function is_configured() {
+	public function is_configured() {
+
 		// override this to check for gateway-specific required settings (user names, passwords, secret keys, etc)
 		return true;
 	}
