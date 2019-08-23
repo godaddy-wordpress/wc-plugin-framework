@@ -568,6 +568,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// add notices about enabled debug logging
 		$this->add_debug_setting_notices();
+
+		// add notices about gateways not being configured
+		$this->add_gateway_not_configured_notices();
 	}
 
 
@@ -718,6 +721,25 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				) );
 
 				break;
+			}
+		}
+	}
+
+
+	/**
+	 * Adds notices about gateways not being configured.
+	 *
+	 * @since 5.4.2-dev.1
+	 */
+	protected function add_gateway_not_configured_notices() {
+
+		foreach ( $this->get_gateways() as $gateway ) {
+
+			if ( $gateway->is_enabled() && ! $gateway->is_configured() && ! $gateway->inherit_settings() ) {
+
+				$this->get_admin_notice_handler()->add_admin_notice( $gateway->get_not_configured_error_message(), $gateway->get_id() . '-not-configured', [
+					'notice_class' => 'error',
+				] );
 			}
 		}
 	}
