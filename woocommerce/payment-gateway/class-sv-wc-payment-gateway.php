@@ -4152,6 +4152,27 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	}
 
 
+	/**
+	 * Returns the error message for display if the gateway is not configured.
+	 *
+	 * @since 5.4.2-dev.1
+	 *
+	 * @return string
+	 */
+	public function get_not_configured_error_message() {
+
+		return sprintf(
+			/* translators: %1$s - gateway name, %2$s - <a> tag, %3$s - </a> tag, %4$s - <a> tag, %5$s - </a> tag */
+			__( 'Heads up! %1$s is not fully configured and cannot accept payments. Please %2$sreview the documentation%3$s and configure the %4$sgateway settings%5$s.', 'woocommerce-plugin-framework' ),
+			$this->get_method_title(),
+			'<a href="' . $this->get_plugin()->get_documentation_url() . '" target="_blank">',
+			'</a>',
+			'<a href="' . $this->get_plugin()->get_settings_url( $this->get_id() ) . '">',
+			'</a>'
+		);
+	}
+
+
 	/** Deprecated Methods ********************************************************************************************/
 
 
