@@ -568,6 +568,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// add notices about enabled debug logging
 		$this->add_debug_setting_notices();
+
+		// add notices about gateways not being configured
+		$this->add_gateway_not_configured_notices();
 	}
 
 
@@ -723,6 +726,25 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	}
 
 
+	/**
+	 * Adds notices about gateways not being configured.
+	 *
+	 * @since 5.4.2-dev.1
+	 */
+	protected function add_gateway_not_configured_notices() {
+
+		foreach ( $this->get_gateways() as $gateway ) {
+
+			if ( $gateway->is_enabled() && ! $gateway->is_configured() && ! $gateway->inherit_settings() ) {
+
+				$this->get_admin_notice_handler()->add_admin_notice( $gateway->get_not_configured_error_message(), $gateway->get_id() . '-not-configured', [
+					'notice_class' => 'error',
+				] );
+			}
+		}
+	}
+
+
 	/** Integration methods ***************************************************/
 
 
@@ -822,7 +844,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function subscriptions_add_renewal_support_status_inline_style() {
 
-		if ( SV_WC_Plugin_Compatibility::normalize_wc_screen_id() === get_current_screen()->id ) {
+		if ( SV_WC_Helper::is_current_screen( SV_WC_Plugin_Compatibility::normalize_wc_screen_id() ) ) {
 			wp_add_inline_style( 'woocommerce_admin_styles', '.sv-wc-payment-gateway-renewal-status-inactive{font-size:1.4em;display:block;text-indent:-9999px;position:relative;height:1em;width:1em;cursor:pointer}.sv-wc-payment-gateway-renewal-status-inactive:before{line-height:1;margin:0;position:absolute;width:100%;height:100%;content:"\e016";color:#ffba00;font-family:WooCommerce;speak:none;font-weight:400;font-variant:normal;text-transform:none;-webkit-font-smoothing:antialiased;text-indent:0;top:0;left:0;text-align:center}' );
 		}
 	}
