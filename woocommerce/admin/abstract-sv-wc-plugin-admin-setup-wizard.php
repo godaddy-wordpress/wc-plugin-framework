@@ -21,13 +21,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_1\Admin;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_2\Admin;
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_1 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_2 as Framework;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_1\\Admin\\Setup_Wizard' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\Admin\\Setup_Wizard' ) ) :
 
 /**
  * The plugin Setup Wizard class.
@@ -145,9 +145,7 @@ abstract class Setup_Wizard {
 	 */
 	public function add_admin_notices() {
 
-		$current_screen = get_current_screen();
-
-		if ( ( $current_screen && 'plugins' === $current_screen->id ) || $this->get_plugin()->is_plugin_settings() ) {
+		if ( Framework\SV_WC_Helper::is_current_screen( 'plugins' ) || $this->get_plugin()->is_plugin_settings() ) {
 
 			if ( $this->is_complete() && $this->get_documentation_notice_message() ) {
 				$notice_id = "wc_{$this->id}_docs";

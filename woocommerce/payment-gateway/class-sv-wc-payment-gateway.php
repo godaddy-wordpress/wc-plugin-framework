@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_2;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_1\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_Payment_Gateway' ) ) :
 
 /**
  * WooCommerce Payment Gateway Framework
@@ -1539,13 +1539,14 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Returns true if the gateway is properly configured to perform transactions
+	 * Determines whether the gateway is properly configured to perform transactions.
 	 *
 	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::is_configured()
-	 * @return boolean true if the gateway is properly configured
+	 *
+	 * @return bool
 	 */
-	protected function is_configured() {
+	public function is_configured() {
+
 		// override this to check for gateway-specific required settings (user names, passwords, secret keys, etc)
 		return true;
 	}
@@ -4148,6 +4149,27 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		global $wp;
 
 		return isset( $wp->query_vars['order-received'] ) ? absint( $wp->query_vars['order-received'] ) : 0;
+	}
+
+
+	/**
+	 * Returns the error message for display if the gateway is not configured.
+	 *
+	 * @since 5.4.2-dev.1
+	 *
+	 * @return string
+	 */
+	public function get_not_configured_error_message() {
+
+		return sprintf(
+			/* translators: %1$s - gateway name, %2$s - <a> tag, %3$s - </a> tag, %4$s - <a> tag, %5$s - </a> tag */
+			__( 'Heads up! %1$s is not fully configured and cannot accept payments. Please %2$sreview the documentation%3$s and configure the %4$sgateway settings%5$s.', 'woocommerce-plugin-framework' ),
+			$this->get_method_title(),
+			'<a href="' . $this->get_plugin()->get_documentation_url() . '" target="_blank">',
+			'</a>',
+			'<a href="' . $this->get_plugin()->get_settings_url( $this->get_id() ) . '">',
+			'</a>'
+		);
 	}
 
 

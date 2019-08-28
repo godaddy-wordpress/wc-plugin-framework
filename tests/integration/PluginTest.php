@@ -3,7 +3,7 @@
 /**
  * Tests for the base plugin class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_4_1\SV_WC_Plugin
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_4_2\SV_WC_Plugin
  */
 class PluginTest extends \Codeception\TestCase\WPTestCase {
 
@@ -152,7 +152,7 @@ class PluginTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function test_get_dependency_handler() {
 
-		$this->assertInstanceOf( '\SkyVerge\WooCommerce\PluginFramework\v5_4_1\SV_WC_Plugin_Dependencies', $this->get_plugin()->get_dependency_handler() );
+		$this->assertInstanceOf( '\SkyVerge\WooCommerce\PluginFramework\v5_4_2\SV_WC_Plugin_Dependencies', $this->get_plugin()->get_dependency_handler() );
 	}
 
 
@@ -161,7 +161,7 @@ class PluginTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function test_get_lifecycle_handler() {
 
-		$this->assertInstanceOf( '\SkyVerge\WooCommerce\PluginFramework\v5_4_1\Plugin\Lifecycle', $this->get_plugin()->get_lifecycle_handler() );
+		$this->assertInstanceOf( '\SkyVerge\WooCommerce\PluginFramework\v5_4_2\Plugin\Lifecycle', $this->get_plugin()->get_lifecycle_handler() );
 	}
 
 

@@ -1,5 +1,11 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2019.nn.nn - version 5.4.2-dev.1
+ * Tweak - Add a standard set of subscription details to orders payment data set by a gateway
+ * Tweak - Add replacement helper methods to get the current screen in WordPress and check the screen ID
+ * Misc - Change SV_WC_Payment_Gateway::is_configured() from protected to public
+ * Misc - Add admin notice when a gateway is enabled but is not configured and is unable to take payments
+
 2019.08.06 - version 5.4.1
  * Misc - Add a configurable admin notice for plugins running deprecated WooCommerce versions
 
