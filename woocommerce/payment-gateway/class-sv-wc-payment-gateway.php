@@ -4155,7 +4155,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Returns the error message for display if the gateway is not configured.
 	 *
-	 * @since 5.4.2-dev.1
+	 * @since 5.4.2
 	 *
 	 * @return string
 	 */

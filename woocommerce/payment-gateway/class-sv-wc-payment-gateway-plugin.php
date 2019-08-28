@@ -729,7 +729,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Adds notices about gateways not being configured.
 	 *
-	 * @since 5.4.2-dev.1
+	 * @since 5.4.2
 	 */
 	protected function add_gateway_not_configured_notices() {
 

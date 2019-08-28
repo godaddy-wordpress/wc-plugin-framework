@@ -961,7 +961,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_He
 		 *
 		 * @see get_current_screen() replacement which is always available, unlike the WordPress core function
 		 *
-		 * @since 5.4.2-dev.1
+		 * @since 5.4.2
 		 *
 		 * @return \WP_Screen|null
 		 */
@@ -978,7 +978,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_He
 		 * This helps avoiding using the get_current_screen() function which is not always available,
 		 * or setting the substitute global $current_screen every time a check needs to be performed.
 		 *
-		 * @since 5.4.2-dev.1
+		 * @since 5.4.2
 		 *
 		 * @param string $id id (or property) to compare
 		 * @param string $prop optional property to compare, defaults to screen id

@@ -203,7 +203,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * @see SV_WC_Payment_Gateway_Integration_Subscriptions::add_subscription_details_to_order()
 	 * @internal
 	 *
-	 * @since 5.4.2-dev.1
+	 * @since 5.4.2
 	 *
 	 * @param \WC_Order $order order object
 	 * @param SV_WC_Payment_Gateway $gateway payment gateway
@@ -272,7 +272,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 *  bool $is_last whether it is the last payment for an installment series
 	 *}
 	 *
-	 * @since 5.4.2-dev.1
+	 * @since 5.4.2
 	 *
 	 * @param \WC_Subscription $subscription subscription object
 	 * @param bool $renewal whether the subscription is a renewal
