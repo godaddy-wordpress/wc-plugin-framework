@@ -177,9 +177,19 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		// tokenization is allowed if tokenization is enabled on the gateway
 		$tokenization_allowed = $this->get_gateway()->supports_tokenization() && $this->get_gateway()->tokenization_enabled();
 
-		// on the pay page there is no way of creating an account, so disallow tokenization for guest customers
-		if ( $tokenization_allowed && is_checkout_pay_page() && ! is_user_logged_in() ) {
-			$tokenization_allowed = false;
+		if ( $tokenization_allowed && ! is_user_logged_in() ) {
+
+			if ( is_checkout_pay_page() ) {
+
+				// on the pay page there is no way of creating an account, so disallow tokenization for guest customers
+				$tokenization_allowed = false;
+
+			} else if ( is_checkout() ) {
+
+				// on the checkout page, only allow if account creation during checkout is enabled
+				$tokenization_allowed = WC()->checkout()->is_registration_enabled();
+
+			}
 		}
 
 		/**
