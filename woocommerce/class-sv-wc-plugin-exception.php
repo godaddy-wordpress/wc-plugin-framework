@@ -26,7 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_4_2;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_Plugin_Exception' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Plugin_Exception' ) ) :
 
 	/**
 	 * Plugin Framework Exception - generic Exception

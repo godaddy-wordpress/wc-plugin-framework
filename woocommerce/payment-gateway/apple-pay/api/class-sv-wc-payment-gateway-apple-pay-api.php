@@ -26,7 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_4_2;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_Payment_Gateway_Apple_Pay_API' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_Apple_Pay_API' ) ) :
 
 /**
  * Sets up the Apple Pay API.
@@ -56,7 +56,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 		$this->set_request_content_type_header( 'application/json' );
 		$this->set_request_accept_header( 'application/json' );
 
-		$this->set_response_handler( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_Payment_Gateway_Apple_Pay_API_Response' );
+		$this->set_response_handler( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_Apple_Pay_API_Response' );
 	}
 
 

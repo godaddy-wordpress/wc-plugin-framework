@@ -26,7 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_4_2;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_Payment_Gateway_API_Authorization_Response' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_API_Authorization_Response' ) ) :
 
 /**
  * WooCommerce Direct Payment Gateway API Authorization Response

@@ -26,7 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_4_2;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
 
 /**
  * Payment Form Class
@@ -977,7 +977,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		);
 
 		if ( $this->get_gateway()->supports_card_types() ) {
-			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_4_2\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
+			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_4_3\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
 		}
 
 		/**

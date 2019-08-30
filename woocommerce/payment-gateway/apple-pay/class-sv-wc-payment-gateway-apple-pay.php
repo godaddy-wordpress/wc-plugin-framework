@@ -26,7 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_4_2;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_Payment_Gateway_Apple_Pay' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_Apple_Pay' ) ) :
 
 /**
  * Sets up Apple Pay support.
@@ -952,7 +952,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		$accepted_card_types = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_card_types() : array();
 
-		$accepted_card_types = array_map( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
+		$accepted_card_types = array_map( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
 
 		$valid_networks = array(
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_AMEX       => 'amex',

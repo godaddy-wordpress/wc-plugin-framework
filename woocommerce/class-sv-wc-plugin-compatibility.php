@@ -26,7 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_4_2;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_Plugin_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Plugin_Compatibility' ) ) :
 
 /**
  * WooCommerce Compatibility Utility Class
@@ -124,7 +124,7 @@ class SV_WC_Plugin_Compatibility {
 				$format = wc_date_format();
 			}
 
-			if ( ! is_a( $date, '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_DateTime' ) ) { // TODO: verify this {CW 2017-07-18}
+			if ( ! is_a( $date, '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_DateTime' ) ) { // TODO: verify this {CW 2017-07-18}
 				return '';
 			}
 

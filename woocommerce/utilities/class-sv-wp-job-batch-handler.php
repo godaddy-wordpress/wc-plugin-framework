@@ -26,7 +26,7 @@
 
  defined( 'ABSPATH' ) or exit;
 
- if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WP_Job_Batch_Handler' ) ) :
+ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WP_Job_Batch_Handler' ) ) :
 
 /**
  * The job batch handler class.
