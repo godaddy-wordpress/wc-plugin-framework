@@ -25,7 +25,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3\Payment_Gateway\Admin;
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_2 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_3 as Framework;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Payment_Gateway\\Admin\\Setup_Wizard' ) ) :
 

@@ -25,7 +25,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3\Admin;
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_2 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_3 as Framework;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Admin\\Setup_Wizard' ) ) :
 

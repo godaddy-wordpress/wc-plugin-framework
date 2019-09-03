@@ -24,7 +24,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3\Payment_Gateway\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_2 as FrameworkBase;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_3 as FrameworkBase;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Payment_Gateway\\Handlers\\Abstract_Hosted_Payment_Handler' ) ) :
 

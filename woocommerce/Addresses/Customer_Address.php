@@ -23,7 +23,7 @@
  */
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3\Addresses;
-use SkyVerge\WooCommerce\PluginFramework\v5_4_2 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_3 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
