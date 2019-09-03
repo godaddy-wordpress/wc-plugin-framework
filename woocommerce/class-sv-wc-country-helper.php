@@ -463,7 +463,6 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Co
 		 * Converts an ISO 3166-alpha2 country code to a calling code.
 		 *
 		 * This conversion is available in WC 3.6+ so we'll call out to that when available.
-		 * TODO: Deprecate this once we require WC 3.6.0 as a minimum {JB 2019-09-02}
 		 *
 		 * @since 5.4.3-dev.1
 		 *
@@ -472,7 +471,8 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Co
 		 */
 		public static function alpha2_to_calling_code( $alpha2_code ) {
 
-			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.6.0' ) ) {
+			// check not only for the right version, but if the helper is loaded & available
+			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.6.0' ) && WC() && isset( WC()->countries ) && is_callable( [ WC()->countries, 'get_country_calling_code' ] ) ) {
 
 				$calling_code = WC()->countries->get_country_calling_code( $alpha2_code );
 
