@@ -34,7 +34,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 	 * The purpose of this class is to centralize country-related utility
 	 * functions that are commonly used in SkyVerge plugins
 	 *
-	 * @since 5.4.3-dev.1
+	 * @since 5.4.3
 	 */
 	class Country_Helper {
 
@@ -419,7 +419,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 		 * 1) given USA, returns US
 		 * 2) given US, returns USA
 		 *
-		 * @since 5.4.3-dev.1
+		 * @since 5.4.3
 		 *
 		 * @param string $code ISO-3166-alpha-2 or ISO-3166-alpha-3 country code
 		 * @return string country code
@@ -435,7 +435,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 		/**
 		 * Converts an ISO 3166-alpha2 country code to an ISO 3166-alpha3 country code.
 		 *
-		 * @since 5.4.3-dev.1
+		 * @since 5.4.3
 		 *
 		 * @param string $alpha2_code ISO 3166-alpha2 country code
 		 * @return string ISO 3166-alpha3 country code
@@ -449,7 +449,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 		/**
 		 * Converts an ISO 3166-alpha2 country code to an ISO 3166-numeric country code.
 		 *
-		 * @since 5.4.3-dev.1
+		 * @since 5.4.3
 		 *
 		 * @param string $alpha2_code ISO 3166-alpha2 country code
 		 * @return string ISO 3166-numeric country code
@@ -465,7 +465,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 		 *
 		 * This conversion is available in WC 3.6+ so we'll call out to that when available.
 		 *
-		 * @since 5.4.3-dev.1
+		 * @since 5.4.3
 		 *
 		 * @param string $alpha2_code ISO 3166-alpha2 country code
 		 * @return string calling code
@@ -492,7 +492,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 		/**
 		 * Converts an ISO 3166-alpha3 country code to an ISO 3166-alpha2 country code.
 		 *
-		 * @since 5.4.3-dev.1
+		 * @since 5.4.3
 		 *
 		 * @param string $alpha3_code ISO 3166-alpha3 country code
 		 * @return string ISO 3166-alpha2 country code
@@ -508,7 +508,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 		/**
 		 * Converts an ISO 3166-alpha3 country code to an ISO 3166-numeric country code.
 		 *
-		 * @since 5.4.3-dev.1
+		 * @since 5.4.3
 		 *
 		 * @param string $alpha3_code ISO 3166-alpha3 country code
 		 * @return string ISO 3166-numeric country code
@@ -521,7 +521,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 		/**
 		 * Converts an ISO 3166-alpha3 country code to a calling code.
 		 *
-		 * @since 5.4.3-dev.1
+		 * @since 5.4.3
 		 *
 		 * @param string $alpha3_code ISO 3166-alpha3 country code
 		 * @return string calling code
@@ -534,7 +534,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 		/**
 		 * Converts an ISO 3166-numeric country code to an ISO 3166-alpha2 code.
 		 *
-		 * @since 5.4.3-dev.1
+		 * @since 5.4.3
 		 *
 		 * @param string $numeric ISO 3166-numeric country code
 		 * @return string ISO 3166-alpha2 country code
@@ -550,7 +550,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 		/**
 		 * Converts an ISO 3166-numeric country code to an ISO 3166-alpha3 code.
 		 *
-		 * @since 5.4.3-dev.1
+		 * @since 5.4.3
 		 *
 		 * @param string $numeric ISO 3166-numeric country code
 		 * @return string ISO 3166-alpha3 country code
@@ -563,7 +563,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 		/**
 		 * Converts an ISO 3166-numeric country code to a calling code.
 		 *
-		 * @since 5.4.3-dev.1
+		 * @since 5.4.3
 		 *
 		 * @param string $numeric ISO 3166-numeric country code
 		 * @return string calling code
@@ -576,7 +576,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 		/**
 		 * Converts a country calling code to an ISO 3166-alpha2 code.
 		 *
-		 * @since 5.4.3-dev.1
+		 * @since 5.4.3
 		 *
 		 * @param string $calling_code country calling code (includes leading '+')
 		 * @return string ISO 3166-alpha2 code
@@ -592,7 +592,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 		/**
 		 * Converts a country calling code to an ISO 3166-alpha3 code.
 		 *
-		 * @since 5.4.3-dev.1
+		 * @since 5.4.3
 		 *
 		 * @param string $calling_code country calling code (includes leading '+')
 		 * @return string ISO 3166-alpha3 code
@@ -606,7 +606,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 		/**
 		 * Converts a country calling code to an ISO 3166-numeric code.
 		 *
-		 * @since 5.4.3-dev.1
+		 * @since 5.4.3
 		 *
 		 * @param string $calling_code country calling code (includes leading '+')
 		 * @return string ISO 3166-numeric code
@@ -623,7 +623,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_
 		 * Since array_flip will fail on the calling codes array due to
 		 * having some arrays as values, this custom function is necessary.
 		 *
-		 * @since 5.4.3-dev.1
+		 * @since 5.4.3
 		 *
 		 * @return array
 		 */

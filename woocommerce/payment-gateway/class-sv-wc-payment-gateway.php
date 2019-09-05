@@ -3169,7 +3169,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines if orders should be captured when switched to a "paid" status.
 	 *
-	 * @since 5.0.1-dev
+	 * @since 5.0.1
 	 *
 	 * @return bool
 	 */
@@ -3178,7 +3178,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		/**
 		 * Filters whether orders should be captured when switched to a "paid" status.
 		 *
-		 * @since 5.0.1-dev
+		 * @since 5.0.1
 		 *
 		 * @param bool $enabled whether "paid" capture is enabled
 		 * @param SV_WC_Payment_Gateway $gateway gateway object

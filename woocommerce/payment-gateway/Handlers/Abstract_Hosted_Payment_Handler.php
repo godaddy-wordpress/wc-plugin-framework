@@ -41,7 +41,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	/**
 	 * Adds the action & filter hooks.
 	 *
-	 * @since 3.0.0-dev.1
+	 * @since 5.4.0
 	 */
 	protected function add_hooks() {
 
@@ -86,7 +86,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	/**
 	 * Renders the payment page.
 	 *
-	 * @since 3.0.0-dev.1
+	 * @since 5.4.0
 	 *
 	 * @param int $order_id order ID
 	 */

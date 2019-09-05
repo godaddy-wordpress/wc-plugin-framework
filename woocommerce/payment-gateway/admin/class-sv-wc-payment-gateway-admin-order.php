@@ -482,7 +482,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 *
 	 * @internal
 	 *
-	 * @since 5.0.1-dev
+	 * @since 5.0.1
 	 * @deprecated 5.3.0
 	 *
 	 * @param int $order_id order ID

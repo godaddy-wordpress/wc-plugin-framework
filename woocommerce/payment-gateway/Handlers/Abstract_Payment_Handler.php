@@ -393,7 +393,7 @@ abstract class Abstract_Payment_Handler {
 		 * This filter is deprecated. Use wc_<gateway_id>_held_order_status instead.
 		 *
 		 * @since 4.0.1
-		 * @deprecated 5.3.0-dev
+		 * @deprecated 5.3.0
 		 *
 		 * @param string $order_status 'on-hold' by default
 		 * @param \WC_Order $order WC order
@@ -405,7 +405,7 @@ abstract class Abstract_Payment_Handler {
 		/**
 		 * Filters the order status that's considered to be "held".
 		 *
-		 * @since 5.3.0-dev
+		 * @since 5.3.0
 		 *
 		 * @param string $status held order status
 		 * @param \WC_Order $order order object
