@@ -26,7 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Country_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Country_Helper' ) ) :
 
 	/**
 	 * SkyVerge Country Helper Class
@@ -36,7 +36,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Co
 	 *
 	 * @since 5.4.3-dev.1
 	 */
-	class SV_WC_Country_Helper {
+	class Country_Helper {
 
 
 		/** @var array ISO 3166-alpha2 => ISO 3166-alpha3  */
@@ -407,8 +407,9 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Co
 			'MZ' => '+258',
 		];
 
+
 		/** @var array flipped calling codes */
-		static $flipped_calling_codes;
+		protected static $flipped_calling_codes;
 
 
 		/**
