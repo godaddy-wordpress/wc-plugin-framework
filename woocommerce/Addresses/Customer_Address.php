@@ -22,12 +22,12 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_2\Addresses;
-use SkyVerge\WooCommerce\PluginFramework\v5_4_2 as Framework;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3\Addresses;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_3 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\Addresses\\Customer_Address' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Addresses\\Customer_Address' ) ) :
 
 /**
  * The customer address data class.

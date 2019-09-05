@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2019.nn.nn - version 5.4.3-dev.1
+ * Fix - Do not show the checkbox to save the payment method on the checkout page if not logged in and registration during checkout is disabled
+
 2019.08.27 - version 5.4.2
  * Tweak - Add a standard set of subscription details to orders payment data set by a gateway
  * Tweak - Add replacement helper methods to get the current screen in WordPress and check the screen ID

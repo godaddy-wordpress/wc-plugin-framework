@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
 
 /**
  * Payment Form Class
@@ -177,9 +177,19 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		// tokenization is allowed if tokenization is enabled on the gateway
 		$tokenization_allowed = $this->get_gateway()->supports_tokenization() && $this->get_gateway()->tokenization_enabled();
 
-		// on the pay page there is no way of creating an account, so disallow tokenization for guest customers
-		if ( $tokenization_allowed && is_checkout_pay_page() && ! is_user_logged_in() ) {
-			$tokenization_allowed = false;
+		if ( $tokenization_allowed && ! is_user_logged_in() ) {
+
+			if ( is_checkout_pay_page() ) {
+
+				// on the pay page there is no way of creating an account, so disallow tokenization for guest customers
+				$tokenization_allowed = false;
+
+			} else if ( is_checkout() ) {
+
+				// on the checkout page, only allow if account creation during checkout is enabled
+				$tokenization_allowed = WC()->checkout()->is_registration_enabled();
+
+			}
 		}
 
 		/**
@@ -381,7 +391,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 		$defaults = $this->get_gateway()->get_payment_method_defaults();
 
-		$check_hint = sprintf( '<img title="%s" class="js-sv-wc-payment-gateway-echeck-form-check-hint" src="%s" width="16" height="16" />', esc_attr__( 'Where do I find this?', 'woocommerce-plugin-framework' ), esc_url( WC()->plugin_url() . '/assets/images/help.png' ) );
+		$check_hint = sprintf( '<img title="%s" alt="%s" class="js-sv-wc-payment-gateway-echeck-form-check-hint" src="%s" width="16" height="16" />', esc_attr__( 'Where do I find this?', 'woocommerce-plugin-framework' ), esc_attr__( 'Where do I find this?', 'woocommerce-plugin-framework' ), esc_url( WC()->plugin_url() . '/assets/images/help.png' ) );
 
 		$fields = array(
 			'routing-number' => array(
@@ -499,7 +509,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 		$image_url = \WC_HTTPS::force_https_url( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/sample-check.png' );
 
-		$html = sprintf( '<div class="js-sv-wc-payment-gateway-echeck-form-sample-check" style="display: none;"><img width="541" height="270" src="%s" /></div>', esc_url( $image_url ) );;
+		$html = sprintf( '<div class="js-sv-wc-payment-gateway-echeck-form-sample-check" style="display: none;"><img width="541" height="270" src="%s" alt="%s" /></div>', esc_url( $image_url ), esc_attr__( 'Sample Check', 'woocommerce-plugin-framework' ) );
 
 		/**
 		 * Payment Gateway Payment Form Sample eCheck HTML.
@@ -905,7 +915,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 */
 	public function render_fieldset_start() {
 
-		printf( '<fieldset id="wc-%s-%s-form">', esc_attr( $this->get_gateway()->get_id_dasherized() ), esc_attr( $this->get_gateway()->get_payment_type() ) );
+		printf( '<fieldset id="wc-%s-%s-form" aria-label="%s"><legend style="display:none;">%s</legend>', esc_attr( $this->get_gateway()->get_id_dasherized() ), esc_attr( $this->get_gateway()->get_payment_type() ), esc_attr__( 'Payment Info', 'woocommerce-plugin-framework' ), esc_attr__( 'Payment Info', 'woocommerce-plugin-framework' ) );
 
 		printf( '<div class="wc-%1$s-new-payment-method-form js-wc-%1$s-new-payment-method-form">', esc_attr( $this->get_gateway()->get_id_dasherized() ) );
 	}
@@ -977,7 +987,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 		);
 
 		if ( $this->get_gateway()->supports_card_types() ) {
-			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_4_2\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
+			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_4_3\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
 		}
 
 		/**

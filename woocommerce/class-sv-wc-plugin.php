@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Plugin' ) ) :
 
 /**
  * # WooCommerce Plugin Framework
@@ -36,13 +36,13 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_2\\SV_WC_Pl
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 5.4.2
+ * @version 5.4.3-dev.1
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.4.2';
+	const VERSION = '5.4.3-dev.1';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -418,6 +418,7 @@ abstract class SV_WC_Plugin {
 
 		// common utility methods
 		require_once( $framework_path . '/class-sv-wc-helper.php' );
+		require_once( $framework_path . '/Country_Helper.php' );
 
 		// backwards compatibility for older WC versions
 		require_once( $framework_path . '/class-sv-wc-plugin-compatibility.php' );
