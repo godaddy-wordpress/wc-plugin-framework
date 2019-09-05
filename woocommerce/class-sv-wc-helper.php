@@ -999,14 +999,16 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_He
 		 * 2) given US, returns USA
 		 *
 		 * @since 4.2.0
+		 * @deprecated 5.4.3-dev
+		 *
 		 * @param string $code ISO-3166-alpha-2 or ISO-3166-alpha-3 country code
 		 * @return string country code
 		 */
 		public static function convert_country_code( $code ) {
 
-			SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.4.3-dev.1', 'SV_WC_Country_Helper::convert_alpha_country_code()' );
+			wc_deprecated_function( __METHOD__, '5.4.3-dev.1', 'SV_WC_Country_Helper::convert_alpha_country_code()' );
 
-			return SV_WC_Country_Helper::convert_alpha_country_code( $code );
+			return Country_Helper::convert_alpha_country_code( $code );
 		}
 
 
