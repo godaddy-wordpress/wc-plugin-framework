@@ -1006,7 +1006,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_He
 		 */
 		public static function convert_country_code( $code ) {
 
-			wc_deprecated_function( __METHOD__, '5.4.3-dev.1', 'SV_WC_Country_Helper::convert_alpha_country_code()' );
+			wc_deprecated_function( __METHOD__, '5.4.3-dev.1', Country_Helper::class . '::convert_alpha_country_code()' );
 
 			return Country_Helper::convert_alpha_country_code( $code );
 		}
