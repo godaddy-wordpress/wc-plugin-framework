@@ -113,25 +113,77 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		wp_enqueue_style( 'sv-wc-apple-pay', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-apple-pay.css', array(), $this->get_plugin()->get_version() ); // TODO: min
 
 		wp_enqueue_script( 'sv-wc-apple-pay', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-apple-pay.min.js', array( 'jquery' ), $this->get_plugin()->get_version(), true );
+	}
+
+
+	protected function get_js_handler_params() {
 
 		/**
 		 * Filters the Apple Pay JS handler params.
 		 *
 		 * @since 4.7.0
+		 *
 		 * @param array $params the JS params
 		 */
-		$params = apply_filters( 'sv_wc_apple_pay_js_handler_params', array(
+		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_apple_pay_js_handler_params', [
 			'gateway_id'               => $this->get_gateway()->get_id(),
 			'gateway_id_dasherized'    => $this->get_gateway()->get_id_dasherized(),
 			'merchant_id'              => $this->get_handler()->get_merchant_id(),
 			'ajax_url'                 => admin_url( 'admin-ajax.php' ),
-			'validate_nonce'           => wp_create_nonce( 'sv_wc_apple_pay_validate_merchant' ),
-			'recalculate_totals_nonce' => wp_create_nonce( 'sv_wc_apple_pay_recalculate_totals' ),
-			'process_nonce'            => wp_create_nonce( 'sv_wc_apple_pay_process_payment' ),
+			'validate_nonce'           => wp_create_nonce( 'wc_' . $this->get_gateway()->get_id() . '_apple_pay_validate_merchant' ),
+			'recalculate_totals_nonce' => wp_create_nonce( 'wc_' . $this->get_gateway()->get_id() . '_apple_pay_recalculate_totals' ),
+			'process_nonce'            => wp_create_nonce( 'wc_' . $this->get_gateway()->get_id() . '_apple_pay_process_payment' ),
 			'generic_error'            => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
-		) );
+		] );
 
 		wp_localize_script( 'sv-wc-apple-pay', 'sv_wc_apple_pay_params', $params );
+	}
+
+
+	/**
+	 * Enqueues an Apple Pay JS handler.
+	 *
+	 * @since 5.4.4-dev.1
+	 *
+	 * @param array $args handler arguments
+	 * @param string $object_name JS object name
+	 * @param string $handler_name handler class name
+	 */
+	protected function enqueue_js_handler( array $args, $object_name = '', $handler_name = '' ) {
+
+		if ( ! $object_name ) {
+			$object_name = 'wc_' . $this->get_gateway()->get_id() . '_apple_pay_handler';
+		}
+
+		if ( ! $handler_name ) {
+			$handler_name = $this->get_js_handler_name();
+		}
+
+		$args = array_merge( $args, $this->get_js_handler_params() );
+
+		wc_enqueue_js(
+			sprintf(
+				'window.%1$s = new %2$s(%3$s); window.%1$s.init()',
+				esc_attr( $object_name ),
+				esc_attr( $handler_name ),
+				json_encode( $args )
+			)
+		);
+	}
+
+
+	/**
+	 * Gets the JS handler class name.
+	 *
+	 * Concrete implementations can override this with their own handler.
+	 *
+	 * @since 5.4.4-dev.1
+	 *
+	 * @return string
+	 */
+	protected function get_js_handler_name() {
+
+		return 'SV_WC_Apple_Pay_Handler';
 	}
 
 
@@ -189,15 +241,32 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 */
 	public function init_product() {
 
-		$args = array();
+		$product = wc_get_product( get_the_ID() );
+
+		if ( ! $product ) {
+			return;
+		}
+
+		$this->enqueue_js_handler( $this->get_product_js_handler_args( $product ) );
+
+		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_button' ] );
+	}
+
+
+	/**
+	 * Gets the args passed to the product JS handler.
+	 *
+	 * @since 5.4.4-dev.1
+	 *
+	 * @param \WC_Product $product product object
+	 * @return array
+	 */
+	protected function get_product_js_handler_args( \WC_Product $product ) {
+
+
+		$args = [];
 
 		try {
-
-			$product = wc_get_product( get_the_ID() );
-
-			if ( ! $product ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Product does not exist.' );
-			}
 
 			$payment_request = $this->get_handler()->get_product_payment_request( $product );
 
@@ -212,13 +281,21 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		 * Filters the Apple Pay product handler args.
 		 *
 		 * @since 4.7.0
-		 * @param array $args
+		 * @deprecated 5.4.4-dev.1
+		 *
+		 * @param array $args JS handler arguments
 		 */
-		$args = apply_filters( 'sv_wc_apple_pay_product_handler_args', $args );
+		$args = (array) apply_filters( 'sv_wc_apple_pay_product_handler_args', $args );
 
-		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Product_Handler(%s);', json_encode( $args ) ) );
-
-		add_action( 'woocommerce_before_add_to_cart_button', array( $this, 'render_button' ) );
+		/**
+		 * Filters the gateway Apple Pay cart handler args.
+		 *
+		 * @since 5.4.4-dev.1
+		 *
+		 * @param array $args JS handler arguments
+		 * @param \WC_Product $product product object
+		 */
+		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_apple_pay_product_js_handler_args', $args, $product );
 	}
 
 
@@ -232,11 +309,32 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 */
 	public function init_cart() {
 
-		$args = array();
+		// bail if the cart is missing or empty
+		if ( ! WC()->cart || WC()->cart->is_empty() ) {
+			return;
+		}
+
+		$this->enqueue_js_handler( $this->get_cart_js_handler_args( WC()->cart ) );
+
+		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_button' ] );
+	}
+
+
+	/**
+	 * Gets the args passed to the cart JS handler.
+	 *
+	 * @since 5.4.4-dev.1
+	 *
+	 * @param \WC_Cart $cart cart object
+	 * @return array
+	 */
+	protected function get_cart_js_handler_args( \WC_Cart $cart ) {
+
+		$args = [];
 
 		try {
 
-			$payment_request = $this->get_handler()->get_cart_payment_request( WC()->cart );
+			$payment_request = $this->get_handler()->get_cart_payment_request( $cart );
 
 			$args['payment_request'] = $payment_request;
 
@@ -249,13 +347,21 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		 * Filters the Apple Pay cart handler args.
 		 *
 		 * @since 4.7.0
-		 * @param array $args
+		 * @deprecated 5.4.4-dev.1
+		 *
+		 * @param array $args JS handler arguments
 		 */
 		$args = apply_filters( 'sv_wc_apple_pay_cart_handler_args', $args );
 
-		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Cart_Handler(%s);', json_encode( $args ) ) );
-
-		add_action( 'woocommerce_proceed_to_checkout', array( $this, 'render_button' ) );
+		/**
+		 * Filters the gateway Apple Pay cart handler args.
+		 *
+		 * @since 5.4.4-dev.1
+		 *
+		 * @param array $args JS handler arguments
+		 * @param \WC_Cart $cart cart object
+		 */
+		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_apple_pay_cart_js_handler_args', $args, $cart );
 	}
 
 
@@ -269,21 +375,43 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 */
 	public function init_checkout() {
 
+		$this->enqueue_js_handler( $this->get_checkout_js_handler_args() );
+
+		if ( $this->get_plugin()->is_plugin_active( 'woocommerce-checkout-add-ons.php' ) ) {
+			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_button' ] );
+		} else {
+			add_action( 'woocommerce_before_checkout_form', [ $this, 'render_checkout_button' ], 15 );
+		}
+	}
+
+
+	/**
+	 * Gets the args passed to the checkout JS handler.
+	 *
+	 * @since 5.4.4-dev.1
+	 *
+	 * @return array
+	 */
+	protected function get_checkout_js_handler_args() {
+
 		/**
 		 * Filters the Apple Pay checkout handler args.
 		 *
 		 * @since 4.7.0
-		 * @param array $args
+		 * @deprecated 5.4.4-dev.1
+		 *
+		 * @param array $args JS handler arguments
 		 */
 		$args = apply_filters( 'sv_wc_apple_pay_checkout_handler_args', array() );
 
-		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Checkout_Handler(%s);', json_encode( $args ) ) );
-
-		if ( $this->get_plugin()->is_plugin_active( 'woocommerce-checkout-add-ons.php' ) ) {
-			add_action( 'woocommerce_review_order_before_payment', array( $this, 'render_button' ) );
-		} else {
-			add_action( 'woocommerce_before_checkout_form', array( $this, 'render_checkout_button' ), 15 );
-		}
+		/**
+		 * Filters the gateway Apple Pay checkout handler args.
+		 *
+		 * @since 5.4.4-dev.1
+		 *
+		 * @param array $args JS handler arguments
+		 */
+		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_apple_pay_checkout_js_handler_args', $args );
 	}
 
 
@@ -298,10 +426,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		<div class="sv-wc-apply-pay-checkout">
 
-			<?php /** translators: Phrase that preceeds the Apple Pay logo, i.e. "Pay with [logo]" */
-			$button_text = __( 'Pay with', 'woocommerce-plugin-framework' );
-
-			$this->render_button(); ?>
+			<?php $this->render_button(); ?>
 
 			<span class="divider">
 				<?php /** translators: "or" as in "Pay with Apple Pay [or] regular checkout" */

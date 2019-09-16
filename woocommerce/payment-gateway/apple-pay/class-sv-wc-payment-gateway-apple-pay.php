@@ -79,11 +79,44 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	protected function init() {
 
 		if ( is_admin() && ! is_ajax() ) {
-			$this->admin = new SV_WC_Payment_Gateway_Apple_Pay_Admin( $this );
+			$this->init_admin();
 		} else {
-			$this->ajax     = new SV_WC_Payment_Gateway_Apple_Pay_AJAX( $this );
-			$this->frontend = new SV_WC_Payment_Gateway_Apple_Pay_Frontend( $this->get_plugin(), $this );
+			$this->init_ajax();
+			$this->init_frontend();
 		}
+	}
+
+
+	/**
+	 * Initializes the admin handler.
+	 *
+	 * @since 5.4.4-dev.1
+	 */
+	protected function init_admin() {
+
+		$this->admin = new SV_WC_Payment_Gateway_Apple_Pay_Admin( $this );
+	}
+
+
+	/**
+	 * Initializes the AJAX handler.
+	 *
+	 * @since 5.4.4-dev.1
+	 */
+	protected function init_ajax() {
+
+		$this->ajax = new SV_WC_Payment_Gateway_Apple_Pay_AJAX( $this );
+	}
+
+
+	/**
+	 * Initializes the frontend handler.
+	 *
+	 * @since 5.4.4-dev.1
+	 */
+	protected function init_frontend() {
+
+		$this->frontend = new SV_WC_Payment_Gateway_Apple_Pay_Frontend( $this->get_plugin(), $this );
 	}
 
 
@@ -147,7 +180,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 			return $result;
 
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+		} catch ( \Exception $e ) {
 
 			if ( $order ) {
 
@@ -631,9 +664,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		if ( ! empty( $response_data ) ) {
 			return new SV_WC_Payment_Gateway_Apple_Pay_Payment_Response( $response_data );
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 
 
