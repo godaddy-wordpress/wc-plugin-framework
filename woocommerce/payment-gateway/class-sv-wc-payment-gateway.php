@@ -4019,35 +4019,81 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Returns true if all debugging is disabled
+	 * Gets the gateway current debug mode.
+	 *
+	 * @see SV_WC_Plugin::get_debug_mode() for the base plugin debug mode
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @return string
+	 */
+	public function get_debug_mode() {
+
+		return is_string( $this->debug_mode ) ? $this->debug_mode : self::DEBUG_MODE_OFF;
+	}
+
+
+	/**
+	 * Sets the gateway debug mode.
+	 *
+	 * @see SV_WC_Plugin::set_debug_mode() for setting the debug mode in the base plugin
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string $mode debug mode expected value
+	 */
+	public function set_debug_mode( $mode ) {
+
+		if ( in_array( $mode, [ self::DEBUG_MODE_LOG, self::DEBUG_MODE_CHECKOUT, self::DEBUG_MODE_BOTH, self::DEBUG_MODE_OFF ], true ) ) {
+
+			$this->debug_mode = $mode;
+
+			$settings = get_option( $this->get_option_key() );
+
+			$settings['debug_mode'] = $this->debug_mode;
+
+			update_option( $this->get_option_key(), $settings );
+		}
+	}
+
+
+	/**
+	 * Checks if all debugging is disabled.
 	 *
 	 * @since 1.0.0
-	 * @return boolean if all debuging is disabled
+	 *
+	 * @return bool
 	 */
 	public function debug_off() {
+
 		return self::DEBUG_MODE_OFF === $this->debug_mode;
 	}
 
 
 	/**
-	 * Returns true if debug logging is enabled
+	 * Checks whether debug logging is enabled.
 	 *
 	 * @since 1.0.0
-	 * @return boolean if debug logging is enabled
+	 *
+	 * @return bool
 	 */
 	public function debug_log() {
+
 		return self::DEBUG_MODE_LOG === $this->debug_mode || self::DEBUG_MODE_BOTH === $this->debug_mode;
 	}
 
 
 	/**
-	 * Returns true if checkout debugging is enabled.  This will cause debugging
-	 * statements to be displayed on the checkout/pay pages
+	 * Determines if checkout debug logging is enabled.
+	 *
+	 * Checkout debug will cause debugging statements to be displayed on the checkout/pay pages.
 	 *
 	 * @since 1.0.0
-	 * @return boolean if checkout debugging is enabled
+	 *
+	 * @return bool
 	 */
 	public function debug_checkout() {
+
 		return self::DEBUG_MODE_CHECKOUT === $this->debug_mode || self::DEBUG_MODE_BOTH === $this->debug_mode;
 	}
 

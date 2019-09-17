@@ -89,6 +89,9 @@ abstract class SV_WC_Plugin {
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
 
+	/** @var string optional debug mode */
+	protected $debug_mode;
+
 
 	/**
 	 * Initialize the plugin.
@@ -907,6 +910,40 @@ abstract class SV_WC_Plugin {
 	 */
 	public function get_version() {
 		return $this->version;
+	}
+
+
+	/**
+	 * Gets the debug mode status.
+	 *
+	 * Child plugins can override this method and return an appropriate value.
+	 * @see SV_WC_Payment_Gateway::get_debug_mode() for individual gateways contained in a gateway plugin
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @return string normally one of 'off' or 'log'
+	 */
+	public function get_debug_mode() {
+
+		// returns 'log' by default as plugins may record general information to the log file like during upgrade routines
+		return ! is_string( $this->debug_mode ) ? 'log' : $this->debug_mode;
+	}
+
+
+	/**
+	 * Sets the debug mode.
+	 *
+	 * Provides a normalized method to set a debug mode in the plugin.
+	 * Child plugins can override and extend this method to update the plugin settings, or call internal methods to set the debug mode accordingly.
+	 * @see SV_WC_Payment_Gateway::set_debug_mode() for setting debug mode in individual gateways of a gateway plugin
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string $mode normally one of 'off' or 'log'
+	 */
+	public function set_debug_mode( $mode ) {
+
+		$this->debug_mode = $mode;
 	}
 
 
