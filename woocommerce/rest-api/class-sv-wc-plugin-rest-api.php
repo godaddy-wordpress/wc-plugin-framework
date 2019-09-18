@@ -47,7 +47,7 @@ class REST_API {
 	private $plugin;
 
 	/** @var array associative array of REST API endpoints and supported WooCommerce REST API versions added by the framework */
-	private $endpoints;
+	protected $endpoints;
 
 	/** @var Debug_Controller[] debug endpoint handlers according to supported API version in use */
 	private $debug_controller = [];
