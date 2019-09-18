@@ -122,23 +122,22 @@ abstract class Log_Controller extends \WC_REST_Controller {
 		try {
 
 			if ( defined( 'WC_LOG_HANDLER' ) && 'WC_Log_Handler_DB' === WC_LOG_HANDLER ) {
-
-				// TODO add support for log handler database logs {FN 2019-09-17}
-
+				$get_logs_method = 'get_log_entries';
 			} else {
+				$get_logs_method = 'get_log_files';
+			}
 
-				$response['plugin'] = $this->get_log_files( $plugin_id, $params );
+			$response['plugin'] = $this->$get_logs_method( $plugin_id, $params );
 
-				if ( $plugin instanceof SV_WC_Payment_Gateway_Plugin ) {
+			if ( $plugin instanceof SV_WC_Payment_Gateway_Plugin ) {
 
-					$response['gateways'] = [];
+				$response['gateways'] = [];
 
-					foreach ( $plugin->get_gateways() as $gateway ) {
+				foreach ( $plugin->get_gateways() as $gateway ) {
 
-						$gateway_id = $gateway->get_id();
+					$gateway_id = $gateway->get_id();
 
-						$response['gateways'][ $gateway_id ] = $this->get_log_files( $gateway_id, $params );
-					}
+					$response['gateways'][ $gateway_id ] = $this->$get_logs_method( $gateway_id, $params );
 				}
 			}
 
@@ -152,13 +151,64 @@ abstract class Log_Controller extends \WC_REST_Controller {
 
 
 	/**
-	 * Gets log files.
+	 * Gets log entries from database.
+	 *
+	 * @see Log_Controller::get_items()
 	 *
 	 * @since 5.5.0-dev
 	 *
-	 * @param string $log_id log identifier (plugin ID, gateway ID)
-	 * @param array $params log query params
-	 * @return array log files
+	 * @param string $log_id log source identifier (plugin ID, gateway ID)
+	 * @param array $params log query parameters
+	 * @return array log data
+	 * @throws \WC_REST_Exception on errors
+	 */
+	private function get_log_entries( $log_id, $params ) {
+		global $wpdb;
+
+		$logs = [];
+
+		if ( isset( $params['date'] ) && is_string( $params['date'] ) && preg_match( '/\d{4}-\d{2}-\d{2}/', $params['date'] ) ) {
+			$log_date = $params['date'];
+		} else {
+			$log_date = null;
+		}
+
+		$log_table = "{$wpdb->prefix}woocommerce_log";
+		$log_rows  = $wpdb->get_results( $wpdb->prepare( "
+				SELECT *
+				FROM {$log_table}
+				WHERE source = %s
+		", $log_id ) );
+
+		foreach ( $log_rows as $log_entry ) {
+
+			if ( $log_date && 0 === strpos( $log_entry->timestamp, $log_date ) ) {
+				continue;
+			}
+
+			$logs[] = [
+				'type'       => 'database',
+				'source'     => $log_table,
+				'level'      => $log_entry->level,
+				'contents'   => $log_entry->message,
+				'updated_at' => date( 'Y-m-d\TH:i:s\Z', (int) strtotime( $log_entry->timestamp ) ),
+			];
+		}
+
+		return $logs;
+	}
+
+
+	/**
+	 * Gets log files.
+	 *
+	 * @see Log_Controller::get_items()
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string $log_id log source identifier (plugin ID, gateway ID)
+	 * @param array $params log query parameters
+	 * @return array log data
 	 * @throws \WC_REST_Exception on errors
 	 */
 	private function get_log_files( $log_id, $params ) {
@@ -188,6 +238,7 @@ abstract class Log_Controller extends \WC_REST_Controller {
 			$log_files[] = [
 				'type'       => 'file',
 				'source'     => basename( $log_file ),
+				'level'      => 300,
 				'contents'   => file_get_contents( $log_file ) ?: '',
 				'updated_at' => date( 'Y-m-d\TH:i:s\Z', (int) filemtime( $file_path ) ),
 			];
