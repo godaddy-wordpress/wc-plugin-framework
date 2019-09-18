@@ -257,8 +257,11 @@ abstract class Log_Controller extends \WC_REST_Controller {
 				continue;
 			}
 
+			// log files are considered notice-level logs by WooCommerce
+			$default_log_level = \WC_Log_Levels::get_level_severity( \WC_Log_Levels::NOTICE );
+
 			// optionally filter by level
-			if ( $log_level && ( ( is_int( $log_level ) && $log_level !== 300 ) || ( is_array( $log_level ) && ! in_array( 300, $log_level, true ) ) ) ) {
+			if ( $log_level && ( ( is_int( $log_level ) && $log_level !== $default_log_level ) || ( is_array( $log_level ) && ! in_array( $default_log_level, $log_level, true ) ) ) ) {
 				continue;
 			}
 
@@ -267,7 +270,7 @@ abstract class Log_Controller extends \WC_REST_Controller {
 			$log_files[]  = [
 				'type'       => 'file',
 				'source'     => basename( $log_file ),
-				'level'      => \WC_Log_Levels::get_level_severity( \WC_Log_Levels::NOTICE ),
+				'level'      => $default_log_level,
 				'contents'   => $log_contents ?: '',
 				'updated_at' => date( 'Y-m-d\TH:i:s\Z', (int) filemtime( $log_file ) ),
 			];
