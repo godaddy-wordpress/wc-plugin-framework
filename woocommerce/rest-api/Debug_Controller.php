@@ -77,17 +77,17 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 			// GET the debug mode status
 			[
 				'methods'             => \WP_REST_Server::READABLE,
-				/* @see \WC_REST_Controller::get_item() */
+				/* @see Debug_Controller::get_item() */
 				'callback'            => [ $this, 'get_item' ],
-				/* @see \WC_REST_Controller::get_item_permissions_check() */
+				/* @see Debug_Controller::get_item_permissions_check() */
 				'permission_callback' => [ $this, 'get_item_permissions_check' ],
 			],
 			// UPDATE (toggle) the debug mode
 			[
 				'methods'             => \WP_REST_Server::EDITABLE,
-				/** @see \WC_REST_Controller::update_item() */
+				/** @see Debug_Controller::update_item() */
 				'callback'            => [ $this, 'update_item' ],
-				/** @see \WC_REST_Controller::update_item_permissions_check() */
+				/** @see Debug_Controller::update_item_permissions_check() */
 				'permission_callback' => [ $this, 'update_item_permissions_check' ],
 			],
 		], true );
@@ -123,8 +123,11 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 	public function get_item( $request ) {
 
 		$plugin     = $this->get_plugin();
+		$plugin_id  = $plugin->get_id();
 		$debug_mode = [
-			'plugin' => $plugin->get_debug_mode(),
+			'plugin' => [
+				$plugin_id => $plugin->get_debug_mode(),
+			],
 		];
 
 		if ( $plugin instanceof SV_WC_Payment_Gateway_Plugin ) {
@@ -137,10 +140,18 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 			}
 		}
 
-		return rest_ensure_response( [
+		/**
+		 * Filters the REST API response for the debug mode endpoint.
+		 *
+		 * @since 5.5.0-dev
+		 *
+		 * @param \WP_Error|array $response_data associative array of debug mode data or error object
+		 * @param \WP_REST_Request $request request object
+		 */
+		return rest_ensure_response( apply_filters( "wc_{$plugin_id}_rest_api_debug_mode_data", [
 			'debug_mode' => $debug_mode,
 			'debug_log'  => defined( 'WC_LOG_HANDLER' ) ? WC_LOG_HANDLER : 'file',
-		] );
+		], $request ) );
 	}
 
 
@@ -186,8 +197,8 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 
 			try {
 
-				if ( isset( $debug_mode['plugin'] ) ) {
-					$plugin->set_debug_mode( $debug_mode['plugin'] );
+				if ( isset( $debug_mode['plugin'][ $plugin_id ] ) ) {
+					$plugin->set_debug_mode( $debug_mode['plugin'][ $plugin_id ] );
 				}
 
 				if (  $plugin instanceof SV_WC_Payment_Gateway_Plugin && isset( $debug_mode['gateways'] ) ) {
@@ -200,6 +211,15 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 						}
 					}
 				}
+
+				/**
+				 * Fires when setting the debug mode via REST API.
+				 *
+				 * @since 5.5.0-dev
+				 *
+				 * @param \WP_REST_Request $request request object
+				 */
+				do_action( "wc_{$plugin_id}_rest_api_set_debug_mode", $request );
 
 			} catch ( \Exception $e ) {
 
