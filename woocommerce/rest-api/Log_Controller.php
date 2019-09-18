@@ -127,7 +127,7 @@ abstract class Log_Controller extends \WC_REST_Controller {
 				$get_logs_method = 'get_log_files';
 			}
 
-			$response['plugin'] = $this->$get_logs_method( $plugin_id, $params );
+			$response['plugin'][ $plugin_id ] = $this->$get_logs_method( $plugin_id, $params );
 
 			if ( $plugin instanceof SV_WC_Payment_Gateway_Plugin ) {
 
@@ -146,7 +146,15 @@ abstract class Log_Controller extends \WC_REST_Controller {
 			$response = new \WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
 		}
 
-		return rest_ensure_response( $response );
+		/**
+		 * Filters the REST API response for the log endpoint.
+		 *
+		 * @since 5.5.0-dev
+		 *
+		 * @param \WP_Error|array $response_data associative array of log data
+		 * @param \WP_REST_Request $request request object
+		 */
+		return rest_ensure_response( apply_filters( "wc_{$plugin_id}_rest_api_logs_data", $response, $request ) );
 	}
 
 
