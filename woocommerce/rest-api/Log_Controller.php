@@ -243,13 +243,14 @@ abstract class Log_Controller extends \WC_REST_Controller {
 				continue;
 			}
 
-			$log_contents = file_get_contents( trailingslashit( $log_dir ) . $log_file );
+			$log_file     = trailingslashit( $log_dir ) . $log_file;
+			$log_contents = file_get_contents( $log_file );
 			$log_files[]  = [
 				'type'       => 'file',
 				'source'     => basename( $log_file ),
-				'level'      => 300,
+				'level'      => \WC_Log_Levels::get_level_severity( \WC_Log_Levels::NOTICE ),
 				'contents'   => $log_contents ?: '',
-				'updated_at' => date( 'Y-m-d\TH:i:s\Z', (int) filemtime( $file_path ) ),
+				'updated_at' => date( 'Y-m-d\TH:i:s\Z', (int) filemtime( $log_file ) ),
 			];
 		}
 
