@@ -165,24 +165,28 @@ abstract class Log_Controller extends \WC_REST_Controller {
 	private function get_log_entries( $log_id, $params ) {
 		global $wpdb;
 
-		$logs = [];
+		$logs      = [];
+		$log_level = $log_date = null;
 
 		if ( isset( $params['date'] ) && is_string( $params['date'] ) && preg_match( '/\d{4}-\d{2}-\d{2}/', $params['date'] ) ) {
 			$log_date = $params['date'];
-		} else {
-			$log_date = null;
+		}
+
+		if ( isset( $params['level'] ) && is_numeric( $params['level'] ) ) {
+			$log_level = (int) $params['level'];
 		}
 
 		$log_table = "{$wpdb->prefix}woocommerce_log";
 		$log_rows  = $wpdb->get_results( $wpdb->prepare( "
-				SELECT *
-				FROM {$log_table}
-				WHERE source = %s
+			SELECT *
+			FROM {$log_table}
+			WHERE source = %s
 		", $log_id ) );
 
 		foreach ( $log_rows as $log_entry ) {
 
-			if ( $log_date && 0 === strpos( $log_entry->timestamp, $log_date ) ) {
+			// optionally filter by log level or date
+			if ( ( $log_level && (int) $log_entry->level !== $log_level ) || ( $log_date && 0 === strpos( $log_entry->timestamp, $log_date ) ) ) {
 				continue;
 			}
 
@@ -214,32 +218,37 @@ abstract class Log_Controller extends \WC_REST_Controller {
 	private function get_log_files( $log_id, $params ) {
 
 		$log_files = [];
-		$log_src   = ! empty( $params['source'] ) ? $params['source'] : null;
-		$log_date  = null;
+		$log_level = $log_date = null;
 
 		if ( isset( $params['date'] ) && is_string( $params['date'] ) && preg_match( '/\d{4}-\d{2}-\d{2}/', $params['date'] ) ) {
 			$log_date = $params['date'];
 		}
 
-		$file_path = \WC_Log_Handler_File::get_log_file_path( $log_id );
+		if ( isset( $params['level'] ) && is_numeric( $params['level'] ) ) {
+			$log_level = (int) $params['level'];
+		}
 
-		if ( ! $file_path ) {
+		$log_file_path = \WC_Log_Handler_File::get_log_file_path( $log_id );
+
+		if ( ! $log_file_path ) {
 			throw new \WC_REST_Exception( "woocommerce_rest_{$log_id}_log_file_not_found", __( 'The resource does not exist.', 'woocommerce-plugin-framework' ), 404 );
 		}
 
-		$found_files = preg_grep( '~^' . $log_id . '-.*\.php$~', scandir( $file_path ) );
+		$log_dir     = dirname( $log_file_path );
+		$found_files = preg_grep( '~^' . $log_id . '-.*\.log$~', scandir( $log_dir ) );
 
 		foreach ( $found_files as $log_file ) {
 
-			if ( ( $log_src && $log_src !== $log_id ) || ( $log_date && false === strpos( $log_file, $log_date ) ) ) {
+			if ( ( $log_level && 300 !== $log_level ) || ( $log_date && false !== strpos( $log_file, $log_date ) ) ) {
 				continue;
 			}
 
-			$log_files[] = [
+			$log_contents = file_get_contents( trailingslashit( $log_dir ) . $log_file );
+			$log_files[]  = [
 				'type'       => 'file',
 				'source'     => basename( $log_file ),
 				'level'      => 300,
-				'contents'   => file_get_contents( $log_file ) ?: '',
+				'contents'   => $log_contents ?: '',
 				'updated_at' => date( 'Y-m-d\TH:i:s\Z', (int) filemtime( $file_path ) ),
 			];
 		}
