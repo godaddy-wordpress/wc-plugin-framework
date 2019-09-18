@@ -172,8 +172,12 @@ abstract class Log_Controller extends \WC_REST_Controller {
 			$log_date = $params['date'];
 		}
 
-		if ( isset( $params['level'] ) && is_numeric( $params['level'] ) ) {
-			$log_level = (int) $params['level'];
+		if ( isset( $params['level'] ) && $params['level'] ) {
+			if ( is_numeric( $params['level'] ) ) {
+				$log_level = (int) $params['level'];
+			} else {
+				$log_level = array_map( 'absint', (array) $params['level'] );
+			}
 		}
 
 		$log_table = "{$wpdb->prefix}woocommerce_log";
@@ -185,8 +189,13 @@ abstract class Log_Controller extends \WC_REST_Controller {
 
 		foreach ( $log_rows as $log_entry ) {
 
-			// optionally filter by log level or date
-			if ( ( $log_level && (int) $log_entry->level !== $log_level ) || ( $log_date && 0 === strpos( $log_entry->timestamp, $log_date ) ) ) {
+			// optionally filter by date
+			if ( $log_date && 0 === strpos( $log_entry->timestamp, $log_date ) ) {
+				continue;
+			}
+
+			// optionally filter by level
+			if ( $log_level && ( ( is_int( $log_level ) && $log_level !== (int) $log_entry->level ) || ( is_array( $log_level ) && ! in_array( (int) $log_entry->level, $log_level, true ) ) ) ) {
 				continue;
 			}
 
@@ -224,8 +233,12 @@ abstract class Log_Controller extends \WC_REST_Controller {
 			$log_date = $params['date'];
 		}
 
-		if ( isset( $params['level'] ) && is_numeric( $params['level'] ) ) {
-			$log_level = (int) $params['level'];
+		if ( isset( $params['level'] ) && $params['level'] ) {
+			if ( is_numeric( $params['level'] ) ) {
+				$log_level = (int) $params['level'];
+			} else {
+				$log_level = array_map( 'absint', (array) $params['level'] );
+			}
 		}
 
 		$log_file_path = \WC_Log_Handler_File::get_log_file_path( $log_id );
@@ -239,7 +252,13 @@ abstract class Log_Controller extends \WC_REST_Controller {
 
 		foreach ( $found_files as $log_file ) {
 
-			if ( ( $log_level && 300 !== $log_level ) || ( $log_date && false !== strpos( $log_file, $log_date ) ) ) {
+			// optionally filter by date
+			if ( $log_date && false !== strpos( $log_file, $log_date ) ) {
+				continue;
+			}
+
+			// optionally filter by level
+			if ( $log_level && ( ( is_int( $log_level ) && $log_level !== 300 ) || ( is_array( $log_level ) && ! in_array( 300, $log_level, true ) ) ) ) {
 				continue;
 			}
 
