@@ -193,7 +193,7 @@ class REST_API {
 
 			require_once( $this->get_plugin()->get_framework_path() . '/rest-api/' . $api_version . '/Debug.php' );
 
-			$controller = $api_version . '\\Debug';
+			$controller = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\' . $api_version . '\\Debug';
 
 			$this->debug_controller[ $api_version ] = new $controller( $this->get_plugin() );
 		}
@@ -224,7 +224,7 @@ class REST_API {
 
 			require_once( $this->get_plugin()->get_framework_path() . '/rest-api/' . $api_version . '/Log.php' );
 
-			$controller = $api_version . '\\Log';
+			$controller = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\' . $api_version . '\\Log';
 
 			$this->log_controller[ $api_version ] = new $controller( $this->get_plugin() );
 		}
