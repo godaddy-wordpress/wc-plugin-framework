@@ -174,15 +174,15 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 
 		try {
 
-			$plugin    = $this->get_plugin();
-			$plugin_id = $plugin->get_id();
-			$params    = $request->get_params();
+			$plugin     = $this->get_plugin();
+			$plugin_id  = $plugin->get_id();
+			$params     = $request->get_params();
 
-			if ( empty( $params['debug_mode'] ) || ! is_array( $params['debug_mode'] ) ) {
-				throw new \WC_REST_Exception( "woocommerce_rest_invalid_{$plugin_id}_debug_mode", __( 'Invalid or missing debug mode.', 'woocommerce-plugin-framework' ), 404 );
+			if ( empty( $params['debug_mode'] ) ) {
+				throw new \WC_REST_Exception( "woocommerce_rest_missing_{$plugin_id}_debug_mode", __( 'Missing debug mode parameter.', 'woocommerce-plugin-framework' ), 404 );
 			}
 
-			$debug_mode = $params['debug_mode'];
+			$debug_mode = (array) $params['debug_mode'];
 
 			try {
 
