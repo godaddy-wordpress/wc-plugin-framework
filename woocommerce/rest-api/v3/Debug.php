@@ -31,6 +31,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\v3\\DebugController' ) ) :
 
+
 /**
  * The plugin REST API Debug endpoint for v3 API
  *
@@ -55,5 +56,6 @@ class Debug extends Debug_Controller {
 
 
 }
+
 
 endif;

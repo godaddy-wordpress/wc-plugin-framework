@@ -934,16 +934,17 @@ abstract class SV_WC_Plugin {
 	 * Sets the debug mode.
 	 *
 	 * Provides a normalized method to set a debug mode in the plugin.
-	 * Child plugins can override and extend this method to update the plugin settings, or call internal methods to set the debug mode accordingly.
+	 * Child plugins can override and extend this method to update the plugin settings, or call internal methods to set a persistent debug mode accordingly.
 	 * @see SV_WC_Payment_Gateway::set_debug_mode() for setting debug mode in individual gateways of a gateway plugin
 	 *
 	 * @since 5.5.0-dev
 	 *
-	 * @param string $mode normally one of 'off' or 'log'
+	 * @param string $debug_mode normally one of 'off' or 'log'
+	 * @throws SV_WC_Plugin_Exception child implementations may choose to throw exception on errors or invalid input
 	 */
-	public function set_debug_mode( $mode ) {
+	public function set_debug_mode( $debug_mode ) {
 
-		$this->debug_mode = $mode;
+		$this->debug_mode = $debug_mode;
 	}
 
 

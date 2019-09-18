@@ -4036,24 +4036,32 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Sets the gateway debug mode.
 	 *
-	 * @see SV_WC_Plugin::set_debug_mode() for setting the debug mode in the base plugin
-	 *
 	 * @since 5.5.0-dev
 	 *
-	 * @param string $mode debug mode expected value
+	 * @param string $debug_mode debug mode expected value
+	 * @throws SV_WC_Plugin_Exception if trying to set an unrecognized debug mode
+	 * @see SV_WC_Plugin::set_debug_mode() for setting the debug mode in the base plugin
 	 */
-	public function set_debug_mode( $mode ) {
+	public function set_debug_mode( $debug_mode ) {
 
-		if ( in_array( $mode, [ self::DEBUG_MODE_LOG, self::DEBUG_MODE_CHECKOUT, self::DEBUG_MODE_BOTH, self::DEBUG_MODE_OFF ], true ) ) {
+		$debug_modes = [ self::DEBUG_MODE_LOG, self::DEBUG_MODE_CHECKOUT, self::DEBUG_MODE_BOTH, self::DEBUG_MODE_OFF ];
 
-			$this->debug_mode = $mode;
-
-			$settings = get_option( $this->get_option_key() );
-
-			$settings['debug_mode'] = $this->debug_mode;
-
-			update_option( $this->get_option_key(), $settings );
+		if ( ! in_array( $debug_mode, $debug_modes, true ) ) {
+			throw new SV_WC_Plugin_Exception( sprintf(
+				/* translators: Placeholder: %1$s - debug mode identifier, %2$s - list of valid debug modes */
+				__( 'Invalid debug mode %1$s. Must be one of: %2$s.', 'woocommerce-plugin-framework' ),
+				is_string( $debug_mode ) ? $debug_mode : gettype( $debug_mode ),
+				implode( ', ', $debug_modes )
+			) );
 		}
+
+		$this->debug_mode = $debug_mode;
+
+		$settings = get_option( $this->get_option_key() );
+
+		$settings['debug_mode'] = $this->debug_mode;
+
+		update_option( $this->get_option_key(), $settings );
 	}
 
 

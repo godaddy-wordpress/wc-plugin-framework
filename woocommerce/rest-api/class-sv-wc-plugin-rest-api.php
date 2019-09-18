@@ -26,8 +26,6 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_5_0\REST_API\Debug_Controller;
 use SkyVerge\WooCommerce\PluginFramework\v5_5_0\REST_API\Log_Controller;
-use SkyVerge\WooCommerce\PluginFramework\v5_5_0\REST_API\v3\Debug;
-use SkyVerge\WooCommerce\PluginFramework\v5_5_0\REST_API\v3\Controller;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -48,8 +46,8 @@ class REST_API {
 	/** @var SV_WC_Plugin plugin instance */
 	private $plugin;
 
-	/** @var array associative array of supported framework endpoints for given API versions */
-	private $supports = [];
+	/** @var array associative array of REST API endpoints and supported WooCommerce REST API versions added by the framework */
+	private $endpoints;
 
 	/** @var Debug_Controller[] debug endpoint handlers according to supported API version in use */
 	private $debug_controller = [];
@@ -67,7 +65,15 @@ class REST_API {
 	 */
 	public function __construct( SV_WC_Plugin $plugin ) {
 
-		$this->plugin = $plugin;
+		$this->plugin    = $plugin;
+		$this->endpoints = [
+			'debug' => [
+				'v3',
+			],
+			'log'   => [
+				'v3',
+			],
+		];
 
 		$this->add_hooks();
 	}
@@ -148,11 +154,7 @@ class REST_API {
 	 */
 	public function register_routes() {
 
-		foreach ( $this->supports as $endpoint => $versions ) {
-
-			if ( ! is_array( $versions ) ) {
-				continue;
-			}
+		foreach ( $this->endpoints as $endpoint => $versions ) {
 
 			foreach ( $versions as $version ) {
 
@@ -179,17 +181,15 @@ class REST_API {
 	 */
 	public function get_debug_controller_instance( $api_version = 'v3' ) {
 
-		$supported_versions = [ 'v3' ];
-
-		if ( in_array( $api_version, $supported_versions, true ) ) {
+		if ( ! in_array( $api_version, $this->endpoints['debug'], true ) ) {
 			return null;
 		}
 
-		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\Debug_Controller' ) ) {
-			require_once( $this->get_plugin()->get_framework_path() . '/rest-api/Debug_Controller.php' );
-		}
-
 		if ( ! isset( $this->debug_controller[ $api_version ] ) ) {
+
+			if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\Debug_Controller' ) ) {
+				require_once( $this->get_plugin()->get_framework_path() . '/rest-api/Debug_Controller.php' );
+			}
 
 			require_once( $this->get_plugin()->get_framework_path() . '/rest-api/' . $api_version . '/Debug.php' );
 
@@ -212,17 +212,15 @@ class REST_API {
 	 */
 	public function get_log_controller_instance( $api_version = 'v3' ) {
 
-		$supported_versions = [ 'v3' ];
-
-		if ( in_array( $api_version, $supported_versions, true ) ) {
+		if ( ! in_array( $api_version, $this->endpoints['log'], true ) ) {
 			return null;
 		}
 
-		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\Log_Controller' ) ) {
-			require_once( $this->get_plugin()->get_framework_path() . '/rest-api/Log_Controller.php' );
-		}
-
 		if ( ! isset( $this->log_controller[ $api_version ] ) ) {
+
+			if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\Log_Controller' ) ) {
+				require_once( $this->get_plugin()->get_framework_path() . '/rest-api/Log_Controller.php' );
+			}
 
 			require_once( $this->get_plugin()->get_framework_path() . '/rest-api/' . $api_version . '/Log.php' );
 

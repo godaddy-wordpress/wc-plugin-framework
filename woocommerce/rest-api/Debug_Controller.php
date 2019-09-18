@@ -24,14 +24,13 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0\REST_API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_5_0\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_5_0\SV_WC_Payment_Gateway_Plugin;
 use SkyVerge\WooCommerce\PluginFramework\v5_5_0\SV_WC_Plugin;
-use SkyVerge\WooCommerce\PluginFramework\v5_5_0\SV_WC_Plugin_Exception;
 
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\Debug_Controller' ) ) :
+
 
 /**
  * The plugin REST API Debug endpoint.
@@ -42,7 +41,7 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 
 
 	/** @var SV_WC_Plugin main instance */
-	private $plugin;
+	protected $plugin;
 
 	/** @var string endpoint namespace */
 	protected $namespace;
@@ -84,13 +83,13 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 				'permission_callback' => [ $this, 'get_item_permissions_check' ],
 			],
 			// UPDATE (toggle) the debug mode
-			array(
+			[
 				'methods'             => \WP_REST_Server::EDITABLE,
 				/** @see \WC_REST_Controller::update_item() */
 				'callback'            => [ $this, 'update_item' ],
 				/** @see \WC_REST_Controller::update_item_permissions_check() */
 				'permission_callback' => [ $this, 'update_item_permissions_check' ],
-			),
+			],
 		], true );
 	}
 
@@ -129,14 +128,18 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 		];
 
 		if ( $plugin instanceof SV_WC_Payment_Gateway_Plugin ) {
+
+			$debug_mode['gateways'] = [];
+
 			foreach ( $plugin->get_gateways() as $gateway ) {
-				$debug_mode[ $gateway->get_id() ] = $gateway->get_debug_mode();
+
+				$debug_mode['gateways'][ $gateway->get_id() ] = $gateway->get_debug_mode();
 			}
 		}
 
 		return rest_ensure_response( [
 			'debug_mode' => $debug_mode,
-			'debug_log'  => defined( 'WC_LOG_HANDLER' ) ? WC_LOG_HANDLER: 'file',
+			'debug_log'  => defined( 'WC_LOG_HANDLER' ) ? WC_LOG_HANDLER : 'file',
 		] );
 	}
 
@@ -173,26 +176,27 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 
 			$plugin    = $this->get_plugin();
 			$plugin_id = $plugin->get_id();
+			$params    = $request->get_params();
 
-			if ( empty( $request['debug_mode'] ) || ! is_array( $request['debug_mode'] ) ) {
-				throw new \WC_REST_Exception( "woocommerce_rest_invalid_{$plugin_id}_debug_mode", __( 'Invalid debug mode data.', 'woocommerce-plugin-framework' ), 404 );
+			if ( empty( $params['debug_mode'] ) || ! is_array( $params['debug_mode'] ) ) {
+				throw new \WC_REST_Exception( "woocommerce_rest_invalid_{$plugin_id}_debug_mode", __( 'Invalid or missing debug mode.', 'woocommerce-plugin-framework' ), 404 );
 			}
 
-			$mode = $request['debug_mode'];
+			$debug_mode = $params['debug_mode'];
 
 			try {
 
-				if ( isset( $mode['plugin'] ) ) {
-					$plugin->set_debug_mode( $mode['plugin'] );
+				if ( isset( $debug_mode['plugin'] ) ) {
+					$plugin->set_debug_mode( $debug_mode['plugin'] );
 				}
 
-				if ( $plugin instanceof SV_WC_Payment_Gateway_Plugin ) {
+				if (  $plugin instanceof SV_WC_Payment_Gateway_Plugin && isset( $debug_mode['gateways'] ) ) {
 
 					foreach ( $plugin->get_gateways() as $gateway ) {
 
-						if ( array_key_exists( $gateway->get_id(), $mode ) ) {
+						if ( array_key_exists( $gateway->get_id(), $debug_mode['gateways'] ) ) {
 
-							$gateway->set_debug_mode( $mode[ $gateway->get_id() ] );
+							$gateway->set_debug_mode( $debug_mode['gateways'][ $gateway->get_id() ] );
 						}
 					}
 				}
@@ -227,5 +231,6 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 
 
 }
+
 
 endif;

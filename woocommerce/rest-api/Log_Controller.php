@@ -31,6 +31,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\Log_Controller' ) ) :
 
+
 /**
  * The plugin REST API Debug endpoint.
  *
@@ -40,7 +41,7 @@ abstract class Log_Controller extends \WC_REST_Controller {
 
 
 	/** @var SV_WC_Plugin main instance */
-	private $plugin;
+	protected $plugin;
 
 	/** @var string endpoint namespace */
 	protected $namespace;
@@ -113,19 +114,12 @@ abstract class Log_Controller extends \WC_REST_Controller {
 	 */
 	public function get_items( $request ) {
 
-		$params   = $request->get_params();
-		$log_src  = isset( $params['source'] ) ? $params['source'] : null;
-		$log_date = null;
-
-		if ( isset( $params['date'] ) && preg_match( '/\d{4}-\d{2}-\d{2}/', $params['date'] ) ) {
-			$log_date = $params['date'];
-		}
+		$response  = [];
+		$params    = $request->get_params();
+		$plugin    = $this->get_plugin();
+		$plugin_id = $plugin->get_id();
 
 		try {
-
-			$response  = [];
-			$plugin    = $this->get_plugin();
-			$plugin_id = $plugin->get_id();
 
 			if ( defined( 'WC_LOG_HANDLER' ) && 'WC_Log_Handler_DB' === WC_LOG_HANDLER ) {
 
@@ -133,59 +127,17 @@ abstract class Log_Controller extends \WC_REST_Controller {
 
 			} else {
 
-				$file_path = \WC_Log_Handler_File::get_log_file_path( $plugin->get_id() );
-
-				if ( ! $file_path ) {
-					throw new \WC_REST_Exception( "woocommerce_rest_{$plugin_id}_log_file_not_found", __( 'The resource does not exist.', 'woocommerce-plugin-framework' ), 404 );
-				}
-
-				$log_files = preg_grep( '~^' . $plugin->get_id() . '-.*\.php$~', scandir( $file_path ) );
-
-				foreach ( $log_files as $log_file ) {
-
-					if ( ( $log_src && $log_src !== $plugin_id ) || ( is_string( $log_date ) && false === strpos( $log_file, $log_date ) ) ) {
-						continue;
-					}
-
-					$response[ $plugin_id ][] = [
-						'type'       => 'file',
-						'origin'     => basename( $log_file ),
-						'contents'   => file_get_contents( $log_file ) ?: '',
-						'updated_at' => date( 'Y-m-d\TH:i:s\Z', filemtime( $file_path ) ),
-					];
-				}
+				$response['plugin'] = $this->get_log_files( $plugin_id, $params );
 
 				if ( $plugin instanceof SV_WC_Payment_Gateway_Plugin ) {
+
+					$response['gateways'] = [];
 
 					foreach ( $plugin->get_gateways() as $gateway ) {
 
 						$gateway_id = $gateway->get_id();
 
-						if ( $log_src && $log_src !== $gateway_id ) {
-							continue;
-						}
-
-						$file_path = \WC_Log_Handler_File::get_log_file_path( $gateway_id );
-
-						if ( ! $file_path ) {
-							throw new \WC_REST_Exception( "woocommerce_rest_{$plugin_id}_{$gateway_id}_log_file_not_found", __( 'The resource does not exist.', 'woocommerce-plugin-framework' ), 404 );
-						}
-
-						$log_files = preg_grep( '~^' . $gateway_id . '-.*\.php$~', scandir( $file_path ) );
-
-						foreach ( $log_files as $log_file ) {
-
-							if ( is_string( $log_date ) && false === strpos( $log_file, $log_date ) ) {
-								continue;
-							}
-
-							$response[ $gateway_id ][] = [
-								'type'       => 'file',
-								'origin'     => basename( $log_file ),
-								'contents'   => file_get_contents( $log_file ) ?: '',
-								'updated_at' => date( 'Y-m-d\TH:i:s\Z', filemtime( $file_path ) ),
-							];
-						}
+						$response['gateways'][ $gateway_id ] = $this->get_log_files( $gateway_id, $params );
 					}
 				}
 			}
@@ -196,6 +148,52 @@ abstract class Log_Controller extends \WC_REST_Controller {
 		}
 
 		return rest_ensure_response( $response );
+	}
+
+
+	/**
+	 * Gets log files.
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string $log_id log identifier (plugin ID, gateway ID)
+	 * @param array $params log query params
+	 * @return array log files
+	 * @throws \WC_REST_Exception on errors
+	 */
+	private function get_log_files( $log_id, $params ) {
+
+		$log_files = [];
+		$log_src   = ! empty( $params['source'] ) ? $params['source'] : null;
+		$log_date  = null;
+
+		if ( isset( $params['date'] ) && is_string( $params['date'] ) && preg_match( '/\d{4}-\d{2}-\d{2}/', $params['date'] ) ) {
+			$log_date = $params['date'];
+		}
+
+		$file_path = \WC_Log_Handler_File::get_log_file_path( $log_id );
+
+		if ( ! $file_path ) {
+			throw new \WC_REST_Exception( "woocommerce_rest_{$log_id}_log_file_not_found", __( 'The resource does not exist.', 'woocommerce-plugin-framework' ), 404 );
+		}
+
+		$found_files = preg_grep( '~^' . $log_id . '-.*\.php$~', scandir( $file_path ) );
+
+		foreach ( $found_files as $log_file ) {
+
+			if ( ( $log_src && $log_src !== $log_id ) || ( $log_date && false === strpos( $log_file, $log_date ) ) ) {
+				continue;
+			}
+
+			$log_files[] = [
+				'type'       => 'file',
+				'source'     => basename( $log_file ),
+				'contents'   => file_get_contents( $log_file ) ?: '',
+				'updated_at' => date( 'Y-m-d\TH:i:s\Z', (int) filemtime( $file_path ) ),
+			];
+		}
+
+		return $log_files;
 	}
 
 
@@ -213,5 +211,6 @@ abstract class Log_Controller extends \WC_REST_Controller {
 
 
 }
+
 
 endif;
