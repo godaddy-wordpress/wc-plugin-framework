@@ -1165,7 +1165,7 @@ abstract class SV_WC_Plugin {
 	 * @param array $args associative array of optional template arguments
 	 * @param null|string $path optional template path, will use default from plugin if null
 	 */
-	public function load_template( $template, $args, $path = '' ) {
+	public function load_template( $template, array $args = [], $path = '' ) {
 
 		$default_path = trailingslashit( $this->get_template_path() );
 
