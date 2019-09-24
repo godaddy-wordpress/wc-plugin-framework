@@ -189,7 +189,7 @@ class Capture {
 				__( '%1$s Capture of %2$s Approved', 'woocommerce-plugin-framework' ),
 				$this->get_gateway()->get_method_title(),
 				wc_price( $order->capture->amount, [
-					'currency' => $order->get_currency( 'edit' )
+					'currency' => $order->get_currency()
 				] )
 			);
 

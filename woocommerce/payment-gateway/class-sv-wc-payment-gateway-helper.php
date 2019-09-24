@@ -128,10 +128,10 @@ class SV_WC_Payment_Gateway_Helper {
 
 
 	/**
-	 * Determine the credit card type from a given account number (only first 4
-	 * required)
+	 * Determines the credit card type from a given account number (only first 4 required).
 	 *
 	 * @since 4.0.0
+	 *
 	 * @param string $account_number the credit card account number
 	 * @return string the credit card type
 	 */

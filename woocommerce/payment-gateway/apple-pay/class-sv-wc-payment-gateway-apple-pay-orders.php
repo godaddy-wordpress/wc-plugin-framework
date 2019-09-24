@@ -92,20 +92,20 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 
 				try {
 
-					$item = new \WC_Order_Item_Coupon();
+					$coupon_item = new \WC_Order_Item_Coupon();
 
-					$item->set_props( [
+					$coupon_item->set_props( [
 						'code'         => $code,
 						'discount'     => $cart->get_coupon_discount_amount( $code ),
 						'discount_tax' => $cart->get_coupon_discount_tax_amount( $code ),
 						'order_id'     => $order->get_id(),
 					] );
 
-					$item->save();
+					$coupon_item->save();
 
-					$order->add_item( $item );
+					$order->add_item( $coupon_item );
 
-					$added_coupon = (bool) $item->get_id();
+					$added_coupon = (bool) $coupon_item->get_id();
 
 				} catch ( \Exception $e ) {
 
@@ -198,22 +198,21 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 
 					try {
 
+						$tax_item = new \WC_Order_Item_Tax();
 
-						$item = new \WC_Order_Item_Tax();
-
-						$item->set_props( [
+						$tax_item->set_props( [
 							'rate_id'            => $rate_id,
 							'tax_total'          => $cart->get_tax_amount( $rate_id ),
 							'shipping_tax_total' => $cart->get_shipping_tax_amount( $rate_id ),
 						] );
 
-						$item->set_rate( $rate_id );
-						$item->set_order_id( $order->get_id() );
-						$item->save();
+						$tax_item->set_rate( $rate_id );
+						$tax_item->set_order_id( $order->get_id() );
+						$tax_item->save();
 
-						$order->add_item( $item );
+						$order->add_item( $tax_item );
 
-						$added_tax = (bool) $item->get_id();
+						$added_tax = (bool) $tax_item->get_id();
 
 					} catch ( \Exception $e ) {
 

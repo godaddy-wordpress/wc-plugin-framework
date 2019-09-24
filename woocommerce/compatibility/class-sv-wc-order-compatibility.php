@@ -192,7 +192,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function add_coupon( \WC_Order $order, $code = [], $discount = 0, $discount_tax = 0 ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::add_coupon()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::add_item()' );
 
 		$item = new \WC_Order_Item_Coupon();
 
@@ -225,7 +225,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function add_fee( \WC_Order $order, $fee ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::add_fee()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::add_item()' );
 
 		$item = new \WC_Order_Item_Fee();
 
@@ -262,7 +262,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function add_shipping( \WC_Order $order, $shipping_rate ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::add_shipping()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::add_item()' );
 
 		$item = new \WC_Order_Item_Shipping();
 
@@ -304,7 +304,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function add_tax( \WC_Order $order, $tax_rate_id, $tax_amount = 0, $shipping_tax_amount = 0 ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::add_tax()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::add_item()' );
 
 		$item = new \WC_Order_Item_Tax();
 
@@ -346,7 +346,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function update_coupon( \WC_Order $order, $item, $args ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::update_coupon()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order_Item_Coupon methods' );
 
 		if ( is_numeric( $item ) ) {
 			$item = $order->get_item( $item );
@@ -391,7 +391,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function update_fee( \WC_Order $order, $item, $args ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::update_fee()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order_Item_Fee methods' );
 
 		if ( is_numeric( $item ) ) {
 			$item = $order->get_item( $item );

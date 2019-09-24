@@ -2833,7 +2833,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		if ( ! $customer_id && $args['autocreate'] ) {
 
 			/** @var \WC_Order|null $order */
-			$order         = isset( $args['order'] ) && $args['order'] instanceof \WC_Order ? $args['order'] : null;
+			$order         = $args['order'] instanceof \WC_Order ? $args['order'] : null;
 			$billing_email = $order ? $order->get_billing_email() : '';
 
 			// Generate a new customer id.

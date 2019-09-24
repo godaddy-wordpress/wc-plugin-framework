@@ -63,7 +63,7 @@ class SV_WC_Plugin_Compatibility {
 
 		wc_deprecated_function( __METHOD__, '5.5.0', 'wc_get_is_paid_statuses()' );
 
-		return wc_get_is_paid_statuses();
+		return (array) wc_get_is_paid_statuses();
 	}
 
 
