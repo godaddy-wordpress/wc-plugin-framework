@@ -314,12 +314,11 @@ abstract class Log_Controller extends \WC_REST_Controller {
 
 				$upload_url       = trailingslashit( $upload_dir['baseurl'] );
 				$upload_url_parts = explode( '/', $upload_url );
-				$wc_log_dir_parts = explode( '/', WC_LOG_DIR );
 				$shared_path      = '';
 
-				foreach ( $wc_log_dir_parts as $part ) {
+				foreach ( explode( '/', WC_LOG_DIR ) as $part ) {
 					if ( $part && in_array( $part, $upload_url_parts, false ) ) {
-						$shared_path   .= $part . '/';
+						$shared_path .= $part . '/';
 					}
 				}
 
@@ -333,7 +332,7 @@ abstract class Log_Controller extends \WC_REST_Controller {
 						$log_file_url = $upload_url;
 
 						foreach ( explode( '/', $relative_path ) as $part ) {
-							if ( ! in_array( $part, $upload_url_parts, false ) ) {
+							if ( $part && ! in_array( $part, $upload_url_parts, false ) ) {
 								$log_file_url .= $part . '/';
 							}
 						}
