@@ -24,6 +24,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0\REST_API;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_5_0\SV_WC_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_5_0\SV_WC_Payment_Gateway_Plugin;
 use SkyVerge\WooCommerce\PluginFramework\v5_5_0\SV_WC_Plugin;
 
@@ -208,11 +209,13 @@ abstract class Log_Controller extends \WC_REST_Controller {
 			}
 
 			$logs[] = [
-				'type'       => 'database',
-				'source'     => $log_table,
 				'level'      => $log_entry->level,
 				'contents'   => $log_entry->message,
 				'updated_at' => date( 'Y-m-d\TH:i:s\Z', (int) strtotime( $log_entry->timestamp ) ),
+				'type'       => 'database',
+				'source'     => [
+					'table' => $log_table,
+				],
 			];
 		}
 
@@ -273,18 +276,75 @@ abstract class Log_Controller extends \WC_REST_Controller {
 				continue;
 			}
 
-			$log_file     = trailingslashit( $log_dir ) . $log_file;
-			$log_contents = file_get_contents( $log_file );
-			$log_files[]  = [
-				'type'       => 'file',
-				'source'     => basename( $log_file ),
+			$log_file_path = trailingslashit( $log_dir ) . $log_file;
+			$log_contents  = file_get_contents( $log_file_path );
+			$log_files[]   = [
 				'level'      => $default_log_level,
 				'contents'   => $log_contents ?: '',
-				'updated_at' => date( 'Y-m-d\TH:i:s\Z', (int) filemtime( $log_file ) ),
+				'updated_at' => date( 'Y-m-d\TH:i:s\Z', (int) filemtime( $log_file_path ) ),
+				'type'       => 'file',
+				'source'     => [
+					'path' => $log_file_path,
+					'url'  => $this->get_log_file_url( $log_file ),
+				],
 			];
 		}
 
 		return $log_files;
+	}
+
+
+	/**
+	 * Gets a log file source.
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string $log_file log file name
+	 * @return string log file URL
+	 */
+	private function get_log_file_url( $log_file ) {
+
+		$log_file_url = '';
+
+		if ( defined( 'WC_LOG_DIR' ) && WC_LOG_DIR ) {
+
+			$upload_dir = wp_get_upload_dir();
+
+			if ( ! empty( $upload_dir['baseurl'] ) ) {
+
+				$upload_url       = trailingslashit( $upload_dir['baseurl'] );
+				$upload_url_parts = explode( '/', $upload_url );
+				$wc_log_dir_parts = explode( '/', WC_LOG_DIR );
+				$shared_path      = '';
+
+				foreach ( $wc_log_dir_parts as $part ) {
+					if ( $part && in_array( $part, $upload_url_parts, false ) ) {
+						$shared_path   .= $part . '/';
+					}
+				}
+
+				if ( '' !== $shared_path   ) {
+
+					// usually: wp-content/uploads/wc-logs
+					$relative_path = substr( WC_LOG_DIR, strpos( WC_LOG_DIR, $shared_path   ) );
+
+					if ( '' !== $relative_path ) {
+
+						$log_file_url = $upload_url;
+
+						foreach ( explode( '/', $relative_path ) as $part ) {
+							if ( ! in_array( $part, $upload_url_parts, false ) ) {
+								$log_file_url .= $part . '/';
+							}
+						}
+
+						$log_file_url .= $log_file;
+					}
+				}
+			}
+		}
+
+		return $log_file_url;
 	}
 
 

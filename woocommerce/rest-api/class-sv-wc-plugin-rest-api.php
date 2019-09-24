@@ -184,7 +184,7 @@ class REST_API {
 		if ( null === $api_version ) {
 			$class_name = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\Debug_Controller';
 		} else {
-			$class_name = "\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\{$api_version}\\Debug_Controller";
+			$class_name = "\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\{$api_version}\\Debug";
 		}
 
 		return $class_name;
@@ -204,7 +204,7 @@ class REST_API {
 		if ( null === $api_version ) {
 			$class_path = $this->get_plugin()->get_framework_path() . '/rest-api/Debug_Controller.php';
 		} else {
-			$class_path = $this->get_plugin()->get_framework_path() . '/rest-api/' . $api_version . '/Debug_Controller.php';
+			$class_path = $this->get_plugin()->get_framework_path() . '/rest-api/' . $api_version . '/Debug.php';
 		}
 
 		return $class_path;
@@ -261,7 +261,7 @@ class REST_API {
 		if ( null === $api_version ) {
 			$class_name = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\Log_Controller';
 		} else {
-			$class_name = "\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\{$api_version}\\Log_Controller";
+			$class_name = "\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\{$api_version}\\Log";
 		}
 
 		return $class_name;
@@ -281,7 +281,7 @@ class REST_API {
 		if ( null === $api_version ) {
 			$class_path = $this->get_plugin()->get_framework_path() . '/rest-api/Log_Controller.php';
 		} else {
-			$class_path = $this->get_plugin()->get_framework_path() . '/rest-api/' . $api_version . '/Log_Controller.php';
+			$class_path = $this->get_plugin()->get_framework_path() . '/rest-api/' . $api_version . '/Log.php';
 		}
 
 		return $class_path;
