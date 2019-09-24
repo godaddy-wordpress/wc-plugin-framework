@@ -172,11 +172,51 @@ class REST_API {
 
 
 	/**
+	 * Gets the debug controller class name.
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string|null $api_version API version, or null for abstract
+	 * @return string
+	 */
+	protected function get_debug_controller_class_name( $api_version = null ) {
+
+		if ( null === $api_version ) {
+			$class_name = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\Debug_Controller';
+		} else {
+			$class_name = "\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\{$api_version}\\Debug_Controller";
+		}
+
+		return $class_name;
+	}
+
+
+	/**
+	 * Gets the debug controller class path.
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string|null $api_version API version, or null for abstract
+	 * @return string
+	 */
+	protected function get_debug_controller_class_path( $api_version = null ) {
+
+		if ( null === $api_version ) {
+			$class_path = $this->get_plugin()->get_framework_path() . '/rest-api/Debug_Controller.php';
+		} else {
+			$class_path = $this->get_plugin()->get_framework_path() . '/rest-api/' . $api_version . '/Debug_Controller.php';
+		}
+
+		return $class_path;
+	}
+
+
+	/**
 	 * Gets the debug controller endpoint handler instance.
 	 *
 	 * @since 5.5.0-dev
 	 *
-	 * @param string $api_version API version for the controller to be returned
+	 * @param string $api_version API version for the controller to be returned (default: latest supported)
 	 * @return null|Debug_Controller
 	 */
 	public function get_debug_controller_instance( $api_version = 'v3' ) {
@@ -187,18 +227,64 @@ class REST_API {
 
 		if ( ! isset( $this->debug_controller[ $api_version ] ) ) {
 
-			if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\Debug_Controller' ) ) {
-				require_once( $this->get_plugin()->get_framework_path() . '/rest-api/Debug_Controller.php' );
+			$debug_class_abstract_name = $this->get_debug_controller_class_name();
+			$debug_class_abstract_path = $this->get_debug_controller_class_path();
+
+			if ( ! class_exists( $debug_class_abstract_name ) ) {
+				require_once( $debug_class_abstract_path );
 			}
 
-			require_once( $this->get_plugin()->get_framework_path() . '/rest-api/' . $api_version . '/Debug.php' );
+			$debug_class_name = $this->get_debug_controller_class_name( $api_version );
+			$debug_class_path = $this->get_debug_controller_class_path( $api_version );
 
-			$controller = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\' . $api_version . '\\Debug';
+			if ( ! class_exists( $debug_class_name ) ) {
+				require_once( $debug_class_path );
+			}
 
-			$this->debug_controller[ $api_version ] = new $controller( $this->get_plugin() );
+			$this->debug_controller[ $api_version ] = new $debug_class_name( $this->get_plugin() );
 		}
 
 		return $this->debug_controller[ $api_version ];
+	}
+
+
+	/**
+	 * Gets the log controller class name.
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string|null $api_version API version, or null for abstract
+	 * @return string
+	 */
+	protected function get_log_controller_class_name( $api_version = null ) {
+
+		if ( null === $api_version ) {
+			$class_name = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\Log_Controller';
+		} else {
+			$class_name = "\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\{$api_version}\\Log_Controller";
+		}
+
+		return $class_name;
+	}
+
+
+	/**
+	 * Gets the log controller class path.
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string|null $api_version API version, or null for abstract
+	 * @return string
+	 */
+	protected function get_log_controller_class_path( $api_version = null ) {
+
+		if ( null === $api_version ) {
+			$class_path = $this->get_plugin()->get_framework_path() . '/rest-api/Log_Controller.php';
+		} else {
+			$class_path = $this->get_plugin()->get_framework_path() . '/rest-api/' . $api_version . '/Log_Controller.php';
+		}
+
+		return $class_path;
 	}
 
 
@@ -207,7 +293,7 @@ class REST_API {
 	 *
 	 * @since 5.5.0-dev
 	 *
-	 * @param string $api_version API version for the controller to be returned
+	 * @param string $api_version API version for the controller to be returned (default: latest supported)
 	 * @return null|Log_Controller
 	 */
 	public function get_log_controller_instance( $api_version = 'v3' ) {
@@ -218,15 +304,21 @@ class REST_API {
 
 		if ( ! isset( $this->log_controller[ $api_version ] ) ) {
 
-			if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\Log_Controller' ) ) {
-				require_once( $this->get_plugin()->get_framework_path() . '/rest-api/Log_Controller.php' );
+			$log_class_abstract_name = $this->get_log_controller_class_name();
+			$log_class_abstract_path = $this->get_log_controller_class_path();
+
+			if ( ! class_exists( $log_class_abstract_name ) ) {
+				require_once( $log_class_abstract_path );
 			}
 
-			require_once( $this->get_plugin()->get_framework_path() . '/rest-api/' . $api_version . '/Log.php' );
+			$log_class_name = $this->get_log_controller_class_name( $api_version );
+			$log_class_path = $this->get_log_controller_class_path( $api_version );
 
-			$controller = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API\\' . $api_version . '\\Log';
+			if ( ! class_exists( $log_class_name ) ) {
+				require_once( $log_class_path );
+			}
 
-			$this->log_controller[ $api_version ] = new $controller( $this->get_plugin() );
+			$this->log_controller[ $api_version ] = new $log_class_name( $this->get_plugin() );
 		}
 
 		return $this->log_controller[ $api_version ];
