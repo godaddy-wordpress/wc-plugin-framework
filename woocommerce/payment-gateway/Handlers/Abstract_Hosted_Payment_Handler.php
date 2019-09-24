@@ -28,6 +28,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_5_0 as FrameworkBase;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\Payment_Gateway\\Handlers\\Abstract_Hosted_Payment_Handler' ) ) :
 
+
 /**
  * The base hosted payment handler.
  *
@@ -383,5 +384,6 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 
 
 }
+
 
 endif;

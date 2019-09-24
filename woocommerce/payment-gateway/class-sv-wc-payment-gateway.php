@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway' ) ) :
 
+
 /**
  * WooCommerce Payment Gateway Framework
  *
@@ -633,14 +634,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		if ( is_checkout_pay_page() ) {
 
-			$order_id  = $this->get_checkout_pay_page_order_id();
+			$order_id = $this->get_checkout_pay_page_order_id();
 
-			if ( $order_id ) {
-				$order = wc_get_order( $order_id );
+			if ( $order_id && ( $order = wc_get_order( $order_id ) ) ) {
 
-				return SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' ) === $this->get_id();
+				return $order->get_payment_method( 'edit' ) === $this->get_id();
 			}
-
 		}
 
 		return null;
@@ -1204,7 +1203,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				self::DEBUG_MODE_CHECKOUT => esc_html__( 'Show on Checkout Page', 'woocommerce-plugin-framework' ),
 				self::DEBUG_MODE_LOG      => esc_html__( 'Save to Log', 'woocommerce-plugin-framework' ),
 				/* translators: show debugging information on both checkout page and in the log */
-				self::DEBUG_MODE_BOTH     => esc_html__( 'Both', 'woocommerce-plugin-framework' )
+				self::DEBUG_MODE_BOTH     => esc_html__( 'Both', 'woocommerce-plugin-framework' ),
 			),
 		);
 
@@ -1519,9 +1518,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		// any required countries?
 		if ( $this->countries && WC()->customer ) {
 
-			$customer_country = ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) ? WC()->customer->get_billing_country() : WC()->customer->get_country();
+			$customer_country = WC()->customer->get_billing_country();
 
 			if ( $customer_country && ! in_array( $customer_country, $this->countries, true ) ) {
+
 				$is_available = false;
 			}
 		}
@@ -1734,7 +1734,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 			$this->mark_order_as_held( $order, $message, $response );
 
-			SV_WC_Order_Compatibility::reduce_stock_levels( $order );
+			wc_reduce_stock_levels( $order );
 
 		} else {
 
@@ -1812,7 +1812,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		/* translators: Placeholders: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card. */
 		$order->capture->description = sprintf( esc_html__( '%1$s - Capture for Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
-		$order->capture->trans_id = $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'trans_id' );
+		$order->capture->trans_id = $this->get_order_meta( $order, 'trans_id' );
 
 		/**
 		 * Direct Gateway Capture Get Order Filter.
@@ -1957,7 +1957,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$order->refund->reason = $reason ? $reason : sprintf( esc_html__( '%1$s - Refund for Order %2$s', 'woocommerce-plugin-framework' ), esc_html( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
 
 		// almost all gateways require the original transaction ID, so include it by default
-		$order->refund->trans_id = $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'trans_id' );
+		$order->refund->trans_id = $this->get_order_meta( $order, 'trans_id' );
 
 		/**
 		 * Payment Gateway Get Order For Refund Filter.
@@ -2023,7 +2023,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - a monetary amount */
 			esc_html__( '%1$s Refund in the amount of %2$s approved.', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
-			wc_price( $order->refund->amount, array( 'currency' => SV_WC_Order_Compatibility::get_prop( $order, 'currency', 'view' ) ) )
+			wc_price( $order->refund->amount, [
+				'currency' => $order->get_currency()
+			] )
 		);
 
 		// adds the transaction id (if any) to the order note
@@ -2254,7 +2256,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			/* translators: Placeholders: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order. */
 			esc_html__( '%1$s Void in the amount of %2$s approved.', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
-			wc_price( $order->refund->amount, array( 'currency' => SV_WC_Order_Compatibility::get_prop( $order, 'currency', 'view' ) ) )
+			wc_price( $order->refund->amount, [
+				'currency' => $order->get_currency()
+			] )
 		);
 
 		// adds the transaction id (if any) to the order note
@@ -2312,12 +2316,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	protected function get_order_with_unique_transaction_ref( $order ) {
 
-		$order_id = SV_WC_Order_Compatibility::get_prop( $order, 'id' );
+		$retry_count = $this->get_order_meta( $order, 'retry_count' );
 
 		// generate a unique retry count
-		if ( is_numeric( $this->get_order_meta( $order_id, 'retry_count' ) ) ) {
-			$retry_count = $this->get_order_meta( $order_id, 'retry_count' );
-
+		if ( is_numeric( $retry_count ) ) {
 			$retry_count++;
 		} else {
 			$retry_count = 0;
@@ -2384,7 +2386,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 			$this->update_order_meta( $order, 'trans_id', $response->get_transaction_id() );
 
-			update_post_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), '_transaction_id', $response->get_transaction_id() );
+			update_post_meta( $order->get_id(), '_transaction_id', $response->get_transaction_id() );
 		}
 
 		// transaction date
@@ -2803,24 +2805,25 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Gets/sets the payment gateway customer id, this defaults to wc-{user id}
-	 * and retrieves/stores to the user meta named by get_customer_id_user_meta_name()
-	 * This can be overridden for gateways that use some other value, or made to
-	 * return false for gateways that don't support a customer id.
+	 * Gets/sets the payment gateway customer id.
+	 *
+	 * This defaults to wc-{user id} and retrieves/stores to the user meta named by get_customer_id_user_meta_name()
+	 * This can be overridden for gateways that use some other value, or made to return false for gateways that don't support a customer id.
+	 * @see SV_WC_Payment_Gateway::get_customer_id_user_meta_name()
 	 *
 	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::get_customer_id_user_meta_name()
+	 *
 	 * @param int $user_id wordpress user identifier
 	 * @param array $args optional additional arguments which can include: environment_id, autocreate (true/false), and order
 	 * @return string payment gateway customer id
 	 */
-	public function get_customer_id( $user_id, $args = array() ) {
+	public function get_customer_id( $user_id, $args = [] ) {
 
-		$defaults = array(
+		$defaults = [
 			'environment_id' => $this->get_environment(),
 			'autocreate'     => true,
 			'order'          => null,
-		);
+		];
 
 		$args = array_merge( $defaults, $args );
 
@@ -2829,12 +2832,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		if ( ! $customer_id && $args['autocreate'] ) {
 
-			$billing_email = ( $args['order'] ) ? SV_WC_Order_Compatibility::get_prop( $args['order'], 'billing_email' ) : '';
+			/** @var \WC_Order|null $order */
+			$order         = isset( $args['order'] ) && $args['order'] instanceof \WC_Order ? $args['order'] : null;
+			$billing_email = $order ? $order->get_billing_email() : '';
 
-			// generate a new customer id.  We try to use 'wc-<hash of billing email>'
-			//  if an order is available, on the theory that it will avoid clashing of
-			//  accounts if a customer uses the same merchant account on multiple independent
-			//  shops.  Otherwise, we use 'wc-<user_id>-<random>'
+			// Generate a new customer id.
+			// We try to use 'wc-<hash of billing email>' if an order/email is available, on the theory that it will avoid clashing of accounts if a customer uses the same merchant account on multiple independent shops.
+			// Otherwise, we use 'wc-<user_id>-<random>'
 			if ( $billing_email ) {
 				$customer_id = 'wc-' . md5( $billing_email );
 			} else {
@@ -2849,20 +2853,21 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Updates the payment gateway customer id for the given $environment, or
-	 * for the plugin current environment
+	 * Updates the payment gateway customer id for the given $environment, or for the plugin current environment.
+	 *
+	 * @see SV_WC_Payment_Gateway::get_customer_id()
 	 *
 	 * @since 1.0.0
-	 * @see SV_WC_Payment_Gateway::get_customer_id()
+	 *
 	 * @param int $user_id WP user ID
 	 * @param string $customer_id payment gateway customer id
 	 * @param string $environment_id optional environment id, defaults to current environment
-	 * @return boolean|int false if no change was made (if the new value was the same as previous value) or if the update failed, meta id if the value was different and the update a success
+	 * @return false|int false if no change was made (if the new value was the same as previous value) or if the update failed, meta id if the value was different and the update a success
 	 */
 	public function update_customer_id( $user_id, $customer_id, $environment_id = null ) {
 
 		// default to current environment
-		if ( is_null( $environment_id ) ) {
+		if ( null === $environment_id ) {
 			$environment_id = $this->get_environment();
 		}
 
@@ -2871,17 +2876,17 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Removes the payment gateway customer id for the given $environment, or
-	 * for the plugin current environment
+	 * Removes the payment gateway customer id for the given $environment, or for the plugin current environment.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @param int $user_id WP user ID
 	 * @param string $environment_id optional environment id, defaults to current environment
-	 * @return boolean true on success, false on failure
+	 * @return bool success
 	 */
 	public function remove_customer_id( $user_id, $environment_id = null ){
 
-		if ( is_null( $environment_id ) ) {
+		if ( null === $environment_id ) {
 			$environment_id = $this->get_environment();
 		}
 
@@ -2891,10 +2896,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Returns a payment gateway customer id for a guest customer.  This
-	 * defaults to wc-guest-{order id} but can be overridden for gateways that
-	 * use some other value, or made to return false for gateways that don't
-	 * support a customer id
+	 * Gets a payment gateway customer id for a guest customer.
+	 *
+	 * This defaults to wc-guest-{order id} but can be overridden for gateways that use some other value, or made to return false for gateways that don't support a customer id.
 	 *
 	 * @since 1.0.0
 	 *
@@ -2904,14 +2908,14 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	public function get_guest_customer_id( \WC_Order $order ) {
 
 		// is there a customer id already tied to this order?
-		$customer_id = $this->get_order_meta( SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'customer_id' );
-
-		if ( $customer_id ) {
-			return $customer_id;
-		}
+		$customer_id = $this->get_order_meta( $order, 'customer_id' );
 
 		// default
-		return 'wc-guest-' . SV_WC_Order_Compatibility::get_prop( $order, 'id' );
+		if ( ! $customer_id ) {
+			$customer_id = 'wc-guest-' . $order->get_id();
+		}
+
+		return $customer_id;
 	}
 
 
@@ -2931,12 +2935,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * id will be the same between them.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $environment_id optional environment id, defaults to plugin current environment
 	 * @return string payment gateway customer id user meta name
 	 */
 	public function get_customer_id_user_meta_name( $environment_id = null ) {
 
-		if ( is_null( $environment_id ) ) {
+		if ( null === $environment_id ) {
 			$environment_id = $this->get_environment();
 		}
 
@@ -3052,7 +3057,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		if ( $this->supports_credit_card_capture() ) {
 
 			// get a list of the "paid" status names
-			$paid_statuses = array_map( 'wc_get_order_status_name', (array) SV_WC_Plugin_Compatibility::wc_get_is_paid_statuses() );
+			$paid_statuses = array_map( 'wc_get_order_status_name', (array) wc_get_is_paid_statuses() );
 			$conjuction    = _x( 'or', 'coordinating conjunction for a list of order statuses: on-hold, processing, or completed', 'woocommerce-plugin-framework' );
 
 			$form_fields['enable_paid_capture'] = array(
@@ -3472,9 +3477,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Get payment currency, either from current order or WC settings
+	 * Gets the payment currency, either from current order or WC settings.
 	 *
 	 * @since 4.1.0
+	 *
 	 * @return string three-letter currency code
 	 */
 	protected function get_payment_currency() {
@@ -3482,11 +3488,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$currency = get_woocommerce_currency();
 		$order_id = $this->get_checkout_pay_page_order_id();
 
-		// Gets currency for the current order, that is about to be paid for
+		// gets currency for the current order, that is about to be paid for
 		if ( $order_id ) {
 
 			$order    = wc_get_order( $order_id );
-			$currency = SV_WC_Order_Compatibility::get_prop( $order, 'currency', 'view' );
+			$currency = $order->get_currency();
 		}
 
 		return $currency;
@@ -3494,13 +3500,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Returns true if $currency is accepted by this gateway
+	 * Determines if a given currency is accepted by this gateway.
 	 *
 	 * @since 2.1.0
-	 * @param string $currency optional three-letter currency code, defaults to
-	 *        order currency (if available) or currently configured WooCommerce
-	 *        currency
-	 * @return boolean true if $currency is accepted, false otherwise
+	 *
+	 * @param string $currency optional three-letter currency code, defaults to order currency (if available) or currently configured WooCommerce currency
+	 * @return bool
 	 */
 	public function currency_is_accepted( $currency = null ) {
 
@@ -3510,11 +3515,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		// default to order/WC currency
-		if ( is_null( $currency ) ) {
+		if ( null === $currency ) {
 			$currency = $this->get_payment_currency();
 		}
 
-		return in_array( $currency, $this->currencies );
+		return in_array( $currency, $this->currencies, false );
 	}
 
 
@@ -3532,15 +3537,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			return false;
 		}
 
+		/** @var \WC_Order_Item_Product $item */
 		foreach ( $order->get_items() as $item ) {
 
-			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
-				$product = $item->get_product();
-			} else {
-				$product = $order->get_product_from_item( $item );
-			}
+			$product = $item->get_product();
 
 			if ( $product && $product->needs_shipping() ) {
+
 				return true;
 			}
 		}
@@ -3562,7 +3565,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @param string $key meta key (already prefixed with gateway ID)
 	 * @param mixed $value meta value
 	 * @param bool $unique whether the meta value should be unique
-	 * @return false|void
+	 * @return bool success
 	 */
 	public function add_order_meta( $order, $key, $value, $unique = false ) {
 
@@ -3570,23 +3573,22 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			$order = wc_get_order( $order );
 		}
 
-		if ( ! $order instanceof \WC_Order ) {
-			return false;
+		if ( $order instanceof \WC_Order ) {
+			$order->add_meta_data( $this->get_order_meta_prefix() . $key, $value, $unique );
 		}
 
-		return SV_WC_Order_Compatibility::add_meta_data( $order, $this->get_order_meta_prefix() . $key, $value, $unique );
+		return $order instanceof \WC_Order;
 	}
 
 
 	/**
 	 * Gets order meta data.
 	 *
-	 * Note this is hardcoded to return a single value for the get_post_meta() call.
-	 *
 	 * @since 2.2.0
+	 *
 	 * @param \WC_Order|int the order to get meta for
 	 * @param string $key meta key
-	 * @return mixed
+	 * @return false|mixed
 	 */
 	public function get_order_meta( $order, $key ) {
 
@@ -3595,10 +3597,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		if ( ! $order instanceof \WC_Order ) {
-			return false;
+			$meta = false;
+		} else {
+			$meta = $order->get_meta( $this->get_order_meta_prefix() . $key, true );
 		}
 
-		return SV_WC_Order_Compatibility::get_meta( $order, $this->get_order_meta_prefix() . $key, true );
+		return $meta;
 	}
 
 
@@ -3610,7 +3614,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @param \WC_Order|int the order to update meta for
 	 * @param string $key meta key
 	 * @param mixed $value meta value
-	 * @return false|void
+	 * @return bool success
 	 */
 	public function update_order_meta( $order, $key, $value ) {
 
@@ -3618,11 +3622,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			$order = wc_get_order( $order );
 		}
 
-		if ( ! $order instanceof \WC_Order ) {
-			return false;
+		if ( $order instanceof \WC_Order ) {
+			$order->update_meta_data( $this->get_order_meta_prefix() . $key, $value );
 		}
 
-		return SV_WC_Order_Compatibility::update_meta_data( $order, $this->get_order_meta_prefix() . $key, $value );
+		return $order instanceof \WC_Order;
 	}
 
 
@@ -3632,7 +3636,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @since 2.2.0
 	 * @param \WC_Order|int the order to delete meta for
 	 * @param string $key meta key
-	 * @return bool
+	 * @return bool success
 	 */
 	public function delete_order_meta( $order, $key ) {
 
@@ -3640,11 +3644,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			$order = wc_get_order( $order );
 		}
 
-		if ( ! $order instanceof \WC_Order ) {
-			return false;
+		if ( $order instanceof \WC_Order ) {
+			$order->delete_meta_data( $this->get_order_meta_prefix() . $key );
 		}
 
-		return SV_WC_Order_Compatibility::delete_meta_data( $order, $this->get_order_meta_prefix() . $key );
+		return $order instanceof \WC_Order ;
 	}
 
 
@@ -3654,9 +3658,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Defaults to `_wc_{gateway_id}_`
 	 *
 	 * @since 2.2.0
+	 *
 	 * @return string
 	 */
 	public function get_order_meta_prefix() {
+
 		return '_wc_' . $this->get_id() . '_';
 	}
 
@@ -4187,7 +4193,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function authorization_valid_for_capture( $order ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::order_can_be_captured()' );
+		wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::order_can_be_captured()' );
 
 		return $this->get_capture_handler()->order_can_be_captured( $order );
 	}
@@ -4204,7 +4210,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function authorization_captured( $order ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::is_order_captured()' );
+		wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::is_order_captured()' );
 
 		return $this->get_capture_handler()->is_order_captured( $order );
 	}
@@ -4221,7 +4227,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function has_authorization_expired( $order ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::has_order_authorization_expired()' );
+		wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::has_order_authorization_expired()' );
 
 		return $this->get_capture_handler()->has_order_authorization_expired( $order );
 	}
@@ -4238,7 +4244,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function authorization_fully_captured( $order ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::is_order_fully_captured()' );
+		wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::is_order_fully_captured()' );
 
 		return $this->get_capture_handler()->is_order_fully_captured( $order );
 	}
@@ -4256,7 +4262,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function do_credit_card_capture( $order, $amount = null ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::perform_capture()' );
+		wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::perform_capture()' );
 
 		$result = $this->get_capture_handler()->perform_capture( $order, $amount );
 
@@ -4278,7 +4284,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	protected function do_credit_card_capture_failed( \WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::do_capture_failed()' );
+		wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::do_capture_failed()' );
 
 		$this->get_capture_handler()->do_capture_failed( $order, $response );
 	}
@@ -4299,7 +4305,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function get_order_capture_maximum( \WC_Order $order ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::get_order_capture_maximum()' );
+		wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::get_order_capture_maximum()' );
 
 		return $this->get_capture_handler()->get_order_capture_maximum( $order );
 	}
@@ -4316,7 +4322,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function get_order_authorization_amount( \WC_Order $order ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::get_order_authorization_amount()' );
+		wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::get_order_authorization_amount()' );
 
 		return $this->get_capture_handler()->get_order_authorization_amount( $order );
 	}
@@ -4333,7 +4339,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	protected function add_capture_data( $order, $response ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::do_capture_success()' );
+		wc_deprecated_function( __METHOD__, '5.3.0', get_class( $this->get_capture_handler() ) . '::do_capture_success()' );
 
 		$this->get_capture_handler()->do_capture_success( $order, $response );
 	}
@@ -4350,10 +4356,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	protected function add_payment_gateway_capture_data( $order, $response ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0' );
+		wc_deprecated_function( __METHOD__, '5.3.0' );
 	}
 
 
 }
 
-endif;  // class exists check
+
+endif;

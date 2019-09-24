@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Direct' ) ) :
 
+
 /**
  * # WooCommerce Payment Gateway Framework Direct Gateway
  *
@@ -400,9 +401,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$held_order_status = apply_filters( 'wc_' . $this->get_id() . '_held_order_status', 'on-hold', $order, null );
 
 				if ( $order->has_status( $held_order_status ) ) {
-					SV_WC_Order_Compatibility::reduce_stock_levels( $order ); // reduce stock for held orders, but don't complete payment
+					// reduce stock for held orders, but don't complete payment
+					wc_reduce_stock_levels( $order );
 				} else {
-					$order->payment_complete(); // mark order as having received payment
+					// mark order as having received payment
+					$order->payment_complete();
 				}
 
 				// process_payment() can sometimes be called in an admin-context
@@ -1002,11 +1005,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 
 	/**
-	 * Creates the order required for adding a new payment method. Note that
-	 * a mock order is generated as there is no actual order associated with the
-	 * request.
+	 * Creates the order required for adding a new payment method.
+	 *
+	 * Note that a mock order is generated as there is no actual order associated with the request.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @return \WC_Order generated order object
 	 */
 	protected function get_order_for_add_payment_method() {
@@ -1017,12 +1021,13 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		$user = get_userdata( get_current_user_id() );
 
-		$properties = array(
+		$properties = [
 			'currency'    => get_woocommerce_currency(), // default to base store currency
 			'customer_id' => $user->ID,
-		);
+		];
 
-		$defaults = array(
+		$defaults = [
+
 			// billing
 			'billing_first_name' => '',
 			'billing_last_name'  => '',
@@ -1046,7 +1051,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			'shipping_postcode'   => '',
 			'shipping_state'      => '',
 			'shipping_country'    => '',
-		);
+
+		];
 
 		foreach ( $defaults as $prop => $value ) {
 
@@ -1057,7 +1063,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			}
 		}
 
-		$order = SV_WC_Order_Compatibility::set_props( $order, $properties );
+		$order->set_props( $properties );
 
 		// other default info
 		$order->customer_id = $this->get_customer_id( $order->get_user_id() );
@@ -1071,10 +1077,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		/**
 		 * Direct Gateway Get Order for Add Payment Method Filter.
 		 *
-		 * Allow actors to modify the order object used for an add payment method
-		 * transaction.
+		 * Allow actors to modify the order object used for an add payment method transaction.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param \WC_Order $order order object
 		 * @param SV_WC_Payment_Gateway_Direct $this instance
 		 */
@@ -1187,6 +1193,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		return false;
 	}
 
+
 }
 
-endif;  // class exists check
+
+endif;

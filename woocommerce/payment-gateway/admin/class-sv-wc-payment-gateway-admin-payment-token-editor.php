@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Admin_Payment_Token_Editor' ) ) :
 
+
 /**
  * The token editor.
  *
@@ -716,5 +717,6 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 
 }
+
 
 endif;

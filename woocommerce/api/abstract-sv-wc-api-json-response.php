@@ -101,4 +101,5 @@ abstract class SV_WC_API_JSON_Response implements SV_WC_API_Response {
 
 }
 
-endif; // class exists check
+
+endif;

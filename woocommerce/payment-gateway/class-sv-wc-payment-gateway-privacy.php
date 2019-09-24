@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Privacy' ) ) :
 
+
 /**
  * The payment gateway privacy handler class.
  *
@@ -385,5 +386,6 @@ class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 
 
 }
+
 
 endif;

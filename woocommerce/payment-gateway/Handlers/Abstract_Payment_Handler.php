@@ -28,6 +28,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_5_0 as FrameworkBase;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\Payment_Gateway\\Handlers\\Abstract_Payment_Handler' ) ) :
 
+
 /**
  * The base payment handler class.
  *
@@ -300,7 +301,7 @@ abstract class Abstract_Payment_Handler {
 	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
-	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response API response object
+	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Customer_Response|FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response API response object
 	 */
 	public function mark_order_as_paid( \WC_Order $order, FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
 
@@ -310,9 +311,11 @@ abstract class Abstract_Payment_Handler {
 		$this->get_gateway()->add_payment_gateway_transaction_data( $order, $response );
 
 		if ( $order->has_status( $this->get_held_order_status( $order, $response ) ) ) {
-			FrameworkBase\SV_WC_Order_Compatibility::reduce_stock_levels( $order ); // reduce stock for held orders, but don't complete payment
+			// reduce stock for held orders, but don't complete payment
+			wc_reduce_stock_levels( $order );
 		} else {
-			$order->payment_complete(); // mark order as having received payment
+			// mark order as having received payment
+			$order->payment_complete();
 		}
 
 		/**
@@ -497,5 +500,6 @@ abstract class Abstract_Payment_Handler {
 
 
 }
+
 
 endif;

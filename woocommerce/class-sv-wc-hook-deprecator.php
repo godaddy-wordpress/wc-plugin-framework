@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Hook_Deprecator' ) ) :
 
+
 /**
  * SkyVerge Hook Deprecator Class
  *
@@ -195,4 +196,4 @@ class SV_WC_Hook_Deprecator {
 }
 
 
-endif; // class exists check
+endif;

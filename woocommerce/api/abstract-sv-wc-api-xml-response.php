@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_API_XML_Response' ) ) :
 
+
 /**
  * Base XML API response class.
  *
@@ -133,4 +134,5 @@ abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 
 }
 
-endif; // class exists check
+
+endif;

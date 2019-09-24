@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Apple_Pay_Admin' ) ) :
 
+
 /**
  * Sets up the Apple Pay settings screen.
  *
@@ -404,5 +405,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 
 
 }
+
 
 endif;

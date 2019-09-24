@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_API_Create_Payment_Token_Response' ) ) :
 
+
 /**
  * WooCommerce Direct Payment Gateway API Create Payment Token Response
  */
@@ -46,4 +47,5 @@ interface SV_WC_Payment_Gateway_API_Create_Payment_Token_Response extends SV_WC_
 
 }
 
-endif;  // interface exists check
+
+endif;

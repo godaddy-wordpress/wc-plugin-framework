@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Plugin' ) ) :
 
+
 /**
  * # WooCommerce Payment Gateway Plugin Framework
  *
@@ -1047,7 +1048,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_payment_gateway_configuration_section( $gateway_id ) {
 
-		SV_WC_Plugin_Compatibility::wc_doing_it_wrong( 'SV_WC_Payment_Gateway_Plugin::get_payment_gateway_configuration_section()', 'Deprecated! Use the plain gateway ID instead.', '5.0.1' );
+		wc_doing_it_wrong( 'SV_WC_Payment_Gateway_Plugin::get_payment_gateway_configuration_section()', 'Deprecated! Use the plain gateway ID instead.', '5.0.1' );
 
 		return strtolower( $gateway_id );
 	}
@@ -1335,5 +1336,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 }
+
 
 endif;

@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Payment_Token' ) ) :
 
+
 /**
  * WooCommerce Payment Gateway Token
  *
@@ -91,15 +92,16 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
-	 * Returns the payment token string
+	 * Gets the payment token string.
 	 *
 	 * @since 1.0.0
-	 * @deprecated since 4.0.0
+	 * @deprecated 4.0.0
+	 *
 	 * @return string payment token string
 	 */
 	public function get_token() {
 
-		_deprecated_function( 'SV_WC_Payment_Gateway_Payment_Token::get_token()', '4.0.0', 'SV_WC_Payment_Gateway_Payment_Token::get_id()' );
+		_deprecated_function( __METHOD__, '4.0.0', 'SV_WC_Payment_Gateway_Payment_Token::get_id()' );
 
 		return $this->get_id();
 	}
@@ -154,13 +156,16 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
-	 * Returns true if this payment token represents an eCheck
+	 * Determines if this payment token represents an eCheck.
 	 *
 	 * @since 1.0.0
 	 * @deprecated since 4.0.0
-	 * @return boolean true if this payment token represents an eCheck
+	 *
+	 * @return bool
 	 */
 	public function is_check() {
+
+		wc_deprecated_function( __METHOD__, '4.0.0', __CLASS__ . '::is_echeck()' );
 
 		return $this->is_echeck();
 	}
@@ -461,4 +466,5 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 }
 
-endif;  // class exists check
+
+endif;

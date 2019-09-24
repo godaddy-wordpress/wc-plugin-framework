@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
 
+
 /**
  * My Payment Methods Class
  *
@@ -155,7 +156,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 					$this->credit_card_tokens[ $token->get_id() ] = $token;
 
-				} elseif ( $token->is_check() ) {
+				} elseif ( $token->is_echeck() ) {
 
 					$this->echeck_tokens[ $token->get_id() ] = $token;
 				}
@@ -1098,4 +1099,5 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 }
 
-endif;  // class exists check
+
+endif;

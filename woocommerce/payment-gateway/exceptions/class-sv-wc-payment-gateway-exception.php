@@ -28,9 +28,11 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Exception' ) ) :
 
+
 /**
  * Payment Gateway Exception - generic payment failure Exception
  */
 class SV_WC_Payment_Gateway_Exception extends SV_WC_Plugin_Exception { }
 
-endif;  // class exists check
+
+endif;

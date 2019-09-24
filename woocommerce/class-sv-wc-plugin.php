@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Plugin' ) ) :
 
+
 /**
  * # WooCommerce Plugin Framework
  *
@@ -271,7 +272,7 @@ abstract class SV_WC_Plugin {
 		// initialize the plugin admin
 		add_action( 'admin_init', array( $this, 'init_admin' ), 0 );
 
-		// hook for translations seperately to ensure they're loaded
+		// hook for translations separately to ensure they're loaded
 		add_action( 'init', array( $this, 'load_translations' ) );
 
 		// add the admin notices
@@ -285,11 +286,7 @@ abstract class SV_WC_Plugin {
 		$this->add_api_request_logging();
 
 		// add any PHP incompatibilities to the system status report
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
-			add_filter( 'woocommerce_system_status_environment_rows', array( $this, 'add_system_status_php_information' ) );
-		} else {
-			add_filter( 'woocommerce_debug_posting', array( $this, 'add_system_status_php_information' ) );
-		}
+		add_filter( 'woocommerce_system_status_environment_rows', array( $this, 'add_system_status_php_information' ) );
 	}
 
 
@@ -1172,7 +1169,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function do_install() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_lifecycle_handler() ) . '::init()' );
+		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_lifecycle_handler() ) . '::init()' );
 
 		$this->get_lifecycle_handler()->init();
 	}
@@ -1188,7 +1185,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function install_default_settings( array $settings ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_lifecycle_handler() ) . '::install_default_settings()' );
+		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_lifecycle_handler() ) . '::install_default_settings()' );
 
 		$this->get_lifecycle_handler()->install_default_settings( $settings );
 	}
@@ -1203,7 +1200,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function activate() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
+		wc_deprecated_function( __METHOD__, '5.2.0' );
 	}
 
 
@@ -1215,7 +1212,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function deactivate() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
+		wc_deprecated_function( __METHOD__, '5.2.0' );
 	}
 
 
@@ -1229,7 +1226,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function get_missing_extension_dependencies() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_missing_php_extensions()' );
+		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_missing_php_extensions()' );
 
 		return $this->get_dependency_handler()->get_missing_php_extensions();
 	}
@@ -1245,7 +1242,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function get_missing_function_dependencies() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_missing_php_functions()' );
+		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_missing_php_functions()' );
 
 		return $this->get_dependency_handler()->get_missing_php_functions();
 	}
@@ -1261,7 +1258,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function get_incompatible_php_settings() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_incompatible_php_settings()' );
+		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_incompatible_php_settings()' );
 
 		return $this->get_dependency_handler()->get_incompatible_php_settings();
 	}
@@ -1277,7 +1274,7 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function get_dependencies() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
+		wc_deprecated_function( __METHOD__, '5.2.0' );
 
 		return array();
 	}
@@ -1293,7 +1290,7 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function get_extension_dependencies() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_php_extensions()' );
+		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_php_extensions()' );
 
 		return $this->get_dependency_handler()->get_php_extensions();
 	}
@@ -1309,7 +1306,7 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function get_function_dependencies() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_php_functions()' );
+		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_php_functions()' );
 
 		return $this->get_dependency_handler()->get_php_functions();
 	}
@@ -1325,7 +1322,7 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function get_php_settings_dependencies() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_php_settings()' );
+		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_php_settings()' );
 
 		return $this->get_dependency_handler()->get_php_settings();
 	}
@@ -1339,12 +1336,13 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @param array $dependencies the environment dependencies
 	 */
-	protected function set_dependencies( $dependencies = array() ) {
+	protected function set_dependencies( $dependencies = [] ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.2.0' );
+		wc_deprecated_function( __METHOD__, '5.2.0' );
 	}
 
 
 }
 
-endif; // Class exists check
+
+endif;

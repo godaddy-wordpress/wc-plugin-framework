@@ -29,6 +29,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_5_0 as Framework;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\Admin\\Setup_Wizard' ) ) :
 
+
 /**
  * The plugin Setup Wizard class.
  *
@@ -1005,7 +1006,7 @@ abstract class Setup_Wizard {
 
 		} catch ( Framework\SV_WC_Plugin_Exception $exception ) {
 
-			Framework\SV_WC_Plugin_Compatibility::wc_doing_it_wrong( __METHOD__, $exception->getMessage(), '5.2.2' );
+			wc_doing_it_wrong( __METHOD__, $exception->getMessage(), '5.2.2' );
 
 			return false;
 		}
@@ -1294,5 +1295,6 @@ abstract class Setup_Wizard {
 
 
 }
+
 
 endif;
