@@ -1,6 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2019.nn.nn - version 5.5.0-dev
+ * Feature - Add a `debug` endpoint to display or toggle the plugin debug mode and for any included gateways
+ * Feature - Add a `log` endpoint for accessing the plugin logs and those of any included gateways
  * Misc - Deprecate backwards compatibility methods for unsupported WooCommerce and PHP versions
 
 2019.09.05 - version 5.4.3
