@@ -4025,6 +4025,30 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
+	 * Determines whether the debug mode is enabled or has a status.
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string[]|string either 'enabled', 'disabled' (for loose checks) or specific debug mode status (or statuses)
+	 * @return bool
+	 */
+	public function is_debug_mode( $status ) {
+
+		$debug_mode = $this->get_debug_mode();
+
+		if ( 'enabled' === $status ) {
+			$is_debug_mode_status = $debug_mode && self::DEBUG_MODE_OFF !== $debug_mode;
+		} elseif ( 'disabled' === $status ) {
+			$is_debug_mode_status = ! $debug_mode || self::DEBUG_MODE_OFF === $debug_mode;
+		} else {
+			$is_debug_mode_status = is_array( $status ) ? in_array( $debug_mode, $status, true ) : $status === $debug_mode;
+		}
+
+		return $is_debug_mode_status;
+	}
+
+
+	/**
 	 * Gets the gateway current debug mode.
 	 *
 	 * @see SV_WC_Plugin::get_debug_mode() for the base plugin debug mode
@@ -4044,11 +4068,15 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 5.5.0-dev
 	 *
-	 * @param string $debug_mode debug mode expected value
+	 * @param bool|string $debug_mode debug mode expected value (but boolean is also accepted for off or log)
 	 * @throws SV_WC_Plugin_Exception if trying to set an unrecognized debug mode
 	 * @see SV_WC_Plugin::set_debug_mode() for setting the debug mode in the base plugin
 	 */
 	public function set_debug_mode( $debug_mode ) {
+
+		if ( is_bool( $debug_mode ) ) {
+			$debug_mode = true === $debug_mode ? self::DEBUG_MODE_LOG : self::DEBUG_MODE_OFF;
+		}
 
 		$debug_modes = [ self::DEBUG_MODE_LOG, self::DEBUG_MODE_CHECKOUT, self::DEBUG_MODE_BOTH, self::DEBUG_MODE_OFF ];
 

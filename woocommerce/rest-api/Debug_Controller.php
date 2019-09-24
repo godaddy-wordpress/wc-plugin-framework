@@ -126,7 +126,8 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 		$plugin_id  = $plugin->get_id();
 		$debug_mode = [
 			'plugin' => [
-				$plugin_id => $plugin->get_debug_mode(),
+				'debug_mode_enabled' => $plugin->is_debug_mode( 'enabled' ),
+				'debug_mode_status'  => $plugin->get_debug_mode(),
 			],
 		];
 
@@ -136,7 +137,10 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 
 			foreach ( $plugin->get_gateways() as $gateway ) {
 
-				$debug_mode['gateways'][ $gateway->get_id() ] = $gateway->get_debug_mode();
+				$gateway_id = $gateway->get_id();
+
+				$debug_mode['gateways'][ $gateway_id ]['debug_mode_enabled'] = $gateway->is_debug_mode( 'enabled' );
+				$debug_mode['gateways'][ $gateway_id ]['debug_mode_status']  = $gateway->get_debug_mode();
 			}
 		}
 
@@ -197,11 +201,11 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 
 			try {
 
-				if ( isset( $debug_mode['plugin'][ $plugin_id ] ) ) {
-					$plugin->set_debug_mode( $debug_mode['plugin'][ $plugin_id ] );
+				if ( isset( $debug_mode['plugin'] ) ) {
+					$plugin->set_debug_mode( $debug_mode['plugin'] );
 				}
 
-				if (  $plugin instanceof SV_WC_Payment_Gateway_Plugin && isset( $debug_mode['gateways'] ) ) {
+				if ( $plugin instanceof SV_WC_Payment_Gateway_Plugin && isset( $debug_mode['gateways'] ) ) {
 
 					foreach ( $plugin->get_gateways() as $gateway ) {
 
