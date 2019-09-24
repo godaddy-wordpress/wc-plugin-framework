@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_API_Payment_Notification_Response' ) ) :
 
+
 /**
  * WooCommerce Payment Gateway API Payment Notification Response
  *
@@ -83,4 +84,5 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 
 }
 
-endif;  // interface exists check
+
+endif;

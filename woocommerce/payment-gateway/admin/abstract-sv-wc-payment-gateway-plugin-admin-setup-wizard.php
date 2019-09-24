@@ -29,6 +29,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_5_0 as Framework;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\Payment_Gateway\\Admin\\Setup_Wizard' ) ) :
 
+
 /**
  * The payment gateway plugin Setup Wizard class.
  *
@@ -63,5 +64,6 @@ abstract class Setup_Wizard extends Framework\Admin\Setup_Wizard {
 
 
 }
+
 
 endif;

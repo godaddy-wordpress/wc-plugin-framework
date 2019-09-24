@@ -29,6 +29,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\Payment_Gateway\\REST_API' ) ) :
 
+
 /**
  * The payment gateway plugin REST API handler class.
  *
@@ -85,5 +86,6 @@ class REST_API extends Plugin_REST_API {
 
 
 }
+
 
 endif;

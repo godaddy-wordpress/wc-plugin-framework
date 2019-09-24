@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Admin_User_Handler' ) ) :
 
+
 /**
  * Handle the admin user profile settings.
  *
@@ -35,11 +36,13 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Pa
  */
 class SV_WC_Payment_Gateway_Admin_User_Handler {
 
+
 	/** @var \SV_WC_Payment_Gateway_Plugin the plugin instance **/
 	protected $plugin;
 
 	/** @var array the token editor for each gateway **/
 	protected $token_editors = array();
+
 
 	/**
 	 * Construct the user handler.
@@ -401,6 +404,9 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	protected function get_plugin() {
 		return $this->plugin;
 	}
+
+
 }
+
 
 endif;

@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Product_Compatibility' ) ) :
 
+
 /**
  * WooCommerce product compatibility class.
  *
@@ -36,33 +37,21 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Pr
 class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 
 
-	/** @var array mapped compatibility properties, as `$new_prop => $old_prop` */
-	protected static $compat_props = array(
-		'catalog_visibility' => 'visibility',
-		'date_on_sale_from'  => 'sale_price_dates_from',
-		'date_on_sale_to'    => 'sale_price_dates_to',
-		'gallery_image_ids'  => 'product_image_gallery',
-		'cross_sell_ids'     => 'crosssell_ids',
-	);
-
-
 	/**
 	 * Gets a product property.
 	 *
 	 * @since 4.6.0
+	 * @deprecated 5.5.0
 	 *
 	 * @param \WC_Product $object the product object
 	 * @param string $prop the property name
 	 * @param string $context if 'view' then the value will be filtered
+	 * @param array $compat_props compatibility arguments, unused since 5.5.0
 	 * @return mixed
 	 */
-	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = array() ) {
+	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = [] ) {
 
-		// backport 'WC_Product::get_parent_id()' to pre-3.0
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_3_0() && 'parent_id' === $prop ) {
-			$prop    = 'id';
-			$context = $object->is_type( 'variation' ) ? 'raw' : $context;
-		}
+		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Product property getter methods' );
 
 		return parent::get_prop( $object, $prop, $context, self::$compat_props );
 	}
@@ -74,12 +63,16 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 * Note that this does not save any data to the database.
 	 *
 	 * @since 4.6.0
+	 * @deprecated 5.5.0
 	 *
 	 * @param \WC_Product $object the product object
 	 * @param array $props the new properties as $key => $value
-	 * @return \WC_Data|\WC_Product
+	 * @param array $compat_props compatibility arguments, unused since 5.5.0
+	 * @return bool|\WP_Error
 	 */
-	public static function set_props( $object, $props, $compat_props = array() ) {
+	public static function set_props( $object, $props, $compat_props = [] ) {
+
+		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Product::set_props()' );
 
 		return parent::set_props( $object, $props, self::$compat_props );
 	}
@@ -89,184 +82,161 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 * Gets a product's parent product.
 	 *
 	 * @since 4.6.0
+	 * @deprecated 5.5.0
 	 *
 	 * @param \WC_Product $product the product object
 	 * @return \WC_Product|bool
 	 */
 	public static function get_parent( \WC_Product $product ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
-			$parent = wc_get_product( $product->get_parent_id() );
-		} else {
-			$parent = $product->is_type( 'variation' ) ? wc_get_product( $product->id ) : false;
-		}
+		wc_deprecated_function( __METHOD__, '5.5.0', 'wc_get_product( \WC_Product::get_parent_id() )' );
 
-		return $parent;
+		return wc_get_product( $product->get_parent_id() );
 	}
 
 
 	/**
-	 * Backports wc_update_product_stock() to pre-3.0.
+	 * Updates product stock.
 	 *
 	 * @since 4.6.0
+	 * @deprecated 5.5.0
 	 *
 	 * @param \WC_Product $product the product object
-	 * @param int $amount Optional. The new stock quantity
-	 * @param string $mode Optional. Can be set, add, or subtract
+	 * @param null|int $amount optional: the new stock quantity
+	 * @param string $mode optional: can be set (default), add, or subtract
 	 * @return int
 	 */
 	public static function wc_update_product_stock( \WC_Product $product, $amount = null, $mode = 'set' ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
-			return wc_update_product_stock( $product, $amount, $mode );
-		} else {
-			return $product->set_stock( $amount, $mode );
-		}
+		wc_deprecated_function( __METHOD__, '5.5.0', 'wc_update_product_stock()' );
+
+		return wc_update_product_stock( $product, $amount, $mode );
 	}
 
 
 	/**
-	 * Backports wc_get_price_html_from_text() to pre-3.0.
+	 * Gets the product price HTML from text.
 	 *
 	 * @since 4.6.0
+	 * @deprecated 5.5.0
 	 *
 	 * @param \WC_Product $product the product object
 	 * @return string
 	 */
 	public static function wc_get_price_html_from_text( \WC_Product $product ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
-			return wc_get_price_html_from_text();
-		} else {
-			return $product->get_price_html_from_text();
-		}
+		wc_deprecated_function( __METHOD__, '5.5.0', 'wc_get_price_html_from_text()' );
+
+		return wc_get_price_html_from_text();
 	}
 
 
 	/**
-	 * Backports wc_get_price_including_tax() to pre-3.0.
+	 * Gets the product price including tax.
 	 *
 	 * @since 4.6.0
+	 * @deprecated 5.5.0
 	 *
 	 * @param \WC_Product $product the product object
-	 * @param int $qty Optional. The quantity
-	 * @param string $price Optional. The product price
+	 * @param int $qty optional: the quantity
+	 * @param string $price optional: the product price
 	 * @return string
 	 */
 	public static function wc_get_price_including_tax( \WC_Product $product, $qty = 1, $price = '' ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+		wc_deprecated_function( __METHOD__, '5.5.0', 'wc_get_price_including_tax()' );
 
-			return wc_get_price_including_tax( $product, array(
-				'qty'   => $qty,
-				'price' => $price,
-			) );
-
-		} else {
-
-			return $product->get_price_including_tax( $qty, $price );
-		}
+		return wc_get_price_including_tax( $product, [
+			'qty'   => $qty,
+			'price' => $price,
+		] );
 	}
 
 
 	/**
-	 * Backports wc_get_price_excluding_tax() to pre-3.0.
+	 * Gets the product price excluding tax.
 	 *
 	 * @since 4.6.0
+	 * @deprecated 5.5.0
 	 *
 	 * @param \WC_Product $product the product object
-	 * @param int $qty Optional. The quantity
-	 * @param string $price Optional. The product price
+	 * @param int $qty optional: The quantity
+	 * @param string $price optional: the product price
 	 * @return string
 	 */
 	public static function wc_get_price_excluding_tax( \WC_Product $product, $qty = 1, $price = '' ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+		wc_deprecated_function( __METHOD__, '5.5.0', 'wc_get_price_excluding_tax()' );
 
-			return wc_get_price_excluding_tax( $product, array(
-				'qty'   => $qty,
-				'price' => $price,
-			) );
-
-		} else {
-
-			return $product->get_price_excluding_tax( $qty, $price );
-		}
+		return wc_get_price_excluding_tax( $product, [
+			'qty'   => $qty,
+			'price' => $price,
+		] );
 	}
 
 
 	/**
-	 * Backports wc_get_price_to_display() to pre-3.0.
+	 * Gets the product price to display.
 	 *
 	 * @since 4.6.0
 	 *
 	 * @param \WC_Product $product the product object
-	 * @param string $price Optional. The product price
-	 * @param int $qty Optional. The quantity
+	 * @param string $price optional: the product price
+	 * @param int $qty optional: the quantity
 	 * @return string
 	 */
 	public static function wc_get_price_to_display( \WC_Product $product, $price = '', $qty = 1 ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+		wc_deprecated_function( __METHOD__, '5.5.0', 'wc_get_price_to_display()' );
 
-			return wc_get_price_to_display( $product, array(
-				'qty'   => $qty,
-				'price' => $price,
-			) );
-
-		} else {
-
-			return $product->get_display_price( $price, $qty );
-		}
+		return wc_get_price_to_display( $product, [
+			'qty'   => $qty,
+			'price' => $price,
+		] );
 	}
 
 
 	/**
-	 * Backports wc_get_product_category_list() to pre-3.0.
+	 * Gets the product category list.
 	 *
 	 * @since 4.6.0
+	 * @deprecated 5.5.0
 	 *
 	 * @param \WC_Product $product the product object
-	 * @param string $sep Optional. The list separator
-	 * @param string $before Optional. To display before the list
-	 * @param string $after Optional. To display after the list
+	 * @param string $sep optional: the list separator
+	 * @param string $before optional: to display before the list
+	 * @param string $after optional: to display after the list
 	 * @return string
 	 */
 	public static function wc_get_product_category_list( \WC_Product $product, $sep = ', ', $before = '', $after = '' ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+		wc_deprecated_function( __METHOD__, '5.5.0', 'wc_get_product_category_list()' );
 
-			$id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
+		$id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
 
-			return wc_get_product_category_list( $id, $sep, $before, $after );
-
-		} else {
-
-			return $product->get_categories( $sep, $before, $after );
-		}
+		return wc_get_product_category_list( $id, $sep, $before, $after );
 	}
 
 
 	/**
-	 * Backports wc_get_rating_html() to pre-3.0.
+	 * Formats the product rating HTML.
 	 *
 	 * @since 4.6.0
+	 * @deprecated 5.5.0
 	 *
-	 * @param \WC_Product $product the product object
-	 * @param string $rating Optional. The product rating
+	 * @param \WC_Product $product the product object, unused since 5.5.0
+	 * @param null|string $rating optional: the product rating
 	 * @return string
 	 */
 	public static function wc_get_rating_html( \WC_Product $product, $rating = null ) {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
-			return wc_get_rating_html( $rating );
-		} else {
-			return $product->get_rating_html( $rating );
-		}
+		wc_deprecated_function( __METHOD__, '5.5.0', 'wc_get_rating_html()' );
+
+		return wc_get_rating_html( $rating );
 	}
 
 
 }
 
 
-endif; // Class exists check
+endif;

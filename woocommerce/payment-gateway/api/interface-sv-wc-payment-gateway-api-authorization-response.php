@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_API_Authorization_Response' ) ) :
 
+
 /**
  * WooCommerce Direct Payment Gateway API Authorization Response
  *
@@ -79,6 +80,7 @@ interface SV_WC_Payment_Gateway_API_Authorization_Response extends SV_WC_Payment
 	public function csc_match();
 
 
-} // SV_WC_Payment_Gateway_API_Authorization_Response
+}
 
-endif;  // interface exists check
+
+endif;

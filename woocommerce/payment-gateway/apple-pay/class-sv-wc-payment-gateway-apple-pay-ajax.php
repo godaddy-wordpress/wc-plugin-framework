@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Apple_Pay_AJAX' ) ) :
 
+
 /**
  * The Apple Pay AJAX handler.
  *
@@ -173,11 +174,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 				if ( $country ) {
 
-					if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
-						WC()->customer->set_calculated_shipping( true );
-					} else {
-						WC()->customer->calculated_shipping( true );
-					}
+					WC()->customer->set_calculated_shipping( true );
 				}
 			}
 
@@ -257,5 +254,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 
 }
+
 
 endif;
