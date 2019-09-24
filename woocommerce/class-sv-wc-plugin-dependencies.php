@@ -331,7 +331,7 @@ class SV_WC_Plugin_Dependencies {
 	 */
 	public function get_missing_php_extensions() {
 
-		$missing_extensions = array();
+		$missing_extensions = [];
 
 		foreach ( $this->get_php_extensions() as $extension ) {
 
@@ -366,7 +366,7 @@ class SV_WC_Plugin_Dependencies {
 	 */
 	public function get_missing_php_functions() {
 
-		$missing_functions = array();
+		$missing_functions = [];
 
 		foreach ( $this->get_php_functions() as $function ) {
 
@@ -401,9 +401,7 @@ class SV_WC_Plugin_Dependencies {
 	 */
 	public function get_incompatible_php_settings() {
 
-		$incompatible_settings = array();
-
-		$dependences = $this->get_php_settings();
+		$incompatible_settings = [];
 
 		if ( function_exists( 'ini_get' ) ) {
 
@@ -415,7 +413,7 @@ class SV_WC_Plugin_Dependencies {
 					continue;
 				}
 
-				if ( is_integer( $expected ) ) {
+				if ( is_int( $expected ) ) {
 
 					// determine if this is a size string, like "10MB"
 					$is_size = ! is_numeric( substr( $actual, -1 ) );
@@ -424,19 +422,19 @@ class SV_WC_Plugin_Dependencies {
 
 					if ( $actual_num < $expected ) {
 
-						$incompatible_settings[ $setting ] = array(
+						$incompatible_settings[ $setting ] = [
 							'expected' => $is_size ? size_format( $expected ) : $expected,
 							'actual'   => $is_size ? size_format( $actual_num ) : $actual,
 							'type'     => 'min',
-						);
+						];
 					}
 
 				} elseif ( $actual !== $expected ) {
 
-					$incompatible_settings[ $setting ] = array(
+					$incompatible_settings[ $setting ] = [
 						'expected' => $expected,
 						'actual'   => $actual,
-					);
+					];
 				}
 			}
 		}
