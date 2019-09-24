@@ -29,7 +29,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_5_0\REST_API\Log_Controller;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\REST_API' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\REST_API' ) ) :
 
 
 /**
