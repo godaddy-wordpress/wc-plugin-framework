@@ -230,14 +230,14 @@ class REST_API {
 			$debug_class_abstract_name = $this->get_debug_controller_class_name();
 			$debug_class_abstract_path = $this->get_debug_controller_class_path();
 
-			if ( ! class_exists( $debug_class_abstract_name ) ) {
+			if ( ! class_exists( $debug_class_abstract_name, false ) ) {
 				require_once( $debug_class_abstract_path );
 			}
 
 			$debug_class_name = $this->get_debug_controller_class_name( $api_version );
 			$debug_class_path = $this->get_debug_controller_class_path( $api_version );
 
-			if ( ! class_exists( $debug_class_name ) ) {
+			if ( ! class_exists( $debug_class_name, false ) ) {
 				require_once( $debug_class_path );
 			}
 
@@ -307,14 +307,14 @@ class REST_API {
 			$log_class_abstract_name = $this->get_log_controller_class_name();
 			$log_class_abstract_path = $this->get_log_controller_class_path();
 
-			if ( ! class_exists( $log_class_abstract_name ) ) {
+			if ( ! class_exists( $log_class_abstract_name, false ) ) {
 				require_once( $log_class_abstract_path );
 			}
 
 			$log_class_name = $this->get_log_controller_class_name( $api_version );
 			$log_class_path = $this->get_log_controller_class_path( $api_version );
 
-			if ( ! class_exists( $log_class_name ) ) {
+			if ( ! class_exists( $log_class_name, false ) ) {
 				require_once( $log_class_path );
 			}
 
