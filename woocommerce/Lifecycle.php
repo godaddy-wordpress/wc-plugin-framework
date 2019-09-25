@@ -231,6 +231,10 @@ class Lifecycle {
 			@opcache_reset();
 		}
 
+		if ( function_exists( 'wincache_ucache_clear' ) ) {
+			@wincache_ucache_clear();
+		}
+
 		// Memcache
 		if ( function_exists( 'memcache_flush' ) ) {
 			@memcache_flush();
