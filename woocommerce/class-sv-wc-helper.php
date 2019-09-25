@@ -975,9 +975,4 @@ class SV_WC_Helper {
 }
 
 
-// Allow calling methods of this class with a generic alias where using namespaces isn't safe, such as template files.
-// NOTE: Use with caution!
-class_alias( SV_WC_Helper::class, 'SV_Helper' );
-
-
 endif;

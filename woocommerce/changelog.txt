@@ -1,7 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2019.nn.nn - version 5.5.0-dev
- * Feature - Adds SV_Helpers and SV_Plugin_Compatibility class aliases for restricted namespace-free usage of helper methods and compatibility methods
  * Misc - Deprecate backwards compatibility methods for unsupported WooCommerce and PHP versions
 
 2019.09.05 - version 5.4.3
