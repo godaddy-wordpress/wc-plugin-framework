@@ -75,22 +75,22 @@ class Lifecycle {
 	protected function add_hooks() {
 
 		// handle activation
-		add_action( 'admin_init', array( $this, 'handle_activation' ) );
+		add_action( 'admin_init', [ $this, 'handle_activation' ] );
 
 		// handle deactivation
-		add_action( 'deactivate_' . $this->get_plugin()->get_plugin_file(), array( $this, 'handle_deactivation' ) );
+		add_action( 'deactivate_' . $this->get_plugin()->get_plugin_file(), [ $this, 'handle_deactivation' ] );
 
 		if ( is_admin() && ! is_ajax() ) {
 
 			// initialize the plugin lifecycle
-			add_action( 'wp_loaded', array( $this, 'init' ) );
+			add_action( 'wp_loaded', [ $this, 'init' ] );
 
 			// add the admin notices
-			add_action( 'init', array( $this, 'add_admin_notices' ) );
+			add_action( 'init', [ $this, 'add_admin_notices' ] );
 		}
 
 		// catch any milestones triggered by action
-		add_action( 'wc_' . $this->get_plugin()->get_id() . '_milestone_reached', array( $this, 'trigger_milestone' ), 10, 3 );
+		add_action( 'wc_' . $this->get_plugin()->get_id() . '_milestone_reached', [ $this, 'trigger_milestone' ], 10, 3 );
 	}
 
 
@@ -202,6 +202,64 @@ class Lifecycle {
 		do_action( 'wc_' . $this->get_plugin()->get_id() . '_deactivated' );
 
 		delete_option( 'wc_' . $this->get_plugin()->get_id() . '_is_active' );
+
+		$this->flush_cache();
+	}
+
+
+	/**
+	 * Tries to flush all known caches.
+	 *
+	 * @since 5.5.0-dev
+	 */
+	private function flush_cache() {
+
+		// APC
+		if ( function_exists( 'apc_clear_cache' ) ) {
+			foreach ( [ 'user', 'opcode', '' ] as $cache_type ) {
+				@apc_clear_cache( $cache_type );
+			}
+		}
+
+		// APCU
+		if ( function_exists( 'apcu_clear_cache' ) ) {
+			@apcu_clear_cache();
+		}
+
+		// OPCache
+		if ( function_exists( 'opcache_reset' ) ) {
+			@opcache_reset();
+		}
+
+		// Memcache
+		if ( function_exists( 'memcache_flush' ) ) {
+			@memcache_flush();
+		}
+
+		// WordPress Object Cache
+		if ( function_exists( 'wp_cache_flush' ) ) {
+			@wp_cache_flush();
+		}
+
+		// WP Super Cache
+		if ( function_exists( 'wp_cache_clear_cache' ) ) {
+			@wp_cache_clear_cache( get_current_blog_id() );
+		}
+
+		// WP Rocket
+		if ( function_exists( 'rocket_clean_domain' ) ) {
+			@rocket_clean_domain();
+		}
+
+		// W3 Total Cache
+		if ( function_exists( 'w3tc_flush_all' ) ) {
+			@w3tc_flush_all();
+		}
+
+		// WP Fastest Cache
+		if ( function_exists( 'wpfc_clear_all_cache' ) ) {
+			@wpfc_clear_all_cache();
+		}
 	}
 
 

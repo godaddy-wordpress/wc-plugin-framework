@@ -2,6 +2,7 @@
 
 2019.nn.nn - version 5.5.0-dev
  * Misc - Deprecate backwards compatibility methods for unsupported WooCommerce and PHP versions
+ * Misc - Attempt to clear known caches when updating or deactivating a plugin
 
 2019.09.05 - version 5.4.3
  * Fix - Do not show the checkbox to save the payment method on the checkout page if not logged in and registration during checkout is disabled
