@@ -446,4 +446,9 @@ class SV_WC_Plugin_Compatibility {
 }
 
 
+// Allow calling methods of this class with a generic alias where using namespaces isn't safe, such as template files.
+// NOTE: Use with caution!
+class_alias( SV_WC_Plugin_Compatibility::class, 'SV_Plugin_Compatibility' );
+
+
 endif;
