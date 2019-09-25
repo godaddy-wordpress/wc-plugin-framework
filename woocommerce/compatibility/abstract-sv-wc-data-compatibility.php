@@ -45,6 +45,8 @@ abstract class SV_WC_Data_Compatibility {
 	/**
 	 * Gets an object property.
 	 *
+	 * @see \WC_Data::get_prop()
+	 *
 	 * @since 4.6.0
 	 * @deprecated 5.5.0
 	 *
@@ -52,13 +54,13 @@ abstract class SV_WC_Data_Compatibility {
 	 * @param string $prop the property name
 	 * @param string $context if 'view' then the value will be filtered
 	 * @param array $compat_props compatibility properties unused since 5.5.0
-	 * @return mixed
+	 * @return null|mixed
 	 */
 	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = [] ) {
 
 		wc_deprecated_function( __METHOD__, '5.5.0', '\WC_Data methods' );
 
-		return $object->{"get_{$prop}"}( $context );
+		return is_callable( [ $object, "get_{$prop}" ] ) ? $object->{"get_{$prop}"}( $context ) : null;
 	}
 
 

@@ -3599,7 +3599,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		if ( ! $order instanceof \WC_Order ) {
 			$meta = false;
 		} else {
-			$meta = $order->get_meta( $this->get_order_meta_prefix() . $key, true );
+			$meta = $order->get_meta( $this->get_order_meta_prefix() . $key, true, 'edit' );
 		}
 
 		return $meta;
