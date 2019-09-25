@@ -3575,6 +3575,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		if ( $order instanceof \WC_Order ) {
 			$order->add_meta_data( $this->get_order_meta_prefix() . $key, $value, $unique );
+			$order->save_meta_data();
 		}
 
 		return $order instanceof \WC_Order;
@@ -3624,6 +3625,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		if ( $order instanceof \WC_Order ) {
 			$order->update_meta_data( $this->get_order_meta_prefix() . $key, $value );
+			$order->save_meta_data();
 		}
 
 		return $order instanceof \WC_Order;
@@ -3646,6 +3648,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		if ( $order instanceof \WC_Order ) {
 			$order->delete_meta_data( $this->get_order_meta_prefix() . $key );
+			$order->save_meta_data();
 		}
 
 		return $order instanceof \WC_Order ;

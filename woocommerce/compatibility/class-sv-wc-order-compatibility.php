@@ -276,6 +276,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		foreach ( $shipping_rate->get_meta_data() as $key => $value ) {
 			$item->add_meta_data( $key, $value, true );
+			$item->save_meta_data();
 		}
 
 		$item->save();
