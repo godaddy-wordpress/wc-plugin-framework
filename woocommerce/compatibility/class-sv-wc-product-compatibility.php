@@ -51,7 +51,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = [] ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Product property getter methods' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'WC_Product::get_prop()' );
 
 		return parent::get_prop( $object, $prop, $context, self::$compat_props );
 	}
@@ -72,7 +72,7 @@ class SV_WC_Product_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function set_props( $object, $props, $compat_props = [] ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Product::set_props()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'WC_Product::set_props()' );
 
 		return parent::set_props( $object, $props, self::$compat_props );
 	}

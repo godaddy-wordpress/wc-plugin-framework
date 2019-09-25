@@ -68,7 +68,7 @@ class SV_WC_DateTime extends \DateTime {
 	 */
 	public function __toString() {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\DateTime::format()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'DateTime::format( DATE_ATOM )' );
 
 		return $this->format( DATE_ATOM );
 	}
@@ -84,7 +84,7 @@ class SV_WC_DateTime extends \DateTime {
 	 */
 	public function getTimestamp() {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\DateTime::getTimestamp()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'DateTime::getTimestamp()' );
 
 		return parent::getTimestamp();
 	}
@@ -100,7 +100,7 @@ class SV_WC_DateTime extends \DateTime {
 	 */
 	public function getOffsetTimestamp() {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', \DateTime::class );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'DateTime::getOffset()' );
 
 		return $this->getTimestamp() + $this->getOffset();
 	}
@@ -117,7 +117,7 @@ class SV_WC_DateTime extends \DateTime {
 	 */
 	public function date( $format ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', 'gmdate() and \\DateTime' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'gmdate()' );
 
 		return gmdate( $format, $this->getOffsetTimestamp() );
 	}
@@ -134,7 +134,7 @@ class SV_WC_DateTime extends \DateTime {
 	 */
 	public function date_i18n( $format = 'Y-m-d' ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', 'date_i18n() and \\DateTime' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'date_i18n()' );
 
 		return date_i18n( $format, $this->getOffsetTimestamp() );
 	}

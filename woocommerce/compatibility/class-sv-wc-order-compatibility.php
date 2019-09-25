@@ -50,7 +50,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_date_created( \WC_Order $order, $context = 'edit' ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::get_date_created()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'WC_Order::get_date_created()' );
 
 		return self::get_date_prop( $order, 'created', $context );
 	}
@@ -69,7 +69,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_date_modified( \WC_Order $order, $context = 'edit' ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::get_date_modified()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'WC_Order::get_date_modified()' );
 
 		return self::get_date_prop( $order, 'modified', $context );
 	}
@@ -88,7 +88,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_date_paid( \WC_Order $order, $context = 'edit' ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::get_date_paid()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'WC_Order::get_date_paid()' );
 
 		return self::get_date_prop( $order, 'paid', $context );
 	}
@@ -107,7 +107,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_date_completed( \WC_Order $order, $context = 'edit' ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::get_date_completed()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'WC_Order::get_date_completed()' );
 
 		return self::get_date_prop( $order, 'completed', $context );
 	}
@@ -129,7 +129,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_date_prop( \WC_Order $order, $type, $context = 'edit' ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order date methods' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'WC_Order' );
 
 		$prop = "date_{$type}";
 		$date = is_callable( [ $order, "get_{$prop}" ] ) ? $order->{"get_{$prop}"}( $context ) : null;
@@ -152,7 +152,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = [] ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order property getter methods' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'WC_Order::get_prop()' );
 
 		return parent::get_prop( $object, $prop, $context, self::$compat_props );
 	}
@@ -192,7 +192,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function add_coupon( \WC_Order $order, $code = [], $discount = 0, $discount_tax = 0 ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::add_item()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'WC_Order::add_item()' );
 
 		$item = new \WC_Order_Item_Coupon();
 
@@ -225,7 +225,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function add_fee( \WC_Order $order, $fee ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::add_item()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'WC_Order::add_item()' );
 
 		$item = new \WC_Order_Item_Fee();
 
@@ -262,7 +262,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function add_shipping( \WC_Order $order, $shipping_rate ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::add_item()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'WC_Order::add_item()' );
 
 		$item = new \WC_Order_Item_Shipping();
 
@@ -304,7 +304,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function add_tax( \WC_Order $order, $tax_rate_id, $tax_amount = 0, $shipping_tax_amount = 0 ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order::add_item()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'WC_Order::add_item()' );
 
 		$item = new \WC_Order_Item_Tax();
 
@@ -346,7 +346,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function update_coupon( \WC_Order $order, $item, $args ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order_Item_Coupon methods' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'WC_Order_Item_Coupon' );
 
 		if ( is_numeric( $item ) ) {
 			$item = $order->get_item( $item );
@@ -391,7 +391,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function update_fee( \WC_Order $order, $item, $args ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', '\\WC_Order_Item_Fee methods' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'WC_Order_Item_Fee' );
 
 		if ( is_numeric( $item ) ) {
 			$item = $order->get_item( $item );
@@ -452,7 +452,6 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @deprecated 5.5.0
 	 *
 	 * @param \WC_Order $order order object
-	 *
 	 * @return bool
 	 */
 	public static function has_shipping_address( \WC_Order $order ) {
@@ -478,15 +477,23 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_item_formatted_meta_data( $item, $hide_prefix = '_', $include_all = false ) {
 
-		$meta_data = $item->get_formatted_meta_data( $hide_prefix, $include_all );
-		$item_meta = [];
+		if ( $item instanceof \WC_Order_Item && SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.1' ) ) {
 
-		foreach ( $meta_data as $meta ) {
+			$meta_data = $item->get_formatted_meta_data( $hide_prefix, $include_all );
+			$item_meta = [];
 
-			$item_meta[] = [
-				'label' => $meta->display_key,
-				'value' => $meta->value,
-			];
+			foreach ( $meta_data as $meta ) {
+
+				$item_meta[] = array(
+					'label' => $meta->display_key,
+					'value' => $meta->value,
+				);
+			}
+
+		} else {
+
+			$item_meta = new \WC_Order_Item_Meta( $item );
+			$item_meta = $item_meta->get_formatted( $hide_prefix );
 		}
 
 		return $item_meta;
