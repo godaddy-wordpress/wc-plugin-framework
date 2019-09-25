@@ -197,7 +197,7 @@ class SV_WC_Plugin_Compatibility {
 		$wc_version = self::get_wc_version();
 
 		// accounts for semver cases like 3.0 being equal to 3.0.0
-		return $wc_version === $version || version_compare( $wc_version, $version, '=' );
+		return $wc_version === $version || ( $wc_version && version_compare( $wc_version, $version, '=' ) );
 	}
 
 
@@ -473,7 +473,7 @@ class SV_WC_Plugin_Compatibility {
 		$subscriptions_version = self::get_wc_subscriptions_version();
 
 		// accounts for semver cases like 2.2 being equal to 2.2.0
-		return $version === $subscriptions_version || version_compare( $version, $subscriptions_version, '=' );
+		return $version === $subscriptions_version || ( $subscriptions_version && version_compare( $version, $subscriptions_version, '=' ) );
 	}
 
 
