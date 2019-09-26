@@ -1135,7 +1135,7 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Gets the plugin default template path.
+	 * Gets the plugin default template path, without a trailing slash.
 	 *
 	 * @since 5.5.0-dev
 	 *
