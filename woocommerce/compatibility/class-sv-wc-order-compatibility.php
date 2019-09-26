@@ -164,6 +164,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * Note that this does not save any data to the database.
 	 *
 	 * @since 4.6.0
+	 * @deprecated 5.5.0
 	 *
 	 * @param \WC_Order $object the order object
 	 * @param array $props the new properties as $key => $value
