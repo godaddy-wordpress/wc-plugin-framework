@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_API' ) ) :
 
+
 /**
  * WooCommerce Direct Payment Gateway API
  */
@@ -245,4 +246,5 @@ interface SV_WC_Payment_Gateway_API {
 
 }
 
-endif;  // interface exists check
+
+endif;

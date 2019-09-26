@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Hosted' ) ) :
 
+
 /**
  * # WooCommerce Payment Gateway Framework Hosted Gateway
  *
@@ -928,6 +929,8 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		return $this->use_form_post() && true;
 	}
 
+
 }
 
-endif;  // class exists check
+
+endif;

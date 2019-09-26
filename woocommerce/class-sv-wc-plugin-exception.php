@@ -28,9 +28,11 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Plugin_Exception' ) ) :
 
-	/**
-	 * Plugin Framework Exception - generic Exception
-	 */
-	class SV_WC_Plugin_Exception extends \Exception { }
 
-endif;  // class exists check
+/**
+ * Plugin Framework Exception - generic Exception
+ */
+class SV_WC_Plugin_Exception extends \Exception { }
+
+
+endif;

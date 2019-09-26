@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Apple_Pay_Admin' ) ) :
 
+
 /**
  * Sets up the Apple Pay settings screen.
  *
@@ -363,7 +364,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	 */
 	protected function is_settings_screen() {
 
-		return 'wc-settings' === SV_WC_Helper::get_request( 'page' ) && 'apple-pay' === SV_WC_Helper::get_request( 'section' );
+		return 'wc-settings' === SV_WC_Helper::get_requested_value( 'page' ) && 'apple-pay' === SV_WC_Helper::get_requested_value( 'section' );
 	}
 
 
@@ -404,5 +405,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 
 
 }
+
 
 endif;

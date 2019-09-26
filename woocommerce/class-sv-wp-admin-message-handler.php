@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WP_Admin_Message_Handler' ) ) :
 
+
 /**
  * # WordPress Admin Message Handler Class
  *
@@ -433,4 +434,5 @@ class SV_WP_Admin_Message_Handler {
 
 }
 
-endif; // class exists check
+
+endif;

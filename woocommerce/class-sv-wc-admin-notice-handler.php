@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Admin_Notice_Handler' ) ) :
 
+
 /**
  * SkyVerge Admin Notice Handler Class
  *
@@ -425,6 +426,8 @@ class SV_WC_Admin_Notice_Handler {
 		return $this->plugin;
 	}
 
+
 }
 
-endif; // Class exists check
+
+endif;

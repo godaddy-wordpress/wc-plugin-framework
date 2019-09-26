@@ -2,6 +2,7 @@
 
 2019.nn.nn - version 5.5.0-dev
  * Feature - Add a plugin helper method to retrieve a template part while consistently passing the default template path to `wc_get_template()`
+ * Misc - Deprecate backwards compatibility methods for unsupported WooCommerce and PHP versions
 
 2019.09.05 - version 5.4.3
  * Fix - Do not show the checkbox to save the payment method on the checkout page if not logged in and registration during checkout is disabled

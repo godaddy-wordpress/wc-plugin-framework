@@ -29,6 +29,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WP_Async_Request' ) ) :
 
+
 /**
  * SkyVerge Wordpress Async Request class
  *
@@ -186,5 +187,6 @@ abstract class SV_WP_Async_Request {
 
 
 }
+
 
 endif;

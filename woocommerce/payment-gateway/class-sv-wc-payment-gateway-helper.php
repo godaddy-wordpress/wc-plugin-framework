@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Helper' ) ) :
 
+
 /**
  * SkyVerge Payment Gateway Helper Class
  *
@@ -127,10 +128,10 @@ class SV_WC_Payment_Gateway_Helper {
 
 
 	/**
-	 * Determine the credit card type from a given account number (only first 4
-	 * required)
+	 * Determines the credit card type from a given account number (only first 4 required).
 	 *
 	 * @since 4.0.0
+	 *
 	 * @param string $account_number the credit card account number
 	 * @return string the credit card type
 	 */
@@ -266,4 +267,5 @@ class SV_WC_Payment_Gateway_Helper {
 
 }
 
-endif; // Class exists check
+
+endif;

@@ -403,4 +403,5 @@ class SV_WC_Framework_Bootstrap {
 // instantiate the class
 SV_WC_Framework_Bootstrap::instance();
 
+
 endif;

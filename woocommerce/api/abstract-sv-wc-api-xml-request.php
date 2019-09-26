@@ -28,12 +28,14 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_API_XML_Request' ) ) :
 
+
 /**
  * Base XML API request class.
  *
  * @since 4.3.0
  */
 abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
+
 
 	/** @var string the request method, one of HEAD, GET, PUT, PATCH, POST, DELETE */
 	protected $method;
@@ -132,7 +134,7 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 	 */
 	public function get_request_data() {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __FUNCTION__, '5.0.0', 'SV_WC_API_XML_Request::get_data' );
+		wc_deprecated_function( __METHOD__, '5.0.0', 'SV_WC_API_XML_Request::get_data' );
 
 		return $this->get_data();
 	}
@@ -210,4 +212,5 @@ abstract class SV_WC_API_XML_Request implements SV_WC_API_Request {
 
 }
 
-endif; // class exists check
+
+endif;

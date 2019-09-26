@@ -28,22 +28,24 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_API_Customer_Response' ) ) :
 
+
+/**
+ * WooCommerce Direct Payment Gateway API Customer Response
+ */
+interface SV_WC_Payment_Gateway_API_Customer_Response extends SV_WC_Payment_Gateway_API_Response {
+
+
 	/**
-	 * WooCommerce Direct Payment Gateway API Customer Response
+	 * Returns the customer ID.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string customer ID returned by the gateway
 	 */
-	interface SV_WC_Payment_Gateway_API_Customer_Response extends SV_WC_Payment_Gateway_API_Response {
+	public function get_customer_id();
 
 
-		/**
-		 * Returns the customer ID.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @return string customer ID returned by the gateway
-		 */
-		public function get_customer_id();
+}
 
 
-	}
-
-endif;  // interface exists check
+endif;

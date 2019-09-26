@@ -28,6 +28,7 @@
 
  if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WP_Job_Batch_Handler' ) ) :
 
+
 /**
  * The job batch handler class.
  *
@@ -304,5 +305,6 @@ class SV_WP_Job_Batch_Handler {
 
 
 }
+
 
 endif;

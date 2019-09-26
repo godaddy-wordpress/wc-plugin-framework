@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_API_JSON_Request' ) ) :
 
+
 /**
  * Base JSON API request class.
  *
@@ -130,4 +131,5 @@ abstract class SV_WC_API_JSON_Request implements SV_WC_API_Request {
 
 }
 
-endif; // class exists check
+
+endif;

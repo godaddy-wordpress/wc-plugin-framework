@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Integration' ) ) :
 
+
 /**
  * Abstract Integration
  *
@@ -68,4 +69,4 @@ abstract class SV_WC_Payment_Gateway_Integration {
 }
 
 
-endif;  // class exists check
+endif;
