@@ -1154,17 +1154,20 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Loads and outputs a template file HTML.
 	 *
-	 * @see \wc_get_template() except we pass the plugin template path by default
+	 * @see \wc_get_template() except we define automatically the default path and pass the plugin template path by default
 	 *
 	 * @since 5.5.0-dev
 	 *
 	 * @param string $template template name/part
 	 * @param array $args associative array of optional template arguments
-	 * @param null|string $path optional template path, will use default from plugin if null
+	 * @param string $path optional template path, will use default from plugin if empty string
+	 * @param string $default_path optional default template path, will normally pass the one defined in plugin unless overridden
 	 */
-	public function load_template( $template, array $args = [], $path = '' ) {
+	public function load_template( $template, array $args = [], $path = '', $default_path = '' ) {
 
-		$default_path = trailingslashit( $this->get_template_path() );
+		if ( '' === $default_path || ! is_string( $default_path ) ) {
+			$default_path = trailingslashit( $this->get_template_path() );
+		}
 
 		if ( '' === $path || ! is_string( $path ) ) {
 			$path = $default_path;
