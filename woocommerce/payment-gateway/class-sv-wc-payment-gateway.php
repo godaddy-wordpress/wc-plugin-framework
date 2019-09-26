@@ -3365,37 +3365,36 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Safely get and trim data from $_POST
+	 * Safely gets and trims data from $_POST
 	 *
-	 * @deprecated use SV_WC_Helper::get_post()
 	 * @since 1.0.0
+	 * @deprecated 5.5.0
+	 *
 	 * @param string $key array key to get from $_POST array
 	 * @return string value from $_POST or blank string if $_POST[ $key ] is not set
 	 */
 	protected function get_post( $key ) {
 
-		if ( isset( $_POST[ $key ] ) ) {
-			return trim( $_POST[ $key ] );
-		}
+		wc_deprecated_function( __METHOD__, '5.5.0', SV_WC_Helper::class . '::get_posted_value()' );
 
-		return '';
+		return SV_WC_Helper::get_posted_value( $key );
 	}
 
 
 	/**
-	 * Safely get and trim data from $_REQUEST
+	 * Safely gets and trims data from $_REQUEST.
 	 *
 	 * @since 1.0.0
+	 * @deprecated 5.5.0
+	 *
 	 * @param string $key array key to get from $_REQUEST array
 	 * @return string value from $_REQUEST or blank string if $_REQUEST[ $key ] is not set
 	 */
 	protected function get_request( $key ) {
 
-		if ( isset( $_REQUEST[ $key ] ) ) {
-			return trim( $_REQUEST[ $key ] );
-		}
+		wc_deprecated_function( __METHOD__, '5.5.0', SV_WC_Helper::class . '::get_requested_value()' );
 
-		return '';
+		return SV_WC_Helper::get_requested_value( $key );
 	}
 
 

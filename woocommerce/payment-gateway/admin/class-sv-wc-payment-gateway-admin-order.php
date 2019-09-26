@@ -85,7 +85,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			// Edit Order screen assets
 			if ( 'post.php' === $hook_suffix ) {
 
-				$order = wc_get_order( SV_WC_Helper::get_request( 'post' ) );
+				$order = wc_get_order( SV_WC_Helper::get_requested_value( 'post' ) );
 
 				if ( ! $order ) {
 					return;
@@ -342,7 +342,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 		check_ajax_referer( 'wc_' . $this->get_plugin()->get_id() . '_capture_charge', 'nonce' );
 
-		$gateway_id = SV_WC_Helper::get_request( 'gateway_id' );
+		$gateway_id = SV_WC_Helper::get_requested_value( 'gateway_id' );
 
 		if ( ! $this->get_plugin()->has_gateway( $gateway_id ) ) {
 			die();
@@ -352,7 +352,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 		try {
 
-			$order_id = SV_WC_Helper::get_request( 'order_id' );
+			$order_id = SV_WC_Helper::get_requested_value( 'order_id' );
 			$order    = wc_get_order( $order_id );
 
 			if ( ! $order ) {
@@ -369,8 +369,8 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 			$amount_captured = (float) $gateway->get_order_meta( $order, 'capture_total' );
 
-			if ( SV_WC_Helper::get_request( 'amount' ) ) {
-				$amount = (float) SV_WC_Helper::get_request( 'amount' );
+			if ( $request_amount = SV_WC_Helper::get_requested_value( 'amount' ) ) {
+				$amount = (float) $request_amount;
 			} else {
 				$amount = $order->get_total();
 			}

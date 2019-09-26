@@ -178,7 +178,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 			}
 
 			// Set the default method
-			$data['default'] = $token_id === SV_WC_Helper::get_post( $this->get_input_name() . '_default' );
+			$data['default'] = $token_id === SV_WC_Helper::get_posted_value( $this->get_input_name() . '_default' );
 
 			if ( $data = $this->validate_token_data( $token_id, $data ) ) {
 				$built_tokens[ $token_id ] = $this->build_token( $user_id, $token_id, $data );
@@ -198,7 +198,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 		check_ajax_referer( 'wc_payment_gateway_admin_get_blank_payment_token', 'security' );
 
-		$index = SV_WC_Helper::get_request( 'index' );
+		$index = SV_WC_Helper::get_requested_value( 'index' );
 
 		if ( $index ) {
 
@@ -241,8 +241,8 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 				throw new SV_WC_Payment_Gateway_Exception( 'Invalid nonce' );
 			}
 
-			$user_id  = SV_WC_Helper::get_request( 'user_id' );
-			$token_id = SV_WC_Helper::get_request( 'token_id' );
+			$user_id  = SV_WC_Helper::get_requested_value( 'user_id' );
+			$token_id = SV_WC_Helper::get_requested_value( 'token_id' );
 
 			if ( ! $user_id ) {
 				throw new SV_WC_Payment_Gateway_Exception( 'User ID is missing' );
@@ -278,7 +278,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 				throw new SV_WC_Payment_Gateway_Exception( 'Invalid nonce' );
 			}
 
-			$user_id = SV_WC_Helper::get_request( 'user_id' );
+			$user_id = SV_WC_Helper::get_requested_value( 'user_id' );
 
 			if ( ! $user_id ) {
 				throw new SV_WC_Payment_Gateway_Exception( 'User ID is missing' );

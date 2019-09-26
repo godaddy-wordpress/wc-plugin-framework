@@ -116,8 +116,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 		check_ajax_referer( 'sv_wc_apple_pay_validate_merchant', 'nonce' );
 
-		$merchant_id = SV_WC_Helper::get_post( 'merchant_id' );
-		$url         = SV_WC_Helper::get_post( 'url' );
+		$merchant_id = SV_WC_Helper::get_posted_value( 'merchant_id' );
+		$url         = SV_WC_Helper::get_posted_value( 'url' );
 
 		try {
 
@@ -178,7 +178,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 				}
 			}
 
-			$chosen_shipping_methods = ( $method = SV_WC_Helper::get_request( 'method' ) ) ? array( wc_clean( $method ) ) : array();
+			$chosen_shipping_methods = ( $method = SV_WC_Helper::get_requested_value( 'method' ) ) ? array( wc_clean( $method ) ) : array();
 
 			WC()->session->set( 'chosen_shipping_methods', $chosen_shipping_methods );
 
@@ -217,8 +217,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 		$this->get_handler()->log( 'Processing payment' );
 
-		$type     = SV_WC_Helper::get_post( 'type' );
-		$response = stripslashes( SV_WC_Helper::get_post( 'payment' ) );
+		$type     = SV_WC_Helper::get_posted_value( 'type' );
+		$response = stripslashes( SV_WC_Helper::get_posted_value( 'payment' ) );
 
 		$this->get_handler()->store_payment_response( $response );
 

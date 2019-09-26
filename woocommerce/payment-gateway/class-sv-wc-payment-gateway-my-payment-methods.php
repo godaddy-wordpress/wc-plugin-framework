@@ -873,7 +873,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			$this->load_tokens();
 
-			$token_id = SV_WC_Helper::get_post( 'token_id' );
+			$token_id = SV_WC_Helper::get_posted_value( 'token_id' );
 
 			if ( empty( $this->tokens[ $token_id ] ) || ! $this->tokens[ $token_id ] instanceof SV_WC_Payment_Gateway_Payment_Token ) {
 				throw new SV_WC_Payment_Gateway_Exception( 'Invalid token ID' );
@@ -890,7 +890,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			$data = array();
 
-			parse_str( SV_WC_Helper::get_post( 'data' ), $data );
+			parse_str( SV_WC_Helper::get_posted_value( 'data' ), $data );
 
 			// set the data
 			$token = $this->save_token_data( $token, $data );

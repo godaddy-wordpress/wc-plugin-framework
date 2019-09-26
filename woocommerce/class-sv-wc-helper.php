@@ -546,36 +546,82 @@ class SV_WC_Helper {
 
 
 	/**
-	 * Safely get and trim data from $_POST
+	 * Safely gets and trims data from $_POST.
 	 *
 	 * @since 3.0.0
+	 * @deprecated 5.5.0
+	 *
 	 * @param string $key array key to get from $_POST array
 	 * @return string value from $_POST or blank string if $_POST[ $key ] is not set
 	 */
 	public static function get_post( $key ) {
 
-		if ( isset( $_POST[ $key ] ) ) {
-			return trim( $_POST[ $key ] );
-		}
+		wc_deprecated_function( __METHOD__, '5.5.0', __CLASS__ . '::get_posted_data()' );
 
-		return '';
+		return self::get_posted_value( $key );
 	}
 
 
 	/**
-	 * Safely get and trim data from $_REQUEST
+	 * Safely gets a value from $_POST.
+	 *
+	 * If the expected data is a string also trims it.
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string $key posted data key
+	 * @param int|float|array|bool|null|string $default default data type to return (default empty string)
+	 * @return int|float|array|bool|null|string posted data value if key found, or default
+	 */
+	public static function get_posted_value( $key, $default = '' ) {
+
+		$value = $default;
+
+		if ( isset( $_POST[ $key ] ) ) {
+			$value = is_string( $_POST[ $key ] ) ? trim( $_POST[ $key ] ) : $_POST[ $key ];
+		}
+
+		return $value;
+	}
+
+
+	/**
+	 * Safely gets and trims data from $_REQUEST.
 	 *
 	 * @since 3.0.0
+	 * @deprecated 5.5.0
+	 *
 	 * @param string $key array key to get from $_REQUEST array
 	 * @return string value from $_REQUEST or blank string if $_REQUEST[ $key ] is not set
 	 */
 	public static function get_request( $key ) {
 
+		wc_deprecated_function( __METHOD__, '5.5.0', __CLASS__ . '::get_posted_data()' );
+
+		return self::get_requested_value( $key );
+	}
+
+
+	/**
+	 * Safely gets a value from $_REQUEST.
+	 *
+	 * If the expected data is a string also trims it.
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string $key posted data key
+	 * @param int|float|array|bool|null|string $default default data type to return (default empty string)
+	 * @return int|float|array|bool|null|string posted data value if key found, or default
+	 */
+	public static function get_requested_value( $key, $default = '' ) {
+
+		$value = $default;
+
 		if ( isset( $_REQUEST[ $key ] ) ) {
-			return trim( $_REQUEST[ $key ] );
+			$value = is_string( $_REQUEST[ $key ] ) ? trim( $_REQUEST[ $key ] ) : $_REQUEST[ $key ];
 		}
 
-		return '';
+		return $value;
 	}
 
 
