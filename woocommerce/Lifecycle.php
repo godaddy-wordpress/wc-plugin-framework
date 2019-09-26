@@ -214,19 +214,16 @@ class Lifecycle {
 	 */
 	private function flush_cache() {
 
-		// APC
 		if ( function_exists( 'apc_clear_cache' ) ) {
 			foreach ( [ 'user', 'opcode', '' ] as $cache_type ) {
 				@apc_clear_cache( $cache_type );
 			}
 		}
 
-		// APCU
 		if ( function_exists( 'apcu_clear_cache' ) ) {
 			@apcu_clear_cache();
 		}
 
-		// OPCache
 		if ( function_exists( 'opcache_reset' ) ) {
 			@opcache_reset();
 		}
@@ -235,34 +232,8 @@ class Lifecycle {
 			@wincache_ucache_clear();
 		}
 
-		// Memcache
 		if ( function_exists( 'memcache_flush' ) ) {
 			@memcache_flush();
-		}
-
-		// WordPress Object Cache
-		if ( function_exists( 'wp_cache_flush' ) ) {
-			@wp_cache_flush();
-		}
-
-		// WP Super Cache
-		if ( function_exists( 'wp_cache_clear_cache' ) ) {
-			@wp_cache_clear_cache( get_current_blog_id() );
-		}
-
-		// WP Rocket
-		if ( function_exists( 'rocket_clean_domain' ) ) {
-			@rocket_clean_domain();
-		}
-
-		// W3 Total Cache
-		if ( function_exists( 'w3tc_flush_all' ) ) {
-			@w3tc_flush_all();
-		}
-
-		// WP Fastest Cache
-		if ( function_exists( 'wpfc_clear_all_cache' ) ) {
-			@wpfc_clear_all_cache();
 		}
 	}
 
