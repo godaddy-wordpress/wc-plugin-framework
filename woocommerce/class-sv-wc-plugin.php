@@ -54,11 +54,14 @@ abstract class SV_WC_Plugin {
 	/** @var string version number */
 	private $version;
 
-	/** @var string plugin path without trailing slash */
+	/** @var string plugin path, without trailing slash */
 	private $plugin_path;
 
-	/** @var string plugin uri */
+	/** @var string plugin URL */
 	private $plugin_url;
+
+	/** @var string template path, without trailing slash */
+	private $template_path;
 
 	/** @var \WC_Logger instance */
 	private $logger;
@@ -1025,48 +1028,56 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Returns the plugin's path without a trailing slash, i.e.
-	 * /path/to/wp-content/plugins/plugin-directory
+	 * Gets the plugin's path without a trailing slash.
+	 *
+	 * e.g. /path/to/wp-content/plugins/plugin-directory
 	 *
 	 * @since 2.0.0
-	 * @return string the plugin path
+	 *
+	 * @return string
 	 */
 	public function get_plugin_path() {
 
-		if ( $this->plugin_path ) {
-			return $this->plugin_path;
+		if ( null === $this->plugin_path ) {
+			$this->plugin_path = untrailingslashit( plugin_dir_path( $this->get_file() ) );
 		}
 
-		return $this->plugin_path = untrailingslashit( plugin_dir_path( $this->get_file() ) );
+		return $this->plugin_path;
 	}
 
 
 	/**
-	 * Returns the plugin's url without a trailing slash, i.e.
-	 * http://skyverge.com/wp-content/plugins/plugin-directory
+	 * Gets the plugin's URL without a trailing slash.
+	 *
+	 * E.g. http://skyverge.com/wp-content/plugins/plugin-directory
 	 *
 	 * @since 2.0.0
-	 * @return string the plugin URL
+	 *
+	 * @return string
 	 */
 	public function get_plugin_url() {
 
-		if ( $this->plugin_url ) {
-			return $this->plugin_url;
+		if ( null === $this->plugin_url ) {
+			$this->plugin_url = untrailingslashit( plugins_url( '/', $this->get_file() ) );
 		}
 
-		return $this->plugin_url = untrailingslashit( plugins_url( '/', $this->get_file() ) );
+		return $this->plugin_url;
 	}
 
 
 	/**
-	 * Returns the woocommerce uploads path, without trailing slash.  Oddly WooCommerce
-	 * core does not provide a way to get this
+	 * Gets the woocommerce uploads path, without trailing slash.
+	 *
+	 * Oddly WooCommerce core does not provide a way to get this.
 	 *
 	 * @since 2.0.0
-	 * @return string upload path for woocommerce
+	 *
+	 * @return string
 	 */
 	public static function get_woocommerce_uploads_path() {
+
 		$upload_dir = wp_upload_dir();
+
 		return $upload_dir['basedir'] . '/woocommerce_uploads';
 	}
 
@@ -1084,8 +1095,9 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Returns the loaded framework path, without trailing slash. Ths is the highest
-	 * version framework that was loaded by the bootstrap.
+	 * Gets the loaded framework path, without trailing slash.
+	 *
+	 * This matches the path to the highest version of the framework currently loaded.
 	 *
 	 * @since 4.0.0
 	 * @return string
@@ -1097,10 +1109,10 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Returns the absolute path to the loaded framework image directory, without a
-	 * trailing slash
+	 * Gets the absolute path to the loaded framework image directory, without a trailing slash.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @return string
 	 */
 	public function get_framework_assets_path() {
@@ -1110,14 +1122,54 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Returns the loaded framework assets URL without a trailing slash
+	 * Gets the loaded framework assets URL without a trailing slash.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @return string
 	 */
 	public function get_framework_assets_url() {
 
 		return untrailingslashit( plugins_url( '/assets', $this->get_framework_file() ) );
+	}
+
+
+	/**
+	 * Gets the plugin default template path, without a trailing slash.
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @return string
+	 */
+	public function get_template_path() {
+
+		if ( null === $this->template_path ) {
+			$this->template_path = $this->get_plugin_path() . '/templates';
+		}
+
+		return $this->template_path;
+	}
+
+
+	/**
+	 * Loads and outputs a template file HTML.
+	 *
+	 * @see \wc_get_template() except we define automatically the default path
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string $template template name/part
+	 * @param array $args associative array of optional template arguments
+	 * @param string $path optional template path, can be empty, as themes can override this
+	 * @param string $default_path optional default template path, will normally use the plugin's own template path unless overridden
+	 */
+	public function load_template( $template, array $args = [], $path = '', $default_path = '' ) {
+
+		if ( '' === $default_path || ! is_string( $default_path ) ) {
+			$default_path = trailingslashit( $this->get_template_path() );
+		}
+
+		wc_get_template( $template, $args, $path, $default_path );
 	}
 
 
