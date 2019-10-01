@@ -556,7 +556,7 @@ class SV_WC_Helper {
 	 */
 	public static function get_post( $key ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', __CLASS__ . '::get_posted_data()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', __CLASS__ . '::get_posted_value()' );
 
 		return self::get_posted_value( $key );
 	}
@@ -596,7 +596,7 @@ class SV_WC_Helper {
 	 */
 	public static function get_request( $key ) {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', __CLASS__ . '::get_posted_data()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', __CLASS__ . '::get_requested_value()' );
 
 		return self::get_requested_value( $key );
 	}
