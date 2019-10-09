@@ -915,22 +915,22 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.5.0-dev
 	 *
-	 * @param string[]|string either 'enabled', 'disabled' (for loose checks) or specific debug mode status (or statuses)
+	 * @param string[]|string|bool|null a valid debug mode status
 	 * @return bool
 	 */
 	public function is_debug_mode( $status ) {
 
 		$debug_mode = $this->get_debug_mode();
 
-		if ( 'enabled' === $status ) {
-			$is_debug_mode_status = $debug_mode && 'off' !== $debug_mode;
-		} elseif ( 'disabled' === $status ) {
-			$is_debug_mode_status = ! $debug_mode || 'off' === $debug_mode;
+		if ( in_array( $status, [ true, 'on', 'enabled' ], true ) ) {
+			$is_debug_mode = 'on' === $debug_mode || 'enabled' === $debug_mode || true === (bool) $debug_mode;
+		} elseif ( in_array( $status, [ false, 'off', 'disabled' ], true ) ) {
+			$is_debug_mode = 'off' === $debug_mode || 'disabled' === $debug_mode || false === (bool) $debug_mode;
 		} else {
-			$is_debug_mode_status = is_array( $status ) ? in_array( $debug_mode, $status, true ) : $status === $debug_mode;
+			$is_debug_mode = is_array( $status ) ? in_array( $this->get_debug_mode(), $status, true ) : $status === $this->get_debug_mode();
 		}
 
-		return $is_debug_mode_status;
+		return $is_debug_mode;
 	}
 
 
@@ -942,12 +942,24 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.5.0-dev
 	 *
-	 * @return string normally one of 'off' or 'log'
+	 * @return bool|string|null debug mode status or null if debug mode is not available for the plugin
 	 */
 	public function get_debug_mode() {
 
-		// returns 'log' by default as plugins may record general information to the log file like during upgrade routines
-		return ! is_string( $this->debug_mode ) ? 'log' : $this->debug_mode;
+		return $this->debug_mode;
+	}
+
+
+	/**
+	 * Gets a list of available debug modes, with labels.
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @return array
+	 */
+	public function get_debug_modes() {
+
+		return [];
 	}
 
 
@@ -960,15 +972,27 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.5.0-dev
 	 *
-	 * @param bool|string $debug_mode normally one of 'off' or 'log' (but the loose boolean value could also be interpreted by child plugins)
-	 * @throws SV_WC_Plugin_Exception child implementations may choose to throw exception on errors or invalid input
+	 * @param null|bool|string $debug_mode one of the accepted values
+	 * @throws SV_WC_Plugin_Exception if there are no debug modes defined, or the debug mode to be set is not recognized, an exception will be thrown
 	 */
 	public function set_debug_mode( $debug_mode ) {
 
-		if ( is_bool( $debug_mode ) ) {
-			$debug_mode = true === $debug_mode ? 'log' : 'off';
+		$debug_modes = $this->get_debug_modes();
+
+		if ( empty( $debug_modes ) ) {
+			throw new SV_WC_Plugin_Exception( __( 'The plugin does not have a debug mode.', 'woocommerce-plugin-framework' ) );
 		}
 
+		if ( ! array_key_exists( $debug_mode, $debug_modes ) ) {
+			throw new SV_WC_Plugin_Exception( sprintf(
+				/* translators: Placeholder: %1$s - debug mode identifier, %2$s - list of valid debug modes */
+				__( 'Invalid debug mode %1$s. Must be one of: %2$s.', 'woocommerce-plugin-framework' ),
+				is_string( $debug_mode ) ? $debug_mode : gettype( $debug_mode ),
+				implode( ', ', array_keys( $debug_modes ) )
+			) );
+		}
+
+		// children implementations may want to extend this method to persist the debug mode into a setting or option
 		$this->debug_mode = $debug_mode;
 	}
 

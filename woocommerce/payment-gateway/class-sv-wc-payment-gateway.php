@@ -1192,20 +1192,16 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		// debug mode
-		$this->form_fields['debug_mode'] = array(
+		$this->form_fields['debug_mode'] = [
 			'title'   => esc_html__( 'Debug Mode', 'woocommerce-plugin-framework' ),
 			'type'    => 'select',
 			/* translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag */
 			'desc'    => sprintf( esc_html__( 'Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the %1$sdebug log%2$s', 'woocommerce-plugin-framework' ), '<a href="' . SV_WC_Helper::get_wc_log_file_url( $this->get_id() ) . '">', '</a>' ),
 			'default' => self::DEBUG_MODE_OFF,
-			'options' => array(
-				self::DEBUG_MODE_OFF      => esc_html__( 'Off', 'woocommerce-plugin-framework' ),
-				self::DEBUG_MODE_CHECKOUT => esc_html__( 'Show on Checkout Page', 'woocommerce-plugin-framework' ),
-				self::DEBUG_MODE_LOG      => esc_html__( 'Save to Log', 'woocommerce-plugin-framework' ),
-				/* translators: show debugging information on both checkout page and in the log */
-				self::DEBUG_MODE_BOTH     => esc_html__( 'Both', 'woocommerce-plugin-framework' ),
-			),
-		);
+		];
+		foreach ( $this->get_debug_modes() as $debug_mode => $debug_mode_label ) {
+			$this->form_fields['debug_mode']['options'][ $debug_mode ] = esc_html( $debug_mode_label );
+		}
 
 		// if there is more than just the production environment available
 		if ( count( $this->get_environments() ) > 1 ) {
@@ -4036,15 +4032,15 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		$debug_mode = $this->get_debug_mode();
 
-		if ( 'enabled' === $status ) {
-			$is_debug_mode_status = $debug_mode && self::DEBUG_MODE_OFF !== $debug_mode;
-		} elseif ( 'disabled' === $status ) {
-			$is_debug_mode_status = ! $debug_mode || self::DEBUG_MODE_OFF === $debug_mode;
+		if ( 'enabled' === $status || 'on' === $status ) {
+			$is_debug_mode = $debug_mode && self::DEBUG_MODE_OFF !== $debug_mode;
+		} elseif ( 'disabled' === $status || 'off' === $status ) {
+			$is_debug_mode = ! $debug_mode || self::DEBUG_MODE_OFF === $debug_mode;
 		} else {
-			$is_debug_mode_status = is_array( $status ) ? in_array( $debug_mode, $status, true ) : $status === $debug_mode;
+			$is_debug_mode = is_array( $status ) ? in_array( $debug_mode, $status, true ) : $status === $debug_mode;
 		}
 
-		return $is_debug_mode_status;
+		return $is_debug_mode;
 	}
 
 
@@ -4064,6 +4060,24 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
+	 * Gets a list of possible debug modes, with labels.
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @return array
+	 */
+	public function get_debug_modes() {
+
+		return [
+			self::DEBUG_MODE_OFF      => __( 'Off', 'woocommerce-plugin-framework' ),
+			self::DEBUG_MODE_CHECKOUT => __( 'Show on Checkout Page', 'woocommerce-plugin-framework' ),
+			self::DEBUG_MODE_LOG      => __( 'Save to Log', 'woocommerce-plugin-framework' ),
+			self::DEBUG_MODE_BOTH     => _x( 'Both', 'Show debugging information on both checkout page and in the log', 'woocommerce-plugin-framework' ),
+		];
+	}
+
+
+	/**
 	 * Sets the gateway debug mode.
 	 *
 	 * @since 5.5.0-dev
@@ -4078,7 +4092,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			$debug_mode = true === $debug_mode ? self::DEBUG_MODE_LOG : self::DEBUG_MODE_OFF;
 		}
 
-		$debug_modes = [ self::DEBUG_MODE_LOG, self::DEBUG_MODE_CHECKOUT, self::DEBUG_MODE_BOTH, self::DEBUG_MODE_OFF ];
+		$debug_modes = array_keys( $this->get_debug_modes() );
 
 		if ( ! in_array( $debug_mode, $debug_modes, true ) ) {
 			throw new SV_WC_Plugin_Exception( sprintf(

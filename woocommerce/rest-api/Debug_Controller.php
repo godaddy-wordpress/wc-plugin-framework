@@ -125,10 +125,10 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 		$plugin     = $this->get_plugin();
 		$plugin_id  = $plugin->get_id();
 		$debug_mode = [
-			'plugin' => [
-				'debug_mode_enabled' => $plugin->is_debug_mode( 'enabled' ),
-				'debug_mode_status'  => $plugin->get_debug_mode(),
-			],
+			'debug_mode_enabled' => $plugin->is_debug_mode( 'enabled' ),
+			'debug_mode_status'  => $plugin->get_debug_mode(),
+			'debug_modes'        => $plugin->get_debug_modes(),
+			'gateways'           => null,
 		];
 
 		if ( $plugin instanceof SV_WC_Payment_Gateway_Plugin ) {
@@ -141,6 +141,7 @@ abstract class Debug_Controller extends \WC_REST_Controller {
 
 				$debug_mode['gateways'][ $gateway_id ]['debug_mode_enabled'] = $gateway->is_debug_mode( 'enabled' );
 				$debug_mode['gateways'][ $gateway_id ]['debug_mode_status']  = $gateway->get_debug_mode();
+				$debug_mode['gateways'][ $gateway_id ]['debug_modes']        = $gateway->get_debug_modes();
 			}
 		}
 
