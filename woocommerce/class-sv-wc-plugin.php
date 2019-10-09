@@ -918,22 +918,12 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.5.0-dev
 	 *
-	 * @param string[]|string|bool|null a valid debug mode status
+	 * @param array|string|bool|null a valid debug mode status or multiple statuses to check
 	 * @return bool
 	 */
 	public function is_debug_mode( $status ) {
 
-		$debug_mode = $this->get_debug_mode();
-
-		if ( in_array( $status, [ true, 'on', 'enabled' ], true ) ) {
-			$is_debug_mode = 'on' === $debug_mode || 'enabled' === $debug_mode || true === (bool) $debug_mode;
-		} elseif ( in_array( $status, [ false, 'off', 'disabled' ], true ) ) {
-			$is_debug_mode = 'off' === $debug_mode || 'disabled' === $debug_mode || false === (bool) $debug_mode;
-		} else {
-			$is_debug_mode = is_array( $status ) ? in_array( $this->get_debug_mode(), $status, true ) : $status === $this->get_debug_mode();
-		}
-
-		return $is_debug_mode;
+		return is_array( $status ) ? in_array( $this->get_debug_mode(), $status, true ) : $status === $this->get_debug_mode();
 	}
 
 
