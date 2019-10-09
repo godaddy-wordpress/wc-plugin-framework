@@ -638,7 +638,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 */
 	public function should_tokenize() {
 
-		return SV_WC_Helper::get_post( 'wc-' . $this->get_gateway()->get_id_dasherized() . '-tokenize-payment-method' ) && ! SV_WC_Helper::get_post( 'wc-' . $this->get_gateway()->get_id_dasherized() . '-payment-token' );
+		return SV_WC_Helper::get_posted_value( 'wc-' . $this->get_gateway()->get_id_dasherized() . '-tokenize-payment-method' ) && ! SV_WC_Helper::get_posted_value( 'wc-' . $this->get_gateway()->get_id_dasherized() . '-payment-token' );
 	}
 
 

@@ -177,7 +177,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 *
 	 * @return string
 	 */
-	private function get_framework_version_namespace() {
+	public function get_framework_version_namespace() {
 
 		return 'v' . str_replace( '.', '_', $this->get_framework_version() );
 	}
@@ -190,7 +190,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 *
 	 * @return string
 	 */
-	private function get_framework_version() {
+	public function get_framework_version() {
 
 		return self::FRAMEWORK_VERSION;
 	}

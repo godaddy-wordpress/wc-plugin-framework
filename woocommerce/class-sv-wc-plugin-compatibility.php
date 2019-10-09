@@ -61,7 +61,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function wc_get_is_paid_statuses() {
 
-		wc_deprecated_function( __METHOD__, '5.5.0', 'wc_get_is_paid_statuses()' );
+		wc_deprecated_function( __METHOD__, '5.5.0', '(array) wc_get_is_paid_statuses()' );
 
 		return (array) wc_get_is_paid_statuses();
 	}
@@ -181,6 +181,23 @@ class SV_WC_Plugin_Compatibility {
 	public static function get_wc_version() {
 
 		return defined( 'WC_VERSION' ) && WC_VERSION ? WC_VERSION : null;
+	}
+
+
+	/**
+	 * Determines if the installed WooCommerce version matches a specific version.
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string $version semver
+	 * @return bool
+	 */
+	public static function is_wc_version( $version ) {
+
+		$wc_version = self::get_wc_version();
+
+		// accounts for semver cases like 3.0 being equal to 3.0.0
+		return $wc_version === $version || ( $wc_version && version_compare( $wc_version, $version, '=' ) );
 	}
 
 
@@ -440,6 +457,23 @@ class SV_WC_Plugin_Compatibility {
 	protected static function get_wc_subscriptions_version() {
 
 		return class_exists( 'WC_Subscriptions' ) && ! empty( \WC_Subscriptions::$version ) ? \WC_Subscriptions::$version : null;
+	}
+
+
+	/**
+	 * Determines if the installed WooCommerce Subscriptions version matches a specific version.
+	 *
+	 * @since 5.5.0-dev
+	 *
+	 * @param string $version semver
+	 * @return bool
+	 */
+	protected static function is_wc_subscriptions_version( $version ) {
+
+		$subscriptions_version = self::get_wc_subscriptions_version();
+
+		// accounts for semver cases like 2.2 being equal to 2.2.0
+		return $version === $subscriptions_version || ( $subscriptions_version && version_compare( $version, $subscriptions_version, '=' ) );
 	}
 
 

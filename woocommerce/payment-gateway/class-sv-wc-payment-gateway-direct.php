@@ -54,17 +54,17 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( $this->supports_tokenization() ) {
 
 			// tokenized transaction?
-			if ( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
+			if ( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 				// unknown token?
-				if ( ! $this->get_payment_tokens_handler()->user_has_token( get_current_user_id(), SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) ) {
+				if ( ! $this->get_payment_tokens_handler()->user_has_token( get_current_user_id(), SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) ) {
 					SV_WC_Helper::wc_add_notice( esc_html__( 'Payment error, please try another payment method or contact us to complete your transaction.', 'woocommerce-plugin-framework' ), 'error' );
 					$is_valid = false;
 				}
 
 				// Check the CSC if enabled
 				if ( $this->is_credit_card_gateway() && $this->csc_enabled_for_tokens() ) {
-					$is_valid = $this->validate_csc( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' ) ) && $is_valid;
+					$is_valid = $this->validate_csc( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-csc' ) ) && $is_valid;
 				}
 
 				// no more validation to perform
@@ -98,11 +98,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function validate_credit_card_fields( $is_valid ) {
 
-		$account_number   = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' );
-		$expiration_month = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
-		$expiration_year  = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
-		$expiry           = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-expiry' );
-		$csc              = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
+		$account_number   = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-number' );
+		$expiration_month = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
+		$expiration_year  = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
+		$expiry           = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-expiry' );
+		$csc              = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-csc' );
 
 		// handle single expiry field formatted like "MM / YY" or "MM / YYYY"
 		if ( ! $expiration_month & ! $expiration_year && $expiry ) {
@@ -254,12 +254,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function validate_check_fields( $is_valid ) {
 
-		$account_number         = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' );
-		$routing_number         = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
+		$account_number         = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-number' );
+		$routing_number         = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
 
 		// optional fields (excluding account type for now)
-		$drivers_license_number = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
-		$check_number           = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-check-number' );
+		$drivers_license_number = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
+		$check_number           = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-check-number' );
 
 		// routing number exists?
 		if ( empty( $routing_number ) ) {
@@ -553,18 +553,18 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$order = parent::get_order( $order_id );
 
 		// payment info
-		if ( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' ) && ! SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
+		if ( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-number' ) && ! SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 			// common attributes
-			$order->payment->account_number = str_replace( array( ' ', '-' ), '', SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-account-number' ) );
+			$order->payment->account_number = str_replace( array( ' ', '-' ), '', SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-number' ) );
 			$order->payment->last_four = substr( $order->payment->account_number, -4 );
 
 			if ( $this->is_credit_card_gateway() ) {
 
 				// credit card specific attributes
-				$order->payment->card_type      = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-card-type' );
-				$order->payment->exp_month      = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
-				$order->payment->exp_year       = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
+				$order->payment->card_type      = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-card-type' );
+				$order->payment->exp_month      = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
+				$order->payment->exp_year       = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
 
 				// add card type for gateways that don't require it displayed at checkout
 				if ( empty( $order->payment->card_type ) ) {
@@ -572,30 +572,30 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				}
 
 				// handle single expiry field formatted like "MM / YY" or "MM / YYYY"
-				if ( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) {
-					list( $order->payment->exp_month, $order->payment->exp_year ) = array_map( 'trim', explode( '/', SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) );
+				if ( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) {
+					list( $order->payment->exp_month, $order->payment->exp_year ) = array_map( 'trim', explode( '/', SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) );
 				}
 
 				// add CSC if enabled
 				if ( $this->csc_enabled() ) {
-					$order->payment->csc = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
+					$order->payment->csc = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
 			} elseif ( $this->is_echeck_gateway() ) {
 
 				// echeck specific attributes
-				$order->payment->routing_number         = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
-				$order->payment->account_type           = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-account-type' );
-				$order->payment->check_number           = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-check-number' );
-				$order->payment->drivers_license_number = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
-				$order->payment->drivers_license_state  = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-drivers-license-state' );
+				$order->payment->routing_number         = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
+				$order->payment->account_type           = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-type' );
+				$order->payment->check_number           = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-check-number' );
+				$order->payment->drivers_license_number = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
+				$order->payment->drivers_license_state  = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-drivers-license-state' );
 
 			}
 
-		} elseif ( SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
+		} elseif ( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 			// paying with tokenized payment method (we've already verified that this token exists in the validate_fields method)
-			$token = $this->get_payment_tokens_handler()->get_token( $order->get_user_id(), SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) );
+			$token = $this->get_payment_tokens_handler()->get_token( $order->get_user_id(), SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) );
 
 			$order->payment->token          = $token->get_id();
 			$order->payment->account_number = $token->get_last_four();
@@ -609,7 +609,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$order->payment->exp_year  = $token->get_exp_year();
 
 				if ( $this->csc_enabled_for_tokens() ) {
-					$order->payment->csc = SV_WC_Helper::get_post( 'wc-' . $this->get_id_dasherized() . '-csc' );
+					$order->payment->csc = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
 			} elseif ( $this->is_echeck_gateway() ) {
