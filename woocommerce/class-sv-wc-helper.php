@@ -567,7 +567,7 @@ class SV_WC_Helper {
 	 *
 	 * If the expected data is a string also trims it.
 	 *
-	 * @since 5.5.0-dev
+	 * @since 5.5.0
 	 *
 	 * @param string $key posted data key
 	 * @param int|float|array|bool|null|string $default default data type to return (default empty string)
@@ -607,7 +607,7 @@ class SV_WC_Helper {
 	 *
 	 * If the expected data is a string also trims it.
 	 *
-	 * @since 5.5.0-dev
+	 * @since 5.5.0
 	 *
 	 * @param string $key posted data key
 	 * @param int|float|array|bool|null|string $default default data type to return (default empty string)

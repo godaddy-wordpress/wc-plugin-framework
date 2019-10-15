@@ -187,7 +187,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Determines if the installed WooCommerce version matches a specific version.
 	 *
-	 * @since 5.5.0-dev
+	 * @since 5.5.0
 	 *
 	 * @param string $version semver
 	 * @return bool
@@ -403,7 +403,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Determines if the installed version of WooCommerce Subscriptions matches or exceeds a given version.
 	 *
-	 * @since 5.5.0-dev
+	 * @since 5.5.0
 	 *
 	 * @param string $version version number to compare
 	 * @return bool
@@ -418,7 +418,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Determines if the installed version of WooCommerce Subscriptions exceeds a given version.
 	 *
-	 * @since 5.5.0-dev
+	 * @since 5.5.0
 	 *
 	 * @param string $version version number to compare
 	 * @return bool
@@ -434,7 +434,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Determines if the installed version of WooCommerce Subscriptions is lower than a given version.
 	 *
-	 * @since 5.5.0-dev
+	 * @since 5.5.0
 	 *
 	 * @param string $version version number to compare
 	 * @return bool
@@ -463,7 +463,7 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Determines if the installed WooCommerce Subscriptions version matches a specific version.
 	 *
-	 * @since 5.5.0-dev
+	 * @since 5.5.0
 	 *
 	 * @param string $version semver
 	 * @return bool

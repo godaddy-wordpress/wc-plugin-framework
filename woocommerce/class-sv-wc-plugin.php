@@ -37,13 +37,13 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Pl
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 5.5.0-dev
+ * @version 5.5.0
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.5.0-dev';
+	const VERSION = '5.5.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -1140,7 +1140,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the plugin default template path, without a trailing slash.
 	 *
-	 * @since 5.5.0-dev
+	 * @since 5.5.0
 	 *
 	 * @return string
 	 */
@@ -1159,7 +1159,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @see \wc_get_template() except we define automatically the default path
 	 *
-	 * @since 5.5.0-dev
+	 * @since 5.5.0
 	 *
 	 * @param string $template template name/part
 	 * @param array $args associative array of optional template arguments
