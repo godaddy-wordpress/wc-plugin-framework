@@ -72,6 +72,9 @@ abstract class SV_WC_Plugin {
 	/** @var string the plugin text domain */
 	private $text_domain;
 
+	/** @var array memoized list of active plugins */
+	private $active_plugins = [];
+
 	/** @var int|float minimum supported WooCommerce versions before the latest (units for major releases, decimals for minor) */
 	private $min_wc_semver;
 
@@ -1174,39 +1177,52 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Helper function to determine whether a plugin is active
+	 * Determines whether a plugin is active.
 	 *
 	 * @since 2.0.0
+	 *
 	 * @param string $plugin_name plugin name, as the plugin-filename.php
 	 * @return boolean true if the named plugin is installed and active
 	 */
 	public function is_plugin_active( $plugin_name ) {
 
-		$active_plugins = (array) get_option( 'active_plugins', array() );
+		$is_active = false;
 
-		if ( is_multisite() ) {
-			$active_plugins = array_merge( $active_plugins, array_keys( get_site_option( 'active_sitewide_plugins', array() ) ) );
-		}
+		if ( is_string( $plugin_name ) ) {
 
-		$plugin_filenames = array();
+			if ( ! array_key_exists( $plugin_name, $this->active_plugins ) ) {
 
-		foreach ( $active_plugins as $plugin ) {
+				$active_plugins = (array) get_option( 'active_plugins', array() );
 
-			if ( SV_WC_Helper::str_exists( $plugin, '/' ) ) {
+				if ( is_multisite() ) {
+					$active_plugins = array_merge( $active_plugins, array_keys( get_site_option( 'active_sitewide_plugins', array() ) ) );
+				}
 
-				// normal plugin name (plugin-dir/plugin-filename.php)
-				list( , $filename ) = explode( '/', $plugin );
+				$plugin_filenames = array();
 
-			} else {
+				foreach ( $active_plugins as $plugin ) {
 
-				// no directory, just plugin file
-				$filename = $plugin;
+					if ( SV_WC_Helper::str_exists( $plugin, '/' ) ) {
+
+						// normal plugin name (plugin-dir/plugin-filename.php)
+						list( , $filename ) = explode( '/', $plugin );
+
+					} else {
+
+						// no directory, just plugin file
+						$filename = $plugin;
+					}
+
+					$plugin_filenames[] = $filename;
+				}
+
+				$this->active_plugins[ $plugin_name ] = in_array( $plugin_name, $plugin_filenames, true );
 			}
 
-			$plugin_filenames[] = $filename;
+			$is_active = (bool) $this->active_plugins[ $plugin_name ];
 		}
 
-		return in_array( $plugin_name, $plugin_filenames );
+		return $is_active;
 	}
 
 
