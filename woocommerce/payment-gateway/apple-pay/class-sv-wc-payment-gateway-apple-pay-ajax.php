@@ -22,11 +22,12 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_Apple_Pay_AJAX' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Apple_Pay_AJAX' ) ) :
+
 
 /**
  * The Apple Pay AJAX handler.
@@ -115,8 +116,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 		check_ajax_referer( 'sv_wc_apple_pay_validate_merchant', 'nonce' );
 
-		$merchant_id = SV_WC_Helper::get_post( 'merchant_id' );
-		$url         = SV_WC_Helper::get_post( 'url' );
+		$merchant_id = SV_WC_Helper::get_posted_value( 'merchant_id' );
+		$url         = SV_WC_Helper::get_posted_value( 'url' );
 
 		try {
 
@@ -173,15 +174,11 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 				if ( $country ) {
 
-					if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
-						WC()->customer->set_calculated_shipping( true );
-					} else {
-						WC()->customer->calculated_shipping( true );
-					}
+					WC()->customer->set_calculated_shipping( true );
 				}
 			}
 
-			$chosen_shipping_methods = ( $method = SV_WC_Helper::get_request( 'method' ) ) ? array( wc_clean( $method ) ) : array();
+			$chosen_shipping_methods = ( $method = SV_WC_Helper::get_requested_value( 'method' ) ) ? array( wc_clean( $method ) ) : array();
 
 			WC()->session->set( 'chosen_shipping_methods', $chosen_shipping_methods );
 
@@ -220,8 +217,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 		$this->get_handler()->log( 'Processing payment' );
 
-		$type     = SV_WC_Helper::get_post( 'type' );
-		$response = stripslashes( SV_WC_Helper::get_post( 'payment' ) );
+		$type     = SV_WC_Helper::get_posted_value( 'type' );
+		$response = stripslashes( SV_WC_Helper::get_posted_value( 'payment' ) );
 
 		$this->get_handler()->store_payment_response( $response );
 
@@ -257,5 +254,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 
 }
+
 
 endif;

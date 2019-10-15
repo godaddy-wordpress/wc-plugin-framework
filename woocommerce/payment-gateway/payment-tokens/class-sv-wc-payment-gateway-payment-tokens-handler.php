@@ -22,11 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_Payment_Tokens_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Payment_Tokens_Handler' ) ) :
+
+
 
 /**
  * Handle the payment tokenization related functionality.
@@ -636,7 +638,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 */
 	public function should_tokenize() {
 
-		return SV_WC_Helper::get_post( 'wc-' . $this->get_gateway()->get_id_dasherized() . '-tokenize-payment-method' ) && ! SV_WC_Helper::get_post( 'wc-' . $this->get_gateway()->get_id_dasherized() . '-payment-token' );
+		return SV_WC_Helper::get_posted_value( 'wc-' . $this->get_gateway()->get_id_dasherized() . '-tokenize-payment-method' ) && ! SV_WC_Helper::get_posted_value( 'wc-' . $this->get_gateway()->get_id_dasherized() . '-payment-token' );
 	}
 
 
@@ -898,5 +900,6 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 }
+
 
 endif;

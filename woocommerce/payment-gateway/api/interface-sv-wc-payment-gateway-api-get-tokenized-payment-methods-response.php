@@ -22,11 +22,12 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_API_Get_Tokenized_Payment_Methods_Response' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_API_Get_Tokenized_Payment_Methods_Response' ) ) :
+
 
 /**
  * WooCommerce Direct Payment Gateway API Create Payment Token Response
@@ -46,4 +47,5 @@ interface SV_WC_Payment_Gateway_API_Get_Tokenized_Payment_Methods_Response exten
 
 }
 
-endif;  // interface exists check
+
+endif;

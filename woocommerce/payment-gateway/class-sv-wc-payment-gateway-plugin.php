@@ -22,11 +22,12 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Plugin' ) ) :
+
 
 /**
  * # WooCommerce Payment Gateway Plugin Framework
@@ -1036,8 +1037,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Get a gateway's settings screen section ID.
 	 *
-	 * This was used as a helper method for WC 2.5 compatibility, but is no
-	 * longer needed and now deprecated.
+	 * This was used as a helper method for WC 2.5 compatibility, but is no longer needed and now deprecated.
 	 *
 	 * @since 4.4.0
 	 * @deprecated 5.0.1
@@ -1047,7 +1047,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_payment_gateway_configuration_section( $gateway_id ) {
 
-		SV_WC_Plugin_Compatibility::wc_doing_it_wrong( 'SV_WC_Payment_Gateway_Plugin::get_payment_gateway_configuration_section()', 'Deprecated! Use the plain gateway ID instead.', '5.0.1' );
+		wc_deprecated_function( __METHOD__, '5.0.1', 'strtolower( $gateway_id )' );
 
 		return strtolower( $gateway_id );
 	}
@@ -1335,5 +1335,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 }
+
 
 endif;

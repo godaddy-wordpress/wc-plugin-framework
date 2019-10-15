@@ -22,11 +22,12 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_Admin_User_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Admin_User_Handler' ) ) :
+
 
 /**
  * Handle the admin user profile settings.
@@ -35,11 +36,13 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Pa
  */
 class SV_WC_Payment_Gateway_Admin_User_Handler {
 
+
 	/** @var \SV_WC_Payment_Gateway_Plugin the plugin instance **/
 	protected $plugin;
 
 	/** @var array the token editor for each gateway **/
 	protected $token_editors = array();
+
 
 	/**
 	 * Construct the user handler.
@@ -401,6 +404,9 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 	protected function get_plugin() {
 		return $this->plugin;
 	}
+
+
 }
+
 
 endif;
