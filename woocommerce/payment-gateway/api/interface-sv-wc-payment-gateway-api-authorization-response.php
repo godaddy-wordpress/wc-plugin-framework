@@ -18,15 +18,16 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/API
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Payment_Gateway_API_Authorization_Response' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_API_Authorization_Response' ) ) :
+
 
 /**
  * WooCommerce Direct Payment Gateway API Authorization Response
@@ -43,38 +44,43 @@ interface SV_WC_Payment_Gateway_API_Authorization_Response extends SV_WC_Payment
 	 * indicate that the charge will be paid by the card issuer.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return string credit card authorization code
 	 */
 	public function get_authorization_code();
 
 
 	/**
-	 * Returns the result of the AVS check
+	 * Returns the result of the AVS check.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return string result of the AVS check, if any
 	 */
 	public function get_avs_result();
 
 
 	/**
-	 * Returns the result of the CSC check
+	 * Returns the result of the CSC check.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return string result of CSC check
 	 */
 	public function get_csc_result();
 
 
 	/**
-	 * Returns true if the CSC check was successful
+	 * Returns true if the CSC check was successful.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return boolean true if the CSC check was successful
 	 */
 	public function csc_match();
 
 
-} // SV_WC_Payment_Gateway_API_Authorization_Response
+}
 
-endif;  // interface exists check
+
+endif;

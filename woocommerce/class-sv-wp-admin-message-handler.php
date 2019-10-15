@@ -18,15 +18,16 @@
  *
  * @package     SkyVerge/WordPress/WP-Admin-Message-Handler
  * @author      SkyVerge
- * @copyright   Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright   Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WP_Admin_Message_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WP_Admin_Message_Handler' ) ) :
+
 
 /**
  * # WordPress Admin Message Handler Class
@@ -375,21 +376,25 @@ class SV_WP_Admin_Message_Handler {
 			return;
 		}
 
+		$output = '';
+
 		if ( $this->error_count() > 0 ) {
-			echo '<div id="wp-admin-message-handler-error" class="notice-error notice"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_errors() ) . '</strong></li></ul></div>';
+			$output .= '<div id="wp-admin-message-handler-error" class="notice-error notice"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_errors() ) . '</strong></li></ul></div>';
 		}
 
 		if ( $this->warning_count() > 0 ) {
-			echo '<div id="wp-admin-message-handler-warning"  class="notice-warning notice"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_warnings() ) . '</strong></li></ul></div>';
+			$output .= '<div id="wp-admin-message-handler-warning"  class="notice-warning notice"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_warnings() ) . '</strong></li></ul></div>';
 		}
 
 		if ( $this->info_count() > 0 ) {
-			echo '<div id="wp-admin-message-handler-warning"  class="notice-info notice"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_infos() ) . '</strong></li></ul></div>';
+			$output .= '<div id="wp-admin-message-handler-warning"  class="notice-info notice"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_infos() ) . '</strong></li></ul></div>';
 		}
 
 		if ( $this->message_count() > 0 ) {
-			echo '<div id="wp-admin-message-handler-message"  class="notice-success notice"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_messages() ) . '</strong></li></ul></div>';
+			$output .= '<div id="wp-admin-message-handler-message"  class="notice-success notice"><ul><li><strong>' . implode( '</strong></li><li><strong>', $this->get_messages() ) . '</strong></li></ul></div>';
 		}
+
+		echo wp_kses_post( $output );
 	}
 
 
@@ -429,4 +434,5 @@ class SV_WP_Admin_Message_Handler {
 
 }
 
-endif; // class exists check
+
+endif;

@@ -19,15 +19,16 @@
  * @package   SkyVerge/WooCommerce/Utilities
  * @author    SkyVerge / Delicious Brains
  * @copyright Copyright (c) 2015-2016 Delicious Brains Inc.
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WP_Background_Job_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WP_Background_Job_Handler' ) ) :
+
 
 /**
  * SkyVerge WordPress Background Job Handler class
@@ -129,12 +130,13 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 
 	/**
-	 * Maybe process job queue
+	 * Maybe processes job queue.
 	 *
-	 * Checks whether data exists within the job queue and that
-	 * the background process is not already running.
+	 * Checks whether data exists within the job queue and that the background process is not already running.
 	 *
 	 * @since 4.4.0
+	 *
+	 * @throws \Exception upon error
 	 */
 	public function maybe_handle() {
 
@@ -250,7 +252,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Unlock the process so that other instances can spawn.
 	 *
 	 * @since 4.4.0
-	 * @return \SV_WP_Background_Job_Handler
+	 * @return SV_WP_Background_Job_Handler
 	 */
 	protected function unlock_process() {
 
@@ -307,12 +309,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			$memory_limit = '128M';
 		}
 
-		if ( ! $memory_limit || -1 == $memory_limit ) {
+		if ( ! $memory_limit || -1 === (int) $memory_limit ) {
 			// unlimited, set to 32GB
-			$memory_limit = '32000M';
+			$memory_limit = '32G';
 		}
 
-		return intval( $memory_limit ) * 1024 * 1024;
+		return SV_WC_Plugin_Compatibility::convert_hr_to_bytes( $memory_limit );
 	}
 
 
@@ -366,8 +368,8 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 *
 	 * @since 4.4.0
 	 *
-	 * @param mixed $attrs Job attributes.
-	 * @return object|null
+	 * @param array|mixed $attrs Job attributes.
+	 * @return \stdClass|object|null
 	 */
 	public function create_job( $attrs ) {
 		global $wpdb;
@@ -410,11 +412,11 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		}
 
 		/**
-		 * Run when a job is created
+		 * Runs when a job is created.
 		 *
 		 * @since 4.4.0
 		 *
-		 * @param object $job The created job
+		 * @param \stdClass|object $job the created job
 		 */
 		do_action( "{$this->identifier}_job_created", $job );
 
@@ -429,7 +431,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 *
 	 * @param string $id Optional. Job ID. Will return first job in queue if not
 	 *                   provided. Will not return completed or failed jobs from queue.
-	 * @return object|null The found job object or null
+	 * @return \stdClass|object|null The found job object or null
 	 */
 	public function get_job( $id = null ) {
 		global $wpdb;
@@ -472,18 +474,18 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		}
 
 		/**
-		 * Filter job as returned from the database
+		 * Filters the job as returned from the database.
 		 *
 		 * @since 4.4.0
 		 *
-		 * @param object $job
+		 * @param \stdClass|object $job
 		 */
 		return apply_filters( "{$this->identifier}_returned_job", $job );
 	}
 
 
 	/**
-	 * Get jobs
+	 * Gets jobs.
 	 *
 	 * @since 4.4.2
 	 *
@@ -494,7 +496,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 *     @type string $order ASC or DESC. Defaults to DESC
 	 *     @type string $orderby Field to order by. Defaults to option_id
 	 * }
-	 * @return array|null Found jobs or null if none found
+	 * @return \stdClass[]|object[]|null Found jobs or null if none found
 	 */
 	public function get_jobs( $args = array() ) {
 		global $wpdb;
@@ -562,11 +564,13 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 
 	/**
-	 * Handle
+	 * Handles jobs.
 	 *
 	 * Process jobs while remaining within server memory and time limit constraints.
 	 *
 	 * @since 4.4.0
+	 *
+	 * @throws \Exception
 	 */
 	protected function handle() {
 
@@ -614,10 +618,10 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 *
 	 * @since 4.4.0
 	 *
-	 * @param object $job
+	 * @param \stdClass|object $job
 	 * @param int $items_per_batch number of items to process in a single request. Defaults to unlimited.
 	 * @throws \Exception when job data is incorrect
-	 * @return object $job
+	 * @return \stdClass $job
 	 */
 	public function process_job( $job, $items_per_batch = null ) {
 
@@ -697,8 +701,8 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 *
 	 * @since 4.4.0
 	 *
-	 * @param object|string $job Job instance or ID
-	 * @return object|false on failure
+	 * @param \stdClass|object|string $job Job instance or ID
+	 * @return \stdClass|object|false on failure
 	 */
 	public function update_job( $job ) {
 
@@ -715,10 +719,11 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		$this->update_job_option( $job );
 
 		/**
-		 * Run when a job is updated
+		 * Runs when a job is updated.
 		 *
 		 * @since 4.4.0
-		 * @param object $job The updated job
+		 *
+		 * @param \stdClass|object $job the updated job
 		 */
 		do_action( "{$this->identifier}_job_updated", $job );
 
@@ -727,12 +732,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 
 	/**
-	 * Handle job completion
+	 * Handles job completion.
 	 *
 	 * @since 4.4.0
 	 *
-	 * @param object|string $job Job instance or ID
-	 * @return object|false on failure
+	 * @param \stdClass|object|string $job Job instance or ID
+	 * @return \stdClass|object|false on failure
 	 */
 	public function complete_job( $job ) {
 
@@ -750,10 +755,11 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		$this->update_job_option( $job );
 
 		/**
-		 * Run when a job is completed
+		 * Runs when a job is completed.
 		 *
 		 * @since 4.4.0
-		 * @param object $job The completed job
+		 *
+		 * @param \stdClass|object $job the completed job
 		 */
 		do_action( "{$this->identifier}_job_complete", $job );
 
@@ -770,9 +776,9 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 *
 	 * @since 4.4.0
 	 *
-	 * @param object|string $job Job instance or ID
+	 * @param \stdClass|object|string $job Job instance or ID
 	 * @param string $reason Optional. Reason for failure.
-	 * @return object|false on failure
+	 * @return \stdClass|false on failure
 	 */
 	public function fail_job( $job, $reason = '' ) {
 
@@ -794,11 +800,11 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		$this->update_job_option( $job );
 
 		/**
-		 * Run when a job is failed
+		 * Runs when a job is failed.
 		 *
 		 * @since 4.4.0
 		 *
-		 * @param object $job The failed job
+		 * @param \stdClass|object $job the failed job
 		 */
 		do_action( "{$this->identifier}_job_failed", $job );
 
@@ -811,7 +817,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 *
 	 * @since 4.4.2
 	 *
-	 * @param object|string $job Job instance or ID
+	 * @param \stdClass|object|string $job Job instance or ID
 	 * @return false on failure
 	 */
 	public function delete_job( $job ) {
@@ -828,11 +834,11 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		$wpdb->delete( $wpdb->options, array( 'option_name' => "{$this->identifier}_job_{$job->id}" ) );
 
 		/**
-		* Run after a job is deleted
+		* Runs after a job is deleted.
 		*
 		* @since 4.4.2
 		*
-		* @param object $job The job that was deleted from database
+		* @param \stdClass|object $job the job that was deleted from database
 		*/
 		do_action( "{$this->identifier}_job_deleted", $job );
 	}
@@ -852,12 +858,13 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		$this->clear_scheduled_event();
 	}
 
+
 	/**
 	 * Schedule cron healthcheck
 	 *
 	 * @since 4.4.0
 	 * @param array $schedules
-	 * @return mixed
+	 * @return array
 	 */
 	public function schedule_cron_healthcheck( $schedules ) {
 
@@ -946,7 +953,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * @since 4.4.2
 	 *
 	 * @param mixed $item Job data item to iterate over
-	 * @param object $job Job instance
+	 * @param \stdClass|object $job Job instance
 	 * @return mixed
 	 */
 	abstract protected function process_item( $item, $job );
@@ -956,7 +963,8 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 * Handles PHP shutdown, say after a fatal error.
 	 *
 	 * @since 4.5.0
-	 * @param object $job the job being processed
+	 *
+	 * @param \stdClass|object $job the job being processed
 	 */
 	public function handle_shutdown( $job ) {
 
@@ -977,7 +985,7 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	 *
 	 * @since 4.6.3
 	 *
-	 * @param object $job the job instance to update in database
+	 * @param \stdClass|object $job the job instance to update in database
 	 * @return int|bool number of rows updated or false on failure, see wpdb::update()
 	 */
 	private function update_job_option( $job ) {
@@ -1057,16 +1065,11 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 	public function run_debug_tool() {
 
 		if ( $this->test_connection() ) {
-			$this->debug_message = __( 'Success! You should be able to process background jobs.', 'woocommerce-plugin-framework' );
+			$this->debug_message = esc_html__( 'Success! You should be able to process background jobs.', 'woocommerce-plugin-framework' );
 			$result = true;
 		} else {
-			$this->debug_message = __( 'Could not connect. Please ask your hosting company to ensure your server has loopback connections enabled.', 'woocommerce-plugin-framework' );
+			$this->debug_message = esc_html__( 'Could not connect. Please ask your hosting company to ensure your server has loopback connections enabled.', 'woocommerce-plugin-framework' );
 			$result = false;
-		}
-
-		// WC 2.6 has no positive message output by default
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_3_0() && $result ) {
-			echo "<div class='updated inline'><p>{$this->debug_message}</p></div>";
 		}
 
 		return $result;
@@ -1114,4 +1117,5 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 }
 
-endif; // Class exists check
+
+endif;

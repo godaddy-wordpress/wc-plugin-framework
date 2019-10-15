@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/API/Response
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_API_JSON_Response' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_API_JSON_Response' ) ) :
 
 
 /**
@@ -101,4 +101,5 @@ abstract class SV_WC_API_JSON_Response implements SV_WC_API_Response {
 
 }
 
-endif; // class exists check
+
+endif;

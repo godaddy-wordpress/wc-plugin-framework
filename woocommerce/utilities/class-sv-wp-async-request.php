@@ -19,15 +19,16 @@
  * @package   SkyVerge/WooCommerce/Utilities
  * @author    SkyVerge / Delicious Brains
  * @copyright Copyright (c) 2015-2016 Delicious Brains Inc.
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WP_Async_Request' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WP_Async_Request' ) ) :
+
 
 /**
  * SkyVerge Wordpress Async Request class
@@ -76,7 +77,7 @@ abstract class SV_WP_Async_Request {
 	 *
 	 * @since 4.4.0
 	 * @param array $data
-	 * @return \SV_WP_Async_Request
+	 * @return SV_WP_Async_Request
 	 */
 	public function set_data( $data ) {
 		$this->data = $data;
@@ -89,7 +90,7 @@ abstract class SV_WP_Async_Request {
 	 * Dispatch the async request
 	 *
 	 * @since 4.4.0
-	 * @return array|WP_Error
+	 * @return array|\WP_Error
 	 */
 	public function dispatch() {
 
@@ -186,5 +187,6 @@ abstract class SV_WP_Async_Request {
 
 
 }
+
 
 endif;

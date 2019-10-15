@@ -5,6 +5,7 @@
 
 # NPM packages used by Grunt.js
 /node_modules
+package-lock.json
 
 # NPM debug log
 npm-debug.log
@@ -18,3 +19,8 @@ npm-debug.log
 # Misc
 *.zip
 .sass-cache*
+
+# Tests
+codeception.yml
+.env
+/tests/_data/dump.sql

@@ -22,11 +22,12 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Payment_Gateway_Apple_Pay_Payment_Response' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Apple_Pay_Payment_Response' ) ) :
+
 
 /**
  * The Apple Pay payment response object.
@@ -41,7 +42,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return object
+	 * @return array
 	 */
 	public function get_payment_data() {
 
@@ -145,7 +146,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 	 *
 	 * @since 4.7.0
 	 *
-	 * @param object $contact the address to prepare
+	 * @param \stdClass|object $contact the address to prepare
 	 * @return array
 	 */
 	protected function prepare_address( $contact ) {
@@ -201,5 +202,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Payment_Response extends SV_WC_API_JSON_Re
 
 
 }
+
 
 endif;

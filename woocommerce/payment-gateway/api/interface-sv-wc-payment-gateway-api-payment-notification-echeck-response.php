@@ -18,15 +18,16 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/API
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Payment_Gateway_API_Payment_Notification_eCheck_Response' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_API_Payment_Notification_eCheck_Response' ) ) :
+
 
 /**
  * WooCommerce Payment Gateway API Payment eCheck Notification Response
@@ -40,23 +41,26 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_eCheck_Response extends
 
 
 	/**
-	 * Returns the account type, one of 'checking' or 'savings', if available
+	 * Returns the account type, one of 'checking' or 'savings', if available.
 	 *
 	 * @since 2.2.0
+	 *
 	 * @return string account type, one of 'checking' or 'savings'
 	 */
 	public function get_account_type();
 
 
 	/**
-	 * Returns the check number used, if available
+	 * Returns the check number used, if available.
 	 *
 	 * @since 2.2.0
-	 * @return int check number, or null
+	 *
+	 * @return int|null check number, or null
 	 */
 	public function get_check_number();
 
 
 }
 
-endif;  // interface exists check
+
+endif;

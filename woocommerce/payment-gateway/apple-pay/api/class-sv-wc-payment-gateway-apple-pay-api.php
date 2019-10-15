@@ -22,11 +22,12 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Payment_Gateway_Apple_Pay_API' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Apple_Pay_API' ) ) :
+
 
 /**
  * Sets up the Apple Pay API.
@@ -56,7 +57,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 		$this->set_request_content_type_header( 'application/json' );
 		$this->set_request_accept_header( 'application/json' );
 
-		$this->set_response_handler( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Payment_Gateway_Apple_Pay_API_Response' );
+		$this->set_response_handler( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Apple_Pay_API_Response' );
 	}
 
 
@@ -69,9 +70,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	 * @param string $merchant_id the merchant ID to validate
 	 * @param string $domain_name the verified domain name
 	 * @param string $display_name the merchant display name
-	 * @return \SV_WC_Payment_Gateway_Apple_Pay_API_Response the response object
-	 *
-	 * @throws \SV_WC_API_Exception
+	 * @return SV_WC_Payment_Gateway_Apple_Pay_API_Response the response object
+	 * @throws SV_WC_API_Exception
 	 */
 	public function validate_merchant( $url, $merchant_id, $domain_name, $display_name ) {
 
@@ -90,10 +90,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @param \SV_WC_API_Request
-	 * @return \SV_WC_API_Response
-	 *
-	 * @throws \SV_WC_API_Exception
+	 * @param SV_WC_API_Request|object
+	 * @return SV_WC_API_Response|object
+	 * @throws SV_WC_API_Exception
 	 */
 	protected function perform_request( $request ) {
 
@@ -133,7 +132,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	 *
 	 * @return bool
 	 *
-	 * @throws \SV_WC_API_Exception
+	 * @throws SV_WC_API_Exception
 	 */
 	protected function do_post_parse_response_validation() {
 
@@ -156,7 +155,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 	 * @since 4.7.0
 	 *
 	 * @param array $type Optional. The desired request type
-	 * @return \SV_WC_Payment_Gateway_Apple_Pay_API_Request the request object
+	 * @return SV_WC_Payment_Gateway_Apple_Pay_API_Request the request object
 	 */
 	protected function get_new_request( $type = array() ) {
 
@@ -191,5 +190,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_API extends SV_WC_API_Base {
 
 
 }
+
 
 endif;

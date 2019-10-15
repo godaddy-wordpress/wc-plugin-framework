@@ -18,15 +18,16 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Payment_Gateway_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Helper' ) ) :
+
 
 /**
  * SkyVerge Payment Gateway Helper Class
@@ -127,10 +128,10 @@ class SV_WC_Payment_Gateway_Helper {
 
 
 	/**
-	 * Determine the credit card type from a given account number (only first 4
-	 * required)
+	 * Determines the credit card type from a given account number (only first 4 required).
 	 *
 	 * @since 4.0.0
+	 *
 	 * @param string $account_number the credit card account number
 	 * @return string the credit card type
 	 */
@@ -208,16 +209,17 @@ class SV_WC_Payment_Gateway_Helper {
 
 
 	/**
-	 * Get the known card types and their variations.
+	 * Gets the known card types and their variations.
 	 *
 	 * Returns the card types in the format:
 	 *
 	 * 'mastercard' {
-	 *     'name'      => 'MasterCard',
-	 *     'varations' => array( 'mc' ),
+	 *     'name'       => 'MasterCard',
+	 *     'variations' => array( 'mc' ),
 	 * }
 	 *
 	 * @since 4.5.0
+	 *
 	 * @return array
 	 */
 	public static function get_card_types() {
@@ -265,4 +267,5 @@ class SV_WC_Payment_Gateway_Helper {
 
 }
 
-endif; // Class exists check
+
+endif;

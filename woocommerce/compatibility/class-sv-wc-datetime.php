@@ -18,33 +18,57 @@
  *
  * @package   SkyVerge/WooCommerce/Compatibility
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
+
+use DateTimeZone;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_DateTime' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_DateTime' ) ) :
+
 
 /**
- * Backports the \WC_DateTime class to WooCommerce pre-3.0.0
- *
- * TODO: Remove this when WC 3.x can be required {CW 2017-03-16}
+ * Extends the DateTime object for backwards compatibility.
  *
  * @since 4.6.0
+ * @deprecated 5.5.0
  */
 class SV_WC_DateTime extends \DateTime {
+
+
+	/**
+	 * SV_WC_DateTime constructor.
+	 *
+	 * @since 5.5.0
+	 * @deprecated 5.5.0
+	 *
+	 * @param string $time
+	 * @param \DateTimeZone|null $timezone
+	 * @throws \Exception
+	 */
+	public function __construct( $time = 'now', \DateTimeZone $timezone = null ) {
+
+		wc_deprecated_function( 'SV_WC_DateTime', '5.5.0', \DateTime::class );
+
+		parent::__construct( $time, $timezone );
+	}
 
 
 	/**
 	 * Outputs an ISO 8601 date string in local timezone.
 	 *
 	 * @since 4.6.0
+	 * @deprecated 5.5.0
+	 *
 	 * @return string
 	 */
 	public function __toString() {
+
+		wc_deprecated_function( __METHOD__, '5.5.0', 'DateTime::format( DATE_ATOM )' );
 
 		return $this->format( DATE_ATOM );
 	}
@@ -53,14 +77,16 @@ class SV_WC_DateTime extends \DateTime {
 	/**
 	 * Gets the UTC timestamp.
 	 *
-	 * Missing in PHP 5.2.
-	 *
 	 * @since 4.6.0
+	 * @deprecated 5.5.0
+	 *
 	 * @return int
 	 */
 	public function getTimestamp() {
 
-		return method_exists( 'DateTime', 'getTimestamp' ) ? parent::getTimestamp() : $this->format( 'U' );
+		wc_deprecated_function( __METHOD__, '5.5.0', 'DateTime::getTimestamp()' );
+
+		return parent::getTimestamp();
 	}
 
 
@@ -68,9 +94,13 @@ class SV_WC_DateTime extends \DateTime {
 	 * Gets the timestamp with the WordPress timezone offset added or subtracted.
 	 *
 	 * @since 4.6.0
+	 * @deprecated 5.5.0
+	 *
 	 * @return int
 	 */
 	public function getOffsetTimestamp() {
+
+		wc_deprecated_function( __METHOD__, '5.5.0', 'DateTime::getOffset()' );
 
 		return $this->getTimestamp() + $this->getOffset();
 	}
@@ -80,10 +110,14 @@ class SV_WC_DateTime extends \DateTime {
 	 * Gets a date based on the offset timestamp.
 	 *
 	 * @since 4.6.0
-	 * @param  string $format date format
+	 * @deprecated 5.5.0
+	 *
+	 * @param string $format date format
 	 * @return string
 	 */
 	public function date( $format ) {
+
+		wc_deprecated_function( __METHOD__, '5.5.0', 'gmdate()' );
 
 		return gmdate( $format, $this->getOffsetTimestamp() );
 	}
@@ -93,15 +127,20 @@ class SV_WC_DateTime extends \DateTime {
 	 * Gets a localised date based on offset timestamp.
 	 *
 	 * @since 4.6.0
-	 * @param  string $format date format
+	 * @deprecated 5.5.0
+	 *
+	 * @param string $format date format
 	 * @return string
 	 */
 	public function date_i18n( $format = 'Y-m-d' ) {
+
+		wc_deprecated_function( __METHOD__, '5.5.0', 'date_i18n()' );
 
 		return date_i18n( $format, $this->getOffsetTimestamp() );
 	}
 
 
 }
+
 
 endif;

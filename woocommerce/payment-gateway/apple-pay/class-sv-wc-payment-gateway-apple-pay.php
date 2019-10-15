@@ -22,11 +22,12 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Payment_Gateway_Apple_Pay' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Apple_Pay' ) ) :
+
 
 /**
  * Sets up Apple Pay support.
@@ -95,7 +96,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * @since 4.7.0
 	 *
 	 * @return array
-	 * @throws \SV_WC_Payment_Gateway_Exception
+	 * @throws \Exception
 	 */
 	public function process_payment() {
 
@@ -122,17 +123,15 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			$order->set_address( $payment_response->get_billing_address(),  'billing' );
 			$order->set_address( $payment_response->get_shipping_address(), 'shipping' );
 
-			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
-				$order->save();
-			}
+			$order->save();
 
 			// add Apple Pay response data to the order
-			add_filter( 'wc_payment_gateway_' . $this->get_processing_gateway()->get_id() . '_get_order', array( $this, 'add_order_data' ) );
+			add_filter( 'wc_payment_gateway_' . $this->get_processing_gateway()->get_id() . '_get_order', [ $this, 'add_order_data' ] );
 
 			if ( $this->is_test_mode() ) {
 				$result = $this->process_test_payment( $order );
 			} else {
-				$result = $this->get_processing_gateway()->process_payment( SV_WC_Order_Compatibility::get_prop( $order, 'id' ) );
+				$result = $this->get_processing_gateway()->process_payment( $order->get_id() );
 			}
 
 			if ( isset( $result['result'] ) && 'success' !== $result['result'] ) {
@@ -170,7 +169,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * @since 4.7.0
 	 *
 	 * @param int $user_id WordPress user ID
-	 * @param \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $payment_response payment response object
+	 * @param SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $payment_response payment response object
 	 */
 	protected function update_customer_addresses( $user_id, SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $payment_response ) {
 
@@ -218,13 +217,12 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * Gets a single product payment request.
 	 *
 	 * @since 4.7.0
-	 * @see \SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
+	 * @see SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
 	 *
 	 * @param \WC_Product $product product object
 	 * @param bool $in_cart whether to generate a cart for this request
 	 * @return array
-	 *
-	 * @throws \SV_WC_Payment_Gateway_Exception
+	 * @throws SV_WC_Payment_Gateway_Exception
 	 */
 	public function get_product_payment_request( \WC_Product $product, $in_cart = false ) {
 
@@ -286,12 +284,11 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * Gets a payment request based on WooCommerce cart data.
 	 *
 	 * @since 4.7.0
-	 * @see \SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
+	 * @see SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
 	 *
 	 * @param \WC_Cart $cart cart object
 	 * @return array
-	 *
-	 * @throws \SV_WC_Payment_Gateway_Exception
+	 * @throws SV_WC_Payment_Gateway_Exception
 	 */
 	public function get_cart_payment_request( \WC_Cart $cart ) {
 
@@ -340,8 +337,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * @since 4.7.0
 	 *
 	 * @return array
-	 *
-	 * @throws \SV_WC_Payment_Gateway_Exception
+	 * @throws SV_WC_Payment_Gateway_Exception
 	 */
 	public function recalculate_totals() {
 
@@ -526,6 +522,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *     @type float $fees     fees total
 	 *     @type float $taxes    tax total
 	 * }
+	 * @return array
 	 */
 	public function build_payment_request_lines( $totals ) {
 
@@ -625,7 +622,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Apple_Pay_Payment_Response|false
+	 * @return false|SV_WC_Payment_Gateway_Apple_Pay_Payment_Response|false
 	 */
 	public function get_stored_payment_response() {
 
@@ -643,6 +640,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * Stores payment request data for later use.
 	 *
 	 * @since 4.7.0
+	 *
+	 * @param mixed|array $data
 	 */
 	public function store_payment_request( $data ) {
 
@@ -654,6 +653,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * Stores payment response data for later use.
 	 *
 	 * @since 4.7.0
+	 *
+	 * @param mixed|array $data
 	 */
 	public function store_payment_response( $data ) {
 
@@ -691,20 +692,20 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 */
 	public function set_customer_taxable_address( $address ) {
 
-		$billing_country = SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ? WC()->customer->get_billing_country() : WC()->customer->get_country();
+		$billing_country = WC()->customer->get_billing_country();
 
 		// set to the shipping address provided by Apple Pay if:
-		// 1. shipping is available
-		// 2. billing is not available
+		// 1. billing is not available
+		// 2. shipping is available
 		// 3. taxes aren't configured to use the shop base
-		if ( WC()->customer->get_shipping_country() && ! $billing_country && $address[0] !== WC()->countries->get_base_country() ) {
+		if ( ! $billing_country && WC()->customer->get_shipping_country() && $address[0] !== WC()->countries->get_base_country() ) {
 
-			$address = array(
+			$address = [
 				WC()->customer->get_shipping_country(),
 				WC()->customer->get_shipping_state(),
 				WC()->customer->get_shipping_postcode(),
 				WC()->customer->get_shipping_city(),
-			);
+			];
 		}
 
 		return $address;
@@ -736,7 +737,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Apple_Pay_API
+	 * @return SV_WC_Payment_Gateway_Apple_Pay_API
 	 */
 	public function get_api() {
 
@@ -950,7 +951,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		$accepted_card_types = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_card_types() : array();
 
-		$accepted_card_types = array_map( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
+		$accepted_card_types = array_map( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
 
 		$valid_networks = array(
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_AMEX       => 'amex',
@@ -968,7 +969,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 		 * @since 4.7.0
 		 *
 		 * @param array $networks the supported networks
-		 * @param \SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler
+		 * @param SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler
 		 */
 		return apply_filters( 'sv_wc_apple_pay_supported_networks', array_values( $networks ), $this );
 	}
@@ -1002,7 +1003,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway|null
+	 * @return SV_WC_Payment_Gateway|null
 	 */
 	public function get_processing_gateway() {
 
@@ -1032,7 +1033,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return \SV_WC_Payment_Gateway_Plugin
+	 * @return SV_WC_Payment_Gateway_Plugin
 	 */
 	public function get_plugin() {
 
@@ -1041,5 +1042,6 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 
 }
+
 
 endif;

@@ -18,15 +18,16 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Payment_Gateway_Payment_Token' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Payment_Token' ) ) :
+
 
 /**
  * WooCommerce Payment Gateway Token
@@ -91,15 +92,16 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
-	 * Returns the payment token string
+	 * Gets the payment token string.
 	 *
 	 * @since 1.0.0
-	 * @deprecated since 4.0.0
+	 * @deprecated 4.0.0
+	 *
 	 * @return string payment token string
 	 */
 	public function get_token() {
 
-		_deprecated_function( 'SV_WC_Payment_Gateway_Payment_Token::get_token()', '4.0.0', 'SV_WC_Payment_Gateway_Payment_Token::get_id()' );
+		wc_deprecated_function( __METHOD__, '4.0.0', __CLASS__ . '::get_id()' );
 
 		return $this->get_id();
 	}
@@ -154,13 +156,16 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
-	 * Returns true if this payment token represents an eCheck
+	 * Determines if this payment token represents an eCheck.
 	 *
 	 * @since 1.0.0
 	 * @deprecated since 4.0.0
-	 * @return boolean true if this payment token represents an eCheck
+	 *
+	 * @return bool
 	 */
 	public function is_check() {
+
+		wc_deprecated_function( __METHOD__, '4.0.0', __CLASS__ . '::is_echeck()' );
 
 		return $this->is_echeck();
 	}
@@ -219,14 +224,18 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
-	 * Determine the credit card type from the full account number
+	 * Determines the credit card type from the full account number.
 	 *
 	 * @since 1.0.0
-	 * @deprecated since 4.0.0 in favor of SV_WC_Payment_Gateway_Helper::card_type_from_account_number()
+	 * @deprecated 4.0.0
+	 * @see SV_WC_Payment_Gateway_Helper::card_type_from_account_number()
+	 *
 	 * @param string $account_number the credit card account number
 	 * @return string the credit card type
 	 */
 	public static function type_from_account_number( $account_number ) {
+
+		wc_deprecated_function( __METHOD__, '4.0.0', __CLASS__, '::card_type_from_account_number()' );
 
 		return SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $account_number );
 	}
@@ -421,6 +430,32 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Gets the billing address hash.
+	 *
+	 * @since 5.3.0
+	 *
+	 * @return string
+	 */
+	public function get_billing_hash() {
+
+		return isset( $this->data['billing_hash'] ) ? $this->data['billing_hash'] : '';
+	}
+
+
+	/**
+	 * Sets the billing hash.
+	 *
+	 * @since 5.3.0
+	 *
+	 * @param string $value billing hash
+	 */
+	public function set_billing_hash( $value ) {
+
+		$this->data['billing_hash'] = $value;
+	}
+
+
+	/**
 	 * Returns a representation of this token suitable for persisting to a
 	 * datastore
 	 *
@@ -435,4 +470,5 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 }
 
-endif;  // class exists check
+
+endif;

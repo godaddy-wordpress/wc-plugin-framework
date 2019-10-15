@@ -83,6 +83,10 @@ class SV_WC_Plugin_Framework_Tests_Bootstrap {
 		require_once( $this->framework_dir . '/woocommerce/payment-gateway/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api-response.php' );
 		require_once( $this->framework_dir . '/woocommerce/payment-gateway/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-payment-response.php' );
 
+		// addresses
+		require_once( $this->framework_dir . '/woocommerce/Addresses/Address.php' );
+		require_once( $this->framework_dir . '/woocommerce/Addresses/Customer_Address.php' );
+
 
 		echo "Loaded Framework..." . PHP_EOL;
 	}

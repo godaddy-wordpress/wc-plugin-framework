@@ -1,5 +1,52 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2019.nn.nn - version 5.5.0-dev
+ * Feature - Add a plugin helper method to retrieve a template part while consistently passing the default template path to `wc_get_template()`
+ * Misc - Deprecate backwards compatibility methods for unsupported WooCommerce and PHP versions
+ * Misc - Replace `SV_WC_Helper::get_post()` and `SV_WC_Helper::get_request()` with `SV_WC_Helper::get_posted_value()` and `SV_WC_Helper::get_requested_value()`
+
+2019.09.05 - version 5.4.3
+ * Fix - Do not show the checkbox to save the payment method on the checkout page if not logged in and registration during checkout is disabled
+ * Misc - Add a Country_Helper class to assist converting country codes to and from various formats
+
+2019.08.27 - version 5.4.2
+ * Tweak - Add a standard set of subscription details to orders payment data set by a gateway
+ * Tweak - Add replacement helper methods to get the current screen in WordPress and check the screen ID
+ * Misc - Change SV_WC_Payment_Gateway::is_configured() from protected to public
+ * Misc - Add admin notice when a gateway is enabled but is not configured and is unable to take payments
+
+2019.08.06 - version 5.4.1
+ * Misc - Add a configurable admin notice for plugins running deprecated WooCommerce versions
+
+2019.03.13 - version 5.4.0
+ * Feature - Add abstract handlers for hosted payment processing
+ * Feature - Revamp the Lifecycle handler for easier upgrade routines and add event logging for important lifecycle events
+ * Tweak - Adjust the no-HTTPS notice to point to where the merchant can fix the problem
+ * Fix - Prevent the Capture button from showing on failed orders or orders without an original transaction ID
+ * Fix - Use the current order total when determining whether a captured order should change status
+
+2019.01.09 - version 5.3.1
+ * Fix - Fix a JavaScript error in the welcome wizard for missing parameters
+ * Fix - Correctly handle memory_limit shorthand from php.ini
+ * Misc - Adjust the Accepted Card Logos setting description to further clarify its purpose
+
+2018.09.25 - version 5.3.0
+ * Feature - Add support for updating payment methods via API on payment
+ * Tweak - Refactor capture handling and add a dedicated handling class
+ * Tweak - Add an admin notice for gateways when debug logging is enabled in production mode
+ * Fix - Ensure orders are automatically captured when the status is changes via the REST API if enabled
+ * Fix - Ensure the gateway capture UI is only displayed for regular orders
+ * Fix - Prevent capture JS errors when multiple gateways running the same framework version are activated
+ * Fix - Strip price HTML from the admin capture alert
+ * Dev - Add the wc_{gateway_id}_held_order_status filter
+
+2018.09.04 - version 5.2.2
+ * Tweak - Provide an abstract Setup Wizard for plugins to implement for easier onboarding
+
+2018.08.21 - version 5.2.1
+ * Fix - Prevent errors when triggering payment gateway payment and refund milestones
+ * Fix - Add escaping to some admin notice messages
+
 2018.07.24 - version 5.2.0
  * Fix - Use the order currency for the gateway capture message currency symbol
  * Dev - Introduce dedicated plugin methods for loading after init

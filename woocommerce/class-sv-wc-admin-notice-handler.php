@@ -18,15 +18,16 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Admin_Notice_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Admin_Notice_Handler' ) ) :
+
 
 /**
  * SkyVerge Admin Notice Handler Class
@@ -309,7 +310,6 @@ class SV_WC_Admin_Notice_Handler {
 	 * @since 3.0.0
 	 * @param string $message_id the message identifier
 	 * @param int $user_id optional user identifier, defaults to current user
-	 * @return boolean true if the message has been dismissed by the admin user
 	 */
 	public function dismiss_notice( $message_id, $user_id = null ) {
 
@@ -426,6 +426,8 @@ class SV_WC_Admin_Notice_Handler {
 		return $this->plugin;
 	}
 
+
 }
 
-endif; // Class exists check
+
+endif;

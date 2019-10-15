@@ -18,15 +18,16 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/API
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_2_0\\SV_WC_Payment_Gateway_API_Payment_Notification_Response' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_API_Payment_Notification_Response' ) ) :
+
 
 /**
  * WooCommerce Payment Gateway API Payment Notification Response
@@ -39,39 +40,43 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 
 
 	/**
-	 * Returns the order id associated with this response
+	 * Returns the order id associated with this response.
 	 *
 	 * @since 2.1.0
-	 * @return int the order id associated with this response, or null if it could not be determined
-	 * @throws Exception if there was a serious error finding the order id
+	 *
+	 * @return int|null the order id associated with this response, or null if it could not be determined
+	 * @throws \Exception if there was a serious error finding the order id
 	 */
 	public function get_order_id();
 
 
 	/**
-	 * Returns true if the transaction was cancelled, false otherwise
+	 * Returns true if the transaction was cancelled, false otherwise.
 	 *
 	 * @since 2.1.0
+	 *
 	 * @return bool true if cancelled, false otherwise
 	 */
 	public function transaction_cancelled();
 
 
 	/**
-	 * Returns the card PAN or checking account number, if available
+	 * Returns the card PAN or checking account number, if available.
 	 *
 	 * @since 2.2.0
-	 * @return string PAN or account number or null if not available
+	 *
+	 * @return string|null PAN or account number or null if not available
 	 */
 	public function get_account_number();
 
 
 	/**
-	 * Determine if this is an IPN response.
+	 * Determines if this is an IPN response.
 	 *
 	 * Intentionally commented out to prevent fatal errors in older plugins
 	 *
 	 * @since 4.3.0
+	 *
 	 * @return bool
 	 */
 	public function is_ipn();
@@ -79,4 +84,5 @@ interface SV_WC_Payment_Gateway_API_Payment_Notification_Response extends SV_WC_
 
 }
 
-endif;  // interface exists check
+
+endif;
