@@ -70,160 +70,17 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 
 			$order = self::get_order_object( $order_data );
 
-			foreach ( $cart->get_cart() as $cart_item_key => $item ) {
 
-				$args = [
-					'variation' => $item['variation'],
-					'totals'    => [
-						'subtotal'     => $item['line_subtotal'],
-						'subtotal_tax' => $item['line_subtotal_tax'],
-						'total'        => $item['line_total'],
-						'tax'          => $item['line_tax'],
-						'tax_data'     => $item['line_tax_data']
-					],
-				];
+			$checkout = WC()->checkout();
 
-				if ( ! $order->add_product( $item['data'], $item['quantity'], $args ) ) {
-					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 525 ) );
-				}
-			}
+			$checkout->create_order_line_items( $order, $cart );
+			$checkout->create_order_coupon_lines( $order, $cart );
+			$checkout->create_order_shipping_lines( $order, WC()->session->get( 'chosen_shipping_methods', [] ), WC()->shipping()->get_packages() );
+			$checkout->create_order_fee_lines( $order, $cart );
+			$checkout->create_order_tax_lines( $order, $cart );
 
-			foreach ( $cart->get_coupons() as $code => $coupon ) {
 
-				try {
-
-					$coupon_item = new \WC_Order_Item_Coupon();
-
-					$coupon_item->set_props( [
-						'code'         => $code,
-						'discount'     => $cart->get_coupon_discount_amount( $code ),
-						'discount_tax' => $cart->get_coupon_discount_tax_amount( $code ),
-						'order_id'     => $order->get_id(),
-					] );
-
-					$coupon_item->save();
-
-					$order->add_item( $coupon_item );
-
-					$added_coupon = (bool) $coupon_item->get_id();
-
-				} catch ( \Exception $e ) {
-
-					$added_coupon = false;
-				}
-
-				if ( ! $added_coupon ) {
-					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 529 ) );
-				}
-			}
-
-			$chosen_methods = WC()->session->get( 'chosen_shipping_methods', [] );
-
-			foreach ( WC()->shipping->get_packages() as $key => $package ) {
-
-				if ( isset( $package['rates'][ $chosen_methods[ $key ] ] ) ) {
-
-					/** @var \WC_Shipping_Rate $shipping_rate */
-					$shipping_rate = $package['rates'][ $chosen_methods[ $key ] ];
-
-					try {
-
-						$shipping_item = new \WC_Order_Item_Shipping();
-
-						$shipping_item->set_props( [
-							'method_title' => $shipping_rate->label,
-							'method_id'    => $shipping_rate->id,
-							'total'        => wc_format_decimal( $shipping_rate->cost ),
-							'taxes'        => $shipping_rate->taxes,
-							'order_id'     => $order->get_id(),
-						] );
-
-						$shipping_item->save();
-
-						$order->add_item( $shipping_item );
-
-						$added_shipping = (bool) $shipping_item->get_id();
-
-					} catch ( \Exception $e ) {
-
-						$added_shipping = false;
-					}
-
-					if ( ! $added_shipping ) {
-						throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 527 ) );
-					}
-				}
-			}
-
-			// add fees
-			foreach ( $cart->get_fees() as $key => $fee ) {
-
-				try {
-
-					$fee_item = new \WC_Order_Item_Fee();
-
-					$fee_item->set_props( [
-						'name'      => $fee->name,
-						'tax_class' => $fee->taxable ? $fee->tax_class : 0,
-						'total'     => $fee->amount,
-						'total_tax' => $fee->tax,
-						'taxes'     => [
-							'total' => $fee->tax_data,
-						],
-						'order_id'  => $order->get_id(),
-					] );
-
-					$fee_item->save();
-
-					$order->add_item( $fee_item );
-
-					$added_fee = (bool) $fee_item->get_id();
-
-				} catch ( \Exception $e ) {
-
-					$added_fee = false;
-				}
-
-				if ( ! $added_fee ) {
-					throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 526 ) );
-				}
-			}
-
-			$cart_taxes     = SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.2' ) ? $cart->get_cart_contents_taxes() : $cart->taxes;
-			$shipping_taxes = SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.2' ) ? $cart->get_shipping_taxes()      : $cart->shipping_taxes;
-
-			foreach ( array_keys( $cart_taxes + $shipping_taxes ) as $rate_id ) {
-
-				if ( $rate_id && apply_filters( 'woocommerce_cart_remove_taxes_zero_rate_id', 'zero-rated' ) !== $rate_id ) {
-
-					try {
-
-						$tax_item = new \WC_Order_Item_Tax();
-
-						$tax_item->set_props( [
-							'rate_id'            => $rate_id,
-							'tax_total'          => $cart->get_tax_amount( $rate_id ),
-							'shipping_tax_total' => $cart->get_shipping_tax_amount( $rate_id ),
-						] );
-
-						$tax_item->set_rate( $rate_id );
-						$tax_item->set_order_id( $order->get_id() );
-						$tax_item->save();
-
-						$order->add_item( $tax_item );
-
-						$added_tax = (bool) $tax_item->get_id();
-
-					} catch ( \Exception $e ) {
-
-						$added_tax = false;
-					}
-
-					if ( ! $added_tax ) {
-						throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 526 ) );
-					}
-				}
-			}
+			$order->save();
 
 			wc_transaction_query( 'commit' );
 
