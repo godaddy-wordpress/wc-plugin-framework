@@ -76,6 +76,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 
 			$order = self::get_order_object( $order_data );
 
+			$order->add_meta_data( 'is_vat_exempt', $cart->get_customer()->get_is_vat_exempt() ? 'yes' : 'no' );
 
 			$checkout = WC()->checkout();
 
