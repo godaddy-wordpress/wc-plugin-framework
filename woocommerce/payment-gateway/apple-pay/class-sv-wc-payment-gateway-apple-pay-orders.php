@@ -63,7 +63,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 
 			$order_data = [
 				'status'      => apply_filters( 'woocommerce_default_order_status', 'pending' ),
-				'customer_id' => get_current_user_id(),
+				'customer_id' => apply_filters( 'woocommerce_checkout_customer_id', get_current_user_id() ),
 				'cart_hash'   => md5( json_encode( wc_clean( $cart->get_cart_for_session() ) ) . $cart->total ),
 				'created_via' => 'apple_pay',
 			];
@@ -79,6 +79,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 			$checkout->create_order_fee_lines( $order, $cart );
 			$checkout->create_order_tax_lines( $order, $cart );
 
+			/** This action is documented by WooCommerce in includes/class-wc-checkout.php */
+			do_action( 'woocommerce_checkout_create_order', $order, [] );
 
 			$order->save();
 
@@ -88,6 +90,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 
 			$order->calculate_totals( false ); // false to skip recalculating taxes
 
+			/** This action is documented by WooCommerce in includes/class-wc-checkout.php */
 			do_action( 'woocommerce_checkout_update_order_meta', $order->get_id(), [] );
 
 			return $order;
@@ -123,6 +126,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 			if ( is_wp_error( $order ) ) {
 				throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 522 ) );
 			}
+
+			/** This action is documented by WooCommerce in includes/class-wc-checkout.php */
+			do_action( 'woocommerce_resume_order', $order_id );
 
 			$order->remove_order_items();
 
