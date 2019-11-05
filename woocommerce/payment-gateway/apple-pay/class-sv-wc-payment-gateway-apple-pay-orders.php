@@ -61,10 +61,16 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 
 			wc_transaction_query( 'start' );
 
+			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.6' ) ) {
+				$cart_hash = $cart->get_cart_hash();
+			} else {
+				$cart_hash = md5( json_encode( wc_clean( $cart->get_cart_for_session() ) ) . $cart->get_total( 'edit' ) );
+			}
+
 			$order_data = [
 				'status'      => apply_filters( 'woocommerce_default_order_status', 'pending' ),
 				'customer_id' => apply_filters( 'woocommerce_checkout_customer_id', get_current_user_id() ),
-				'cart_hash'   => md5( json_encode( wc_clean( $cart->get_cart_for_session() ) ) . $cart->total ),
+				'cart_hash'   => $cart_hash,
 				'created_via' => 'apple_pay',
 			];
 
