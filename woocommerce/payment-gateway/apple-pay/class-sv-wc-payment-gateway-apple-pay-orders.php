@@ -116,6 +116,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 	 *
 	 * @since 4.7.0
 	 *
+	 * @see \WC_Checkout::create_order()
 	 * @param array $order_data the order data
 	 * @return \WC_Order
 	 * @throws SV_WC_Payment_Gateway_Exception
@@ -123,8 +124,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 	public static function get_order_object( $order_data ) {
 
 		$order_id = (int) WC()->session->get( 'order_awaiting_payment', 0 );
+		$order    = $order_id ? wc_get_order( $order_id ) : null;
 
-		if ( $order_id && $order_data['cart_hash'] === get_post_meta( $order_id, '_cart_hash', true ) && ( $order = wc_get_order( $order_id ) ) && $order->has_status( array( 'pending', 'failed' ) ) ) {
+		if ( $order && $order->has_cart_hash( $order_data['cart_hash'] ) && $order->has_status( [ 'pending', 'failed' ] ) ) {
 
 			$order_data['order_id'] = $order_id;
 
