@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2019.nn.nn - version 5.5.1
+ * Fix - Refactor Apple Pay order creation to support the same filters and actions that are fired during regular checkout
 
 2019.10.15 - version 5.5.0
  * Feature - Add a plugin helper method to retrieve a template part while consistently passing the default template path to `wc_get_template()`
