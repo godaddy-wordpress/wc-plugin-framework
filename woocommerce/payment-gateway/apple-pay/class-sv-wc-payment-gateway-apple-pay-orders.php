@@ -49,12 +49,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 	 */
 	public static function create_order( \WC_Cart $cart ) {
 
-		// ensure totals are fully calculated by simulating checkout in WC 3.1 or lower
-		// TODO: remove this when WC 3.2+ can be required {CW 2017-11-17}
-		if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) && SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.2' ) ) {
-			define( 'WOOCOMMERCE_CHECKOUT', true );
-		}
-
 		$cart->calculate_totals();
 
 		try {
