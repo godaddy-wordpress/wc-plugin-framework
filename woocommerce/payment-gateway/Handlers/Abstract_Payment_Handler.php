@@ -311,8 +311,10 @@ abstract class Abstract_Payment_Handler {
 		$this->get_gateway()->add_payment_gateway_transaction_data( $order, $response );
 
 		if ( $order->has_status( $this->get_held_order_status( $order, $response ) ) ) {
-			// reduce stock for held orders, but don't complete payment
-			wc_reduce_stock_levels( $order );
+			// reduce stock for held orders, but don't complete payment (WooCommerce versions 3.5 and newer will do this for us)
+			if ( FrameworkBase\SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.5.0' ) ) {
+				wc_reduce_stock_levels( $order );
+			}
 		} else {
 			// mark order as having received payment
 			$order->payment_complete();

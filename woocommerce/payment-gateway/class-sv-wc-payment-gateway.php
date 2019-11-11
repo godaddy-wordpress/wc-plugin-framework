@@ -1734,7 +1734,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 			$this->mark_order_as_held( $order, $message, $response );
 
-			wc_reduce_stock_levels( $order );
+			// WooCommerce versions from 3.5+ will reduce stock for us on held orders
+			if ( SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.5.0' ) ) {
+				wc_reduce_stock_levels( $order );
+			}
 
 		} else {
 
