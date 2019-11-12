@@ -1,8 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2019.nn.nn - version 5.5.1-dev
- * Tweak - Allow multiple old hooks to be mapped to a single new one
  * Tweak - Refactor Apple Pay order creation to support the same filters and actions that are fired during regular checkout
+ * Tweak - Allow multiple old hooks to be mapped to a single new one
+ * Fix - Harden integration with WooCommerce Pre-Orders to avoid a PHP error in some circumstances
 
 2019.10.15 - version 5.5.0
  * Feature - Add a plugin helper method to retrieve a template part while consistently passing the default template path to `wc_get_template()`
