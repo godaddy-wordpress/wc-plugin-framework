@@ -764,7 +764,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	protected function add_apple_pay_not_supported_notices() {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.2' ) && $this->is_apple_pay_activated() ) {
+		if ( 'wc-settings' === SV_WC_Helper::get_requested_value( 'page' ) && SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.2' ) && $this->is_apple_pay_activated() ) {
 
 			$this->get_admin_notice_handler()->add_admin_notice(
 				sprintf(
