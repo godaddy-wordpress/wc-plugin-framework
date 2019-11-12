@@ -53,8 +53,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 
 		try {
 
-			wc_transaction_query( 'start' );
-
 			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.6' ) ) {
 				$cart_hash = $cart->get_cart_hash();
 			} else {
@@ -85,8 +83,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 
 			$order->save();
 
-			wc_transaction_query( 'commit' );
-
 			$order->update_taxes();
 
 			$order->calculate_totals( false ); // false to skip recalculating taxes
@@ -97,9 +93,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 			return $order;
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
-
-			wc_transaction_query( 'rollback' );
-
 			throw $e;
 		}
 	}
