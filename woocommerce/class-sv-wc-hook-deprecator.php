@@ -116,8 +116,8 @@ class SV_WC_Hook_Deprecator {
 
 		$new_hooks = wp_list_pluck( $this->hooks, 'replacement' );
 
-		// check if there is a matching old hook for the current hook
-		if ( $old_hook = array_search( $new_hook, $new_hooks ) ) {
+		// check if there are matching old hooks for the current hook
+		foreach ( array_keys( $new_hooks, $new_hook ) as $old_hook ) {
 
 			// check if there are any hooks added to the old hook
 			if ( has_filter( $old_hook ) ) {
