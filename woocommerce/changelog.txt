@@ -4,6 +4,7 @@
  * Tweak - Refactor Apple Pay order creation to support the same filters and actions that are fired during regular checkout
  * Tweak - Allow multiple old hooks to be mapped to a single new one
  * Fix - Harden integration with WooCommerce Pre-Orders to avoid a PHP error in some circumstances
+ * Fix - Do not reduce twice the stock level of a product when the order is held and payment is not completed
 
 2019.10.15 - version 5.5.0
  * Feature - Add a plugin helper method to retrieve a template part while consistently passing the default template path to `wc_get_template()`
