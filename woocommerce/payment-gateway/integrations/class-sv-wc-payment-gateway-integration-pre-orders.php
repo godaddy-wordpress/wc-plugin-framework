@@ -369,10 +369,8 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 
 					$this->get_gateway()->mark_order_as_held( $order, $this->get_gateway()->supports( SV_WC_Payment_Gateway::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->get_gateway()->perform_credit_card_authorization( $order ) ? __( 'Authorization only transaction', 'woocommerce-plugin-framework' ) : $response->get_status_message(), $response );
 
-					// reduce stock for held orders, but don't complete payment (WC 3.5+ will do this for us)
-					if ( SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.5.0' ) ) {
-						wc_reduce_stock_levels( $order );
-					}
+					// reduce stock for held orders, but don't complete payment (pass order ID so WooCommerce fetches fresh order object with reduced_stock meta set on order status change)
+					wc_reduce_stock_levels( $order->get_id() );
 
 				} else {
 
