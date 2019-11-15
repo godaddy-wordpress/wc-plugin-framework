@@ -428,7 +428,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Determines whether Apple Pay is activated.
 	 *
-	 * @since 5.5.1-dev
+	 * @since 5.5.1
 	 */
 	private function is_apple_pay_activated() {
 
