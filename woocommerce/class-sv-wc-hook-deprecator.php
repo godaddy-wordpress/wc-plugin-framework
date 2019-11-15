@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Hook_Deprecator' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_1\\SV_WC_Hook_Deprecator' ) ) :
 
 
 /**
@@ -116,8 +116,8 @@ class SV_WC_Hook_Deprecator {
 
 		$new_hooks = wp_list_pluck( $this->hooks, 'replacement' );
 
-		// check if there is a matching old hook for the current hook
-		if ( $old_hook = array_search( $new_hook, $new_hooks ) ) {
+		// check if there are matching old hooks for the current hook
+		foreach ( array_keys( $new_hooks, $new_hook ) as $old_hook ) {
 
 			// check if there are any hooks added to the old hook
 			if ( has_filter( $old_hook ) ) {

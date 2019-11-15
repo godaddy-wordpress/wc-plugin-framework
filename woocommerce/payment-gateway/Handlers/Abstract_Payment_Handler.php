@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0\Payment_Gateway\Handlers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_1\Payment_Gateway\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_5_0 as FrameworkBase;
+use SkyVerge\WooCommerce\PluginFramework\v5_5_1 as FrameworkBase;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\Payment_Gateway\\Handlers\\Abstract_Payment_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_1\\Payment_Gateway\\Handlers\\Abstract_Payment_Handler' ) ) :
 
 
 /**
@@ -311,8 +311,8 @@ abstract class Abstract_Payment_Handler {
 		$this->get_gateway()->add_payment_gateway_transaction_data( $order, $response );
 
 		if ( $order->has_status( $this->get_held_order_status( $order, $response ) ) ) {
-			// reduce stock for held orders, but don't complete payment
-			wc_reduce_stock_levels( $order );
+			// reduce stock for held orders, but don't complete payment (pass order ID so WooCommerce fetches fresh order object with reduced_stock meta set on order status change)
+			wc_reduce_stock_levels( $order->get_id() );
 		} else {
 			// mark order as having received payment
 			$order->payment_complete();

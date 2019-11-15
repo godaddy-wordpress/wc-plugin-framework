@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Apple_Pay' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_1\\SV_WC_Payment_Gateway_Apple_Pay' ) ) :
 
 
 /**
@@ -300,12 +300,6 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 			throw new SV_WC_Payment_Gateway_Exception( 'Cart contains pre-orders.' );
 		}
 
-		// ensure totals are fully calculated by simulating checkout in WC 3.1 or lower
-		// TODO: remove this when WC 3.2+ can be required {CW 2017-11-17}
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.2' ) && ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
-			define( 'WOOCOMMERCE_CHECKOUT', true );
-		}
-
 		$cart->calculate_totals();
 
 		if ( count( WC()->shipping->get_packages() ) > 1 ) {
@@ -406,12 +400,6 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 * @return array
 	 */
 	protected function get_cart_totals( \WC_Cart $cart ) {
-
-		// ensure totals are fully calculated by simulating checkout in WC 3.1 or lower
-		// TODO: remove this when WC 3.2+ can be required {CW 2017-11-17}
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.2' ) && ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
-			define( 'WOOCOMMERCE_CHECKOUT', true );
-		}
 
 		$cart->calculate_totals();
 
@@ -951,7 +939,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		$accepted_card_types = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_card_types() : array();
 
-		$accepted_card_types = array_map( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
+		$accepted_card_types = array_map( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_1\\SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
 
 		$valid_networks = array(
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_AMEX       => 'amex',

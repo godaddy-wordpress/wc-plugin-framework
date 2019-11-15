@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway_Integration_Pre_Orders' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_1\\SV_WC_Payment_Gateway_Integration_Pre_Orders' ) ) :
 
 
 /**
@@ -80,28 +80,32 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 
 
 	/**
-	 * Force tokenization for pre-orders
+	 * Forces tokenization for pre-orders.
+	 *
+	 * @see SV_WC_Payment_Gateway::tokenization_forced()
 	 *
 	 * @since 4.1.0
-	 * @see SV_WC_Payment_Gateway::tokenization_forced()
-	 * @param boolean $force_tokenization whether tokenization should be forced
-	 * @return boolean true if tokenization should be forced, false otherwise
+	 *
+	 * @param bool $force_tokenization whether tokenization should be forced
+	 * @return bool
 	 */
 	public function maybe_force_tokenization( $force_tokenization ) {
 
-		// pay page with pre-order?
 		$pay_page_pre_order = false;
+
+		// pay page with pre-order?
 		if ( $this->get_gateway()->is_pay_page_gateway() ) {
 
-			$order_id  = $this->get_gateway()->get_checkout_pay_page_order_id();
+			$order_id = $this->get_gateway()->get_checkout_pay_page_order_id();
 
-			if ( $order_id ) {
-				$pay_page_pre_order = \WC_Pre_Orders_Order::order_contains_pre_order( $order_id ) && \WC_Pre_Orders_Product::product_is_charged_upon_release( \WC_Pre_Orders_Order::get_pre_order_product( $order_id ) );
+			if ( $order_id && \WC_Pre_Orders_Order::order_contains_pre_order( $order_id ) ) {
+
+				$pre_order_product  = \WC_Pre_Orders_Order::get_pre_order_product( $order_id );
+				$pay_page_pre_order = $pre_order_product && \WC_Pre_Orders_Product::product_is_charged_upon_release( $pre_order_product );
 			}
 		}
 
-		if ( ( \WC_Pre_Orders_Cart::cart_contains_pre_order() && \WC_Pre_Orders_Product::product_is_charged_upon_release( \WC_Pre_Orders_Cart::get_pre_order_product() ) ) ||
-			 $pay_page_pre_order ) {
+		if ( $pay_page_pre_order || ( \WC_Pre_Orders_Cart::cart_contains_pre_order() && \WC_Pre_Orders_Product::product_is_charged_upon_release( \WC_Pre_Orders_Cart::get_pre_order_product() ) ) ) {
 
 			// always tokenize the card for pre-orders that are charged upon release
 			$force_tokenization = true;
@@ -365,8 +369,8 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 
 					$this->get_gateway()->mark_order_as_held( $order, $this->get_gateway()->supports( SV_WC_Payment_Gateway::FEATURE_CREDIT_CARD_AUTHORIZATION ) && $this->get_gateway()->perform_credit_card_authorization( $order ) ? __( 'Authorization only transaction', 'woocommerce-plugin-framework' ) : $response->get_status_message(), $response );
 
-					// reduce stock for held orders, but don't complete payment
-					wc_reduce_stock_levels( $order );
+					// reduce stock for held orders, but don't complete payment (pass order ID so WooCommerce fetches fresh order object with reduced_stock meta set on order status change)
+					wc_reduce_stock_levels( $order->get_id() );
 
 				} else {
 

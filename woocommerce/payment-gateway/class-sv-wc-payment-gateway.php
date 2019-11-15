@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_0\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_1\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -1734,7 +1734,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 			$this->mark_order_as_held( $order, $message, $response );
 
-			wc_reduce_stock_levels( $order );
+			// pass order ID so WooCommerce fetches fresh order object with reduced_stock meta set on order status change
+			wc_reduce_stock_levels( $order->get_id() );
 
 		} else {
 
