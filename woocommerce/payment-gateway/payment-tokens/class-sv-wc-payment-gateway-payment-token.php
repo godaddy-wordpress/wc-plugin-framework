@@ -50,6 +50,23 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	protected $img_url;
 
+	/**
+	 * @var array key-value array to map WC core token props to framework token `$data` keys
+	 */
+	private $props = [
+		'is_default'   => 'default',
+		'type'         => 'type',
+		'last4'        => 'last_four',
+		'expiry_year'  => 'exp_year',
+		'expiry_month' => 'exp_month',
+		'card_type'    => 'card_type',
+	];
+
+	/**
+	 * @var \WC_Payment_Token WC core token
+	 */
+	private $token = null;
+
 
 	/**
 	 * Initialize a payment token with associated $data which is expected to
