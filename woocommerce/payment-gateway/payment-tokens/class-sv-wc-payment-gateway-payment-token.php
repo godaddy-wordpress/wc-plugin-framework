@@ -50,6 +50,11 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	protected $img_url;
 
+	/**
+	 * @var \WC_Payment_Token WC core token
+	 */
+	private $token = null;
+
 
 	/**
 	 * Initialize a payment token with associated $data which is expected to
