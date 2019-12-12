@@ -504,6 +504,12 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	private function read( \WC_Payment_Token $core_token ) {
 
 		$token_data = $core_token->get_data();
+		$meta_data  = $token_data['meta_data'] ?: [];
+		unset( $token_data['meta_data'] );
+
+		foreach ( $meta_data as $meta_datum ) {
+			$token_data[ $meta_datum->key ] = $meta_datum->value;
+		}
 
 		foreach ( $token_data as $core_key => $value ) {
 
