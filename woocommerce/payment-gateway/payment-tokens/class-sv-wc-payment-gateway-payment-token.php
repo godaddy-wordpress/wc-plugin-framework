@@ -54,6 +54,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * @var array key-value array to map WooCommerce core token props to framework token `$data` keys
 	 */
 	private $props = [
+		'user_id'      => 'user_id',
 		'is_default'   => 'default',
 		'type'         => 'type',
 		'last4'        => 'last_four',
@@ -133,6 +134,32 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_id() {
 
 		return $this->id;
+	}
+
+
+	/**
+	 * Gets the ID of the user associated with the token.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @return int
+	 */
+	public function get_user_id() {
+
+		return isset( $this->data['user_id'] ) ? absint( $this->data['user_id'] ) : 0;
+	}
+
+
+	/**
+	 * Sets the ID of the user associated with the token.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param int $user_id
+	 */
+	public function set_user_id( $user_id ) {
+
+		$this->data['user_id'] = is_numeric( $user_id ) ? absint( $user_id ) : 0;
 	}
 
 
