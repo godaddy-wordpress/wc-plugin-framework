@@ -82,7 +82,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * @since 1.0.0
 	 * @param string $id the payment gateway token ID
-	 * @param array $data associated data
+	 * @param array|\WC_Payment_Token $data associated data array or WC core token
 	 */
 	public function __construct( $id, $data ) {
 
