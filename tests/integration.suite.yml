@@ -3,6 +3,7 @@
 # Suite for unit or integration tests that require WordPress functions and classes.
 
 actor: IntegrationTester
+bootstrap: _bootstrap.php
 modules:
     enabled:
         - WPLoader

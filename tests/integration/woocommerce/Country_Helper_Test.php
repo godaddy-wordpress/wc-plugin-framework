@@ -1,7 +1,6 @@
 <?php
 
 use \SkyVerge\WooCommerce\PluginFramework\v5_5_1 as Framework;
-
 /**
  * Perform tests for the helper class that handles utility functions related to country entities.
  *
@@ -10,10 +9,7 @@ use \SkyVerge\WooCommerce\PluginFramework\v5_5_1 as Framework;
 class Country_Helper_Test extends \Codeception\TestCase\WPTestCase {
 
 
-	protected function _before() {
-
-		require_once 'woocommerce/Country_Helper.php';
-	}
+	use Framework_Integration_Tests_Helper;
 
 
 	/** @see Framework\Country_Helper::convert_alpha_country_code() */

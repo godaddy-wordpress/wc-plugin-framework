@@ -11,23 +11,7 @@ use \SkyVerge\WooCommerce\Test_Plugin\Plugin as Plugin;
 class SV_WC_Plugin_Test extends \Codeception\TestCase\WPTestCase {
 
 
-	/** @var Plugin  */
-	private $plugin;
-
-
-	/**
-	 * Gets the singleton instance of the test plugin.
-	 *
-	 * @return Plugin
-	 */
-	protected function get_plugin() {
-
-		if ( null === $this->plugin ) {
-			$this->plugin = sv_wc_test_plugin();
-		}
-
-		return $this->plugin;
-	}
+	use Framework_Integration_Tests_Helper;
 
 
 	/** @see Framework\SV_WC_Plugin::get_id() */
