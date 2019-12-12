@@ -67,8 +67,9 @@ install:
   - wp core update-db
 
   # copy the plugin to the plugins directory
+  - mkdir -p $TRAVIS_BUILD_DIR/tests/_support/_plugins/test-plugin/vendor/skyverge/wc-plugin-framework
+  - cp -r $TRAVIS_BUILD_DIR/woocommerce $TRAVIS_BUILD_DIR/tests/_support/_plugins/test-plugin/vendor/skyverge/wc-plugin-framework
   - cp -r $TRAVIS_BUILD_DIR/tests/_support/_plugins/test-plugin $WP_ROOT_FOLDER/wp-content/plugins/
-  - cp -r $TRAVIS_BUILD_DIR/woocommerce $WP_ROOT_FOLDER/wp-content/plugins/test-plugin/vendor/skyverge/wc-plugin-framework
 
   # install & activate WooCommerce & the plugin
   - wp plugin install woocommerce --activate
