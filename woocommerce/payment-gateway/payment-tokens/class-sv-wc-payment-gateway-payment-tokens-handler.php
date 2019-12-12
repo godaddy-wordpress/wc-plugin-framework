@@ -64,14 +64,17 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * A factory method to build and return a payment token object for the
-	 * gateway.  Concrete classes can override this method to return a custom
-	 * payment token implementation.
+	 * Builds the token object.
+	 *
+	 * A factory method to build and return a payment token object for the gateway.
+	 * Child implementations can override this method to return a custom payment token.
+	 *
+	 * From version 5.6.0, this method can accept a core \WC_Payment_Token type as the second argument to read data from.
 	 *
 	 * @since 4.3.0
 	 *
 	 * @param string $token payment token
-	 * @param array $data {
+	 * @param \WC_Payment_Token|array $data {
 	 *     Payment token data.
 	 *
 	 *     @type bool   $default   Optional. Indicates this is the default payment token
