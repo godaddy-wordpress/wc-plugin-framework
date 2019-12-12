@@ -13,16 +13,16 @@ modules:
         - \Helper\Acceptance
     config:
         WPDb:
-            dsn: 'mysql:host=%DB_HOST%;dbname=%DB_NAME%'
-            user: '%DB_USER%'
-            password: '%DB_PASSWORD%'
+            dsn: 'mysql:host=%ACCEPTANCE_DB_HOST%;dbname=%ACCEPTANCE_DB_NAME%'
+            user: '%ACCEPTANCE_DB_USER%'
+            password: '%ACCEPTANCE_DB_PASSWORD%'
             dump: 'tests/_data/dump.sql'
             populate: true #import the dump before the tests
             cleanup: true #import the dump between tests
             waitlock: 0
             url: '%WP_URL%'
             urlReplacement: true #replace the hardcoded dump URL with the one above
-            tablePrefix: '%TABLE_PREFIX%'
+            tablePrefix: '%ACCEPTANCE_TABLE_PREFIX%'
         WPBrowser:
             url: '%WP_URL%'
             adminUsername: '%ADMIN_USERNAME%'

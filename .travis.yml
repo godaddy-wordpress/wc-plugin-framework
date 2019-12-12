@@ -24,16 +24,16 @@ env:
     - WP_ADMIN_PATH="/wp-admin"
     - WP_URL="http://127.0.0.1:8888"
     - WP_DOMAIN="127.0.0.1:8888"
-    - TABLE_PREFIX="wp_"
-    - DB_NAME="memberships_acceptance"
-    - DB_HOST="127.0.0.1"
-    - DB_USER="root"
-    - DB_PASSWORD="" # intentionally blank
-    - TEST_DB_NAME="memberships_integration"
-    - TEST_DB_HOST="127.0.0.1"
-    - TEST_DB_USER="root"
-    - TEST_DB_PASSWORD="" # intentionally blank
-    - TEST_TABLE_PREFIX="wp_"
+    - ACCEPTANCE_TABLE_PREFIX="wp_"
+    - ACCEPTANCE_DB_NAME="memberships_acceptance"
+    - ACCEPTANCE_DB_HOST="127.0.0.1"
+    - ACCEPTANCE_DB_USER="root"
+    - ACCEPTANCE_DB_PASSWORD="" # intentionally blank
+    - INTEGRATION_DB_NAME="memberships_integration"
+    - INTEGRATION_DB_HOST="127.0.0.1"
+    - INTEGRATION_DB_USER="root"
+    - INTEGRATION_DB_PASSWORD="" # intentionally blank
+    - INTEGRATION_TABLE_PREFIX="wp_"
     - ADMIN_EMAIL="admin@localhost.test"
     - ADMIN_USERNAME="admin"
     - ADMIN_PASSWORD="password"
@@ -42,8 +42,8 @@ env:
 
 before_install:
   # create the databases that will be used in the tests
-  - mysql -e "create database IF NOT EXISTS $DB_NAME;" -uroot
-  - mysql -e "create database IF NOT EXISTS $TEST_DB_NAME;" -uroot
+  - mysql -e "create database IF NOT EXISTS $ACCEPTANCE_DB_NAME;" -uroot
+  - mysql -e "create database IF NOT EXISTS $INTEGRATION_DB_NAME;" -uroot
   # set up folders
   - mkdir -p $WP_ROOT_FOLDER
   - mkdir tools
@@ -61,7 +61,7 @@ install:
 
   # install and configure WordPress
   - wp core download --version=$WP_VERSION
-  - wp config create --dbname="$DB_NAME" --dbuser="$DB_USER" --dbpass="$DB_PASSWORD" --dbhost="$DB_HOST" --dbprefix="$TABLE_PREFIX"
+  - wp config create --dbname="$ACCEPTANCE_DB_NAME" --dbuser="$ACCEPTANCE_DB_USER" --dbpass="$ACCEPTANCE_DB_PASSWORD" --dbhost="$ACCEPTANCE_DB_HOST" --dbprefix="$ACCEPTANCE_TABLE_PREFIX"
   - wp core install --url="$WP_URL" --title="Test" --admin_user="$ADMIN_USERNAME" --admin_password="$ADMIN_PASSWORD" --admin_email="$ADMIN_EMAIL" --skip-email
   - wp rewrite structure '/%postname%/' --hard
   - wp core update-db

@@ -10,11 +10,11 @@ modules:
     config:
         WPLoader:
             wpRootFolder: "%WP_ROOT_FOLDER%"
-            dbName: "%TEST_DB_NAME%"
-            dbHost: "%TEST_DB_HOST%"
-            dbUser: "%TEST_DB_USER%"
-            dbPassword: "%TEST_DB_PASSWORD%"
-            tablePrefix: "%TEST_TABLE_PREFIX%"
+            dbName: "%INTEGRATION_DB_NAME%"
+            dbHost: "%INTEGRATION_DB_HOST%"
+            dbUser: "%INTEGRATION_DB_USER%"
+            dbPassword: "%INTEGRATION_DB_PASSWORD%"
+            tablePrefix: "%INTEGRATION_TABLE_PREFIX%"
             domain: "%WP_DOMAIN%"
             adminEmail: "%ADMIN_EMAIL%"
             title: "Plugin Framework Tests"
