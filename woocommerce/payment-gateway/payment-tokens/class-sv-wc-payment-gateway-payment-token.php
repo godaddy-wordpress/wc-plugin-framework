@@ -90,6 +90,8 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 			$this->token = $data;
 
+			$this->read( $this->token );
+
 		} else {
 
 			if ( isset( $data['type'] ) && 'credit_card' == $data['type'] ) {
