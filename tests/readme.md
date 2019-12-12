@@ -1,5 +1,7 @@
 # WooCommerce Plugin Framework Tests
 
+The SkyVerge WooCommerce Plugin Framework uses [Codeception](https://codeception.com/) and [WP Browser](https://wpbrowser.wptestkit.dev/) to run acceptance and integration tests.
+
 ## Setup
 
 1) Install dependencies with `composer install`
@@ -12,13 +14,13 @@ Make sure you have a database available on the machine where you'd like to run i
 
 You can add one with:
 
-```shell
+```shell script
 sudo mysql -e "CREATE DATABASE IF NOT EXISTS framework_tests"  -uroot
 ``` 
 
 You may also want to have a copy of WooCommerce active in such environment. If WP CLI is available, you can run
 
-```shell
+```shell script
 wp plugin install woocommerce --activate
 ```
 
@@ -32,6 +34,8 @@ From the root directory of the framework project, _on the machine where the test
 
 - `vendor/bin/codecept run acceptance` for acceptance tests
 - `vendor/bin/codecept run integration` for integration tests
+
+You can also specify individual tests to run. See [Codeception documentation](https://codeception.com/docs/reference/Commands).
 
 ## Adding tests
 
