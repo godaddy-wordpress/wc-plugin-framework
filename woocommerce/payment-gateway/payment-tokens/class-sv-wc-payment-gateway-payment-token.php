@@ -54,6 +54,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * @var array key-value array to map WooCommerce core token props to framework token `$data` keys
 	 */
 	private $props = [
+		'gateway_id'   => 'gateway_id',
 		'is_default'   => 'default',
 		'type'         => 'type',
 		'last4'        => 'last_four',
@@ -133,6 +134,32 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_id() {
 
 		return $this->id;
+	}
+
+
+	/**
+	 * Gets the gateway ID for the token.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @return string
+	 */
+	public function get_gateway_id() {
+
+		return isset( $this->data['gateway_id'] ) ? $this->data['gateway_id'] : '';
+	}
+
+
+	/**
+	 * Sets the gateway ID for the token.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param string $gateway_id
+	 */
+	public function set_gateway_id( $gateway_id ) {
+
+		$this->data['gateway_id'] = $gateway_id;
 	}
 
 
