@@ -563,6 +563,16 @@ class SV_WC_Payment_Gateway_Payment_Token {
 					break;
 				}
 			}
+
+			if ( empty( $token ) ) {
+
+				// instantiate a new token
+				if ( $this->is_credit_card() ) {
+					$token = new \WC_Payment_Token_CC();
+				} elseif ( $this->is_echeck() ) {
+					$token = new \WC_Payment_Token_ECheck();
+				}
+			}
 		}
 	}
 
