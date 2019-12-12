@@ -1,7 +1,7 @@
 <?php
 
-
 class PluginActionLinksCest {
+
 
     public function _before( AcceptanceTester $I ) {
     	$I->loginAsAdmin();
@@ -32,4 +32,6 @@ class PluginActionLinksCest {
 		$I->click( 'Configure' );
 		$I->canSeeInCurrentUrl( 'wc-settings' );
 	}
+
+
 }

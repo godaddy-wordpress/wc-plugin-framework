@@ -1,74 +1,64 @@
 <?php
 
+use \SkyVerge\WooCommerce\PluginFramework\v5_5_1 as Framework;
+use \SkyVerge\WooCommerce\Test_Plugin\Plugin as Plugin;
+
 /**
  * Tests for the base plugin class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_5_1\SV_WC_Plugin
+ * @see Framework\SV_WC_Plugin
  */
-class PluginTest extends \Codeception\TestCase\WPTestCase {
+class SV_WC_Plugin_Test extends \Codeception\TestCase\WPTestCase {
 
 
-	/** @var \IntegrationTester */
-	protected $tester;
-
-	/** @var \SkyVerge\WooCommerce\TestPlugin\Plugin instance */
-	protected $plugin;
-
-
-	protected function _before() {
-
-
-	}
-
-
-	protected function _after() {
-
-
-	}
-
-
-	/** Tests *********************************************************************************************************/
+	/** @var Plugin  */
+	private $plugin;
 
 
 	/**
-	 * Tests get_id.
+	 * Gets the singleton instance of the test plugin.
+	 *
+	 * @return Plugin
 	 */
+	protected function get_plugin() {
+
+		if ( null === $this->plugin ) {
+			$this->plugin = sv_wc_test_plugin();
+		}
+
+		return $this->plugin;
+	}
+
+
+	/** @see Framework\SV_WC_Plugin::get_id() */
 	public function test_get_id() {
 
 		$this->assertEquals( 'test_plugin', $this->get_plugin()->get_id() );
 	}
 
 
-	/**
-	 * Tests get_id_dasherized.
-	 */
+	/** @see Framework\SV_WC_Plugin::get_id_dasherized() */
 	public function test_get_id_dasherized() {
 
 		$this->assertEquals( 'test-plugin', $this->get_plugin()->get_id_dasherized() );
 	}
 
 
-	/**
-	 * Tests get_version.
-	 */
+	/** @see Framework\SV_WC_Plugin::get_version() */
 	public function test_get_version() {
 
 		$this->assertEquals( '1.0.0', $this->get_plugin()->get_version() );
 	}
 
 
-	/**
-	 * Tests get_plugin_file.
-	 */
+	/** @see Framework\SV_WC_Plugin::get_plugin_file() */
 	public function test_get_plugin_file() {
 
 		$this->assertEquals( 'test-plugin/test-plugin.php', $this->get_plugin()->get_plugin_file() );
 	}
 
 
-	/**
-	 * Tests get_plugin_path.
-	 */
+	/** @see Framework\SV_WC_Plugin::get_plugin_path() */
 	public function test_get_plugin_path() {
 
 		$path = $this->get_plugin()->get_plugin_path();
@@ -78,9 +68,7 @@ class PluginTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
-	/**
-	 * Tests get_plugin_url.
-	 */
+	/** @see Framework\SV_WC_Plugin::get_plugin_url() */
 	public function test_get_plugin_url() {
 
 		$url = $this->get_plugin()->get_plugin_url();
@@ -90,9 +78,7 @@ class PluginTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
-	/**
-	 * Tests get_woocommerce_uploads_path.
-	 */
+	/** @see Framework\SV_WC_Plugin::get_woocommerce_uploads_path() */
 	public function test_get_woocommerce_uploads_path() {
 
 		$path = $this->get_plugin()->get_woocommerce_uploads_path();
@@ -102,18 +88,14 @@ class PluginTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
-	/**
-	 * Tests get_framework_file.
-	 */
+	/** @see Framework\SV_WC_Plugin::get_framework_file() */
 	public function test_get_framework_file() {
 
 		$this->assertStringEndsWith( 'class-sv-wc-plugin.php', $this->get_plugin()->get_framework_file() );
 	}
 
 
-	/**
-	 * Tests get_framework_path.
-	 */
+	/** @see Framework\SV_WC_Plugin::get_framework_path() */
 	public function test_get_framework_path() {
 
 		$path = $this->get_plugin()->get_framework_path();
@@ -123,9 +105,7 @@ class PluginTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
-	/**
-	 * Tests get_framework_assets_url.
-	 */
+	/** @see Framework\SV_WC_Plugin::get_framework_assets_url() */
 	public function test_get_framework_assets_url() {
 
 		$url = $this->get_plugin()->get_framework_assets_url();
@@ -135,9 +115,7 @@ class PluginTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
-	/**
-	 * Tests get_framework_assets_path.
-	 */
+	/** @see Framework\SV_WC_Plugin::get_framework_assets_path() */
 	public function test_get_framework_assets_path() {
 
 		$path = $this->get_plugin()->get_framework_assets_path();
@@ -147,67 +125,34 @@ class PluginTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
-	/**
-	 * Tests get_dependency_handler.
-	 */
+	/** @see Framework\SV_WC_Plugin::get_dependency_handler() */
 	public function test_get_dependency_handler() {
 
 		$this->assertInstanceOf( '\SkyVerge\WooCommerce\PluginFramework\v5_5_1\SV_WC_Plugin_Dependencies', $this->get_plugin()->get_dependency_handler() );
 	}
 
 
-	/**
-	 * Tests get_lifecycle_handler.
-	 */
+	/** @see Framework\SV_WC_Plugin::get_lifecycle_handler() */
 	public function test_get_lifecycle_handler() {
 
 		$this->assertInstanceOf( '\SkyVerge\WooCommerce\PluginFramework\v5_5_1\Plugin\Lifecycle', $this->get_plugin()->get_lifecycle_handler() );
 	}
 
 
-	/**
-	 * Tests is_plugin_active()
-	 *
-	 * @param mixed $plugin plugin name
-	 * @param bool $expected the expected return value
-	 *
-	 * @dataProvider provider_is_plugin_active
-	 */
-	public function test_is_plugin_active( $plugin, $expected ) {
+	/** @see Framework\SV_WC_Plugin::is_plugin_active() */
+	public function test_is_plugin_active() {
 
-		$this->assertEquals( $expected, $this->get_plugin()->is_plugin_active( $plugin ) );
-	}
-
-
-	/**
-	 * Provider for test_is_plugin_active()
-	 *
-	 * @return array
-	 */
-	public function provider_is_plugin_active() {
-
-		return [
-			[ 'woocommerce', false ],
-			[ 'woocommerce.php', true ],
+		$check_plugins = [
+			'invalid.php'     => false, // non-existent
+			'woocommerce'     => false, // must specify .php
+			'woocommerce.php' => true,
+			'test-plugin.php' => true,
 		];
-	}
 
+		foreach ( $check_plugins as $plugin_name => $expected_result ) {
 
-	/** Helper methods ************************************************************************************************/
-
-
-	/**
-	 * Gets the plugin instance.
-	 *
-	 * @return \SkyVerge\WooCommerce\TestPlugin\Plugin
-	 */
-	protected function get_plugin() {
-
-		if ( null === $this->plugin ) {
-			$this->plugin = sv_wc_test_plugin();
+			$this->assertEquals( $expected_result, $this->get_plugin()->is_plugin_active( $plugin_name ) );
 		}
-
-		return $this->plugin;
 	}
 
 

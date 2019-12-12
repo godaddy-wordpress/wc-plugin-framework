@@ -4,7 +4,7 @@ extensions:
     config:
         tad\WPBrowser\Extension\Copier:
             files:
-                woocommerce: 'tests/_support/plugins/test-plugin/vendor/skyverge/wc-plugin-framework/woocommerce'
-                tests/_support/plugins/test-plugin: '%WP_ROOT_FOLDER%/wp-content/plugins/test-plugin'
+                tests/_support/_plugins/test-plugin/wp-content/plugins/woocommerce: '%WP_ROOT_FOLDER%/wp-content/plugins/woocommerce'
+                tests/_support/_plugins/test-plugin: '%WP_ROOT_FOLDER%/wp-content/plugins/test-plugin'
 params:
     - .env

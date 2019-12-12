@@ -1,5 +1,5 @@
 <?php
-namespace SkyVerge\WooCommerce\TestPlugin;
+namespace SkyVerge\WooCommerce\Test_Plugin;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_5_1 as Framework;
 

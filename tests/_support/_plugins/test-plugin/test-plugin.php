@@ -39,7 +39,7 @@ class SV_WC_Framework_Test_Plugin_Loader {
 	const MINIMUM_WC_VERSION = '3.0.9';
 
 	/** SkyVerge plugin framework version used by this plugin */
-	const FRAMEWORK_VERSION = '5.4.2';
+	const FRAMEWORK_VERSION = '5.5.1';
 
 	/** the plugin name, for displaying notices */
 	const PLUGIN_NAME = 'WooCommerce Framework Test Plugin';
@@ -112,7 +112,7 @@ class SV_WC_Framework_Test_Plugin_Loader {
 		$loader = require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
 
 		// register plugin namespace with autoloader
-		$loader->addPsr4( 'SkyVerge\\WooCommerce\\TestPlugin\\', __DIR__ . '/includes' );
+		$loader->addPsr4( 'SkyVerge\\WooCommerce\\Test_Plugin\\', __DIR__ . '/includes' );
 
 		require_once( plugin_dir_path( __FILE__ ) . 'includes/Functions.php' );
 

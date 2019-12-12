@@ -9,7 +9,7 @@
 ## Running Tests
 
 From the root directory, run:
-- `vendor/bin/codecept run unit` for unit tests
+- `vendor/bin/codecept run acceptance` for acceptance tests
 - `vendor/bin/codecept run integration` for integration tests
 
 // TODO: acceptance test instructions.

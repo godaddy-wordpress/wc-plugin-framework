@@ -24,3 +24,5 @@ npm-debug.log
 codeception.yml
 .env
 /tests/_data/dump.sql
+/tests/_support/_plugins/test-plugin/vendor
+/tests/_support/_plugins/test-plugin/wp-content

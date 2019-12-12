@@ -10,7 +10,11 @@ modules:
     enabled:
         - WPDb
         - WPBrowser
-        - \Helper\Acceptance
+        - WPCLI
+        - WPLoader
+        - WPFilesystem
+        - REST
+        - Asserts
     config:
         WPDb:
             dsn: 'mysql:host=%ACCEPTANCE_DB_HOST%;dbname=%ACCEPTANCE_DB_NAME%'
@@ -28,3 +32,18 @@ modules:
             adminUsername: '%ADMIN_USERNAME%'
             adminPassword: '%ADMIN_PASSWORD%'
             adminPath: '%WP_ADMIN_PATH%'
+        WPCLI:
+            path: '%WP_ROOT_FOLDER%'
+            throw: true
+        WPLoader:
+            loadOnly: true
+            wpRootFolder: '%WP_ROOT_FOLDER%'
+            dbName: "%ACCEPTANCE_DB_NAME%"
+            dbHost: "%ACCEPTANCE_DB_HOST%"
+            dbUser: "%ACCEPTANCE_DB_USER%"
+            dbPassword: "%ACCEPTANCE_DB_PASSWORD%"
+        WPFilesystem:
+            wpRootFolder: '%WP_ROOT_FOLDER%'
+        REST:
+            depends: WPBrowser
+            url: '%WP_URL%'
