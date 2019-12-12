@@ -548,6 +548,9 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	public function save() {
 
+		if ( $this->token instanceof \WC_Payment_Token ) {
+			$token = $this->token;
+		}
 	}
 
 
