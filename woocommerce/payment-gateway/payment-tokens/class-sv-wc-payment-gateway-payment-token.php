@@ -51,7 +51,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	protected $img_url;
 
 	/**
-	 * @var array key-value array to map WC core token props to framework token `$data` keys
+	 * @var array key-value array to map WooCommerce core token props to framework token `$data` keys
 	 */
 	private $props = [
 		'is_default'   => 'default',
@@ -63,9 +63,9 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	];
 
 	/**
-	 * @var \WC_Payment_Token WC core token
+	 * @var null|\WC_Payment_Token WooCommerce core token corresponding to the framework token, if set
 	 */
-	private $token = null;
+	private $token;
 
 
 	/**
