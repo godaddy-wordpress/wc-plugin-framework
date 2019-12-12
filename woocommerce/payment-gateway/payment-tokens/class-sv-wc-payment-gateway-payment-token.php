@@ -572,6 +572,9 @@ class SV_WC_Payment_Gateway_Payment_Token {
 				} elseif ( $this->is_echeck() ) {
 					$token = new \WC_Payment_Token_ECheck();
 				}
+
+				// mark the token as migrated
+				$this->data['migrated'] = true;
 			}
 
 			if ( ! empty( $token ) ) {
