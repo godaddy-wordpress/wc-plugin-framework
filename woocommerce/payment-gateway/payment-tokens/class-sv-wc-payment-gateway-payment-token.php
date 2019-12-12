@@ -538,6 +538,19 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	}
 
 
+	/**
+	 * Stores the token data in the database.
+	 *
+	 * Stores the token data as a Woocommerce payment token, in the `wp_woocommerce_payment_tokens` table,
+	 * with meta data in the `wp_woocommerce_payment_tokenmeta` table.
+	 *
+	 * @since 5.6.0-dev.1
+	 */
+	public function save() {
+
+	}
+
+
 }
 
 
