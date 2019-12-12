@@ -493,6 +493,30 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	}
 
 
+	/**
+	 * Reads the properties and meta data of the WC core token
+	 * and sets the found key-values as an array in the `data` property.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param \WC_Payment_Token $core_token
+	 */
+	private function read( \WC_Payment_Token $core_token ) {
+
+		$token_data = $core_token->get_data();
+
+		foreach ( $token_data as $core_key => $value ) {
+
+			if ( array_key_exists( $core_key, $this->props ) ) {
+
+				$framework_key = $this->props[ $core_key ];
+
+				$this->data[ $framework_key ] = $value;
+			}
+		}
+	}
+
+
 }
 
 
