@@ -550,6 +550,19 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		if ( $this->token instanceof \WC_Payment_Token ) {
 			$token = $this->token;
+		} else {
+
+			// see if there is already a token with this ID saved for this customer and gateway
+			// TODO: use `get_user_id` and `get_gateway_id`, once merged {DM 2019-12-12}
+			$saved_tokens = \WC_Payment_Tokens::get_customer_tokens( $this->data['user_id'], $this->data['gateway_id'] );
+
+			foreach ( $saved_tokens as $saved_token ) {
+
+				if ( $saved_token->get_id() === $this->get_id() ) {
+					$token = $saved_token;
+					break;
+				}
+			}
 		}
 	}
 
