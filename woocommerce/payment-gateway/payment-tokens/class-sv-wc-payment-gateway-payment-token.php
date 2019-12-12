@@ -573,6 +573,23 @@ class SV_WC_Payment_Gateway_Payment_Token {
 					$token = new \WC_Payment_Token_ECheck();
 				}
 			}
+
+			if ( ! empty( $token ) ) {
+
+				$token->set_token( $this->get_id() );
+
+				foreach ( $this->data as $key => $value ) {
+
+					$core_key = array_search( $key, $this->props );
+
+					if ( false !== $core_key ) {
+						$token->set_props( [ $core_key => $value ] );
+					} else {
+						// metadata
+						$token->add_meta_data( $key, $value, true );
+					}
+				}
+			}
 		}
 	}
 
