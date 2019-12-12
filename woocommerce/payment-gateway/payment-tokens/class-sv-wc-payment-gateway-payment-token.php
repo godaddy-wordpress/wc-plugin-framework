@@ -473,6 +473,19 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Gets the WooCommerce core payment token object related to this framework token.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @return \WC_Payment_Token|null
+	 */
+	public function get_woocommerce_payment_token() {
+
+		return $this->token instanceof \WC_Payment_Token ? $this->token : null;
+	}
+
+
+	/**
 	 * Returns a representation of this token suitable for persisting to a
 	 * datastore
 	 *
