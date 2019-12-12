@@ -4,8 +4,6 @@ extensions:
     config:
         tad\WPBrowser\Extension\Copier:
             files:
-                # make a copy of WooCommerce available to our test suites
-                ./tests/_support/_plugins/test-plugin/wp-content/plugins/woocommerce: '%WP_ROOT_FOLDER%/wp-content/plugins/woocommerce'
                 # copy the current version of the framework from the active branch to the test plugin
                 ./woocommerce: './tests/_support/_plugins/test-plugin/vendor/skyverge/wc-plugin-framework/woocommerce'
                 # make a copy of the test plugin available to our test suites (bundling the framework version from the current branch)

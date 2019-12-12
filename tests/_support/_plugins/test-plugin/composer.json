@@ -1,7 +1,0 @@
-{
-    "name": "skyverge/test-plugin",
-    "require": {
-        "woocommerce/woocommerce": "3.8.1",
-        "skyverge/wc-plugin-framework": "5.5.1"
-    }
-}
