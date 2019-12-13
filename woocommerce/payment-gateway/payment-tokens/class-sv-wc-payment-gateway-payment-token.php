@@ -558,7 +558,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 			foreach ( $saved_tokens as $saved_token ) {
 
-				if ( $saved_token->get_id() === $this->get_id() ) {
+				if ( $saved_token->get_token() === $this->get_id() ) {
 					$token = $saved_token;
 					break;
 				}
