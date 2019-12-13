@@ -54,6 +54,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * @var array key-value array to map WooCommerce core token props to framework token `$data` keys
 	 */
 	private $props = [
+		'gateway_id'   => 'gateway_id',
 		'user_id'      => 'user_id',
 		'is_default'   => 'default',
 		'type'         => 'type',
@@ -74,6 +75,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * The token $data is expected to have the following members:
 	 *
+	 * gateway_id   - string identifier of the gateway the token belongs to (in WooCommerce core tokens this also identifies the environment of the gateway)
 	 * user_id      - int identifier of the customer user associated to this token
 	 * default      - boolean optional indicates this is the default payment token
 	 * type         - string one of 'credit_card' or 'echeck' ('check' for backwards compatibility)
@@ -147,6 +149,32 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_id() {
 
 		return $this->id;
+	}
+
+
+	/**
+	 * Gets the gateway ID for the token.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @return string
+	 */
+	public function get_gateway_id() {
+
+		return isset( $this->data['gateway_id'] ) ? $this->data['gateway_id'] : '';
+	}
+
+
+	/**
+	 * Sets the gateway ID for the token.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param string $gateway_id
+	 */
+	public function set_gateway_id( $gateway_id ) {
+
+		$this->data['gateway_id'] = $gateway_id;
 	}
 
 
