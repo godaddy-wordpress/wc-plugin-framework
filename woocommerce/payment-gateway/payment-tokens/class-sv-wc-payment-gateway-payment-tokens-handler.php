@@ -584,6 +584,35 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	}
 
 
+	/**
+	 * Updates a single legacy token in user meta.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param int $user_id WP user ID
+	 * @param SV_WC_Payment_Gateway_Payment_Token $token token to update
+	 * @param string|null $environment_id optional environment ID, defaults to plugin current environment
+	 * @return string|int updated user meta ID
+	 */
+	public function update_legacy_token( $user_id, $token, $environment_id = null ) {
+
+		// default to current environment
+		if ( null === $environment_id ) {
+			$environment_id = $this->get_environment_id();
+		}
+
+		$legacy_tokens = get_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), true );
+
+		if ( isset( $legacy_tokens[ $token->get_id() ] ) ) {
+			$legacy_tokens[ $token->get_id() ] = $token->to_datastore_format();
+		}
+
+		return update_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), $legacy_tokens );
+	}
+
+
 
 	/** Admin methods *****************************************************************************/
 
