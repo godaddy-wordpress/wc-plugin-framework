@@ -655,6 +655,8 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 			foreach ( $this->data as $key => $value ) {
 
+				// prefix the expiration year if needed (WC_Payment_Token requires it to be 4 digits long)
+				// TODO: figure out how to handle cards expiring before 2000 {DM 2019-12-13}
 				if ( 'exp_year' === $key && 2 === strlen( $value ) ) {
 					$value = '20' . $value;
 				}
