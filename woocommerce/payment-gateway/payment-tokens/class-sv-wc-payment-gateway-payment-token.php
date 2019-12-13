@@ -611,8 +611,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 		} else {
 
 			// see if there is already a token with this ID saved for this customer and gateway
-			// TODO: use `get_user_id` and `get_gateway_id`, once merged {DM 2019-12-12}
-			$saved_tokens = \WC_Payment_Tokens::get_customer_tokens( $this->data['user_id'], $this->data['gateway_id'] );
+			$saved_tokens = \WC_Payment_Tokens::get_customer_tokens( $this->get_user_id(), $this->get_gateway_id() );
 
 			foreach ( $saved_tokens as $saved_token ) {
 
@@ -636,12 +635,10 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 				// update legacy token in user meta data
 				$gateways   = WC()->payment_gateways->payment_gateways();
-				// TODO: use `get_gateway_id`, once merged {DM 2019-12-12}
-				$gateway_id = $this->data['gateway_id'];
+				$gateway_id = $this->get_gateway_id();
 
 				if ( ! empty( $gateway_id ) && ! empty( $gateway = $gateways[ $gateway_id ] ) ) {
-					// TODO: use `get_user_id`, once merged {DM 2019-12-12}
-					$gateway->get_payment_tokens_handler()->update_legacy_token( $this->data['user_id'], $this );
+					$gateway->get_payment_tokens_handler()->update_legacy_token( $this->get_user_id(), $this );
 				}
 			}
 
