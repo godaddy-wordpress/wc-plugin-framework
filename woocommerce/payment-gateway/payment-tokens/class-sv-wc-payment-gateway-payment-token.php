@@ -75,6 +75,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * The token $data is expected to have the following members:
 	 *
+	 * gateway_id   - string identifier of the gateway the token belongs to (in WooCommerce core tokens this also identifies the environment of the gateway)
 	 * user_id      - int identifier of the customer user associated to this token
 	 * default      - boolean optional indicates this is the default payment token
 	 * type         - string one of 'credit_card' or 'echeck' ('check' for backwards compatibility)
