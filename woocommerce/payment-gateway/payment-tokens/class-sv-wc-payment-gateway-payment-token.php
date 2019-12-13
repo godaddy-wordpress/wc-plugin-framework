@@ -575,6 +575,16 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 				// mark the token as migrated
 				$this->data['migrated'] = true;
+
+				// update legacy token in user meta data
+				$gateways   = WC()->payment_gateways->payment_gateways();
+				// TODO: use `get_gateway_id`, once merged {DM 2019-12-12}
+				$gateway_id = $this->data['gateway_id'];
+
+				if ( ! empty( $gateway_id ) && ! empty( $gateway = $gateways[ $gateway_id ] ) ) {
+					// TODO: use `get_user_id`, once merged {DM 2019-12-12}
+					$gateway->get_payment_tokens_handler()->update_legacy_token( $this->data['user_id'], $this );
+				}
 			}
 
 			if ( ! empty( $token ) ) {
