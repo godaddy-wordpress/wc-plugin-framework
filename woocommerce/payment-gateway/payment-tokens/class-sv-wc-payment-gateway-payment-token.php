@@ -55,6 +55,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	private $props = [
 		'gateway_id'   => 'gateway_id',
+		'user_id'      => 'user_id',
 		'is_default'   => 'default',
 		'type'         => 'type',
 		'last4'        => 'last_four',
@@ -70,9 +71,11 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
-	 * Initialize a payment token with associated $data which is expected to
-	 * have the following members:
+	 * Initializes a payment token.
 	 *
+	 * The token $data is expected to have the following members:
+	 *
+	 * user_id      - int identifier of the customer user associated to this token
 	 * default      - boolean optional indicates this is the default payment token
 	 * type         - string one of 'credit_card' or 'echeck' ('check' for backwards compatibility)
 	 * last_four    - string last four digits of account number
@@ -82,30 +85,41 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * account_type - string one of 'checking' or 'savings' (checking gateway only)
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $id the payment gateway token ID
-	 * @param array $data associated data
+	 * @param array|\WC_Payment_Token $data associated data array or WC core token
 	 */
 	public function __construct( $id, $data ) {
 
-		if ( isset( $data['type'] ) && 'credit_card' == $data['type'] ) {
+		if ( $data instanceof \WC_Payment_Token ) {
 
-			// normalize the provided card type to adjust for possible abbreviations if set
-			if ( isset( $data['card_type'] ) && $data['card_type'] ) {
+			$this->token = $data;
 
-				$data['card_type'] = SV_WC_Payment_Gateway_Helper::normalize_card_type( $data['card_type'] );
+			$this->read( $this->token );
 
-			// otherwise, get the payment type from the account number
-			} elseif ( isset( $data['account_number'] ) ) {
+		} else {
 
-				$data['card_type'] = SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $data['account_number'] );
+			if ( isset( $data['type'] ) && 'credit_card' == $data['type'] ) {
+
+				// normalize the provided card type to adjust for possible abbreviations if set
+				if ( isset( $data['card_type'] ) && $data['card_type'] ) {
+
+					$data['card_type'] = SV_WC_Payment_Gateway_Helper::normalize_card_type( $data['card_type'] );
+
+				// otherwise, get the payment type from the account number
+				} elseif ( isset( $data['account_number'] ) ) {
+
+					$data['card_type'] = SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $data['account_number'] );
+				}
 			}
+
+			// remove account number so it's not saved to the token
+			unset( $data['account_number'] );
+
+			$this->data = $data;
 		}
 
-		// remove account number so it's not saved to the token
-		unset( $data['account_number'] );
-
 		$this->id    = $id;
-		$this->data  = $data;
 	}
 
 
@@ -160,6 +174,32 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function set_gateway_id( $gateway_id ) {
 
 		$this->data['gateway_id'] = $gateway_id;
+	}
+
+
+	/**
+	 * Gets the ID of the user associated with the token.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @return int
+	 */
+	public function get_user_id() {
+
+		return isset( $this->data['user_id'] ) ? absint( $this->data['user_id'] ) : 0;
+	}
+
+
+	/**
+	 * Sets the ID of the user associated with the token.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param int $user_id
+	 */
+	public function set_user_id( $user_id ) {
+
+		$this->data['user_id'] = is_numeric( $user_id ) ? absint( $user_id ) : 0;
 	}
 
 
@@ -500,6 +540,19 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Gets the WooCommerce core payment token object related to this framework token.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @return \WC_Payment_Token|null
+	 */
+	public function get_woocommerce_payment_token() {
+
+		return $this->token instanceof \WC_Payment_Token ? $this->token : null;
+	}
+
+
+	/**
 	 * Returns a representation of this token suitable for persisting to a
 	 * datastore
 	 *
@@ -509,6 +562,36 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function to_datastore_format() {
 
 		return $this->data;
+	}
+
+
+	/**
+	 * Reads the properties and meta data of the WC core token
+	 * and sets the found key-values as an array in the `data` property.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param \WC_Payment_Token $core_token
+	 */
+	private function read( \WC_Payment_Token $core_token ) {
+
+		$token_data = $core_token->get_data();
+		$meta_data  = $token_data['meta_data'] ?: [];
+		unset( $token_data['meta_data'] );
+
+		foreach ( $meta_data as $meta_datum ) {
+			$token_data[ $meta_datum->key ] = $meta_datum->value;
+		}
+
+		foreach ( $token_data as $core_key => $value ) {
+
+			if ( array_key_exists( $core_key, $this->props ) ) {
+
+				$framework_key = $this->props[ $core_key ];
+
+				$this->data[ $framework_key ] = $value;
+			}
+		}
 	}
 
 
