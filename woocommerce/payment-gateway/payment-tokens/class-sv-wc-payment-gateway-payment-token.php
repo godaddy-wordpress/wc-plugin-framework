@@ -606,6 +606,8 @@ class SV_WC_Payment_Gateway_Payment_Token {
 						$token->add_meta_data( $key, $value, true );
 					}
 				}
+
+				$token->save();
 			}
 		}
 	}
