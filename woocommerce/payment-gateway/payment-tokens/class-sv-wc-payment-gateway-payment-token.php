@@ -593,6 +593,10 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 				foreach ( $this->data as $key => $value ) {
 
+					if ( 'exp_year' === $key && 2 === strlen( $value ) ) {
+						$value = '20' . $value;
+					}
+
 					$core_key = array_search( $key, $this->props );
 
 					if ( false !== $core_key ) {
