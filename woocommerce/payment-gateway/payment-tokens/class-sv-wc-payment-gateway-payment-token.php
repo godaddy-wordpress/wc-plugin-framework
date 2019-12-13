@@ -70,9 +70,11 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
-	 * Initialize a payment token with associated $data which is expected to
-	 * have the following members:
+	 * Initializes a payment token.
 	 *
+	 * The token $data is expected to have the following members:
+	 *
+	 * gateway_id   - identifier of the gateway the token belongs to (in WooCommerce core tokens this also identifies the environment of the gateway)
 	 * default      - boolean optional indicates this is the default payment token
 	 * type         - string one of 'credit_card' or 'echeck' ('check' for backwards compatibility)
 	 * last_four    - string last four digits of account number
@@ -82,6 +84,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * account_type - string one of 'checking' or 'savings' (checking gateway only)
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $id the payment gateway token ID
 	 * @param array $data associated data
 	 */
