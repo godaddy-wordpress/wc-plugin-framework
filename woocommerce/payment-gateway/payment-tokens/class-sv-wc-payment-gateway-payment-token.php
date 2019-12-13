@@ -54,6 +54,8 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * @var array key-value array to map WooCommerce core token props to framework token `$data` keys
 	 */
 	private $props = [
+		'gateway_id'   => 'gateway_id',
+		'user_id'      => 'user_id',
 		'is_default'   => 'default',
 		'type'         => 'type',
 		'last4'        => 'last_four',
@@ -69,9 +71,12 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
-	 * Initialize a payment token with associated $data which is expected to
-	 * have the following members:
+	 * Initializes a payment token.
 	 *
+	 * The token $data is expected to have the following members:
+	 *
+	 * gateway_id   - string identifier of the gateway the token belongs to (in WooCommerce core tokens this also identifies the environment of the gateway)
+	 * user_id      - int identifier of the customer user associated to this token
 	 * default      - boolean optional indicates this is the default payment token
 	 * type         - string one of 'credit_card' or 'echeck' ('check' for backwards compatibility)
 	 * last_four    - string last four digits of account number
@@ -81,6 +86,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * account_type - string one of 'checking' or 'savings' (checking gateway only)
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $id the payment gateway token ID
 	 * @param array|\WC_Payment_Token $data associated data array or WC core token
 	 */
@@ -143,6 +149,58 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function get_id() {
 
 		return $this->id;
+	}
+
+
+	/**
+	 * Gets the gateway ID for the token.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @return string
+	 */
+	public function get_gateway_id() {
+
+		return isset( $this->data['gateway_id'] ) ? $this->data['gateway_id'] : '';
+	}
+
+
+	/**
+	 * Sets the gateway ID for the token.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param string $gateway_id
+	 */
+	public function set_gateway_id( $gateway_id ) {
+
+		$this->data['gateway_id'] = $gateway_id;
+	}
+
+
+	/**
+	 * Gets the ID of the user associated with the token.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @return int
+	 */
+	public function get_user_id() {
+
+		return isset( $this->data['user_id'] ) ? absint( $this->data['user_id'] ) : 0;
+	}
+
+
+	/**
+	 * Sets the ID of the user associated with the token.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param int $user_id
+	 */
+	public function set_user_id( $user_id ) {
+
+		$this->data['user_id'] = is_numeric( $user_id ) ? absint( $user_id ) : 0;
 	}
 
 
