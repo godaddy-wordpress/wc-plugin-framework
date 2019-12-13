@@ -641,7 +641,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			$this->data['migrated'] = true;
 
 			// update legacy token in user meta data
-			$gateways   = WC()->payment_gateways->payment_gateways();
+			$gateways   = WC()->payment_gateways()->payment_gateways();
 			$gateway_id = $this->get_gateway_id();
 
 			if ( ! empty( $gateway_id ) && ! empty( $gateway = $gateways[ $gateway_id ] ) ) {
