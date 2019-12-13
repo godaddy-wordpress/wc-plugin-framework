@@ -666,7 +666,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 				if ( false !== $core_key ) {
 					$token->set_props( [ $core_key => $value ] );
 				} else {
-					$token->add_meta_data( $key, $value, true );
+					$token->update_meta_data( $key, $value, true );
 				}
 			}
 
