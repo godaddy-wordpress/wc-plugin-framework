@@ -596,6 +596,8 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 */
 	public function update_legacy_token( $user_id, $token, $environment_id = null ) {
 
+		$updated = false;
+
 		// default to current environment
 		if ( null === $environment_id ) {
 			$environment_id = $this->get_environment_id();
@@ -603,11 +605,14 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 		$legacy_tokens = get_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), true );
 
-		if ( isset( $legacy_tokens[ $token->get_id() ] ) ) {
+		if ( is_array( $legacy_tokens ) && isset( $legacy_tokens[ $token->get_id() ] ) ) {
+
 			$legacy_tokens[ $token->get_id() ] = $token->to_datastore_format();
+
+			$updated = update_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), $legacy_tokens );
 		}
 
-		return update_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), $legacy_tokens );
+		return $updated;
 	}
 
 
