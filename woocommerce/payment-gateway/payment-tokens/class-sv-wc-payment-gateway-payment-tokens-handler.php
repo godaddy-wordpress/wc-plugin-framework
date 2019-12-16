@@ -385,6 +385,38 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
+	 * Deletes a legacy payment token from user meta.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param int $user_id WordPress user ID
+	 * @param SV_WC_Payment_Gateway_Payment_Token $token payment token object
+	 * @param string|null $environment_id gateway environment ID
+	 * @return bool whether the token was deleted from the user meta
+	 */
+	public function delete_legacy_token( $user_id, SV_WC_Payment_Gateway_Payment_Token $token, $environment_id = null ) {
+
+		$deleted = false;
+
+		// default to current environment
+		if ( null === $environment_id ) {
+			$environment_id = $this->get_environment_id();
+		}
+
+		$legacy_tokens = get_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), true );
+
+		if ( is_array( $legacy_tokens ) && isset( $legacy_tokens[ $token->get_id() ] ) ) {
+
+			unset( $legacy_tokens[ $token->get_id() ] );
+
+			$deleted = (bool) update_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), $legacy_tokens );
+		}
+
+		return $deleted;
+	}
+
+
+	/**
 	 * Sets the default token for a user.
 	 *
 	 * This is shown as "Default Card" in the frontend and will be auto-selected during checkout.
