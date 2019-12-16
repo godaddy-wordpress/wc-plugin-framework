@@ -424,10 +424,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				 */
 				do_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_processed', $order, $this );
 
-				return array(
+				return [
 					'result'   => 'success',
 					'redirect' => $this->get_return_url( $order ),
-				);
+				];
 
 			} else {
 
@@ -441,10 +441,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			$this->mark_order_as_failed( $order, $e->getMessage() );
 
-			return array(
+			return [
 				'result'  => 'failure',
 				'message' => $e->getMessage(),
-			);
+			];
 		}
 
 		return $default;
