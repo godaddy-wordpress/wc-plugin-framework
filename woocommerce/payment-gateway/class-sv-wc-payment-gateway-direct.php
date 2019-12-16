@@ -428,6 +428,13 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					'result'   => 'success',
 					'redirect' => $this->get_return_url( $order ),
 				);
+
+			} else {
+
+				return [
+					'result'  => 'failure',
+					'message' => 'The transaction failed.',
+				];
 			}
 
 		} catch ( SV_WC_Plugin_Exception $e ) {
