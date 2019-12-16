@@ -236,7 +236,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	public function is_credit_card() {
 
-		return 'credit_card' == $this->data['type'];
+		return 'credit_card' === $this->data['type'];
 	}
 
 
@@ -549,7 +549,27 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	public function get_woocommerce_payment_token() {
 
-		return $this->token instanceof \WC_Payment_Token ? $this->token : null;
+		$token = null;
+
+		if ( $this->token instanceof \WC_Payment_Token ) {
+
+			$token = $this->token;
+
+		} else {
+
+			// see if there is already a token with this ID saved for this customer and gateway
+			$saved_tokens = \WC_Payment_Tokens::get_customer_tokens( $this->get_user_id(), $this->get_gateway_id() );
+
+			foreach ( $saved_tokens as $saved_token ) {
+
+				if ( $saved_token->get_token() === $this->get_id() ) {
+					$token = $saved_token;
+					break;
+				}
+			}
+		}
+
+		return $token;
 	}
 
 
@@ -593,6 +613,62 @@ class SV_WC_Payment_Gateway_Payment_Token {
 				$this->data[ $framework_key ] = $value;
 			}
 		}
+	}
+
+
+	/**
+	 * Stores the token data in the database.
+	 *
+	 * Stores the token data as a Woocommerce payment token, in the `wp_woocommerce_payment_tokens` table,
+	 * with meta data in the `wp_woocommerce_payment_tokenmeta` table.
+	 *
+	 * @since 5.6.0-dev.1
+	 */
+	public function save() {
+
+		$token = $this->get_woocommerce_payment_token();
+
+		if ( ! $token instanceof \WC_Payment_Token ) {
+
+			// instantiate a new token: if it's not a credit card, we default to echeck, so there's always an instance
+			if ( $this->is_credit_card() ) {
+				$token = new \WC_Payment_Token_CC();
+			} elseif ( $this->is_echeck() ) {
+				$token = new \WC_Payment_Token_ECheck();
+			}
+
+			// mark the token as migrated
+			$this->data['migrated'] = true;
+
+			// update legacy token in user meta data
+			$gateways   = WC()->payment_gateways()->payment_gateways();
+			$gateway_id = $this->get_gateway_id();
+
+			if ( ! empty( $gateway_id ) && ! empty( $gateway = $gateways[ $gateway_id ] ) ) {
+				$gateway->get_payment_tokens_handler()->update_legacy_token( $this->get_user_id(), $this );
+			}
+		}
+
+		$token->set_token( $this->get_id() );
+
+		foreach ( $this->data as $key => $value ) {
+
+			// prefix the expiration year if needed (WC_Payment_Token requires it to be 4 digits long)
+			// TODO: figure out how to handle cards expiring before 2000 {DM 2019-12-13}
+			if ( 'exp_year' === $key && 2 === strlen( $value ) ) {
+				$value = '20' . $value;
+			}
+
+			$core_key = array_search( $key, $this->props, false );
+
+			if ( false !== $core_key ) {
+				$token->set_props( [ $core_key => $value ] );
+			} else {
+				$token->update_meta_data( $key, $value, true );
+			}
+		}
+
+		$token->save();
 	}
 
 
