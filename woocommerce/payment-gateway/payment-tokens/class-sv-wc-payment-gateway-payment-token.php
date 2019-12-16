@@ -676,6 +676,8 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * Deletes a token from the database.
 	 *
 	 * Also deletes a token from the legacy user meta.
+	 * @see \WC_Payment_Token::delete()
+	 * @see SV_WC_Payment_Gateway_Payment_Tokens_Handler::delete_legacy_token()
 	 *
 	 * @since 5.6.0-dev.1
 	 *
