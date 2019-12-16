@@ -587,6 +587,8 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/**
 	 * Updates a single legacy token in user meta.
 	 *
+	 * @see SV_WC_Payment_Gateway_Payment_Token::save()
+	 *
 	 * @since 5.6.0-dev.1
 	 *
 	 * @param int $user_id WP user ID

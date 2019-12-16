@@ -236,7 +236,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	public function is_credit_card() {
 
-		return 'credit_card' == $this->data['type'];
+		return 'credit_card' === $this->data['type'];
 	}
 
 
@@ -628,9 +628,9 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		$token = $this->get_woocommerce_payment_token();
 
-		if ( empty( $token ) ) {
+		if ( ! $token instanceof \WC_Payment_Token ) {
 
-			// instantiate a new token
+			// instantiate a new token: if it's not a credit card, we default to echeck, so there's always an instance
 			if ( $this->is_credit_card() ) {
 				$token = new \WC_Payment_Token_CC();
 			} elseif ( $this->is_echeck() ) {
@@ -649,29 +649,26 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			}
 		}
 
-		if ( ! empty( $token ) ) {
+		$token->set_token( $this->get_id() );
 
-			$token->set_token( $this->get_id() );
+		foreach ( $this->data as $key => $value ) {
 
-			foreach ( $this->data as $key => $value ) {
-
-				// prefix the expiration year if needed (WC_Payment_Token requires it to be 4 digits long)
-				// TODO: figure out how to handle cards expiring before 2000 {DM 2019-12-13}
-				if ( 'exp_year' === $key && 2 === strlen( $value ) ) {
-					$value = '20' . $value;
-				}
-
-				$core_key = array_search( $key, $this->props );
-
-				if ( false !== $core_key ) {
-					$token->set_props( [ $core_key => $value ] );
-				} else {
-					$token->update_meta_data( $key, $value, true );
-				}
+			// prefix the expiration year if needed (WC_Payment_Token requires it to be 4 digits long)
+			// TODO: figure out how to handle cards expiring before 2000 {DM 2019-12-13}
+			if ( 'exp_year' === $key && 2 === strlen( $value ) ) {
+				$value = '20' . $value;
 			}
 
-			$token->save();
+			$core_key = array_search( $key, $this->props, false );
+
+			if ( false !== $core_key ) {
+				$token->set_props( [ $core_key => $value ] );
+			} else {
+				$token->update_meta_data( $key, $value, true );
+			}
 		}
+
+		$token->save();
 	}
 
 
