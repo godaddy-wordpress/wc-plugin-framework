@@ -387,6 +387,8 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/**
 	 * Deletes a legacy payment token from user meta.
 	 *
+	 * @see SV_WC_Payment_Gateway_Payment_Token::delete()
+	 *
 	 * @since 5.6.0-dev.1
 	 *
 	 * @param int $user_id WordPress user ID
