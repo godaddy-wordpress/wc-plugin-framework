@@ -625,6 +625,8 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * @see \WC_Payment_Token::save()
 	 *
 	 * @since 5.6.0-dev.1
+	 *
+	 * @retur int ID of the token saved as returned by {@see \WC_Payment_Token::save()}
 	 */
 	public function save() {
 
@@ -671,7 +673,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			}
 		}
 
-		$token->save();
+		return $token->save();
 	}
 
 
