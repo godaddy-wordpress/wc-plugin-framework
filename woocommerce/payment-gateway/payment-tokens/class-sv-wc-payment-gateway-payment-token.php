@@ -672,6 +672,24 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	}
 
 
+	/**
+	 * Deletes a token from the database.
+	 *
+	 * Also deletes a token from the legacy user meta.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param bool $force_delete argument mapped to {@see \WC_Data::delete()}
+	 */
+	public function delete( $force_delete = false ) {
+
+		if ( $token = $this->get_woocommerce_payment_token() ) {
+
+			$token->delete( $force_delete );
+		}
+	}
+
+
 }
 
 
