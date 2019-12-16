@@ -24,6 +24,10 @@ You may also want to have a copy of WooCommerce active in such environment. If W
 wp plugin install woocommerce --activate
 ```
 
+#### Integration tests
+
+Not particular setup should be required to run standard unit tests.
+
 #### Acceptance tests
 
 TODO
@@ -34,16 +38,21 @@ From the root directory of the framework project, _on the machine where the test
 
 - `vendor/bin/codecept run acceptance` for acceptance tests
 - `vendor/bin/codecept run integration` for integration tests
+- `vendor/bin/codecept run unit` for unit tests
 
 You can also specify individual tests to run. See [Codeception documentation](https://codeception.com/docs/reference/Commands).
 
 ## Adding tests
 
-#### Integration tests
+#### Unit tests
 
 Follow the same directory structure as the framework project.
 
 Name test files after the classes you're going to test, for example `SV_WC_Plugin` may become `SV_WC_Plugin_Test`. The public methods being tested should also match this pattern. E.g. `get_id()` becomes `test_get_id()`. 
+
+#### Integration tests
+
+Follow the same naming and directory structure as with unit tests.
 
 #### Acceptance tests
 
