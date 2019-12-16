@@ -587,8 +587,9 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
-	 * Reads the properties and meta data of the WC core token
-	 * and sets the found key-values as an array in the `data` property.
+	 * Reads the properties and meta data of a WooCommerce core token.
+	 *
+	 * Sets the found key-values as an array in the data property.
 	 *
 	 * @since 5.6.0-dev.1
 	 *
@@ -598,6 +599,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		$token_data = $core_token->get_data();
 		$meta_data  = $token_data['meta_data'] ?: [];
+
 		unset( $token_data['meta_data'] );
 
 		foreach ( $meta_data as $meta_datum ) {
@@ -619,8 +621,8 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Stores the token data in the database.
 	 *
-	 * Stores the token data as a Woocommerce payment token, in the `wp_woocommerce_payment_tokens` table,
-	 * with meta data in the `wp_woocommerce_payment_tokenmeta` table.
+	 * Stores the token as a Woocommerce payment token.
+	 * @see \WC_Payment_Token::save()
 	 *
 	 * @since 5.6.0-dev.1
 	 */
@@ -645,6 +647,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			$gateway_id = $this->get_gateway_id();
 
 			if ( ! empty( $gateway_id ) && ! empty( $gateway = $gateways[ $gateway_id ] ) ) {
+				/** @see SV_WC_Payment_Gateway_Payment_Tokens_Handler::update_legacy_token() */
 				$gateway->get_payment_tokens_handler()->update_legacy_token( $this->get_user_id(), $this );
 			}
 		}
