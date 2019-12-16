@@ -1,25 +1,30 @@
 <?php
 
+use \SkyVerge\WooCommerce\PluginFramework\v5_5_1 as Framework;
+
 define( 'ABSPATH', true );
 
-class CountryHelperTest extends \Codeception\Test\Unit {
+/** @see Framework\Country_Helper */
+class Country_Helper_Test extends \Codeception\Test\Unit {
 
-	/**
-	 * @var \UnitTester
-	 */
+
+	/** @var \UnitTester */
 	protected $tester;
+
 
 	protected function _before() {
 
 		require_once( 'woocommerce/Country_Helper.php' );
 	}
 
+
 	protected function _after() {
 
 	}
 
+
 	/**
-	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_5_1\Country_Helper::convert_alpha_country_code()
+	 * @see Framework\Country_Helper::convert_alpha_country_code()
 	 *
 	 * @param string $code input country code
 	 * @param string $expected expected return value
@@ -28,7 +33,7 @@ class CountryHelperTest extends \Codeception\Test\Unit {
 	 */
 	public function test_convert_alpha_country_code( $code, $expected ) {
 
-		$result = \SkyVerge\WooCommerce\PluginFramework\v5_5_1\Country_Helper::convert_alpha_country_code( $code );
+		$result = Framework\Country_Helper::convert_alpha_country_code( $code );
 
 		$this->assertEquals( $expected, $result );
 	}

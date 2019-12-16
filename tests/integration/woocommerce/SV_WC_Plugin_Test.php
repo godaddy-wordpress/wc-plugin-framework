@@ -1,13 +1,8 @@
 <?php
 
 use \SkyVerge\WooCommerce\PluginFramework\v5_5_1 as Framework;
-use \SkyVerge\WooCommerce\Test_Plugin\Plugin as Plugin;
 
-/**
- * Tests for the base plugin class.
- *
- * @see Framework\SV_WC_Plugin
- */
+/** @see Framework\SV_WC_Plugin */
 class SV_WC_Plugin_Test extends \Codeception\TestCase\WPTestCase {
 
 

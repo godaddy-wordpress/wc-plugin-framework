@@ -5,9 +5,9 @@ defined( 'ABSPATH' ) or exit;
 /**
  * Gets the main plugin instance.
  *
- * @return \SkyVerge\WooCommerce\Test_Plugin\Plugin
  * @since 1.0.0
  *
+ * @return \SkyVerge\WooCommerce\Test_Plugin\Plugin
  */
 function sv_wc_test_plugin() {
 

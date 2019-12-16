@@ -10,7 +10,7 @@ trait Framework_Integration_Tests_Helper {
 	/**
 	 * Gets the singleton instance of the test plugin.
 	 *
-	 * @return Plugin
+	 * @return SkyVerge\WooCommerce\Test_Plugin\Plugin
 	 */
 	protected function get_plugin() {
 
