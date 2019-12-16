@@ -19,4 +19,4 @@ extensions:
         #- Codeception\Command\DbSnapshot
         #- tad\Codeception\Command\SearchReplace
 params:
-    - .env
+    - env
