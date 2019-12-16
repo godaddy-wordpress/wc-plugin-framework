@@ -5,7 +5,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_5_1 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
-class Plugin extends Framework\SV_WC_Plugin {
+class Plugin extends Framework\SV_WC_Payment_Gateway_Plugin {
 
 
 	/** @var Plugin single instance of this plugin */
