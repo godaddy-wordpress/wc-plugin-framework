@@ -393,6 +393,23 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 
 
 	/**
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::get_environment()
+	 *
+	 * @dataProvider provider_get_enviroment
+	 */
+	public function test_get_environment( $stored_environment, $expected_enviroment ) {
+
+		$woocommerce_token = new WC_Payment_Token_CC();
+
+		$woocommerce_token->add_meta_data( 'environment', $stored_environment );
+
+		$token = new Framework\SV_WC_Payment_Gateway_Payment_Token( '12345', $woocommerce_token );
+
+		$this->assertSame( $expected_enviroment, $token->get_environment() );
+	}
+
+
+	/**
 	 * Provides test data for test_get_enviroment().
 	 *
 	 * @return array
