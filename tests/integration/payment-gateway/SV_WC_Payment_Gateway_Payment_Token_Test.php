@@ -392,6 +392,19 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 	}
 
 
+	/**
+	 * Provides test data for test_get_enviroment().
+	 *
+	 * @return array
+	 */
+	public function provider_get_enviroment() {
+
+		return [
+			'metadata is set'  => [ 'test_environment', 'test_environment' ],
+		];
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
