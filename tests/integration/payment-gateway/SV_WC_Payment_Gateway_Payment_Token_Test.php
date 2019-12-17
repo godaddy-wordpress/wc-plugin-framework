@@ -418,6 +418,8 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 
 		return [
 			'metadata is set'  => [ 'test_environment', 'test_environment' ],
+			'empty metadata'   => [ '', null ],
+			'metadata not set' => [ null, null ],
 		];
 	}
 
