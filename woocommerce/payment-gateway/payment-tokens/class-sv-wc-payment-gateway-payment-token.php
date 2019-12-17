@@ -689,20 +689,48 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		$deleted = false;
 
+		// delete the core token from WooCommerce tables
 		if ( $token = $this->get_woocommerce_payment_token() ) {
 			$deleted = $token->delete( $force_delete );
 		}
 
-		// delete legacy token in user meta data
-		$gateways   = WC()->payment_gateways()->payment_gateways();
-		$gateway_id = $this->get_gateway_id();
-
-		if ( ! empty( $gateway_id ) && ! empty( $gateway = $gateways[ $gateway_id ] ) ) {
-			/** @see SV_WC_Payment_Gateway_Payment_Tokens_Handler::delete_legacy_token() */
-			$gateway->get_payment_tokens_handler()->delete_legacy_token( $this->get_user_id(), $this );
+		// delete legacy token in WordPress user meta table
+		if ( $tokens_handler = $this->get_tokens_handler() ) {
+			$tokens_handler->delete_legacy_token( $this->get_user_id(), $this );
 		}
 
 		return $deleted;
+	}
+
+
+	/**
+	 * Gets the gateway tokens handler.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @return SV_WC_Payment_Gateway_Payment_Tokens_Handler|null
+	 */
+	protected function get_tokens_handler() {
+
+		$handler    = null;
+		$gateway_id = $this->get_gateway_id();
+
+		if ( ! empty( $gateway_id ) ) {
+
+			$gateways = WC()->payment_gateways()->payment_gateways();
+
+			if ( $gateways && isset( $gateways[ $gateway_id ] ) ) {
+
+				$gateway = $gateways[ $gateway_id ];
+
+				if ( $gateway instanceof SV_WC_Payment_Gateway ) {
+
+					$handler = $gateway->get_payment_tokens_handler();
+				}
+			}
+		}
+
+		return $handler;
 	}
 
 
