@@ -541,6 +541,22 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Gets the gateway environment that this token is associated with.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @return string|null
+	 */
+	public function get_environment() {
+
+		$token       = $this->get_woocommerce_payment_token();
+		$environment = $token ? $token->get_meta( 'environment' ) : '';
+
+		return $environment ?: null;
+	}
+
+
+	/**
 	 * Gets the WooCommerce core payment token object related to this framework token.
 	 *
 	 * @since 5.6.0-dev.1
