@@ -465,4 +465,27 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 	}
 
 
+	/**
+	 * Gets a new \WC_Payment_Token_CC object.
+	 *
+	 * @return \WC_Payment_Token_CC
+	 */
+	private function get_new_woocommerce_credit_card_token() {
+
+		$token = new WC_Payment_Token_CC();
+
+		$token->set_user_id( 1 );
+		$token->set_token( '12345' );
+		$token->set_last4( '1111' );
+		$token->set_expiry_year( '2022' );
+		$token->set_expiry_month( '08' );
+		$token->set_card_type( Framework\SV_WC_Payment_Gateway_Helper::CARD_TYPE_VISA );
+
+		/** necessary so that \WC_Data::get_data() returns the props set above */
+		$token->save();
+
+		return $token;
+	}
+
+
 }
