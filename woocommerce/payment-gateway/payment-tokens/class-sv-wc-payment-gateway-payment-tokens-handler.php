@@ -359,7 +359,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	public function delete_token( $user_id, SV_WC_Payment_Gateway_Payment_Token $token, $environment_id = null ) {
 
 		// default to current environment
-		if ( is_null( $environment_id ) ) {
+		if ( null === $environment_id ) {
 			$environment_id = $this->get_environment_id();
 		}
 
@@ -372,18 +372,24 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 		unset( $tokens[ $token->get_id() ] );
 
-		// if the deleted card was the default one, make another one the new default
+		// delete token from local cache
+		unset( $this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] );
+
+		// clear the transient
+		$this->clear_transient( $user_id );
+
+		// if the deleted token was the default token, make another one the new default
 		if ( $token->is_default() ) {
 
 			foreach ( array_keys( $tokens ) as $key ) {
 
 				$tokens[ $key ]->set_default( true );
+				$tokens[ $key ]->save();
 				break;
 			}
 		}
 
-		// persist the updated tokens
-		return $this->update_tokens( $user_id, $tokens );
+		return $token->delete();
 	}
 
 

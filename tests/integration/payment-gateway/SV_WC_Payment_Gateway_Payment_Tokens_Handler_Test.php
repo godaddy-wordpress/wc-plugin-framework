@@ -27,6 +27,75 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler_Test extends \Codeception\Tes
 
 
 	/**
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::delete_token()
+	 */
+	public function test_delete_token() {
+
+		$token_id = '12345';
+
+		// store a test token
+		$token = new Framework\SV_WC_Payment_Gateway_Payment_Token( $token_id, [
+			'type' => 'credit_card',
+			'last_four' => '1111',
+			'exp_month' => '01',
+			'exp_year'  => '20',
+			'card_type' => 'visa',
+			'default'   => true,
+		] );
+
+		$this->get_handler()->update_tokens( 1, [ $token_id => $token ] );
+
+		$core_token_id = $token->get_woocommerce_payment_token()->get_id();
+
+		$this->get_handler()->delete_token( 1, $token );
+
+		$this->assertNull( $this->get_handler()->get_token( 1, $token_id ) );
+		$this->assertNull( \WC_Payment_Tokens::get( $core_token_id ) );
+	}
+
+
+	/**
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::delete_token()
+	 */
+	public function test_delete_token_marks_another_token_as_deafult() {
+
+		$token_id         = '12345';
+		$default_token_id = '45678';
+
+		// store test tokens
+		$tokens = [
+			'12345' => new Framework\SV_WC_Payment_Gateway_Payment_Token( '12345', [
+				'type' => 'credit_card',
+				'last_four' => '1111',
+				'exp_month' => '01',
+				'exp_year'  => '20',
+				'card_type' => 'visa',
+				'default'   => true,
+			] ),
+			'45678' => new Framework\SV_WC_Payment_Gateway_Payment_Token( '45678', [
+				'type' => 'credit_card',
+				'last_four' => '2222',
+				'exp_month' => '01',
+				'exp_year'  => '20',
+				'card_type' => 'visa',
+			] ),
+		];
+
+		$this->get_handler()->update_tokens( 1, $tokens );
+
+		$this->get_handler()->delete_token( 1, $this->get_handler()->get_token( 1, $token_id ) );
+
+		$default_token = $this->get_handler()->get_token( 1, $default_token_id );
+
+		$this->assertTrue( $default_token->is_default() );
+
+		$core_token = $default_token->get_woocommerce_payment_token();
+
+		$this->assertTrue( $core_token->get_is_default() );
+	}
+
+
+	/**
 	 * @see Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::update_tokens()
 	 */
 	public function test_update_tokens() {
