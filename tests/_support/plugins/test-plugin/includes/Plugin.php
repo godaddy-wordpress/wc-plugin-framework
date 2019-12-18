@@ -17,6 +17,10 @@ class Plugin extends Framework\SV_WC_Payment_Gateway_Plugin {
 	/** string the plugin ID */
 	const PLUGIN_ID = 'test_plugin';
 
+	const GATEWAY_ID = 'test_gateway';
+
+	const GATEWAY_CLASS = Gateway::class;
+
 
 	/**
 	 * Constructs the class.
@@ -28,9 +32,15 @@ class Plugin extends Framework\SV_WC_Payment_Gateway_Plugin {
 		parent::__construct(
 			self::PLUGIN_ID,
 			self::VERSION,
-			array(
+			[
 				'text_domain' => 'sv-wc-test-plugin',
-			)
+				'gateways' => [
+					self::GATEWAY_ID => self::GATEWAY_CLASS,
+				],
+				'supports' => [
+					self::FEATURE_CUSTOMER_ID,
+				],
+			]
 		);
 	}
 
@@ -81,4 +91,6 @@ class Plugin extends Framework\SV_WC_Payment_Gateway_Plugin {
 
 		return self::$instance;
 	}
+
+
 }
