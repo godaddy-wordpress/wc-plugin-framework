@@ -397,7 +397,7 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 	 *
 	 * @dataProvider provider_get_enviroment
 	 */
-	public function test_get_environment( $stored_environment, $expected_enviroment ) {
+	public function test_get_environment( $stored_environment, $expected_environment ) {
 
 		$woocommerce_token = $this->get_new_woocommerce_credit_card_token();
 
@@ -410,11 +410,11 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 
 
 	/**
-	 * Provides test data for test_get_enviroment().
+	 * Provides test data for test_get_environment().
 	 *
 	 * @return array
 	 */
-	public function provider_get_enviroment() {
+	public function provider_get_environment() {
 
 		return [
 			'metadata is set'  => [ 'test_environment', 'test_environment' ],
@@ -437,7 +437,7 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 		$tokens_handler = \Codeception\Stub::make(
 			Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::class,
 			[
-				// mock delete_legacy_token() to check that the token enviroment is passed as the third parameter
+				// mock delete_legacy_token() to check that the token environment is passed as the third parameter
 				'delete_legacy_token' => \Codeception\Stub\Expected::once(
 					function( $user_id, $token, $environment_id ) use ( $environment ) {
 						$this->assertSame( $environment, $environment_id );
