@@ -31,29 +31,26 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler_Test extends \Codeception\Tes
 	 */
 	public function test_delete_token() {
 
+		$token_id = '12345';
+
 		// store a test token
-		$framework_token = new Framework\SV_WC_Payment_Gateway_Payment_Token( '12345', [
+		$token = new Framework\SV_WC_Payment_Gateway_Payment_Token( $token_id, [
 			'type' => 'credit_card',
 			'last_four' => '1111',
 			'exp_month' => '01',
 			'exp_year'  => '20',
 			'card_type' => 'visa',
+			'default'   => true,
 		] );
 
-		$this->get_handler()->update_tokens( 1, [ $framework_token->get_id() => $framework_token ] );
+		$this->get_handler()->update_tokens( 1, [ $token_id => $token ] );
 
-		// prepare a mock token with the same ID of the test token
-		$token = \Codeception\Stub::make(
-			Framework\SV_WC_Payment_Gateway_Payment_Token::class,
-			[
-				'get_id' => $framework_token->get_id(),
-				'delete' => \Codeception\Stub\Expected::once(),
-			],
-			$this
-		);
+		$core_token_id = $token->get_woocommerce_payment_token()->get_id();
 
-		// test that the token's delete method is called
 		$this->get_handler()->delete_token( 1, $token );
+
+		$this->assertNull( $this->get_handler()->get_token( 1, $token_id ) );
+		$this->assertNull( \WC_Payment_Tokens::get( $core_token_id ) );
 	}
 
 
