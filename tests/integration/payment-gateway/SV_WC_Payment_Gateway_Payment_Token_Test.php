@@ -424,6 +424,42 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 	}
 
 
+	/**
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::delete()
+	 */
+	public function test_delete_passes_the_token_environment() {
+
+		$woocommerce_token = $this->get_new_woocommerce_credit_card_token();
+		$environment       = 'test_environment';
+
+		$woocommerce_token->add_meta_data( 'environment', $environment );
+
+		$tokens_handler = \Codeception\Stub::make(
+			Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::class,
+			[
+				// mock delete_legacy_token() to check that the token enviroment is passed as the third parameter
+				'delete_legacy_token' => \Codeception\Stub\Expected::once(
+					function( $user_id, $token, $environment_id ) use ( $environment ) {
+						$this->assertSame( $environment, $environment_id );
+					}
+				),
+			],
+			$this
+		);
+
+		$token = \Codeception\Stub::construct(
+			Framework\SV_WC_Payment_Gateway_Payment_Token::class,
+			[ '12345', $woocommerce_token ],
+			[
+				// mock get_tokens_handler() to return a stub
+				'get_tokens_handler' => $tokens_handler,
+			]
+		);
+
+		$token->delete();
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
