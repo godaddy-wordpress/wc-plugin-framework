@@ -90,12 +90,12 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler_Test extends \Codeception\Tes
 
 		$this->assertNull( $this->get_handler()->get_token( 1, $token_id ) );
 
-		$deafult_token = $this->get_handler()->get_token( 1, $default_token_id );
+		$default_token = $this->get_handler()->get_token( 1, $default_token_id );
 
-		$this->assertInstanceOf( Framework\SV_WC_Payment_Gateway_Payment_Token::class, $deafult_token );
-		$this->assertTrue( $deafult_token->is_default() );
+		$this->assertInstanceOf( Framework\SV_WC_Payment_Gateway_Payment_Token::class, $default_token );
+		$this->assertTrue( $default_token->is_default() );
 
-		$core_token = $deafult_token->get_woocommerce_payment_token();
+		$core_token = $default_token->get_woocommerce_payment_token();
 
 		$this->assertTrue( $core_token->get_is_default() );
 	}
