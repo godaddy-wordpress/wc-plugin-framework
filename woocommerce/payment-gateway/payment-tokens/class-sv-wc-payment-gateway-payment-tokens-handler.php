@@ -627,14 +627,14 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$token->set_gateway_id( $this->get_gateway()->get_id() );
 			// TODO: set the environment ID {CW 2019-12-17}
 
-			$token->save();
+			$token_id = $token->save();
 
-			if ( $core_token = $token->get_woocommerce_payment_token() ) {
-				$updated_tokens[] = $core_token->get_token();
+			if ( $token_id ) {
+				$updated_tokens[] = $token_id;
 			}
 		}
 
-		return ! empty( $updated_tokens );
+		return count( $tokens ) === count( $updated_tokens );
 	}
 
 
