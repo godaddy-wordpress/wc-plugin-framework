@@ -355,18 +355,18 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
-	 * Returns the full payment type, ie Visa, MasterCard, American Express,
-	 * Discover, Diners, JCB, eCheck, etc
+	 * Returns the full payment type, ie Visa, MasterCard, American Express, Discover, Diners, JCB, eCheck, etc.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return string the payment type
 	 */
 	public function get_type_full() {
 
 		if ( $this->is_credit_card() ) {
-			$type = $this->get_card_type() ? $this->get_card_type() : 'card';
+			$type = $this->get_card_type()    ?: 'card';
 		} else {
-			$type = $this->get_account_type() ? $this->get_account_type() : 'bank';
+			$type = $this->get_account_type() ?: 'bank';
 		}
 
 		return SV_WC_Payment_Gateway_Helper::payment_type_to_name( $type );
