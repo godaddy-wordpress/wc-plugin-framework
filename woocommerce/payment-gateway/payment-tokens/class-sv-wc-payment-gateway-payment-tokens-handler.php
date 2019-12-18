@@ -412,6 +412,8 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 		if ( is_array( $legacy_tokens ) && isset( $legacy_tokens[ $token->get_id() ] ) ) {
 
+			unset( $this->legacy_tokens[ $environment_id ][ $user_id ][ $token->get_id() ] );
+
 			unset( $legacy_tokens[ $token->get_id() ] );
 
 			$deleted = (bool) update_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), $legacy_tokens );
@@ -686,6 +688,9 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		$legacy_tokens = get_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), true );
 
 		if ( is_array( $legacy_tokens ) && isset( $legacy_tokens[ $token->get_id() ] ) ) {
+
+			// update the cached token
+			$this->legacy_tokens[ $environment_id ][ $user_id ][ $token->get_id() ] = $token;
 
 			$legacy_tokens[ $token->get_id() ] = $token->to_datastore_format();
 
