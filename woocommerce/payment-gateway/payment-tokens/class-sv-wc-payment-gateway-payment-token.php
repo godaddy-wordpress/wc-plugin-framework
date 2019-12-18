@@ -688,7 +688,10 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 			$core_key = array_search( $key, $this->props, false );
 
-			if ( false !== $core_key ) {
+			/** \WC_Payment_Token does not define a set_is_default method */
+			if ( 'is_default' === $core_key ) {
+				$token->set_default( $value );
+			} elseif ( false !== $core_key ) {
 				$token->set_props( [ $core_key => $value ] );
 			} else {
 				$token->update_meta_data( $key, $value, true );
