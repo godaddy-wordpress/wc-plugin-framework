@@ -381,6 +381,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			foreach ( array_keys( $tokens ) as $key ) {
 
 				$tokens[ $key ]->set_default( true );
+				$tokens[ $key ]->save();
 				break;
 			}
 		}
