@@ -44,6 +44,9 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/** @var array|SV_WC_Payment_Gateway_Payment_Token[] array of cached user id to array of SV_WC_Payment_Gateway_Payment_Token token objects */
 	protected $tokens;
 
+	/** @var array cached legacy tokens, by user ID and environment */
+	protected $legacy_tokens;
+
 	/** @var SV_WC_Payment_Gateway gateway instance */
 	protected $gateway;
 
@@ -409,6 +412,8 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 		if ( is_array( $legacy_tokens ) && isset( $legacy_tokens[ $token->get_id() ] ) ) {
 
+			unset( $this->legacy_tokens[ $environment_id ][ $user_id ][ $token->get_id() ] );
+
 			unset( $legacy_tokens[ $token->get_id() ] );
 
 			$deleted = (bool) update_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), $legacy_tokens );
@@ -513,17 +518,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		// gateways that don't support fetching them over an API, as well as the
 		// default token for those that do
 		if ( $user_id ) {
-
-			$_tokens = get_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), true );
-
-			// from database format
-			if ( is_array( $_tokens ) ) {
-				foreach ( $_tokens as $token => $data ) {
-					$tokens[ $token ] = $this->build_token( $token, $data );
-				}
-			}
-
-			$this->tokens[ $environment_id ][ $user_id ] = $tokens;
+			$this->tokens[ $environment_id ][ $user_id ] = $this->get_legacy_tokens( $user_id, $environment_id ); // TODO: replace with core token getter {CW 2019-12-18}
 		}
 
 		// if the payment gateway API supports retrieving tokens directly, do so as it's easier to stay synchronized
@@ -587,6 +582,37 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		do_action( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_payment_tokens_loaded', $this->tokens[ $environment_id ][ $user_id ], $this );
 
 		return $this->tokens[ $environment_id ][ $user_id ];
+	}
+
+
+	/**
+	 * Gets token objects from the legacy user meta data store.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param int $user_id WordPress user ID
+	 * @param null|string $environment_id desired environment ID
+	 * @return SV_WC_Payment_Gateway_Payment_Token[]
+	 */
+	public function get_legacy_tokens( $user_id, $environment_id = null ) {
+
+		if ( null === $environment_id ) {
+			$environment_id = $this->get_environment_id();
+		}
+
+		$this->legacy_tokens[ $environment_id ][ $user_id ] = [];
+
+		$token_data = get_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), true );
+
+		// from database format
+		if ( is_array( $token_data ) ) {
+
+			foreach ( $token_data as $token => $data ) {
+				$this->legacy_tokens[ $environment_id ][ $user_id ][ $token ] = $this->build_token( $token, $data );
+			}
+		}
+
+		return $this->legacy_tokens[ $environment_id ][ $user_id ];
 	}
 
 
@@ -662,6 +688,9 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		$legacy_tokens = get_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), true );
 
 		if ( is_array( $legacy_tokens ) && isset( $legacy_tokens[ $token->get_id() ] ) ) {
+
+			// update the cached token
+			$this->legacy_tokens[ $environment_id ][ $user_id ][ $token->get_id() ] = $token;
 
 			$legacy_tokens[ $token->get_id() ] = $token->to_datastore_format();
 
