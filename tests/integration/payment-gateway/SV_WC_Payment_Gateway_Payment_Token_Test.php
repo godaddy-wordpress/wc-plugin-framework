@@ -399,7 +399,7 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 	 */
 	public function test_get_environment( $stored_environment, $expected_enviroment ) {
 
-		$woocommerce_token = new WC_Payment_Token_CC();
+		$woocommerce_token = $this->get_new_woocommerce_credit_card_token();
 
 		$woocommerce_token->add_meta_data( 'environment', $stored_environment );
 
