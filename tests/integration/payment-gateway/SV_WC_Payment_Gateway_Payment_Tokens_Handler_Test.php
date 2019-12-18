@@ -85,8 +85,6 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler_Test extends \Codeception\Tes
 
 		$this->get_handler()->delete_token( 1, $this->get_handler()->get_token( 1, $token_id ) );
 
-		$this->assertNull( $this->get_handler()->get_token( 1, $token_id ) );
-
 		$default_token = $this->get_handler()->get_token( 1, $default_token_id );
 
 		$this->assertInstanceOf( Framework\SV_WC_Payment_Gateway_Payment_Token::class, $default_token );
