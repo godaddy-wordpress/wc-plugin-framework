@@ -594,6 +594,37 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
+	 * Gets token objects from the legacy user meta data store.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param int $user_id WordPress user ID
+	 * @param null|string $environment_id desired environment ID
+	 * @return SV_WC_Payment_Gateway_Payment_Token[]
+	 */
+	public function get_legacy_tokens( $user_id, $environment_id = null ) {
+
+		if ( null === $environment_id ) {
+			$environment_id = $this->get_environment_id();
+		}
+
+		$this->legacy_tokens[ $environment_id ][ $user_id ] = [];
+
+		$token_data = get_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), true );
+
+		// from database format
+		if ( is_array( $token_data ) ) {
+
+			foreach ( $token_data as $token => $data ) {
+				$this->legacy_tokens[ $environment_id ][ $user_id ][ $token ] = $this->build_token( $token, $data );
+			}
+		}
+
+		return $this->legacy_tokens[ $environment_id ][ $user_id ];
+	}
+
+
+	/**
 	 * Updates the given payment tokens for the identified user, in the database.
 	 *
 	 * @since 1.0.0
