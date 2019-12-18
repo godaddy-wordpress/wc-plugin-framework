@@ -58,6 +58,46 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler_Test extends \Codeception\Tes
 
 
 	/**
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::delete_token()
+	 */
+	public function test_delete_token_marks_another_token_as_deafult() {
+
+		$token_id         = '12345';
+		$default_token_id = '45678';
+
+		// store test tokens
+		$tokens = [
+			'12345' => new Framework\SV_WC_Payment_Gateway_Payment_Token( '12345', [
+				'type' => 'credit_card',
+				'last_four' => '1111',
+				'exp_month' => '01',
+				'exp_year'  => '20',
+				'card_type' => 'visa',
+				'default'   => true,
+			] ),
+			'45678' => new Framework\SV_WC_Payment_Gateway_Payment_Token( '45678', [
+				'type' => 'credit_card',
+				'last_four' => '2222',
+				'exp_month' => '01',
+				'exp_year'  => '20',
+				'card_type' => 'visa',
+			] ),
+		];
+
+		$this->get_handler()->update_tokens( 1, $tokens );
+
+		$this->get_handler()->delete_token( 1, $this->get_handler()->get_token( 1, $token_id ) );
+
+		$this->assertNull( $this->get_handler()->get_token( 1, $token_id ) );
+
+		$deafult_token = $this->get_handler()->get_token( 1, $default_token_id );
+
+		$this->assertInstanceOf( Framework\SV_WC_Payment_Gateway_Payment_Token::class, $deafult_token );
+		$this->assertTrue( $deafult_token->is_default() );
+	}
+
+
+	/**
 	 * @see Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::update_tokens()
 	 */
 	public function test_update_tokens() {
