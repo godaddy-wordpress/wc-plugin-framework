@@ -44,6 +44,9 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/** @var array|SV_WC_Payment_Gateway_Payment_Token[] array of cached user id to array of SV_WC_Payment_Gateway_Payment_Token token objects */
 	protected $tokens;
 
+	/** @var array cached legacy tokens, by user ID and environment */
+	protected $legacy_tokens;
+
 	/** @var SV_WC_Payment_Gateway gateway instance */
 	protected $gateway;
 
