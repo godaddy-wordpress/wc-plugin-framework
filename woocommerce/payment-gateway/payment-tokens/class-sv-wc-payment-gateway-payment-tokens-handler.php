@@ -356,7 +356,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	public function delete_token( $user_id, SV_WC_Payment_Gateway_Payment_Token $token, $environment_id = null ) {
 
 		// default to current environment
-		if ( is_null( $environment_id ) ) {
+		if ( null === $environment_id ) {
 			$environment_id = $this->get_environment_id();
 		}
 
