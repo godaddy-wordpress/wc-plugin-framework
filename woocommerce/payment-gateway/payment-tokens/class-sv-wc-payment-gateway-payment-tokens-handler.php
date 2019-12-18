@@ -379,6 +379,8 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			}
 		}
 
+		$token->delete();
+
 		// persist the updated tokens
 		return $this->update_tokens( $user_id, $tokens );
 	}
