@@ -196,7 +196,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token the token
 	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
-	 * @return bool|int false if token not added, user meta ID if added
+	 * @return bool
 	 */
 	public function add_token( $user_id, $token, $environment_id = null ) {
 
@@ -596,9 +596,9 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @since 1.0.0
 	 *
 	 * @param int $user_id WP user ID
-	 * @param array $tokens array of tokens
+	 * @param SV_WC_Payment_Gateway_Payment_Token[] $tokens array of tokens
 	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
-	 * @return string updated user meta id
+	 * @return bool
 	 */
 	public function update_tokens( $user_id, $tokens, $environment_id = null ) {
 
@@ -613,8 +613,28 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		// clear the transient
 		$this->clear_transient( $user_id );
 
-		// persist the updated tokens to the user meta
-		return update_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), $this->format_for_db( $tokens ) );
+		$updated_tokens = [];
+
+		foreach ( $tokens as $token ) {
+
+			// skip invalid objects
+			if ( ! $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
+				continue;
+			}
+
+			// ensure the vital properties are set
+			$token->set_user_id( $user_id );
+			$token->set_gateway_id( $this->get_gateway()->get_id() );
+			// TODO: set the environment ID {CW 2019-12-17}
+
+			$token_id = $token->save();
+
+			if ( $token_id ) {
+				$updated_tokens[] = $token_id;
+			}
+		}
+
+		return count( $tokens ) === count( $updated_tokens );
 	}
 
 

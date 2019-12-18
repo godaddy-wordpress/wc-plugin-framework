@@ -27,6 +27,27 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler_Test extends \Codeception\Tes
 
 
 	/**
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::update_tokens()
+	 */
+	public function test_update_tokens() {
+
+		$tokens = [
+			new Framework\SV_WC_Payment_Gateway_Payment_Token( '12345', [
+				'type' => 'credit_card',
+				'last_four' => '1111',
+				'exp_month' => '01',
+				'exp_year'  => '20',
+				'card_type' => 'visa',
+			] )
+		];
+
+		$this->get_handler()->update_tokens( 1, $tokens );
+
+		$this->assertIsArray( \WC_Payment_Tokens::get_customer_tokens( 1, 'test_gateway' ) );
+	}
+
+
+	/**
 	 * @see Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::get_user_meta_name()
 	 *
 	 * @dataProvider provider_get_user_meta_name
