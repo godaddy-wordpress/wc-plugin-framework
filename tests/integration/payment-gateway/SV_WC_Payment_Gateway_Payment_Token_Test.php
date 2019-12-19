@@ -30,6 +30,18 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 
 
 	/**
+	 * Provides test data for test_read_sets_token_type()
+	 */
+	public function provider_read_sets_token_type() {
+
+		return [
+			'credit_card' => [ new WC_Payment_Token_CC(), 'credit_card' ],
+			'echeck'      => [ new WC_Payment_Token_ECheck(), 'echeck' ],
+		];
+	}
+
+
+	/**
 	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::get_id()
 	 */
 	public function test_get_id() {
