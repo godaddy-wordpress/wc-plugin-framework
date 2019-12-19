@@ -96,6 +96,22 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler_Test extends \Codeception\Tes
 
 
 	/**
+	 * Provides test data for test_get_tokens_retrieves_core_tokens()
+	 *
+	 * @return array
+	 */
+	public function provider_get_tokens() {
+
+		$token_id = '12345';
+
+		return [
+			'same environment'      => [ 'test_environment_a', 'test_environment_a', [ $token_id ] ],
+			'different environment' => [ 'test_environment_a', 'test_environment_b', [] ],
+		];
+	}
+
+
+	/**
 	 * @see Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::update_tokens()
 	 */
 	public function test_update_tokens() {
