@@ -671,7 +671,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 			// update legacy token to mark it migrated
 			if ( $tokens_handler = $this->get_tokens_handler() ) {
-				$tokens_handler->update_legacy_token( $this->get_user_id(), $this );
+				$tokens_handler->update_legacy_token( $this->get_user_id(), $this, $this->get_environment() ?: null );
 			}
 		}
 
