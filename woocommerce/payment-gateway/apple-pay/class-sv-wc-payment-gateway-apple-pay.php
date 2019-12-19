@@ -134,7 +134,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 				$result = $this->get_processing_gateway()->process_payment( $order->get_id() );
 			}
 
-			if ( isset( $result['result'] ) && 'success' !== $result['result'] ) {
+			if ( ! isset( $result['result'] ) || 'success' !== $result['result'] ) {
 				throw new SV_WC_Payment_Gateway_Exception( 'Gateway processing error.' );
 			}
 
