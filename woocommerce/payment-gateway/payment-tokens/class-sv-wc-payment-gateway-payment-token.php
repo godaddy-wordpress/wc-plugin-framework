@@ -65,6 +65,13 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	];
 
 	/**
+	 * @var array key-value array to map WooCommerce core token meta data to framework token `$data` keys
+	 */
+	private $meta_data = [
+		'environment' => 'environment',
+	];
+
+	/**
 	 * @var null|\WC_Payment_Token WooCommerce core token corresponding to the framework token, if set
 	 */
 	private $token;
@@ -84,6 +91,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * exp_month    - string optional expiration month MM (credit card only)
 	 * exp_year     - string optional expiration year YYYY (credit card only)
 	 * account_type - string one of 'checking' or 'savings' (checking gateway only)
+	 * environment  - string optional gateway environment id
 	 *
 	 * @since 1.0.0
 	 *
@@ -568,14 +576,11 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * @since 5.6.0-dev.1
 	 *
-	 * @return string|null
+	 * @return string
 	 */
 	public function get_environment() {
 
-		$token       = $this->get_woocommerce_payment_token();
-		$environment = $token ? $token->get_meta( 'environment' ) : '';
-
-		return $environment ?: null;
+		return isset( $this->data['environment'] ) && is_string( $this->data['environment'] ) ? $this->data['environment'] : '';
 	}
 
 
@@ -655,6 +660,10 @@ class SV_WC_Payment_Gateway_Payment_Token {
 				$framework_key = $this->props[ $core_key ];
 
 				$this->data[ $framework_key ] = $value;
+
+			} elseif ( array_key_exists( $core_key, $this->meta_data ) ) {
+
+				$this->data[ $this->meta_data[ $core_key ] ] = $value;
 			}
 		}
 	}
@@ -688,7 +697,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 			// update legacy token to mark it migrated
 			if ( $tokens_handler = $this->get_tokens_handler() ) {
-				$tokens_handler->update_legacy_token( $this->get_user_id(), $this );
+				$tokens_handler->update_legacy_token( $this->get_user_id(), $this, $this->get_environment() ?: null );
 			}
 		}
 
@@ -742,7 +751,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		// delete legacy token in WordPress user meta table
 		if ( $tokens_handler = $this->get_tokens_handler() ) {
-			$tokens_handler->delete_legacy_token( $this->get_user_id(), $this, $this->get_environment() );
+			$tokens_handler->delete_legacy_token( $this->get_user_id(), $this, $this->get_environment() ?: null );
 		}
 
 		return $deleted;
