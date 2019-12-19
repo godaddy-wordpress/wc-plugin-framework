@@ -410,6 +410,22 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 
 
 	/**
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::get_environment()
+	 *
+	 * @dataProvider provider_get_environment
+	 */
+	public function test_get_environment_set_using_legacy_data( $stored_environment, $expected_environment ) {
+
+		$token = new Framework\SV_WC_Payment_Gateway_Payment_Token( '12345', array_merge(
+			$this->get_legacy_credit_card_token_data(),
+			[ 'environment' => $stored_environment ]
+		) );
+
+		$this->assertSame( $expected_environment, $token->get_environment() );
+	}
+
+
+	/**
 	 * Provides test data for test_get_environment().
 	 *
 	 * @return array
