@@ -442,21 +442,22 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 
 	/**
 	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::delete()
+	 *
+	 * @dataProvider provider_passes_the_token_environment
 	 */
-	public function test_delete_passes_the_token_environment() {
+	public function test_delete_passes_the_token_environment( $stored_environment, $expected_environment ) {
 
 		$woocommerce_token = $this->get_new_woocommerce_credit_card_token();
-		$environment       = 'test_environment';
 
-		$woocommerce_token->add_meta_data( 'environment', $environment );
+		$woocommerce_token->add_meta_data( 'environment', $stored_environment );
 
 		$tokens_handler = \Codeception\Stub::make(
 			Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::class,
 			[
 				// mock delete_legacy_token() to check that the token environment is passed as the third parameter
 				'delete_legacy_token' => \Codeception\Stub\Expected::once(
-					function( $user_id, $token, $environment_id ) use ( $environment ) {
-						$this->assertSame( $environment, $environment_id );
+					function( $user_id, $token, $environment_id ) use ( $expected_environment ) {
+						$this->assertSame( $expected_environment, $environment_id );
 					}
 				),
 			],
