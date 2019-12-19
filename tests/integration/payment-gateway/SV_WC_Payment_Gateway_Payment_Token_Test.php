@@ -489,6 +489,38 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 	}
 
 
+	/**
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::save()
+	 *
+	 * @dataProvider provider_passes_the_token_environment
+	 */
+	public function test_save_passes_the_token_environment( $stored_environment, $expected_environment ) {
+
+		$user_meta_name = sv_wc_test_plugin()->get_gateway()->get_payment_tokens_handler()->get_user_meta_name( $expected_environment );
+		$token_id       = '12345';
+
+		$data = array_merge(
+			$this->get_legacy_credit_card_token_data(),
+			[ 'environment' => $stored_environment ]
+		);
+
+		// store fake legacy token data to be updated
+		update_user_meta( $data['user_id'], $user_meta_name, [ $token_id => $data ] );
+
+		// we will set a different expiry month to check legacy token data was modified
+		$exp_month = $data['exp_month'] === '07' ? '08' : '07';
+
+		$token = new Framework\SV_WC_Payment_Gateway_Payment_Token( $token_id, $data );
+
+		$token->set_exp_month( $exp_month );
+		$token->save();
+
+		$stored_tokens = get_user_meta( $data['user_id'], $user_meta_name, true );
+
+		$this->assertEquals( $exp_month, $stored_tokens[ $token_id ]['exp_month'] );
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
