@@ -484,6 +484,26 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 
 
 	/**
+	 * Gets legacy credit card token array data, as it would exist in user meta.
+	 *
+	 * @return array
+	 */
+	private function get_legacy_credit_card_token_data() {
+
+		return [
+			'type'       => 'credit_card',
+			'user_id'    => 1,
+			'gateway_id' => 'test_gateway',
+			'default'    => true,
+			'last_four'  => '1111',
+			'card_type'  => Framework\SV_WC_Payment_Gateway_Helper::CARD_TYPE_VISA,
+			'exp_month'  => '01',
+			'exp_year'   => '2020',
+		];
+	}
+
+
+	/**
 	 * Gets a new eCheck payment token object.
 	 *
 	 * @return Framework\SV_WC_Payment_Gateway_Payment_Token
