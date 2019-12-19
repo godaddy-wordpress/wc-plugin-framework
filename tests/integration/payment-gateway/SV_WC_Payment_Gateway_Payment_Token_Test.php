@@ -476,6 +476,18 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 	}
 
 
+	/**
+	 * Provides test data for test_delete_passes_the_token_environment() and test_save_passes_the_token_environment()
+	 */
+	public function provider_passes_the_token_environment() {
+
+		return [
+			'environment set'     => [ 'test_environment', 'test_environment' ],
+			'environment not set' => [ '', null ]
+		];
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
