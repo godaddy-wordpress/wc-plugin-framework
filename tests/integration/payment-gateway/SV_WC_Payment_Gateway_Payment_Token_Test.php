@@ -30,6 +30,20 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 
 
 	/**
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::read()
+	 *
+	 * @dataProvider provider_read_sets_token_type
+	 */
+	public function test_read_sets_token_type( $core_token, $expected_type ) {
+
+		$token = new Framework\SV_WC_Payment_Gateway_Payment_Token( '12345', $core_token );
+
+		$this->assertEquals( $expected_type, $token->get_type() );
+		$this->assertTrue( $token->{"is_$expected_type"}() );
+	}
+
+
+	/**
 	 * Provides test data for test_read_sets_token_type()
 	 */
 	public function provider_read_sets_token_type() {
