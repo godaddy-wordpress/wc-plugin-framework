@@ -395,7 +395,7 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 	/**
 	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::get_environment()
 	 *
-	 * @dataProvider provider_get_enviroment
+	 * @dataProvider provider_get_environment
 	 */
 	public function test_get_environment( $stored_environment, $expected_environment ) {
 
