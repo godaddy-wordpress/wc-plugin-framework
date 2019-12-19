@@ -553,14 +553,11 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * @since 5.6.0-dev.1
 	 *
-	 * @return string|null
+	 * @return string
 	 */
 	public function get_environment() {
 
-		$token       = $this->get_woocommerce_payment_token();
-		$environment = $token ? $token->get_meta( 'environment' ) : '';
-
-		return $environment ?: null;
+		return isset( $this->data['environment'] ) && is_string( $this->data['environment'] ) ? $this->data['environment'] : '';
 	}
 
 
