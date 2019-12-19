@@ -524,7 +524,23 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		// gateways that don't support fetching them over an API, as well as the
 		// default token for those that do
 		if ( $user_id ) {
-			$this->tokens[ $environment_id ][ $user_id ] = $this->get_legacy_tokens( $user_id, $environment_id ); // TODO: replace with core token getter {CW 2019-12-18}
+
+			$core_tokens = \WC_Payment_Tokens::get_customer_tokens( $user_id, $this->get_gateway()->get_id() );
+
+			if ( is_array( $core_tokens ) ) {
+
+				foreach ( $core_tokens as $core_token ) {
+
+					if ( $environment_id === $core_token->get_meta( 'environment' ) ) {
+						$tokens[ $core_token->get_token() ] = $this->build_token( $core_token->get_token(), $core_token );
+					}
+				}
+			}
+
+			/** TODO: remove when legacy tokens are added to the result of \WC_Payment_Tokens::get_customer_tokens() using a filter {WV 2019-12-19} */
+			$tokens = $tokens + $this->get_legacy_tokens( $user_id, $environment_id );
+
+			$this->tokens[ $environment_id ][ $user_id ] = $tokens;
 		}
 
 		// if the payment gateway API supports retrieving tokens directly, do so as it's easier to stay synchronized
