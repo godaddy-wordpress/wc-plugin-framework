@@ -57,7 +57,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 		'gateway_id'   => 'gateway_id',
 		'user_id'      => 'user_id',
 		'is_default'   => 'default',
-		'type'         => 'type',
 		'last4'        => 'last_four',
 		'expiry_year'  => 'exp_year',
 		'expiry_month' => 'exp_month',
