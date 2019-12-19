@@ -65,6 +65,13 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	];
 
 	/**
+	 * @var array key-value array to map WooCommerce core token meta data to framework token `$data` keys
+	 */
+	private $meta_data = [
+		'environment' => 'environment',
+	];
+
+	/**
 	 * @var null|\WC_Payment_Token WooCommerce core token corresponding to the framework token, if set
 	 */
 	private $token;
