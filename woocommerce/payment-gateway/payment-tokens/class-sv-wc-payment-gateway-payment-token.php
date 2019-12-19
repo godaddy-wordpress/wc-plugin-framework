@@ -637,6 +637,10 @@ class SV_WC_Payment_Gateway_Payment_Token {
 				$framework_key = $this->props[ $core_key ];
 
 				$this->data[ $framework_key ] = $value;
+
+			} elseif ( array_key_exists( $core_key, $this->meta_data ) ) {
+
+				$this->data[ $this->meta_data[ $core_key ] ] = $value;
 			}
 		}
 	}
