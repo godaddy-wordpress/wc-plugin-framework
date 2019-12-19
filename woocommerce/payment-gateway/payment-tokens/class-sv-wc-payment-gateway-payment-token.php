@@ -643,6 +643,13 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		unset( $token_data['meta_data'] );
 
+		/** default to 'echeck' if core token is not an instance of \WC_Payment_Token_CC */
+		if ( $core_token instanceof \WC_Payment_Token_CC ) {
+			$this->data['type'] = 'credit_card';
+		} else {
+			$this->data['type'] = 'echeck';
+		}
+
 		foreach ( $meta_data as $meta_datum ) {
 			$token_data[ $meta_datum->key ] = $meta_datum->value;
 		}
