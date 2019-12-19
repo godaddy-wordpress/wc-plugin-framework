@@ -405,7 +405,7 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 
 		$token = new Framework\SV_WC_Payment_Gateway_Payment_Token( '12345', $woocommerce_token );
 
-		$this->assertSame( $expected_enviroment, $token->get_environment() );
+		$this->assertSame( $expected_environment, $token->get_environment() );
 	}
 
 
