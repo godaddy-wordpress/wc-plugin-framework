@@ -470,16 +470,7 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 	 */
 	private function get_new_credit_card_token() {
 
-		return new Framework\SV_WC_Payment_Gateway_Payment_Token( '12345', [
-			'type'       => 'credit_card',
-			'user_id'    => 1,
-			'gateway_id' => 'test_gateway',
-			'default'    => true,
-			'last_four'  => '1111',
-			'card_type'  => Framework\SV_WC_Payment_Gateway_Helper::CARD_TYPE_VISA,
-			'exp_month'  => '01',
-			'exp_year'   => '2020',
-		] );
+		return new Framework\SV_WC_Payment_Gateway_Payment_Token( '12345', $this->get_legacy_credit_card_token_data() );
 	}
 
 
