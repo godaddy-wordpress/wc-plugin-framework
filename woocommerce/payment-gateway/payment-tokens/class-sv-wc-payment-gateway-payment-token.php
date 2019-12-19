@@ -84,6 +84,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * exp_month    - string optional expiration month MM (credit card only)
 	 * exp_year     - string optional expiration year YYYY (credit card only)
 	 * account_type - string one of 'checking' or 'savings' (checking gateway only)
+	 * environment  - string optional gateway environment id
 	 *
 	 * @since 1.0.0
 	 *
