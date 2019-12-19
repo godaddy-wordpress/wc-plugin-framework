@@ -722,7 +722,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		// delete legacy token in WordPress user meta table
 		if ( $tokens_handler = $this->get_tokens_handler() ) {
-			$tokens_handler->delete_legacy_token( $this->get_user_id(), $this, $this->get_environment() );
+			$tokens_handler->delete_legacy_token( $this->get_user_id(), $this, $this->get_environment() ?: null );
 		}
 
 		return $deleted;
