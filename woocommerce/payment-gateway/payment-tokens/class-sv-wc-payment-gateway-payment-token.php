@@ -564,6 +564,22 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Gets the gateway environment that this token is associated with.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @return string|null
+	 */
+	public function get_environment() {
+
+		$token       = $this->get_woocommerce_payment_token();
+		$environment = $token ? $token->get_meta( 'environment' ) : '';
+
+		return $environment ?: null;
+	}
+
+
+	/**
 	 * Gets the WooCommerce core payment token object related to this framework token.
 	 *
 	 * @since 5.6.0-dev.1
@@ -726,7 +742,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		// delete legacy token in WordPress user meta table
 		if ( $tokens_handler = $this->get_tokens_handler() ) {
-			$tokens_handler->delete_legacy_token( $this->get_user_id(), $this );
+			$tokens_handler->delete_legacy_token( $this->get_user_id(), $this, $this->get_environment() );
 		}
 
 		return $deleted;

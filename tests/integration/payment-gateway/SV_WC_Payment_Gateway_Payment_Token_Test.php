@@ -392,6 +392,74 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 	}
 
 
+	/**
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::get_environment()
+	 *
+	 * @dataProvider provider_get_environment
+	 */
+	public function test_get_environment( $stored_environment, $expected_environment ) {
+
+		$woocommerce_token = $this->get_new_woocommerce_credit_card_token();
+
+		$woocommerce_token->add_meta_data( 'environment', $stored_environment );
+
+		$token = new Framework\SV_WC_Payment_Gateway_Payment_Token( '12345', $woocommerce_token );
+
+		$this->assertSame( $expected_environment, $token->get_environment() );
+	}
+
+
+	/**
+	 * Provides test data for test_get_environment().
+	 *
+	 * @return array
+	 */
+	public function provider_get_environment() {
+
+		return [
+			'metadata is set'  => [ 'test_environment', 'test_environment' ],
+			'empty metadata'   => [ '', null ],
+			'metadata not set' => [ null, null ],
+		];
+	}
+
+
+	/**
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::delete()
+	 */
+	public function test_delete_passes_the_token_environment() {
+
+		$woocommerce_token = $this->get_new_woocommerce_credit_card_token();
+		$environment       = 'test_environment';
+
+		$woocommerce_token->add_meta_data( 'environment', $environment );
+
+		$tokens_handler = \Codeception\Stub::make(
+			Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::class,
+			[
+				// mock delete_legacy_token() to check that the token environment is passed as the third parameter
+				'delete_legacy_token' => \Codeception\Stub\Expected::once(
+					function( $user_id, $token, $environment_id ) use ( $environment ) {
+						$this->assertSame( $environment, $environment_id );
+					}
+				),
+			],
+			$this
+		);
+
+		$token = \Codeception\Stub::construct(
+			Framework\SV_WC_Payment_Gateway_Payment_Token::class,
+			[ '12345', $woocommerce_token ],
+			[
+				// mock get_tokens_handler() to return a stub
+				'get_tokens_handler' => $tokens_handler,
+			]
+		);
+
+		$token->delete();
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
@@ -430,6 +498,29 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 			'last_four'    => '1111',
 			'account_type' => 'checking',
 		] );
+	}
+
+
+	/**
+	 * Gets a new \WC_Payment_Token_CC object.
+	 *
+	 * @return \WC_Payment_Token_CC
+	 */
+	private function get_new_woocommerce_credit_card_token() {
+
+		$token = new WC_Payment_Token_CC();
+
+		$token->set_user_id( 1 );
+		$token->set_token( '12345' );
+		$token->set_last4( '1111' );
+		$token->set_expiry_year( '2022' );
+		$token->set_expiry_month( '08' );
+		$token->set_card_type( Framework\SV_WC_Payment_Gateway_Helper::CARD_TYPE_VISA );
+
+		/** necessary so that \WC_Data::get_data() returns the props set above */
+		$token->save();
+
+		return $token;
 	}
 
 
