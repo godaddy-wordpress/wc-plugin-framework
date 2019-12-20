@@ -558,13 +558,20 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	public function get_woocommerce_payment_token() {
 
-		if ( ! $this->token instanceof \WC_Payment_Token && $this->get_user_id() ) {
+		if ( ! $this->token instanceof \WC_Payment_Token && $this->get_user_id() && $this->get_gateway_id() ) {
 
 			// see if there is already a token with this ID saved for this customer and gateway
-			$saved_tokens = \WC_Payment_Tokens::get_customer_tokens( $this->get_user_id(), $this->get_gateway_id() );
+			// purposefully do not use \WC_Payment_Tokens::get_customer_tokens() here to avoid an infinite loop since we filter its results
+			$saved_tokens = \WC_Payment_Tokens::get_tokens(
+				[
+					'user_id'    => $this->get_user_id(),
+					'gateway_id' => $this->get_gateway_id(),
+				]
+			);;
 
 			foreach ( $saved_tokens as $saved_token ) {
 
+				// use a matching token if found in core tokens
 				if ( $saved_token->get_token() === $this->get_id() ) {
 					$this->token = $saved_token;
 					break;
