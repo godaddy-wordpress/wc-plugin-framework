@@ -592,13 +592,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	public function get_woocommerce_payment_token() {
 
-		$token = null;
-
-		if ( $this->token instanceof \WC_Payment_Token ) {
-
-			$token = $this->token;
-
-		} else {
+		if ( ! $this->token instanceof \WC_Payment_Token && $this->get_user_id() ) {
 
 			// see if there is already a token with this ID saved for this customer and gateway
 			$saved_tokens = \WC_Payment_Tokens::get_customer_tokens( $this->get_user_id(), $this->get_gateway_id() );
@@ -606,13 +600,13 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			foreach ( $saved_tokens as $saved_token ) {
 
 				if ( $saved_token->get_token() === $this->get_id() ) {
-					$token = $saved_token;
+					$this->token = $saved_token;
 					break;
 				}
 			}
 		}
 
-		return $token;
+		return $this->token;
 	}
 
 
@@ -729,7 +723,11 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			}
 		}
 
-		return $token->save();
+		$result = $token->save();
+
+		$this->token = $token;
+
+		return $result;
 	}
 
 
