@@ -279,13 +279,18 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$environment_id = $this->get_environment_id();
 		}
 
-		$tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
+		$token->set_gateway_id( $this->get_gateway()->get_id() );
+		$token->set_user_id( $user_id );
+		$token->set_environment( $environment_id );
 
-		if ( isset( $tokens[ $token->get_id() ] ) ) {
-			$tokens[ $token->get_id() ] = $token;
+		$saved = $token->save();
+
+		// if saved, update the local cache
+		if ( $saved ) {
+			$this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] = $token;
 		}
 
-		return $this->update_tokens( $user_id, $tokens, $environment_id );
+		return $saved;
 	}
 
 
