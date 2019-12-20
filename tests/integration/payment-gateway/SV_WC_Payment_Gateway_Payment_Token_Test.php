@@ -56,6 +56,23 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 
 
 	/**
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::read()
+	 *
+	 * @dataProvider provider_read_sets_core_token_metadata
+	 */
+	public function test_read_sets_core_token_metadata( $meta_key, $meta_value, $method_name ) {
+
+		$core_token = $this->get_new_woocommerce_credit_card_token();
+
+		$core_token->add_meta_data( $meta_key, $meta_value );
+
+		$token = new Framework\SV_WC_Payment_Gateway_Payment_Token( '12345', $core_token );
+
+		$this->assertEquals( $meta_value, $token->{$method_name}() );
+	}
+
+
+	/**
 	 * Provides test data for test_read_sets_core_token_metadata()
 	 */
 	public function provider_read_sets_core_token_metadata() {
