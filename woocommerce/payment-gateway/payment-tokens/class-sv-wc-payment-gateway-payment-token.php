@@ -136,22 +136,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Gets the payment token string.
 	 *
-	 * @since 1.0.0
-	 * @deprecated 4.0.0
-	 *
-	 * @return string payment token string
-	 */
-	public function get_token() {
-
-		wc_deprecated_function( __METHOD__, '4.0.0', __CLASS__ . '::get_id()' );
-
-		return $this->get_id();
-	}
-
-
-	/**
-	 * Gets the payment token string.
-	 *
 	 * @since 4.0.0
 	 *
 	 * @return string payment token string
