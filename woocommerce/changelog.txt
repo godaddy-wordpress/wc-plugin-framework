@@ -3,6 +3,8 @@
 2019.nn.nn - version 5.6.0-dev.1
  * Tweak - Migrate payment tokens to be compatible with WC core payment tokens
  * Fix - Fix a JavaScript error when instantiating a class that hasn't been loaded
+ * Fix - `SV_WC_Payment_Gateway_Apple_Pay::process_payment()` now throws an exception if the result returned by the processing gateway doesn't indicate whether the transaction was successful or not
+ * Fix - Update `SV_WC_Payment_Gateway_Direct::process_payment()` to cover for and edge case in which `SV_WC_Payment_Gateway_Direct::do_transaction()` fails without throwing an exception
 
 2019.11.14 - version 5.5.1
  * Tweak - Refactor Apple Pay order creation to support the same filters and actions that are fired during regular checkout
