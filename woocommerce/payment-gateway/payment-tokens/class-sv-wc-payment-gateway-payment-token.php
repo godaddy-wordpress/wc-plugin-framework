@@ -256,22 +256,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Determines if this payment token represents an eCheck.
 	 *
-	 * @since 1.0.0
-	 * @deprecated since 4.0.0
-	 *
-	 * @return bool
-	 */
-	public function is_check() {
-
-		wc_deprecated_function( __METHOD__, '4.0.0', __CLASS__ . '::is_echeck()' );
-
-		return $this->is_echeck();
-	}
-
-
-	/**
-	 * Determines if this payment token represents an eCheck.
-	 *
 	 * @since 4.0.0
 	 *
 	 * @return bool
