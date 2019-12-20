@@ -199,7 +199,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token the token
 	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
-	 * @return bool
+	 * @return int
 	 */
 	public function add_token( $user_id, $token, $environment_id = null ) {
 
@@ -208,21 +208,31 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$environment_id = $this->get_environment_id();
 		}
 
-		// get existing tokens
-		$tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
-
 		// if this token is set as active, mark all others as false
 		if ( $token->is_default() ) {
-			foreach ( array_keys( $tokens ) as $key ) {
-				$tokens[ $key ]->set_default( false );
+
+			$existing_tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
+
+			foreach ( $existing_tokens as $existing_token ) {
+				$existing_token->set_default( false );
+				$existing_token->save();
 			}
+
+			$this->tokens[ $environment_id ][ $user_id ] = $existing_tokens;
 		}
 
-		// add the new token
-		$tokens[ $token->get_id() ] = $token;
+		$token->set_gateway_id( $this->get_gateway()->get_id() );
+		$token->set_user_id( $user_id );
+		$token->set_environment( $environment_id );
 
-		// persist the updated tokens
-		return $this->update_tokens( $user_id, $tokens, $environment_id );
+		$saved = $token->save();
+
+		// if saved, update the local cache
+		if ( $saved ) {
+			$this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] = $token;
+		}
+
+		return $saved;
 	}
 
 
