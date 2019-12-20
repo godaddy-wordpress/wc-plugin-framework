@@ -97,20 +97,18 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		// if no gateway ID specified (getting all tokens), or this gateway is specified
 		if ( empty( $tokens ) && ( ! $gateway_id || $gateway_id === $this->get_gateway()->get_id() ) ) {
 
+			// migrate any legacy tokens that haven't already been migrated
 			foreach ( $this->get_legacy_tokens( $customer_id ) as $legacy_token ) {
 
-				$data = $legacy_token->to_datastore_format();
+				if ( ! $legacy_token->get_woocommerce_payment_token() ) {
 
-				if ( ! empty( $data['migrated'] ) ) {
-					continue;
-				}
+					$legacy_token->set_gateway_id( $this->get_gateway()->get_id() );
+					$legacy_token->set_user_id( $customer_id );
+					$legacy_token->set_environment( $this->get_environment_id() );
 
-				if ( $legacy_token->save() ) {
-
-					$tokens[] = $legacy_token->get_woocommerce_payment_token();
-
-					// mark the legacy token as migrated
-					$this->update_legacy_token( $customer_id, $legacy_token, null, true );
+					if ( $legacy_token->save() ) {
+						$tokens[ $legacy_token->get_id() ] = $legacy_token;
+					}
 				}
 			}
 		}
@@ -619,9 +617,6 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 					}
 				}
 			}
-
-			/** TODO: remove when legacy tokens are added to the result of \WC_Payment_Tokens::get_customer_tokens() using a filter {WV 2019-12-19} */
-			$tokens = $tokens + $this->get_legacy_tokens( $user_id, $environment_id );
 
 			$this->tokens[ $environment_id ][ $user_id ] = $tokens;
 		}
