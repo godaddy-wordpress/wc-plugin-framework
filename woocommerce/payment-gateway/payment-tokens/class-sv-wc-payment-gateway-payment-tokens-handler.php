@@ -95,21 +95,36 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	public function add_legacy_tokens_to_customer_payment_tokens( $tokens, $customer_id, $gateway_id ) {
 
 		// if no gateway ID specified (getting all tokens), or this gateway is specified
-		if ( empty( $tokens ) && ( ! $gateway_id || $gateway_id === $this->get_gateway()->get_id() ) ) {
+		if ( $gateway_id === $this->get_gateway()->get_id() && ! $this->user_legacy_tokens_migrated( $customer_id ) ) {
+
+			$legacy_tokens   = $this->get_legacy_tokens( $customer_id );
+			$migrated_tokens = 0;
 
 			// migrate any legacy tokens that haven't already been migrated
-			foreach ( $this->get_legacy_tokens( $customer_id ) as $legacy_token ) {
+			foreach ( $legacy_tokens as $legacy_token ) {
 
-				if ( ! $legacy_token->get_woocommerce_payment_token() ) {
+				if ( ! $legacy_token->is_migrated() ) {
 
 					$legacy_token->set_gateway_id( $this->get_gateway()->get_id() );
 					$legacy_token->set_user_id( $customer_id );
 					$legacy_token->set_environment( $this->get_environment_id() );
 
 					if ( $legacy_token->save() ) {
+
 						$tokens[ $legacy_token->get_id() ] = $legacy_token;
+
+						$migrated_tokens++;
+
+						$legacy_token->set_migrated( true );
+
+						$this->update_legacy_token( $customer_id, $legacy_token );
 					}
 				}
+			}
+
+			// if all of the tokens were successfully migrated, flag the user for no further migrations
+			if ( count( $legacy_tokens ) === $migrated_tokens ) {
+				$this->set_user_legacy_tokens_migrated( $customer_id );
 			}
 		}
 
@@ -1121,6 +1136,43 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	protected function get_gateway() {
 
 		return $this->gateway;
+	}
+
+
+	/**
+	 * Determines whether a user's tokens have been migrated.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param int $user_id WordPress user ID
+	 * @param string|null $environment_id environment ID
+	 * @return bool
+	 */
+	public function user_legacy_tokens_migrated( $user_id, $environment_id = null ) {
+
+		if ( null === $environment_id ) {
+			$environment_id = $this->get_environment_id();
+		}
+
+		return 'yes' === get_user_meta( $user_id, $this->get_user_meta_name( $environment_id ) . '_migrated', true );
+	}
+
+
+	/**
+	 * Marks a user as having their tokens migrated.
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param int $user_id WordPress user ID
+	 * @param string|null $environment_id environment ID
+	 */
+	public function set_user_legacy_tokens_migrated( $user_id, $environment_id = null ) {
+
+		if ( null === $environment_id ) {
+			$environment_id = $this->get_environment_id();
+		}
+
+		update_user_meta( $user_id, $this->get_user_meta_name( $environment_id ) . '_migrated', 'yes' );
 	}
 
 
