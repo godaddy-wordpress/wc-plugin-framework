@@ -408,6 +408,9 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 					break;
 				}
 			}
+
+			// delete the legacy token data now that the token has been removed
+			$this->delete_legacy_token( $user_id, $token, $environment_id );
 		}
 
 		return $deleted;
