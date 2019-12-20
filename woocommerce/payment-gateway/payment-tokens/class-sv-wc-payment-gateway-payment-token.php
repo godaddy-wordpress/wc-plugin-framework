@@ -136,22 +136,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Gets the payment token string.
 	 *
-	 * @since 1.0.0
-	 * @deprecated 4.0.0
-	 *
-	 * @return string payment token string
-	 */
-	public function get_token() {
-
-		wc_deprecated_function( __METHOD__, '4.0.0', __CLASS__ . '::get_id()' );
-
-		return $this->get_id();
-	}
-
-
-	/**
-	 * Gets the payment token string.
-	 *
 	 * @since 4.0.0
 	 *
 	 * @return string payment token string
@@ -256,22 +240,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Determines if this payment token represents an eCheck.
 	 *
-	 * @since 1.0.0
-	 * @deprecated since 4.0.0
-	 *
-	 * @return bool
-	 */
-	public function is_check() {
-
-		wc_deprecated_function( __METHOD__, '4.0.0', __CLASS__ . '::is_echeck()' );
-
-		return $this->is_echeck();
-	}
-
-
-	/**
-	 * Determines if this payment token represents an eCheck.
-	 *
 	 * @since 4.0.0
 	 *
 	 * @return bool
@@ -322,24 +290,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function set_card_type( $card_type ) {
 
 		$this->data['card_type'] = $card_type;
-	}
-
-
-	/**
-	 * Determines the credit card type from the full account number.
-	 *
-	 * @since 1.0.0
-	 * @deprecated 4.0.0
-	 * @see SV_WC_Payment_Gateway_Helper::card_type_from_account_number()
-	 *
-	 * @param string $account_number the credit card account number
-	 * @return string the credit card type
-	 */
-	public static function type_from_account_number( $account_number ) {
-
-		wc_deprecated_function( __METHOD__, '4.0.0', __CLASS__, '::card_type_from_account_number()' );
-
-		return SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $account_number );
 	}
 
 
