@@ -56,6 +56,16 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 
 
 	/**
+	 * Provides test data for test_read_sets_core_token_metadata()
+	 */
+	public function provider_read_sets_core_token_metadata() {
+		return [
+			'nickname' => [ 'nickname', 'personal card', 'get_nickname' ],
+		];
+	}
+
+
+	/**
 	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::get_id()
 	 */
 	public function test_get_id() {
