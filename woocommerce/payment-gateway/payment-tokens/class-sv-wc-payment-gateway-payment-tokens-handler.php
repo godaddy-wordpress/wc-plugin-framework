@@ -106,7 +106,11 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 				}
 
 				if ( $legacy_token->save() ) {
+
 					$tokens[] = $legacy_token->get_woocommerce_payment_token();
+
+					// mark the legacy token as migrated
+					$this->update_legacy_token( $customer_id, $legacy_token, null, true );
 				}
 			}
 		}
