@@ -67,6 +67,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * @var array key-value array to map WooCommerce core token meta data to framework token `$data` keys
 	 */
 	private $meta_data = [
+		'nickname'    => 'nickname',
 		'environment' => 'environment',
 	];
 
