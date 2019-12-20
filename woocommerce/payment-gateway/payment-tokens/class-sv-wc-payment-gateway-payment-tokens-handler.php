@@ -378,33 +378,39 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$environment_id = $this->get_environment_id();
 		}
 
-		// get existing tokens
-		$tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
-
-		if ( ! isset( $tokens[ $token->get_id() ] ) ) {
-			return false;
-		}
-
-		unset( $tokens[ $token->get_id() ] );
-
-		// delete token from local cache
-		unset( $this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] );
-
-		// clear the transient
+		// always clear the transient
 		$this->clear_transient( $user_id );
 
-		// if the deleted token was the default token, make another one the new default
-		if ( $token->is_default() ) {
+		$is_default = $token->is_default();
+		$deleted    = $token->delete();
 
-			foreach ( array_keys( $tokens ) as $key ) {
+		if ( $deleted ) {
 
-				$tokens[ $key ]->set_default( true );
-				$tokens[ $key ]->save();
-				break;
+			// delete token from local cache if successful
+			unset( $this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] );
+
+			// if the deleted token was the default token, make another one the new default
+			if ( $is_default ) {
+
+				foreach ( $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) ) as $existing_token ) {
+
+					if ( $existing_token->get_id() === $token->get_id() ) {
+						continue;
+					}
+
+					// set the first as default and bail
+					$existing_token->set_default( true );
+					$existing_token->save();
+
+					// update the local cache
+					$this->tokens[ $environment_id ][ $user_id ][ $existing_token->get_id() ] = $existing_token;
+
+					break;
+				}
 			}
 		}
 
-		return $token->delete();
+		return $deleted;
 	}
 
 
