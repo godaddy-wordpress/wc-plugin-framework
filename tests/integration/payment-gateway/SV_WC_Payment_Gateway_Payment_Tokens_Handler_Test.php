@@ -96,6 +96,59 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler_Test extends \Codeception\Tes
 
 
 	/**
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::get_tokens()
+	 *
+	 * @dataProvider provider_get_tokens
+	 */
+	public function test_get_tokens_retrieves_core_tokens( $token_environment, $requested_environment, array $found_tokens_ids ) {
+
+		// store a test core token
+		$core_token = new WC_Payment_Token_CC();
+		$user_id    = 1;
+
+		$core_token->set_user_id( $user_id );
+		$core_token->set_gateway_id( sv_wc_test_plugin()->get_gateway()->get_id() );
+		$core_token->set_token( '12345' );
+		$core_token->set_last4( '1111' );
+		$core_token->set_expiry_year( '2022' );
+		$core_token->set_expiry_month( '08' );
+		$core_token->set_card_type( Framework\SV_WC_Payment_Gateway_Helper::CARD_TYPE_VISA );
+
+		$core_token->add_meta_data( 'environment', $token_environment );
+
+		$core_token->save();
+
+		// use a new instance of the payment tokens handler to bypass the handler's internal cache
+		$handler = new Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler( sv_wc_test_plugin()->get_gateway() );
+
+		$tokens = $handler->get_tokens( $user_id, [ 'environment_id' => $requested_environment ] );
+
+		$this->assertEquals( array_keys( $tokens ), $found_tokens_ids );
+
+		/** test that found tokens are instances of Framework\SV_WC_Payment_Gateway_Payment_Token */
+		foreach ( $found_tokens_ids as $found_token_id ) {
+			$this->assertInstanceOf( Framework\SV_WC_Payment_Gateway_Payment_Token::class, $tokens[ $found_token_id ] );
+		}
+	}
+
+
+	/**
+	 * Provides test data for test_get_tokens_retrieves_core_tokens()
+	 *
+	 * @return array
+	 */
+	public function provider_get_tokens() {
+
+		$token_id = '12345';
+
+		return [
+			'same environment'      => [ 'test_environment_a', 'test_environment_a', [ $token_id ] ],
+			'different environment' => [ 'test_environment_a', 'test_environment_b', [] ],
+		];
+	}
+
+
+	/**
 	 * @see Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::update_tokens()
 	 */
 	public function test_update_tokens() {
