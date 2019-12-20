@@ -109,7 +109,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		} else {
 
-			if ( isset( $data['type'] ) && 'credit_card' == $data['type'] ) {
+			if ( isset( $data['type'] ) && 'credit_card' === $data['type'] ) {
 
 				// normalize the provided card type to adjust for possible abbreviations if set
 				if ( isset( $data['card_type'] ) && $data['card_type'] ) {
@@ -649,7 +649,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * @since 5.6.0-dev.1
 	 *
-	 * @retur int ID of the token saved as returned by {@see \WC_Payment_Token::save()}
+	 * @return int ID of the token saved as returned by {@see \WC_Payment_Token::save()}
 	 */
 	public function save() {
 
@@ -699,7 +699,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * @since 5.6.0-dev.1
 	 *
 	 * @param bool $force_delete argument mapped to {@see \WC_Data::delete()}
-	 * @return bool whether a token was deleted (note: it will not evaluate deletion of legacy data)
+	 * @return bool
 	 */
 	public function delete( $force_delete = false ) {
 
