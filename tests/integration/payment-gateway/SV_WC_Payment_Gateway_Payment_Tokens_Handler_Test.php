@@ -123,7 +123,6 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler_Test extends \Codeception\Tes
 		$token = $this->get_handler()->get_token( 1, $token->get_id() );
 
 		$this->assertEquals( '02', $token->get_exp_month() );
->>>>>>> ch24992/remove-token-object-logic
 	}
 
 
