@@ -129,7 +129,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			$this->data = $data;
 		}
 
-		$this->id = $id;
+		$this->id = (string) $id;
 	}
 
 
