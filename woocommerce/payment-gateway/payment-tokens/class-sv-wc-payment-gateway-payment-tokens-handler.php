@@ -751,7 +751,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			// ensure the vital properties are set
 			$token->set_user_id( $user_id );
 			$token->set_gateway_id( $this->get_gateway()->get_id() );
-			// TODO: set the environment ID {CW 2019-12-17}
+			$token->set_environment( $environment_id );
 
 			$token_id = $token->save();
 
