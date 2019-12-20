@@ -663,14 +663,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			} elseif ( $this->is_echeck() ) {
 				$token = new \WC_Payment_Token_ECheck();
 			}
-
-			// mark the token as migrated
-			$this->data['migrated'] = true;
-
-			// update legacy token to mark it migrated
-			if ( $tokens_handler = $this->get_tokens_handler() ) {
-				$tokens_handler->update_legacy_token( $this->get_user_id(), $this, $this->get_environment() ?: null );
-			}
 		}
 
 		$token->set_token( $this->get_id() );
@@ -700,12 +692,9 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
-	 * Deletes the token from the database.
-	 *
-	 * Also deletes the token from the legacy user meta.
+	 * Deletes the associated WooCommerce core token from the database, if any.
 	 *
 	 * @see \WC_Payment_Token::delete()
-	 * @see SV_WC_Payment_Gateway_Payment_Tokens_Handler::delete_legacy_token()
 	 *
 	 * @since 5.6.0-dev.1
 	 *
@@ -721,43 +710,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			$deleted = $token->delete( $force_delete );
 		}
 
-		// delete legacy token in WordPress user meta table
-		if ( $tokens_handler = $this->get_tokens_handler() ) {
-			$tokens_handler->delete_legacy_token( $this->get_user_id(), $this, $this->get_environment() ?: null );
-		}
-
 		return $deleted;
-	}
-
-
-	/**
-	 * Gets the gateway tokens handler.
-	 *
-	 * @since 5.6.0-dev.1
-	 *
-	 * @return SV_WC_Payment_Gateway_Payment_Tokens_Handler|null
-	 */
-	protected function get_tokens_handler() {
-
-		$handler    = null;
-		$gateway_id = $this->get_gateway_id();
-
-		if ( ! empty( $gateway_id ) ) {
-
-			$gateways = WC()->payment_gateways()->payment_gateways();
-
-			if ( $gateways && isset( $gateways[ $gateway_id ] ) ) {
-
-				$gateway = $gateways[ $gateway_id ];
-
-				if ( $gateway instanceof SV_WC_Payment_Gateway ) {
-
-					$handler = $gateway->get_payment_tokens_handler();
-				}
-			}
-		}
-
-		return $handler;
 	}
 
 
