@@ -27,32 +27,6 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler_Test extends \Codeception\Tes
 
 
 	/**
-	 * @see Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::add_legacy_tokens_to_customer_payment_tokens()
-	 */
-	public function test_add_legacy_tokens_to_customer_payment_tokens_filter() {
-
-		$handler = new Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler( sv_wc_test_plugin()->get_gateway() );
-
-		// add fake user meta
-		update_user_meta( 1, $handler->get_user_meta_name(), [
-			'12345' => $this->get_legacy_token_data(),
-			'67890' => $this->get_legacy_token_data(),
-		] );
-
-		$tokens = \WC_Payment_Tokens::get_customer_tokens( 1, sv_wc_test_plugin()->get_gateway()->get_id() );
-
-		$this->assertCount( 2, $tokens );
-
-		$this->assertTrue( $handler->user_legacy_tokens_migrated( 1 ) );
-
-		// ensure the tokens aren't re-migrated
-		$tokens = \WC_Payment_Tokens::get_customer_tokens( 1, sv_wc_test_plugin()->get_gateway()->get_id() );
-
-		$this->assertCount( 2, $tokens );
-	}
-
-
-	/**
 	 * @see Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::add_token()
 	 */
 	public function test_add_token() {

@@ -63,72 +63,6 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		$this->gateway = $gateway;
 
 		$this->environment_id = $gateway->get_environment();
-
-		// add the action & filter hooks
-		$this->add_hooks();
-	}
-
-
-	/**
-	 * Adds the action & filter hooks.
-	 *
-	 * @since x.y.z
-	 */
-	protected function add_hooks() {
-
-		add_filter( 'woocommerce_get_customer_payment_tokens', [ $this, 'add_legacy_tokens_to_customer_payment_tokens' ], 10, 3 );
-	}
-
-
-	/**
-	 * Migrates legacy tokens to the core token data store and adds them to the return.
-	 *
-	 * @internal
-	 *
-	 * @since x.y.z
-	 *
-	 * @param \WC_Payment_Token[] $tokens core tokens
-	 * @param int $customer_id WordPress user ID
-	 * @param string $gateway_id payment gateway ID for which to get the tokens
-	 * @return \WC_Payment_Token[]
-	 */
-	public function add_legacy_tokens_to_customer_payment_tokens( $tokens, $customer_id, $gateway_id ) {
-
-		// if no gateway ID specified (getting all tokens), or this gateway is specified
-		if ( $gateway_id === $this->get_gateway()->get_id() && ! $this->user_legacy_tokens_migrated( $customer_id ) ) {
-
-			$legacy_tokens   = $this->get_legacy_tokens( $customer_id );
-			$migrated_tokens = 0;
-
-			// migrate any legacy tokens that haven't already been migrated
-			foreach ( $legacy_tokens as $legacy_token ) {
-
-				if ( ! $legacy_token->is_migrated() ) {
-
-					$legacy_token->set_gateway_id( $this->get_gateway()->get_id() );
-					$legacy_token->set_user_id( $customer_id );
-					$legacy_token->set_environment( $this->get_environment_id() );
-
-					if ( $legacy_token->save() ) {
-
-						$tokens[ $legacy_token->get_id() ] = $legacy_token;
-
-						$migrated_tokens++;
-
-						$legacy_token->set_migrated( true );
-
-						$this->update_legacy_token( $customer_id, $legacy_token );
-					}
-				}
-			}
-
-			// if all of the tokens were successfully migrated, flag the user for no further migrations
-			if ( count( $legacy_tokens ) === $migrated_tokens ) {
-				$this->set_user_legacy_tokens_migrated( $customer_id );
-			}
-		}
-
-		return $tokens;
 	}
 
 
@@ -630,6 +564,40 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 					if ( $environment_id === $core_token->get_meta( 'environment' ) ) {
 						$tokens[ $core_token->get_token() ] = $this->build_token( $core_token->get_token(), $core_token );
 					}
+				}
+			}
+
+			// migrate legacy tokens if necessary
+			if ( ! $this->user_legacy_tokens_migrated( $user_id ) ) {
+
+				$legacy_tokens   = $this->get_legacy_tokens( $user_id );
+				$migrated_tokens = 0;
+
+				// migrate any legacy tokens that haven't already been migrated
+				foreach ( $legacy_tokens as $legacy_token ) {
+
+					if ( ! isset( $tokens[ $legacy_token->get_id() ] ) && ! $legacy_token->is_migrated() ) {
+
+						$legacy_token->set_gateway_id( $this->get_gateway()->get_id() );
+						$legacy_token->set_user_id( $user_id );
+						$legacy_token->set_environment( $environment_id );
+
+						if ( $legacy_token->save() ) {
+
+							$tokens[ $legacy_token->get_id() ] = $legacy_token;
+
+							$migrated_tokens++;
+
+							$legacy_token->set_migrated( true );
+
+							$this->update_legacy_token( $user_id, $legacy_token );
+						}
+					}
+				}
+
+				// if all of the tokens were successfully migrated, flag the user for no further migrations
+				if ( count( $legacy_tokens ) === $migrated_tokens ) {
+					$this->set_user_legacy_tokens_migrated( $user_id );
 				}
 			}
 
