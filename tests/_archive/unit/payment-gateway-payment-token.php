@@ -132,7 +132,7 @@ class Payment_Gateway_Payment_Token extends Test_Case {
 
 
 	/**
-	 * Tests false for \SV_WC_Payment_Gateway_Payment_Token::is_check()
+	 * Tests false for \SV_WC_Payment_Gateway_Payment_Token::is_echeck()
 	 *
 	 * @since 4.5.0
 	 */
