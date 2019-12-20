@@ -687,7 +687,13 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			}
 		}
 
-		return $token->save();
+		$saved = $token->save();
+
+		if ( $saved ) {
+			$this->token = $token;
+		}
+
+		return $saved;
 	}
 
 
