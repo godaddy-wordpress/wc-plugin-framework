@@ -229,7 +229,10 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 		// if saved, update the local cache
 		if ( $saved ) {
+
 			$this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] = $token;
+
+			$this->clear_transient( $user_id );
 		}
 
 		return $saved;
@@ -287,7 +290,10 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 		// if saved, update the local cache
 		if ( $saved ) {
+
 			$this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] = $token;
+
+			$this->clear_transient( $user_id );
 		}
 
 		return $saved;
