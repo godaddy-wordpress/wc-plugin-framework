@@ -536,6 +536,20 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Sets the gateway environment that this token is associated with.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param string $value environment to set
+	 * @return string
+	 */
+	public function set_environment( $value ) {
+
+		$this->data['environment'] = $value;
+	}
+
+
+	/**
 	 * Gets the WooCommerce core payment token object related to this framework token.
 	 *
 	 * @since 5.6.0-dev.1

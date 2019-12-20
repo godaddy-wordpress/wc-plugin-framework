@@ -499,83 +499,15 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 
 
 	/**
-	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::delete()
-	 *
-	 * @dataProvider provider_passes_the_token_environment
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::set_environment()
 	 */
-	public function test_delete_passes_the_token_environment( $stored_environment, $expected_environment ) {
+	public function test_set_environment() {
 
-		$woocommerce_token = $this->get_new_woocommerce_credit_card_token();
+		$token = $this->get_new_credit_card_token();
 
-		$woocommerce_token->add_meta_data( 'environment', $stored_environment );
+		$token->set_environment( 'test' );
 
-		$tokens_handler = \Codeception\Stub::make(
-			Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler::class,
-			[
-				// mock delete_legacy_token() to check that the token environment is passed as the third parameter
-				'delete_legacy_token' => \Codeception\Stub\Expected::once(
-					function( $user_id, $token, $environment_id ) use ( $expected_environment ) {
-						$this->assertSame( $expected_environment, $environment_id );
-					}
-				),
-			],
-			$this
-		);
-
-		$token = \Codeception\Stub::construct(
-			Framework\SV_WC_Payment_Gateway_Payment_Token::class,
-			[ '12345', $woocommerce_token ],
-			[
-				// mock get_tokens_handler() to return a stub
-				'get_tokens_handler' => $tokens_handler,
-			]
-		);
-
-		$token->delete();
-	}
-
-
-	/**
-	 * Provides test data for test_delete_passes_the_token_environment() and test_save_passes_the_token_environment()
-	 */
-	public function provider_passes_the_token_environment() {
-
-		return [
-			'environment set'     => [ 'test_environment', 'test_environment' ],
-			'environment not set' => [ '', null ]
-		];
-	}
-
-
-	/**
-	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::save()
-	 *
-	 * @dataProvider provider_passes_the_token_environment
-	 */
-	public function test_save_passes_the_token_environment( $stored_environment, $expected_environment ) {
-
-		$user_meta_name = sv_wc_test_plugin()->get_gateway()->get_payment_tokens_handler()->get_user_meta_name( $expected_environment );
-		$token_id       = '12345';
-
-		$data = array_merge(
-			$this->get_legacy_credit_card_token_data(),
-			[ 'environment' => $stored_environment ]
-		);
-
-		// store fake legacy token data to be updated
-		update_user_meta( $data['user_id'], $user_meta_name, [ $token_id => $data ] );
-
-		// we will set a different expiry month to check legacy token data was modified
-		$exp_month = $data['exp_month'] === '07' ? '08' : '07';
-
-		$token = new Framework\SV_WC_Payment_Gateway_Payment_Token( $token_id, $data );
-
-		$token->set_exp_month( $exp_month );
-		$token->save();
-
-		$stored_tokens = get_user_meta( $data['user_id'], $user_meta_name, true );
-
-		$this->assertEquals( $exp_month, $stored_tokens[ $token_id ]['exp_month'] );
+		$this->assertEquals( 'test', $token->get_environment() );
 	}
 
 
