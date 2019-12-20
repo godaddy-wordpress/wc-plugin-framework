@@ -91,6 +91,10 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 		$token = $this->get_new_credit_card_token();
 
 		$this->assertEquals( '12345', $token->get_id() );
+
+		$token = $this->get_new_credit_card_token( 12345 );
+
+		$this->assertIsString( $token->get_id() );
 	}
 
 
@@ -581,11 +585,12 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 	/**
 	 * Gets a new credit card payment token object.
 	 *
+	 * @param string|int $token_id a token id (normally a string), will default to "12345"
 	 * @return Framework\SV_WC_Payment_Gateway_Payment_Token
 	 */
-	private function get_new_credit_card_token() {
+	private function get_new_credit_card_token( $token_id = '12345' ) {
 
-		return new Framework\SV_WC_Payment_Gateway_Payment_Token( '12345', $this->get_legacy_credit_card_token_data() );
+		return new Framework\SV_WC_Payment_Gateway_Payment_Token( $token_id, $this->get_legacy_credit_card_token_data() );
 	}
 
 
