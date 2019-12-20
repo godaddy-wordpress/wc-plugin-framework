@@ -67,7 +67,9 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * @var array key-value array to map WooCommerce core token meta data to framework token `$data` keys
 	 */
 	private $meta_data = [
-		'environment' => 'environment',
+		'nickname'     => 'nickname',
+		'billing_hash' => 'billing_hash',
+		'environment'  => 'environment',
 	];
 
 	/**
@@ -107,7 +109,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		} else {
 
-			if ( isset( $data['type'] ) && 'credit_card' == $data['type'] ) {
+			if ( isset( $data['type'] ) && 'credit_card' === $data['type'] ) {
 
 				// normalize the provided card type to adjust for possible abbreviations if set
 				if ( isset( $data['card_type'] ) && $data['card_type'] ) {
@@ -127,23 +129,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			$this->data = $data;
 		}
 
-		$this->id = $id;
-	}
-
-
-	/**
-	 * Gets the payment token string.
-	 *
-	 * @since 1.0.0
-	 * @deprecated 4.0.0
-	 *
-	 * @return string payment token string
-	 */
-	public function get_token() {
-
-		wc_deprecated_function( __METHOD__, '4.0.0', __CLASS__ . '::get_id()' );
-
-		return $this->get_id();
+		$this->id = (string) $id;
 	}
 
 
@@ -254,22 +240,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Determines if this payment token represents an eCheck.
 	 *
-	 * @since 1.0.0
-	 * @deprecated since 4.0.0
-	 *
-	 * @return bool
-	 */
-	public function is_check() {
-
-		wc_deprecated_function( __METHOD__, '4.0.0', __CLASS__ . '::is_echeck()' );
-
-		return $this->is_echeck();
-	}
-
-
-	/**
-	 * Determines if this payment token represents an eCheck.
-	 *
 	 * @since 4.0.0
 	 *
 	 * @return bool
@@ -320,24 +290,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	public function set_card_type( $card_type ) {
 
 		$this->data['card_type'] = $card_type;
-	}
-
-
-	/**
-	 * Determines the credit card type from the full account number.
-	 *
-	 * @since 1.0.0
-	 * @deprecated 4.0.0
-	 * @see SV_WC_Payment_Gateway_Helper::card_type_from_account_number()
-	 *
-	 * @param string $account_number the credit card account number
-	 * @return string the credit card type
-	 */
-	public static function type_from_account_number( $account_number ) {
-
-		wc_deprecated_function( __METHOD__, '4.0.0', __CLASS__, '::card_type_from_account_number()' );
-
-		return SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $account_number );
 	}
 
 
@@ -584,6 +536,20 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Sets the gateway environment that this token is associated with.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param string $value environment to set
+	 * @return string
+	 */
+	public function set_environment( $value ) {
+
+		$this->data['environment'] = $value;
+	}
+
+
+	/**
 	 * Gets the WooCommerce core payment token object related to this framework token.
 	 *
 	 * @since 5.6.0-dev.1
@@ -677,7 +643,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * @since 5.6.0-dev.1
 	 *
-	 * @retur int ID of the token saved as returned by {@see \WC_Payment_Token::save()}
+	 * @return int ID of the token saved as returned by {@see \WC_Payment_Token::save()}
 	 */
 	public function save() {
 
@@ -690,14 +656,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 				$token = new \WC_Payment_Token_CC();
 			} elseif ( $this->is_echeck() ) {
 				$token = new \WC_Payment_Token_ECheck();
-			}
-
-			// mark the token as migrated
-			$this->data['migrated'] = true;
-
-			// update legacy token to mark it migrated
-			if ( $tokens_handler = $this->get_tokens_handler() ) {
-				$tokens_handler->update_legacy_token( $this->get_user_id(), $this, $this->get_environment() ?: null );
 			}
 		}
 
@@ -723,26 +681,25 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			}
 		}
 
-		$result = $token->save();
+		$saved = $token->save();
 
-		$this->token = $token;
+		if ( $saved ) {
+			$this->token = $token;
+		}
 
-		return $result;
+		return $saved;
 	}
 
 
 	/**
-	 * Deletes the token from the database.
-	 *
-	 * Also deletes the token from the legacy user meta.
+	 * Deletes the associated WooCommerce core token from the database, if any.
 	 *
 	 * @see \WC_Payment_Token::delete()
-	 * @see SV_WC_Payment_Gateway_Payment_Tokens_Handler::delete_legacy_token()
 	 *
 	 * @since 5.6.0-dev.1
 	 *
 	 * @param bool $force_delete argument mapped to {@see \WC_Data::delete()}
-	 * @return bool whether a token was deleted (note: it will not evaluate deletion of legacy data)
+	 * @return bool
 	 */
 	public function delete( $force_delete = false ) {
 
@@ -753,43 +710,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			$deleted = $token->delete( $force_delete );
 		}
 
-		// delete legacy token in WordPress user meta table
-		if ( $tokens_handler = $this->get_tokens_handler() ) {
-			$tokens_handler->delete_legacy_token( $this->get_user_id(), $this, $this->get_environment() ?: null );
-		}
-
 		return $deleted;
-	}
-
-
-	/**
-	 * Gets the gateway tokens handler.
-	 *
-	 * @since 5.6.0-dev.1
-	 *
-	 * @return SV_WC_Payment_Gateway_Payment_Tokens_Handler|null
-	 */
-	protected function get_tokens_handler() {
-
-		$handler    = null;
-		$gateway_id = $this->get_gateway_id();
-
-		if ( ! empty( $gateway_id ) ) {
-
-			$gateways = WC()->payment_gateways()->payment_gateways();
-
-			if ( $gateways && isset( $gateways[ $gateway_id ] ) ) {
-
-				$gateway = $gateways[ $gateway_id ];
-
-				if ( $gateway instanceof SV_WC_Payment_Gateway ) {
-
-					$handler = $gateway->get_payment_tokens_handler();
-				}
-			}
-		}
-
-		return $handler;
 	}
 
 

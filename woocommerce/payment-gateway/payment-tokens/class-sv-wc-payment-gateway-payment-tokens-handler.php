@@ -248,7 +248,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token the token
 	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
-	 * @return bool
+	 * @return int
 	 */
 	public function add_token( $user_id, $token, $environment_id = null ) {
 
@@ -257,21 +257,31 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$environment_id = $this->get_environment_id();
 		}
 
-		// get existing tokens
-		$tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
-
 		// if this token is set as active, mark all others as false
 		if ( $token->is_default() ) {
-			foreach ( array_keys( $tokens ) as $key ) {
-				$tokens[ $key ]->set_default( false );
+
+			$existing_tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
+
+			foreach ( $existing_tokens as $existing_token ) {
+				$existing_token->set_default( false );
+				$existing_token->save();
 			}
+
+			$this->tokens[ $environment_id ][ $user_id ] = $existing_tokens;
 		}
 
-		// add the new token
-		$tokens[ $token->get_id() ] = $token;
+		$token->set_gateway_id( $this->get_gateway()->get_id() );
+		$token->set_user_id( $user_id );
+		$token->set_environment( $environment_id );
 
-		// persist the updated tokens
-		return $this->update_tokens( $user_id, $tokens, $environment_id );
+		$saved = $token->save();
+
+		// if saved, update the local cache
+		if ( $saved ) {
+			$this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] = $token;
+		}
+
+		return $saved;
 	}
 
 
@@ -318,13 +328,18 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$environment_id = $this->get_environment_id();
 		}
 
-		$tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
+		$token->set_gateway_id( $this->get_gateway()->get_id() );
+		$token->set_user_id( $user_id );
+		$token->set_environment( $environment_id );
 
-		if ( isset( $tokens[ $token->get_id() ] ) ) {
-			$tokens[ $token->get_id() ] = $token;
+		$saved = $token->save();
+
+		// if saved, update the local cache
+		if ( $saved ) {
+			$this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] = $token;
 		}
 
-		return $this->update_tokens( $user_id, $tokens, $environment_id );
+		return $saved;
 	}
 
 
@@ -412,33 +427,42 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$environment_id = $this->get_environment_id();
 		}
 
-		// get existing tokens
-		$tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
-
-		if ( ! isset( $tokens[ $token->get_id() ] ) ) {
-			return false;
-		}
-
-		unset( $tokens[ $token->get_id() ] );
-
-		// delete token from local cache
-		unset( $this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] );
-
-		// clear the transient
+		// always clear the transient
 		$this->clear_transient( $user_id );
 
-		// if the deleted token was the default token, make another one the new default
-		if ( $token->is_default() ) {
+		$is_default = $token->is_default();
+		$deleted    = $token->delete();
 
-			foreach ( array_keys( $tokens ) as $key ) {
+		if ( $deleted ) {
 
-				$tokens[ $key ]->set_default( true );
-				$tokens[ $key ]->save();
-				break;
+			// delete token from local cache if successful
+			unset( $this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] );
+
+			// if the deleted token was the default token, make another one the new default
+			if ( $is_default ) {
+
+				foreach ( $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) ) as $existing_token ) {
+
+					if ( $existing_token->get_id() === $token->get_id() ) {
+						continue;
+					}
+
+					// set the first as default and bail
+					$existing_token->set_default( true );
+					$existing_token->save();
+
+					// update the local cache
+					$this->tokens[ $environment_id ][ $user_id ][ $existing_token->get_id() ] = $existing_token;
+
+					break;
+				}
 			}
+
+			// delete the legacy token data now that the token has been removed
+			$this->delete_legacy_token( $user_id, $token, $environment_id );
 		}
 
-		return $token->delete();
+		return $deleted;
 	}
 
 
@@ -573,7 +597,23 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		// gateways that don't support fetching them over an API, as well as the
 		// default token for those that do
 		if ( $user_id ) {
-			$this->tokens[ $environment_id ][ $user_id ] = $this->get_legacy_tokens( $user_id, $environment_id ); // TODO: replace with core token getter {CW 2019-12-18}
+
+			$core_tokens = \WC_Payment_Tokens::get_customer_tokens( $user_id, $this->get_gateway()->get_id() );
+
+			if ( is_array( $core_tokens ) ) {
+
+				foreach ( $core_tokens as $core_token ) {
+
+					if ( $environment_id === $core_token->get_meta( 'environment' ) ) {
+						$tokens[ $core_token->get_token() ] = $this->build_token( $core_token->get_token(), $core_token );
+					}
+				}
+			}
+
+			/** TODO: remove when legacy tokens are added to the result of \WC_Payment_Tokens::get_customer_tokens() using a filter {WV 2019-12-19} */
+			$tokens = $tokens + $this->get_legacy_tokens( $user_id, $environment_id );
+
+			$this->tokens[ $environment_id ][ $user_id ] = $tokens;
 		}
 
 		// if the payment gateway API supports retrieving tokens directly, do so as it's easier to stay synchronized
