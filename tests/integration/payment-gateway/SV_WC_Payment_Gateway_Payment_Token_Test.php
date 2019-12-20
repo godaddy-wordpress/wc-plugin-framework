@@ -511,6 +511,19 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 	}
 
 
+	/**
+	 * @see Framework\SV_WC_Payment_Gateway_Payment_Token::is_migrated()
+	 */
+	public function test_is_migrated() {
+
+		$token = $this->get_new_credit_card_token();
+
+		$token->set_migrated( true );
+
+		$this->assertTrue( $token->is_migrated() );
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 

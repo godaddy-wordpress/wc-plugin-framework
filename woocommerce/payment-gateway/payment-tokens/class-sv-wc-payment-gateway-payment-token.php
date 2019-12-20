@@ -541,11 +541,36 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * @since 5.6.0-dev.1
 	 *
 	 * @param string $value environment to set
-	 * @return string
 	 */
 	public function set_environment( $value ) {
 
 		$this->data['environment'] = $value;
+	}
+
+
+	/**
+	 * Determines if this token's data has been migrated to core storage.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @return bool
+	 */
+	public function is_migrated() {
+
+		return ! empty( $this->data['migrated'] );
+	}
+
+
+	/**
+	 * Sets if this token's data has been migrated to core storage.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param bool $value if this token's data has been migrated to core storage
+	 */
+	public function set_migrated( $value ) {
+
+		$this->data['migrated'] = (bool) $value;
 	}
 
 
