@@ -769,9 +769,10 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @param int $user_id WP user ID
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token to update
 	 * @param string|null $environment_id optional environment ID, defaults to plugin current environment
+	 * @param bool $migrated whether the token was migrated to the new datastore
 	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure
 	 */
-	public function update_legacy_token( $user_id, $token, $environment_id = null ) {
+	public function update_legacy_token( $user_id, $token, $environment_id = null, $migrated = false ) {
 
 		$updated = false;
 
@@ -788,6 +789,10 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$this->legacy_tokens[ $environment_id ][ $user_id ][ $token->get_id() ] = $token;
 
 			$legacy_tokens[ $token->get_id() ] = $token->to_datastore_format();
+
+			if ( $migrated ) {
+				$legacy_tokens[ $token->get_id() ]['migrated'] = true;
+			}
 
 			$updated = update_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), $legacy_tokens );
 		}
