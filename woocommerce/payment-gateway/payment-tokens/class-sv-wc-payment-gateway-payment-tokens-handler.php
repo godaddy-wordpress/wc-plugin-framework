@@ -63,6 +63,55 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		$this->gateway = $gateway;
 
 		$this->environment_id = $gateway->get_environment();
+
+		// add the action & filter hooks
+		$this->add_hooks();
+	}
+
+
+	/**
+	 * Adds the action & filter hooks.
+	 *
+	 * @since x.y.z
+	 */
+	protected function add_hooks() {
+
+		add_filter( 'woocommerce_get_customer_payment_tokens', [ $this, 'add_legacy_tokens_to_customer_payment_tokens' ], 10, 3 );
+	}
+
+
+	/**
+	 * Migrates legacy tokens to the core token data store and adds them to the return.
+	 *
+	 * @internal
+	 *
+	 * @since x.y.z
+	 *
+	 * @param \WC_Payment_Token[] $tokens core tokens
+	 * @param int $customer_id WordPress user ID
+	 * @param string $gateway_id payment gateway ID for which to get the tokens
+	 * @return \WC_Payment_Token[]
+	 */
+	public function add_legacy_tokens_to_customer_payment_tokens( $tokens, $customer_id, $gateway_id ) {
+
+		// if no gateway ID specified (getting all tokens), or this gateway is specified
+		if ( empty( $tokens ) && ( ! $gateway_id || $gateway_id === $this->get_gateway()->get_id() ) ) {
+
+			foreach ( $this->get_legacy_tokens( $customer_id ) as $legacy_token ) {
+
+				$data = $legacy_token->to_datastore_format();
+
+				if ( ! empty( $data['migrated'] ) ) {
+					continue;
+				}
+
+				if ( $legacy_token->save() ) {
+					$tokens[] = $legacy_token->get_woocommerce_payment_token();
+				}
+			}
+		}
+
+		return $tokens;
 	}
 
 
