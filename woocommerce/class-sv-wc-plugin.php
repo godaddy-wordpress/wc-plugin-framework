@@ -761,11 +761,12 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Determine if TLS v1.2 is required for API requests.
+	 * Determines if TLS v1.2 is required for API requests.
 	 *
 	 * Subclasses should override this to return true if TLS v1.2 is required.
 	 *
 	 * @since 5.5.2-dev.1
+	 *
 	 * @return bool
 	 */
 	public function require_tls_1_2() {
@@ -797,15 +798,7 @@ abstract class SV_WC_Plugin {
 			}
 		}
 
-		/**
-		 * Filters whether TLS 1.2 is available.
-		 *
-		 * @since 4.7.1
-		 *
-		 * @param bool $is_available whether TLS 1.2 is available
-		 * @param SV_WC_API_Base $api API class instance
-		 */
-		return (bool) apply_filters( 'wc_' . $this->get_id() . '_api_is_tls_1_2_available', $is_available, $this );
+		return $is_available;
 	}
 
 
