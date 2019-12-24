@@ -100,7 +100,7 @@ abstract class SV_WC_API_Base {
 		$start_time = microtime( true );
 
 		// if this API requires TLS v1.2, force it
-		if ( $this->require_tls_1_2() ) {
+		if ( $this->get_plugin()->require_tls_1_2() ) {
 			add_action( 'http_api_curl', array( $this, 'set_tls_1_2_request' ), 10, 3 );
 		}
 
@@ -823,7 +823,7 @@ abstract class SV_WC_API_Base {
 		 * @param bool $is_available whether TLS 1.2 is available
 		 * @param SV_WC_API_Base $api API class instance
 		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_api_is_tls_1_2_available', $this->get_plugin()->is_tls_1_2_available(), $this );
+		return (bool) apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_api_is_tls_1_2_available', $this->get_plugin()->is_tls_1_2_available(), $this );
 	}
 
 
