@@ -3,7 +3,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
-use \SkyVerge\WooCommerce\PluginFramework\v5_5_1 as PluginFramework;
+use \SkyVerge\WooCommerce\PluginFramework\v5_5_2 as PluginFramework;
 
 /**
  * Unit tests for \SV_WC_Payment_Gateway_Helper
