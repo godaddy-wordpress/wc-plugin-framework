@@ -629,7 +629,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					break;
 				}
 
-			} elseif ( ! $this->is_tls_1_2_available() ) {
+			} elseif ( $this->require_tls_1_2() && ! $this->is_tls_1_2_available() ) {
 
 				/* translators: Placeholders: %s - payment gateway name */
 				$message = sprintf( esc_html__( "%s will soon require TLS 1.2 support to process transactions and your server environment may need to be updated. Please contact your hosting provider to confirm that your site can send and receive TLS 1.2 connections and request they make any necessary updates.", 'woocommerce-plugin-framework' ), '<strong>' . $gateway->get_method_title() . '</strong>' );
