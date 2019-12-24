@@ -567,8 +567,39 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 				}
 			}
 
-			/** TODO: remove when legacy tokens are added to the result of \WC_Payment_Tokens::get_customer_tokens() using a filter {WV 2019-12-19} */
-			$tokens = $tokens + $this->get_legacy_tokens( $user_id, $environment_id );
+			// migrate legacy tokens if necessary
+			if ( ! $this->user_legacy_tokens_migrated( $user_id ) ) {
+
+				$legacy_tokens   = $this->get_legacy_tokens( $user_id );
+				$migrated_tokens = 0;
+
+				// migrate any legacy tokens that haven't already been migrated
+				foreach ( $legacy_tokens as $legacy_token ) {
+
+					if ( ! isset( $tokens[ $legacy_token->get_id() ] ) && ! $legacy_token->is_migrated() ) {
+
+						$legacy_token->set_gateway_id( $this->get_gateway()->get_id() );
+						$legacy_token->set_user_id( $user_id );
+						$legacy_token->set_environment( $environment_id );
+
+						if ( $legacy_token->save() ) {
+
+							$tokens[ $legacy_token->get_id() ] = $legacy_token;
+
+							$migrated_tokens++;
+
+							$legacy_token->set_migrated( true );
+
+							$this->update_legacy_token( $user_id, $legacy_token );
+						}
+					}
+				}
+
+				// if all of the tokens were successfully migrated, flag the user for no further migrations
+				if ( count( $legacy_tokens ) === $migrated_tokens ) {
+					$this->set_user_legacy_tokens_migrated( $user_id );
+				}
+			}
 
 			$this->tokens[ $environment_id ][ $user_id ] = $tokens;
 		}
@@ -703,7 +734,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			// ensure the vital properties are set
 			$token->set_user_id( $user_id );
 			$token->set_gateway_id( $this->get_gateway()->get_id() );
-			// TODO: set the environment ID {CW 2019-12-17}
+			$token->set_environment( $environment_id );
 
 			$token_id = $token->save();
 
@@ -726,9 +757,10 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @param int $user_id WP user ID
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token to update
 	 * @param string|null $environment_id optional environment ID, defaults to plugin current environment
+	 * @param bool $migrated whether the token was migrated to the new datastore
 	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure
 	 */
-	public function update_legacy_token( $user_id, $token, $environment_id = null ) {
+	public function update_legacy_token( $user_id, $token, $environment_id = null, $migrated = false ) {
 
 		$updated = false;
 
@@ -745,6 +777,10 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$this->legacy_tokens[ $environment_id ][ $user_id ][ $token->get_id() ] = $token;
 
 			$legacy_tokens[ $token->get_id() ] = $token->to_datastore_format();
+
+			if ( $migrated ) {
+				$legacy_tokens[ $token->get_id() ]['migrated'] = true;
+			}
 
 			$updated = update_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), $legacy_tokens );
 		}
@@ -1068,6 +1104,43 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	protected function get_gateway() {
 
 		return $this->gateway;
+	}
+
+
+	/**
+	 * Determines whether a user's tokens have been migrated.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param int $user_id WordPress user ID
+	 * @param string|null $environment_id environment ID
+	 * @return bool
+	 */
+	public function user_legacy_tokens_migrated( $user_id, $environment_id = null ) {
+
+		if ( null === $environment_id ) {
+			$environment_id = $this->get_environment_id();
+		}
+
+		return 'yes' === get_user_meta( $user_id, $this->get_user_meta_name( $environment_id ) . '_migrated', true );
+	}
+
+
+	/**
+	 * Marks a user as having their tokens migrated.
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param int $user_id WordPress user ID
+	 * @param string|null $environment_id environment ID
+	 */
+	public function set_user_legacy_tokens_migrated( $user_id, $environment_id = null ) {
+
+		if ( null === $environment_id ) {
+			$environment_id = $this->get_environment_id();
+		}
+
+		update_user_meta( $user_id, $this->get_user_meta_name( $environment_id ) . '_migrated', 'yes' );
 	}
 
 
