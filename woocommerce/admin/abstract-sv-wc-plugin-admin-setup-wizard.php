@@ -17,7 +17,7 @@
  * needs please refer to http://www.skyverge.com
  *
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
