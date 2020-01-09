@@ -392,8 +392,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Initializes the plugin admin.
 	 *
-	 * Plugins can override this to set up any handlers after the WordPress
-	 * admin is ready.
+	 * Plugins can override this to set up any handlers after the WordPress admin is ready.
 	 *
 	 * @since 5.2.0
 	 */

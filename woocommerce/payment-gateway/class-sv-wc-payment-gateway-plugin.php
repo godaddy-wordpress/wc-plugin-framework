@@ -198,7 +198,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Initializes the plugin admin.
 	 *
-	 * @internal
 	 * @see SV_WC_Plugin::init_admin()
 	 *
 	 * @since 5.2.0
