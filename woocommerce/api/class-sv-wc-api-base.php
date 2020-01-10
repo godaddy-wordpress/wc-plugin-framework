@@ -100,7 +100,7 @@ abstract class SV_WC_API_Base {
 		$start_time = microtime( true );
 
 		// if this API requires TLS v1.2, force it
-		if ( $this->require_tls_1_2() ) {
+		if ( $this->get_plugin()->require_tls_1_2() ) {
 			add_action( 'http_api_curl', array( $this, 'set_tls_1_2_request' ), 10, 3 );
 		}
 
@@ -794,15 +794,18 @@ abstract class SV_WC_API_Base {
 
 
 	/**
-	 * Determine if TLS v1.2 is required for API requests.
-	 *
-	 * Subclasses should override this to return true if TLS v1.2 is required.
+	 * Determines if TLS v1.2 is required for API requests.
 	 *
 	 * @since 4.4.0
+	 * @deprecated x.y.z
+	 *
 	 * @return bool
 	 */
 	public function require_tls_1_2() {
-		return false;
+
+		wc_deprecated_function( __METHOD__, 'x.y.z', 'SV_WC_Plugin::require_tls_1_2()' );
+
+		return $this->get_plugin()->require_tls_1_2();
 	}
 
 
@@ -815,20 +818,6 @@ abstract class SV_WC_API_Base {
 	 */
 	public function is_tls_1_2_available() {
 
-		// assume availability to avoid notices for unknown SSL types
-		$is_available = true;
-
-		// check the cURL version if installed
-		if ( is_callable( 'curl_version' ) ) {
-
-			$versions = curl_version();
-
-			// cURL 7.34.0 is considered the minimum version that supports TLS 1.2
-			if ( version_compare( $versions['version'], '7.34.0', '<' ) ) {
-				$is_available = false;
-			}
-		}
-
 		/**
 		 * Filters whether TLS 1.2 is available.
 		 *
@@ -837,7 +826,7 @@ abstract class SV_WC_API_Base {
 		 * @param bool $is_available whether TLS 1.2 is available
 		 * @param SV_WC_API_Base $api API class instance
 		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_api_is_tls_1_2_available', $is_available, $this );
+		return (bool) apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_api_is_tls_1_2_available', $this->get_plugin()->is_tls_1_2_available(), $this );
 	}
 
 
