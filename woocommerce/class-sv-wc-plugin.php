@@ -764,7 +764,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * Subclasses should override this to return true if TLS v1.2 is required.
 	 *
-	 * @since x.y.z
+	 * @since 5.5.2
 	 *
 	 * @return bool
 	 */
@@ -777,7 +777,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Determines if TLS 1.2 is available.
 	 *
-	 * @since x.y.z
+	 * @since 5.5.2
 	 *
 	 * @return bool
 	 */
