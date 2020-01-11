@@ -6,6 +6,7 @@
 2020.01.09 - version 5.5.2
  * Fix - `SV_WC_Payment_Gateway_Apple_Pay::process_payment()` now throws an exception if the result returned by the processing gateway doesn't indicate whether the transaction was successful or not
  * Fix - Update `SV_WC_Payment_Gateway_Direct::process_payment()` to cover for and edge case in which `SV_WC_Payment_Gateway_Direct::do_transaction()` fails without throwing an exception
+ * Fix - On WooCommerce 3.9: prevent empty credit card fields from being marked as invalid before the user has entered any data
  * Dev - TLS 1.2 helper methods moved from `SV_WC_API_Base` to `SV_WC_Plugin`
  * Dev - Deprecated `SV_WC_API_Base::require_tls_1_2()`
 
