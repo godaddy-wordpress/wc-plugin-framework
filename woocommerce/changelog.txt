@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2020.nn.nn - version 5.5.3
+2020.01.13 - version 5.5.3
  * Fix - Fix a JavaScript error when instantiating a class that hasn't been loaded
 
 2020.01.09 - version 5.5.2
