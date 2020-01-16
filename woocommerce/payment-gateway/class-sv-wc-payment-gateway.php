@@ -650,13 +650,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Gets the order button text:
 	 *
 	 * Direct gateway: "Place order"
-	 * Redirect/Hosted gateway: "Continue"
+	 * Redirect/Hosted gateway: "Continue to Payment"
 	 *
 	 * @since 4.0.0
 	 */
 	protected function get_order_button_text() {
 
-		$text = $this->is_hosted_gateway() ? esc_html__( 'Continue', 'woocommerce-plugin-framework' ) : esc_html__( 'Place order', 'woocommerce-plugin-framework' );
+		$text = $this->is_hosted_gateway() ? esc_html__( 'Continue to Payment', 'woocommerce-plugin-framework' ) : esc_html__( 'Place order', 'woocommerce-plugin-framework' );
 
 		/**
 		 * Payment Gateway Place Order Button Text Filter.
