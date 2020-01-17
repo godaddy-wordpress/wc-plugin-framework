@@ -314,7 +314,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_terms_notice' ] );
 		} else {
 			add_action( 'woocommerce_before_checkout_form', [ $this, 'render_checkout_button' ], 15 );
-			add_action( 'woocommerce_before_checkout_form', [ $this, 'render_terms_notice' ], 15 );
 		}
 	}
 
@@ -330,10 +329,15 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		<div class="sv-wc-apply-pay-checkout">
 
-			<?php /** translators: Phrase that preceeds the Apple Pay logo, i.e. "Pay with [logo]" */
-			$button_text = __( 'Pay with', 'woocommerce-plugin-framework' );
+			<?php
 
-			$this->render_button(); ?>
+				/** translators: Phrase that preceeds the Apple Pay logo, i.e. "Pay with [logo]" */
+				$button_text = __( 'Pay with', 'woocommerce-plugin-framework' );
+
+				$this->render_button();
+				$this->render_terms_notice();
+
+			?>
 
 			<span class="divider">
 				<?php /** translators: "or" as in "Pay with Apple Pay [or] regular checkout" */
