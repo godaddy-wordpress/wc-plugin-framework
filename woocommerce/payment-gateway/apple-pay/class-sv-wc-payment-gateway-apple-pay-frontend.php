@@ -195,7 +195,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		if ( apply_filters( 'woocommerce_checkout_show_terms', true ) && function_exists( 'wc_terms_and_conditions_checkbox_enabled' ) && wc_terms_and_conditions_checkbox_enabled() ) {
 
 			/** translators: Placeholders: %1$s - [terms] placeholder, will be replaced by terms link */
-			$default_text = __( 'By submitting your payment, you agree to the website %1$s.', 'woocommerce-plugin-framework' );
+			$default_text = __( 'By submitting your payment, you agree to our %1$s.', 'woocommerce-plugin-framework' );
 
 			$text = apply_filters( 'sv_wc_apple_pay_terms_notice', $default_text );
 
@@ -203,7 +203,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 			?>
 			<div class="woocommerce-terms-and-conditions-wrapper">
-				<p><?php echo wp_kses_post( $text ); ?></p>
+				<p><small><?php echo wp_kses_post( $text ); ?></small></p>
 			</div>
 			<?php
 		}
@@ -246,8 +246,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Product_Handler(%s);', json_encode( $args ) ) );
 
-		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_terms_notice' ] );
 		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_button' ] );
+		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_terms_notice' ] );
 	}
 
 
@@ -284,8 +284,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Cart_Handler(%s);', json_encode( $args ) ) );
 
-		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_terms_notice' ] );
 		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_button' ] );
+		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_terms_notice' ] );
 	}
 
 
@@ -310,11 +310,11 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Checkout_Handler(%s);', json_encode( $args ) ) );
 
 		if ( $this->get_plugin()->is_plugin_active( 'woocommerce-checkout-add-ons.php' ) ) {
-			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_terms_notice' ] );
 			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_button' ] );
+			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_terms_notice' ] );
 		} else {
-			add_action( 'woocommerce_before_checkout_form', [ $this, 'render_terms_notice' ], 15 );
 			add_action( 'woocommerce_before_checkout_form', [ $this, 'render_checkout_button' ], 15 );
+			add_action( 'woocommerce_before_checkout_form', [ $this, 'render_terms_notice' ], 15 );
 		}
 	}
 

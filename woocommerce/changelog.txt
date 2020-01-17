@@ -1,7 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2020.nn.nn - version 5.5.4
- * Tweak - Render terms notice before Apple Pay buttons
+ * Tweak - Add terms notice before Apple Pay buttons
 
 2020.01.13 - version 5.5.3
  * Fix - Fix a JavaScript error when instantiating a class that hasn't been loaded
