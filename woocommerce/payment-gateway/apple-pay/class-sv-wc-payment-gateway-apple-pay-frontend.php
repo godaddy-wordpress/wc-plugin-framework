@@ -188,18 +188,29 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 *
 	 * Only displayed if a Terms and conditions page is configured.
 	 *
-	 * @since 5.5.3
+	 * @internal
+	 *
+	 * @since 5.5.4
 	 */
 	public function render_terms_notice() {
 
 		if ( apply_filters( 'woocommerce_checkout_show_terms', true ) && function_exists( 'wc_terms_and_conditions_checkbox_enabled' ) && wc_terms_and_conditions_checkbox_enabled() ) {
 
-			/** translators: Placeholders: %1$s - [terms] placeholder, will be replaced by terms link */
-			$default_text = __( 'By submitting your payment, you agree to our %1$s.', 'woocommerce-plugin-framework' );
+			$default_text = sprintf(
+				/** translators: Placeholders: %1$s - [terms] placeholder, will be replaced by terms link */
+				__( 'By submitting your payment, you agree to our %1$s.', 'woocommerce-plugin-framework' ),
+				'[terms]'
+			);
 
-			$text = apply_filters( 'sv_wc_apple_pay_terms_notice', $default_text );
+			/**
+			 * Allows to filter the notice text, use the [terms] shortcode to insert a link to the terms & conditions page.
+			 *
+			 * @since 5.5.4
+			 * @params string $default_text default notice text
+			 */
+			$text = apply_filters( 'sv_wc_apple_pay_terms_notice_text', $default_text );
 
-			$text = wc_replace_policy_page_link_placeholders( sprintf( $text, '[terms]' ) );
+			$text = wc_replace_policy_page_link_placeholders( $text );
 
 			?>
 			<div class="woocommerce-terms-and-conditions-wrapper">
