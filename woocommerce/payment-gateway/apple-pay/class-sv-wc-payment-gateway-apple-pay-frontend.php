@@ -184,6 +184,33 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 
 	/**
+	 * Renders a notice informing the customer that by purchasing they are accepting the website's terms and conditions.
+	 *
+	 * Only displayed if a Terms and conditions page is configured.
+	 *
+	 * @since 5.5.3
+	 */
+	public function render_terms_notice() {
+
+		if ( apply_filters( 'woocommerce_checkout_show_terms', true ) && function_exists( 'wc_terms_and_conditions_checkbox_enabled' ) && wc_terms_and_conditions_checkbox_enabled() ) {
+
+			/** translators: Placeholders: %1$s - [terms] placeholder, will be replaced by terms link */
+			$default_text = __( 'By submitting your payment, you agree to the website %1$s.', 'woocommerce-plugin-framework' );
+
+			$text = apply_filters( 'sv_wc_apple_pay_terms_notice', $default_text );
+
+			$text = wc_replace_policy_page_link_placeholders( sprintf( $text, '[terms]' ) );
+
+			?>
+			<div class="woocommerce-terms-and-conditions-wrapper">
+				<p><?php echo wp_kses_post( $text ); ?></p>
+			</div>
+			<?php
+		}
+	}
+
+
+	/**
 	 * Initializes Apple Pay on the single product page.
 	 *
 	 * @since 4.7.0
@@ -219,7 +246,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Product_Handler(%s);', json_encode( $args ) ) );
 
-		add_action( 'woocommerce_before_add_to_cart_button', array( $this, 'render_button' ) );
+		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_terms_notice' ] );
+		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_button' ] );
 	}
 
 
@@ -256,7 +284,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Cart_Handler(%s);', json_encode( $args ) ) );
 
-		add_action( 'woocommerce_proceed_to_checkout', array( $this, 'render_button' ) );
+		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_terms_notice' ] );
+		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_button' ] );
 	}
 
 
@@ -281,9 +310,11 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Checkout_Handler(%s);', json_encode( $args ) ) );
 
 		if ( $this->get_plugin()->is_plugin_active( 'woocommerce-checkout-add-ons.php' ) ) {
-			add_action( 'woocommerce_review_order_before_payment', array( $this, 'render_button' ) );
+			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_terms_notice' ] );
+			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_button' ] );
 		} else {
-			add_action( 'woocommerce_before_checkout_form', array( $this, 'render_checkout_button' ), 15 );
+			add_action( 'woocommerce_before_checkout_form', [ $this, 'render_terms_notice' ], 15 );
+			add_action( 'woocommerce_before_checkout_form', [ $this, 'render_checkout_button' ], 15 );
 		}
 	}
 
