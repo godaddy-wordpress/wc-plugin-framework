@@ -215,7 +215,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			$text = wc_replace_policy_page_link_placeholders( $text );
 
 			?>
-			<div class="woocommerce-terms-and-conditions-wrapper">
+			<div class="sv-wc-apple-pay-terms woocommerce-terms-and-conditions-wrapper">
 				<p><small><?php echo wp_kses_post( $text ); ?></small></p>
 			</div>
 			<?php
