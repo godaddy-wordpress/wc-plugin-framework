@@ -343,13 +343,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		<div class="sv-wc-apply-pay-checkout">
 
 			<?php
-
-				/** translators: Phrase that preceeds the Apple Pay logo, i.e. "Pay with [logo]" */
-				$button_text = __( 'Pay with', 'woocommerce-plugin-framework' );
-
 				$this->render_button();
 				$this->render_terms_notice();
-
 			?>
 
 			<span class="divider">
