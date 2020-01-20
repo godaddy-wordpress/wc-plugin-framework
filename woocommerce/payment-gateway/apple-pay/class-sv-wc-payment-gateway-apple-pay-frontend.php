@@ -194,6 +194,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 */
 	public function render_terms_notice() {
 
+		/** This filter is documented by WordPress in templates/checkout/terms.php */
 		if ( apply_filters( 'woocommerce_checkout_show_terms', true ) && function_exists( 'wc_terms_and_conditions_checkbox_enabled' ) && wc_terms_and_conditions_checkbox_enabled() ) {
 
 			$default_text = sprintf(
