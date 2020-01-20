@@ -418,7 +418,6 @@ jQuery( document ).ready ($) ->
 			super( args )
 
 			@buttons = '.sv-wc-apply-pay-checkout'
-			@terms   = '.sv-wc-apply-pay-terms'
 
 
 		attach_update_events: =>
