@@ -206,6 +206,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 			 * Allows to filter the notice text, use the [terms] shortcode to insert a link to the terms & conditions page.
 			 *
 			 * @since 5.5.4
+			 *
 			 * @params string $default_text default notice text
 			 */
 			$text = apply_filters( 'sv_wc_apple_pay_terms_notice_text', $default_text );
