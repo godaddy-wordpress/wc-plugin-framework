@@ -198,8 +198,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		if ( apply_filters( 'woocommerce_checkout_show_terms', true ) && function_exists( 'wc_terms_and_conditions_checkbox_enabled' ) && wc_terms_and_conditions_checkbox_enabled() ) {
 
 			$default_text = sprintf(
-				/** translators: Placeholders: %1$s - [terms] placeholder, will be replaced by terms link */
-				__( 'By submitting your payment, you agree to our %1$s.', 'woocommerce-plugin-framework' ),
+				/** translators: Placeholders: %s - [terms] placeholder, will be replaced by terms link */
+				__( 'By submitting your payment, you agree to our %s.', 'woocommerce-plugin-framework' ),
 				'[terms]'
 			);
 
