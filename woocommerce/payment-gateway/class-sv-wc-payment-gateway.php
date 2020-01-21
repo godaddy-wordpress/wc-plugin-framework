@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_3\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -650,13 +650,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Gets the order button text:
 	 *
 	 * Direct gateway: "Place order"
-	 * Redirect/Hosted gateway: "Continue"
+	 * Redirect/Hosted gateway: "Continue to Payment"
 	 *
 	 * @since 4.0.0
 	 */
 	protected function get_order_button_text() {
 
-		$text = $this->is_hosted_gateway() ? esc_html__( 'Continue', 'woocommerce-plugin-framework' ) : esc_html__( 'Place order', 'woocommerce-plugin-framework' );
+		$text = $this->is_hosted_gateway() ? esc_html__( 'Continue to Payment', 'woocommerce-plugin-framework' ) : esc_html__( 'Place order', 'woocommerce-plugin-framework' );
 
 		/**
 		 * Payment Gateway Place Order Button Text Filter.
