@@ -5,6 +5,10 @@
 	margin: 0 0 1em 0;
 }
 
+.sv-wc-apple-pay-terms {
+	display: none;
+}
+
 @supports ( -webkit-appearance: -apple-pay-button ) {
 
 	.sv-wc-apple-pay-button {
