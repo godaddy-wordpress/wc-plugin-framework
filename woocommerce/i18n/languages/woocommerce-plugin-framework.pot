@@ -1,4 +1,4 @@
-# Copyright (C) 2020
+# Copyright (C) 2020 
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
@@ -115,7 +115,6 @@ msgid "Leave a Review"
 msgstr ""
 
 #: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:789
-#: payment-gateway/class-sv-wc-payment-gateway.php:659
 msgid "Continue"
 msgstr ""
 
@@ -847,11 +846,11 @@ msgstr ""
 msgid "Buy with"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:303
-msgid "Pay with"
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:202
+msgid "By submitting your payment, you agree to our %s."
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:309
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:352
 msgid "or"
 msgstr ""
 
@@ -1379,6 +1378,10 @@ msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway.php:484
 msgid "Drivers license number is missing"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:659
+msgid "Continue to Payment"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway.php:659
