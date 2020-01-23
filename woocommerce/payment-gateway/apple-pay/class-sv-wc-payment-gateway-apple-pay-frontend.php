@@ -201,7 +201,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 				/** translators: Placeholders: %1$s - opening HTML link tag pointing to the terms & conditions page, %2$s closing HTML link tag */
 				__( 'By submitting your payment, you agree to our %1$sterms and conditions%2$s.', 'woocommerce-plugin-framework' ),
 				'<a href="' . esc_url( get_permalink( wc_terms_and_conditions_page_id() ) ) . '" class="sv-wc-apple-pay-terms-and-conditions-link" target="_blank">',
-				'</a>',
+				'</a>'
 			);
 
 			/**
