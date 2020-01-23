@@ -155,9 +155,9 @@ jQuery( document ).ready ($) ->
 			$csc         = $('.js-sv-wc-payment-gateway-credit-card-form-csc').payment('formatCardCVC');
 
 			# trigger a 'change' event for non empty fields only
-			$card_number.trigger( 'change') if $card_number.val().length > 0
-			$expiry.trigger( 'change') if $expiry.val().length > 0
-			$csc.trigger( 'change') if $csc.val().length > 0
+			$card_number.trigger( 'change') if $card_number.val() && $card_number.val().length > 0
+			$expiry.trigger( 'change') if $expiry.val() && $expiry.val().length > 0
+			$csc.trigger( 'change') if $csc.val() && $csc.val().length > 0
 
 			# perform inline validation on credit card inputs
 			$( '.js-sv-wc-payment-gateway-credit-card-form-input' ).on( 'change paste keyup', => this.do_inline_credit_card_validation() )

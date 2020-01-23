@@ -3,6 +3,7 @@
 2020.01.20 - version 5.5.4
  * Tweak - Add a link to the site's terms and conditions page below Apple Pay buttons when available
  * Tweak - Adjust the place order button label for redirect/hosted gateways
+ * Fix - Fix a JavaScript error triggered trying read the 'length' property of an undefined value in format_credit_card_inputs()
 
 2020.01.13 - version 5.5.3
  * Fix - Fix a JavaScript error when instantiating a class that hasn't been loaded
