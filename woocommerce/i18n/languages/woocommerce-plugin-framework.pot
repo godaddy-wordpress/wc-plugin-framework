@@ -847,10 +847,10 @@ msgid "Buy with"
 msgstr ""
 
 #: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:202
-msgid "By submitting your payment, you agree to our %s."
+msgid "By submitting your payment, you agree to our %1$sterms and conditions%2$s."
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:352
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:351
 msgid "or"
 msgstr ""
 

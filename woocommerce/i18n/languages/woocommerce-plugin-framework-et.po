@@ -122,7 +122,6 @@ msgid "Leave a Review"
 msgstr ""
 
 #: admin/abstract-sv-wc-plugin-admin-setup-wizard.php:789
-#: payment-gateway/class-sv-wc-payment-gateway.php:659
 msgid "Continue"
 msgstr "Jätka"
 
@@ -905,12 +904,12 @@ msgstr "E-tšekk"
 msgid "Buy with"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:303
-#, fuzzy
-msgid "Pay with"
-msgstr "Maksa"
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:202
+msgid ""
+"By submitting your payment, you agree to our %1$sterms and conditions%2$s."
+msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:309
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:351
 msgid "or"
 msgstr ""
 
@@ -1468,6 +1467,10 @@ msgstr "Juhiloa osariik on puudu"
 #: payment-gateway/class-sv-wc-payment-gateway.php:484
 msgid "Drivers license number is missing"
 msgstr "Juhiloa number on puudu"
+
+#: payment-gateway/class-sv-wc-payment-gateway.php:659
+msgid "Continue to Payment"
+msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway.php:659
 msgid "Place order"
@@ -2042,6 +2045,10 @@ msgstr ""
 msgctxt "software environment"
 msgid "Production"
 msgstr "Töö/avalik"
+
+#, fuzzy
+#~ msgid "Pay with"
+#~ msgstr "Maksa"
 
 #~ msgid "%1$s Capture Failed: %2$s - %3$s"
 #~ msgstr "%1$s: tasumine ebaõnnestus: %2$s - %3$s"
