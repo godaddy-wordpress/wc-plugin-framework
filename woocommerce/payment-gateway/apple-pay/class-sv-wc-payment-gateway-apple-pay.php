@@ -91,7 +91,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Initializes the admin handler.
 	 *
-	 * @since 5.4.4-dev.1
+	 * @since 5.6.0-dev
 	 */
 	protected function init_admin() {
 
@@ -102,7 +102,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Initializes the AJAX handler.
 	 *
-	 * @since 5.4.4-dev.1
+	 * @since 5.6.0-dev
 	 */
 	protected function init_ajax() {
 
@@ -113,7 +113,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Initializes the frontend handler.
 	 *
-	 * @since 5.4.4-dev.1
+	 * @since 5.6.0-dev
 	 */
 	protected function init_frontend() {
 
