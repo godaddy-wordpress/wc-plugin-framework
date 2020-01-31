@@ -1,5 +1,33 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2020.nn.nn - version 5.6.0-dev
+
+2020.01.20 - version 5.5.4
+ * Tweak - Add a link to the site's terms and conditions page below Apple Pay buttons when available
+ * Tweak - Adjust the place order button label for redirect/hosted gateways
+ * Fix - Fix a JavaScript error triggered trying read the 'length' property of an undefined value in format_credit_card_inputs()
+
+2020.01.13 - version 5.5.3
+ * Fix - Fix a JavaScript error when instantiating a class that hasn't been loaded
+
+2020.01.09 - version 5.5.2
+ * Fix - `SV_WC_Payment_Gateway_Apple_Pay::process_payment()` now throws an exception if the result returned by the processing gateway doesn't indicate whether the transaction was successful or not
+ * Fix - Update `SV_WC_Payment_Gateway_Direct::process_payment()` to cover for and edge case in which `SV_WC_Payment_Gateway_Direct::do_transaction()` fails without throwing an exception
+ * Fix - On WooCommerce 3.9: prevent empty credit card fields from being marked as invalid before the user has entered any data
+ * Dev - TLS 1.2 helper methods moved from `SV_WC_API_Base` to `SV_WC_Plugin`
+ * Dev - Deprecated `SV_WC_API_Base::require_tls_1_2()`
+
+2019.11.14 - version 5.5.1
+ * Tweak - Refactor Apple Pay order creation to support the same filters and actions that are fired during regular checkout
+ * Tweak - Allow multiple old hooks to be mapped to a single new one via the hook deprecator
+ * Fix - Harden integration with WooCommerce Pre-Orders to avoid a PHP error in some circumstances
+ * Fix - Fix double product stock reduction when an order is held and payment is not completed
+
+2019.10.15 - version 5.5.0
+ * Feature - Add a plugin helper method to retrieve a template part while consistently passing the default template path to `wc_get_template()`
+ * Misc - Deprecate backwards compatibility methods for unsupported WooCommerce and PHP versions
+ * Misc - Replace `SV_WC_Helper::get_post()` and `SV_WC_Helper::get_request()` with `SV_WC_Helper::get_posted_value()` and `SV_WC_Helper::get_requested_value()`
+
 2019.09.05 - version 5.4.3
  * Fix - Do not show the checkbox to save the payment method on the checkout page if not logged in and registration during checkout is disabled
  * Misc - Add a Country_Helper class to assist converting country codes to and from various formats

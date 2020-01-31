@@ -18,15 +18,16 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/API
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_API_Response' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway_API_Response' ) ) :
+
 
 /**
  * WooCommerce Direct Payment Gateway API Response
@@ -116,4 +117,5 @@ interface SV_WC_Payment_Gateway_API_Response extends SV_WC_API_Response {
 
 }
 
-endif;  // interface exists check
+
+endif;

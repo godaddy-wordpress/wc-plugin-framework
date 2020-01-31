@@ -18,15 +18,16 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Hook_Deprecator' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Hook_Deprecator' ) ) :
+
 
 /**
  * SkyVerge Hook Deprecator Class
@@ -115,8 +116,8 @@ class SV_WC_Hook_Deprecator {
 
 		$new_hooks = wp_list_pluck( $this->hooks, 'replacement' );
 
-		// check if there is a matching old hook for the current hook
-		if ( $old_hook = array_search( $new_hook, $new_hooks ) ) {
+		// check if there are matching old hooks for the current hook
+		foreach ( array_keys( $new_hooks, $new_hook ) as $old_hook ) {
 
 			// check if there are any hooks added to the old hook
 			if ( has_filter( $old_hook ) ) {
@@ -195,4 +196,4 @@ class SV_WC_Hook_Deprecator {
 }
 
 
-endif; // class exists check
+endif;

@@ -3,7 +3,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
-use \SkyVerge\WooCommerce\PluginFramework\v5_4_3 as PluginFramework;
+use \SkyVerge\WooCommerce\PluginFramework\v5_5_4 as PluginFramework;
 
 /**
  * Plugin Test

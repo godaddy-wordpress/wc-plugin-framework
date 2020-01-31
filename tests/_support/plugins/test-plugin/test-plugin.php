@@ -133,9 +133,8 @@ class SV_WC_Framework_Test_Plugin_Loader {
 			require_once( __DIR__ . '/vendor/skyverge/wc-plugin-framework/woocommerce/class-sv-wc-plugin.php' );
 		}
 
-		// TODO: remove this if not a payment gateway
 		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Payment_Gateway_Plugin' ) ) {
-			#require_once( plugin_dir_path( __FILE__ ) . 'vendor/skyverge/woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php' );
+			require_once( __DIR__ . '/vendor/skyverge/wc-plugin-framework/woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php' );
 		}
 	}
 

@@ -18,15 +18,16 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Admin
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3\Payment_Gateway\Handlers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4\Payment_Gateway\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_3 as FrameworkBase;
+use SkyVerge\WooCommerce\PluginFramework\v5_5_4 as FrameworkBase;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Payment_Gateway\\Handlers\\Abstract_Payment_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\Payment_Gateway\\Handlers\\Abstract_Payment_Handler' ) ) :
+
 
 /**
  * The base payment handler class.
@@ -300,7 +301,7 @@ abstract class Abstract_Payment_Handler {
 	 * @since 5.4.0
 	 *
 	 * @param \WC_Order $order order object
-	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response API response object
+	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Customer_Response|FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response API response object
 	 */
 	public function mark_order_as_paid( \WC_Order $order, FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
 
@@ -310,9 +311,11 @@ abstract class Abstract_Payment_Handler {
 		$this->get_gateway()->add_payment_gateway_transaction_data( $order, $response );
 
 		if ( $order->has_status( $this->get_held_order_status( $order, $response ) ) ) {
-			FrameworkBase\SV_WC_Order_Compatibility::reduce_stock_levels( $order ); // reduce stock for held orders, but don't complete payment
+			// reduce stock for held orders, but don't complete payment (pass order ID so WooCommerce fetches fresh order object with reduced_stock meta set on order status change)
+			wc_reduce_stock_levels( $order->get_id() );
 		} else {
-			$order->payment_complete(); // mark order as having received payment
+			// mark order as having received payment
+			$order->payment_complete();
 		}
 
 		/**
@@ -497,5 +500,6 @@ abstract class Abstract_Payment_Handler {
 
 
 }
+
 
 endif;

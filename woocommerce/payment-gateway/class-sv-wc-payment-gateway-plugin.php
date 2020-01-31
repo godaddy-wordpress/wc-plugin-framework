@@ -18,15 +18,16 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway_Plugin' ) ) :
+
 
 /**
  * # WooCommerce Payment Gateway Plugin Framework
@@ -197,7 +198,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Initializes the plugin admin.
 	 *
-	 * @internal
 	 * @see SV_WC_Plugin::init_admin()
 	 *
 	 * @since 5.2.0
@@ -418,6 +418,19 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function maybe_init_apple_pay() {
 
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.2' ) && $this->is_apple_pay_activated() && $this->supports_apple_pay() ) {
+			$this->apple_pay = $this->build_apple_pay_instance();
+		}
+	}
+
+
+	/**
+	 * Determines whether Apple Pay is activated.
+	 *
+	 * @since 5.5.1
+	 */
+	private function is_apple_pay_activated() {
+
 		/**
 		 * Filters whether Apple Pay is activated.
 		 *
@@ -425,11 +438,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		 *
 		 * @param bool $activated whether Apple Pay is activated
 		 */
-		$activated = (bool) apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_activate_apple_pay', false );
-
-		if ( $this->supports_apple_pay() && $activated ) {
-			$this->apple_pay = $this->build_apple_pay_instance();
-		}
+		return (bool) apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_activate_apple_pay', false );
 	}
 
 
@@ -571,6 +580,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// add notices about gateways not being configured
 		$this->add_gateway_not_configured_notices();
+
+		$this->add_apple_pay_not_supported_notices();
 	}
 
 
@@ -617,7 +628,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					break;
 				}
 
-			} elseif ( $gateway->get_api() && is_callable( array( $gateway->get_api(), 'require_tls_1_2' ) ) && is_callable( array( $gateway->get_api(), 'is_tls_1_2_available' ) ) && $gateway->get_api()->require_tls_1_2() && ! $gateway->get_api()->is_tls_1_2_available() ) {
+			} elseif ( $this->require_tls_1_2() && ! $this->is_tls_1_2_available() ) {
 
 				/* translators: Placeholders: %s - payment gateway name */
 				$message = sprintf( esc_html__( "%s will soon require TLS 1.2 support to process transactions and your server environment may need to be updated. Please contact your hosting provider to confirm that your site can send and receive TLS 1.2 connections and request they make any necessary updates.", 'woocommerce-plugin-framework' ), '<strong>' . $gateway->get_method_title() . '</strong>' );
@@ -741,6 +752,30 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					'notice_class' => 'error',
 				] );
 			}
+		}
+	}
+
+
+	/**
+	 * Adds notices about Apple Pay not supportted in the current WooCommerce version.
+	 *
+	 * @since 5.5.1
+	 */
+	protected function add_apple_pay_not_supported_notices() {
+
+		if ( 'wc-settings' === SV_WC_Helper::get_requested_value( 'page' ) && SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.2' ) && $this->is_apple_pay_activated() ) {
+
+			$this->get_admin_notice_handler()->add_admin_notice(
+				sprintf(
+					/* translators: Placeholders: %1$s - plugin name, %2$s - opening <a> HTML link tag, %3$s - closing </a> HTML link tag */
+					__( 'Heads up! Apple Pay for %1$s requires WooCommerce version 3.2 or greater. Please %2$supdate WooCommerce%3$s.', 'woocommerce-plugin-framework' ),
+					$this->get_plugin_name(),
+					'<a href="' . esc_url( admin_url( 'update-core.php' ) ) .'">',
+					'</a>'
+				),
+				$this->get_id_dasherized() . '-apple-pay-requires-wc-version-3-2',
+				[ 'notice_class' => 'error' ]
+			);
 		}
 	}
 
@@ -1036,8 +1071,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Get a gateway's settings screen section ID.
 	 *
-	 * This was used as a helper method for WC 2.5 compatibility, but is no
-	 * longer needed and now deprecated.
+	 * This was used as a helper method for WC 2.5 compatibility, but is no longer needed and now deprecated.
 	 *
 	 * @since 4.4.0
 	 * @deprecated 5.0.1
@@ -1047,7 +1081,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_payment_gateway_configuration_section( $gateway_id ) {
 
-		SV_WC_Plugin_Compatibility::wc_doing_it_wrong( 'SV_WC_Payment_Gateway_Plugin::get_payment_gateway_configuration_section()', 'Deprecated! Use the plain gateway ID instead.', '5.0.1' );
+		wc_deprecated_function( __METHOD__, '5.0.1', 'strtolower( $gateway_id )' );
 
 		return strtolower( $gateway_id );
 	}
@@ -1335,5 +1369,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 }
+
 
 endif;

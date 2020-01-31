@@ -18,15 +18,16 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Apple-Pay
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_Apple_Pay_Admin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway_Apple_Pay_Admin' ) ) :
+
 
 /**
  * Sets up the Apple Pay settings screen.
@@ -363,7 +364,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	 */
 	protected function is_settings_screen() {
 
-		return 'wc-settings' === SV_WC_Helper::get_request( 'page' ) && 'apple-pay' === SV_WC_Helper::get_request( 'section' );
+		return 'wc-settings' === SV_WC_Helper::get_requested_value( 'page' ) && 'apple-pay' === SV_WC_Helper::get_requested_value( 'section' );
 	}
 
 
@@ -404,5 +405,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 
 
 }
+
 
 endif;

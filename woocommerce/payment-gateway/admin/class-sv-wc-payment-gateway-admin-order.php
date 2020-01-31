@@ -18,15 +18,16 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Admin
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
+
 
 /**
  * Handle the admin order screens.
@@ -84,7 +85,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			// Edit Order screen assets
 			if ( 'post.php' === $hook_suffix ) {
 
-				$order = wc_get_order( SV_WC_Helper::get_request( 'post' ) );
+				$order = wc_get_order( SV_WC_Helper::get_requested_value( 'post' ) );
 
 				if ( ! $order ) {
 					return;
@@ -114,8 +115,8 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 		wp_localize_script( 'sv-wc-payment-gateway-admin-order', 'sv_wc_payment_gateway_admin_order', array(
 			'ajax_url'       => admin_url( 'admin-ajax.php' ),
-			'gateway_id'     => SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' ),
-			'order_id'       => SV_WC_Order_Compatibility::get_prop( $order, 'id' ),
+			'gateway_id'     => $order->get_payment_method( 'edit' ),
+			'order_id'       => $order->get_id(),
 			'capture_ays'    => __( 'Are you sure you wish to process this capture? The action cannot be undone.', 'woocommerce-plugin-framework' ),
 			'capture_action' => 'wc_' . $this->get_plugin()->get_id() . '_capture_charge',
 			'capture_nonce'  => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_capture_charge' ),
@@ -256,7 +257,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	public function add_capture_button( $order ) {
 
 		// only display the button for core orders
-		if ( ! $order instanceof \WC_Order || 'shop_order' !== get_post_type( SV_WC_Order_Compatibility::get_prop( $order, 'id' ) ) ) {
+		if ( ! $order instanceof \WC_Order || 'shop_order' !== get_post_type( $order->get_id() ) ) {
 			return;
 		}
 
@@ -341,7 +342,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 		check_ajax_referer( 'wc_' . $this->get_plugin()->get_id() . '_capture_charge', 'nonce' );
 
-		$gateway_id = SV_WC_Helper::get_request( 'gateway_id' );
+		$gateway_id = SV_WC_Helper::get_requested_value( 'gateway_id' );
 
 		if ( ! $this->get_plugin()->has_gateway( $gateway_id ) ) {
 			die();
@@ -351,7 +352,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 		try {
 
-			$order_id = SV_WC_Helper::get_request( 'order_id' );
+			$order_id = SV_WC_Helper::get_requested_value( 'order_id' );
 			$order    = wc_get_order( $order_id );
 
 			if ( ! $order ) {
@@ -362,14 +363,14 @@ class SV_WC_Payment_Gateway_Admin_Order {
 				throw new SV_WC_Payment_Gateway_Exception( 'Invalid permissions' );
 			}
 
-			if ( SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' ) !== $gateway->get_id() ) {
+			if ( $order->get_payment_method( 'edit' ) !== $gateway->get_id() ) {
 				throw new SV_WC_Payment_Gateway_Exception( 'Invalid payment method' );
 			}
 
 			$amount_captured = (float) $gateway->get_order_meta( $order, 'capture_total' );
 
-			if ( SV_WC_Helper::get_request( 'amount' ) ) {
-				$amount = (float) SV_WC_Helper::get_request( 'amount' );
+			if ( $request_amount = SV_WC_Helper::get_requested_value( 'amount' ) ) {
+				$amount = (float) $request_amount;
 			} else {
 				$amount = $order->get_total();
 			}
@@ -380,15 +381,15 @@ class SV_WC_Payment_Gateway_Admin_Order {
 				throw new SV_WC_Payment_Gateway_Exception( $result['message'] );
 			}
 
-			wp_send_json_success( array(
+			wp_send_json_success( [
 				'message' => html_entity_decode( wp_strip_all_tags( $result['message'] ) ), // ensure any HTML tags are removed and the currency symbol entity is decoded
-			) );
+			] );
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
-			wp_send_json_error( array(
+			wp_send_json_error( [
 				'message' => $e->getMessage(),
-			) );
+			] );
 		}
 	}
 
@@ -404,8 +405,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	protected function get_order_gateway( \WC_Order $order ) {
 
 		$capture_gateway = null;
-
-		$payment_method = SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' );
+		$payment_method  = $order->get_payment_method( 'edit' );
 
 		if ( $this->get_plugin()->has_gateway( $payment_method ) ) {
 
@@ -450,7 +450,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 */
 	protected function maybe_capture_charge( $order, $amount = null ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0' );
+		wc_deprecated_function( __METHOD__, '5.3.0' );
 
 		if ( ! is_object( $order ) ) {
 			$order = wc_get_order( $order );
@@ -491,7 +491,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 */
 	public function maybe_capture_paid_order( $order_id, $old_status, $new_status ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0' );
+		wc_deprecated_function( __METHOD__, '5.3.0' );
 	}
 
 
@@ -506,18 +506,15 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 */
 	protected function is_order_ready_for_capture( \WC_Order $order ) {
 
-		SV_WC_Plugin_Compatibility::wc_deprecated_function( __METHOD__, '5.3.0' );
+		wc_deprecated_function( __METHOD__, '5.3.0' );
 
 		$gateway = $this->get_order_gateway( $order );
 
-		if ( ! $gateway ) {
-			return false;
-		}
-
-		return $gateway->get_capture_handler()->is_order_ready_for_capture( $order );
+		return $gateway && $gateway->get_capture_handler()->is_order_ready_for_capture( $order );
 	}
 
 
 }
+
 
 endif;

@@ -33,6 +33,7 @@ jQuery( document ).ready ($) ->
 			@generic_error            = args.generic_error
 
 			@buttons = '.sv-wc-apple-pay-button'
+			@terms   = '.sv-wc-apple-pay-terms'
 
 
 		# Determines if Apple Pay is available.
@@ -365,6 +366,7 @@ jQuery( document ).ready ($) ->
 			this.get_payment_request( data ).then ( response ) =>
 
 				$( @buttons ).show()
+				$( @terms ).show()
 
 				@payment_request = $.parseJSON( response )
 
@@ -375,6 +377,7 @@ jQuery( document ).ready ($) ->
 				console.error '[Apple Pay] Could not build payment request. ' + response.message
 
 				$( @buttons ).hide()
+				$( @terms ).hide()
 
 				this.unblock_ui()
 

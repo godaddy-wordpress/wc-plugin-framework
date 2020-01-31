@@ -18,16 +18,17 @@
  *
  * @package   SkyVerge/WooCommerce/Utilities
  * @author    SkyVerge / Delicious Brains
- * @copyright Copyright (c) 2015-2016 Delicious Brains Inc.
- * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
+ * @copyright Copyright (c) 2015-2020 Delicious Brains Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WP_Background_Job_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WP_Background_Job_Handler' ) ) :
+
 
 /**
  * SkyVerge WordPress Background Job Handler class
@@ -1071,11 +1072,6 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			$result = false;
 		}
 
-		// WC 2.6 has no positive message output by default
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_lt_3_0() && $result ) {
-			echo "<div class='updated inline'><p>{$this->debug_message}</p></div>";
-		}
-
 		return $result;
 	}
 
@@ -1121,4 +1117,5 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 }
 
-endif; // Class exists check
+
+endif;

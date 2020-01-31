@@ -18,17 +18,18 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Admin
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3\Payment_Gateway\Handlers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4\Payment_Gateway\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_3 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_5_4 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\Payment_Gateway\\Handlers\\Capture' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\Payment_Gateway\\Handlers\\Capture' ) ) :
+
 
 /**
  * The transaction capture handler.
@@ -73,7 +74,7 @@ class Capture {
 	 */
 	public function maybe_capture_paid_order( $order_id, $old_status, $new_status ) {
 
-		$paid_statuses = Framework\SV_WC_Plugin_Compatibility::wc_get_is_paid_statuses();
+		$paid_statuses = (array) wc_get_is_paid_statuses();
 
 		// bail if changing to a non-paid status or from a paid status
 		if ( ! in_array( $new_status, $paid_statuses, true ) || in_array( $old_status, $paid_statuses, true ) ) {
@@ -86,7 +87,7 @@ class Capture {
 			return;
 		}
 
-		$payment_method = Framework\SV_WC_Order_Compatibility::get_prop( $order, 'payment_method' );
+		$payment_method = $order->get_payment_method( 'edit' );
 
 		if ( $payment_method !== $this->get_gateway()->get_id() ) {
 			return;
@@ -147,7 +148,7 @@ class Capture {
 
 				$message = "{$this->get_gateway()->get_method_title()} does not support payment captures";
 
-				Framework\SV_WC_Plugin_Compatibility::wc_doing_it_wrong( __METHOD__, $message, '5.3.0' );
+				wc_doing_it_wrong( __METHOD__, $message, '5.3.0' );
 
 				throw new Framework\SV_WC_Payment_Gateway_Exception( $message, 500 );
 			}
@@ -187,7 +188,9 @@ class Capture {
 				/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount. Definitions: Capture, as in capture funds from a credit card. */
 				__( '%1$s Capture of %2$s Approved', 'woocommerce-plugin-framework' ),
 				$this->get_gateway()->get_method_title(),
-				wc_price( $order->capture->amount, array( 'currency' => Framework\SV_WC_Order_Compatibility::get_prop( $order, 'currency', 'view' ) ) )
+				wc_price( $order->capture->amount, [
+					'currency' => $order->get_currency()
+				] )
 			);
 
 			// adds the transaction id (if any) to the order note
@@ -347,8 +350,7 @@ class Capture {
 	 */
 	public function has_order_authorization_expired( \WC_Order $order ) {
 
-		$transaction_date = $this->get_gateway()->get_order_meta( Framework\SV_WC_Order_Compatibility::get_prop( $order, 'id' ), 'trans_date' );
-
+		$transaction_date = $this->get_gateway()->get_order_meta( $order, 'trans_date' );
 		$transaction_time = strtotime( $transaction_date );
 
 		return $transaction_date && floor( ( time() - $transaction_time ) / 3600 ) > $this->get_gateway()->get_authorization_time_window();
@@ -422,5 +424,6 @@ class Capture {
 
 
 }
+
 
 endif;

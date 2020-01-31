@@ -18,16 +18,22 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Plugin_Dependencies' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Plugin_Dependencies' ) ) :
 
+
+/**
+ * Plugin dependencies handler.
+ *
+ * @since 5.2.0
+ */
 class SV_WC_Plugin_Dependencies {
 
 
@@ -46,6 +52,8 @@ class SV_WC_Plugin_Dependencies {
 
 	/**
 	 * Constructs the class.
+	 *
+	 * @since 5.2.0
 	 *
 	 * @param SV_WC_Plugin $plugin plugin instance
 	 * @param array $args {
@@ -262,21 +270,6 @@ class SV_WC_Plugin_Dependencies {
 
 			$this->add_admin_notice( 'sv-wc-deprecated-php-version', $message, 'error' );
 		}
-
-		// display a notice that WC < 3.0 support will soon be dropped
-		if ( isset( $_GET['page'] ) && 'wc-settings' === $_GET['page'] && SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.0' ) ) {
-
-			$message = sprintf(
-				/* translators: Placeholders: %1$s - WooCommerce version number, %2$s - <strong>, %3$s - </strong>, %4$s - Plugin name, %5$s - <a> tag, %6$s - </a> tag */
-				__( 'Hey there! We\'ve noticed that your site is running version %1$s of WooCommerce, but %2$sWooCommerce 3.0 or higher will soon be required%3$s by %4$s. We recommend you %5$supdate WooCommerce%6$s to the latest version as soon as possible.', 'woocommerce-plugin-framework' ),
-				esc_html( SV_WC_Plugin_Compatibility::get_wc_version() ),
-				'<strong>', '</strong>',
-				esc_html( $this->get_plugin()->get_plugin_name() ),
-				'<a href="' . esc_url( admin_url( 'update-core.php' ) ) . '">', '</a>'
-			);
-
-			$this->add_admin_notice( 'sv-wc-deprecated-wc-version', $message, 'warning' );
-		}
 	}
 
 
@@ -331,7 +324,7 @@ class SV_WC_Plugin_Dependencies {
 	 */
 	public function get_missing_php_extensions() {
 
-		$missing_extensions = array();
+		$missing_extensions = [];
 
 		foreach ( $this->get_php_extensions() as $extension ) {
 
@@ -366,7 +359,7 @@ class SV_WC_Plugin_Dependencies {
 	 */
 	public function get_missing_php_functions() {
 
-		$missing_functions = array();
+		$missing_functions = [];
 
 		foreach ( $this->get_php_functions() as $function ) {
 
@@ -401,9 +394,7 @@ class SV_WC_Plugin_Dependencies {
 	 */
 	public function get_incompatible_php_settings() {
 
-		$incompatible_settings = array();
-
-		$dependences = $this->get_php_settings();
+		$incompatible_settings = [];
 
 		if ( function_exists( 'ini_get' ) ) {
 
@@ -415,7 +406,7 @@ class SV_WC_Plugin_Dependencies {
 					continue;
 				}
 
-				if ( is_integer( $expected ) ) {
+				if ( is_int( $expected ) ) {
 
 					// determine if this is a size string, like "10MB"
 					$is_size = ! is_numeric( substr( $actual, -1 ) );
@@ -424,19 +415,19 @@ class SV_WC_Plugin_Dependencies {
 
 					if ( $actual_num < $expected ) {
 
-						$incompatible_settings[ $setting ] = array(
+						$incompatible_settings[ $setting ] = [
 							'expected' => $is_size ? size_format( $expected ) : $expected,
 							'actual'   => $is_size ? size_format( $actual_num ) : $actual,
 							'type'     => 'min',
-						);
+						];
 					}
 
 				} elseif ( $actual !== $expected ) {
 
-					$incompatible_settings[ $setting ] = array(
+					$incompatible_settings[ $setting ] = [
 						'expected' => $expected,
 						'actual'   => $actual,
-					);
+					];
 				}
 			}
 		}
@@ -472,5 +463,6 @@ class SV_WC_Plugin_Dependencies {
 
 
 }
+
 
 endif;

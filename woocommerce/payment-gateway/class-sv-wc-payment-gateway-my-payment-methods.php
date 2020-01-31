@@ -18,15 +18,16 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_3\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
+
 
 /**
  * My Payment Methods Class
@@ -155,7 +156,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 					$this->credit_card_tokens[ $token->get_id() ] = $token;
 
-				} elseif ( $token->is_check() ) {
+				} elseif ( $token->is_echeck() ) {
 
 					$this->echeck_tokens[ $token->get_id() ] = $token;
 				}
@@ -204,7 +205,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 			 */
 			do_action( 'wc_' . $this->get_plugin()->get_id() . '_after_my_payment_method_table', $this );
-
 		}
 	}
 
@@ -216,36 +216,39 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function render_js() {
 
-		$args = array(
-			'id'              => $this->get_plugin()->get_id(),
-			'slug'            => $this->get_plugin()->get_id_dasherized(),
-			'has_core_tokens' => (bool) wc_get_customer_saved_methods_list( get_current_user_id() ),
-			'ajax_url'        => admin_url( 'admin-ajax.php' ),
-			'ajax_nonce'      => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
-			'i18n'            => array(
-				'edit_button'   => esc_html__( 'Edit', 'woocommerce-plugin-framework' ),
-				'cancel_button' => esc_html__( 'Cancel', 'woocommerce-plugin-framework' ),
-				'save_error'    => esc_html__( 'Oops, there was an error updating your payment method. Please try again.', 'woocommerce-plugin-framework' ),
-				'delete_ays'    => esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ),
-			),
-		);
+		if ( $this->has_tokens ) {
 
-		/**
-		 * Filters the payment gateway payment methods JavaScript args.
-		 *
-		 * @since 5.1.0
-		 *
-		 * @param array $args arguments
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $handler payment methods handler
-		 */
-		$args = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_payment_methods_js_args', $args, $this );
+			$args = array(
+				'id'              => $this->get_plugin()->get_id(),
+				'slug'            => $this->get_plugin()->get_id_dasherized(),
+				'has_core_tokens' => (bool) wc_get_customer_saved_methods_list( get_current_user_id() ),
+				'ajax_url'        => admin_url( 'admin-ajax.php' ),
+				'ajax_nonce'      => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
+				'i18n'            => array(
+					'edit_button'   => esc_html__( 'Edit', 'woocommerce-plugin-framework' ),
+					'cancel_button' => esc_html__( 'Cancel', 'woocommerce-plugin-framework' ),
+					'save_error'    => esc_html__( 'Oops, there was an error updating your payment method. Please try again.', 'woocommerce-plugin-framework' ),
+					'delete_ays'    => esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ),
+				),
+			);
 
-		wc_enqueue_js( sprintf(
-			'window.wc_%1$s_payment_methods_handler = new %2$s( %3$s );',
-			esc_js( $this->get_plugin()->get_id() ),
-			esc_js( $this->get_js_handler_class() ),
-			json_encode( $args )
-		) );
+			/**
+			 * Filters the payment gateway payment methods JavaScript args.
+			 *
+			 * @since 5.1.0
+			 *
+			 * @param array $args arguments
+			 * @param SV_WC_Payment_Gateway_My_Payment_Methods $handler payment methods handler
+			 */
+			$args = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_payment_methods_js_args', $args, $this );
+
+			wc_enqueue_js( sprintf(
+				'window.wc_%1$s_payment_methods_handler = new %2$s( %3$s );',
+				esc_js( $this->get_plugin()->get_id() ),
+				esc_js( $this->get_js_handler_class() ),
+				json_encode( $args )
+			) );
+		}
 	}
 
 
@@ -872,7 +875,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			$this->load_tokens();
 
-			$token_id = SV_WC_Helper::get_post( 'token_id' );
+			$token_id = SV_WC_Helper::get_posted_value( 'token_id' );
 
 			if ( empty( $this->tokens[ $token_id ] ) || ! $this->tokens[ $token_id ] instanceof SV_WC_Payment_Gateway_Payment_Token ) {
 				throw new SV_WC_Payment_Gateway_Exception( 'Invalid token ID' );
@@ -889,7 +892,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			$data = array();
 
-			parse_str( SV_WC_Helper::get_post( 'data' ), $data );
+			parse_str( SV_WC_Helper::get_posted_value( 'data' ), $data );
 
 			// set the data
 			$token = $this->save_token_data( $token, $data );
@@ -1098,4 +1101,5 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 }
 
-endif;  // class exists check
+
+endif;

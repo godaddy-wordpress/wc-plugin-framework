@@ -58,7 +58,7 @@ class SV_WC_Framework_Plugin_Loader {
 	const MINIMUM_WC_VERSION = '3.0.9';
 
 	/** SkyVerge plugin framework version used by this plugin */
-	const FRAMEWORK_VERSION = '5.4.3'; // TODO: framework version
+	const FRAMEWORK_VERSION = '5.5.4'; // TODO: framework version
 
 	/** the plugin name, for displaying notices */
 	const PLUGIN_NAME = 'WooCommerce Framework Plugin'; // TODO: plugin name
@@ -157,7 +157,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 *
 	 * @since 1.0.0
 	 */
-	protected function load_framework() {
+	private function load_framework() {
 
 		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Plugin' ) ) {
 			require_once( plugin_dir_path( __FILE__ ) . 'lib/skyverge/woocommerce/class-sv-wc-plugin.php' );
@@ -177,7 +177,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 *
 	 * @return string
 	 */
-	protected function get_framework_version_namespace() {
+	public function get_framework_version_namespace() {
 
 		return 'v' . str_replace( '.', '_', $this->get_framework_version() );
 	}
@@ -190,7 +190,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 *
 	 * @return string
 	 */
-	protected function get_framework_version() {
+	public function get_framework_version() {
 
 		return self::FRAMEWORK_VERSION;
 	}
@@ -200,6 +200,8 @@ class SV_WC_Framework_Plugin_Loader {
 	 * Checks the server environment and other factors and deactivates plugins as necessary.
 	 *
 	 * Based on http://wptavern.com/how-to-prevent-wordpress-plugins-from-activating-on-sites-with-incompatible-hosting-environments
+	 *
+	 * @internal
 	 *
 	 * @since 1.0.0
 	 */
@@ -213,8 +215,11 @@ class SV_WC_Framework_Plugin_Loader {
 		}
 	}
 
+
 	/**
 	 * Checks the environment on loading WordPress, just in case the environment changes after activation.
+	 *
+	 * @internal
 	 *
 	 * @since 1.0.0
 	 */
@@ -231,6 +236,8 @@ class SV_WC_Framework_Plugin_Loader {
 
 	/**
 	 * Adds notices for out-of-date WordPress and/or WooCommerce versions.
+	 *
+	 * @internal
 	 *
 	 * @since 1.0.0
 	 */
@@ -266,7 +273,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 *
 	 * @return bool
 	 */
-	protected function plugins_compatible() {
+	private function plugins_compatible() {
 
 		return $this->is_wp_compatible() && $this->is_wc_compatible();
 	}
@@ -279,7 +286,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 *
 	 * @return bool
 	 */
-	protected function is_wp_compatible() {
+	private function is_wp_compatible() {
 
 		if ( ! self::MINIMUM_WP_VERSION ) {
 			return true;
@@ -296,7 +303,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 *
 	 * @return bool
 	 */
-	protected function is_wc_compatible() {
+	private function is_wc_compatible() {
 
 		if ( ! self::MINIMUM_WC_VERSION ) {
 			return true;
@@ -308,6 +315,8 @@ class SV_WC_Framework_Plugin_Loader {
 
 	/**
 	 * Deactivates the plugin.
+	 *
+	 * @internal
 	 *
 	 * @since 1.0.0
 	 */
@@ -330,7 +339,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 * @param string $class the css class for the notice
 	 * @param string $message the notice message
 	 */
-	public function add_admin_notice( $slug, $class, $message ) {
+	private function add_admin_notice( $slug, $class, $message ) {
 
 		$this->notices[ $slug ] = array(
 			'class'   => $class,
@@ -342,6 +351,8 @@ class SV_WC_Framework_Plugin_Loader {
 	/**
 	 * Displays any admin notices added with \SV_WC_Framework_Plugin_Loader::add_admin_notice()
 	 *
+	 * @internal
+	 *
 	 * @since 1.0.0
 	 */
 	public function admin_notices() {
@@ -350,9 +361,7 @@ class SV_WC_Framework_Plugin_Loader {
 
 			?>
 			<div class="<?php echo esc_attr( $notice['class'] ); ?>">
-				<p>
-					<?php echo wp_kses( $notice['message'], array( 'a' => array( 'href' => array() ) ) ); ?>
-				</p>
+				<p><?php echo wp_kses( $notice['message'], array( 'a' => array( 'href' => array() ) ) ); ?></p>
 			</div>
 			<?php
 		}
@@ -368,7 +377,7 @@ class SV_WC_Framework_Plugin_Loader {
 	 *
 	 * @return bool
 	 */
-	protected function is_environment_compatible() {
+	private function is_environment_compatible() {
 
 		return version_compare( PHP_VERSION, self::MINIMUM_PHP_VERSION, '>=' );
 	}
@@ -381,11 +390,9 @@ class SV_WC_Framework_Plugin_Loader {
 	 *
 	 * @return string
 	 */
-	protected function get_environment_message() {
+	private function get_environment_message() {
 
-		$message = sprintf( 'The minimum PHP version required for this plugin is %1$s. You are running %2$s.', self::MINIMUM_PHP_VERSION, PHP_VERSION );
-
-		return $message;
+		return sprintf( 'The minimum PHP version required for this plugin is %1$s. You are running %2$s.', self::MINIMUM_PHP_VERSION, PHP_VERSION );
 	}
 
 
