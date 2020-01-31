@@ -1,7 +1,5 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2019.nn.nn - version 5.4.4-dev.1
-
 2019.09.05 - version 5.4.3
  * Fix - Do not show the checkbox to save the payment method on the checkout page if not logged in and registration during checkout is disabled
  * Misc - Add a Country_Helper class to assist converting country codes to and from various formats
