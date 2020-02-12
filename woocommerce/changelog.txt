@@ -18,7 +18,6 @@
  * Dev - TLS 1.2 helper methods moved from `SV_WC_API_Base` to `SV_WC_Plugin`
  * Dev - Deprecated `SV_WC_API_Base::require_tls_1_2()`
 
->>>>>>> master
 2019.11.14 - version 5.5.1
  * Tweak - Refactor Apple Pay order creation to support the same filters and actions that are fired during regular checkout
  * Tweak - Allow multiple old hooks to be mapped to a single new one via the hook deprecator
