@@ -311,7 +311,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 			$args['payment_request'] = $payment_request;
 
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+		} catch ( \Exception $e ) {
 
 			$this->get_handler()->log( 'Could not initialize Apple Pay. ' . $e->getMessage() );
 		}

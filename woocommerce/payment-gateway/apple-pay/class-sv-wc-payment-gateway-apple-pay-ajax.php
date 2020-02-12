@@ -206,7 +206,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 			wp_send_json_success( $data );
 
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+		} catch ( \Exception $e ) {
 
 			$this->get_handler()->log( $e->getMessage() );
 
