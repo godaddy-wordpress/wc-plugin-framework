@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Payment-Tokens
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_1\\SV_WC_Payment_Gateway_Payment_Tokens_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway_Payment_Tokens_Handler' ) ) :
 
 
 
@@ -72,7 +72,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * A factory method to build and return a payment token object for the gateway.
 	 * Child implementations can override this method to return a custom payment token.
 	 *
-	 * From version 5.6.0, this method can accept a core \WC_Payment_Token type as the second argument to read data from.
+	 * From version x.y.z, this method can accept a core \WC_Payment_Token type as the second argument to read data from.
 	 *
 	 * @since 4.3.0
 	 *

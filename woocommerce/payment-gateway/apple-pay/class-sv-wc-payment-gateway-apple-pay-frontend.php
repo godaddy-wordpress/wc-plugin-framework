@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Apple-Pay
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2016, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_1\\SV_WC_Payment_Gateway_Apple_Pay_Frontend' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway_Apple_Pay_Frontend' ) ) :
 
 
 /**
@@ -184,6 +184,45 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 
 	/**
+	 * Renders a notice informing the customer that by purchasing they are accepting the website's terms and conditions.
+	 *
+	 * Only displayed if a Terms and conditions page is configured.
+	 *
+	 * @internal
+	 *
+	 * @since 5.5.4
+	 */
+	public function render_terms_notice() {
+
+		/** This filter is documented by WooCommerce in templates/checkout/terms.php */
+		if ( apply_filters( 'woocommerce_checkout_show_terms', true ) && function_exists( 'wc_terms_and_conditions_checkbox_enabled' ) && wc_terms_and_conditions_checkbox_enabled() ) {
+
+			$default_text = sprintf(
+				/** translators: Placeholders: %1$s - opening HTML link tag pointing to the terms & conditions page, %2$s closing HTML link tag */
+				__( 'By submitting your payment, you agree to our %1$sterms and conditions%2$s.', 'woocommerce-plugin-framework' ),
+				'<a href="' . esc_url( get_permalink( wc_terms_and_conditions_page_id() ) ) . '" class="sv-wc-apple-pay-terms-and-conditions-link" target="_blank">',
+				'</a>'
+			);
+
+			/**
+			 * Allows to filter the text for the terms & conditions notice.
+			 *
+			 * @since 5.5.4
+			 *
+			 * @params string $default_text default notice text
+			 */
+			$text = apply_filters( 'sv_wc_apple_pay_terms_notice_text', $default_text );
+
+			?>
+			<div class="sv-wc-apple-pay-terms woocommerce-terms-and-conditions-wrapper">
+				<p><small><?php echo wp_kses_post( $text ); ?></small></p>
+			</div>
+			<?php
+		}
+	}
+
+
+	/**
 	 * Initializes Apple Pay on the single product page.
 	 *
 	 * @since 4.7.0
@@ -219,7 +258,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Product_Handler(%s);', json_encode( $args ) ) );
 
-		add_action( 'woocommerce_before_add_to_cart_button', array( $this, 'render_button' ) );
+		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_button' ] );
+		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_terms_notice' ] );
 	}
 
 
@@ -256,7 +296,8 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Cart_Handler(%s);', json_encode( $args ) ) );
 
-		add_action( 'woocommerce_proceed_to_checkout', array( $this, 'render_button' ) );
+		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_button' ] );
+		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_terms_notice' ] );
 	}
 
 
@@ -281,9 +322,10 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		wc_enqueue_js( sprintf( 'window.sv_wc_apple_pay_handler = new SV_WC_Apple_Pay_Checkout_Handler(%s);', json_encode( $args ) ) );
 
 		if ( $this->get_plugin()->is_plugin_active( 'woocommerce-checkout-add-ons.php' ) ) {
-			add_action( 'woocommerce_review_order_before_payment', array( $this, 'render_button' ) );
+			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_button' ] );
+			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_terms_notice' ] );
 		} else {
-			add_action( 'woocommerce_before_checkout_form', array( $this, 'render_checkout_button' ), 15 );
+			add_action( 'woocommerce_before_checkout_form', [ $this, 'render_checkout_button' ], 15 );
 		}
 	}
 
@@ -299,10 +341,10 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		<div class="sv-wc-apply-pay-checkout">
 
-			<?php /** translators: Phrase that preceeds the Apple Pay logo, i.e. "Pay with [logo]" */
-			$button_text = __( 'Pay with', 'woocommerce-plugin-framework' );
-
-			$this->render_button(); ?>
+			<?php
+				$this->render_button();
+				$this->render_terms_notice();
+			?>
 
 			<span class="divider">
 				<?php /** translators: "or" as in "Pay with Apple Pay [or] regular checkout" */

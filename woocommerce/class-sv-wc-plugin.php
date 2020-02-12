@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_1\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Plugin' ) ) :
 
 
 /**
@@ -43,7 +43,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.5.1';
+	const VERSION = '5.5.4';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -392,8 +392,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Initializes the plugin admin.
 	 *
-	 * Plugins can override this to set up any handlers after the WordPress
-	 * admin is ready.
+	 * Plugins can override this to set up any handlers after the WordPress admin is ready.
 	 *
 	 * @since 5.2.0
 	 */
@@ -757,6 +756,48 @@ abstract class SV_WC_Plugin {
 		require_once( $this->get_plugin_path() . $local_path );
 
 		return new $class_name;
+	}
+
+
+	/**
+	 * Determines if TLS v1.2 is required for API requests.
+	 *
+	 * Subclasses should override this to return true if TLS v1.2 is required.
+	 *
+	 * @since 5.5.2
+	 *
+	 * @return bool
+	 */
+	public function require_tls_1_2() {
+
+		return false;
+	}
+
+
+	/**
+	 * Determines if TLS 1.2 is available.
+	 *
+	 * @since 5.5.2
+	 *
+	 * @return bool
+	 */
+	public function is_tls_1_2_available() {
+
+		// assume availability to avoid notices for unknown SSL types
+		$is_available = true;
+
+		// check the cURL version if installed
+		if ( is_callable( 'curl_version' ) ) {
+
+			$versions = curl_version();
+
+			// cURL 7.34.0 is considered the minimum version that supports TLS 1.2
+			if ( version_compare( $versions['version'], '7.34.0', '<' ) ) {
+				$is_available = false;
+			}
+		}
+
+		return $is_available;
 	}
 
 

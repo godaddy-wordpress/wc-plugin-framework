@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2019, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_1\\SV_WC_Payment_Gateway_Direct' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway_Direct' ) ) :
 
 
 /**
@@ -424,20 +424,27 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				 */
 				do_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_processed', $order, $this );
 
-				return array(
+				return [
 					'result'   => 'success',
 					'redirect' => $this->get_return_url( $order ),
-				);
+				];
+
+			} else {
+
+				return [
+					'result'  => 'failure',
+					'message' => 'The transaction failed.',
+				];
 			}
 
 		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			$this->mark_order_as_failed( $order, $e->getMessage() );
 
-			return array(
+			return [
 				'result'  => 'failure',
 				'message' => $e->getMessage(),
-			);
+			];
 		}
 
 		return $default;
