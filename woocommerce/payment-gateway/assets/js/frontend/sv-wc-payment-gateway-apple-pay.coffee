@@ -69,6 +69,7 @@ jQuery( document ).ready ($) ->
 
 			if @payment_request
 				$( @buttons ).show()
+				$( @terms ).show()
 
 			$( document.body ).on 'click', '.sv-wc-apple-pay-button', ( e ) =>
 
