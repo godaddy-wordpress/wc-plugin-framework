@@ -1,8 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2020.nn.nn - version x.y.z
- * Tweak - Migrate payment tokens to be compatible with WC core payment tokens
- * Fix - Fix a JavaScript error when instantiating a class that hasn't been loaded
+ * Tweak - Migrate payment tokens to be compatible with WooCommerce core payment tokens
 
 2020.01.20 - version 5.5.4
  * Tweak - Add a link to the site's terms and conditions page below Apple Pay buttons when available

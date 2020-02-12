@@ -199,7 +199,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @param int $user_id user identifier
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token the token
 	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
-	 * @return bool
+	 * @return int
 	 */
 	public function add_token( $user_id, $token, $environment_id = null ) {
 
@@ -208,21 +208,34 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$environment_id = $this->get_environment_id();
 		}
 
-		// get existing tokens
-		$tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
-
 		// if this token is set as active, mark all others as false
 		if ( $token->is_default() ) {
-			foreach ( array_keys( $tokens ) as $key ) {
-				$tokens[ $key ]->set_default( false );
+
+			$existing_tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
+
+			foreach ( $existing_tokens as $existing_token ) {
+				$existing_token->set_default( false );
+				$existing_token->save();
 			}
+
+			$this->tokens[ $environment_id ][ $user_id ] = $existing_tokens;
 		}
 
-		// add the new token
-		$tokens[ $token->get_id() ] = $token;
+		$token->set_gateway_id( $this->get_gateway()->get_id() );
+		$token->set_user_id( $user_id );
+		$token->set_environment( $environment_id );
 
-		// persist the updated tokens
-		return $this->update_tokens( $user_id, $tokens, $environment_id );
+		$saved = $token->save();
+
+		// if saved, update the local cache
+		if ( $saved ) {
+
+			$this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] = $token;
+
+			$this->clear_transient( $user_id );
+		}
+
+		return $saved;
 	}
 
 
@@ -269,13 +282,21 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$environment_id = $this->get_environment_id();
 		}
 
-		$tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
+		$token->set_gateway_id( $this->get_gateway()->get_id() );
+		$token->set_user_id( $user_id );
+		$token->set_environment( $environment_id );
 
-		if ( isset( $tokens[ $token->get_id() ] ) ) {
-			$tokens[ $token->get_id() ] = $token;
+		$saved = $token->save();
+
+		// if saved, update the local cache
+		if ( $saved ) {
+
+			$this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] = $token;
+
+			$this->clear_transient( $user_id );
 		}
 
-		return $this->update_tokens( $user_id, $tokens, $environment_id );
+		return $saved;
 	}
 
 
@@ -363,33 +384,42 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$environment_id = $this->get_environment_id();
 		}
 
-		// get existing tokens
-		$tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
-
-		if ( ! isset( $tokens[ $token->get_id() ] ) ) {
-			return false;
-		}
-
-		unset( $tokens[ $token->get_id() ] );
-
-		// delete token from local cache
-		unset( $this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] );
-
-		// clear the transient
+		// always clear the transient
 		$this->clear_transient( $user_id );
 
-		// if the deleted token was the default token, make another one the new default
-		if ( $token->is_default() ) {
+		$is_default = $token->is_default();
+		$deleted    = $token->delete();
 
-			foreach ( array_keys( $tokens ) as $key ) {
+		if ( $deleted ) {
 
-				$tokens[ $key ]->set_default( true );
-				$tokens[ $key ]->save();
-				break;
+			// delete token from local cache if successful
+			unset( $this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] );
+
+			// if the deleted token was the default token, make another one the new default
+			if ( $is_default ) {
+
+				foreach ( $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) ) as $existing_token ) {
+
+					if ( $existing_token->get_id() === $token->get_id() ) {
+						continue;
+					}
+
+					// set the first as default and bail
+					$existing_token->set_default( true );
+					$existing_token->save();
+
+					// update the local cache
+					$this->tokens[ $environment_id ][ $user_id ][ $existing_token->get_id() ] = $existing_token;
+
+					break;
+				}
 			}
+
+			// delete the legacy token data now that the token has been removed
+			$this->delete_legacy_token( $user_id, $token, $environment_id );
 		}
 
-		return $token->delete();
+		return $deleted;
 	}
 
 
@@ -537,8 +567,39 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 				}
 			}
 
-			/** TODO: remove when legacy tokens are added to the result of \WC_Payment_Tokens::get_customer_tokens() using a filter {WV 2019-12-19} */
-			$tokens = $tokens + $this->get_legacy_tokens( $user_id, $environment_id );
+			// migrate legacy tokens if necessary
+			if ( ! $this->user_legacy_tokens_migrated( $user_id ) ) {
+
+				$legacy_tokens   = $this->get_legacy_tokens( $user_id );
+				$migrated_tokens = 0;
+
+				// migrate any legacy tokens that haven't already been migrated
+				foreach ( $legacy_tokens as $legacy_token ) {
+
+					if ( ! isset( $tokens[ $legacy_token->get_id() ] ) && ! $legacy_token->is_migrated() ) {
+
+						$legacy_token->set_gateway_id( $this->get_gateway()->get_id() );
+						$legacy_token->set_user_id( $user_id );
+						$legacy_token->set_environment( $environment_id );
+
+						if ( $legacy_token->save() ) {
+
+							$tokens[ $legacy_token->get_id() ] = $legacy_token;
+
+							$migrated_tokens++;
+
+							$legacy_token->set_migrated( true );
+
+							$this->update_legacy_token( $user_id, $legacy_token );
+						}
+					}
+				}
+
+				// if all of the tokens were successfully migrated, flag the user for no further migrations
+				if ( count( $legacy_tokens ) === $migrated_tokens ) {
+					$this->set_user_legacy_tokens_migrated( $user_id );
+				}
+			}
 
 			$this->tokens[ $environment_id ][ $user_id ] = $tokens;
 		}
@@ -673,7 +734,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			// ensure the vital properties are set
 			$token->set_user_id( $user_id );
 			$token->set_gateway_id( $this->get_gateway()->get_id() );
-			// TODO: set the environment ID {CW 2019-12-17}
+			$token->set_environment( $environment_id );
 
 			$token_id = $token->save();
 
@@ -696,9 +757,10 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @param int $user_id WP user ID
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token to update
 	 * @param string|null $environment_id optional environment ID, defaults to plugin current environment
+	 * @param bool $migrated whether the token was migrated to the new datastore
 	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure
 	 */
-	public function update_legacy_token( $user_id, $token, $environment_id = null ) {
+	public function update_legacy_token( $user_id, $token, $environment_id = null, $migrated = false ) {
 
 		$updated = false;
 
@@ -715,6 +777,10 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$this->legacy_tokens[ $environment_id ][ $user_id ][ $token->get_id() ] = $token;
 
 			$legacy_tokens[ $token->get_id() ] = $token->to_datastore_format();
+
+			if ( $migrated ) {
+				$legacy_tokens[ $token->get_id() ]['migrated'] = true;
+			}
 
 			$updated = update_user_meta( $user_id, $this->get_user_meta_name( $environment_id ), $legacy_tokens );
 		}
@@ -1038,6 +1104,43 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	protected function get_gateway() {
 
 		return $this->gateway;
+	}
+
+
+	/**
+	 * Determines whether a user's tokens have been migrated.
+	 *
+	 * @since 5.6.0-dev.1
+	 *
+	 * @param int $user_id WordPress user ID
+	 * @param string|null $environment_id environment ID
+	 * @return bool
+	 */
+	public function user_legacy_tokens_migrated( $user_id, $environment_id = null ) {
+
+		if ( null === $environment_id ) {
+			$environment_id = $this->get_environment_id();
+		}
+
+		return 'yes' === get_user_meta( $user_id, $this->get_user_meta_name( $environment_id ) . '_migrated', true );
+	}
+
+
+	/**
+	 * Marks a user as having their tokens migrated.
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param int $user_id WordPress user ID
+	 * @param string|null $environment_id environment ID
+	 */
+	public function set_user_legacy_tokens_migrated( $user_id, $environment_id = null ) {
+
+		if ( null === $environment_id ) {
+			$environment_id = $this->get_environment_id();
+		}
+
+		update_user_meta( $user_id, $this->get_user_meta_name( $environment_id ) . '_migrated', 'yes' );
 	}
 
 
