@@ -152,7 +152,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 				'title'   => __( 'Apple Merchant ID', 'woocommerce-plugin-framework' ),
 				'type'    => 'text',
 				'desc'  => sprintf(
-				/** translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag */
+					/** translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag */
 					__( 'This is found in your %1$sApple developer account%2$s', 'woocommerce-plugin-framework' ),
 					'<a href="https://developer.apple.com" target="_blank">', '</a>'
 				),
@@ -167,7 +167,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 				'type'     => 'text',
 				'desc_tip' => 'The full system path to your certificate file from Apple. For security reasons you should store this outside of your web root.',
 				'desc'     => sprintf(
-				/* translators: Placeholders: %s - the server's web root path */
+					/* translators: Placeholders: %s - the server's web root path */
 					__( 'For reference, your current web root path is: %s', 'woocommerce-plugin-framework' ),
 					'<code>' . ABSPATH . '</code>'
 				),
