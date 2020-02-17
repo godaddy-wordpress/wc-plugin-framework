@@ -558,7 +558,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			 * @param $params array
 			 * @return array
 			 */
-			$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() . '_js_localize_script_params', $this->get_gateway_js_localized_script_params() );
+			$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() . '_js_localize_script_params', $params );
 
 			$this->localize_script( $handle, $params );
 		}
