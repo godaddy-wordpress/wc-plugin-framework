@@ -92,6 +92,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		// styles/scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_styles_scripts' ) );
 
+		add_filter( 'woocommerce_account_payment_methods_columns', [ $this, 'add_payment_methods_columns' ] );
+
 		// render the My Payment Methods section
 		// TODO: merge our payment methods data into the core table and remove this in a future version {CW 2016-05-17}
 		add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render' ) );
@@ -170,6 +172,47 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$this->has_tokens = ! empty( $this->tokens );
 
 		return $this->tokens;
+	}
+
+
+	/**
+	 * Adds columns to the payment methods table.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param array of table columns in key => Title format
+	 * @return array of table columns in key => Title format
+	 */
+	public function add_payment_methods_columns( $columns  = [] ) {
+
+		$headers = [
+			'title'   => __( 'Method', 'woocommerce-plugin-framework' ),
+			'details' => __( 'Details', 'woocommerce-plugin-framework' ),
+			'expiry'  => __( 'Expires', 'woocommerce-plugin-framework' ),
+			'default' => __( 'Default?', 'woocommerce-plugin-framework' ),
+			'actions' => __( 'Actions', 'woocommerce-plugin-framework' ),
+		];
+
+		/**
+		 * My Payment Methods Table Headers Filter.
+		 *
+		 * Allow actors to modify the table headers.
+		 *
+		 * In 5.6.0, moved from SV_WC_Payment_Gateway_My_Payment_Methods::get_table_headers().
+		 *
+		 * @since 4.0.0
+		 * @param array $headers table headers {
+		 *     @type string $title
+		 *     @type string $details
+		 *     @type string $expiry
+		 *     @type string $default
+		 *     @type string $actions
+		 * }
+		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+		 */
+		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_headers', $headers, $this );
 	}
 
 
@@ -414,35 +457,20 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Return the table headers
+	 * Returns the table headers.
+	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-17 {DM 2020-02-17}
 	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
+	 *
 	 * @return array of table headers in key => Title format
 	 */
 	protected function get_table_headers() {
 
-		$headers = array(
-			'title'   => __( 'Method', 'woocommerce-plugin-framework' ),
-			'details' => __( 'Details', 'woocommerce-plugin-framework' ),
-			'expiry'  => __( 'Expires', 'woocommerce-plugin-framework' ),
-			'default' => __( 'Default?', 'woocommerce-plugin-framework' ),
-			'actions' => __( 'Actions', 'woocommerce-plugin-framework' ),
-		);
+		wc_deprecated_function( __METHOD__, '5.6.0-dev', 'SV_WC_Payment_Gateway_My_Payment_Methods::add_payment_methods_columns' );
 
-		/**
-		 * My Payment Methods Table Headers Filter.
-		 *
-		 * Allow actors to modify the table headers.
-		 *
-		 * @since 4.0.0
-		 * @param array $headers table headers {
-		 *     @type string $title
-		 *     @type string $expiry
-		 *     @type string $actions
-		 * }
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_headers', $headers, $this );
+		return $this->add_payment_methods_columns();
 	}
 
 
