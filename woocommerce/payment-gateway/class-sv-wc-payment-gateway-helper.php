@@ -231,7 +231,7 @@ class SV_WC_Payment_Gateway_Helper {
 			),
 			self::CARD_TYPE_MASTERCARD => array(
 				'name'       => esc_html_x( 'MasterCard', 'credit card type', 'woocommerce-plugin-framework' ),
-				'variations' => array( 'mc' ),
+				'variations' => array( 'mc', 'master-card' ),
 			),
 			self::CARD_TYPE_AMEX => array(
 				'name'       => esc_html_x( 'American Express', 'credit card type', 'woocommerce-plugin-framework' ),

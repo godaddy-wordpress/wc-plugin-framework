@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2020.nn.nn - version x.y.z
+2020.nn.nn - version 5.6.0-dev
  * Tweak - Migrate payment tokens to be compatible with WooCommerce core payment tokens
 
 2020.01.20 - version 5.5.4
