@@ -96,6 +96,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		add_filter( 'woocommerce_account_payment_methods_columns', [ $this, 'add_payment_methods_columns' ] );
 
+		add_action( 'woocommerce_account_payment_methods_column_details', [ $this, 'add_payment_method_details' ] );
+
 		// render the My Payment Methods section
 		// TODO: merge our payment methods data into the core table and remove this in a future version {CW 2016-05-17}
 		add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render' ) );
@@ -251,6 +253,42 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		}
 
 		return $columns;
+	}
+
+
+	/**
+	 * Gets FW token object from payment method token ID.
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param array $method payment method data array
+	 * @return SV_WC_Payment_Gateway_Payment_Token|null
+	 */
+	private function get_token_by_id( $method ) {
+
+		if ( ! empty( $method['token'] ) && ! empty( $this->tokens[ $method['token'] ] ) ) {
+			return $this->tokens[ $method['token'] ];
+		}
+
+		return null;
+	}
+
+
+	/**
+	 * Adds the Details column content.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param array $method payment method
+	 */
+	public function add_payment_method_details( $method ) {
+
+		if ( $token = $this->get_token_by_id( $method ) ) {
+
+			echo $this->get_payment_method_details_html( $token );
+		}
 	}
 
 
