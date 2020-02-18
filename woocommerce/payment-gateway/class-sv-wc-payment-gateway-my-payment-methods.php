@@ -92,6 +92,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		// styles/scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_styles_scripts' ) );
 
+		add_filter( 'woocommerce_payment_methods_list_item', [ $this, 'add_payment_methods_list_item_id' ], 10, 2 );
+
 		// render the My Payment Methods section
 		// TODO: merge our payment methods data into the core table and remove this in a future version {CW 2016-05-17}
 		add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render' ) );
