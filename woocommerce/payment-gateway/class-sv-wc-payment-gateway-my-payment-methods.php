@@ -202,9 +202,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 *
 		 * @since 4.0.0
 		 * @param array $headers table headers {
-		 *     @type string $title
+		 *     @type string $method
 		 *     @type string $details
-		 *     @type string $expiry
+		 *     @type string $expires
 		 *     @type string $default
 		 *     @type string $actions
 		 * }
