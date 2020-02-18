@@ -293,6 +293,24 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
+	 * Adds the Default column content.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param array $method payment method
+	 */
+	public function add_payment_method_default( $method ) {
+
+		if ( $token = $this->get_token_by_id( $method ) ) {
+
+			echo $this->get_payment_method_default_html( $token );
+		}
+	}
+
+
+	/**
 	 * Render the payment methods table.
 	 *
 	 * @since 4.0.0
