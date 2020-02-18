@@ -92,6 +92,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		// styles/scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_styles_scripts' ) );
 
+		add_filter( 'woocommerce_payment_methods_list_item', [ $this, 'add_payment_methods_list_item_id' ], 10, 2 );
+
 		add_filter( 'woocommerce_account_payment_methods_columns', [ $this, 'add_payment_methods_columns' ] );
 
 		// render the My Payment Methods section
@@ -172,6 +174,27 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$this->has_tokens = ! empty( $this->tokens );
 
 		return $this->tokens;
+	}
+
+
+	/**
+	 * Adds the token ID to the token data array.
+	 *
+	 * @see wc_get_account_saved_payment_methods_list
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param array $item individual list item from woocommerce_saved_payment_methods_list
+	 * @param \WC_Payment_Token $token payment token associated with this method entry
+	 * @return array
+	 */
+	public function add_payment_methods_list_item_id( $item, $token ) {
+
+		$item['id'] = $token->get_token();
+
+		return $item;
 	}
 
 
