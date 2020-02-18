@@ -174,6 +174,24 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
+	 * Adds the token ID to the token data array.
+	 *
+	 * @see wc_get_account_saved_payment_methods_list
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @paramarray $item individual list item from woocommerce_saved_payment_methods_list
+	 * @param \WC_Payment_Token $token payment token associated with this method entry
+	 * @return array
+	 */
+	public function add_payment_methods_list_item_id( $item, $token ) {
+
+	}
+
+
+	/**
 	 * Render the payment methods table.
 	 *
 	 * @since 4.0.0
