@@ -16,6 +16,18 @@ table.woocommerce-MyAccount-paymentMethods {
 			display: none;
   		}
 	}
+
+	td.woocommerce-PaymentMethod--details {
+		white-space: nowrap;
+
+		img {
+			width: 40px;
+			height: 25px;
+			margin-right: 0.5em;
+			vertical-align: middle;
+			display: inline !important;
+		}
+	}
 }
 
 table.sv-wc-payment-gateway-my-payment-methods-table {
@@ -47,18 +59,6 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 
 		.sv-wc-payment-gateway-payment-method-title input {
 			width: 100%;
-		}
-
-		.sv-wc-payment-gateway-payment-method-details {
-			white-space: nowrap;
-
-			img {
-				width: 40px;
-				height: 25px;
-				margin-right: 0.5em;
-				vertical-align: middle;
-				display: inline !important;
-			}
 		}
 
 		.sv-wc-payment-gateway-payment-method-expiry {
