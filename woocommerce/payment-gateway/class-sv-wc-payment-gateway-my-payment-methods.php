@@ -187,13 +187,11 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_methods_columns( $columns  = [] ) {
 
-		$headers = [
-			'title'   => __( 'Method', 'woocommerce-plugin-framework' ),
-			'details' => __( 'Details', 'woocommerce-plugin-framework' ),
-			'expiry'  => __( 'Expires', 'woocommerce-plugin-framework' ),
-			'default' => __( 'Default?', 'woocommerce-plugin-framework' ),
-			'actions' => __( 'Actions', 'woocommerce-plugin-framework' ),
-		];
+		$details_column = [ 'details' => __( 'Details', 'woocommerce-plugin-framework' ) ];
+		$columns        = SV_WC_Helper::array_insert_after( $columns, 'method', $details_column );
+
+		$default_column = [ 'default' => __( 'Default?', 'woocommerce-plugin-framework' ) ];
+		$columns        = SV_WC_Helper::array_insert_after( $columns, 'expires', $default_column );
 
 		/**
 		 * My Payment Methods Table Headers Filter.
@@ -212,7 +210,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 * }
 		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_headers', $headers, $this );
+		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_headers', $columns, $this );
 	}
 
 
