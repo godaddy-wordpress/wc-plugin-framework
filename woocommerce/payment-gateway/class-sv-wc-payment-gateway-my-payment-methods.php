@@ -198,7 +198,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 *
 		 * Allow actors to modify the table headers.
 		 *
-		 * In 5.6.0, moved from SV_WC_Payment_Gateway_My_Payment_Methods::get_table_headers().
+		 * In 5.6.0, moved from SV_WC_Payment_Gateway_My_Payment_Methods::get_table_headers()
+		 * and renamed the `method` (previously `title`) and `expires` (previously `expiry`)
+		 * for consistency with core column keys.
 		 *
 		 * @since 4.0.0
 		 * @param array $headers table headers {
@@ -210,7 +212,19 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 * }
 		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_headers', $columns, $this );
+		$columns = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_headers', $columns, $this );
+
+		// backwards compatibility for 3rd parties using the filter with the old column keys
+		if ( array_key_exists( 'title', $columns ) ) {
+			$columns['method'] = $columns['title'];
+			unset( $columns['title'] );
+		}
+		if ( array_key_exists( 'expiry', $columns ) ) {
+			$columns['expires'] = $columns['expiry'];
+			unset( $columns['expiry'] );
+		}
+
+		return $columns;
 	}
 
 
