@@ -216,10 +216,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		// backwards compatibility for 3rd parties using the filter with the old column keys
 		if ( array_key_exists( 'title', $columns ) ) {
+
 			$columns['method'] = $columns['title'];
 			unset( $columns['title'] );
 		}
+
 		if ( array_key_exists( 'expiry', $columns ) ) {
+
 			$columns['expires'] = $columns['expiry'];
 			unset( $columns['expiry'] );
 		}
