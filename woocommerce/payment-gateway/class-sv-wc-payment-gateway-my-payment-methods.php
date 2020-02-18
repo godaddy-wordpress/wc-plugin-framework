@@ -255,6 +255,20 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
+	 * Adds the Details column content.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param array $method payment method
+	 */
+	public function add_payment_method_details( $method ) {
+
+	}
+
+
+	/**
 	 * Render the payment methods table.
 	 *
 	 * @since 4.0.0
