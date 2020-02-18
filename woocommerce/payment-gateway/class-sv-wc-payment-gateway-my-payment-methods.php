@@ -257,6 +257,24 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
+	 * Gets FW token object from payment method token ID.
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param array $method payment method data array
+	 * @return SV_WC_Payment_Gateway_Payment_Token|null
+	 */
+	private function get_token_by_id( $method ) {
+
+		if ( ! empty( $method['id'] ) && ! empty( $this->tokens[ $method['id'] ] ) ) {
+			return $this->tokens[ $method['id'] ];
+		}
+
+		return null;
+	}
+
+
+	/**
 	 * Adds the Details column content.
 	 *
 	 * @internal
@@ -267,6 +285,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_method_details( $method ) {
 
+		if ( $token = $this->get_token_by_id( $method ) ) {
+
+		}
 	}
 
 
