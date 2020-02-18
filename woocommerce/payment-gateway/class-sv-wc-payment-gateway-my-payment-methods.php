@@ -266,8 +266,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	private function get_token_by_id( $method ) {
 
-		if ( ! empty( $method['id'] ) && ! empty( $this->tokens[ $method['id'] ] ) ) {
-			return $this->tokens[ $method['id'] ];
+		if ( ! empty( $method['token'] ) && ! empty( $this->tokens[ $method['token'] ] ) ) {
+			return $this->tokens[ $method['token'] ];
 		}
 
 		return null;
