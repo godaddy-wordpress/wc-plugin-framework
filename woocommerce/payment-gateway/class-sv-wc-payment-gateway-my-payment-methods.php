@@ -282,7 +282,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * @since 5.6.0-dev
 	 *
 	 * @param array $method payment method
-	 * @return array|string
 	 */
 	public function add_payment_method_details( $method ) {
 
@@ -292,7 +291,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			$content = $this->get_payment_method_details_html( $token );
 		}
 
-		return $content;
+		echo $content;
 	}
 
 
