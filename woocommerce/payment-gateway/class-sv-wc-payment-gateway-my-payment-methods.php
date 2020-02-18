@@ -194,7 +194,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_methods_list_item_id( $item, $token ) {
 
-		$item['id'] = $token->get_token();
+		$item['token'] = $token->get_token();
 
 		return $item;
 	}
