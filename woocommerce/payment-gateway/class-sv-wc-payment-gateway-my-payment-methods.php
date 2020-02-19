@@ -72,6 +72,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		// save a payment method via AJAX
 		add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_save_payment_method', array( $this, 'ajax_save_payment_method' ) );
+
+		add_action( 'woocommerce_payment_token_set_default', [ $this, 'clear_payment_methods_transient' ], 10, 2 );
 	}
 
 
@@ -177,6 +179,24 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$this->has_tokens = ! empty( $this->tokens );
 
 		return $this->tokens;
+	}
+
+
+	/**
+	 * Clear the tokens transient after making a method the default,
+	 * so that the correct payment method shows as default.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param int $token_id token ID
+	 * @param \WC_Payment_Token $token core token object
+	 */
+	public function clear_payment_methods_transient( $token_id, $token ) {
+
+		$gateway = $this->get_plugin()->get_gateway( $token->get_gateway_id() );
+		$gateway->get_payment_tokens_handler()->clear_transient( get_current_user_id() );
 	}
 
 
