@@ -662,6 +662,20 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 
 	/**
+	 * Displays a list of subscriptions orders assocaited with the current token.
+	 *
+	 * This method only generates output for tokens created by the framework.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array $method payment method
+	 */
+	public function add_payment_method_subscriptions( $method ) {
+
+	}
+
+
+	/**
 	 * Add a subscriptions header to the My Payment Methods table.
 	 *
 	 * @since 4.3.0
