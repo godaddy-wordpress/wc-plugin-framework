@@ -12,7 +12,8 @@ http://www.gnu.org/licenses/gpl-3.0.html
 table.woocommerce-MyAccount-paymentMethods {
 
 	th.woocommerce-PaymentMethod--details,
-	th.woocommerce-PaymentMethod--default {
+	th.woocommerce-PaymentMethod--default,
+	th.woocommerce-PaymentMethod--actions {
 		span {
 			display: none;
   		}
@@ -52,6 +53,18 @@ table.woocommerce-MyAccount-paymentMethods {
 			border-radius: 2px;
 		}
 	}
+
+	td.woocommerce-PaymentMethod--actions {
+		text-align: center;
+
+		.button {
+			margin: .125em;
+
+			&.disabled.tip:hover {
+				cursor: help;
+			}
+		}
+	}
 }
 
 table.sv-wc-payment-gateway-my-payment-methods-table {
@@ -65,30 +78,10 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 		white-space: nowrap;
 	}
 
-	.sv-wc-payment-gateway-payment-method-header-actions span {
-		display: none;
-	}
-
-	.sv-wc-payment-gateway-payment-method-header-actions {
-		text-align: right;
-	}
-
 	.sv-wc-payment-gateway-my-payment-methods-method {
 
 		.sv-wc-payment-gateway-payment-method-title input {
 			width: 100%;
-		}
-
-		.sv-wc-payment-gateway-payment-method-actions {
-			text-align: right;
-
-			.button {
-				margin: .125em 0 .125em .25em;
-
-				&.disabled.tip:hover {
-					cursor: help;
-				}
-			}
 		}
 
 		.cancel-edit-payment-method {
@@ -212,26 +205,22 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 		td.woocommerce-PaymentMethod--default {
 			text-align: right;
 		}
+
+		td.woocommerce-PaymentMethod--actions {
+			text-align: center;
+
+			&:before {
+				display: none;
+			}
+
+			.button {
+				float: none;
+				margin: .125em;
+			}
+		}
 	}
 
 	table.sv-wc-payment-gateway-my-payment-methods-table {
-
-		.sv-wc-payment-gateway-my-payment-methods-method {
-
-			.sv-wc-payment-gateway-payment-method-actions {
-				text-align: right;
-
-				&:before {
-					display: none;
-				}
-
-				.button {
-					float: none;
-					margin: .125em .25em .125em 0;
-				}
-			}
-		}
-
 		.sv-wc-payment-gateway-my-payment-methods-type-divider td:before {
 			display: none;
 		}
