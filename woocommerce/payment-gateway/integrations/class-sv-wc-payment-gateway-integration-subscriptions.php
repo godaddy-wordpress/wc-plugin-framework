@@ -674,6 +674,14 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function add_payment_method_subscriptions( $method ) {
 
+		if ( isset( $method['token'] ) ) {
+
+			$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( get_current_user_id(), $method['token'] );
+
+			if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
+				echo $this->get_payment_method_subscriptions_html( $token );
+			}
+		}
 	}
 
 
