@@ -664,7 +664,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 
 	/**
-	 * Displays a list of subscriptions orders assocaited with the current token.
+	 * Displays a list of subscriptions orders associated with the current token.
 	 *
 	 * This method only generates output for tokens created by the framework.
 	 *
