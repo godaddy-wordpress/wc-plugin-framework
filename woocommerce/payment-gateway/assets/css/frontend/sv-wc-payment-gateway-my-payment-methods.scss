@@ -24,10 +24,6 @@ table.woocommerce-MyAccount-paymentMethods {
 		text-align: center;
 	}
 
-	th.woocommerce-PaymentMethod--actions {
-		text-align: right;
-	}
-
 	td.woocommerce-PaymentMethod--details {
 		white-space: nowrap;
 
@@ -59,10 +55,10 @@ table.woocommerce-MyAccount-paymentMethods {
 	}
 
 	td.woocommerce-PaymentMethod--actions {
-		text-align: right;
+		text-align: center;
 
 		.button {
-			margin: .125em 0 .125em .25em;
+			margin: .125em;
 
 			&.disabled.tip:hover {
 				cursor: help;
@@ -211,7 +207,7 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 		}
 
 		td.woocommerce-PaymentMethod--actions {
-			text-align: right;
+			text-align: center;
 
 			&:before {
 				display: none;
@@ -219,7 +215,7 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 
 			.button {
 				float: none;
-				margin: .125em .25em .125em 0;
+				margin: .125em;
 			}
 		}
 	}
