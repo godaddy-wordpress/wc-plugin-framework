@@ -11,10 +11,15 @@ http://www.gnu.org/licenses/gpl-3.0.html
 
 table.woocommerce-MyAccount-paymentMethods {
 
-	th.woocommerce-PaymentMethod--details {
+	th.woocommerce-PaymentMethod--details,
+	th.woocommerce-PaymentMethod--default {
 		span {
 			display: none;
   		}
+	}
+
+	th.woocommerce-PaymentMethod--default {
+		text-align: center;
 	}
 
 	td.woocommerce-PaymentMethod--details {
@@ -26,6 +31,20 @@ table.woocommerce-MyAccount-paymentMethods {
 			margin-right: 0.5em;
 			vertical-align: middle;
 			display: inline !important;
+		}
+	}
+
+	td.woocommerce-PaymentMethod--default {
+		text-align: center;
+
+		mark {
+			display: inline-block;
+			color: white;
+			background-color: #3d9cd2;
+			font-size: 0.75em;
+			text-transform: uppercase;
+			padding: 2px 4px;
+			border-radius: 2px;
 		}
 	}
 }
@@ -41,13 +60,11 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 		white-space: nowrap;
 	}
 
-	.sv-wc-payment-gateway-payment-method-header-default span,
 	.sv-wc-payment-gateway-payment-method-header-actions span {
 		display: none;
 	}
 
-	.sv-wc-payment-gateway-payment-method-header-expiry,
-	.sv-wc-payment-gateway-payment-method-header-default {
+	.sv-wc-payment-gateway-payment-method-header-expiry {
 		text-align: center;
 	}
 
@@ -63,20 +80,6 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 
 		.sv-wc-payment-gateway-payment-method-expiry {
 			text-align: center;
-		}
-
-		.sv-wc-payment-gateway-payment-method-default {
-			text-align: center;
-
-			mark {
-				display: inline-block;
-				color: white;
-				background-color: #3d9cd2;
-				font-size: 0.75em;
-				text-transform: uppercase;
-				padding: 2px 4px;
-				border-radius: 2px;
-			}
 		}
 
 		.sv-wc-payment-gateway-payment-method-actions {
@@ -98,8 +101,10 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 
 	&.editing {
 
-		.sv-wc-payment-gateway-payment-method-header-default span {
-			display: inline;
+		th.woocommerce-PaymentMethod--default {
+			span {
+				display: inline;
+			}
 		}
 
 		.sv-wc-payment-gateway-my-payment-methods-method:not(.editing),
@@ -205,12 +210,17 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 
 @media screen and (max-width: 768px) {
 
+	table.woocommerce-MyAccount-paymentMethods {
+		td.woocommerce-PaymentMethod--default {
+			text-align: right;
+		}
+	}
+
 	table.sv-wc-payment-gateway-my-payment-methods-table {
 
 		.sv-wc-payment-gateway-my-payment-methods-method {
 
-			.sv-wc-payment-gateway-payment-method-expiry,
-			.sv-wc-payment-gateway-payment-method-default {
+			.sv-wc-payment-gateway-payment-method-expiry {
 				text-align: right;
 			}
 
