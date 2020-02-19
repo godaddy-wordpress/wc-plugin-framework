@@ -72,6 +72,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		// save a payment method via AJAX
 		add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_save_payment_method', array( $this, 'ajax_save_payment_method' ) );
+
+		add_action( 'woocommerce_payment_token_set_default', [ $this, 'clear_payment_methods_transients' ], 10, 2 );
 	}
 
 
@@ -97,6 +99,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		add_filter( 'woocommerce_account_payment_methods_columns', [ $this, 'add_payment_methods_columns' ] );
 
 		add_action( 'woocommerce_account_payment_methods_column_details', [ $this, 'add_payment_method_details' ] );
+		add_action( 'woocommerce_account_payment_methods_column_default', [ $this, 'add_payment_method_default' ] );
 
 		// render the My Payment Methods section
 		// TODO: merge our payment methods data into the core table and remove this in a future version {CW 2016-05-17}
@@ -176,6 +179,30 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$this->has_tokens = ! empty( $this->tokens );
 
 		return $this->tokens;
+	}
+
+
+	/**
+	 * Clear the tokens transients after making a method the default,
+	 * so that the correct payment method shows as default.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param int $token_id token ID
+	 * @param \WC_Payment_Token $token core token object
+	 */
+	public function clear_payment_methods_transients( $token_id, $token ) {
+
+		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
+
+			if ( ! $gateway->is_available() || ! ( $gateway->supports_tokenization() && $gateway->tokenization_enabled() ) ) {
+				continue;
+			}
+
+			$gateway->get_payment_tokens_handler()->clear_transient( get_current_user_id() );
+		}
 	}
 
 
@@ -288,6 +315,24 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		if ( $token = $this->get_token_by_id( $method ) ) {
 
 			echo $this->get_payment_method_details_html( $token );
+		}
+	}
+
+
+	/**
+	 * Adds the Default column content.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param array $method payment method
+	 */
+	public function add_payment_method_default( $method ) {
+
+		if ( $token = $this->get_token_by_id( $method ) ) {
+
+			echo $this->get_payment_method_default_html( $token );
 		}
 	}
 
