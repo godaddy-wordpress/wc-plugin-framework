@@ -117,6 +117,8 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		add_filter( 'wc_' . $this->get_gateway()->get_plugin()->get_id() . '_my_payment_methods_table_body_row_data', array( $this, 'add_my_payment_methods_table_body_row_data' ), 10, 3 );
 		add_filter( 'wc_' . $this->get_gateway()->get_plugin()->get_id() . '_my_payment_methods_table_method_actions', array( $this, 'disable_my_payment_methods_table_method_delete' ), 10, 3 );
 
+		add_filter( 'woocommerce_account_payment_methods_column_subscriptions', [ $this, 'add_payment_method_subscriptions' ] );
+
 		/* Admin Change Payment Method support */
 
 		// framework defaults - payment_token and customer_id
