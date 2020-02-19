@@ -9,6 +9,27 @@ http://www.gnu.org/licenses/gpl-3.0.html
 
 @import '../../../../assets/css/mixins';
 
+table.woocommerce-MyAccount-paymentMethods {
+
+	th.woocommerce-PaymentMethod--details {
+		span {
+			display: none;
+  		}
+	}
+
+	td.woocommerce-PaymentMethod--details {
+		white-space: nowrap;
+
+		img {
+			width: 40px;
+			height: 25px;
+			margin-right: 0.5em;
+			vertical-align: middle;
+			display: inline !important;
+		}
+	}
+}
+
 table.sv-wc-payment-gateway-my-payment-methods-table {
 	font-size: 0.85em;
 
@@ -20,7 +41,6 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 		white-space: nowrap;
 	}
 
-	.sv-wc-payment-gateway-payment-method-header-details span,
 	.sv-wc-payment-gateway-payment-method-header-default span,
 	.sv-wc-payment-gateway-payment-method-header-actions span {
 		display: none;
@@ -39,18 +59,6 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 
 		.sv-wc-payment-gateway-payment-method-title input {
 			width: 100%;
-		}
-
-		.sv-wc-payment-gateway-payment-method-details {
-			white-space: nowrap;
-
-			img {
-				width: 40px;
-				height: 25px;
-				margin-right: 0.5em;
-				vertical-align: middle;
-				display: inline !important;
-			}
 		}
 
 		.sv-wc-payment-gateway-payment-method-expiry {
