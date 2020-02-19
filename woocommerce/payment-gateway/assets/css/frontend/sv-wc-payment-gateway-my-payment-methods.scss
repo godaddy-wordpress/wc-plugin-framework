@@ -18,6 +18,7 @@ table.woocommerce-MyAccount-paymentMethods {
   		}
 	}
 
+	th.woocommerce-PaymentMethod--expires,
 	th.woocommerce-PaymentMethod--default {
 		text-align: center;
 	}
@@ -32,6 +33,10 @@ table.woocommerce-MyAccount-paymentMethods {
 			vertical-align: middle;
 			display: inline !important;
 		}
+	}
+
+	td.woocommerce-PaymentMethod--expires {
+		text-align: center;
 	}
 
 	td.woocommerce-PaymentMethod--default {
@@ -64,10 +69,6 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 		display: none;
 	}
 
-	.sv-wc-payment-gateway-payment-method-header-expiry {
-		text-align: center;
-	}
-
 	.sv-wc-payment-gateway-payment-method-header-actions {
 		text-align: right;
 	}
@@ -76,10 +77,6 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 
 		.sv-wc-payment-gateway-payment-method-title input {
 			width: 100%;
-		}
-
-		.sv-wc-payment-gateway-payment-method-expiry {
-			text-align: center;
 		}
 
 		.sv-wc-payment-gateway-payment-method-actions {
@@ -211,6 +208,7 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 @media screen and (max-width: 768px) {
 
 	table.woocommerce-MyAccount-paymentMethods {
+		td.woocommerce-PaymentMethod--expires,
 		td.woocommerce-PaymentMethod--default {
 			text-align: right;
 		}
@@ -219,10 +217,6 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 	table.sv-wc-payment-gateway-my-payment-methods-table {
 
 		.sv-wc-payment-gateway-my-payment-methods-method {
-
-			.sv-wc-payment-gateway-payment-method-expiry {
-				text-align: right;
-			}
 
 			.sv-wc-payment-gateway-payment-method-actions {
 				text-align: right;
