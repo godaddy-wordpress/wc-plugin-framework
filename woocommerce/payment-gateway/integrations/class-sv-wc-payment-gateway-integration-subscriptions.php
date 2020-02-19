@@ -678,6 +678,37 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 
 	/**
+	 * Gets the HTML code for the list of subscriptions orders associated with the given token.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param SV_WC_Payment_Gateway_Payment_Token $token the payment token
+	 * @return string
+	 */
+	private function get_payment_method_subscriptions_html( $token ) {
+
+		$html = '';
+
+		// make sure the token belongs to this gateway
+		if ( $token->get_gateway_id() === $this->get_gateway()->get_id() ) {
+
+			$subscription_ids = array();
+
+			// build a link for each subscription
+			foreach ( $this->get_payment_token_subscriptions( get_current_user_id(), $token ) as $subscription ) {
+				$subscription_ids[] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $subscription->get_view_order_url() ), esc_attr( sprintf( _x( '#%s', 'hash before order number', 'woocommerce-plugin-framework' ), $subscription->get_order_number() ) ) );
+			}
+
+			if ( ! empty( $subscription_ids ) ) {
+				$html = implode( ', ', $subscription_ids );
+			}
+		}
+
+		return $html;
+	}
+
+
+	/**
 	 * Add a subscriptions header to the My Payment Methods table.
 	 *
 	 * @since 4.3.0
