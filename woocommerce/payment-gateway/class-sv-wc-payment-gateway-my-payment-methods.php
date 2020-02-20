@@ -1148,86 +1148,16 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * Handle payment methods actions, e.g. deleting a payment method or setting
 	 * one as default
 	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-20 {WV 2020-02-20}
+	 *
+	 * @internal
+	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
 	 */
 	public function handle_payment_method_actions() {
 
-		if ( ! $this->has_tokens ) {
-			return;
-		}
-
-		$token  = isset( $_GET[ 'wc-' . $this->get_plugin()->get_id_dasherized() . '-token' ] )  ? trim( $_GET[ 'wc-' . $this->get_plugin()->get_id_dasherized() . '-token' ] ) : '';
-		$action = isset( $_GET[ 'wc-' . $this->get_plugin()->get_id_dasherized() . '-action' ] ) ? $_GET[ 'wc-' . $this->get_plugin()->get_id_dasherized() . '-action' ] : '';
-
-		// process payment method actions
-		if ( $token && $action && ! empty( $_GET['_wpnonce'] ) && is_user_logged_in() ) {
-
-			// security check
-			if ( false === wp_verify_nonce( $_GET['_wpnonce'], 'wc-' . $this->get_plugin()->get_id_dasherized() . '-token-action' ) ) {
-
-				SV_WC_Helper::wc_add_notice( esc_html__( 'Oops, you took too long, please try again.', 'woocommerce-plugin-framework' ), 'error' );
-
-				$this->redirect_to_my_account();
-			}
-
-			// current logged in user
-			$user_id = get_current_user_id();
-
-			$gateway = $this->get_plugin()->get_gateway_from_token( $user_id, $token );
-
-			// couldn't find an associated gateway for that token
-			if ( ! is_object( $gateway ) ) {
-
-				SV_WC_Helper::wc_add_notice( esc_html__( 'There was an error with your request, please try again.', 'woocommerce-plugin-framework' ), 'error' );
-
-				$this->redirect_to_my_account();
-			}
-
-			switch ( $action ) {
-
-				// handle deletion
-				case 'delete':
-
-					if ( ! $gateway->get_payment_tokens_handler()->remove_token( $user_id, $token ) ) {
-
-						/* translators: Payment method as in a specific credit card, e-check or bank account */
-						SV_WC_Helper::wc_add_notice( esc_html__( 'Error removing payment method', 'woocommerce-plugin-framework' ), 'error' );
-
-					} else {
-
-						/* translators: Payment method as in a specific credit card, e-check or bank account */
-						SV_WC_Helper::wc_add_notice( esc_html__( 'Payment method deleted.', 'woocommerce-plugin-framework' ) );
-
-						/**
-						 * Fires after a new payment method is deleted by a customer.
-						 *
-						 * @since 5.0.0
-						 *
-						 * @param string $token_id ID of the deleted token
-						 * @param int $user_id user ID
-						 */
-						do_action( 'wc_payment_gateway_' . $gateway->get_id() . '_payment_method_deleted', $token, $user_id );
-					}
-
-				break;
-
-				// custom actions
-				default:
-
-					/**
-					 * My Payment Methods Custom Action.
-					 *
-					 * Fired when a custom action is requested for a payment method (e.g. other than delete/make default)
-					 *
-					 * @since 4.0.0
-					 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-					 */
-					do_action( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_action_' . sanitize_title( $action ), $this );
-				break;
-			}
-
-			$this->redirect_to_my_account();
-		}
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 	}
 
 
