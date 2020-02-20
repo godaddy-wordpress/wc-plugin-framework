@@ -117,11 +117,15 @@ jQuery( document ).ready ($) ->
 
 					# remove other methods' "Default" badges if this was set as default
 					if response.data.is_default
-						row.siblings().find( ".wc-#{@slug}-payment-method-default .view" ).empty().siblings( '.edit' ).find( 'input' ).prop( 'checked', false )
+						row.siblings().find( ".woocommerce-PaymentMethod--default .view" ).empty().siblings( '.edit' ).find( 'input' ).prop( 'checked', false )
 
-					if response.data.html?
-						table = row.parents( 'table' )
-						table.replaceWith( response.data.html )
+					if response.data.title?
+						console.log(row.find('.woocommerce-PaymentMethod--title'))
+						row.find('.woocommerce-PaymentMethod--title').replaceWith( response.data.title )
+
+					if response.data.default?
+						console.log(row.find('.woocommerce-PaymentMethod--default'))
+						row.find('.woocommerce-PaymentMethod--default').replaceWith( response.data.default )
 
 					if response.data.nonce?
 						@ajax_nonce = response.data.nonce

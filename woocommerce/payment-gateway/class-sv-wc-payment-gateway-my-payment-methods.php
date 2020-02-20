@@ -1104,12 +1104,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			// persist the data
 			$gateway->get_payment_tokens_handler()->update_token( $user_id, $token );
 
-			ob_start();
-			woocommerce_account_payment_methods();
-			$table_html = ob_get_clean();
-
 			wp_send_json_success( [
-				'html'       => $table_html,
+				'title'      => $this->get_payment_method_title_html( $token ),
+				'default'    => $this->get_payment_method_default_html( $token ),
 				'is_default' => $token->is_default(),
 				'nonce'      => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
 			] );
