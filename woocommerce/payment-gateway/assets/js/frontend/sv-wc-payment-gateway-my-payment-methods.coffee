@@ -39,6 +39,9 @@ jQuery( document ).ready ($) ->
 			# init tipTip
 			$( ".wc-#{@slug}-payment-method-actions .button.tip" ).tipTip()
 
+			# hide the "Save" button
+			$( ".woocommerce-PaymentMethod--actions .button.save" ).hide()
+
 			# handle the edit action
 			$( ".wc-#{@slug}-my-payment-methods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .edit-payment-method", ( event ) => this.edit_method( event ) )
 
