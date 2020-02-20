@@ -102,9 +102,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		// render JavaScript used in the My Payment Methods section
 		add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render_js' ) );
-
-		// handle payment method deletion, etc.
-		$this->handle_payment_method_actions();
 	}
 
 
