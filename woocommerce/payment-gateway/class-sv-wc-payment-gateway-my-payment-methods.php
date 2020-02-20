@@ -98,6 +98,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		add_filter( 'woocommerce_account_payment_methods_columns', [ $this, 'add_payment_methods_columns' ] );
 
+		add_action( 'woocommerce_account_payment_methods_column_title',   [ $this, 'add_payment_method_title' ] );
 		add_action( 'woocommerce_account_payment_methods_column_details', [ $this, 'add_payment_method_details' ] );
 		add_action( 'woocommerce_account_payment_methods_column_default', [ $this, 'add_payment_method_default' ] );
 
@@ -239,8 +240,11 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_methods_columns( $columns  = [] ) {
 
+		$title_column   = [ 'title' => __( 'Title', 'woocommerce-plugin-framework' ) ];
+		$columns        = SV_WC_Helper::array_insert_after( $columns, 'method', $title_column );
+
 		$details_column = [ 'details' => __( 'Details', 'woocommerce-plugin-framework' ) ];
-		$columns        = SV_WC_Helper::array_insert_after( $columns, 'method', $details_column );
+		$columns        = SV_WC_Helper::array_insert_after( $columns, 'title', $details_column );
 
 		$default_column = [ 'default' => __( 'Default?', 'woocommerce-plugin-framework' ) ];
 		$columns        = SV_WC_Helper::array_insert_after( $columns, 'expires', $default_column );
@@ -250,13 +254,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 *
 		 * Allow actors to modify the table headers.
 		 *
-		 * In 5.6.0, moved from SV_WC_Payment_Gateway_My_Payment_Methods::get_table_headers()
-		 * and renamed the `method` (previously `title`) and `expires` (previously `expiry`)
-		 * for consistency with core column keys.
+		 * In 5.6.0, moved from SV_WC_Payment_Gateway_My_Payment_Methods::get_table_headers() and
+		 * renamed the `expires` column (previously `expiry`) for consistency with core column keys.
 		 *
 		 * @since 4.0.0
 		 * @param array $headers table headers {
 		 *     @type string $method
+		 *     @type string $title
 		 *     @type string $details
 		 *     @type string $expires
 		 *     @type string $default
@@ -267,12 +271,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$columns = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_headers', $columns, $this );
 
 		// backwards compatibility for 3rd parties using the filter with the old column keys
-		if ( array_key_exists( 'title', $columns ) ) {
-
-			$columns['method'] = $columns['title'];
-			unset( $columns['title'] );
-		}
-
 		if ( array_key_exists( 'expiry', $columns ) ) {
 
 			$columns['expires'] = $columns['expiry'];
@@ -298,6 +296,24 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		}
 
 		return null;
+	}
+
+
+	/**
+	 * Adds the Title column content.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param array $method payment method
+	 */
+	public function add_payment_method_title( $method ) {
+
+		if ( $token = $this->get_token_by_id( $method ) ) {
+
+			echo $this->get_payment_method_title_html( $token );
+		}
 	}
 
 
