@@ -40,16 +40,16 @@ jQuery( document ).ready ($) ->
 			$( ".woocommerce-PaymentMethod--actions .button.save" ).hide()
 
 			# handle the edit action
-			$( ".wc-#{@slug}-my-payment-methods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .edit-payment-method", ( event ) => this.edit_method( event ) )
+			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .edit-payment-method", ( event ) => this.edit_method( event ) )
 
 			# handle the save action
-			$( ".wc-#{@slug}-my-payment-methods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .save-payment-method", ( event ) => this.save_method( event ) )
+			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .save-payment-method", ( event ) => this.save_method( event ) )
 
 			# handle the cancel action
-			$( ".wc-#{@slug}-my-payment-methods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .cancel-edit-payment-method", ( event ) => this.cancel_edit( event ) )
+			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .cancel-edit-payment-method", ( event ) => this.cancel_edit( event ) )
 
 			# handle the delete action
-			$( ".wc-#{@slug}-my-payment-methods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .delete-payment-method", ( event ) =>
+			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .delete-payment-method", ( event ) =>
 
 				if $( event.currentTarget ).hasClass( 'disabled' ) or not confirm( @i18n.delete_ays )
 					event.preventDefault()
@@ -170,7 +170,7 @@ jQuery( document ).ready ($) ->
 		enable_editing_ui: ->
 
 			# set the methods table as 'editing'
-			$( ".wc-#{@slug}-my-payment-methods" ).addClass( 'editing' )
+			$( ".woocommerce-MyAccount-paymentMethods" ).addClass( 'editing' )
 
 			# disable the Add Payment Method button
 			$( '.button[href*="add-payment-method"]' ).addClass( 'disabled' )
@@ -182,7 +182,7 @@ jQuery( document ).ready ($) ->
 		disable_editing_ui: ->
 
 			# removes the methods table's "editing" status
-			$( ".wc-#{@slug}-my-payment-methods" ).removeClass( 'editing' )
+			$( ".woocommerce-MyAccount-paymentMethods" ).removeClass( 'editing' )
 
 			# re-enable the Add Payment Method button
 			$( '.button[href*="add-payment-method"]' ).removeClass( 'disabled' )
@@ -191,13 +191,13 @@ jQuery( document ).ready ($) ->
 		# Blocks the payment methods table UI.
 		#
 		# @since 5.1.0
-		block_ui: -> $( ".wc-#{@slug}-my-payment-methods" ).parent( 'div' ).block( message: null, overlayCSS: background: '#fff', opacity: 0.6 )
+		block_ui: -> $( ".woocommerce-MyAccount-paymentMethods" ).parent( 'div' ).block( message: null, overlayCSS: background: '#fff', opacity: 0.6 )
 
 
 		# Unblocks the payment methods table UI.
 		#
 		# @since 5.1.0
-		unblock_ui: -> $( ".wc-#{@slug}-my-payment-methods" ).parent( 'div' ).unblock()
+		unblock_ui: -> $( ".woocommerce-MyAccount-paymentMethods" ).parent( 'div' ).unblock()
 
 
 		# Displays an error message to the user.
@@ -213,6 +213,6 @@ jQuery( document ).ready ($) ->
 
 			message = @i18n.save_error unless message
 
-			columns = $( ".wc-#{@slug}-my-payment-methods thead tr th" ).size()
+			columns = $( ".woocommerce-MyAccount-paymentMethods thead tr th" ).size()
 
 			$( '<tr class="error"><td colspan="' + columns + '">' + message + '</td></tr>' ).insertAfter( row ).find( 'td' ).delay( 8000 ).slideUp( 200 )
