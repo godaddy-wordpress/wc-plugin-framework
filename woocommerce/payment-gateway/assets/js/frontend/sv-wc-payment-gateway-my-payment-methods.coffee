@@ -120,7 +120,8 @@ jQuery( document ).ready ($) ->
 						row.siblings().find( ".wc-#{@slug}-payment-method-default .view" ).empty().siblings( '.edit' ).find( 'input' ).prop( 'checked', false )
 
 					if response.data.html?
-						row.replaceWith( response.data.html )
+						table = row.parents( 'table' )
+						table.replaceWith( response.data.html )
 
 					if response.data.nonce?
 						@ajax_nonce = response.data.nonce

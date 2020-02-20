@@ -1096,7 +1096,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			// set the data
 			$token = $this->save_token_data( $token, $data );
 
-			 // use the handler so other methods don't remain default
+			// use the handler so other methods don't remain default
 			if ( $token->is_default() ) {
 				$gateway->get_payment_tokens_handler()->set_default_token( $user_id, $token );
 			}
@@ -1104,11 +1104,11 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			// persist the data
 			$gateway->get_payment_tokens_handler()->update_token( $user_id, $token );
 
-			wp_send_json_success( array(
-				'html'       => $this->get_table_body_row_html( array( $token ) ),
+			wp_send_json_success( [
+				'html'       => woocommerce_account_payment_methods(),
 				'is_default' => $token->is_default(),
 				'nonce'      => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
-			) );
+			] );
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
