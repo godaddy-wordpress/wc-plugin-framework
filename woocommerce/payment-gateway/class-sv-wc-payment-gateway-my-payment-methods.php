@@ -862,14 +862,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	protected function get_payment_method_default_html( SV_WC_Payment_Gateway_Payment_Token $token ) {
 
-		$html = '<div class="view">';
-		 	$html .= $token->is_default() ? '<mark class="default">' . esc_html__( 'Default', 'woocommerce-plugin-framework' ) . '</mark>' : '';
-		$html .= '</div>';
-
-		// add the edit context input
-		$html .= '<div class="edit" style="display:none;">';
-			$html .= '<input type="checkbox" class="default" name="default" value="yes" ' . checked( true, $token->is_default(), false ) . ' />';
-		$html .= '</div>';
+		$html = $token->is_default() ? '<mark class="default">' . esc_html__( 'Default', 'woocommerce-plugin-framework' ) . '</mark>' : '';
 
 		/**
 		 * Filter a token's payment method "default" flag HTML.
