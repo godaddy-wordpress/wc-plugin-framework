@@ -98,6 +98,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		add_filter( 'woocommerce_account_payment_methods_columns', [ $this, 'add_payment_methods_columns' ] );
 
+		add_action( 'woocommerce_account_payment_methods_column_title',   [ $this, 'add_payment_method_title' ] );
 		add_action( 'woocommerce_account_payment_methods_column_details', [ $this, 'add_payment_method_details' ] );
 		add_action( 'woocommerce_account_payment_methods_column_default', [ $this, 'add_payment_method_default' ] );
 
@@ -295,6 +296,24 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		}
 
 		return null;
+	}
+
+
+	/**
+	 * Adds the Title column content.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param array $method payment method
+	 */
+	public function add_payment_method_title( $method ) {
+
+		if ( $token = $this->get_token_by_id( $method ) ) {
+
+			echo $this->get_payment_method_title_html( $token );
+		}
 	}
 
 
