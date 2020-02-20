@@ -71,13 +71,13 @@ jQuery( document ).ready ($) ->
 
 			$( '.woocommerce-MyAccount-paymentMethods' ).find( 'tr' ).each ( index, element ) =>
 
-				titleColumn = $( element ).find( '.woocommerce-PaymentMethod--title' )
+				titleColumn = $( element ).find( 'td.woocommerce-PaymentMethod--title' )
 
 				# Title column is not empty, this is a FW token
 				if ( titleColumn.children().length > 0 )
 
 					# replace Method column content
-					$( element ).find( '.woocommerce-PaymentMethod--method' ).html( titleColumn.html() )
+					$( element ).find( 'td.woocommerce-PaymentMethod--method' ).html( titleColumn.html() )
 					# clear the Title column
 					titleColumn.empty()
 
