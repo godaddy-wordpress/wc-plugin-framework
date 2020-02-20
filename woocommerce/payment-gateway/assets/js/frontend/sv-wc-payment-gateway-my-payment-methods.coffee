@@ -34,22 +34,22 @@ jQuery( document ).ready ($) ->
 			@ajax_nonce = args.ajax_nonce
 
 			# init tipTip
-			$( ".wc-#{@slug}-payment-method-actions .button.tip" ).tipTip()
+			$( ".woocommerce-PaymentMethod--actions .button.tip" ).tipTip()
 
 			# hide the "Save" button
 			$( ".woocommerce-PaymentMethod--actions .button.save" ).hide()
 
 			# handle the edit action
-			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .edit-payment-method", ( event ) => this.edit_method( event ) )
+			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .edit-payment-method", ( event ) => this.edit_method( event ) )
 
 			# handle the save action
-			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .save-payment-method", ( event ) => this.save_method( event ) )
+			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .save-payment-method", ( event ) => this.save_method( event ) )
 
 			# handle the cancel action
-			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .cancel-edit-payment-method", ( event ) => this.cancel_edit( event ) )
+			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .cancel-edit-payment-method", ( event ) => this.cancel_edit( event ) )
 
 			# handle the delete action
-			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .delete-payment-method", ( event ) =>
+			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .delete-payment-method", ( event ) =>
 
 				if $( event.currentTarget ).hasClass( 'disabled' ) or not confirm( @i18n.delete_ays )
 					event.preventDefault()
