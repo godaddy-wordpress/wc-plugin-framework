@@ -379,10 +379,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_method_default( $method ) {
 
-		if ( $token = $this->get_token_by_id( $method ) ) {
-
-			echo $this->get_payment_method_default_html( $token );
-		}
+		echo $this->get_payment_method_default_html( ! empty( $method['is_default'] ), $this->get_token_by_id( $method ) );
 	}
 
 
@@ -765,7 +762,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		$method = array(
 			'title'   => $this->get_payment_method_title_html( $token ),
-			'default' => $this->get_payment_method_default_html( $token ),
+			'default' => $this->get_payment_method_default_html( $token->is_default(), $token ),
 			'details' => $this->get_payment_method_details_html( $token ),
 			'actions' => $this->get_payment_method_actions_html( $token ),
 		);
@@ -857,22 +854,28 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 *
 	 * @since 5.1.0
 	 *
-	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
+	 * @param boolean $is_default true if the token is the default token
+	 * @param SV_WC_Payment_Gateway_Payment_Token|null $token FW token object, only set if the token is a FW token
 	 * @return string
 	 */
-	protected function get_payment_method_default_html( SV_WC_Payment_Gateway_Payment_Token $token ) {
+	protected function get_payment_method_default_html( $is_default, SV_WC_Payment_Gateway_Payment_Token $token = null ) {
 
-		$html = $token->is_default() ? '<mark class="default">' . esc_html__( 'Default', 'woocommerce-plugin-framework' ) . '</mark>' : '';
+		$html = $is_default ? '<mark class="default">' . esc_html__( 'Default', 'woocommerce-plugin-framework' ) . '</mark>' : '';
 
-		/**
-		 * Filter a token's payment method "default" flag HTML.
-		 *
-		 * @since 5.1.0
-		 *
-		 * @param string $html "default" flag HTML
-		 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_default_html', $html, $token );
+		if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
+
+			/**
+			 * Filter a FW token's payment method "default" flag HTML.
+			 *
+			 * @since 5.1.0
+			 *
+			 * @param string $html "default" flag HTML
+			 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
+			 */
+			$html = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_default_html', $html, $token );
+		}
+
+		return $html;
 	}
 
 
