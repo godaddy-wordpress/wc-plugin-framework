@@ -88,9 +88,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			return;
 		}
 
-		// load all tokens for the given plugin
-		$this->load_tokens();
-
 		// styles/scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_styles_scripts' ) );
 
