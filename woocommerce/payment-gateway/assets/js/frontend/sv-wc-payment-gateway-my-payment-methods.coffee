@@ -33,9 +33,6 @@ jQuery( document ).ready ($) ->
 			@ajax_url   = args.ajax_url
 			@ajax_nonce = args.ajax_nonce
 
-			# hide the core "No methods" message
-			$( ".wc-#{@slug}-my-payment-methods" ).prev( ".woocommerce-Message.woocommerce-Message--info" ).hide() unless args.has_core_tokens
-
 			# init tipTip
 			$( ".wc-#{@slug}-payment-method-actions .button.tip" ).tipTip()
 
