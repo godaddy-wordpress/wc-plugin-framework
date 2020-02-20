@@ -73,8 +73,8 @@ jQuery( document ).ready ($) ->
 			button = $( event.currentTarget )
 			row    = button.parents( 'tr' )
 
-			row.find( '.view' ).hide()
-			row.find( '.edit' ).show()
+			row.find( 'div.view' ).hide()
+			row.find( 'div.edit' ).show()
 			row.addClass( 'editing' )
 
 			# change the Edit button to "Cancel"
@@ -148,8 +148,8 @@ jQuery( document ).ready ($) ->
 			button = $( event.currentTarget )
 			row    = button.parents( 'tr' )
 
-			row.find( '.view' ).show()
-			row.find( '.edit' ).hide()
+			row.find( 'div.view' ).show()
+			row.find( 'div.edit' ).hide()
 			row.removeClass( 'editing' )
 
 			# change the "Cancel" button back to "Edit"
