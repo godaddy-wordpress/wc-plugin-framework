@@ -40,7 +40,7 @@ jQuery( document ).ready ($) ->
 			$( ".woocommerce-PaymentMethod--actions .button.save" ).hide()
 
 			# handle the edit action
-			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .edit-payment-method", ( event ) => this.edit_method( event ) )
+			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .button.edit", ( event ) => this.edit_method( event ) )
 
 			# handle the save action
 			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .save-payment-method", ( event ) => this.save_method( event ) )
@@ -78,7 +78,7 @@ jQuery( document ).ready ($) ->
 			row.addClass( 'editing' )
 
 			# change the Edit button to "Cancel"
-			button.text( @i18n.cancel_button ).removeClass( 'edit-payment-method' ).addClass( 'cancel-edit-payment-method' ).removeClass( 'button' )
+			button.text( @i18n.cancel_button ).removeClass( 'edit' ).addClass( 'cancel-edit-payment-method' ).removeClass( 'button' )
 
 			button.siblings( '.save-payment-method' ).show()
 			button.siblings( '.delete-payment-method' ).hide()
@@ -153,7 +153,7 @@ jQuery( document ).ready ($) ->
 			row.removeClass( 'editing' )
 
 			# change the "Cancel" button back to "Edit"
-			button.removeClass( 'cancel-edit-payment-method' ).addClass( 'edit-payment-method' ).text( @i18n.edit_button ).addClass( 'button' )
+			button.removeClass( 'cancel-edit-payment-method' ).addClass( 'edit' ).text( @i18n.edit_button ).addClass( 'button' )
 
 			button.siblings( '.save-payment-method' ).hide()
 			button.siblings( '.delete-payment-method' ).show()
