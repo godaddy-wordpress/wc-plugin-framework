@@ -837,6 +837,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		// add the edit context input
 		$html .= '<div class="edit" style="display:none;">';
 			$html .= '<input type="text" class="nickname" name="nickname" value="' . esc_html( $token->get_nickname() ) . '" placeholder="' . esc_attr( __( 'Nickname', 'woocommerce-plugin-framework' ) ) . '" />';
+			$html .= '<input type="hidden" name="token-id" value="' . esc_attr( $token->get_id() ) . '" />';
 		$html .= '</div>';
 
 		/**

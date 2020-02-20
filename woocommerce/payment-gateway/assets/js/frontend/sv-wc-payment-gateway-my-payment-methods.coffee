@@ -106,7 +106,7 @@ jQuery( document ).ready ($) ->
 			data =
 				action:   "wc_#{@id}_save_payment_method"
 				nonce:    @ajax_nonce
-				token_id: row.data( 'token-id' )
+				token_id: row.find( 'input[name=token-id]' ).val()
 				data:     row.find( 'input[name]' ).serialize()
 
 			$.post( @ajax_url, data )
