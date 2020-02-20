@@ -723,6 +723,8 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 *
 	 * TODO: remove this method by version 6.0.0 or by 2021-02-20 {WV 2020-02-20}
 	 *
+	 * @internal
+	 *
 	 * @since 4.3.0
 	 * @deprecated 5.6.0-dev
 	 *
@@ -743,6 +745,8 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * Disables the "Delete" My Payment Methods method action button if there is an associated subscription.
 	 *
 	 * TODO: remove this method by version 6.0.0 or by 2021-02-20 {WV 2020-02-20}
+	 *
+	 * @internal
 	 *
 	 * @since 4.3.0
 	 * @deprecated 5.6.0-dev
