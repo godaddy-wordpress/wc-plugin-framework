@@ -149,7 +149,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Gets the gateway ID for the token.
 	 *
-	 * @since x.y.z
+	 * @since 5.6.0-dev.1
 	 *
 	 * @return string
 	 */
