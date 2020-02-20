@@ -670,7 +670,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 *
 	 * TODO: Ask Subscriptions developers whether they would be interested in start adding the column to the payment methods table themselves {WV 2020-02-19}
 	 *
-	 * @since x.y.z
+	 * @since 5.6.0-dev
 	 *
 	 * @param array $method payment method
 	 */
@@ -690,7 +690,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Gets the HTML code for the list of subscriptions orders associated with the given token.
 	 *
-	 * @since x.y.z
+	 * @since 5.6.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token the payment token
 	 * @return string

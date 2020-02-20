@@ -72,7 +72,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * A factory method to build and return a payment token object for the gateway.
 	 * Child implementations can override this method to return a custom payment token.
 	 *
-	 * From version x.y.z, this method can accept a core \WC_Payment_Token type as the second argument to read data from.
+	 * From version 5.6.0-dev, this method can accept a core \WC_Payment_Token type as the second argument to read data from.
 	 *
 	 * @since 4.3.0
 	 *
@@ -671,7 +671,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/**
 	 * Gets token objects from the legacy user meta data store.
 	 *
-	 * @since x.y.z
+	 * @since 5.6.0-dev
 	 *
 	 * @param int $user_id WordPress user ID
 	 * @param null|string $environment_id desired environment ID
