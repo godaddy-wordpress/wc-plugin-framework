@@ -49,7 +49,7 @@ jQuery( document ).ready ($) ->
 			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .cancel-edit", ( event ) => this.cancel_edit( event ) )
 
 			# handle the delete action
-			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .delete-payment-method", ( event ) =>
+			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .button.delete", ( event ) =>
 
 				if $( event.currentTarget ).hasClass( 'disabled' ) or not confirm( @i18n.delete_ays )
 					event.preventDefault()
@@ -81,7 +81,7 @@ jQuery( document ).ready ($) ->
 			button.text( @i18n.cancel_button ).removeClass( 'edit' ).addClass( 'cancel-edit' ).removeClass( 'button' )
 
 			button.siblings( '.save-payment-method' ).show()
-			button.siblings( '.delete-payment-method' ).hide()
+			button.siblings( '.delete' ).hide()
 
 			this.enable_editing_ui()
 
@@ -156,7 +156,7 @@ jQuery( document ).ready ($) ->
 			button.removeClass( 'cancel-edit' ).addClass( 'edit' ).text( @i18n.edit_button ).addClass( 'button' )
 
 			button.siblings( '.save-payment-method' ).hide()
-			button.siblings( '.delete-payment-method' ).show()
+			button.siblings( '.delete' ).show()
 
 			this.disable_editing_ui()
 
