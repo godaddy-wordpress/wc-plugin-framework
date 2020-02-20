@@ -837,6 +837,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		// add the edit context input
 		$html .= '<div class="edit" style="display:none;">';
 			$html .= '<input type="text" class="nickname" name="nickname" value="' . esc_html( $token->get_nickname() ) . '" placeholder="' . esc_attr( __( 'Nickname', 'woocommerce-plugin-framework' ) ) . '" />';
+			$html .= '<input type="hidden" name="token-id" value="' . esc_attr( $token->get_id() ) . '" />';
 		$html .= '</div>';
 
 		/**
@@ -1095,7 +1096,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			// set the data
 			$token = $this->save_token_data( $token, $data );
 
-			 // use the handler so other methods don't remain default
+			// use the handler so other methods don't remain default
 			if ( $token->is_default() ) {
 				$gateway->get_payment_tokens_handler()->set_default_token( $user_id, $token );
 			}
@@ -1103,11 +1104,12 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			// persist the data
 			$gateway->get_payment_tokens_handler()->update_token( $user_id, $token );
 
-			wp_send_json_success( array(
-				'html'       => $this->get_table_body_row_html( array( $token ) ),
+			wp_send_json_success( [
+				'title'      => $this->get_payment_method_title_html( $token ),
+				'default'    => $this->get_payment_method_default_html( $token ),
 				'is_default' => $token->is_default(),
 				'nonce'      => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
-			) );
+			] );
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 

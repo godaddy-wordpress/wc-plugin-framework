@@ -33,23 +33,23 @@ jQuery( document ).ready ($) ->
 			@ajax_url   = args.ajax_url
 			@ajax_nonce = args.ajax_nonce
 
-			# hide the core "No methods" message
-			$( ".wc-#{@slug}-my-payment-methods" ).prev( ".woocommerce-Message.woocommerce-Message--info" ).hide() unless args.has_core_tokens
-
 			# init tipTip
-			$( ".wc-#{@slug}-payment-method-actions .button.tip" ).tipTip()
+			$( ".woocommerce-PaymentMethod--actions .button.tip" ).tipTip()
+
+			# hide the "Save" button
+			$( ".woocommerce-PaymentMethod--actions .button.save" ).hide()
 
 			# handle the edit action
-			$( ".wc-#{@slug}-my-payment-methods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .edit-payment-method", ( event ) => this.edit_method( event ) )
+			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .button.edit", ( event ) => this.edit_method( event ) )
 
 			# handle the save action
-			$( ".wc-#{@slug}-my-payment-methods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .save-payment-method", ( event ) => this.save_method( event ) )
+			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .button.save", ( event ) => this.save_method( event ) )
 
 			# handle the cancel action
-			$( ".wc-#{@slug}-my-payment-methods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .cancel-edit-payment-method", ( event ) => this.cancel_edit( event ) )
+			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .cancel-edit", ( event ) => this.cancel_edit( event ) )
 
 			# handle the delete action
-			$( ".wc-#{@slug}-my-payment-methods" ).on( 'click', ".wc-#{@slug}-payment-method-actions .delete-payment-method", ( event ) =>
+			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .button.delete", ( event ) =>
 
 				if $( event.currentTarget ).hasClass( 'disabled' ) or not confirm( @i18n.delete_ays )
 					event.preventDefault()
@@ -73,15 +73,15 @@ jQuery( document ).ready ($) ->
 			button = $( event.currentTarget )
 			row    = button.parents( 'tr' )
 
-			row.find( '.view' ).hide()
-			row.find( '.edit' ).show()
+			row.find( 'div.view' ).hide()
+			row.find( 'div.edit' ).show()
 			row.addClass( 'editing' )
 
 			# change the Edit button to "Cancel"
-			button.text( @i18n.cancel_button ).removeClass( 'edit-payment-method' ).addClass( 'cancel-edit-payment-method' ).removeClass( 'button' )
+			button.text( @i18n.cancel_button ).removeClass( 'edit' ).addClass( 'cancel-edit' ).removeClass( 'button' )
 
-			button.siblings( '.save-payment-method' ).show()
-			button.siblings( '.delete-payment-method' ).hide()
+			button.siblings( '.save' ).show()
+			button.siblings( '.delete' ).hide()
 
 			this.enable_editing_ui()
 
@@ -106,7 +106,7 @@ jQuery( document ).ready ($) ->
 			data =
 				action:   "wc_#{@id}_save_payment_method"
 				nonce:    @ajax_nonce
-				token_id: row.data( 'token-id' )
+				token_id: row.find( 'input[name=token-id]' ).val()
 				data:     row.find( 'input[name]' ).serialize()
 
 			$.post( @ajax_url, data )
@@ -117,13 +117,23 @@ jQuery( document ).ready ($) ->
 
 					# remove other methods' "Default" badges if this was set as default
 					if response.data.is_default
-						row.siblings().find( ".wc-#{@slug}-payment-method-default .view" ).empty().siblings( '.edit' ).find( 'input' ).prop( 'checked', false )
+						row.siblings().find( ".woocommerce-PaymentMethod--default .view" ).empty().siblings( '.edit' ).find( 'input' ).prop( 'checked', false )
 
-					if response.data.html?
-						row.replaceWith( response.data.html )
+					if response.data.title?
+						row.find('.woocommerce-PaymentMethod--title').html( response.data.title )
+
+					if response.data.default?
+						row.find('.woocommerce-PaymentMethod--default').html( response.data.default )
 
 					if response.data.nonce?
 						@ajax_nonce = response.data.nonce
+
+					# change the "Cancel" button back to "Edit"
+					button.siblings( '.cancel-edit' ).removeClass( 'cancel-edit' ).addClass( 'edit' ).text( @i18n.edit_button ).addClass( 'button' )
+
+					# hide the "Save" button
+					button.hide()
+					button.siblings( '.delete' ).show()
 
 					this.disable_editing_ui()
 
@@ -136,7 +146,7 @@ jQuery( document ).ready ($) ->
 					this.unblock_ui()
 
 
-		# Cancels editing a payment method.
+		# Cancels/stop editing a payment method.
 		#
 		# @since 5.1.0
 		#
@@ -148,15 +158,15 @@ jQuery( document ).ready ($) ->
 			button = $( event.currentTarget )
 			row    = button.parents( 'tr' )
 
-			row.find( '.view' ).show()
-			row.find( '.edit' ).hide()
+			row.find( 'div.view' ).show()
+			row.find( 'div.edit' ).hide()
 			row.removeClass( 'editing' )
 
 			# change the "Cancel" button back to "Edit"
-			button.removeClass( 'cancel-edit-payment-method' ).addClass( 'edit-payment-method' ).text( @i18n.edit_button ).addClass( 'button' )
+			button.removeClass( 'cancel-edit' ).addClass( 'edit' ).text( @i18n.edit_button ).addClass( 'button' )
 
-			button.siblings( '.save-payment-method' ).hide()
-			button.siblings( '.delete-payment-method' ).show()
+			button.siblings( '.save' ).hide()
+			button.siblings( '.delete' ).show()
 
 			this.disable_editing_ui()
 
@@ -170,7 +180,7 @@ jQuery( document ).ready ($) ->
 		enable_editing_ui: ->
 
 			# set the methods table as 'editing'
-			$( ".wc-#{@slug}-my-payment-methods" ).addClass( 'editing' )
+			$( ".woocommerce-MyAccount-paymentMethods" ).addClass( 'editing' )
 
 			# disable the Add Payment Method button
 			$( '.button[href*="add-payment-method"]' ).addClass( 'disabled' )
@@ -182,7 +192,7 @@ jQuery( document ).ready ($) ->
 		disable_editing_ui: ->
 
 			# removes the methods table's "editing" status
-			$( ".wc-#{@slug}-my-payment-methods" ).removeClass( 'editing' )
+			$( ".woocommerce-MyAccount-paymentMethods" ).removeClass( 'editing' )
 
 			# re-enable the Add Payment Method button
 			$( '.button[href*="add-payment-method"]' ).removeClass( 'disabled' )
@@ -191,13 +201,13 @@ jQuery( document ).ready ($) ->
 		# Blocks the payment methods table UI.
 		#
 		# @since 5.1.0
-		block_ui: -> $( ".wc-#{@slug}-my-payment-methods" ).parent( 'div' ).block( message: null, overlayCSS: background: '#fff', opacity: 0.6 )
+		block_ui: -> $( ".woocommerce-MyAccount-paymentMethods" ).parent( 'div' ).block( message: null, overlayCSS: background: '#fff', opacity: 0.6 )
 
 
 		# Unblocks the payment methods table UI.
 		#
 		# @since 5.1.0
-		unblock_ui: -> $( ".wc-#{@slug}-my-payment-methods" ).parent( 'div' ).unblock()
+		unblock_ui: -> $( ".woocommerce-MyAccount-paymentMethods" ).parent( 'div' ).unblock()
 
 
 		# Displays an error message to the user.
@@ -213,6 +223,6 @@ jQuery( document ).ready ($) ->
 
 			message = @i18n.save_error unless message
 
-			columns = $( ".wc-#{@slug}-my-payment-methods thead tr th" ).size()
+			columns = $( ".woocommerce-MyAccount-paymentMethods thead tr th" ).size()
 
 			$( '<tr class="error"><td colspan="' + columns + '">' + message + '</td></tr>' ).insertAfter( row ).find( 'td' ).delay( 8000 ).slideUp( 200 )
