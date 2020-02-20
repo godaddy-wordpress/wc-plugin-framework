@@ -239,8 +239,11 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_methods_columns( $columns  = [] ) {
 
+		$title_column   = [ 'title' => __( 'Title', 'woocommerce-plugin-framework' ) ];
+		$columns        = SV_WC_Helper::array_insert_after( $columns, 'method', $title_column );
+
 		$details_column = [ 'details' => __( 'Details', 'woocommerce-plugin-framework' ) ];
-		$columns        = SV_WC_Helper::array_insert_after( $columns, 'method', $details_column );
+		$columns        = SV_WC_Helper::array_insert_after( $columns, 'title', $details_column );
 
 		$default_column = [ 'default' => __( 'Default?', 'woocommerce-plugin-framework' ) ];
 		$columns        = SV_WC_Helper::array_insert_after( $columns, 'expires', $default_column );
