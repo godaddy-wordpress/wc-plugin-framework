@@ -100,6 +100,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		add_action( 'woocommerce_account_payment_methods_column_details', [ $this, 'add_payment_method_details' ] );
 		add_action( 'woocommerce_account_payment_methods_column_default', [ $this, 'add_payment_method_default' ] );
 
+		// map Framework payment methods actions to WooCommerce actions for backwards compatibility
+		add_action( 'woocommerce_before_account_payment_methods', [ $this, 'before_payment_methods_table' ] );
+
 		// render JavaScript used in the My Payment Methods section
 		add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render_js' ) );
 	}
@@ -370,6 +373,34 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		if ( $token = $this->get_token_by_id( $method ) ) {
 
 			echo $this->get_payment_method_default_html( $token );
+		}
+	}
+
+
+	/**
+	 * Triggers the wc_{id}_before_my_payment_method_table action.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param bool $has_methods whether there any saved payment methods in the table
+	*/
+	public function before_payment_methods_table( $has_methods ) {
+
+		if ( $has_methods ) {
+
+			/**
+			 * Before My Payment Methods Table Action.
+			*
+			* Fired before WooCommerce's My Payment Methods table HTML is rendered.
+			*
+			* @since 4.0.0
+			* @since 5.6.0-dev triggered on woocommerce_before_account_payment_methods
+			*
+			* @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+			*/
+			do_action( 'wc_' . $this->get_plugin()->get_id() . '_before_my_payment_method_table', $this );
 		}
 	}
 
