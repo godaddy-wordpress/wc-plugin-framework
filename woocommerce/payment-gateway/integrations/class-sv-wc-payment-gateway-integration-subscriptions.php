@@ -117,6 +117,8 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		add_filter( 'wc_' . $this->get_gateway()->get_plugin()->get_id() . '_my_payment_methods_table_body_row_data', array( $this, 'add_my_payment_methods_table_body_row_data' ), 10, 3 );
 		add_filter( 'wc_' . $this->get_gateway()->get_plugin()->get_id() . '_my_payment_methods_table_method_actions', array( $this, 'disable_my_payment_methods_table_method_delete' ), 10, 3 );
 
+		add_filter( 'woocommerce_account_payment_methods_column_subscriptions', [ $this, 'add_payment_method_subscriptions' ] );
+
 		/* Admin Change Payment Method support */
 
 		// framework defaults - payment_token and customer_id
@@ -658,6 +660,63 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		}
 
 		return $new_headers;
+	}
+
+
+	/**
+	 * Displays a list of subscriptions orders associated with the current token.
+	 *
+	 * This method only generates output for tokens created by the framework.
+	 *
+	 * TODO: Ask Subscriptions developers whether they would be interested in start adding the column to the payment methods table themselves {WV 2020-02-19}
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param array $method payment method
+	 */
+	public function add_payment_method_subscriptions( $method ) {
+
+		if ( isset( $method['token'] ) ) {
+
+			$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( get_current_user_id(), $method['token'] );
+
+			if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
+				echo $this->get_payment_method_subscriptions_html( $token );
+			}
+		}
+	}
+
+
+	/**
+	 * Gets the HTML code for the list of subscriptions orders associated with the given token.
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param SV_WC_Payment_Gateway_Payment_Token $token the payment token
+	 * @return string
+	 */
+	private function get_payment_method_subscriptions_html( $token ) {
+
+		$html = '';
+
+		// make sure the token belongs to this gateway
+		if ( $token->get_gateway_id() === $this->get_gateway()->get_id() ) {
+
+			$subscription_ids = array();
+
+			// build a link for each subscription
+			foreach ( $this->get_payment_token_subscriptions( get_current_user_id(), $token ) as $subscription ) {
+				$subscription_ids[] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $subscription->get_view_order_url() ), esc_attr( sprintf( _x( '#%s', 'hash before order number', 'woocommerce-plugin-framework' ), $subscription->get_order_number() ) ) );
+			}
+
+			if ( ! empty( $subscription_ids ) ) {
+				$html = implode( ', ', $subscription_ids );
+			}
+		}
+
+		return $html;
 	}
 
 
