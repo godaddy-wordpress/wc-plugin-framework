@@ -312,8 +312,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	private function get_token_by_id( $method ) {
 
-		if ( ! empty( $method['token'] ) && ! empty( $this->tokens[ $method['token'] ] ) ) {
-			return $this->tokens[ $method['token'] ];
+		if ( ! empty( $method['token'] ) ) {
+			return $this->get_plugin()->get_gateway()->get_payment_tokens_handler()->get_token( get_current_user_id(), $method['token'] );
 		}
 
 		return null;
