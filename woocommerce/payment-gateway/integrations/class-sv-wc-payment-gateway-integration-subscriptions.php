@@ -753,7 +753,10 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Disables the "Delete" My Payment Methods method action button if there is an associated subscription.
 	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-20 {WV 2020-02-20}
+	 *
 	 * @since 4.3.0
+	 * @deprecated since 5.6.0-dev
 	 *
 	 * @param array $actions the token actions
 	 * @param SV_WC_Payment_Gateway_Payment_Token the token object
@@ -762,24 +765,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function disable_my_payment_methods_table_method_delete( $actions, $token, $handler ) {
 
-		$disable_delete = false;
-
-		$subscriptions = $this->get_payment_token_subscriptions( get_current_user_id(), $token );
-
-		// Check each subscription for the ability to change the payment method
-		foreach ( $subscriptions as $subscription ) {
-
-			if ( $subscription->can_be_updated_to( 'new-payment-method' ) ) {
-				$disable_delete = true;
-				break;
-			}
-		}
-
-		// if at least one can be changed, no deleting for you!
-		if ( isset( $actions['delete'] ) && $disable_delete ) {
-			$actions['delete']['class'] = array_merge( (array) $actions['delete']['class'], array( 'disabled' ) );
-			$actions['delete']['tip']   = __( 'This payment method is tied to a subscription and cannot be deleted. Please switch the subscription to another method first.', 'woocommerce-plugin-framework' );
-		}
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
 		return $actions;
 	}
