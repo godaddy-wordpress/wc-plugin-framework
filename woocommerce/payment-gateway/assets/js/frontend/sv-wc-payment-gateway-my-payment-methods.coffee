@@ -130,6 +130,13 @@ jQuery( document ).ready ($) ->
 					if response.data.nonce?
 						@ajax_nonce = response.data.nonce
 
+					# change the "Cancel" button back to "Edit"
+					button.siblings( '.cancel-edit' ).removeClass( 'cancel-edit' ).addClass( 'edit' ).text( @i18n.edit_button ).addClass( 'button' )
+
+					# hide the "Save" button
+					button.hide()
+					button.siblings( '.delete' ).show()
+
 					this.disable_editing_ui()
 
 				.fail ( jqXHR, textStatus, error ) =>
@@ -141,7 +148,7 @@ jQuery( document ).ready ($) ->
 					this.unblock_ui()
 
 
-		# Cancels editing a payment method.
+		# Cancels/stop editing a payment method.
 		#
 		# @since 5.1.0
 		#
