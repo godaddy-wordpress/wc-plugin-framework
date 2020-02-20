@@ -299,6 +299,20 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
+	 * Adds the Title column content.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param array $method payment method
+	 */
+	public function add_payment_method_title( $method ) {
+
+	}
+
+
+	/**
 	 * Adds the Details column content.
 	 *
 	 * @internal
