@@ -1089,19 +1089,12 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			// set the data
 			$token = $this->save_token_data( $token, $data );
 
-			// use the handler so other methods don't remain default
-			if ( $token->is_default() ) {
-				$gateway->get_payment_tokens_handler()->set_default_token( $user_id, $token );
-			}
-
 			// persist the data
 			$gateway->get_payment_tokens_handler()->update_token( $user_id, $token );
 
 			wp_send_json_success( [
-				'title'      => $this->get_payment_method_title_html( $token ),
-				'default'    => $this->get_payment_method_default_html( $token ),
-				'is_default' => $token->is_default(),
-				'nonce'      => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
+				'title' => $this->get_payment_method_title_html( $token ),
+				'nonce' => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
 			] );
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
@@ -1138,8 +1131,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		if ( $clean_nickname || ! $raw_nickname ) {
 			$token->set_nickname( $clean_nickname );
 		}
-
-		$token->set_default( isset( $data['default'] ) && 'yes' === $data['default'] );
 
 		return $token;
 	}
