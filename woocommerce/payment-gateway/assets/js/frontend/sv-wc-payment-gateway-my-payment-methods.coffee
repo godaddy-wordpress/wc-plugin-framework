@@ -71,15 +71,16 @@ jQuery( document ).ready ($) ->
 
 			$( '.woocommerce-MyAccount-paymentMethods' ).find( 'tr' ).each ( index, element ) =>
 
+				# delete the Title header
+				$( element ).find( 'th.woocommerce-PaymentMethod--title' ).remove()
+
 				titleColumn = $( element ).find( 'td.woocommerce-PaymentMethod--title' )
 
 				# Title column is not empty, this is a FW token
 				if ( titleColumn.children().length > 0 )
 
-					# replace Method column content
-					$( element ).find( 'td.woocommerce-PaymentMethod--method' ).html( titleColumn.html() )
-					# clear the Title column
-					titleColumn.empty()
+					# replace Method column
+					$( element ).find( 'td.woocommerce-PaymentMethod--method' ).replaceWith( titleColumn )
 
 
 		# Edits a payment method.
@@ -141,7 +142,7 @@ jQuery( document ).ready ($) ->
 						row.siblings().find( ".woocommerce-PaymentMethod--default .view" ).empty().siblings( '.edit' ).find( 'input' ).prop( 'checked', false )
 
 					if response.data.title?
-						row.find('.woocommerce-PaymentMethod--method').html( response.data.title )
+						row.find('.woocommerce-PaymentMethod--title').html( response.data.title )
 
 					if response.data.default?
 						row.find('.woocommerce-PaymentMethod--default').html( response.data.default )
