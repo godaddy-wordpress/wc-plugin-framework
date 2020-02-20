@@ -310,6 +310,10 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_method_title( $method ) {
 
+		if ( $token = $this->get_token_by_id( $method ) ) {
+
+			echo $this->get_payment_method_title_html( $token );
+		}
 	}
 
 
