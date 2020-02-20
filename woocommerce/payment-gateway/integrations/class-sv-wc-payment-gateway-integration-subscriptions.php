@@ -670,6 +670,8 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 *
 	 * TODO: Ask Subscriptions developers whether they would be interested in start adding the column to the payment methods table themselves {WV 2020-02-19}
 	 *
+	 * @internal
+	 *
 	 * @since 5.6.0-dev
 	 *
 	 * @param array $method payment method
