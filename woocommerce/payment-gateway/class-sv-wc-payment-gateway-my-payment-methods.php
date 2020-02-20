@@ -95,6 +95,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_styles_scripts' ) );
 
 		add_filter( 'woocommerce_payment_methods_list_item', [ $this, 'add_payment_methods_list_item_id' ], 10, 2 );
+		add_filter( 'woocommerce_payment_methods_list_item', [ $this, 'add_payment_methods_list_item_edit_action' ], 10, 2 );
 
 		add_filter( 'woocommerce_account_payment_methods_columns', [ $this, 'add_payment_methods_columns' ] );
 
@@ -222,6 +223,38 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	public function add_payment_methods_list_item_id( $item, $token ) {
 
 		$item['token'] = $token->get_token();
+
+		return $item;
+	}
+
+
+	/**
+	 * Adds the Edit and Save buttons to the Actions column.
+	 *
+	 * @see wc_get_account_saved_payment_methods_list
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param array $item individual list item from woocommerce_saved_payment_methods_list
+	 * @param \WC_Payment_Token $token payment token associated with this method entry
+	 * @return array
+	 */
+	public function add_payment_methods_list_item_edit_action( $item, $token ) {
+
+		$new_actions = [
+			'edit' => [
+				'url'  => '#',
+				'name' => esc_html__( 'Edit', 'woocommerce-plugin-framework' ),
+			],
+			'save' => [
+				'url'  => '#',
+				'name' => esc_html__( 'Save', 'woocommerce-plugin-framework' ),
+			]
+		];
+
+		$item['actions'] = array_merge( $new_actions, $item['actions'] );
 
 		return $item;
 	}
