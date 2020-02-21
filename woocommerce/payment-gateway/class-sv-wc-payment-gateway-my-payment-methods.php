@@ -892,26 +892,19 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Get a token's payment method expiration date HTML.
 	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
+	 *
 	 * @since 5.1.0
+	 * @deprecated 5.6.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return string
 	 */
 	protected function get_payment_method_expiry_html( SV_WC_Payment_Gateway_Payment_Token $token ) {
 
-		$html = esc_html( $token->get_exp_date() );
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		// TODO: add edit support {CW 2018-01-30}
-
-		/**
-		 * Filter a token's payment method expiration date HTML.
-		 *
-		 * @since 5.1.0
-		 *
-		 * @param string $html expiration date HTML
-		 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_expiry_html', $html, $token );
+		return '';
 	}
 
 
