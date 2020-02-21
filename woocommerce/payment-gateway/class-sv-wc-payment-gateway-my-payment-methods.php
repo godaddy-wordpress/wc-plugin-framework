@@ -106,6 +106,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		add_action( 'woocommerce_before_account_payment_methods', [ $this, 'before_payment_methods_table' ] );
 		add_action( 'woocommerce_after_account_payment_methods',  [ $this, 'after_payment_methods_table'] );
 
+		// handle custom payment method actions
+		$this->handle_payment_method_actions();
+
 		// render JavaScript used in the My Payment Methods section
 		add_action( 'woocommerce_after_account_payment_methods', [ $this, 'render_js' ] );
 	}
@@ -233,13 +236,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * @since 5.6.0-dev
 	 *
 	 * @param array $item individual list item from woocommerce_saved_payment_methods_list
-	 * @param \WC_Payment_Token $token payment token associated with this method entry
+	 * @param \WC_Payment_Token $core_token payment token associated with this method entry
 	 * @return array
 	 */
-	public function add_payment_methods_list_item_edit_action( $item, $token ) {
+	public function add_payment_methods_list_item_edit_action( $item, $core_token ) {
 
 		// add new actions for FW tokens belonging to this gateway
-		if ( $this->get_token_by_id( $token->get_token() ) ) {
+		if ( $token = $this->get_token_by_id( $core_token->get_token() ) ) {
 
 			$new_actions = [
 				'edit' => [
@@ -252,7 +255,24 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 				]
 			];
 
-			$item['actions'] = array_merge( $new_actions, $item['actions'] );
+			/**
+			 * My Payment Methods Table Method Actions Filter.
+			 *
+			 * Allows actors to modify the table method actions.
+			 *
+			 * @since 4.0.0
+			 * @since 5.6.0-dev defining a class for the action button is no longer supported
+			 *
+			 * @param $actions array {
+			 *     @type string $url action URL
+			 *     @type string $name action button name
+			 * }
+			 * @param SV_WC_Payment_Gateway_Payment_Token $token
+			 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+			 */
+			$custom_actions = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_actions', [], $token, $this );
+
+			$item['actions'] = array_merge( $new_actions, $item['actions'], $custom_actions );
 		}
 
 		return $item;
@@ -521,7 +541,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function render_js() {
 
-		$args = array(
+		$args = [
 			'id'              => $this->get_plugin()->get_id(),
 			'slug'            => $this->get_plugin()->get_id_dasherized(),
 			'has_core_tokens' => (bool) wc_get_customer_saved_methods_list( get_current_user_id() ),
@@ -533,7 +553,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 				'save_error'    => esc_html__( 'Oops, there was an error updating your payment method. Please try again.', 'woocommerce-plugin-framework' ),
 				'delete_ays'    => esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ),
 			),
-		);
+		];
 
 		/**
 		 * Filters the payment gateway payment methods JavaScript args.
@@ -612,106 +632,54 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Return the table title HTML, text defaults to "My Payment Methods"
 	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
+	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
+	 *
 	 * @return string table title HTML
 	 */
 	protected function get_table_title_html() {
 
-		/**
-		 * My Payment Methods Table Table Heading Text Filter.
-		 *
-		 * Allow actors to modify the my payment methods table heading text.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param string $message table heading text
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		/* translators: Payment method as in a specific credit card, eCheck or bank account */
-		$title = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_title', esc_html__( 'My Payment Methods', 'woocommerce-plugin-framework' ), $this );
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		$html = '<div class="sv-wc-payment-gateway-my-payment-methods-table-title">';
-
-		$html .= sprintf( '<h2 id="wc-%s-my-payment-methods">%s</h2>', $this->get_plugin()->get_id_dasherized(), esc_html( $title ) );
-
-		if ( $this->supports_add_payment_method() ) {
-			/* translators: Payment method as in a specific credit card, e-check or bank account */
-			$html .= sprintf( '<a class="button sv-wc-payment-gateway-my-payment-methods-add-payment-method-button dashicons-before dashicons-plus-alt" href="%s">%s</a>', esc_url( wc_get_endpoint_url( 'add-payment-method' ) ), esc_html__( 'Add New Payment Method', 'woocommerce-plugin-framework' ) );
-		}
-
-		$html .= '</div>';
-
-		/**
-		 * My Payment Methods Table Title HTML Filter.
-		 *
-		 * Allow actors to modify the table title HTML.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param string $html table title HTML
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_title_html', $html, $this );
+		return '';
 	}
 
 
 	/**
-	 * Return the table HTML
+	 * Returns the table HTML
+	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
 	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
+	 *
 	 * @return string table HTML
 	 */
 	public function get_table_html() {
 
-		$html = sprintf( '<table class="shop_table shop_table_responsive sv-wc-payment-gateway-my-payment-methods-table wc-%s-my-payment-methods">', sanitize_html_class( $this->get_plugin()->get_id_dasherized() ) );
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		$html .= $this->get_table_head_html();
-
-		$html .= $this->get_table_body_html();
-
-		$html .= '</table>';
-
-		/**
-		 * My Payment Methods Table HTML Filter.
-		 *
-		 * Allow actors to modify the table HTML.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param string $html table HTML
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_html', $html, $this );
+		return '';
 	}
 
 
 	/**
-	 * Return the table head HTML
+	 * Returns the table head HTML
+	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
 	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
+	 *
 	 * @return string table thead HTML
 	 */
 	protected function get_table_head_html() {
 
-		$html = '<thead><tr>';
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		foreach ( $this->get_table_headers() as $key => $title ) {
-			$html .= sprintf( '<th class="sv-wc-payment-gateway-my-payment-method-table-header sv-wc-payment-gateway-payment-method-header-%1$s wc-%2$s-payment-method-%1$s"><span class="nobr">%3$s</span></th>', sanitize_html_class( $key ), sanitize_html_class( $this->get_plugin()->get_id_dasherized() ), esc_html( $title ) );
-		}
-
-		$html .= '</tr></thead>';
-
-		/**
-		 * My Payment Methods Table Head HTML Filter.
-		 *
-		 * Allow actors to modify the table head HTML.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param string $html table head HTML
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_head_html', $html, $this );
+		return '';
 	}
 
 
@@ -734,111 +702,39 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Return the table body HTML
+	 * Returns the table body HTML
+	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
 	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
+	 *
 	 * @return string table tbody HTML
 	 */
 	protected function get_table_body_html() {
 
-		$html = '<tbody>';
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		if ( $this->credit_card_tokens && $this->echeck_tokens ) {
-
-			$html .= sprintf(
-				'<tr class="sv-wc-payment-gateway-my-payment-methods-type-divider wc-%s-my-payment-methods-type-divider"><td colspan="%d">%s</td></tr>',
-				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ),
-				count( $this->get_table_headers() ),
-				esc_html__( 'Credit/Debit Cards', 'woocommerce-plugin-framework' )
-			);
-
-			$html .= $this->get_table_body_row_html( $this->credit_card_tokens );
-
-			$html .= sprintf(
-				'<tr class="sv-wc-payment-gateway-my-payment-methods-type-divider wc-%s-my-payment-methods-type-divider"><td colspan="%d">%s</td></tr>',
-				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ),
-				count( $this->get_table_headers() ),
-				esc_html__( 'Bank Accounts', 'woocommerce-plugin-framework' )
-			);
-
-			$html .= $this->get_table_body_row_html( $this->echeck_tokens );
-
-		} else {
-
-			$html .= $this->get_table_body_row_html( $this->tokens );
-		}
-
-		$html .= '</tbody>';
-
-		/**
-		 * My Payment Methods Table Body HTML Filter.
-		 *
-		 * Allow actors to modify the table body HTML.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param string $html table body HTML
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_body_html', $html, $this );
+		return '';
 	}
 
 
 	/**
 	 * Returns the table body row HTML, each row represents a single payment method.
 	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
+	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token[] $tokens token objects
 	 * @return string table tbody > tr HTML
 	 */
 	protected function get_table_body_row_html( $tokens ) {
 
-		$html = '';
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		// for responsive table data-title attributes
-		$headers = $this->get_table_headers();
-
-		foreach ( $tokens as $token ) {
-
-			$method = $this->get_table_body_row_data( $token );
-
-			$html .= sprintf(
-				'<tr class="sv-wc-payment-gateway-my-payment-methods-method wc-%1$s-my-payment-methods-method %2$s" data-token-id="%3$s">',
-				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ),
-				$token->is_default() ? 'default' : '',
-				esc_attr( $token->get_id() )
-			);
-
-			// Display the row data in the order of the headers
-			foreach ( $headers as $attribute => $attribute_title ) {
-
-				$value = isset( $method[ $attribute ] ) ? $method[ $attribute ] : __( 'N/A', 'woocommerce-plugin-framework' );
-
-				$html .= sprintf(
-					'<td class="sv-wc-payment-gateway-payment-method-%1$s wc-%2$s-payment-method-%1$s" data-title="%4$s">%3$s</td>',
-					sanitize_html_class( $attribute ),
-					sanitize_html_class( $this->get_plugin()->get_id_dasherized() ),
-					$value,
-					esc_attr( $attribute_title )
-				);
-			}
-
-			$html .= '</tr>';
-		}
-
-		/**
-		 * My Payment Methods Table Row HTML Filter.
-		 *
-		 * Allow actors to modify the table row HTML.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param string $html table row HTML
-		 * @param SV_WC_Payment_Gateway_Payment_Token[] $tokens simple array of token objects
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_row_html', $html, $tokens, $this );
+		return '';
 	}
 
 
@@ -880,21 +776,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 		 */
 		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_body_row_data', $method, $token, $this );
-	}
-
-
-	/**
-	 * Get the payment method title for a given token.
-	 *
-	 * @since 4.0.0
-	 * @deprecated 5.1.0
-	 *
-	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
-	 * @return string
-	 */
-	protected function get_payment_method_title( $token ) {
-
-		return $this->get_payment_method_title_html( $token );
 	}
 
 
@@ -1012,136 +893,57 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Get a token's payment method expiration date HTML.
 	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
+	 *
 	 * @since 5.1.0
+	 * @deprecated 5.6.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return string
 	 */
 	protected function get_payment_method_expiry_html( SV_WC_Payment_Gateway_Payment_Token $token ) {
 
-		$html = esc_html( $token->get_exp_date() );
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		// TODO: add edit support {CW 2018-01-30}
-
-		/**
-		 * Filter a token's payment method expiration date HTML.
-		 *
-		 * @since 5.1.0
-		 *
-		 * @param string $html expiration date HTML
-		 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_expiry_html', $html, $token );
+		return '';
 	}
 
 
 	/**
 	 * Get a token's payment method actions HTML.
 	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
+	 *
 	 * @since 5.1.0
+	 * @deprecated 5.6.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return string
 	 */
 	protected function get_payment_method_actions_html( SV_WC_Payment_Gateway_Payment_Token $token ) {
 
-		$actions = array(
-			'<a href="#" class="edit-payment-method button">' . esc_html__( 'Edit', 'woocommerce-plugin-framework' ) . '</a>',
-			'<a href="#" class="save-payment-method button" style="display:none">' . esc_html__( 'Save', 'woocommerce-plugin-framework' ) . '</a>',
-		);
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		foreach ( $this->get_payment_method_actions( $token ) as $action => $details ) {
-
-			$classes    = isset( $details['class'] ) ? (array) $details['class'] : array();
-			$attributes = isset( $details['attributes'] ) ? (array) $details['attributes'] : array();
-
-			$attributes['data-token-id'] = $token->get_id();
-			$attributes['data-action']   = $action;
-
-			// if the action has a tooltip set
-			if ( ! empty( $details['tip'] ) ) {
-
-				$classes[] = 'tip';
-
-				$attributes['title'] = $details['tip'];
-			}
-
-			// build the attributes
-			foreach ( $attributes as $attribute => $value ) {
-				$attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $value ) . '"';
-				unset( $attributes[ $attribute ] );
-			}
-
-			// build the button
-			$actions[] = sprintf(
-				( in_array( 'disabled', $classes ) ) ? '<a class="button %2$s" %3$s>%4$s</a>' : '<a href="%1$s" class="button %2$s" %3$s>%4$s</a>',
-				! empty( $details['url'] ) ? esc_url( $details['url'] ) : '#',
-				implode( ' ', array_map( 'sanitize_html_class', $classes ) ),
-				implode( ' ', $attributes ),
-				esc_html( $details['name'] )
-			);
-		}
-
-		$html = implode( '', $actions );
-
-		/**
-		 * Filters a token's payment method actions HTML.
-		 *
-		 * @since 5.1.0
-		 *
-		 * @param string $html actions HTML
-		 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_actions_html', $html, $token );
+		return '';
 	}
 
 
 	/**
 	 * Gets the actions for the given payment method token.
 	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
+	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return array
 	 */
 	protected function get_payment_method_actions( $token ) {
 
-		$actions = array(
-			'delete' => __( 'Delete', 'woocommerce-plugin-framework' ),
-		);
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		$plugin_slug = $this->get_plugin()->get_id_dasherized();
-
-		foreach ( $actions as $action => $label ) {
-
-			$url = add_query_arg( array(
-				"wc-{$plugin_slug}-token"  => $token->get_id(),
-				"wc-{$plugin_slug}-action" => $action,
-			) );
-
-			$actions[ $action ] = array(
-				'name'  => $label,
-				'url'   => wp_nonce_url( $url, "wc-{$plugin_slug}-token-action" ),
-				'class' => "{$action}-payment-method",
-			);
-		}
-
-		/**
-		 * My Payment Methods Table Method Actions Filter.
-		 *
-		 * Allow actors to modify the table method actions.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param $actions array {
-		 *     @type string $url action URL
-		 *     @type string $class action button class
-		 *     @type string $name action button name
-		 * }
-		 * @param SV_WC_Payment_Gateway_Payment_Token $token
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_actions', $actions, $token, $this );
+		return [];
 	}
 
 
@@ -1233,19 +1035,51 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Handle payment methods actions, e.g. deleting a payment method or setting
-	 * one as default
-	 *
-	 * TODO: remove this method by version 6.0.0 or by 2021-02-20 {WV 2020-02-20}
+	 * Handles custom payment methods actions.
 	 *
 	 * @internal
 	 *
 	 * @since 4.0.0
-	 * @deprecated 5.6.0-dev
 	 */
 	public function handle_payment_method_actions() {
 
-		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
+		$token  = trim( SV_WC_Helper::get_requested_value( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-token' ) );
+		$action = SV_WC_Helper::get_requested_value( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-action' );
+
+		// process payment method actions
+		if ( $token && $action && ! empty( $_GET['_wpnonce'] ) && is_user_logged_in() ) {
+
+			// security check
+			if ( false === wp_verify_nonce( $_GET['_wpnonce'], 'wc-' . $this->get_plugin()->get_id_dasherized() . '-token-action' ) ) {
+
+				SV_WC_Helper::wc_add_notice( esc_html__( 'Oops, you took too long, please try again.', 'woocommerce-plugin-framework' ), 'error' );
+
+				$this->redirect_to_my_account();
+			}
+
+			$user_id = get_current_user_id();
+			$gateway = $this->get_plugin()->get_gateway_from_token( $user_id, $token );
+
+			// couldn't find an associated gateway for that token
+			if ( ! is_object( $gateway ) ) {
+
+				SV_WC_Helper::wc_add_notice( esc_html__( 'There was an error with your request, please try again.', 'woocommerce-plugin-framework' ), 'error' );
+
+				$this->redirect_to_my_account();
+			}
+
+			/**
+			 * My Payment Methods Custom Action.
+			 *
+			 * Fired when a custom action is requested for a payment method (e.g. other than delete/make default)
+			 *
+			 * @since 4.0.0
+			 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+			 */
+			do_action( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_action_' . sanitize_title( $action ), $this );
+
+			$this->redirect_to_my_account();
+		}
 	}
 
 
