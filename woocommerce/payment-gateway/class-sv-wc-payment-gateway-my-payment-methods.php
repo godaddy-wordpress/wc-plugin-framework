@@ -199,9 +199,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			$gateway->get_payment_tokens_handler()->clear_transient( get_current_user_id() );
 		}
-
-		// clear Default column content transient
-		delete_transient( self::get_method_default_column_transient_key( $token->get_token() ) );
 	}
 
 
@@ -241,7 +238,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_methods_list_item_edit_action( $item, $token ) {
 
-		// add new actions for FW tokens belonging to this plugin
+		// add new actions for FW tokens belonging to this gateway
 		if ( $this->get_token_by_id( $token->get_token() ) ) {
 
 			$new_actions = [
@@ -395,20 +392,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Gets the transient key where the default column content HTML is saved.
-	 *
-	 * @since 5.6.0-dev
-	 *
-	 * @param string $method_token token string
-	 * @return string
-	 */
-	private static function get_method_default_column_transient_key( $method_token ) {
-
-		return "sv_wc_${method_token}_default";
-	}
-
-
-	/**
 	 * Adds the Default column content.
 	 *
 	 * @internal
@@ -419,40 +402,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_method_default( $method ) {
 
-		// check if another FW plugin already hooked into this action and set the transient
-		if ( ! empty( $method['token'] ) ) {
-
-			$transient_key = self::get_method_default_column_transient_key( $method['token'] );
-
-			if ( ! empty( $transient_key ) && ! empty( get_transient( $transient_key ) ) ) {
-				return;
-			}
-		}
-
-		$html = $this->get_payment_method_default_html( ! empty( $method['is_default'] ) );
-
-		$token = $this->get_token_from_method_data_array( $method );
-
-		// if the method belongs to this plugin, allow to filter the HTML
-		if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
-
-			/**
-			 * Filter a FW token's payment method "default" flag HTML.
-			 *
-			 * @since 5.1.0
-			 *
-			 * @param string $html "default" flag HTML
-			 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
-			 */
-			$html = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_default_html', $html, $token );
-		}
-
-		// set the transient for the other FW plugins
-		if ( ! empty( $html ) && isset( $transient_key ) ) {
-			set_transient( $transient_key, $html, 60 );
-		}
-
-		echo $html;
+		echo $this->get_payment_method_default_html( ! empty( $method['is_default'] ), $this->get_token_from_method_data_array( $method ) );
 	}
 
 
@@ -904,7 +854,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		$method = array(
 			'title'   => $this->get_payment_method_title_html( $token ),
-			'default' => $this->get_payment_method_default_html( $token->is_default() ),
+			'default' => $this->get_payment_method_default_html( $token->is_default(), $token ),
 			'details' => $this->get_payment_method_details_html( $token ),
 			'actions' => $this->get_payment_method_actions_html( $token ),
 		);
@@ -998,11 +948,27 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * @since 5.1.0
 	 *
 	 * @param boolean $is_default true if the token is the default token
+	 * @param SV_WC_Payment_Gateway_Payment_Token|null $token FW token object, only set if the token is a FW token
 	 * @return string
 	 */
-	protected function get_payment_method_default_html( $is_default = false ) {
+	protected function get_payment_method_default_html( $is_default = false, SV_WC_Payment_Gateway_Payment_Token $token = null ) {
 
-		return $is_default ? '<mark class="default">' . esc_html__( 'Default', 'woocommerce-plugin-framework' ) . '</mark>' : '';
+		$html = $is_default ? '<mark class="default">' . esc_html__( 'Default', 'woocommerce-plugin-framework' ) . '</mark>' : '';
+
+		if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
+
+			/**
+			 * Filter a FW token's payment method "default" flag HTML.
+			 *
+			 * @since 5.1.0
+			 *
+			 * @param string $html "default" flag HTML
+			 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
+			 */
+			$html = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_default_html', $html, $token );
+		}
+
+		return $html;
 	}
 
 
