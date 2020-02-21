@@ -242,7 +242,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	public function add_payment_methods_list_item_edit_action( $item, $core_token ) {
 
 		// add new actions for FW tokens belonging to this gateway
-		if ( $this->get_token_by_id( $core_token->get_token() ) ) {
+		if ( $token = $this->get_token_by_id( $core_token->get_token() ) ) {
 
 			$new_actions = [
 				'edit' => [
@@ -255,7 +255,24 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 				]
 			];
 
-			$item['actions'] = array_merge( $new_actions, $item['actions'] );
+			/**
+			 * My Payment Methods Table Method Actions Filter.
+			 *
+			 * Allows actors to modify the table method actions.
+			 *
+			 * @since 4.0.0
+			 * @since 5.6.0-dev defining a class for the action button is no longer supported
+			 *
+			 * @param $actions array {
+			 *     @type string $url action URL
+			 *     @type string $name action button name
+			 * }
+			 * @param SV_WC_Payment_Gateway_Payment_Token $token
+			 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+			 */
+			$custom_actions = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_actions', [], $token, $this );
+
+			$item['actions'] = array_merge( $new_actions, $item['actions'], $custom_actions );
 		}
 
 		return $item;
