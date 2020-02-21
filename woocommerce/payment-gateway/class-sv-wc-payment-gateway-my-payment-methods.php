@@ -780,21 +780,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Get the payment method title for a given token.
-	 *
-	 * @since 4.0.0
-	 * @deprecated 5.1.0
-	 *
-	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
-	 * @return string
-	 */
-	protected function get_payment_method_title( $token ) {
-
-		return $this->get_payment_method_title_html( $token );
-	}
-
-
-	/**
 	 * Get a token's payment method title HTML.
 	 *
 	 * @since 5.1.0
