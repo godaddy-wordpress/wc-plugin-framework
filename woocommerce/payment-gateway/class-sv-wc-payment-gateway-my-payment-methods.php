@@ -541,7 +541,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function render_js() {
 
-		$args = array(
+		$args = [
 			'id'              => $this->get_plugin()->get_id(),
 			'slug'            => $this->get_plugin()->get_id_dasherized(),
 			'has_core_tokens' => (bool) wc_get_customer_saved_methods_list( get_current_user_id() ),
@@ -553,7 +553,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 				'save_error'    => esc_html__( 'Oops, there was an error updating your payment method. Please try again.', 'woocommerce-plugin-framework' ),
 				'delete_ays'    => esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ),
 			),
-		);
+		];
 
 		/**
 		 * Filters the payment gateway payment methods JavaScript args.
