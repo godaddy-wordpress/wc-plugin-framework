@@ -11,6 +11,8 @@ http://www.gnu.org/licenses/gpl-3.0.html
 
 table.woocommerce-MyAccount-paymentMethods {
 
+	font-size: 0.85em;
+
 	.woocommerce-PaymentMethod--title {
 		display: none;
 	}
@@ -76,7 +78,6 @@ table.woocommerce-MyAccount-paymentMethods {
 }
 
 table.sv-wc-payment-gateway-my-payment-methods-table {
-	font-size: 0.85em;
 
 	th, td {
 		vertical-align: middle;
