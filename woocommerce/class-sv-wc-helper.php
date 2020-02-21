@@ -1019,7 +1019,7 @@ class SV_WC_Helper {
 
 
 	/**
-	 * Checks if another Framework plugin already hooked into this action.
+	 * Checks if another Framework plugin already hooked into an action/filter.
 	 *
 	 * @since 5.6.0-dev
 	 *

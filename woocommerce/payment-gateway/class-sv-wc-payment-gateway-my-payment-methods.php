@@ -238,7 +238,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_methods_list_item_edit_action( $item, $token ) {
 
-		// add new actions for FW tokens belonging to this gateway
+		// add new actions for FW tokens belonging to this plugin
 		if ( $this->get_token_by_id( $token->get_token() ) ) {
 
 			$new_actions = [
@@ -953,8 +953,18 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	protected function get_payment_method_default_html( $is_default = false, SV_WC_Payment_Gateway_Payment_Token $token = null ) {
 
+		// if the method does not belong to this plugin
+		if ( ! $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
+
+			// check if another plugin already hooked into this action
+			if ( SV_WC_Helper::is_another_framework_plugin_hooked_into( 'woocommerce_account_payment_methods_column_default', $this->get_plugin()->get_id() ) ) {
+				return '';
+			}
+		}
+
 		$html = $is_default ? '<mark class="default">' . esc_html__( 'Default', 'woocommerce-plugin-framework' ) . '</mark>' : '';
 
+		// if the method belongs to this plugin
 		if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
 
 			/**
