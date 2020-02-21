@@ -395,14 +395,14 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			/**
 			 * Before My Payment Methods Table Action.
-			*
-			* Fired before WooCommerce's My Payment Methods table HTML is rendered.
-			*
-			* @since 4.0.0
-			* @since 5.6.0-dev triggered on woocommerce_before_account_payment_methods
-			*
-			* @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-			*/
+			 *
+			 * Fired before WooCommerce's My Payment Methods table HTML is rendered.
+			 *
+			 * @since 4.0.0
+			 * @since 5.6.0-dev triggered on woocommerce_before_account_payment_methods
+			 *
+			 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+			 */
 			do_action( 'wc_' . $this->get_plugin()->get_id() . '_before_my_payment_method_table', $this );
 		}
 	}
