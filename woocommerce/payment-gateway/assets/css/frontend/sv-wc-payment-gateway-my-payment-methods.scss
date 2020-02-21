@@ -69,7 +69,7 @@ table.woocommerce-MyAccount-paymentMethods {
 	}
 
 	td.woocommerce-PaymentMethod--actions {
-		text-align: center;
+		text-align: right;
 
 		.button {
 			margin: .125em;
@@ -195,7 +195,7 @@ table.woocommerce-MyAccount-paymentMethods {
 		}
 
 		td.woocommerce-PaymentMethod--actions {
-			text-align: center;
+			text-align: right;
 
 			&:before {
 				display: none;
