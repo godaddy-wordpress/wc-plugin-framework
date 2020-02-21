@@ -22,6 +22,7 @@ jQuery( document ).ready ($) ->
 		# @param [Object] args, with the properties:
 		#     id:         [String] plugin ID
 		#     slug:       [String] plugin slug or dasherized ID
+		#     gateway_id: [String] gateway ID
 		#     i18n:       [Object] localized text strings
 		#     ajax_url:   [String] URL for AJAX requests
 		#     ajax_nonce: [String] nonce for AJAX requests
@@ -54,6 +55,13 @@ jQuery( document ).ready ($) ->
 			# handle the delete action
 			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .button.delete", ( event ) =>
 
+				button = $( event.currentTarget )
+				row    = button.parents( 'tr' )
+
+				# check if the method belongs to this plugin
+				if row.find( "input[name=plugin-id][value=#{@slug}]" ).length is 0
+					return
+
 				if $( event.currentTarget ).hasClass( 'disabled' ) or not confirm( @i18n.delete_ays )
 					event.preventDefault()
 
@@ -70,6 +78,10 @@ jQuery( document ).ready ($) ->
 		replace_method_column: =>
 
 			$( '.woocommerce-MyAccount-paymentMethods' ).find( 'tr' ).each ( index, element ) =>
+
+				# check if the method belongs to this plugin
+				if $( element ).find( "input[name=plugin-id][value=#{@slug}]" ).length is 0
+					return
 
 				# delete the Title header
 				$( element ).find( 'th.woocommerce-PaymentMethod--title' ).remove()
@@ -98,6 +110,10 @@ jQuery( document ).ready ($) ->
 			button = $( event.currentTarget )
 			row    = button.parents( 'tr' )
 
+			# check if the method belongs to this plugin
+			if row.find( "input[name=plugin-id][value=#{@slug}]" ).length is 0
+				return
+
 			row.find( 'div.view' ).hide()
 			row.find( 'div.edit' ).show()
 			row.addClass( 'editing' )
@@ -122,6 +138,10 @@ jQuery( document ).ready ($) ->
 
 			button = $( event.currentTarget )
 			row    = button.parents( 'tr' )
+
+			# check if the method belongs to this plugin
+			if row.find( "input[name=plugin-id][value=#{@slug}]" ).length is 0
+				return
 
 			this.block_ui()
 
@@ -175,6 +195,10 @@ jQuery( document ).ready ($) ->
 
 			button = $( event.currentTarget )
 			row    = button.parents( 'tr' )
+
+			# check if the method belongs to this plugin
+			if row.find( "input[name=plugin-id][value=#{@slug}]" ).length is 0
+				return
 
 			row.find( 'div.view' ).show()
 			row.find( 'div.edit' ).hide()

@@ -916,7 +916,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$html .= '<div class="edit" style="display:none;">';
 			$html .= '<input type="text" class="nickname" name="nickname" value="' . esc_html( $token->get_nickname() ) . '" placeholder="' . esc_attr( __( 'Nickname', 'woocommerce-plugin-framework' ) ) . '" />';
 			$html .= '<input type="hidden" name="token-id" value="' . esc_attr( $token->get_id() ) . '" />';
-			$html .= '<input type="hidden" name="gateway-id" value="' . esc_attr( $this->get_plugin()->get_gateway()->get_id() ) . '" />';
+			$html .= '<input type="hidden" name="plugin-id" value="' . esc_attr( $this->get_plugin()->get_id_dasherized() ) . '" />';
 		$html .= '</div>';
 
 		/**
