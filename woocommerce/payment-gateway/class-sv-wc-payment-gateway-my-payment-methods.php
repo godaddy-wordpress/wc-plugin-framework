@@ -440,7 +440,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$html = $this->get_payment_method_default_html( ! empty( $method['is_default'] ), $token );
 
 		// if the method does not belong to this plugin
-		if ( isset( $transient_key ) && ! $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
+		if ( ! empty( $html ) && isset( $transient_key ) && ! $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
 
 			// set the transient for the other FW plugins
 			set_transient( $transient_key, $html, 60 );
