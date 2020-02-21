@@ -108,13 +108,6 @@ table.woocommerce-MyAccount-paymentMethods {
 	}
 }
 
-table.sv-wc-payment-gateway-my-payment-methods-table {
-
-	tr.sv-wc-payment-gateway-my-payment-methods-type-divider td {
-		font-weight: 700;
-	}
-}
-
 #tiptip_holder {
 	display: none;
 	position: absolute;
@@ -212,12 +205,6 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 				float: none;
 				margin: .125em;
 			}
-		}
-	}
-
-	table.sv-wc-payment-gateway-my-payment-methods-table {
-		.sv-wc-payment-gateway-my-payment-methods-type-divider td:before {
-			display: none;
 		}
 	}
 }
