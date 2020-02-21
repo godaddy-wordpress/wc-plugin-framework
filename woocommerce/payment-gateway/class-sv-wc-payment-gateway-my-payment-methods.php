@@ -632,46 +632,18 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Return the table title HTML, text defaults to "My Payment Methods"
 	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
+	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
+	 *
 	 * @return string table title HTML
 	 */
 	protected function get_table_title_html() {
 
-		/**
-		 * My Payment Methods Table Table Heading Text Filter.
-		 *
-		 * Allow actors to modify the my payment methods table heading text.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param string $message table heading text
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		/* translators: Payment method as in a specific credit card, eCheck or bank account */
-		$title = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_title', esc_html__( 'My Payment Methods', 'woocommerce-plugin-framework' ), $this );
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		$html = '<div class="sv-wc-payment-gateway-my-payment-methods-table-title">';
-
-		$html .= sprintf( '<h2 id="wc-%s-my-payment-methods">%s</h2>', $this->get_plugin()->get_id_dasherized(), esc_html( $title ) );
-
-		if ( $this->supports_add_payment_method() ) {
-			/* translators: Payment method as in a specific credit card, e-check or bank account */
-			$html .= sprintf( '<a class="button sv-wc-payment-gateway-my-payment-methods-add-payment-method-button dashicons-before dashicons-plus-alt" href="%s">%s</a>', esc_url( wc_get_endpoint_url( 'add-payment-method' ) ), esc_html__( 'Add New Payment Method', 'woocommerce-plugin-framework' ) );
-		}
-
-		$html .= '</div>';
-
-		/**
-		 * My Payment Methods Table Title HTML Filter.
-		 *
-		 * Allow actors to modify the table title HTML.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param string $html table title HTML
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_title_html', $html, $this );
+		return '';
 	}
 
 
