@@ -1018,6 +1018,46 @@ class SV_WC_Helper {
 	}
 
 
+	/**
+	 * Checks if another Framework plugin already hooked into this action.
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param string $hook hook string
+	 * @param string $current_plugin_id current plugin ID
+	 *
+	 * @return bool
+	 */
+	public static function is_another_framework_plugin_hooked_into( $hook, $current_plugin_id ) {
+		global $wp_filter;
+
+		if ( ! empty( $wp_filter[ $hook ] ) ) {
+
+			$hooks = $wp_filter[ $hook ];
+
+			foreach ( $hooks as $hook ) {
+
+				if ( ! empty( $hook['callbacks'] ) ) {
+
+					foreach ( $hook['callbacks'] as $priority => $callbacks ) {
+
+						foreach ( $callbacks as $callback ) {
+
+							$plugin = ! empty( $callback[0]['plugin'] ) ? $callback[0]['plugin'] : null;
+
+							if ( $plugin instanceof SV_WC_Plugin && $plugin->get_id() !== $current_plugin_id ) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+
 }
 
 
