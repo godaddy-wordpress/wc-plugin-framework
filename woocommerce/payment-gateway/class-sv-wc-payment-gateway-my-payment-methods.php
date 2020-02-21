@@ -702,53 +702,20 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Return the table body HTML
+	 * Returns the table body HTML
+	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
 	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
+	 *
 	 * @return string table tbody HTML
 	 */
 	protected function get_table_body_html() {
 
-		$html = '<tbody>';
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		if ( $this->credit_card_tokens && $this->echeck_tokens ) {
-
-			$html .= sprintf(
-				'<tr class="sv-wc-payment-gateway-my-payment-methods-type-divider wc-%s-my-payment-methods-type-divider"><td colspan="%d">%s</td></tr>',
-				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ),
-				count( $this->get_table_headers() ),
-				esc_html__( 'Credit/Debit Cards', 'woocommerce-plugin-framework' )
-			);
-
-			$html .= $this->get_table_body_row_html( $this->credit_card_tokens );
-
-			$html .= sprintf(
-				'<tr class="sv-wc-payment-gateway-my-payment-methods-type-divider wc-%s-my-payment-methods-type-divider"><td colspan="%d">%s</td></tr>',
-				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ),
-				count( $this->get_table_headers() ),
-				esc_html__( 'Bank Accounts', 'woocommerce-plugin-framework' )
-			);
-
-			$html .= $this->get_table_body_row_html( $this->echeck_tokens );
-
-		} else {
-
-			$html .= $this->get_table_body_row_html( $this->tokens );
-		}
-
-		$html .= '</tbody>';
-
-		/**
-		 * My Payment Methods Table Body HTML Filter.
-		 *
-		 * Allow actors to modify the table body HTML.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param string $html table body HTML
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_body_html', $html, $this );
+		return '';
 	}
 
 
