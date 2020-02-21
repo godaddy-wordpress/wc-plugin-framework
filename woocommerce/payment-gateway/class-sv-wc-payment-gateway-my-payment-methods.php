@@ -648,32 +648,20 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Return the table HTML
+	 * Returns the table HTML
+	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
 	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
+	 *
 	 * @return string table HTML
 	 */
 	public function get_table_html() {
 
-		$html = sprintf( '<table class="shop_table shop_table_responsive sv-wc-payment-gateway-my-payment-methods-table wc-%s-my-payment-methods">', sanitize_html_class( $this->get_plugin()->get_id_dasherized() ) );
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		$html .= $this->get_table_head_html();
-
-		$html .= $this->get_table_body_html();
-
-		$html .= '</table>';
-
-		/**
-		 * My Payment Methods Table HTML Filter.
-		 *
-		 * Allow actors to modify the table HTML.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param string $html table HTML
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_html', $html, $this );
+		return '';
 	}
 
 
