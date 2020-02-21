@@ -722,58 +722,19 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Returns the table body row HTML, each row represents a single payment method.
 	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
+	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token[] $tokens token objects
 	 * @return string table tbody > tr HTML
 	 */
 	protected function get_table_body_row_html( $tokens ) {
 
-		$html = '';
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		// for responsive table data-title attributes
-		$headers = $this->get_table_headers();
-
-		foreach ( $tokens as $token ) {
-
-			$method = $this->get_table_body_row_data( $token );
-
-			$html .= sprintf(
-				'<tr class="sv-wc-payment-gateway-my-payment-methods-method wc-%1$s-my-payment-methods-method %2$s" data-token-id="%3$s">',
-				sanitize_html_class( $this->get_plugin()->get_id_dasherized() ),
-				$token->is_default() ? 'default' : '',
-				esc_attr( $token->get_id() )
-			);
-
-			// Display the row data in the order of the headers
-			foreach ( $headers as $attribute => $attribute_title ) {
-
-				$value = isset( $method[ $attribute ] ) ? $method[ $attribute ] : __( 'N/A', 'woocommerce-plugin-framework' );
-
-				$html .= sprintf(
-					'<td class="sv-wc-payment-gateway-payment-method-%1$s wc-%2$s-payment-method-%1$s" data-title="%4$s">%3$s</td>',
-					sanitize_html_class( $attribute ),
-					sanitize_html_class( $this->get_plugin()->get_id_dasherized() ),
-					$value,
-					esc_attr( $attribute_title )
-				);
-			}
-
-			$html .= '</tr>';
-		}
-
-		/**
-		 * My Payment Methods Table Row HTML Filter.
-		 *
-		 * Allow actors to modify the table row HTML.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param string $html table row HTML
-		 * @param SV_WC_Payment_Gateway_Payment_Token[] $tokens simple array of token objects
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_row_html', $html, $tokens, $this );
+		return '';
 	}
 
 
