@@ -911,61 +911,19 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Get a token's payment method actions HTML.
 	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
+	 *
 	 * @since 5.1.0
+	 * @deprecated 5.6.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return string
 	 */
 	protected function get_payment_method_actions_html( SV_WC_Payment_Gateway_Payment_Token $token ) {
 
-		$actions = array(
-			'<a href="#" class="edit-payment-method button">' . esc_html__( 'Edit', 'woocommerce-plugin-framework' ) . '</a>',
-			'<a href="#" class="save-payment-method button" style="display:none">' . esc_html__( 'Save', 'woocommerce-plugin-framework' ) . '</a>',
-		);
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		foreach ( $this->get_payment_method_actions( $token ) as $action => $details ) {
-
-			$classes    = isset( $details['class'] ) ? (array) $details['class'] : array();
-			$attributes = isset( $details['attributes'] ) ? (array) $details['attributes'] : array();
-
-			$attributes['data-token-id'] = $token->get_id();
-			$attributes['data-action']   = $action;
-
-			// if the action has a tooltip set
-			if ( ! empty( $details['tip'] ) ) {
-
-				$classes[] = 'tip';
-
-				$attributes['title'] = $details['tip'];
-			}
-
-			// build the attributes
-			foreach ( $attributes as $attribute => $value ) {
-				$attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $value ) . '"';
-				unset( $attributes[ $attribute ] );
-			}
-
-			// build the button
-			$actions[] = sprintf(
-				( in_array( 'disabled', $classes ) ) ? '<a class="button %2$s" %3$s>%4$s</a>' : '<a href="%1$s" class="button %2$s" %3$s>%4$s</a>',
-				! empty( $details['url'] ) ? esc_url( $details['url'] ) : '#',
-				implode( ' ', array_map( 'sanitize_html_class', $classes ) ),
-				implode( ' ', $attributes ),
-				esc_html( $details['name'] )
-			);
-		}
-
-		$html = implode( '', $actions );
-
-		/**
-		 * Filters a token's payment method actions HTML.
-		 *
-		 * @since 5.1.0
-		 *
-		 * @param string $html actions HTML
-		 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_actions_html', $html, $token );
+		return '';
 	}
 
 
