@@ -106,6 +106,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		add_action( 'woocommerce_before_account_payment_methods', [ $this, 'before_payment_methods_table' ] );
 		add_action( 'woocommerce_after_account_payment_methods',  [ $this, 'after_payment_methods_table'] );
 
+		// handle custom payment method actions
+		$this->handle_payment_method_actions();
+
 		// render JavaScript used in the My Payment Methods section
 		add_action( 'woocommerce_after_account_payment_methods', [ $this, 'render_js' ] );
 	}
@@ -1232,19 +1235,51 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Handle payment methods actions, e.g. deleting a payment method or setting
-	 * one as default
-	 *
-	 * TODO: remove this method by version 6.0.0 or by 2021-02-20 {WV 2020-02-20}
+	 * Handles custom payment methods actions.
 	 *
 	 * @internal
 	 *
 	 * @since 4.0.0
-	 * @deprecated 5.6.0-dev
 	 */
 	public function handle_payment_method_actions() {
 
-		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
+		$token  = trim( SV_WC_Helper::get_requested_value( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-token' ) );
+		$action = SV_WC_Helper::get_requested_value( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-action' );
+
+		// process payment method actions
+		if ( $token && $action && ! empty( $_GET['_wpnonce'] ) && is_user_logged_in() ) {
+
+			// security check
+			if ( false === wp_verify_nonce( $_GET['_wpnonce'], 'wc-' . $this->get_plugin()->get_id_dasherized() . '-token-action' ) ) {
+
+				SV_WC_Helper::wc_add_notice( esc_html__( 'Oops, you took too long, please try again.', 'woocommerce-plugin-framework' ), 'error' );
+
+				$this->redirect_to_my_account();
+			}
+
+			$user_id = get_current_user_id();
+			$gateway = $this->get_plugin()->get_gateway_from_token( $user_id, $token );
+
+			// couldn't find an associated gateway for that token
+			if ( ! is_object( $gateway ) ) {
+
+				SV_WC_Helper::wc_add_notice( esc_html__( 'There was an error with your request, please try again.', 'woocommerce-plugin-framework' ), 'error' );
+
+				$this->redirect_to_my_account();
+			}
+
+			/**
+			 * My Payment Methods Custom Action.
+			 *
+			 * Fired when a custom action is requested for a payment method (e.g. other than delete/make default)
+			 *
+			 * @since 4.0.0
+			 * @param \SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+			 */
+			do_action( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_action_' . sanitize_title( $action ), $this );
+
+			$this->redirect_to_my_account();
+		}
 	}
 
 
