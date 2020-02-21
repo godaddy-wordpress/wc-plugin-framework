@@ -930,49 +930,19 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/**
 	 * Gets the actions for the given payment method token.
 	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
+	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return array
 	 */
 	protected function get_payment_method_actions( $token ) {
 
-		$actions = array(
-			'delete' => __( 'Delete', 'woocommerce-plugin-framework' ),
-		);
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		$plugin_slug = $this->get_plugin()->get_id_dasherized();
-
-		foreach ( $actions as $action => $label ) {
-
-			$url = add_query_arg( array(
-				"wc-{$plugin_slug}-token"  => $token->get_id(),
-				"wc-{$plugin_slug}-action" => $action,
-			) );
-
-			$actions[ $action ] = array(
-				'name'  => $label,
-				'url'   => wp_nonce_url( $url, "wc-{$plugin_slug}-token-action" ),
-				'class' => "{$action}-payment-method",
-			);
-		}
-
-		/**
-		 * My Payment Methods Table Method Actions Filter.
-		 *
-		 * Allow actors to modify the table method actions.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param $actions array {
-		 *     @type string $url action URL
-		 *     @type string $class action button class
-		 *     @type string $name action button name
-		 * }
-		 * @param SV_WC_Payment_Gateway_Payment_Token $token
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_actions', $actions, $token, $this );
+		return [];
 	}
 
 
