@@ -34,6 +34,10 @@ table.woocommerce-MyAccount-paymentMethods {
 		text-align: center;
 	}
 
+	td.woocommerce-PaymentMethod--method input {
+		width: 100%;
+	}
+
 	td.woocommerce-PaymentMethod--details {
 		white-space: nowrap;
 
@@ -85,17 +89,6 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 
 	.button {
 		white-space: nowrap;
-	}
-
-	.sv-wc-payment-gateway-my-payment-methods-method {
-
-		.sv-wc-payment-gateway-payment-method-title input {
-			width: 100%;
-		}
-
-		.cancel-edit-payment-method {
-			margin-right: 0.5em;
-		}
 	}
 
 	&.editing {
