@@ -238,18 +238,22 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_methods_list_item_edit_action( $item, $token ) {
 
-		$new_actions = [
-			'edit' => [
-				'url'  => '#',
-				'name' => esc_html__( 'Edit', 'woocommerce-plugin-framework' ),
-			],
-			'save' => [
-				'url'  => '#',
-				'name' => esc_html__( 'Save', 'woocommerce-plugin-framework' ),
-			]
-		];
+		// add new actions for FW tokens
+		if ( ! empty( $this->tokens[ $token->get_token() ] ) ) {
 
-		$item['actions'] = array_merge( $new_actions, $item['actions'] );
+			$new_actions = [
+				'edit' => [
+					'url'  => '#',
+					'name' => esc_html__( 'Edit', 'woocommerce-plugin-framework' ),
+				],
+				'save' => [
+					'url'  => '#',
+					'name' => esc_html__( 'Save', 'woocommerce-plugin-framework' ),
+				]
+			];
+
+			$item['actions'] = array_merge( $new_actions, $item['actions'] );
+		}
 
 		return $item;
 	}
@@ -373,10 +377,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_method_default( $method ) {
 
-		if ( $token = $this->get_token_by_id( $method ) ) {
-
-			echo $this->get_payment_method_default_html( $token );
-		}
+		echo $this->get_payment_method_default_html( ! empty( $method['is_default'] ), $this->get_token_by_id( $method ) );
 	}
 
 
@@ -828,7 +829,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		$method = array(
 			'title'   => $this->get_payment_method_title_html( $token ),
-			'default' => $this->get_payment_method_default_html( $token ),
+			'default' => $this->get_payment_method_default_html( $token->is_default(), $token ),
 			'details' => $this->get_payment_method_details_html( $token ),
 			'actions' => $this->get_payment_method_actions_html( $token ),
 		);
@@ -920,29 +921,28 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 *
 	 * @since 5.1.0
 	 *
-	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
+	 * @param boolean $is_default true if the token is the default token
+	 * @param SV_WC_Payment_Gateway_Payment_Token|null $token FW token object, only set if the token is a FW token
 	 * @return string
 	 */
-	protected function get_payment_method_default_html( SV_WC_Payment_Gateway_Payment_Token $token ) {
+	protected function get_payment_method_default_html( $is_default = false, SV_WC_Payment_Gateway_Payment_Token $token = null ) {
 
-		$html = '<div class="view">';
-		 	$html .= $token->is_default() ? '<mark class="default">' . esc_html__( 'Default', 'woocommerce-plugin-framework' ) . '</mark>' : '';
-		$html .= '</div>';
+		$html = $is_default ? '<mark class="default">' . esc_html__( 'Default', 'woocommerce-plugin-framework' ) . '</mark>' : '';
 
-		// add the edit context input
-		$html .= '<div class="edit" style="display:none;">';
-			$html .= '<input type="checkbox" class="default" name="default" value="yes" ' . checked( true, $token->is_default(), false ) . ' />';
-		$html .= '</div>';
+		if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
 
-		/**
-		 * Filter a token's payment method "default" flag HTML.
-		 *
-		 * @since 5.1.0
-		 *
-		 * @param string $html "default" flag HTML
-		 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_default_html', $html, $token );
+			/**
+			 * Filter a FW token's payment method "default" flag HTML.
+			 *
+			 * @since 5.1.0
+			 *
+			 * @param string $html "default" flag HTML
+			 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
+			 */
+			$html = apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_method_default_html', $html, $token );
+		}
+
+		return $html;
 	}
 
 
@@ -1159,19 +1159,12 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			// set the data
 			$token = $this->save_token_data( $token, $data );
 
-			// use the handler so other methods don't remain default
-			if ( $token->is_default() ) {
-				$gateway->get_payment_tokens_handler()->set_default_token( $user_id, $token );
-			}
-
 			// persist the data
 			$gateway->get_payment_tokens_handler()->update_token( $user_id, $token );
 
 			wp_send_json_success( [
-				'title'      => $this->get_payment_method_title_html( $token ),
-				'default'    => $this->get_payment_method_default_html( $token ),
-				'is_default' => $token->is_default(),
-				'nonce'      => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
+				'title' => $this->get_payment_method_title_html( $token ),
+				'nonce' => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
 			] );
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
@@ -1208,8 +1201,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		if ( $clean_nickname || ! $raw_nickname ) {
 			$token->set_nickname( $clean_nickname );
 		}
-
-		$token->set_default( isset( $data['default'] ) && 'yes' === $data['default'] );
 
 		return $token;
 	}

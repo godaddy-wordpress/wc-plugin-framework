@@ -39,6 +39,9 @@ jQuery( document ).ready ($) ->
 			# hide the "Save" button
 			$( ".woocommerce-PaymentMethod--actions .button.save" ).hide()
 
+			# replace the "Method" column content for FW tokens
+			this.replace_method_column()
+
 			# handle the edit action
 			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .button.edit", ( event ) => this.edit_method( event ) )
 
@@ -59,6 +62,28 @@ jQuery( document ).ready ($) ->
 			# don't follow the Add Payment Method button URL if it's disabled
 			$( '.button[href*="add-payment-method"]' ).click ( event ) ->
 				event.preventDefault() if $( this ).hasClass( 'disabled' )
+
+
+		# Replace Method column content with Title column content, for FW tokens.
+		#
+		# @since 5.6.0-dev
+		replace_method_column: =>
+
+			$( '.woocommerce-MyAccount-paymentMethods' ).find( 'tr' ).each ( index, element ) =>
+
+				# delete the Title header
+				$( element ).find( 'th.woocommerce-PaymentMethod--title' ).remove()
+
+				titleColumn = $( element ).find( 'td.woocommerce-PaymentMethod--title' )
+
+				# Title column is not empty, this is a FW token
+				if ( titleColumn.children().length > 0 )
+
+					# replace Method column
+					$( element ).find( 'td.woocommerce-PaymentMethod--method' ).html( titleColumn.html() )
+
+				# delete Title column
+				$( element ).find( 'td.woocommerce-PaymentMethod--title' ).remove()
 
 
 		# Edits a payment method.
@@ -115,15 +140,8 @@ jQuery( document ).ready ($) ->
 
 					return this.display_error( row, response.data ) unless response.success
 
-					# remove other methods' "Default" badges if this was set as default
-					if response.data.is_default
-						row.siblings().find( ".woocommerce-PaymentMethod--default .view" ).empty().siblings( '.edit' ).find( 'input' ).prop( 'checked', false )
-
 					if response.data.title?
-						row.find('.woocommerce-PaymentMethod--title').html( response.data.title )
-
-					if response.data.default?
-						row.find('.woocommerce-PaymentMethod--default').html( response.data.default )
+						row.find('.woocommerce-PaymentMethod--method').html( response.data.title )
 
 					if response.data.nonce?
 						@ajax_nonce = response.data.nonce
