@@ -322,7 +322,18 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	private function get_token_by_id( $token_id ) {
 
-		return $this->get_plugin()->get_gateway()->get_payment_tokens_handler()->get_token( get_current_user_id(), $token_id );
+		$token = null;
+
+		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
+
+			$token = $gateway->get_payment_tokens_handler()->get_token( get_current_user_id(), $token_id );
+
+			if ( ! empty( $token ) ) {
+				break;
+			}
+		}
+
+		return $token;
 	}
 
 
