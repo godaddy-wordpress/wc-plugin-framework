@@ -74,6 +74,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_save_payment_method', array( $this, 'ajax_save_payment_method' ) );
 
 		add_action( 'woocommerce_payment_token_set_default', [ $this, 'clear_payment_methods_transients' ], 10, 2 );
+
+		add_action( 'woocommerce_payment_token_deleted', [ $this, 'payment_token_deleted' ], 10, 2 );
 	}
 
 
@@ -430,6 +432,42 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 			 */
 			do_action( 'wc_' . $this->get_plugin()->get_id() . '_after_my_payment_method_table', $this );
+		}
+	}
+
+
+	/**
+	 * Triggers action wc_payment_gateway_{id}_payment_method_deleted when a framework token is deleted.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param int $token_id the ID of a core token
+	 * @param \WC_Payment_Token $core_token the core token object
+	 */
+	public function payment_token_deleted( $token_id, $core_token ) {
+
+		$token = $core_token instanceof \WC_Payment_Token ? $this->get_token_by_id( [ 'token' => $core_token->get_token() ] ) : null;
+
+		if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
+
+			// confirm the token was deleted from the Payment Methods screen
+			if ( (int) $token_id === (int) get_query_var( 'delete-payment-method' ) ) {
+
+				$user_id = get_current_user_id();
+				$gateway = $this->get_plugin()->get_gateway_from_token( $user_id, $token );
+
+				/**
+				 * Fires after a new payment method is deleted by a customer.
+				 *
+				 * @since 5.0.0
+				 *
+				 * @param string $token_id ID of the deleted token
+				 * @param int $user_id user ID
+				 */
+				do_action( 'wc_payment_gateway_' . $gateway->get_id() . '_payment_method_deleted', $token, $user_id );
+			}
 		}
 	}
 
