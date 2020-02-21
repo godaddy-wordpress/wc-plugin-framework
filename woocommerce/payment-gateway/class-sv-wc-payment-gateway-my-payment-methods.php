@@ -238,7 +238,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_methods_list_item_edit_action( $item, $token ) {
 
-		// add new actions for FW tokens
+		// add new actions for FW tokens belonging to this gateway
 		if ( $this->get_token_by_id( $token->get_token() ) ) {
 
 			$new_actions = [
