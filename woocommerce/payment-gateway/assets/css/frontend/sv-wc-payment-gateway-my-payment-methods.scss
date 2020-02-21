@@ -83,30 +83,23 @@ table.woocommerce-MyAccount-paymentMethods {
 			}
 		}
 	}
+
+	&.editing {
+
+		.payment-method:not(.editing) {
+			opacity: 0.5;
+		}
+
+		.payment-method:hover {
+			opacity: 1;
+		}
+	}
 }
 
 table.sv-wc-payment-gateway-my-payment-methods-table {
 
 	.button {
 		white-space: nowrap;
-	}
-
-	&.editing {
-
-		th.woocommerce-PaymentMethod--default {
-			span {
-				display: inline;
-			}
-		}
-
-		.sv-wc-payment-gateway-my-payment-methods-method:not(.editing),
-		.sv-wc-payment-gateway-my-payment-methods-type-divider {
-			opacity: 0.5;
-		}
-
-		.sv-wc-payment-gateway-my-payment-methods-method:hover {
-			opacity: 1;
-		}
 	}
 
 	tr.sv-wc-payment-gateway-my-payment-methods-type-divider td {
