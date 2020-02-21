@@ -244,18 +244,22 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_methods_list_item_edit_action( $item, $token ) {
 
-		$new_actions = [
-			'edit' => [
-				'url'  => '#',
-				'name' => esc_html__( 'Edit', 'woocommerce-plugin-framework' ),
-			],
-			'save' => [
-				'url'  => '#',
-				'name' => esc_html__( 'Save', 'woocommerce-plugin-framework' ),
-			]
-		];
+		// add new actions for FW tokens
+		if ( ! empty( $this->tokens[ $token->get_token() ] ) ) {
 
-		$item['actions'] = array_merge( $new_actions, $item['actions'] );
+			$new_actions = [
+				'edit' => [
+					'url'  => '#',
+					'name' => esc_html__( 'Edit', 'woocommerce-plugin-framework' ),
+				],
+				'save' => [
+					'url'  => '#',
+					'name' => esc_html__( 'Save', 'woocommerce-plugin-framework' ),
+				]
+			];
+
+			$item['actions'] = array_merge( $new_actions, $item['actions'] );
+		}
 
 		return $item;
 	}
