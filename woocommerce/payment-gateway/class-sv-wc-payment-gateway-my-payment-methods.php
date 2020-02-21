@@ -236,13 +236,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * @since 5.6.0-dev
 	 *
 	 * @param array $item individual list item from woocommerce_saved_payment_methods_list
-	 * @param \WC_Payment_Token $token payment token associated with this method entry
+	 * @param \WC_Payment_Token $core_token payment token associated with this method entry
 	 * @return array
 	 */
-	public function add_payment_methods_list_item_edit_action( $item, $token ) {
+	public function add_payment_methods_list_item_edit_action( $item, $core_token ) {
 
 		// add new actions for FW tokens belonging to this gateway
-		if ( $this->get_token_by_id( $token->get_token() ) ) {
+		if ( $this->get_token_by_id( $core_token->get_token() ) ) {
 
 			$new_actions = [
 				'edit' => [
