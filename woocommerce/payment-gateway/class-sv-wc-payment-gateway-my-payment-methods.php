@@ -239,7 +239,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	public function add_payment_methods_list_item_edit_action( $item, $token ) {
 
 		// add new actions for FW tokens
-		if ( $this->get_token_by_id( [ 'token' => $token->get_token() ] ) ) {
+		if ( $this->get_token_by_id( $token->get_token() ) ) {
 
 			$new_actions = [
 				'edit' => [
@@ -317,13 +317,27 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 *
 	 * @since 5.6.0-dev
 	 *
+	 * @param string $token_id token string
+	 * @return SV_WC_Payment_Gateway_Payment_Token|null
+	 */
+	private function get_token_by_id( $token_id ) {
+
+		return $this->get_plugin()->get_gateway()->get_payment_tokens_handler()->get_token( get_current_user_id(), $token_id );
+	}
+
+
+	/**
+	 * Gets FW token object from payment method data array.
+	 *
+	 * @since 5.6.0-dev
+	 *
 	 * @param array $method payment method data array
 	 * @return SV_WC_Payment_Gateway_Payment_Token|null
 	 */
-	private function get_token_by_id( $method ) {
+	private function get_token_from_method_data_array( $method ) {
 
 		if ( ! empty( $method['token'] ) ) {
-			return $this->get_plugin()->get_gateway()->get_payment_tokens_handler()->get_token( get_current_user_id(), $method['token'] );
+			return $this->get_token_by_id( $method['token'] );
 		}
 
 		return null;
@@ -341,7 +355,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_method_title( $method ) {
 
-		if ( $token = $this->get_token_by_id( $method ) ) {
+		if ( $token = $this->get_token_from_method_data_array( $method ) ) {
 
 			echo $this->get_payment_method_title_html( $token );
 		}
@@ -359,7 +373,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_method_details( $method ) {
 
-		if ( $token = $this->get_token_by_id( $method ) ) {
+		if ( $token = $this->get_token_from_method_data_array( $method ) ) {
 
 			echo $this->get_payment_method_details_html( $token );
 		}
@@ -377,7 +391,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_method_default( $method ) {
 
-		echo $this->get_payment_method_default_html( ! empty( $method['is_default'] ), $this->get_token_by_id( $method ) );
+		echo $this->get_payment_method_default_html( ! empty( $method['is_default'] ), $this->get_token_from_method_data_array( $method ) );
 	}
 
 
@@ -449,7 +463,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function payment_token_deleted( $token_id, $core_token ) {
 
-		$token = $core_token instanceof \WC_Payment_Token ? $this->get_token_by_id( [ 'token' => $core_token->get_token() ] ) : null;
+		$token = $core_token instanceof \WC_Payment_Token ? $this->get_token_by_id( $core_token->get_token() ) : null;
 
 		if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
 
