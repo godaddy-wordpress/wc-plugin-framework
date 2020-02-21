@@ -13,6 +13,10 @@ table.woocommerce-MyAccount-paymentMethods {
 
 	font-size: 0.85em;
 
+	th, td {
+		vertical-align: middle;
+	}
+
 	.woocommerce-PaymentMethod--title {
 		display: none;
 	}
@@ -78,10 +82,6 @@ table.woocommerce-MyAccount-paymentMethods {
 }
 
 table.sv-wc-payment-gateway-my-payment-methods-table {
-
-	th, td {
-		vertical-align: middle;
-	}
 
 	.button {
 		white-space: nowrap;
