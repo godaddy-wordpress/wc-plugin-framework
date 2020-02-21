@@ -1018,48 +1018,6 @@ class SV_WC_Helper {
 	}
 
 
-	/**
-	 * Checks if another Framework plugin already hooked into an action/filter.
-	 *
-	 * @since 5.6.0-dev
-	 *
-	 * @param string $tag hook tag
-	 * @param string $current_plugin_id current plugin ID
-	 *
-	 * @return bool
-	 */
-	public static function is_another_framework_plugin_hooked_into( $tag, $current_plugin_id ) {
-		global $wp_filter;
-
-		if ( ! empty( $wp_filter[ $tag ] ) ) {
-
-			/** @var \WP_Hook WordPress hook object */
-			$hook = $wp_filter[ $tag ];
-
-			if ( ! empty( $hook->callbacks ) ) {
-
-				foreach ( $hook->callbacks as $priority => $callbacks ) {
-
-					foreach ( $callbacks as $callback ) {
-
-						if ( is_array( $callback['function'] ) && ! empty( $callback['function'][0] ) ) {
-
-							$callable_class = $callback['function'][0];
-							$plugin         = $callable_class->get_plugin();
-
-							if ( $plugin instanceof SV_WC_Plugin && $plugin->get_id() !== $current_plugin_id ) {
-								return true;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return false;
-	}
-
-
 }
 
 
