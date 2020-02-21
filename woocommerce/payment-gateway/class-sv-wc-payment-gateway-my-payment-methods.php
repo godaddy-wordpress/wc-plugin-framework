@@ -107,7 +107,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		add_action( 'woocommerce_after_account_payment_methods',  [ $this, 'after_payment_methods_table'] );
 
 		// render JavaScript used in the My Payment Methods section
-		add_action( 'woocommerce_after_account_payment_methods', array( $this, 'render_js' ) );
+		add_action( 'woocommerce_after_account_payment_methods', [ $this, 'render_js' ] );
 	}
 
 
