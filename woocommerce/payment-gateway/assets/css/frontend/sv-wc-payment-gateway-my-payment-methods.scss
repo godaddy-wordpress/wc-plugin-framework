@@ -11,6 +11,7 @@ http://www.gnu.org/licenses/gpl-3.0.html
 
 table.woocommerce-MyAccount-paymentMethods {
 
+	th.woocommerce-PaymentMethod--title,
 	th.woocommerce-PaymentMethod--details,
 	th.woocommerce-PaymentMethod--default,
 	th.woocommerce-PaymentMethod--actions {
@@ -22,6 +23,10 @@ table.woocommerce-MyAccount-paymentMethods {
 	th.woocommerce-PaymentMethod--expires,
 	th.woocommerce-PaymentMethod--default {
 		text-align: center;
+	}
+
+	td.woocommerce-PaymentMethod--title {
+		display: none;
 	}
 
 	td.woocommerce-PaymentMethod--details {
