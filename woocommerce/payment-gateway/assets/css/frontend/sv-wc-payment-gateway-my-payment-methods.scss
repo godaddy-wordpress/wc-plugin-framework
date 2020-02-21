@@ -95,6 +95,10 @@ table.woocommerce-MyAccount-paymentMethods {
 		}
 	}
 
+	.button {
+		white-space: nowrap;
+	}
+
 	tbody tr.error td {
 		color: white;
 		text-align: center;
@@ -105,10 +109,6 @@ table.woocommerce-MyAccount-paymentMethods {
 }
 
 table.sv-wc-payment-gateway-my-payment-methods-table {
-
-	.button {
-		white-space: nowrap;
-	}
 
 	tr.sv-wc-payment-gateway-my-payment-methods-type-divider td {
 		font-weight: 700;
