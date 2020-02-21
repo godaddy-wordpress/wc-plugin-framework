@@ -94,6 +94,14 @@ table.woocommerce-MyAccount-paymentMethods {
 			opacity: 1;
 		}
 	}
+
+	tbody tr.error td {
+		color: white;
+		text-align: center;
+		background-color: #e26838;
+		border-radius: 0 0 3px 3px;
+		padding: 5px;
+	}
 }
 
 table.sv-wc-payment-gateway-my-payment-methods-table {
@@ -104,14 +112,6 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 
 	tr.sv-wc-payment-gateway-my-payment-methods-type-divider td {
 		font-weight: 700;
-	}
-
-	.error td {
-		color: white;
-		text-align: center;
-		background-color: #e26838;
-		border-radius: 0 0 3px 3px;
-		padding: 5px;
 	}
 }
 
