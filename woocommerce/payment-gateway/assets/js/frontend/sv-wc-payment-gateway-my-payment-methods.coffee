@@ -80,12 +80,10 @@ jQuery( document ).ready ($) ->
 				if ( titleColumn.children().length > 0 )
 
 					# replace Method column
-					$( element ).find( 'td.woocommerce-PaymentMethod--method' ).replaceWith( titleColumn )
+					$( element ).find( 'td.woocommerce-PaymentMethod--method' ).html( titleColumn.html() )
 
-				else
-
-					# delete Title column
-					$( element ).find( 'td.woocommerce-PaymentMethod--title' ).remove()
+				# delete Title column
+				$( element ).find( 'td.woocommerce-PaymentMethod--title' ).remove()
 
 
 		# Edits a payment method.
