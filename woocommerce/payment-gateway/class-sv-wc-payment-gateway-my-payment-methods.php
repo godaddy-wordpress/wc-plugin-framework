@@ -666,32 +666,20 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Return the table head HTML
+	 * Returns the table head HTML
+	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
 	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
+	 *
 	 * @return string table thead HTML
 	 */
 	protected function get_table_head_html() {
 
-		$html = '<thead><tr>';
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		foreach ( $this->get_table_headers() as $key => $title ) {
-			$html .= sprintf( '<th class="sv-wc-payment-gateway-my-payment-method-table-header sv-wc-payment-gateway-payment-method-header-%1$s wc-%2$s-payment-method-%1$s"><span class="nobr">%3$s</span></th>', sanitize_html_class( $key ), sanitize_html_class( $this->get_plugin()->get_id_dasherized() ), esc_html( $title ) );
-		}
-
-		$html .= '</tr></thead>';
-
-		/**
-		 * My Payment Methods Table Head HTML Filter.
-		 *
-		 * Allow actors to modify the table head HTML.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param string $html table head HTML
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_head_html', $html, $this );
+		return '';
 	}
 
 
