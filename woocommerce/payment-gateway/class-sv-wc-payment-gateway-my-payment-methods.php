@@ -199,6 +199,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			$gateway->get_payment_tokens_handler()->clear_transient( get_current_user_id() );
 		}
+
+		// clear Default column content transient
+		delete_transient( self::get_method_default_column_transient_key( $token->get_token() ) );
 	}
 
 
@@ -392,6 +395,20 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
+	 * Gets the transient key where the default column content HTML is saved.
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param string $method_token token string
+	 * @return string
+	 */
+	private static function get_method_default_column_transient_key( $method_token ) {
+
+		return "sv_wc_${method_token}_default";
+	}
+
+
+	/**
 	 * Adds the Default column content.
 	 *
 	 * @internal
@@ -402,7 +419,34 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function add_payment_method_default( $method ) {
 
-		echo $this->get_payment_method_default_html( ! empty( $method['is_default'] ), $this->get_token_from_method_data_array( $method ) );
+		$token = $this->get_token_from_method_data_array( $method );
+
+		if ( ! empty( $method['token'] ) ) {
+			$transient_key = self::get_method_default_column_transient_key( $method['token'] );
+		}
+
+		// if the method does not belong to this plugin
+		if ( ! $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
+
+			// check if another FW plugin already hooked into this action and set the transient
+			if ( ! empty( $transient_key ) ) {
+				$transient = get_transient( $transient_key );
+				if ( ! empty( $transient ) ) {
+					return;
+				}
+			}
+		}
+
+		$html = $this->get_payment_method_default_html( ! empty( $method['is_default'] ), $token );
+
+		// if the method does not belong to this plugin
+		if ( isset( $transient_key ) && ! $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
+
+			// set the transient for the other FW plugins
+			set_transient( $transient_key, $html, 60 );
+		}
+
+		echo $html;
 	}
 
 
@@ -952,15 +996,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * @return string
 	 */
 	protected function get_payment_method_default_html( $is_default = false, SV_WC_Payment_Gateway_Payment_Token $token = null ) {
-
-		// if the method does not belong to this plugin
-		if ( ! $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
-
-			// check if another plugin already hooked into this action
-			if ( SV_WC_Helper::is_another_framework_plugin_hooked_into( 'woocommerce_account_payment_methods_column_default', $this->get_plugin()->get_id() ) ) {
-				return '';
-			}
-		}
 
 		$html = $is_default ? '<mark class="default">' . esc_html__( 'Default', 'woocommerce-plugin-framework' ) . '</mark>' : '';
 
