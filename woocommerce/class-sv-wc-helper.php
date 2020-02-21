@@ -1023,27 +1023,29 @@ class SV_WC_Helper {
 	 *
 	 * @since 5.6.0-dev
 	 *
-	 * @param string $hook hook string
+	 * @param string $tag hook tag
 	 * @param string $current_plugin_id current plugin ID
 	 *
 	 * @return bool
 	 */
-	public static function is_another_framework_plugin_hooked_into( $hook, $current_plugin_id ) {
+	public static function is_another_framework_plugin_hooked_into( $tag, $current_plugin_id ) {
 		global $wp_filter;
 
-		if ( ! empty( $wp_filter[ $hook ] ) ) {
+		if ( ! empty( $wp_filter[ $tag ] ) ) {
 
-			$hooks = $wp_filter[ $hook ];
+			/** @var \WP_Hook WordPress hook object */
+			$hook = $wp_filter[ $tag ];
 
-			foreach ( $hooks as $hook ) {
+			if ( ! empty( $hook->callbacks ) ) {
 
-				if ( ! empty( $hook['callbacks'] ) ) {
+				foreach ( $hook->callbacks as $priority => $callbacks ) {
 
-					foreach ( $hook['callbacks'] as $priority => $callbacks ) {
+					foreach ( $callbacks as $callback ) {
 
-						foreach ( $callbacks as $callback ) {
+						if ( is_array( $callback['function'] ) && ! empty( $callback['function'][0] ) ) {
 
-							$plugin = ! empty( $callback[0]['plugin'] ) ? $callback[0]['plugin'] : null;
+							$callable_class = $callback['function'][0];
+							$plugin         = $callable_class->get_plugin();
 
 							if ( $plugin instanceof SV_WC_Plugin && $plugin->get_id() !== $current_plugin_id ) {
 								return true;
