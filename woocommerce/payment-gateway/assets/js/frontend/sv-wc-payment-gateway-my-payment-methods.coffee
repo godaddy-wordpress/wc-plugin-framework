@@ -43,6 +43,9 @@ jQuery( document ).ready ($) ->
 			# replace the "Method" column content for FW tokens
 			this.replace_method_column()
 
+			# remove duplicate "Default" marks
+			this.remove_duplicate_default_marks()
+
 			# handle the edit action
 			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .button.edit", ( event ) => this.edit_method( event ) )
 
@@ -96,6 +99,18 @@ jQuery( document ).ready ($) ->
 
 				# delete Title column
 				$( element ).find( 'td.woocommerce-PaymentMethod--title' ).remove()
+
+
+		# Removes duplicate "Default" marks.
+		#
+		# They are already hidden using CSS, but should also be removed for accessibility.
+		#
+		# @since 5.6.0-dev
+		remove_duplicate_default_marks: =>
+
+			$( '.woocommerce-MyAccount-paymentMethods' ).find( 'tr' ).each ( index, element ) =>
+
+				$( element ).find( 'td.woocommerce-PaymentMethod--default' ).find( 'mark.default:not(:first-child)' ).remove()
 
 
 		# Edits a payment method.
