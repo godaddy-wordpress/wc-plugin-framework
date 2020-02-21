@@ -145,7 +145,7 @@ jQuery( document ).ready ($) ->
 						row.siblings().find( ".woocommerce-PaymentMethod--default .view" ).empty().siblings( '.edit' ).find( 'input' ).prop( 'checked', false )
 
 					if response.data.title?
-						row.find('.woocommerce-PaymentMethod--title').html( response.data.title )
+						row.find('.woocommerce-PaymentMethod--method').html( response.data.title )
 
 					if response.data.default?
 						row.find('.woocommerce-PaymentMethod--default').html( response.data.default )
