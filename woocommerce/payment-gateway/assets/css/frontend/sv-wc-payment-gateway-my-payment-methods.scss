@@ -93,6 +93,13 @@ table.woocommerce-MyAccount-paymentMethods {
 		.payment-method:hover {
 			opacity: 1;
 		}
+
+		td.woocommerce-PaymentMethod--actions {
+
+			.button.save {
+				display: inline-block;
+			}
+		}
 	}
 
 	.button {
