@@ -22,7 +22,6 @@ jQuery( document ).ready ($) ->
 		# @param [Object] args, with the properties:
 		#     id:         [String] plugin ID
 		#     slug:       [String] plugin slug or dasherized ID
-		#     gateway_id: [String] gateway ID
 		#     i18n:       [Object] localized text strings
 		#     ajax_url:   [String] URL for AJAX requests
 		#     ajax_nonce: [String] nonce for AJAX requests
