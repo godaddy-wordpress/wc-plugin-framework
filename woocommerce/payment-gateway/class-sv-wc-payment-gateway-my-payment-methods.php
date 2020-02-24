@@ -57,21 +57,22 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Setup Class
+	 * Sets up the class.
 	 *
-	 * Note: this constructor executes during the `wp` action
+	 * Note: this constructor adds most of its functionality during the `wp` action.
+	 *
+	 * @since 4.0.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin gateway plugin
-	 * @since 4.0.0
 	 */
 	public function __construct( $plugin ) {
 
 		$this->plugin = $plugin;
 
-		add_action( 'wp', array( $this, 'init' ) );
+		add_action( 'wp', [ $this, 'init' ] );
 
 		// save a payment method via AJAX
-		add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_save_payment_method', array( $this, 'ajax_save_payment_method' ) );
+		add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_save_payment_method', [ $this, 'ajax_save_payment_method' ] );
 
 		add_action( 'woocommerce_payment_token_set_default', [ $this, 'clear_payment_methods_transients' ], 10, 2 );
 
