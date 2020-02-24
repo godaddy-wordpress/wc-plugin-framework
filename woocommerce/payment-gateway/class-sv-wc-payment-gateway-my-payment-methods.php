@@ -753,43 +753,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		$deprecated_filter = 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_body_row_data';
-
-		if ( has_filter( $deprecated_filter ) ) {
-
-			wc_deprecated_function( "The filter {$deprecated_filter}", '5.6.0-dev', 'WooCommerce core actions and filters to add new columns and filter their content' );
-
-			$method = array(
-				'title'   => $this->get_payment_method_title_html( $token ),
-				'default' => $this->get_payment_method_default_html( $token->is_default(), $token ),
-				'details' => $this->get_payment_method_details_html( $token ),
-				'actions' => $this->get_payment_method_actions_html( $token ),
-			);
-
-			// add the expiration date if applicable
-			if ( $token->get_exp_month() && $token->get_exp_year() ) {
-				$method['expiry'] = $this->get_payment_method_expiry_html( $token );
-			}
-
-			/**
-			 * My Payment Methods Table Body Row Data Filter.
-			 *
-			 * TODO: remove this filter by version 6.0.0 or by 2021-02-24 {FN 2020-02-21}
-			 *
-			 * @since 4.0.0
-			 * @deprecated 5.6.0-dev
-			 *
-			 * @param array $methods {
-			 *     @type string $title payment method title
-			 *     @type string $expiry payment method expiry
-			 *     @type string $actions actions for payment method
-			 * }
-			 * @param array $token simple array of SV_WC_Payment_Gateway_Payment_Token objects
-			 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-			 */
-			return apply_filters( $deprecated_filter, $method, $token, $this );
-		}
-
 		return [];
 	}
 
