@@ -33,9 +33,6 @@ jQuery( document ).ready ($) ->
 			@ajax_url   = args.ajax_url
 			@ajax_nonce = args.ajax_nonce
 
-			# init tipTip
-			$( ".woocommerce-PaymentMethod--actions .button.tip" ).tipTip()
-
 			# replace the "Method" column content for FW tokens
 			this.replace_method_column()
 
