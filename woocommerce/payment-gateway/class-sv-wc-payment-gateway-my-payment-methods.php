@@ -1152,7 +1152,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 			if ( has_filter( $deprecated_filter ) ) {
 
-				wc_deprecated_function( $deprecated_filter, '5.6.0-dev', 'WooCommerce core actions and filters' );
+				wc_deprecated_function( $deprecated_filter . ' filter hook', '5.6.0-dev', 'WooCommerce core actions and filters' );
 			}
 		}
 	}
