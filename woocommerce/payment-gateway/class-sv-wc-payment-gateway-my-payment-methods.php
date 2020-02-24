@@ -739,14 +739,17 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Return the payment method data for a given token
+	 * Gets the payment method data for a given token.
 	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token the token object
 	 * @return array payment method data suitable for HTML output
 	 */
 	protected function get_table_body_row_data( $token ) {
+
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
 		$method = array(
 			'title'   => $this->get_payment_method_title_html( $token ),
