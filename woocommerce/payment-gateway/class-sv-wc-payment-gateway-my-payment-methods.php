@@ -91,6 +91,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			return;
 		}
 
+		$this->handle_deprecated_hooks();
+
 		// styles/scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_styles_scripts' ) );
 
@@ -1119,6 +1121,40 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		global $wp;
 
 		return is_user_logged_in() && is_account_page() && isset( $wp->query_vars['payment-methods'] );
+	}
+
+
+	/**
+	 * Handles deprecated hooks.
+	 *
+	 * TODO: remove deprecated hooks handling by version 6.0.0 or by 2021-02-25 {FN 2020-02-25}
+	 *
+	 * @since 5.6.0-dev
+	 */
+	private function handle_deprecated_hooks() {
+
+		$plugin_id          = $this->get_plugin()->get_id();
+		$deprecated_filters = [
+			'my_payment_methods_table_html',
+			'my_payment_methods_table_head_html',
+			'my_payment_methods_table_title',
+			'my_payment_methods_table_title_html',
+			'my_payment_methods_table_row_html',
+			'my_payment_methods_table_body_html',
+			'my_payment_methods_table_body_row_data',
+			'my_payment_methods_table_method_expiry_html',
+			'my_payment_methods_table_actions_html',
+		];
+
+		foreach ( $deprecated_filters as $deprecated_filter ) {
+
+			$deprecated_filter = 'wc_' . $plugin_id . '_' . $deprecated_filter;
+
+			if ( has_filter( $deprecated_filter ) ) {
+
+				wc_deprecated_function( $deprecated_filter, '5.6.0-dev', 'WooCommerce core actions and filters' );
+			}
+		}
 	}
 
 
