@@ -739,43 +739,21 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Return the payment method data for a given token
+	 * Gets the payment method data for a given token.
+	 *
+	 * TODO: remove this method by version 6.0.0 or by 2021-02-24 {FN 2020-02-21}
 	 *
 	 * @since 4.0.0
+	 * @deprecated 5.6.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token the token object
 	 * @return array payment method data suitable for HTML output
 	 */
 	protected function get_table_body_row_data( $token ) {
 
-		$method = array(
-			'title'   => $this->get_payment_method_title_html( $token ),
-			'default' => $this->get_payment_method_default_html( $token->is_default(), $token ),
-			'details' => $this->get_payment_method_details_html( $token ),
-			'actions' => $this->get_payment_method_actions_html( $token ),
-		);
+		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
 
-		// add the expiration date if applicable
-		if ( $token->get_exp_month() && $token->get_exp_year() ) {
-			$method['expiry'] = $this->get_payment_method_expiry_html( $token );
-		}
-
-		/**
-		 * My Payment Methods Table Body Row Data Filter.
-		 *
-		 * Allow actors to modify the table body row data.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param array $methods {
-		 *     @type string $title payment method title
-		 *     @type string $expiry payment method expiry
-		 *     @type string $actions actions for payment method
-		 * }
-		 * @param array $token simple array of SV_WC_Payment_Gateway_Payment_Token objects
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
-		 */
-		return apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_my_payment_methods_table_body_row_data', $method, $token, $this );
+		return [];
 	}
 
 
@@ -790,7 +768,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	protected function get_payment_method_title_html( SV_WC_Payment_Gateway_Payment_Token $token ) {
 
 		$nickname = $token->get_nickname();
-		$title    = $token->get_nickname() ? $token->get_nickname() : $token->get_type_full();
+		$title    = $nickname ?: $token->get_type_full();
 
 		/**
 		 * Filter a token's payment method title.
@@ -808,6 +786,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$html .= '<div class="edit" style="display:none;">';
 			$html .= '<input type="text" class="nickname" name="nickname" value="' . esc_html( $token->get_nickname() ) . '" placeholder="' . esc_attr( __( 'Nickname', 'woocommerce-plugin-framework' ) ) . '" />';
 			$html .= '<input type="hidden" name="token-id" value="' . esc_attr( $token->get_id() ) . '" />';
+			$html .= '<input type="hidden" name="plugin-id" value="' . esc_attr( $this->get_plugin()->get_id_dasherized() ) . '" />';
 		$html .= '</div>';
 
 		/**

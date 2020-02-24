@@ -39,6 +39,9 @@ jQuery( document ).ready ($) ->
 			# replace the "Method" column content for FW tokens
 			this.replace_method_column()
 
+			# remove duplicate "Default" marks
+			this.remove_duplicate_default_marks()
+
 			# handle the edit action
 			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .button.edit", ( event ) => this.edit_method( event ) )
 
@@ -50,6 +53,13 @@ jQuery( document ).ready ($) ->
 
 			# handle the delete action
 			$( ".woocommerce-MyAccount-paymentMethods" ).on( 'click', ".woocommerce-PaymentMethod--actions .button.delete", ( event ) =>
+
+				button = $( event.currentTarget )
+				row    = button.parents( 'tr' )
+
+				# check if the method belongs to this plugin
+				if row.find( "input[name=plugin-id][value=#{@slug}]" ).length is 0
+					return
 
 				if $( event.currentTarget ).hasClass( 'disabled' ) or not confirm( @i18n.delete_ays )
 					event.preventDefault()
@@ -68,6 +78,10 @@ jQuery( document ).ready ($) ->
 
 			$( '.woocommerce-MyAccount-paymentMethods' ).find( 'tr' ).each ( index, element ) =>
 
+				# check if the method belongs to this plugin
+				if $( element ).find( "input[name=plugin-id][value=#{@slug}]" ).length is 0
+					return
+
 				# delete the Title header
 				$( element ).find( 'th.woocommerce-PaymentMethod--title' ).remove()
 
@@ -83,6 +97,18 @@ jQuery( document ).ready ($) ->
 				$( element ).find( 'td.woocommerce-PaymentMethod--title' ).remove()
 
 
+		# Removes duplicate "Default" marks.
+		#
+		# They are already hidden using CSS, but should also be removed for accessibility.
+		#
+		# @since 5.6.0-dev
+		remove_duplicate_default_marks: =>
+
+			$( '.woocommerce-MyAccount-paymentMethods' ).find( 'tr' ).each ( index, element ) =>
+
+				$( element ).find( 'td.woocommerce-PaymentMethod--default' ).find( 'mark.default:not(:first-child)' ).remove()
+
+
 		# Edits a payment method.
 		#
 		# @since 5.1.0
@@ -94,6 +120,10 @@ jQuery( document ).ready ($) ->
 
 			button = $( event.currentTarget )
 			row    = button.parents( 'tr' )
+
+			# check if the method belongs to this plugin
+			if row.find( "input[name=plugin-id][value=#{@slug}]" ).length is 0
+				return
 
 			row.find( 'div.view' ).hide()
 			row.find( 'div.edit' ).show()
@@ -118,6 +148,10 @@ jQuery( document ).ready ($) ->
 
 			button = $( event.currentTarget )
 			row    = button.parents( 'tr' )
+
+			# check if the method belongs to this plugin
+			if row.find( "input[name=plugin-id][value=#{@slug}]" ).length is 0
+				return
 
 			this.block_ui()
 
@@ -170,6 +204,10 @@ jQuery( document ).ready ($) ->
 
 			button = $( event.currentTarget )
 			row    = button.parents( 'tr' )
+
+			# check if the method belongs to this plugin
+			if row.find( "input[name=plugin-id][value=#{@slug}]" ).length is 0
+				return
 
 			row.find( 'div.view' ).show()
 			row.find( 'div.edit' ).hide()
