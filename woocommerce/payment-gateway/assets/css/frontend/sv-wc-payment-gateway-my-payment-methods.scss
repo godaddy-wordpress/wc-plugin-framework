@@ -81,6 +81,9 @@ table.woocommerce-MyAccount-paymentMethods {
 			&.save {
 				display: none;
 			}
+			&.delete {
+				display: inline-block;
+			}
 		}
 	}
 
@@ -98,6 +101,9 @@ table.woocommerce-MyAccount-paymentMethods {
 
 			.button.save {
 				display: inline-block;
+			}
+			.button.delete {
+				display: none;
 			}
 		}
 	}

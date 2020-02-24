@@ -129,8 +129,6 @@ jQuery( document ).ready ($) ->
 			# change the Edit button to "Cancel"
 			button.text( @i18n.cancel_button ).removeClass( 'edit' ).addClass( 'cancel-edit' ).removeClass( 'button' )
 
-			button.siblings( '.delete' ).hide()
-
 			this.enable_editing_ui()
 
 
@@ -176,9 +174,6 @@ jQuery( document ).ready ($) ->
 					# change the "Cancel" button back to "Edit"
 					button.siblings( '.cancel-edit' ).removeClass( 'cancel-edit' ).addClass( 'edit' ).text( @i18n.edit_button ).addClass( 'button' )
 
-					# hide the "Save" button
-					button.siblings( '.delete' ).show()
-
 					this.disable_editing_ui()
 
 				.fail ( jqXHR, textStatus, error ) =>
@@ -212,8 +207,6 @@ jQuery( document ).ready ($) ->
 
 			# change the "Cancel" button back to "Edit"
 			button.removeClass( 'cancel-edit' ).addClass( 'edit' ).text( @i18n.edit_button ).addClass( 'button' )
-
-			button.siblings( '.delete' ).show()
 
 			this.disable_editing_ui()
 
