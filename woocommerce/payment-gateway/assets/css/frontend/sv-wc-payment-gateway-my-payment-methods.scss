@@ -49,13 +49,17 @@ table.woocommerce-MyAccount-paymentMethods {
 		text-align: center;
 
 		mark {
-			display: inline-block;
+			display: none;
 			color: white;
 			background-color: #3d9cd2;
 			font-size: 0.75em;
 			text-transform: uppercase;
 			padding: 2px 4px;
 			border-radius: 2px;
+
+			&:first-child {
+				display: inline-block;
+			}
 		}
 	}
 
