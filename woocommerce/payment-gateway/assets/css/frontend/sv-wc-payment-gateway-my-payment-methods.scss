@@ -78,10 +78,6 @@ table.woocommerce-MyAccount-paymentMethods {
 		.button {
 			margin: .125em;
 
-			&.disabled.tip:hover {
-				cursor: help;
-			}
-
 			&.save {
 				display: none;
 			}
@@ -119,83 +115,6 @@ table.woocommerce-MyAccount-paymentMethods {
 	}
 }
 
-#tiptip_holder {
-	display: none;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 99999;
-
-	&.tip_top {
-		padding-bottom: 5px;
-
-		#tiptip_arrow_inner {
-			margin-top: -7px;
-			margin-left: -6px;
-			border-top-color: #464646;
-		}
-	}
-
-	&.tip_bottom {
-		padding-top: 5px;
-
-		#tiptip_arrow_inner {
-			margin-top: -5px;
-			margin-left: -6px;
-			border-bottom-color: #464646;
-		}
-	}
-
-	&.tip_right {
-		padding-left: 5px;
-
-		#tiptip_arrow_inner {
-			margin-top: -6px;
-			margin-left: -5px;
-			border-right-color: #464646;
-		}
-	}
-
-	&.tip_left {
-		padding-right: 5px;
-
-		#tiptip_arrow_inner {
-			margin-top: -6px;
-			margin-left: -7px;
-			border-left-color: #464646;
-		}
-	}
-}
-
-#tiptip_content,
-.chart-tooltip {
-	font-size:11px;
-	color:#fff;
-	padding:.5em .5em;
-	background:#464646;
-	-webkit-border-radius:3px;
-	-moz-border-radius:3px;
-	border-radius:3px;
-	-webkit-box-shadow:1px 1px 3px rgba(0,0,0,0.1);
-	-moz-box-shadow:1px 1px 3px rgba(0,0,0,0.1);
-	box-shadow:1px 1px 3px rgba(0,0,0,0.1);
-	text-align:center;
-	max-width:150px;
-}
-#tiptip_content code,
-.chart-tooltip code {
-	background:#888;
-	padding:1px;
-}
-#tiptip_arrow,
-#tiptip_arrow_inner {
-	position:absolute;
-	border-color:transparent;
-	border-style:solid;
-	border-width:6px;
-	height:0;
-	width:0;
-}
 
 @media screen and (max-width: 768px) {
 
