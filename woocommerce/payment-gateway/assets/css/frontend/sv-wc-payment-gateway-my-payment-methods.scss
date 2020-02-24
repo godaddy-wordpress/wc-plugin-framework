@@ -11,7 +11,16 @@ http://www.gnu.org/licenses/gpl-3.0.html
 
 table.woocommerce-MyAccount-paymentMethods {
 
-	th.woocommerce-PaymentMethod--title,
+	font-size: 0.85em;
+
+	th, td {
+		vertical-align: middle;
+	}
+
+	.woocommerce-PaymentMethod--title {
+		display: none;
+	}
+
 	th.woocommerce-PaymentMethod--details,
 	th.woocommerce-PaymentMethod--default,
 	th.woocommerce-PaymentMethod--actions {
@@ -25,8 +34,8 @@ table.woocommerce-MyAccount-paymentMethods {
 		text-align: center;
 	}
 
-	td.woocommerce-PaymentMethod--title {
-		display: none;
+	td.woocommerce-PaymentMethod--method input {
+		width: 100%;
 	}
 
 	td.woocommerce-PaymentMethod--details {
@@ -78,53 +87,30 @@ table.woocommerce-MyAccount-paymentMethods {
 			}
 		}
 	}
-}
 
-table.sv-wc-payment-gateway-my-payment-methods-table {
-	font-size: 0.85em;
+	&.editing {
 
-	th, td {
-		vertical-align: middle;
+		.payment-method:not(.editing) {
+			opacity: 0.5;
+		}
+
+		.payment-method:hover {
+			opacity: 1;
+		}
+
+		td.woocommerce-PaymentMethod--actions {
+
+			.button.save {
+				display: inline-block;
+			}
+		}
 	}
 
 	.button {
 		white-space: nowrap;
 	}
 
-	.sv-wc-payment-gateway-my-payment-methods-method {
-
-		.sv-wc-payment-gateway-payment-method-title input {
-			width: 100%;
-		}
-
-		.cancel-edit-payment-method {
-			margin-right: 0.5em;
-		}
-	}
-
-	&.editing {
-
-		th.woocommerce-PaymentMethod--default {
-			span {
-				display: inline;
-			}
-		}
-
-		.sv-wc-payment-gateway-my-payment-methods-method:not(.editing),
-		.sv-wc-payment-gateway-my-payment-methods-type-divider {
-			opacity: 0.5;
-		}
-
-		.sv-wc-payment-gateway-my-payment-methods-method:hover {
-			opacity: 1;
-		}
-	}
-
-	tr.sv-wc-payment-gateway-my-payment-methods-type-divider td {
-		font-weight: 700;
-	}
-
-	.error td {
+	tbody tr.error td {
 		color: white;
 		text-align: center;
 		background-color: #e26838;
@@ -230,12 +216,6 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 				float: none;
 				margin: .125em;
 			}
-		}
-	}
-
-	table.sv-wc-payment-gateway-my-payment-methods-table {
-		.sv-wc-payment-gateway-my-payment-methods-type-divider td:before {
-			display: none;
 		}
 	}
 }

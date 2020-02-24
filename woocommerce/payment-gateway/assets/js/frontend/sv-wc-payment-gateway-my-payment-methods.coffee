@@ -36,9 +36,6 @@ jQuery( document ).ready ($) ->
 			# init tipTip
 			$( ".woocommerce-PaymentMethod--actions .button.tip" ).tipTip()
 
-			# hide the "Save" button
-			$( ".woocommerce-PaymentMethod--actions .button.save" ).hide()
-
 			# replace the "Method" column content for FW tokens
 			this.replace_method_column()
 
@@ -135,7 +132,6 @@ jQuery( document ).ready ($) ->
 			# change the Edit button to "Cancel"
 			button.text( @i18n.cancel_button ).removeClass( 'edit' ).addClass( 'cancel-edit' ).removeClass( 'button' )
 
-			button.siblings( '.save' ).show()
 			button.siblings( '.delete' ).hide()
 
 			this.enable_editing_ui()
@@ -184,7 +180,6 @@ jQuery( document ).ready ($) ->
 					button.siblings( '.cancel-edit' ).removeClass( 'cancel-edit' ).addClass( 'edit' ).text( @i18n.edit_button ).addClass( 'button' )
 
 					# hide the "Save" button
-					button.hide()
 					button.siblings( '.delete' ).show()
 
 					this.disable_editing_ui()
@@ -221,7 +216,6 @@ jQuery( document ).ready ($) ->
 			# change the "Cancel" button back to "Edit"
 			button.removeClass( 'cancel-edit' ).addClass( 'edit' ).text( @i18n.edit_button ).addClass( 'button' )
 
-			button.siblings( '.save' ).hide()
 			button.siblings( '.delete' ).show()
 
 			this.disable_editing_ui()

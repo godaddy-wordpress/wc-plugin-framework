@@ -711,6 +711,8 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 			if ( ! empty( $subscription_ids ) ) {
 				$html = implode( ', ', $subscription_ids );
+			} else {
+				$html = __( 'N/A', 'woocommerce-plugin-framework' );
 			}
 		}
 
