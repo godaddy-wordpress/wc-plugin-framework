@@ -790,7 +790,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	protected function get_payment_method_title_html( SV_WC_Payment_Gateway_Payment_Token $token ) {
 
 		$nickname = $token->get_nickname();
-		$title    = $token->get_nickname() ? $token->get_nickname() : $token->get_type_full();
+		$title    = $nickname ?: $token->get_type_full();
 
 		/**
 		 * Filter a token's payment method title.
