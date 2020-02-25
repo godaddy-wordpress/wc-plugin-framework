@@ -91,6 +91,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			return;
 		}
 
+		// initializes tokens as WooCommerce core tokens
+		$this->load_tokens();
+
 		// styles/scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_styles_scripts' ) );
 
@@ -131,10 +134,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Get the the available tokens for each plugin gateway and combine them
+	 * Gets the the available tokens for each plugin gateway and combine them.
 	 *
-	 * Tokens are also separated into Credit Card and eCheck-specific class members
-	 * for convenience.
+	 * Tokens are also separated into Credit Card and eCheck-specific class members for convenience.
 	 *
 	 * @since 4.0.0
 	 */
