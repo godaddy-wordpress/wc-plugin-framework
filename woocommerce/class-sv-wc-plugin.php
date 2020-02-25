@@ -471,6 +471,7 @@ abstract class SV_WC_Plugin {
 		$deprecated_hooks   = [];
 		$deprecated_filters = [
 			/** @see SV_WC_Payment_Gateway_My_Payment_Methods handler - once migrated to WC core tokens UI, we removed these and have no replacement */
+			// TODO: remove deprecated hooks handling by version 6.0.0 or by 2021-02-25 {FN 2020-02-25}
 			"wc_{$plugin_id}_my_payment_methods_table_html",
 			"wc_{$plugin_id}_my_payment_methods_table_head_html",
 			"wc_{$plugin_id}_my_payment_methods_table_title",
