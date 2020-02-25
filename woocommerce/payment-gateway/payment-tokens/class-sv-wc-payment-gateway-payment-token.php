@@ -726,7 +726,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		} catch ( \Exception $e ) {
 
-			throw new SV_WC_Payment_Gateway_Exception( $e->getMessage() );
+			throw new SV_WC_Payment_Gateway_Exception( 'Could not save payment token. ' . $e->getMessage() );
 		}
 
 		return $saved;
