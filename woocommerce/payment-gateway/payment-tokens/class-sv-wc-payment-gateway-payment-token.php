@@ -728,7 +728,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			$this->token = null;
 
 			// TODO probably this exception should be logged to the gateway log {FN 2020-02-25}
-			$saved = 0;
+			$saved = $token->get_id();
 		}
 
 		return $saved;
