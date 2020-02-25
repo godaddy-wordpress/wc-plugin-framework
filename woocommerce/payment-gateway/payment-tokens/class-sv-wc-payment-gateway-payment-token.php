@@ -592,7 +592,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 					'user_id'    => $this->get_user_id(),
 					'gateway_id' => $this->get_gateway_id(),
 				]
-			);;
+			);
 
 			foreach ( $saved_tokens as $saved_token ) {
 
