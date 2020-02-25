@@ -713,10 +713,22 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			}
 		}
 
-		$saved = $token->save();
+		$token->apply_changes();
 
-		if ( $saved ) {
-			$this->token = $token;
+		try {
+
+			$saved = $token->save();
+
+			if ( $saved ) {
+				$this->token = $token;
+			}
+
+		} catch ( \Exception $e ) {
+
+			$this->token = null;
+
+			// TODO probably this exception should be logged to the gateway log {FN 2020-02-25}
+			$saved = 0;
 		}
 
 		return $saved;
