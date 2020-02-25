@@ -2,6 +2,7 @@
 
 2020.nn.nn - version 5.6.0-dev
  * Tweak - Migrate payment tokens to be compatible with WooCommerce core payment tokens
+ * Dev - Deprecate some filter hooks in the payment methods table
 
 2020.01.20 - version 5.5.4
  * Tweak - Add a link to the site's terms and conditions page below Apple Pay buttons when available
