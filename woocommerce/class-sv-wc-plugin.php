@@ -461,7 +461,7 @@ abstract class SV_WC_Plugin {
 	 * @see SV_WC_Plugin::init_hook_deprecator()
 	 * @see SV_WC_Plugin::get_deprecated_hooks()
 	 *
-	 * @since 5.6.0-dev.1
+	 * @since 5.6.0-dev
 	 *
 	 * @return array associative array
 	 */
