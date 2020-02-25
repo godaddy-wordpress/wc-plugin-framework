@@ -676,6 +676,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * @since 5.6.0-dev.1
 	 *
 	 * @return int ID of the token saved as returned by {@see \WC_Payment_Token::save()}
+	 * @throws SV_WC_Payment_Gateway_Exception when saving the parent token hits an error
 	 */
 	public function save() {
 
@@ -725,10 +726,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		} catch ( \Exception $e ) {
 
-			$this->token = null;
-
-			// TODO probably this exception should be logged to the gateway log {FN 2020-02-25}
-			$saved = $token->get_id();
+			throw new SV_WC_Payment_Gateway_Exception( $e->getMessage() );
 		}
 
 		return $saved;
