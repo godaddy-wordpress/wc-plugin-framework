@@ -592,7 +592,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 					'user_id'    => $this->get_user_id(),
 					'gateway_id' => $this->get_gateway_id(),
 				]
-			);;
+			);
 
 			foreach ( $saved_tokens as $saved_token ) {
 
@@ -713,10 +713,22 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			}
 		}
 
-		$saved = $token->save();
+		$token->apply_changes();
 
-		if ( $saved ) {
-			$this->token = $token;
+		try {
+
+			$saved = $token->save();
+
+			if ( $saved ) {
+				$this->token = $token;
+			}
+
+		} catch ( \Exception $e ) {
+
+			$this->token = null;
+
+			// TODO probably this exception should be logged to the gateway log {FN 2020-02-25}
+			$saved = $token->get_id();
 		}
 
 		return $saved;
