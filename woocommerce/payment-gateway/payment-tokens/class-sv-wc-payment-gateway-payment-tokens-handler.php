@@ -214,8 +214,14 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$existing_tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
 
 			foreach ( $existing_tokens as $existing_token ) {
+
 				$existing_token->set_default( false );
-				$existing_token->save();
+
+				try {
+					$existing_token->save();
+				} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+					$this->get_gateway()->get_plugin()->log( $e->getMessage() );
+				}
 			}
 
 			$this->tokens[ $environment_id ][ $user_id ] = $existing_tokens;
@@ -225,7 +231,12 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		$token->set_user_id( $user_id );
 		$token->set_environment( $environment_id );
 
-		$saved = $token->save();
+		try {
+			$saved = $token->save();
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+			$saved = false;
+			$this->get_gateway()->get_plugin()->log( $e->getMessage() );
+		}
 
 		// if saved, update the local cache
 		if ( $saved ) {
@@ -286,7 +297,12 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		$token->set_user_id( $user_id );
 		$token->set_environment( $environment_id );
 
-		$saved = $token->save();
+		try {
+			$saved = $token->save();
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+			$saved = false;
+			$this->get_gateway()->get_plugin()->log( $e->getMessage() );
+		}
 
 		// if saved, update the local cache
 		if ( $saved ) {
@@ -406,7 +422,12 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 					// set the first as default and bail
 					$existing_token->set_default( true );
-					$existing_token->save();
+
+					try {
+						$existing_token->save();
+					} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+						$this->get_gateway()->get_plugin()->log( $e->getMessage() );
+					}
 
 					// update the local cache
 					$this->tokens[ $environment_id ][ $user_id ][ $existing_token->get_id() ] = $existing_token;
@@ -582,16 +603,24 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 						$legacy_token->set_user_id( $user_id );
 						$legacy_token->set_environment( $environment_id );
 
-						if ( $legacy_token->save() ) {
+						try {
 
-							$tokens[ $legacy_token->get_id() ] = $legacy_token;
+							if ( $legacy_token->save() ) {
 
-							$migrated_tokens++;
+								$tokens[ $legacy_token->get_id() ] = $legacy_token;
 
-							$legacy_token->set_migrated( true );
+								$migrated_tokens++;
 
-							$this->update_legacy_token( $user_id, $legacy_token );
+								$legacy_token->set_migrated( true );
+
+								$this->update_legacy_token( $user_id, $legacy_token );
+							}
+
+						} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+
+							$this->get_gateway()->get_plugin()->log( $e->getMessage() );
 						}
+
 					}
 				}
 
@@ -736,7 +765,12 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$token->set_gateway_id( $this->get_gateway()->get_id() );
 			$token->set_environment( $environment_id );
 
-			$token_id = $token->save();
+			try {
+				$token_id = $token->save();
+			} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+				$token_id = 0;
+				$this->get_gateway()->get_plugin()->log( $e->getMessage() );
+			}
 
 			if ( $token_id ) {
 				$updated_tokens[] = $token_id;
