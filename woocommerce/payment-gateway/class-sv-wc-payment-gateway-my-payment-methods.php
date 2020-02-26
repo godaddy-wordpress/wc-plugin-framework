@@ -55,6 +55,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/** @var bool true if there are tokens */
 	protected $has_tokens;
 
+	/** @var string the base name of the matching JS handler class used in frontend */
+	private $js_handler_base_class_name = 'SV_WC_Payment_Methods_Handler';
+
 
 	/**
 	 * Sets up the class.
@@ -95,7 +98,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$this->load_tokens();
 
 		// styles/scripts
-		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_styles_scripts' ) );
+		add_action( 'wp_enqueue_scripts', [ $this, 'maybe_enqueue_styles_scripts' ] );
 
 		add_filter( 'woocommerce_payment_methods_list_item', [ $this, 'add_payment_methods_list_item_id' ], 10, 2 );
 		add_filter( 'woocommerce_payment_methods_list_item', [ $this, 'add_payment_methods_list_item_edit_action' ], 10, 2 );
@@ -119,17 +122,18 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Enqueue frontend CSS/JS
+	 * Enqueues frontend scripts and styles.
 	 *
 	 * @since 4.0.0
 	 */
 	public function maybe_enqueue_styles_scripts() {
 
-		$handle = 'sv-wc-payment-gateway-my-payment-methods';
+		$js_class = sprintf( '%s_v5_5_4', $this->js_handler_base_class_name );
+		$handle   = strtolower( str_replace( '_', '-', $js_class ) );
 
-		wp_enqueue_style( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array( 'dashicons' ), SV_WC_Plugin::VERSION );
+		wp_enqueue_style( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-my-payment-methods.min.css', [ 'dashicons' ], SV_WC_Plugin::VERSION );
 
-		wp_enqueue_script( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', [ 'jquery' ], SV_WC_Plugin::VERSION );
+		wp_enqueue_script( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-my-payment-methods.min.js', [ 'jquery' ], SV_WC_Plugin::VERSION );
 	}
 
 
@@ -586,7 +590,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	protected function get_js_handler_class() {
 
-		return 'SV_WC_Payment_Methods_Handler';
+		return sprintf( '%s_v5_5_4', $this->js_handler_base_class_name );
 	}
 
 

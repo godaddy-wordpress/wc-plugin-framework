@@ -12,7 +12,7 @@ jQuery( document ).ready ($) ->
 	# The My Payment Methods handler.
 	#
 	# @since 5.1.0
-	class window.SV_WC_Payment_Methods_Handler
+	class window.SV_WC_Payment_Methods_Handler_v5_5_4
 
 
 		# Constructs the class.
