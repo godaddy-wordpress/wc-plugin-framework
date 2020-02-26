@@ -76,6 +76,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			'subscription_payment_method_change_admin',
 		) );
 
+		// disable default payment token change notice if wc_add_notice() is not available
+		add_action( 'admin_init', [ $this, 'disable_default_payment_token_change_notice' ] );
+
 		// force tokenization when needed
 		add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_tokenization_forced', array( $this, 'maybe_force_tokenization' ) );
 
@@ -133,6 +136,26 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			add_action( 'woocommerce_subscription_validate_payment_meta_' . $this->get_gateway()->get_id(), array( $this->get_gateway(), 'subscriptions_admin_validate_payment_meta' ), 10 );
 		}
 	}
+
+
+	/**
+	 * Disables Subscription's default payment token change notice if wc_add_notice() is not defined
+	 *
+	 * This prevents an uncaught error from being triggered when tokens are retrieved and saved in the user profile page.
+	 *
+	 * @internal
+	 *
+	 * @see \WCS_My_Account_Payment_Methods::display_default_payment_token_change_notice()
+	 *
+	 * @since 5.6.0-dev
+	 */
+	public function disable_default_payment_token_change_notice() {
+
+		if ( ! function_exists( 'wc_add_notice' ) ) {
+			remove_action( 'woocommerce_payment_token_set_default', [ 'WCS_My_Account_Payment_Methods', 'display_default_payment_token_change_notice' ], 10, 2 );
+		}
+	}
+
 
 	/**
 	 * Force tokenization for subscriptions, this can be forced either during checkout
