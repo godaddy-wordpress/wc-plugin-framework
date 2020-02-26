@@ -144,6 +144,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function disable_default_payment_token_change_notice() {
 
+		if ( ! function_exists( 'wc_add_notice' ) ) {
+			remove_action( 'woocommerce_payment_token_set_default', [ 'WCS_My_Account_Payment_Methods', 'display_default_payment_token_change_notice' ], 10, 2 );
+		}
 	}
 
 
