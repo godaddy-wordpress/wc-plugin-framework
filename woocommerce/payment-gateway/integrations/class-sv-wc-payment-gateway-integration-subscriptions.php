@@ -134,6 +134,19 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		}
 	}
 
+
+	/**
+	 * Disables Subscription's default payment token change notice if the current request is not a frontend request.
+	 *
+	 * @see \WooCommerce::is_request()
+	 *
+	 * @since 5.6.0-dev
+	 */
+	public function disable_default_payment_token_change_notice() {
+
+	}
+
+
 	/**
 	 * Force tokenization for subscriptions, this can be forced either during checkout
 	 * or when the payment method for a subscription is being changed
