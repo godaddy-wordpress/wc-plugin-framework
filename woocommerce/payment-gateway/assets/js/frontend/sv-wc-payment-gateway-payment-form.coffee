@@ -122,6 +122,8 @@ jQuery( document ).ready ($) ->
 		# during the updated_checkout event as otherwise the reference to
 		# the checkout fields becomes stale (somehow ¯\_(ツ)_/¯)
 		#
+		# This ensures payment fields are not marked as "invalid" before the customer has interacted with them.
+		#
 		# Returns nothing.
 		set_payment_fields: ->
 
