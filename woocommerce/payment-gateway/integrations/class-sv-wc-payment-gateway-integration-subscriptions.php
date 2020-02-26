@@ -76,6 +76,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			'subscription_payment_method_change_admin',
 		) );
 
+		// disable default payment token change notice if wc_add_notice() is not available
+		add_action( 'admin_init', [ $this, 'disable_default_payment_token_change_notice' ] );
+
 		// force tokenization when needed
 		add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_tokenization_forced', array( $this, 'maybe_force_tokenization' ) );
 
