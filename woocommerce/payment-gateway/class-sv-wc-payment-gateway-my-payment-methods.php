@@ -133,7 +133,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 		wp_enqueue_style( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-my-payment-methods.min.css', [ 'dashicons' ], SV_WC_Plugin::VERSION );
 
-		wp_enqueue_script( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', [ 'jquery' ], SV_WC_Plugin::VERSION );
+		wp_enqueue_script( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-my-payment-methods.min.js', [ 'jquery' ], SV_WC_Plugin::VERSION );
 	}
 
 
