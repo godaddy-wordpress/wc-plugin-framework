@@ -124,7 +124,20 @@ jQuery( document ).ready ($) ->
 		#
 		# Returns nothing.
 		set_payment_fields: ->
+
 			@payment_fields = $( ".payment_method_#{ @id }" )
+
+			$required_fields = @payment_fields.find( '.validate-required .input-text' )
+
+			$required_fields.each( ( i, input ) =>
+
+				# if any of the required fields have a value, bail this loop and proceed with WooCommerce validation
+				if $( input ).val()
+					return false
+
+				# otherwise remove all validation result classes from the inputs, since the form is freshly loaded
+				$( input ).trigger( 'input' )
+			)
 
 
 		# Public: Validate Payment data when order is placed
