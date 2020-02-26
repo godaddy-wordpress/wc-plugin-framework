@@ -125,7 +125,8 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function maybe_enqueue_styles_scripts() {
 
-		$handle  = 'sv-wc-payment-gateway-my-payment-methods-v5_5_4';
+		$js_class = 'SV_WC_Payment_Methods_Handler_v5_5_4';
+		$handle   = strtolower( str_replace( '_', '-', $js_class ) );
 
 		wp_enqueue_style( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', [ 'dashicons' ], SV_WC_Plugin::VERSION );
 
