@@ -55,6 +55,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/** @var bool true if there are tokens */
 	protected $has_tokens;
 
+	/** @var string the base name of the matching JS handler class used in frontend */
+	private $js_handler_base_class_name = 'SV_WC_Payment_Methods_Handler';
+
 
 	/**
 	 * Sets up the class.
@@ -125,7 +128,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	public function maybe_enqueue_styles_scripts() {
 
-		$js_class = 'SV_WC_Payment_Methods_Handler_v5_5_4';
+		$js_class = sprintf( '%s_v5_5_4', $this->js_handler_base_class_name );
 		$handle   = strtolower( str_replace( '_', '-', $js_class ) );
 
 		wp_enqueue_style( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', [ 'dashicons' ], SV_WC_Plugin::VERSION );
@@ -587,7 +590,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	protected function get_js_handler_class() {
 
-		return 'SV_WC_Payment_Methods_Handler_v5_5_4';
+		return sprintf( '%s_v5_5_4', $this->js_handler_base_class_name );
 	}
 
 
