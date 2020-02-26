@@ -141,6 +141,8 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Disables Subscription's default payment token change notice if the current request is not a frontend request.
 	 *
+	 * @internal
+	 *
 	 * @see \WooCommerce::is_request()
 	 *
 	 * @since 5.6.0-dev
