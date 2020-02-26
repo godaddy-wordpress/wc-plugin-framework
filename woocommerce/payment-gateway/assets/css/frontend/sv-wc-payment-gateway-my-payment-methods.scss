@@ -97,7 +97,7 @@ table.woocommerce-MyAccount-paymentMethods {
 			opacity: 1;
 		}
 
-		td.woocommerce-PaymentMethod--actions {
+		.payment-method.editing td.woocommerce-PaymentMethod--actions {
 
 			.button.save {
 				display: inline-block;
