@@ -586,7 +586,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 */
 	protected function get_js_handler_class() {
 
-		return 'SV_WC_Payment_Methods_Handler';
+		return 'SV_WC_Payment_Methods_Handler_v5_5_4';
 	}
 
 
