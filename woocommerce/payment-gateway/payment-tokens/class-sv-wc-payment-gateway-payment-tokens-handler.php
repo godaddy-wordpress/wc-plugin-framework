@@ -661,6 +661,11 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 				// persist locally after merging
 				$this->update_tokens( $user_id, $this->tokens[ $environment_id ][ $user_id ], $environment_id );
 
+				// remove local tokens not present in remote data
+				foreach ( array_diff_key( $tokens, $this->tokens[ $environment_id ][ $user_id ] ) as $key => $token ) {
+					$this->delete_token( $user_id, $token, $environment_id );
+				}
+
 			} catch( SV_WC_Plugin_Exception $e ) {
 
 				// communication or other error
