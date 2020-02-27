@@ -557,7 +557,23 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 */
 	public function is_migrated() {
 
-		return ! empty( $this->data['migrated'] );
+		$gateway_id  = $this->get_gateway_id();
+		$is_migrated = ! empty( $this->data['migrated'] );
+
+		if ( '' !== $gateway_id ) {
+
+			/**
+			 * Filters the migration status of a token.
+			 *
+			 * @since 5.6.0-dev
+			 *
+			 * @param bool $is_migrated this would be set to true if a migration occurred
+			 * @param SV_WC_Payment_Gateway_Payment_Token $token the token object
+			 */
+			$is_migrated = (bool) apply_filters( "wc_payment_gateway_{$gateway_id}_migrated_token", $is_migrated, $this );
+		}
+
+		return $is_migrated;
 	}
 
 

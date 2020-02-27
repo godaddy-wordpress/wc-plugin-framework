@@ -1156,7 +1156,18 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$environment_id = $this->get_environment_id();
 		}
 
-		return 'yes' === get_user_meta( $user_id, $this->get_user_meta_name( $environment_id ) . '_migrated', true );
+		$migrated = 'yes' === get_user_meta( $user_id, $this->get_user_meta_name( $environment_id ) . '_migrated', true );
+
+		/**
+		 * Filters whether a user's legacy tokens have been migrated.
+		 *
+		 * @since 5.6.0-dev
+		 *
+		 * @param bool $migrated whether the tokens have been migrated
+		 * @param int $user_id user ID
+		 * @param string $environment_id the gateway environment the tokens are related to
+		 */
+		return (bool) apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_user_legacy_tokens_migrated', $migrated, $user_id, $environment_id );
 	}
 
 
