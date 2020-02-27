@@ -570,7 +570,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			 * @param bool $migrated this would be set to true if a migration occurred
 			 * @param SV_WC_Payment_Gateway_Payment_Token $token the token object
 			 */
-			$is_migrated = (bool) apply_filters( "wc_{$gateway_id}_migrated_token", ! empty( $this->data['migrated'] ), $this );
+			$is_migrated = (bool) apply_filters( "wc_payment_gateway_{$gateway_id}_migrated_token", ! empty( $this->data['migrated'] ), $this );
 		}
 
 		return $is_migrated;

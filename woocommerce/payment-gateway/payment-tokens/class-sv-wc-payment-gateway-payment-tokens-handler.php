@@ -1167,7 +1167,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		 * @param int $user_id user ID
 		 * @param string $environment_id the gateway environment the tokens are related to
 		 */
-		return (bool) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_user_legacy_tokens_migrated', $migrated, $user_id, $environment_id );
+		return (bool) apply_filters( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_user_legacy_tokens_migrated', $migrated, $user_id, $environment_id );
 	}
 
 
