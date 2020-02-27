@@ -676,7 +676,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * @since 5.6.0-dev.1
 	 *
 	 * @return int ID of the token saved as returned by {@see \WC_Payment_Token::save()}
-	 * @throws SV_WC_Payment_Gateway_Exception when saving the parent token hits an error
+	 * @throws SV_WC_Payment_Gateway_Exception when saving and validating the parent token hits an error
 	 */
 	public function save() {
 
@@ -724,7 +724,13 @@ class SV_WC_Payment_Gateway_Payment_Token {
 				$this->token = $token;
 			}
 
-		/** usually thrown during {@see \WC_Payment_Token::validate()} */
+		/**
+		 * Usually thrown during either of the following:
+		 *
+		 * @see \WC_Payment_Token::validate() completely missing token data
+		 * @see \WC_Payment_Token_CC::validate() missing card type, missing or invalid four digits, expiration year or month
+		 * @see \WC_Payment_Token_eCheck::validate() missing last four`
+		 */
 		} catch ( \Exception $e ) {
 
 			throw new SV_WC_Payment_Gateway_Exception( 'Could not save payment token. ' . $e->getMessage() );
