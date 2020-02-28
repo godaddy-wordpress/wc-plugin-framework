@@ -494,31 +494,38 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 *
 	 * @since 5.6.0-dev
 	 *
-	 * @param int $token_id the ID of a core token
+	 * @param int $core_token_id the ID of a core token
 	 * @param \WC_Payment_Token $core_token the core token object
 	 */
-	public function payment_token_deleted( $token_id, $core_token ) {
+	public function payment_token_deleted( $core_token_id, $core_token ) {
 
-		$token = $core_token instanceof \WC_Payment_Token ? $this->get_token_by_id( $core_token->get_token() ) : null;
+		$token_id = null;
 
-		if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
+		// find out if the core token belongs to one of the gateways from this plugin
+		// we can't use get_token_by_id() here because the FW token and associated core token were already deleted
+		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
 
-			// confirm the token was deleted from the Payment Methods screen
-			if ( (int) $token_id === (int) get_query_var( 'delete-payment-method' ) ) {
+			if ( $gateway->get_id() === $core_token->get_gateway_id() ) {
 
-				$user_id = get_current_user_id();
-				$gateway = $this->get_plugin()->get_gateway_from_token( $user_id, $token );
-
-				/**
-				 * Fires after a new payment method is deleted by a customer.
-				 *
-				 * @since 5.0.0
-				 *
-				 * @param string $token_id ID of the deleted token
-				 * @param int $user_id user ID
-				 */
-				do_action( 'wc_payment_gateway_' . $gateway->get_id() . '_payment_method_deleted', $token, $user_id );
+				$token_id = $core_token->get_token();
+				break;
 			}
+		}
+
+		// confirm this is one of the plugin's tokens and that the token was deleted from the Payment Methods screen
+		if ( $token_id && (int) $core_token_id === (int) get_query_var( 'delete-payment-method' ) ) {
+
+			$user_id = get_current_user_id();
+
+			/**
+			 * Fires after a new payment method is deleted by a customer.
+			 *
+			 * @since 5.0.0
+			 *
+			 * @param string $token_id ID of the deleted token
+			 * @param int $user_id user ID
+			 */
+			do_action( 'wc_payment_gateway_' . $core_token->get_gateway_id() . '_payment_method_deleted', $token_id, $user_id );
 		}
 	}
 

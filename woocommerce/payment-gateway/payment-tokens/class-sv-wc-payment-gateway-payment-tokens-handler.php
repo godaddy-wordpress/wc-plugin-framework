@@ -63,6 +63,8 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		$this->gateway = $gateway;
 
 		$this->environment_id = $gateway->get_environment();
+
+		$this->add_payment_token_deleted_action();
 	}
 
 
@@ -346,25 +348,50 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		// for direct gateways that allow it, attempt to delete the token from the endpoint
 		if ( $this->get_gateway()->get_api()->supports_remove_tokenized_payment_method() ) {
 
-			try {
-
-				$response = $this->get_gateway()->get_api()->remove_tokenized_payment_method( $token->get_id(), $this->get_gateway()->get_customer_id( $user_id, array( 'environment_id' => $environment_id ) ) );
-
-				if ( ! $response->transaction_approved() && ! $this->should_delete_token( $token, $response ) ) {
-					return false;
-				}
-
-			} catch( SV_WC_Plugin_Exception $e ) {
-
-				if ( $this->get_gateway()->debug_log() ) {
-					$this->get_gateway()->get_plugin()->log( $e->getMessage(), $this->get_gateway()->get_id() );
-				}
-
+			if ( ! $this->remove_token_from_gateway( $user_id, $environment_id, $token ) ) {
 				return false;
 			}
 		}
 
 		return $this->delete_token( $user_id, $token );
+	}
+
+
+	/**
+	 * Removes a tokenized payment method using the gateway's API.
+	 *
+	 * Returns true if the token's local data should be removed.
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param int $user_id user identifier
+	 * @param string $environment_id environment id
+	 * @param SV_WC_Payment_Gateway_Payment_Token $token the payment token to remove
+	 * @return bool
+	 */
+	private function remove_token_from_gateway( $user_id, $environment_id, $token ) {
+
+		// remove a token's local data unless an exception occurs or we choose to keep loca data based on the API response
+		$remove_local_data = true;
+
+		try {
+
+			$response = $this->get_gateway()->get_api()->remove_tokenized_payment_method( $token->get_id(), $this->get_gateway()->get_customer_id( $user_id, array( 'environment_id' => $environment_id ) ) );
+
+			if ( ! $response->transaction_approved() && ! $this->should_delete_token( $token, $response ) ) {
+				$remove_local_data = false;
+			}
+
+		} catch( SV_WC_Plugin_Exception $e ) {
+
+			if ( $this->get_gateway()->debug_log() ) {
+				$this->get_gateway()->get_plugin()->log( $e->getMessage(), $this->get_gateway()->get_id() );
+			}
+
+			$remove_local_data = false;
+		}
+
+		return $remove_local_data;
 	}
 
 
@@ -404,7 +431,14 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		$this->clear_transient( $user_id );
 
 		$is_default = $token->is_default();
-		$deleted    = $token->delete();
+
+		// no need to respond to woocommerce_payment_token_deleted, we will remove remote and legacy data here
+		$this->remove_payment_token_deleted_action();
+
+		$deleted = $token->delete();
+
+		// restore action callback for woocommerce_payment_token_deleted
+		$this->add_payment_token_deleted_action();
 
 		if ( $deleted ) {
 
@@ -1191,6 +1225,63 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		}
 
 		update_user_meta( $user_id, $this->get_user_meta_name( $environment_id ) . '_migrated', 'yes' );
+	}
+
+
+	/**
+	 * Adds the callback action for woocommerce_payment_token_deleted.
+	 *
+	 * @since 5.6.0-dev
+	 */
+	private function add_payment_token_deleted_action() {
+
+		add_action( 'woocommerce_payment_token_deleted', [ $this, 'payment_token_deleted' ], 10, 2 );
+	}
+
+
+	/**
+	 * Removes the callback action for woocommerce_payment_token_deleted.
+	 *
+	 * @since 5.6.0-dev
+	 */
+	private function remove_payment_token_deleted_action() {
+
+		remove_action( 'woocommerce_payment_token_deleted', [ $this, 'payment_token_deleted' ], 10, 2 );
+	}
+
+
+	/**
+	 * Deletes remote token data and legacy token data when the corresponding core token is deleted.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param int $token_id the ID of a core token
+	 * @param \WC_Payment_Token $core_token the core token object
+	 */
+	public function payment_token_deleted( $token_id, $core_token ) {
+
+		if ( $this->get_gateway()->get_id() === $core_token->get_gateway_id() ) {
+
+			$token = $this->build_token( $core_token->get_token(), $core_token );
+
+			$user_id        = $token->get_user_id();
+			$environment_id = $token->get_environment();
+
+			// for direct gateways that allow it, attempt to delete the token from the endpoint
+			if ( ! $this->get_gateway()->get_api()->supports_remove_tokenized_payment_method() || $this->remove_token_from_gateway( $user_id, $environment_id, $token ) ) {
+
+				// clear tokens transient
+				$this->clear_transient( $user_id );
+
+				// delete token from local cache
+				unset( $this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] );
+
+				// delete the legacy token data now that the token has been removed
+				$this->delete_legacy_token( $user_id, $token, $environment_id );
+			}
+		}
 	}
 
 
