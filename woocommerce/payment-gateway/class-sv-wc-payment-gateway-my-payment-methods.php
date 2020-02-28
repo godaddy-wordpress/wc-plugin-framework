@@ -502,6 +502,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$token_id = null;
 
 		// find out if the core token belongs to one of the gateways from this plugin
+		// we can't use get_token_by_id() here because the FW token and associated core token were already deleted
 		foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
 
 			if ( $gateway->get_id() === $core_token->get_gateway_id() ) {
