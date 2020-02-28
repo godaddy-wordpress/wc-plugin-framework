@@ -1228,7 +1228,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * Add the callback action for woocommerce_payment_token_deleted.
+	 * Adds the callback action for woocommerce_payment_token_deleted.
 	 *
 	 * @since 5.6.0-dev
 	 */
