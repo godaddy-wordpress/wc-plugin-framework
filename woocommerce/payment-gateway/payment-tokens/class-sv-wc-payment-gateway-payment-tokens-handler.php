@@ -371,6 +371,43 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
+	 * Removes a tokenized payment method using the gateway's API.
+	 *
+	 * Returns true if the token's local data should be removed.
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param int $user_id user identifier
+	 * @param SV_WC_Payment_Gateway_Payment_Token $token the payment token to remove
+	 * @return bool
+	 */
+	private function remove_token_from_gateway( $user_id, $token ) {
+
+		// remove a token's local data unless an exception occurs or we choose to keep loca data based on the API response
+		$remove_local_data = true;
+
+		try {
+
+			$response = $this->get_gateway()->get_api()->remove_tokenized_payment_method( $token->get_id(), $this->get_gateway()->get_customer_id( $user_id, array( 'environment_id' => $environment_id ) ) );
+
+			if ( ! $response->transaction_approved() && ! $this->should_delete_token( $token, $response ) ) {
+				$remove_local_data = false;
+			}
+
+		} catch( SV_WC_Plugin_Exception $e ) {
+
+			if ( $this->get_gateway()->debug_log() ) {
+				$this->get_gateway()->get_plugin()->log( $e->getMessage(), $this->get_gateway()->get_id() );
+			}
+
+			$remove_local_data = false;
+		}
+
+		return $remove_local_data;
+	}
+
+
+	/**
 	 * Determines if a token's local meta should be deleted based on an API response.
 	 *
 	 * @since 5.1.0
