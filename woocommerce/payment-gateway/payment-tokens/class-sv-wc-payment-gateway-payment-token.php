@@ -64,15 +64,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	];
 
 	/**
-	 * @var array key-value array to map WooCommerce core token meta data to framework token `$data` keys
-	 */
-	private $meta_data = [
-		'nickname'     => 'nickname',
-		'billing_hash' => 'billing_hash',
-		'environment'  => 'environment',
-	];
-
-	/**
 	 * @var null|\WC_Payment_Token WooCommerce core token corresponding to the framework token, if set
 	 */
 	private $token;
@@ -675,9 +666,9 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 				$this->data[ $framework_key ] = $value;
 
-			} elseif ( array_key_exists( $core_key, $this->meta_data ) ) {
+			} elseif ( ! isset( $this->data[ $core_key ] ) ) {
 
-				$this->data[ $this->meta_data[ $core_key ] ] = $value;
+				$this->data[ $core_key ] = $value;
 			}
 		}
 	}

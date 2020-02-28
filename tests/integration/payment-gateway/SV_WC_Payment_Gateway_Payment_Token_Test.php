@@ -79,6 +79,7 @@ class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPT
 		return [
 			'nickname'     => [ 'nickname', 'personal card', 'get_nickname' ],
 			'billing_hash' => [ 'billing_hash', 'a5df', 'get_billing_hash' ],
+			'account_type' => [ 'account_type', 'savings', 'get_account_type' ],
 		];
 	}
 
