@@ -348,20 +348,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		// for direct gateways that allow it, attempt to delete the token from the endpoint
 		if ( $this->get_gateway()->get_api()->supports_remove_tokenized_payment_method() ) {
 
-			try {
-
-				$response = $this->get_gateway()->get_api()->remove_tokenized_payment_method( $token->get_id(), $this->get_gateway()->get_customer_id( $user_id, array( 'environment_id' => $environment_id ) ) );
-
-				if ( ! $response->transaction_approved() && ! $this->should_delete_token( $token, $response ) ) {
-					return false;
-				}
-
-			} catch( SV_WC_Plugin_Exception $e ) {
-
-				if ( $this->get_gateway()->debug_log() ) {
-					$this->get_gateway()->get_plugin()->log( $e->getMessage(), $this->get_gateway()->get_id() );
-				}
-
+			if ( ! $this->remove_token_from_gateway( $user_id, $token ) ) {
 				return false;
 			}
 		}
