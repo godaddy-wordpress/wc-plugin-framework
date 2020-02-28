@@ -63,6 +63,8 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		$this->gateway = $gateway;
 
 		$this->environment_id = $gateway->get_environment();
+
+		$this->add_payment_token_deleted_action();
 	}
 
 
