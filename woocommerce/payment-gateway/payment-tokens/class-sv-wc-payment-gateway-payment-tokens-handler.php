@@ -1194,6 +1194,21 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	}
 
 
+	/**
+	 * Deletes remote token data and legacy token data when the corresponding core token is deleted.
+	 *
+	 * @internal
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param int $token_id the ID of a core token
+	 * @param \WC_Payment_Token $core_token the core token object
+	 */
+	public function payment_token_deleted() {
+
+	}
+
+
 }
 
 
