@@ -348,7 +348,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		// for direct gateways that allow it, attempt to delete the token from the endpoint
 		if ( $this->get_gateway()->get_api()->supports_remove_tokenized_payment_method() ) {
 
-			if ( ! $this->remove_token_from_gateway( $user_id, $token ) ) {
+			if ( ! $this->remove_token_from_gateway( $user_id, $environment_id, $token ) ) {
 				return false;
 			}
 		}
@@ -365,10 +365,11 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @since 5.6.0-dev
 	 *
 	 * @param int $user_id user identifier
+	 * @param string $environment_id environment id
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token the payment token to remove
 	 * @return bool
 	 */
-	private function remove_token_from_gateway( $user_id, $token ) {
+	private function remove_token_from_gateway( $user_id, $environment_id, $token ) {
 
 		// remove a token's local data unless an exception occurs or we choose to keep loca data based on the API response
 		$remove_local_data = true;
@@ -1269,7 +1270,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$environment_id = $token->get_environment();
 
 			// for direct gateways that allow it, attempt to delete the token from the endpoint
-			if ( ! $this->get_gateway()->get_api()->supports_remove_tokenized_payment_method() || $this->remove_token_from_gateway( $user_id, $token ) ) {
+			if ( ! $this->get_gateway()->get_api()->supports_remove_tokenized_payment_method() || $this->remove_token_from_gateway( $user_id, $environment_id, $token ) ) {
 
 				// clear tokens transient
 				$this->clear_transient( $user_id );
