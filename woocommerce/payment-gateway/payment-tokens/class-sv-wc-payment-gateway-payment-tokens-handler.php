@@ -406,7 +406,14 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		$this->clear_transient( $user_id );
 
 		$is_default = $token->is_default();
-		$deleted    = $token->delete();
+
+		// no need to respond to woocommerce_payment_token_deleted, we will remove remote and legacy data here
+		$this->remove_payment_token_deleted_action();
+
+		$deleted = $token->delete();
+
+		// restore action callback for woocommerce_payment_token_deleted
+		$this->add_payment_token_deleted_action();
 
 		if ( $deleted ) {
 
