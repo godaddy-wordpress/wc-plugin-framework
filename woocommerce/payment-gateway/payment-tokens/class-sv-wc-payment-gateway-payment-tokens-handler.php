@@ -1259,8 +1259,28 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @param int $token_id the ID of a core token
 	 * @param \WC_Payment_Token $core_token the core token object
 	 */
-	public function payment_token_deleted() {
+	public function payment_token_deleted( $token_id, $core_token ) {
 
+		if ( $this->get_gateway()->get_id() === $core_token->get_gateway_id() ) {
+
+			$token = $this->build_token( $core_token->get_token(), $core_token );
+
+			$user_id        = $token->get_user_id();
+			$environment_id = $token->get_environment();
+
+			// for direct gateways that allow it, attempt to delete the token from the endpoint
+			if ( ! $this->get_gateway()->get_api()->supports_remove_tokenized_payment_method() || $this->remove_token_from_gateway( $user_id, $token ) ) {
+
+				// clear tokens transient
+				$this->clear_transient( $user_id );
+
+				// delete token from local cache
+				unset( $this->tokens[ $environment_id ][ $user_id ][ $token->get_id() ] );
+
+				// delete the legacy token data now that the token has been removed
+				$this->delete_legacy_token( $user_id, $token, $environment_id );
+			}
+		}
 	}
 
 
