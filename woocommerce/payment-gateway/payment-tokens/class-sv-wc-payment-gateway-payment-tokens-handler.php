@@ -1195,6 +1195,17 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
+	 * Add the callback action for woocommerce_payment_token_deleted.
+	 *
+	 * @since 5.6.0-dev
+	 */
+	private function add_payment_token_deleted_action() {
+
+		add_action( 'woocommerce_payment_token_deleted', [ $this, 'payment_token_deleted' ], 10, 2 );
+	}
+
+
+	/**
 	 * Deletes remote token data and legacy token data when the corresponding core token is deleted.
 	 *
 	 * @internal
