@@ -740,7 +740,10 @@ class SV_WC_Payment_Gateway_Payment_Token {
 		 */
 		} catch ( \Exception $e ) {
 
-			throw new SV_WC_Payment_Gateway_Exception( 'Could not save payment token. ' . $e->getMessage() );
+			$token_id = $this->get_id();
+			$user_id  = $this->get_user_id();
+
+			throw new SV_WC_Payment_Gateway_Exception( 'Could not save payment token %1$s for user %2$s. ' . $e->getMessage(), $token_id, $user_id );
 		}
 
 		return $saved;
