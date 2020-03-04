@@ -98,7 +98,7 @@ jQuery( document ).ready ($) ->
 
 		# Initializes the product page.
 		#
-		# @since 5.6.0-dev
+		# @since 5.6.0
 		init_product_page: =>
 
 			@ui_element = $( 'form.cart' )
@@ -106,7 +106,7 @@ jQuery( document ).ready ($) ->
 
 		# Initializes the cart page.
 		#
-		# @since 5.6.0-dev
+		# @since 5.6.0
 		init_cart_page: =>
 
 			@ui_element = $( 'form.woocommerce-cart-form' ).parents( 'div.woocommerce' )
@@ -119,7 +119,7 @@ jQuery( document ).ready ($) ->
 
 		# Initializes the checkout page.
 		#
-		# @since 5.6.0-dev
+		# @since 5.6.0
 		init_checkout_page: =>
 
 			@ui_element = $( 'form.woocommerce-checkout' )
@@ -133,7 +133,7 @@ jQuery( document ).ready ($) ->
 
 		# Gets a new Apple Pay session.
 		#
-		# @since 5.6.0-dev
+		# @since 5.6.0
 		#
 		# @param [Object] payment_request payment request object
 		# @return ApplePaySession
@@ -144,7 +144,7 @@ jQuery( document ).ready ($) ->
 
 		# Gets the Apple SDK version to use.
 		#
-		# @since 5.6.0-dev
+		# @since 5.6.0
 		# @return int
 		get_sdk_version: ->
 

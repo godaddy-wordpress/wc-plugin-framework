@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2020.nn.nn - version 5.6.0-dev
+2020.03.04 - version 5.6.0
  * Feature - Add support for WooCommerce Admin enhanced notes
  * Tweak - Refactor Apple Pay handler classes for greater flexibility
  * Fix - Remove gateway payment field validation on initial page load

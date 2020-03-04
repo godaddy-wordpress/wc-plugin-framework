@@ -142,7 +142,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Enqueues an Apple Pay JS handler.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 *
 	 * @param array $args handler arguments
 	 * @param string $object_name JS object name
@@ -176,7 +176,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 *
 	 * Concrete implementations can override this with their own handler.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 *
 	 * @return string
 	 */
@@ -295,7 +295,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Gets the args passed to the product JS handler.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 *
 	 * @param \WC_Product $product product object
 	 * @return array
@@ -320,7 +320,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		 * Filters the Apple Pay product handler args.
 		 *
 		 * @since 4.7.0
-		 * @deprecated 5.6.0-dev
+		 * @deprecated 5.6.0
 		 *
 		 * @param array $args JS handler arguments
 		 */
@@ -329,7 +329,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		/**
 		 * Filters the gateway Apple Pay cart handler args.
 		 *
-		 * @since 5.6.0-dev
+		 * @since 5.6.0
 		 *
 		 * @param array $args JS handler arguments
 		 * @param \WC_Product $product product object
@@ -363,7 +363,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Gets the args passed to the cart JS handler.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 *
 	 * @param \WC_Cart $cart cart object
 	 * @return array
@@ -387,7 +387,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		 * Filters the Apple Pay cart handler args.
 		 *
 		 * @since 4.7.0
-		 * @deprecated 5.6.0-dev
+		 * @deprecated 5.6.0
 		 *
 		 * @param array $args JS handler arguments
 		 */
@@ -396,7 +396,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		/**
 		 * Filters the gateway Apple Pay cart handler args.
 		 *
-		 * @since 5.6.0-dev
+		 * @since 5.6.0
 		 *
 		 * @param array $args JS handler arguments
 		 * @param \WC_Cart $cart cart object
@@ -429,7 +429,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	/**
 	 * Gets the args passed to the checkout JS handler.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 *
 	 * @return array
 	 */
@@ -439,7 +439,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		 * Filters the Apple Pay checkout handler args.
 		 *
 		 * @since 4.7.0
-		 * @deprecated 5.6.0-dev
+		 * @deprecated 5.6.0
 		 *
 		 * @param array $args JS handler arguments
 		 */
@@ -448,7 +448,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		/**
 		 * Filters the gateway Apple Pay checkout handler args.
 		 *
-		 * @since 5.6.0-dev
+		 * @since 5.6.0
 		 *
 		 * @param array $args JS handler arguments
 		 */

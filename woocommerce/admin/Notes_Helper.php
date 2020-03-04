@@ -28,7 +28,7 @@ use Automattic\WooCommerce\Admin\Notes as WooCommerce_Admin_Notes;
 /**
  * Helper class for WooCommerce enhanced admin notes.
  *
- * @since 5.6.0-dev
+ * @since 5.6.0
  */
 class Notes_Helper {
 
@@ -39,7 +39,7 @@ class Notes_Helper {
 	/**
 	 * Determines if any notes with the given name exist.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 *
 	 * @param string $name note name
 	 * @return bool
@@ -80,7 +80,7 @@ class Notes_Helper {
 	/**
 	 * Gets all notes with the given name.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 *
 	 * @param string $name note name
 	 * @return int[]

@@ -949,7 +949,7 @@ class SV_WC_Helper {
 	/**
 	 * Determines if viewing an enhanced admin screen.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 *
 	 * @return bool
 	 */

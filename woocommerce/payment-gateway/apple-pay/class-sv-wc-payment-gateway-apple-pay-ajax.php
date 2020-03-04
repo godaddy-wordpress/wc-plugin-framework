@@ -61,7 +61,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	/**
 	 * Adds the action & filter hooks.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 */
 	protected function add_hooks() {
 

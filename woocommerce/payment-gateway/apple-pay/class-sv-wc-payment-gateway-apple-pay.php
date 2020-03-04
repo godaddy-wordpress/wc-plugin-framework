@@ -91,7 +91,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Initializes the admin handler.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 */
 	protected function init_admin() {
 
@@ -102,7 +102,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Initializes the AJAX handler.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 */
 	protected function init_ajax() {
 
@@ -113,7 +113,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Initializes the frontend handler.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 */
 	protected function init_frontend() {
 
@@ -662,7 +662,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Builds a payment response object from an array of data.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 *
 	 * @param string $data response data, as a JSON string
 	 * @return SV_WC_Payment_Gateway_Apple_Pay_Payment_Response
@@ -908,7 +908,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Determines if a merchant ID is required for configuration.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 *
 	 * @return bool
 	 */
@@ -921,7 +921,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	/**
 	 * Determines if a local Apple Pay certificate is required for configuration.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 *
 	 * @return bool
 	 */
