@@ -94,7 +94,6 @@ class Notes_Helper {
 			/** @var WooCommerce_Admin_Notes\DataStore $data_store */
 			$data_store = \WC_Data_Store::load( 'admin-note' );
 
-			// We already have this note? Then exit, we're done.
 			$note_ids = $data_store->get_notes_with_name( $name );
 
 		} catch ( \Exception $exception ) {}
