@@ -747,7 +747,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	protected function add_gateway_not_configured_notices() {
 
-		$is_enahanced_admin_available = SV_WC_Plugin_Compatibility::is_enhanced_admin_available();
+		$is_enhanced_admin_available = SV_WC_Plugin_Compatibility::is_enhanced_admin_available();
 
 		foreach ( $this->get_gateways() as $gateway ) {
 
@@ -755,7 +755,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 			if ( $gateway->is_enabled() && ! $gateway->is_configured() && ! $gateway->inherit_settings() ) {
 
-				if ( $is_enahanced_admin_available ) {
+				if ( $is_enhanced_admin_available ) {
 
 					if ( $note = Admin\Notes_Helper::get_note_with_name( $note_name ) ) {
 
@@ -800,8 +800,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					] );
 				}
 
-				// if all's well with this gateway, make sure and delete any previously added notes
-			} elseif ( $is_enahanced_admin_available && Admin\Notes_Helper::note_with_name_exists( $note_name ) ) {
+			// if all's well with this gateway, make sure and delete any previously added notes
+			} elseif ( $is_enhanced_admin_available && Admin\Notes_Helper::note_with_name_exists( $note_name ) ) {
 
 				WC_Admin_Notes::delete_notes_with_name( $note_name );
 			}
