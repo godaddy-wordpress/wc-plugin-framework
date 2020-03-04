@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
 
+use Automattic\WooCommerce\Admin\Loader;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Helper' ) ) :
@@ -941,6 +943,19 @@ class SV_WC_Helper {
 		global $current_screen;
 
 		return isset( $current_screen->$prop ) && $id === $current_screen->$prop;
+	}
+
+
+	/**
+	 * Determines if viewing an enhanced admin screen.
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @return bool
+	 */
+	public static function is_enhanced_admin_screen() {
+
+		return is_admin() && SV_WC_Plugin_Compatibility::is_enhanced_admin_available() && ( Loader::is_admin_page() || Loader::is_embed_page() );
 	}
 
 
