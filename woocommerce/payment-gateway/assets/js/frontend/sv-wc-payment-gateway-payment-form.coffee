@@ -122,9 +122,24 @@ jQuery( document ).ready ($) ->
 		# during the updated_checkout event as otherwise the reference to
 		# the checkout fields becomes stale (somehow ¯\_(ツ)_/¯)
 		#
+		# This ensures payment fields are not marked as "invalid" before the customer has interacted with them.
+		#
 		# Returns nothing.
 		set_payment_fields: ->
+
 			@payment_fields = $( ".payment_method_#{ @id }" )
+
+			$required_fields = @payment_fields.find( '.validate-required .input-text' )
+
+			$required_fields.each( ( i, input ) =>
+
+				# if any of the required fields have a value, bail this loop and proceed with WooCommerce validation
+				if $( input ).val()
+					return false
+
+				# otherwise remove all validation result classes from the inputs, since the form is freshly loaded
+				$( input ).trigger( 'input' )
+			)
 
 
 		# Public: Validate Payment data when order is placed

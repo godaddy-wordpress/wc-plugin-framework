@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_6_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway_Apple_Pay_AJAX' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_0\\SV_WC_Payment_Gateway_Apple_Pay_AJAX' ) ) :
 
 
 /**
@@ -53,22 +53,34 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 		$this->handler = $handler;
 
 		if ( $this->get_handler()->is_available() ) {
-
-			add_action( 'wp_ajax_sv_wc_apple_pay_get_payment_request',        array( $this, 'get_payment_request' ) );
-			add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_get_payment_request', array( $this, 'get_payment_request' ) );
-
-			// validate the merchant
-			add_action( 'wp_ajax_sv_wc_apple_pay_validate_merchant',        array( $this, 'validate_merchant' ) );
-			add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_validate_merchant', array( $this, 'validate_merchant' ) );
-
-			// recalculate the payment request totals
-			add_action( 'wp_ajax_sv_wc_apple_pay_recalculate_totals',        array( $this, 'recalculate_totals' ) );
-			add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_recalculate_totals', array( $this, 'recalculate_totals' ) );
-
-			// process the payment
-			add_action( 'wp_ajax_sv_wc_apple_pay_process_payment',        array( $this, 'process_payment' ) );
-			add_action( 'wp_ajax_nopriv_sv_wc_apple_pay_process_payment', array( $this, 'process_payment' ) );
+			$this->add_hooks();
 		}
+	}
+
+
+	/**
+	 * Adds the action & filter hooks.
+	 *
+	 * @since 5.6.0-dev
+	 */
+	protected function add_hooks() {
+
+		$gateway_id = $this->get_handler()->get_processing_gateway()->get_id();
+
+		add_action( "wp_ajax_wc_{$gateway_id}_apple_pay_get_payment_request",        [ $this, 'get_payment_request' ] );
+		add_action( "wp_ajax_nopriv_wc_{$gateway_id}_apple_pay_get_payment_request", [ $this, 'get_payment_request' ] );
+
+		// validate the merchant
+		add_action( "wp_ajax_wc_{$gateway_id}_apple_pay_validate_merchant",        [ $this, 'validate_merchant' ] );
+		add_action( "wp_ajax_nopriv_wc_{$gateway_id}_apple_pay_validate_merchant", [ $this, 'validate_merchant' ] );
+
+		// recalculate the payment request totals
+		add_action( "wp_ajax_wc_{$gateway_id}_apple_pay_recalculate_totals",        [ $this, 'recalculate_totals' ] );
+		add_action( "wp_ajax_nopriv_wc_{$gateway_id}_apple_pay_recalculate_totals", [ $this, 'recalculate_totals' ] );
+
+		// process the payment
+		add_action( "wp_ajax_wc_{$gateway_id}_apple_pay_process_payment",        [ $this, 'process_payment' ] );
+		add_action( "wp_ajax_nopriv_wc_{$gateway_id}_apple_pay_process_payment", [ $this, 'process_payment' ] );
 	}
 
 
@@ -114,7 +126,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 		$this->get_handler()->log( 'Validating merchant' );
 
-		check_ajax_referer( 'sv_wc_apple_pay_validate_merchant', 'nonce' );
+		check_ajax_referer( 'wc_' . $this->get_handler()->get_processing_gateway()->get_id() . '_apple_pay_validate_merchant', 'nonce' );
 
 		$merchant_id = SV_WC_Helper::get_posted_value( 'merchant_id' );
 		$url         = SV_WC_Helper::get_posted_value( 'url' );
@@ -125,7 +137,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 			wp_send_json_success( $response->get_merchant_session() );
 
-		} catch ( SV_WC_API_Exception $e ) {
+		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			$this->get_handler()->log( 'Could not validate merchant. ' . $e->getMessage() );
 
@@ -148,7 +160,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 		$this->get_handler()->log( 'Recalculating totals' );
 
-		check_ajax_referer( 'sv_wc_apple_pay_recalculate_totals', 'nonce' );
+		check_ajax_referer( 'wc_' . $this->get_handler()->get_processing_gateway()->get_id() . '_apple_pay_recalculate_totals', 'nonce' );
 
 		try {
 
@@ -194,7 +206,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 			wp_send_json_success( $data );
 
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+		} catch ( \Exception $e ) {
 
 			$this->get_handler()->log( $e->getMessage() );
 
@@ -217,18 +229,19 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 		$this->get_handler()->log( 'Processing payment' );
 
-		$type     = SV_WC_Helper::get_posted_value( 'type' );
+		check_ajax_referer( 'wc_' . $this->get_handler()->get_processing_gateway()->get_id() . '_apple_pay_process_payment', 'nonce' );
+
 		$response = stripslashes( SV_WC_Helper::get_posted_value( 'payment' ) );
 
 		$this->get_handler()->store_payment_response( $response );
 
 		try {
 
-			$result = $this->get_handler()->process_payment( $type, $response );
+			$result = $this->get_handler()->process_payment();
 
 			wp_send_json_success( $result );
 
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+		} catch ( \Exception $e ) {
 
 			$this->get_handler()->log( 'Payment failed. ' . $e->getMessage() );
 

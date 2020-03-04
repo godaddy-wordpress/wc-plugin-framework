@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_6_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_0\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -558,7 +558,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			 * @param $params array
 			 * @return array
 			 */
-			$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() . '_js_localize_script_params', $this->get_gateway_js_localized_script_params() );
+			$params = apply_filters( 'wc_gateway_' . $this->get_plugin()->get_id() . '_js_localize_script_params', $params );
 
 			$this->localize_script( $handle, $params );
 		}

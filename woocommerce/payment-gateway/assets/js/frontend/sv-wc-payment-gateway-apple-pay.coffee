@@ -22,22 +22,18 @@ jQuery( document ).ready ($) ->
 		# @since 4.7.0
 		constructor: (args) ->
 
-			@params = sv_wc_apple_pay_params
-
-			@payment_request = args.payment_request
+			@gateway_id               = args.gateway_id
+			@gateway_slug             = args.gateway_slug
+			@merchant_id              = args.merchant_id
+			@ajax_url                 = args.ajax_url
+			@validate_nonce           = args.validate_nonce
+			@recalculate_totals_nonce = args.recalculate_totals_nonce
+			@process_nonce            = args.process_nonce
+			@payment_request          = args.payment_request
+			@generic_error            = args.generic_error
 
 			@buttons = '.sv-wc-apple-pay-button'
 			@terms   = '.sv-wc-apple-pay-terms'
-
-			if this.is_available()
-
-				if @payment_request
-					$( @buttons ).show()
-					$( @terms ).show()
-
-				this.init()
-
-				this.attach_update_events()
 
 
 		# Determines if Apple Pay is available.
@@ -48,7 +44,7 @@ jQuery( document ).ready ($) ->
 
 			return false unless window.ApplePaySession
 
-			ApplePaySession.canMakePaymentsWithActiveCard( @params.merchant_id ).then ( canMakePayments ) =>
+			ApplePaySession.canMakePaymentsWithActiveCard( @merchant_id ).then ( canMakePayments ) =>
 
 				return canMakePayments
 
@@ -58,6 +54,23 @@ jQuery( document ).ready ($) ->
 		# @since 4.7.0
 		init: ->
 
+			return unless this.is_available()
+
+			# initialize for the various pages
+			if $( 'form.cart' ).length
+				this.init_product_page()
+			else if $( 'form.woocommerce-cart-form' ).length
+				this.init_cart_page()
+			else if $( 'form.woocommerce-checkout' ).length
+				this.init_checkout_page()
+
+			# bail if no UI was initialized
+			return unless @ui_element
+
+			if @payment_request
+				$( @buttons ).show()
+				$( @terms ).show()
+
 			$( document.body ).on 'click', '.sv-wc-apple-pay-button', ( e ) =>
 
 				e.preventDefault()
@@ -66,7 +79,7 @@ jQuery( document ).ready ($) ->
 
 				try
 
-					@session = new ApplePaySession( 1, @payment_request )
+					@session = this.get_new_session( @payment_request )
 
 					# set the payment card events
 					@session.onvalidatemerchant        = ( event ) => this.on_validate_merchant( event )
@@ -81,6 +94,61 @@ jQuery( document ).ready ($) ->
 				catch error
 
 					this.fail_payment( error )
+
+
+		# Initializes the product page.
+		#
+		# @since 5.6.0-dev
+		init_product_page: =>
+
+			@ui_element = $( 'form.cart' )
+
+
+		# Initializes the cart page.
+		#
+		# @since 5.6.0-dev
+		init_cart_page: =>
+
+			@ui_element = $( 'form.woocommerce-cart-form' ).parents( 'div.woocommerce' )
+
+			# re-init if the cart totals are updated
+			$( document.body ).on 'updated_cart_totals', =>
+
+				this.reset_payment_request()
+
+
+		# Initializes the checkout page.
+		#
+		# @since 5.6.0-dev
+		init_checkout_page: =>
+
+			@ui_element = $( 'form.woocommerce-checkout' )
+			@buttons    = '.sv-wc-apply-pay-checkout'
+
+			$( document.body ).on 'updated_checkout', =>
+
+				# re-init if the checkout is updated
+				this.reset_payment_request()
+
+
+		# Gets a new Apple Pay session.
+		#
+		# @since 5.6.0-dev
+		#
+		# @param [Object] payment_request payment request object
+		# @return ApplePaySession
+		get_new_session: ( payment_request ) ->
+
+			return new ApplePaySession( this.get_sdk_version(), payment_request )
+
+
+		# Gets the Apple SDK version to use.
+		#
+		# @since 5.6.0-dev
+		# @return int
+		get_sdk_version: ->
+
+			return 2
 
 
 		# The callback for after the merchant data is validated.
@@ -108,14 +176,14 @@ jQuery( document ).ready ($) ->
 		validate_merchant: ( url ) => new Promise ( resolve, reject ) =>
 
 			data = {
-				'action':      'sv_wc_apple_pay_validate_merchant',
-				'nonce':       @params.validate_nonce,
-				'merchant_id': @params.merchant_id,
+				'action':      "wc_#{ @gateway_id }_apple_pay_validate_merchant",
+				'nonce':       @validate_nonce,
+				'merchant_id': @merchant_id,
 				'url':         url
 			}
 
 			# retrieve a payment request object
-			$.post @params.ajax_url, data, ( response ) =>
+			$.post @ajax_url, data, ( response ) =>
 
 				if response.success
 					resolve response.data
@@ -131,12 +199,12 @@ jQuery( document ).ready ($) ->
 			new Promise ( resolve, reject ) =>
 
 				data = {
-					'action': 'sv_wc_apple_pay_recalculate_totals',
-					'nonce':  @params.recalculate_totals_nonce,
+					'action': "wc_#{ @gateway_id }_apple_pay_recalculate_totals",
+					'nonce':  @recalculate_totals_nonce,
 				}
 
 				# retrieve a payment request object
-				$.post @params.ajax_url, data, ( response ) =>
+				$.post @ajax_url, data, ( response ) =>
 
 					if response.success
 
@@ -159,13 +227,13 @@ jQuery( document ).ready ($) ->
 			new Promise ( resolve, reject ) =>
 
 				data = {
-					'action':  'sv_wc_apple_pay_recalculate_totals',
-					'nonce':   @params.recalculate_totals_nonce,
+					'action':  "wc_#{ @gateway_id }_apple_pay_recalculate_totals",
+					'nonce':   @recalculate_totals_nonce,
 					'contact': event.shippingContact
 				}
 
 				# retrieve a payment request object
-				$.post @params.ajax_url, data, ( response ) =>
+				$.post @ajax_url, data, ( response ) =>
 
 					if response.success
 
@@ -188,13 +256,13 @@ jQuery( document ).ready ($) ->
 			new Promise ( resolve, reject ) =>
 
 				data = {
-					'action': 'sv_wc_apple_pay_recalculate_totals',
-					'nonce':  @params.recalculate_totals_nonce,
+					'action': "wc_#{ @gateway_id }_apple_pay_recalculate_totals",
+					'nonce':  @recalculate_totals_nonce,
 					'method': event.shippingMethod.identifier
 				}
 
 				# retrieve a payment request object
-				$.post @params.ajax_url, data, ( response ) =>
+				$.post @ajax_url, data, ( response ) =>
 
 					if response.success
 
@@ -233,13 +301,12 @@ jQuery( document ).ready ($) ->
 		process_authorization: ( payment ) => new Promise ( resolve, reject ) =>
 
 			data = {
-				action:  'sv_wc_apple_pay_process_payment',
-				nonce:   @params.process_nonce,
-				type:    @type,
+				action:  "wc_#{ @gateway_id }_apple_pay_process_payment",
+				nonce:   @process_nonce,
 				payment: JSON.stringify( payment )
 			}
 
-			$.post @params.ajax_url, data, ( response ) =>
+			$.post @ajax_url, data, ( response ) =>
 
 				if response.success
 					resolve response.data
@@ -272,7 +339,7 @@ jQuery( document ).ready ($) ->
 
 			this.unblock_ui()
 
-			this.render_errors( [ @params.generic_error ] )
+			this.render_errors( [ @generic_error ] )
 
 
 		# Sets the Apple Pay payment status depending on the gateway result.
@@ -286,14 +353,6 @@ jQuery( document ).ready ($) ->
 				status = ApplePaySession.STATUS_FAILURE
 
 			@session.completePayment( status )
-
-
-		# Attaches any update events required by the implementing class.
-		#
-		# @since 4.7.0
-		attach_update_events: =>
-
-			# Optional, for resetting the request data
 
 
 		# Resets the payment request via AJAX.
@@ -330,14 +389,13 @@ jQuery( document ).ready ($) ->
 		get_payment_request: ( data ) => new Promise ( resolve, reject ) =>
 
 			base_data = {
-				'action': 'sv_wc_apple_pay_get_payment_request'
-				'type'  : @type
+				'action': "wc_#{ @gateway_id }_apple_pay_get_payment_request"
 			}
 
 			$.extend data, base_data
 
 			# retrieve a payment request object
-			$.post @params.ajax_url, data, ( response ) =>
+			$.post @ajax_url, data, ( response ) =>
 
 				if response.success
 					resolve response.data
@@ -373,74 +431,3 @@ jQuery( document ).ready ($) ->
 		#
 		# @since 4.7.0
 		unblock_ui: -> @ui_element.unblock()
-
-
-	# The WooCommerce Apple Pay cart handler class.
-	#
-	# @since 4.7.0
-	class window.SV_WC_Apple_Pay_Cart_Handler extends SV_WC_Apple_Pay_Handler
-
-
-		# Constructs the handler.
-		#
-		# @since 4.7.0
-		constructor: ( args ) ->
-
-			@type = 'cart'
-
-			@ui_element = $( 'form.woocommerce-cart-form' ).parents( 'div.woocommerce' )
-
-			super( args )
-
-		attach_update_events: =>
-
-			# re-init if the cart totals are updated
-			$( document.body ).on 'updated_cart_totals', =>
-
-				this.reset_payment_request()
-
-
-	# The WooCommerce Apple Pay checkout handler class.
-	#
-	# @since 4.7.0
-	class window.SV_WC_Apple_Pay_Checkout_Handler extends SV_WC_Apple_Pay_Handler
-
-
-		# Constructs the handler.
-		#
-		# @since 4.7.0
-		constructor: ( args ) ->
-
-			@type = 'checkout'
-
-			@ui_element = $( 'form.woocommerce-checkout' )
-
-			super( args )
-
-			@buttons = '.sv-wc-apply-pay-checkout'
-
-
-		attach_update_events: =>
-
-			# re-init if the cart totals are updated
-			$( document.body ).on 'updated_checkout', =>
-
-				this.reset_payment_request()
-
-
-	# The WooCommerce Apple Pay product handler class.
-	#
-	# @since 4.7.0
-	class window.SV_WC_Apple_Pay_Product_Handler extends SV_WC_Apple_Pay_Handler
-
-
-		# Constructs the handler.
-		#
-		# @since 4.7.0
-		constructor: ( args ) ->
-
-			@type = 'product'
-
-			@ui_element = $( 'form.cart' )
-
-			super( args )

@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_6_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_0\\SV_WC_Payment_Gateway_Helper' ) ) :
 
 
 /**
@@ -231,7 +231,7 @@ class SV_WC_Payment_Gateway_Helper {
 			),
 			self::CARD_TYPE_MASTERCARD => array(
 				'name'       => esc_html_x( 'MasterCard', 'credit card type', 'woocommerce-plugin-framework' ),
-				'variations' => array( 'mc' ),
+				'variations' => array( 'mc', 'master-card' ),
 			),
 			self::CARD_TYPE_AMEX => array(
 				'name'       => esc_html_x( 'American Express', 'credit card type', 'woocommerce-plugin-framework' ),
