@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 5.5.4\n"
+"Project-Id-Version: WooCommerce Plugin Framework 5.6.0\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -173,7 +173,7 @@ msgstr ""
 msgid "Please %1$supdate WooCommerce%2$s"
 msgstr ""
 
-#: class-sv-wc-plugin-compatibility.php:334
+#: class-sv-wc-plugin-compatibility.php:347
 msgid "WooCommerce"
 msgstr ""
 
@@ -244,7 +244,7 @@ msgstr ""
 msgid "You cannot unserialize instances of %s."
 msgstr ""
 
-#: class-sv-wc-plugin.php:563
+#: class-sv-wc-plugin.php:564
 #. translators: Placeholders: %1$s - plugin name, %2$s - WooCommerce version
 #. number, %3$s - opening <a> HTML link tag, %4$s - closing </a> HTML link tag
 msgid ""
@@ -253,20 +253,21 @@ msgid ""
 "features."
 msgstr ""
 
-#: class-sv-wc-plugin.php:606
+#: class-sv-wc-plugin.php:607
 #. translators: Docs as in Documentation
 msgid "Docs"
 msgstr ""
 
-#: class-sv-wc-plugin.php:699
+#: class-sv-wc-plugin.php:700
 msgid "%1$s - A minimum of %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:708
+#: class-sv-wc-plugin.php:709
 msgid "Set as %1$s - %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:973
+#: class-sv-wc-plugin.php:974
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:788
 msgid "Configure"
 msgstr ""
 
@@ -613,7 +614,7 @@ msgid "The gateway customer ID for the user. Only edit this if necessary."
 msgstr ""
 
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:99
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:132
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:137
 msgid "An error occurred, please try again or try an alternate form of payment"
 msgstr ""
 
@@ -772,43 +773,43 @@ msgstr ""
 msgid "Connection Settings"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:149
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:152
 msgid "Apple Merchant ID"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:153
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:156
 msgid "This is found in your %1$sApple developer account%2$s"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:160
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:166
 msgid "Certificate Path"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:165
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:171
 #. translators: Placeholders: %s - the server's web root path
 msgid "For reference, your current web root path is: %s"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:178
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:188
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:184
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:194
 msgid "Processing Gateway"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:196
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:202
 msgid "Test Mode"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:197
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:203
 msgid ""
 "Enable to test Apple Pay functionality throughout your sites without "
 "processing real payments."
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:306
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:312
 msgid "Your site must be served over HTTPS with a valid SSL certificate."
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:316
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:322
 #. translators: Placeholders: %1$s - plugin name, %2$s - a
 #. currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
 msgid ""
@@ -820,37 +821,37 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:335
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:341
 msgid ""
 "Your %1$sMerchant Identity Certificate%2$s cannot be found. Please check "
 "your path configuration."
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:342
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:348
 msgid "Apple Pay is disabled."
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:381
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:387
 msgid "Single products"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:382
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:388
 msgid "Cart"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:383
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:389
 msgid "Checkout"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:169
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:219
 msgid "Buy with"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:202
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:252
 msgid "By submitting your payment, you agree to our %1$sterms and conditions%2$s."
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:351
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:477
 msgid "or"
 msgstr ""
 
@@ -860,31 +861,31 @@ msgstr ""
 msgid "Error %d: Unable to create order. Please try again."
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:121
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:154
 msgid "Apple Pay payment authorized."
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:155
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:188
 msgid "Apple Pay payment failed. %s"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:532
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:566
 msgid "Subtotal"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:542
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:576
 msgid "Discount"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:552
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:586
 msgid "Shipping"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:562
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:596
 msgid "Fees"
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:572
+#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:606
 msgid "Taxes"
 msgstr ""
 
@@ -1272,7 +1273,7 @@ msgstr ""
 msgid "Payment Info"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:617
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:620
 #. translators: Placeholders: %1$s - plugin name, %2$s - <a> tag, %3$s - </a>
 #. tag
 msgid ""
@@ -1280,7 +1281,7 @@ msgid ""
 "data may be at risk. %2$sVerify your site URLs here%3$s"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:634
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:637
 #. translators: Placeholders: %s - payment gateway name
 msgid ""
 "%s will soon require TLS 1.2 support to process transactions and your "
@@ -1289,7 +1290,7 @@ msgid ""
 "and request they make any necessary updates."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:690
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:693
 #. translators: Placeholders: %1$s - plugin name, %2$s - a
 #. currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
 msgid ""
@@ -1301,7 +1302,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:725
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:728
 #. translators: Placeholders: %1$s - payment gateway name, %2$s - opening <a>
 #. tag, %3$s - closing </a> tag
 msgid ""
@@ -1310,7 +1311,16 @@ msgid ""
 "processing, we recommend %2$sturning off Debug Mode%3$s"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:771
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:777
+#. translators: Placeholders: %s - gateway name
+msgid "%s is not configured"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:789
+msgid "Dismiss"
+msgstr ""
+
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:824
 #. translators: Placeholders: %1$s - plugin name, %2$s - opening <a> HTML link
 #. tag, %3$s - closing </a> HTML link tag
 msgid ""
@@ -1318,7 +1328,7 @@ msgid ""
 "Please %2$supdate WooCommerce%3$s."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:807
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:860
 #. translators: Placeholders: %1$s - payment gateway title (such as
 #. Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
 msgid ""
@@ -1326,7 +1336,7 @@ msgid ""
 "tokenization%3$s to activate %1$s for Subscriptions."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:825
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:878
 #. translators: Placeholders: %1$s - payment gateway title (such as
 #. Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
 msgid ""
@@ -1334,13 +1344,13 @@ msgid ""
 "tokenization%3$s to activate %1$s for Pre-Orders."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:862
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:915
 msgid ""
 "You must enable tokenization for this gateway in order to support automatic "
 "renewal payments with the WooCommerce Subscriptions extension."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:863
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:916
 msgid "Inactive"
 msgstr ""
 
@@ -1808,17 +1818,17 @@ msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
 
-#: class-sv-wc-helper.php:408
+#: class-sv-wc-helper.php:410
 msgctxt "coordinating conjunction for a list of items: a, b, and c"
 msgid "and"
 msgstr ""
 
-#: class-sv-wc-plugin.php:611
+#: class-sv-wc-plugin.php:612
 msgctxt "noun"
 msgid "Support"
 msgstr ""
 
-#: class-sv-wc-plugin.php:616
+#: class-sv-wc-plugin.php:617
 msgctxt "verb"
 msgid "Review"
 msgstr ""
