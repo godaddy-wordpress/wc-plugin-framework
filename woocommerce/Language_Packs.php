@@ -127,22 +127,54 @@ class Language_Packs {
 	/**
 	 * Intercepts the translations API requests to inject plugin translation updates.
 	 *
+	 * @see \translations_api()
+	 *
 	 * @internal
 	 *
 	 * @since x.y.z
 	 *
-	 * @param false|array $response request response
+	 * @param false|array|\WP_Error $response request response
 	 * @param string $request_type request type
-	 * @param \stdClass $args request arguments object
-	 * @return false|array
+	 * @param array $args request arguments
+	 * @return false|array|\WP_Error
 	 */
 	public function update_translations( $response, $request_type, $args ) {
 
-		if ( $response ) {
+		if ( 'plugins' === $request_type
+		     && is_array( $args )
+		     && isset( $args['slug'] )
+		     && $this->get_plugin()->get_id() === $args['slug'] ) {
 
+			// TODO update this to use a framework request object {FN 2020-03-05}
+			return $this->process_translations_update_request( $args );
 		}
 
 		return $response;
+	}
+
+
+	/**
+	 * Processes a translations update request.
+	 *
+	 * @see Language_Packs::update_translations()
+	 * @see \translations_api()
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array $args update request arguments
+	 * @return array|\WP_Error
+	 */
+	private function process_translations_update_request( array $args ) {
+
+		// TODO probably this should return a framework response object or WP_Error on errors {FN 2020-03-05}
+
+		$translations = [];
+
+		foreach ( $this->get_language_packs() as $language_pack ) {
+			$translations[] =  $language_pack->get_data();
+		}
+
+		return $translations;
 	}
 
 
