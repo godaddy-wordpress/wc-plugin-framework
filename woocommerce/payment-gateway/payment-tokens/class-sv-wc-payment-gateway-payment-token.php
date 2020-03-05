@@ -734,8 +734,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			}
 		}
 
-		$token->apply_changes();
-
 		try {
 
 			$saved = $token->save();
