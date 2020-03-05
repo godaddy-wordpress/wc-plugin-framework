@@ -159,7 +159,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 */
 	public function save( $user_id ) {
 
-		$tokens = ( isset( $_POST[ $this->get_input_name() ] ) ) ? $_POST[ $this->get_input_name() ] : array();
+		$tokens = ( isset( $_POST[ $this->get_input_name() ] ) ) ? $_POST[ $this->get_input_name() ] : [];
 
 		$default_token_id = SV_WC_Helper::get_posted_value( $this->get_input_name() . '_default' );
 		$built_tokens     = [];
