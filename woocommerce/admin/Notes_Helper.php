@@ -56,7 +56,7 @@ class Notes_Helper {
 	/**
 	 * Gets a note with the given name.
 	 *
-	 * @since 5.5.5-dev
+	 * @since 5.6.0
 	 *
 	 * @param string $name name of the note to get
 	 * @return WooCommerce_Admin_Notes\WC_Admin_Note|null
