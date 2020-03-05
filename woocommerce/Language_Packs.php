@@ -30,6 +30,37 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_0\\Language
 
 class Language_Packs {
 
+
+	/** @var SV_WC_Plugin main plugin instance */
+	private $plugin;
+
+
+	/**
+	 * Language packs constructor.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param SV_WC_Plugin $plugin main plugin instance
+	 */
+	public function __construct( SV_WC_Plugin $plugin ) {
+
+		$this->plugin = $plugin;
+	}
+
+
+	/**
+	 * Gets the main plugin instance.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return SV_WC_Plugin
+	 */
+	private function get_plugin() {
+
+		return $this->plugin;
+	}
+
+
 }
 
 endif;
