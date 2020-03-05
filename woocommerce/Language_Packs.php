@@ -39,6 +39,9 @@ class Language_Packs {
 	/** @var SV_WC_Plugin main plugin instance */
 	private $plugin;
 
+	/** @var array translations configuration */
+	private $config;
+
 
 	/**
 	 * Language packs constructor.
@@ -46,10 +49,12 @@ class Language_Packs {
 	 * @since x.y.z
 	 *
 	 * @param SV_WC_Plugin $plugin main plugin instance
+	 * @param array $config the plugin's translations configuration
 	 */
-	public function __construct( SV_WC_Plugin $plugin ) {
+	public function __construct( SV_WC_Plugin $plugin, $config ) {
 
 		$this->plugin = $plugin;
+		$this->config = $config;
 
 		// adds the plugin to the list of plugins in the translations transient
 		add_filter( 'site_transient_update_plugins', [ $this, 'add_translations' ] );

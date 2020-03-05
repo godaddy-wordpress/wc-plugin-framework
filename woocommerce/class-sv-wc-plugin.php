@@ -133,6 +133,7 @@ abstract class SV_WC_Plugin {
 			'min_wc_semver' => 0.2, // by default, 2 minor versions behind the latest published are supported
 			'text_domain'   => '',
 			'dependencies'  => [],
+			'languages'     => [],
 		] );
 
 		$this->min_wc_semver = is_numeric( $args['min_wc_semver'] ) ? abs( $args['min_wc_semver'] ) : null;
@@ -163,7 +164,7 @@ abstract class SV_WC_Plugin {
 		$this->init_setup_wizard_handler();
 
 		// build the language packs handler instance
-		$this->init_language_packs_handler();
+		$this->init_language_packs_handler( $args['languages'] );
 
 		// add the action & filter hooks
 		$this->add_hooks();
@@ -275,10 +276,12 @@ abstract class SV_WC_Plugin {
 	 * Initializes the language packs handler.
 	 *
 	 * @since x.y.z
+	 *
+	 * @param array $config plugin languages support configuration
 	 */
-	protected function init_language_packs_handler() {
+	protected function init_language_packs_handler( $config ) {
 
-		$this->language_packs = new Language_Packs( $this );
+		$this->language_packs = new Language_Packs( $this, $config );
 	}
 
 
