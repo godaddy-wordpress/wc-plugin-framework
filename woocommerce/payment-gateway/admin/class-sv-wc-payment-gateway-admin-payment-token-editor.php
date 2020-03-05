@@ -336,6 +336,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 * @param SV_WC_Payment_Gateway_Payment_Token the payment token object to update
 	 * @param string $token_id the token ID
 	 * @param array $data the token data
+	 * @return SV_WC_Payment_Gateway_Payment_Token
 	 */
 	protected function update_token( $token, $token_id, $data ) {
 
