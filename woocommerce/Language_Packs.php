@@ -234,7 +234,13 @@ class Language_Packs {
 	}
 
 
-
+	/**
+	 * Gets remote translations data.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return array
+	 */
 	private function get_language_packs() {
 
 		return [];
