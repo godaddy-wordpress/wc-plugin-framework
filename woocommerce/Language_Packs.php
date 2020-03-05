@@ -56,10 +56,13 @@ class Language_Packs {
 		$this->plugin = $plugin;
 		$this->config = $config;
 
-		// adds the plugin to the list of plugins in the translations transient
-		add_filter( 'site_transient_update_plugins', [ $this, 'add_translations' ] );
-		// intercepts the translations API to update a plugin that is not listed in the WordPress plugins directory
-		add_filter( 'translations_api', [ $this, 'update_translations' ] );
+		if ( ! empty( $this->config ) ) {
+
+			// adds the plugin to the list of plugins in the translations transient
+			add_filter( 'site_transient_update_plugins', [ $this, 'add_translations' ] );
+			// intercepts the translations API to update a plugin that is not listed in the WordPress plugins directory
+			add_filter( 'translations_api', [ $this, 'update_translations' ] );
+		}
 	}
 
 
