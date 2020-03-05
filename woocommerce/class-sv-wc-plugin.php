@@ -93,6 +93,9 @@ abstract class SV_WC_Plugin {
 	/** @var Admin\Setup_Wizard handler instance */
 	protected $setup_wizard_handler;
 
+	/** @var Language_Packs */
+	private $language_packs;
+
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
 
@@ -158,6 +161,9 @@ abstract class SV_WC_Plugin {
 
 		// build the setup handler instance
 		$this->init_setup_wizard_handler();
+
+		// build the language packs handler instance
+		$this->init_language_packs_handler();
 
 		// add the action & filter hooks
 		$this->add_hooks();
@@ -262,6 +268,17 @@ abstract class SV_WC_Plugin {
 	protected function init_setup_wizard_handler() {
 
 		require_once( $this->get_framework_path() . '/admin/abstract-sv-wc-plugin-admin-setup-wizard.php' );
+	}
+
+
+	/**
+	 * Initializes the language packs handler.
+	 *
+	 * @since x.y.z
+	 */
+	protected function init_language_packs_handler() {
+
+		$this->language_packs = new Language_Packs( $this );
 	}
 
 
