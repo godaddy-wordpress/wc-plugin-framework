@@ -78,6 +78,45 @@ class Language_Packs {
 	 */
 	public function add_translations( $data ) {
 
+		if ( is_object( $data ) ) {
+
+			if ( ! isset( $data->translations ) ) {
+				$data->translations = [];
+			}
+
+			if ( is_array( $data->translations ) ) {
+
+				$language_packs = $this->get_language_packs();
+
+				if ( ! empty( $language_packs ) ) {
+
+					$installed_translations = wp_get_installed_translations( 'plugins' );
+
+					foreach ( $language_packs as $language_pack ) {
+
+						if ( $this->is_supported_language( $language_pack->get_language() ) ) {
+
+							if ( isset( $installed_translations[ $this->get_plugin()->get_id() ][ $language_pack->get_language() ]['PO-Revision-Date'] ) ) {
+
+								try {
+									$local_last_updated_at  = new \DateTime( $installed_translations[ $this->get_plugin()->get_id() ][ $language_pack->get_language() ]['PO-Revision-Date'] );
+									$remote_last_updated_at = new \DateTime( $language_pack->get_po_revision_date() );
+								} catch ( \Exception $e ) {
+									continue;
+								}
+
+								if ( $local_last_updated_at >= $remote_last_updated_at ) {
+									continue;
+								}
+
+								$data->translations[] = $language_pack->get_transient_data();
+							}
+						}
+					}
+				}
+			}
+		}
+
 		return $data;
 	}
 
@@ -89,14 +128,25 @@ class Language_Packs {
 	 *
 	 * @since x.y.z
 	 *
-	 * @param string|array|\stdClass $response request response
+	 * @param false|array $response request response
 	 * @param string $request_type request type
-	 * @param array $args request arguments
-	 * @return mixed
+	 * @param \stdClass $args request arguments object
+	 * @return false|array
 	 */
 	public function update_translations( $response, $request_type, $args ) {
 
+		if ( $response ) {
+
+		}
+
 		return $response;
+	}
+
+
+
+	private function get_language_packs() {
+
+		return [];
 	}
 
 
