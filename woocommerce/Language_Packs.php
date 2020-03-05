@@ -60,9 +60,56 @@ class Language_Packs {
 
 			// adds the plugin to the list of plugins in the translations transient
 			add_filter( 'site_transient_update_plugins', [ $this, 'add_translations' ], 1, 1 );
+
 			// intercepts the translations API to update a plugin that is not listed in the WordPress plugins directory
 			add_filter( 'translations_api', [ $this, 'update_translations' ], 1, 3 );
+
+			// handle internal translations cache cleanup by synchronizing it to the site transients cache for plugin updates
+			add_action( 'set_site_transient_update_plugins',    [ $this, 'clean_translations_cache' ] );
+			add_action( 'delete_site_transient_update_plugins', [ $this, 'clean_translations_cache' ] );
 		}
+	}
+
+
+	/**
+	 * Cleans internal translations caches.
+	 *
+	 * This happens when WordPress sets or deletes the corresponding cache for updating plugins.
+	 * @see Language_Packs::process_request()
+	 *
+	 * @internal
+	 *
+	 * @since x.y.z
+	 */
+	public function clean_translations_cache() {
+
+		$transient_key = $this->get_cache_transient_key();
+		$translations  = get_site_transient( $transient_key );
+
+		if ( ! is_array( $translations ) || empty( $translations ) ) {
+			return;
+		}
+
+		// considers a time margin of 15 seconds in case of frequent writes
+		$timestamp = key( $translations );
+		$expired   = time() - $timestamp >= 15;
+
+		if ( $expired ) {
+			delete_site_transient( $transient_key );
+		}
+	}
+
+
+	/**
+	 * Gets the transient key for the current plugin.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	private function get_cache_transient_key() {
+
+		return sprintf( '%s_languages', $this->get_plugin()->get_id() );
 	}
 
 
@@ -145,8 +192,7 @@ class Language_Packs {
 		     && isset( $args['slug'] )
 		     && $this->get_plugin()->get_id() === $args['slug'] ) {
 
-			// TODO update this to use a framework request object {FN 2020-03-05}
-			return $this->process_translations_update_request( $args );
+			return $this->process_request( $args );
 		}
 
 		return $response;
@@ -157,6 +203,7 @@ class Language_Packs {
 	 * Processes a translations update request.
 	 *
 	 * @see Language_Packs::update_translations()
+	 * @see Language_Packs::clean_translations_cache()
 	 * @see \translations_api()
 	 *
 	 * @since x.y.z
@@ -164,14 +211,23 @@ class Language_Packs {
 	 * @param array $args update request arguments
 	 * @return array|\WP_Error
 	 */
-	private function process_translations_update_request( array $args ) {
+	private function process_request( array $args ) {
 
-		// TODO probably this should return a framework response object or WP_Error on errors {FN 2020-03-05}
+		$transient_key = $this->get_cache_transient_key();
+		$translations  = get_site_transient( $transient_key );
 
-		$translations = [];
+		if ( ! is_array( $translations ) ) {
 
-		foreach ( $this->get_language_packs() as $language_pack ) {
-			$translations[] =  $language_pack->get_data();
+			$translations = [];
+			$timestamp    = time();
+
+			foreach ( $this->get_language_packs() as $language_pack ) {
+				$translations[ $timestamp ] = $language_pack->get_data();
+			}
+
+			if ( ! empty( $translations ) ) {
+				set_site_transient( $transient_key, $translations, DAY_IN_SECONDS );
+			}
 		}
 
 		return $translations;
