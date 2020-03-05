@@ -59,10 +59,44 @@ class Language_Packs {
 		if ( ! empty( $this->config ) ) {
 
 			// adds the plugin to the list of plugins in the translations transient
-			add_filter( 'site_transient_update_plugins', [ $this, 'add_translations' ] );
+			add_filter( 'site_transient_update_plugins', [ $this, 'add_translations' ], 1, 1 );
 			// intercepts the translations API to update a plugin that is not listed in the WordPress plugins directory
-			add_filter( 'translations_api', [ $this, 'update_translations' ] );
+			add_filter( 'translations_api', [ $this, 'update_translations' ], 1, 3 );
 		}
+	}
+
+
+	/**
+	 * Adds translations data to the plugins update transient.
+	 *
+	 * @internal
+	 *
+	 * @since x.y.z
+	 *
+	 * @param \stdClass $data transient data
+	 * @return \stdClass
+	 */
+	public function add_translations( $data ) {
+
+		return $data;
+	}
+
+
+	/**
+	 * Intercepts the translations API requests to inject plugin translation updates.
+	 *
+	 * @internal
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string|array|\stdClass $response request response
+	 * @param string $request_type request type
+	 * @param array $args request arguments
+	 * @return mixed
+	 */
+	public function update_translations( $response, $request_type, $args ) {
+
+		return $response;
 	}
 
 
