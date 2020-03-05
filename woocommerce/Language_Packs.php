@@ -51,7 +51,7 @@ class Language_Packs {
 	 * @param SV_WC_Plugin $plugin main plugin instance
 	 * @param array $config the plugin's translations configuration
 	 */
-	public function __construct( SV_WC_Plugin $plugin, $config ) {
+	public function __construct( SV_WC_Plugin $plugin, array $config ) {
 
 		$this->plugin = $plugin;
 		$this->config = $config;
