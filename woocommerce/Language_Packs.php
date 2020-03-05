@@ -28,6 +28,11 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_0\\Language_Packs' ) ) :
 
+/**
+ * Language packs handler.
+ *
+ * @since x.y.z
+ */
 class Language_Packs {
 
 
