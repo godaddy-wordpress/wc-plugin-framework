@@ -310,7 +310,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 
 	/**
-	 * Build a token object from data saved in the admin.
+	 * Builds a token object from data saved in the admin.
 	 *
 	 * This method allows concrete gateways to add special token data.
 	 * See Authorize.net CIM for an example.

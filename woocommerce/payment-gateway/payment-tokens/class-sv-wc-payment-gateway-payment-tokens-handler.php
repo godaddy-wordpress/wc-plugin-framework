@@ -279,7 +279,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
-	 * Updates a single token by persisting it to user meta
+	 * Updates a single token by persisting its data as a core token.
 	 *
 	 * @since since 4.0.0
 	 *
