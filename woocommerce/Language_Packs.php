@@ -94,24 +94,27 @@ class Language_Packs {
 
 					foreach ( $language_packs as $language_pack ) {
 
+						// skip unsupported languages
 						if ( $this->is_supported_language( $language_pack->get_language() ) ) {
+							continue;
+						}
 
-							if ( isset( $installed_translations[ $this->get_plugin()->get_id() ][ $language_pack->get_language() ]['PO-Revision-Date'] ) ) {
+						// if an existing translation is found, check that if it's in need of an updated, otherwise bail
+						if ( isset( $installed_translations[ $this->get_plugin()->get_id() ][ $language_pack->get_language() ]['PO-Revision-Date'] ) ) {
 
-								try {
-									$local_last_updated_at  = new \DateTime( $installed_translations[ $this->get_plugin()->get_id() ][ $language_pack->get_language() ]['PO-Revision-Date'] );
-									$remote_last_updated_at = new \DateTime( $language_pack->get_po_revision_date() );
-								} catch ( \Exception $e ) {
-									continue;
-								}
+							try {
+								$local_last_updated_at  = new \DateTime( $installed_translations[ $this->get_plugin()->get_id() ][ $language_pack->get_language() ]['PO-Revision-Date'] );
+								$remote_last_updated_at = new \DateTime( $language_pack->get_po_revision_date() );
+							} catch ( \Exception $e ) {
+								continue;
+							}
 
-								if ( $local_last_updated_at >= $remote_last_updated_at ) {
-									continue;
-								}
-
-								$data->translations[] = $language_pack->get_transient_data();
+							if ( $local_last_updated_at >= $remote_last_updated_at ) {
+								continue;
 							}
 						}
+
+						$data->translations[] = $language_pack->get_transient_data();
 					}
 				}
 			}
@@ -147,6 +150,22 @@ class Language_Packs {
 	private function get_language_packs() {
 
 		return [];
+	}
+
+
+	/**
+	 * Determines if a given language is supported in WordPress.
+	 *
+	 * Lets the handler only process languages that are present in the current installation.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $language language code
+	 * @return bool
+	 */
+	private function is_supported_language( $language ) {
+
+		return in_array( $language, get_available_languages(), false );
 	}
 
 
