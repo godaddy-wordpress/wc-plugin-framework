@@ -59,6 +59,7 @@ class Language_Packs {
 		$this->plugin = $plugin;
 		$this->config = $config;
 
+		// if no translations configuration is specified, we can assume this plugin does not support them or relies on the WordPress plugins directory
 		if ( ! empty( $this->config ) ) {
 
 			// adds the plugin to the list of plugins in the translations transient
@@ -140,6 +141,20 @@ class Language_Packs {
 
 				if ( ! empty( $language_packs ) ) {
 
+					/**
+					 * This contains an associative array of plugins translation data as follows:
+					 *
+					 * [ 'plugin-slug' =>
+					 *   [ '<lang_code, e.g "it_IT">' =>
+					 *     'POT_Creation-Date'  => "<datetime>", // optional
+					 *     'PO-Revision-Date'   => "<datetime>", // important, this is the time used by WordPress to issue update requests
+					 *     'Project-Id-Version' => "<string>",   // should be optional, this matches the same information as in the pot file
+					 *     'X-Generator'        => "<string>",   // for example GlotPress/x.y.z, optional
+					 *   ], ...
+					 * ], ...
+					 *
+					 * We must insert the same kind of data in the array for our plugin, so that WordPress is tricked into issuing an update request for the given plugin.
+					 */
 					$installed_translations = wp_get_installed_translations( 'plugins' );
 
 					foreach ( $language_packs as $language_pack ) {
@@ -164,6 +179,7 @@ class Language_Packs {
 							}
 						}
 
+						// append WordPress plugin translation updates transient data
 						$data->translations[] = $language_pack->get_transient_data();
 					}
 				}
@@ -192,7 +208,7 @@ class Language_Packs {
 
 		if ( 'plugins' === $request_type
 		     && is_array( $args )
-		     && isset( $args['slug'] )
+		     && isset( $args['slug'], $args['version'] )
 		     && $this->get_plugin()->get_id() === $args['slug'] ) {
 
 			return $this->process_request( $args );
@@ -204,6 +220,27 @@ class Language_Packs {
 
 	/**
 	 * Processes a translations update request.
+	 *
+	 * This should return a 200 HTTP response with message "OK" along with the following body containing an array of language data:
+	 *
+	 * {
+	 *   "translations": [
+	 *     {
+	 *       "language":"<language code, e.g. it_IT>",
+	 *       "version": "x.y.z should match the version of the request",
+	 *       "updated": "<datetime>",
+	 *       "english_name": "<name>"
+	 *       "native_name": "<name>"
+	 *       "package": "<path_to_file.zip file with po/mo assets, may include blocks>",
+	 *       "iso":
+	 *         {
+	 *           "1": "<language code ISO first part, e.g it>",
+	 *           "2": "<language code ISO second part, e.g IT>"
+	 *         }
+	 *     },
+	 *    ...
+	 *   ]
+	 * }
 	 *
 	 * @see Language_Packs::update_translations()
 	 * @see Language_Packs::clean_translations_cache()
@@ -218,14 +255,19 @@ class Language_Packs {
 
 		$transient_key = $this->get_cache_transient_key();
 		$translations  = get_site_transient( $transient_key );
+		$args          = wp_parse_args( [
+			'version' => $this->get_plugin()->get_version(),
+		], $args );
 
 		if ( ! is_array( $translations ) ) {
 
 			$translations = [];
 			$timestamp    = time();
 
-			foreach ( $this->get_language_packs() as $language_pack ) {
-				$translations[ $timestamp ] = $language_pack->get_data();
+			// TODO this should parse the language packs object array into a normalized response object as expected by WordPress {FN 2020-03-05}
+
+			foreach ( $this->get_language_packs( $args['version'] ) as $language_pack ) {
+				$translations[ $timestamp ] = $language_pack->get_response_data();
 			}
 
 			if ( ! empty( $translations ) ) {
@@ -242,10 +284,18 @@ class Language_Packs {
 	 *
 	 * @since x.y.z
 	 *
+	 * @param string $version version of the translations to retrieve (default to current)
 	 * @return array
 	 */
-	private function get_language_packs() {
+	private function get_language_packs( $version = '' ) {
 
+		if ( empty( $version ) ) {
+			$version = $this->get_plugin()->get_version();
+		}
+
+		// TODO should use $this->config prop to learn where to look for translations {FN 2020-03-05}
+
+		// TODO this should build a request to a remote server and output a normalized object, e.g. a Language_Pack object {FN 2020-03-05}
 		return [];
 	}
 

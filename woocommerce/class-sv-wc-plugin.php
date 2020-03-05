@@ -114,6 +114,11 @@ abstract class SV_WC_Plugin {
 	 *
 	 *     @type int|float $latest_wc_versions the last supported versions of WooCommerce, as a major.minor float relative to the latest available version
 	 *     @type string $text_domain the plugin textdomain, used to set up translations
+	 *     @type array $languages {
+	 *         additional language configuration for language packs and translations support
+	 *
+	 *         @type string $api_url remote URL to retrieve translations from
+	 *     }
 	 *     @type array  $dependencies {
 	 *         PHP extension, function, and settings dependencies
 	 *
