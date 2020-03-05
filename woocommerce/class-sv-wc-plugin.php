@@ -473,6 +473,7 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/class-sv-wc-admin-notice-handler.php' );
 		require_once( $framework_path . '/Lifecycle.php' );
 		require_once( $framework_path . '/rest-api/class-sv-wc-plugin-rest-api.php' );
+		require_once( $framework_path . '/Language_Packs.php' );
 	}
 
 
