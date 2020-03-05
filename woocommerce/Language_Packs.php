@@ -145,7 +145,7 @@ class Language_Packs {
 					foreach ( $language_packs as $language_pack ) {
 
 						// skip unsupported languages
-						if ( $this->is_supported_language( $language_pack->get_language() ) ) {
+						if ( ! $this->is_supported_language( $language_pack->get_language() ) ) {
 							continue;
 						}
 
