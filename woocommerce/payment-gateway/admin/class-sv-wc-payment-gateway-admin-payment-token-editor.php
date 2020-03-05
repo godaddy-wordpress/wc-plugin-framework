@@ -319,6 +319,32 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 
 	/**
+	 * Updates a token object with data saved in the admin.
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param SV_WC_Payment_Gateway_Payment_Token the payment token object to update
+	 * @param string $token_id the token ID
+	 * @param array $data the token data
+	 */
+	protected function update_token( $token, $token_id, $data ) {
+
+		unset( $data['type'] );
+
+		foreach ( $data as $key => $value ) {
+
+			if ( is_callable( [ $token, "set_{$key}" ] ) ) {
+				$token->{"set_{$key}"}( $value );
+			}
+		}
+
+		$token->set_id( $token_id );
+
+		return $token;
+	}
+
+
+	/**
 	 * Update the user's token data.
 	 *
 	 * @since 4.3.0
