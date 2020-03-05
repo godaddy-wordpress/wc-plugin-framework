@@ -79,7 +79,7 @@ class Language_Packs {
 	 * Cleans internal translations caches.
 	 *
 	 * This happens when WordPress sets or deletes the corresponding cache for updating plugins.
-	 * @see Language_Packs::process_request()
+	 * @see Language_Packs::process_translations_update_request()
 	 *
 	 * @internal
 	 *
@@ -111,7 +111,7 @@ class Language_Packs {
 	 *
 	 * @return string
 	 */
-	private function get_cache_transient_key() {
+	protected function get_cache_transient_key() {
 
 		return sprintf( '%s_languages', $this->get_plugin()->get_id() );
 	}
@@ -211,7 +211,7 @@ class Language_Packs {
 		     && isset( $args['slug'], $args['version'] )
 		     && $this->get_plugin()->get_id() === $args['slug'] ) {
 
-			return $this->process_request( $args );
+			return $this->process_translations_update_request( $args );
 		}
 
 		return $response;
@@ -251,7 +251,7 @@ class Language_Packs {
 	 * @param array $args update request arguments
 	 * @return array|\WP_Error
 	 */
-	private function process_request( array $args ) {
+	private function process_translations_update_request( array $args ) {
 
 		$transient_key = $this->get_cache_transient_key();
 		$translations  = get_site_transient( $transient_key );
@@ -287,7 +287,7 @@ class Language_Packs {
 	 * @param string $version version of the translations to retrieve (default to current)
 	 * @return array
 	 */
-	private function get_language_packs( $version = '' ) {
+	protected function get_language_packs( $version = '' ) {
 
 		if ( empty( $version ) ) {
 			$version = $this->get_plugin()->get_version();
@@ -327,7 +327,7 @@ class Language_Packs {
 	 *
 	 * @return SV_WC_Plugin
 	 */
-	private function get_plugin() {
+	protected function get_plugin() {
 
 		return $this->plugin;
 	}
