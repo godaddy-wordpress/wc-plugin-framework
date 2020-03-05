@@ -42,6 +42,9 @@ class Language_Packs {
 	/** @var array translations configuration */
 	private $config;
 
+	/** @var array memoized supported languages */
+	private $supported_languages = [];
+
 
 	/**
 	 * Language packs constructor.
@@ -259,7 +262,11 @@ class Language_Packs {
 	 */
 	private function is_supported_language( $language ) {
 
-		return in_array( $language, get_available_languages(), false );
+		if ( ! array_key_exists( $language, $this->supported_languages ) ) {
+			$this->supported_languages[ $language ] = in_array( $language, get_available_languages(), false );
+		}
+
+		return $this->supported_languages[ $language ];
 	}
 
 
