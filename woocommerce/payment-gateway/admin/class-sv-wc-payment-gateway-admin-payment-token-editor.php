@@ -165,9 +165,11 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 		foreach ( $tokens as $data ) {
 
-			$token_id = $data['id'];
+			$token_id          = $data['id'];
+			$original_token_id = isset( $data['original_id'] ) ? $data['original_id'] : '';
 
 			unset( $data['id'] );
+			unset( $data['original_id'] );
 
 			if ( ! $token_id ) {
 				continue;
@@ -181,7 +183,14 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 			$data['default'] = $token_id === SV_WC_Helper::get_posted_value( $this->get_input_name() . '_default' );
 
 			if ( $data = $this->validate_token_data( $token_id, $data ) ) {
-				$built_tokens[ $token_id ] = $this->build_token( $user_id, $token_id, $data );
+
+				$token = $original_token_id ? $this->get_gateway()->get_payment_tokens_handler()->get_token( $user_id, $original_token_id ) : null;
+
+				if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
+					$built_tokens[ $token_id ] = $this->update_token( $token, $token_id, $data );
+				} else {
+					$built_tokens[ $token_id ] = $this->build_token( $user_id, $token_id, $data );
+				}
 			}
 		}
 
