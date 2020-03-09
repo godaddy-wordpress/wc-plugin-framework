@@ -25,6 +25,10 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_6_0\Admin;
 
 use Automattic\WooCommerce\Admin\Notes as WooCommerce_Admin_Notes;
 
+defined( 'ABSPATH' ) or exit;
+
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_0\\Admin\\Notes_Helper' ) ) :
+
 /**
  * Helper class for WooCommerce enhanced admin notes.
  *
@@ -102,4 +106,44 @@ class Notes_Helper {
 	}
 
 
+	/**
+	 * Gets all note IDs from the given source.
+	 *
+	 * @since 5.6.1-dev
+	 *
+	 * @param string $source note source
+	 * @return int[]
+	 */
+	public static function get_note_ids_with_source( $source ) {
+		global $wpdb;
+
+		return $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT note_id FROM {$wpdb->prefix}wc_admin_notes WHERE source = %s ORDER BY note_id ASC",
+				$source
+			)
+		);
+	}
+
+
+	/**
+	 * Deletes all notes from the given source.
+	 *
+	 * @since 5.6.1-dev
+	 *
+	 * @param string $source source name
+	 */
+	public static function delete_notes_with_source( $source ) {
+
+		foreach ( self::get_note_ids_with_source( $source ) as $note_id ) {
+
+			if ( $note = WooCommerce_Admin_Notes\WC_Admin_Notes::get_note( $note_id ) ) {
+				$note->delete();
+			}
+		}
+	}
+
+
 }
+
+endif;
