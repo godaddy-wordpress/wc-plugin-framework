@@ -810,7 +810,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Adds notices about Apple Pay not supportted in the current WooCommerce version.
+	 * Adds notices about Apple Pay not supported in the current WooCommerce version.
 	 *
 	 * @since 5.5.1
 	 */
