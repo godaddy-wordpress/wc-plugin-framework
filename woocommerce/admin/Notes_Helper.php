@@ -106,6 +106,26 @@ class Notes_Helper {
 	}
 
 
+	/**
+	 * Gets all note IDs from the given source.
+	 *
+	 * @since 5.6.1-dev
+	 *
+	 * @param string $source note source
+	 * @return int[]
+	 */
+	public static function get_note_ids_with_source( $source ) {
+		global $wpdb;
+
+		return $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT note_id FROM {$wpdb->prefix}wc_admin_notes WHERE source = %s ORDER BY note_id ASC",
+				$source
+			)
+		);
+	}
+
+
 }
 
 endif;
