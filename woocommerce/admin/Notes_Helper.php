@@ -25,6 +25,10 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_6_0\Admin;
 
 use Automattic\WooCommerce\Admin\Notes as WooCommerce_Admin_Notes;
 
+defined( 'ABSPATH' ) or exit;
+
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_0\\Admin\\Notes_Helper' ) ) :
+
 /**
  * Helper class for WooCommerce enhanced admin notes.
  *
@@ -103,3 +107,5 @@ class Notes_Helper {
 
 
 }
+
+endif;
