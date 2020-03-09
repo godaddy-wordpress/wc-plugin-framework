@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 5.6.0\n"
+"Project-Id-Version: WooCommerce Plugin Framework 5.6.1\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -12,27 +12,27 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: Lifecycle.php:377
+#: Lifecycle.php:394
 msgid "Awesome"
 msgstr ""
 
-#: Lifecycle.php:378
+#: Lifecycle.php:395
 msgid "Fantastic"
 msgstr ""
 
-#: Lifecycle.php:379
+#: Lifecycle.php:396
 msgid "Cowabunga"
 msgstr ""
 
-#: Lifecycle.php:380
+#: Lifecycle.php:397
 msgid "Congratulations"
 msgstr ""
 
-#: Lifecycle.php:381
+#: Lifecycle.php:398
 msgid "Hot dog"
 msgstr ""
 
-#: Lifecycle.php:388
+#: Lifecycle.php:405
 #. translators: Placeholders: %1$s - plugin name, %2$s - <a> tag, %3$s - </a>
 #. tag, %4$s - <a> tag, %5$s - </a> tag
 msgid ""

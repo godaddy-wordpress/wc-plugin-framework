@@ -21,13 +21,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_6_0\Admin;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Admin;
 
 use Automattic\WooCommerce\Admin\Notes as WooCommerce_Admin_Notes;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_0\\Admin\\Notes_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Admin\\Notes_Helper' ) ) :
 
 /**
  * Helper class for WooCommerce enhanced admin notes.
@@ -109,7 +109,7 @@ class Notes_Helper {
 	/**
 	 * Gets all note IDs from the given source.
 	 *
-	 * @since 5.6.1-dev
+	 * @since 5.6.1
 	 *
 	 * @param string $source note source
 	 * @return int[]
@@ -129,7 +129,7 @@ class Notes_Helper {
 	/**
 	 * Deletes all notes from the given source.
 	 *
-	 * @since 5.6.1-dev
+	 * @since 5.6.1
 	 *
 	 * @param string $source source name
 	 */
