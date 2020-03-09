@@ -24,7 +24,9 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_6_0\Plugin;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_6_0\Admin\Notes_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_0\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_0\SV_WC_Plugin_Compatibility;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -191,6 +193,11 @@ class Lifecycle {
 	 * @since 5.2.0
 	 */
 	public function handle_deactivation() {
+
+		// if the enhanced admin is available, delete all of this plugin's notes on deactivation
+		if ( SV_WC_Plugin_Compatibility::is_enhanced_admin_available() ) {
+			Notes_Helper::delete_notes_with_source( $this->get_plugin()->get_id_dasherized() );
+		}
 
 		$this->deactivate();
 
