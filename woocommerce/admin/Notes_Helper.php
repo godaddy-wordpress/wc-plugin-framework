@@ -126,6 +126,24 @@ class Notes_Helper {
 	}
 
 
+	/**
+	 * Deletes all notes from the given source.
+	 *
+	 * @since 5.6.1-dev
+	 *
+	 * @param string $source source name
+	 */
+	public static function delete_notes_with_source( $source ) {
+
+		foreach ( self::get_note_ids_with_source( $source ) as $note_id ) {
+
+			if ( $note = WooCommerce_Admin_Notes\WC_Admin_Notes::get_note( $note_id ) ) {
+				$note->delete();
+			}
+		}
+	}
+
+
 }
 
 endif;
