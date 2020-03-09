@@ -204,7 +204,6 @@ class Lifecycle {
 			if ( $this->get_plugin() instanceof SV_WC_Payment_Gateway_Plugin ) {
 
 				foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
-
 					Notes_Helper::delete_notes_with_source( $gateway->get_id_dasherized() );
 				}
 			}
