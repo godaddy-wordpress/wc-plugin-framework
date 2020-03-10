@@ -757,39 +757,43 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 				if ( $is_enhanced_admin_available ) {
 
-					if ( $note = Admin\Notes_Helper::get_note_with_name( $note_name ) ) {
+					try {
 
-						// if on the problem gateway's configuration page, revive the existing note that may have been dismissed
-						if ( WC_Admin_Note::E_WC_ADMIN_NOTE_ACTIONED === $note->get_status() && $this->is_payment_gateway_configuration_page( $gateway->get_id() ) ) {
-							$note->set_status( WC_Admin_Note::E_WC_ADMIN_NOTE_UNACTIONED );
+						if ( $note = Admin\Notes_Helper::get_note_with_name( $note_name ) ) {
+
+							// if on the problem gateway's configuration page, revive the existing note that may have been dismissed
+							if ( WC_Admin_Note::E_WC_ADMIN_NOTE_ACTIONED === $note->get_status() && $this->is_payment_gateway_configuration_page( $gateway->get_id() ) ) {
+								$note->set_status( WC_Admin_Note::E_WC_ADMIN_NOTE_UNACTIONED );
+							}
+
+						} else {
+
+							$note = new WC_Admin_Note();
+
+							$note->set_name( $note_name );
+							$note->set_type( WC_Admin_Note::E_WC_ADMIN_NOTE_ERROR );
+							$note->set_source( $gateway->get_id_dasherized() );
+
+							$note->set_title( sprintf(
+								/* translators: Placeholders: %s - gateway name */
+								__( '%s is not configured', 'woocommerce-plugin-framework' ),
+								$gateway->get_method_title()
+							) );
+
+							$note->set_content( $gateway->get_not_configured_error_message() );
 						}
 
-					} else {
+						$note->set_actions( [] );
 
-						$note = new WC_Admin_Note();
+						// add the action buttons if not on the gateway's configuration page
+						if ( ! $this->is_payment_gateway_configuration_page( $gateway->get_id() ) ) {
+							$note->add_action( 'configure', __( 'Configure', 'woocommerce-plugin-framework' ), $this->get_settings_url( $this->get_id() ), WC_Admin_Note::E_WC_ADMIN_NOTE_UNACTIONED, true );
+							$note->add_action( 'dismiss', __( 'Dismiss', 'woocommerce-plugin-framework' ) );
+						}
 
-						$note->set_name( $note_name );
-						$note->set_type( WC_Admin_Note::E_WC_ADMIN_NOTE_ERROR );
-						$note->set_source( $gateway->get_id_dasherized() );
+						$note->save();
 
-						$note->set_title( sprintf(
-							/* translators: Placeholders: %s - gateway name */
-							__( '%s is not configured', 'woocommerce-plugin-framework' ),
-							$gateway->get_method_title()
-						) );
-
-						$note->set_content( $gateway->get_not_configured_error_message() );
-					}
-
-					$note->set_actions( [] );
-
-					// add the action buttons if not on the gateway's configuration page
-					if ( ! $this->is_payment_gateway_configuration_page( $gateway->get_id() ) ) {
-						$note->add_action( 'configure', __( 'Configure', 'woocommerce-plugin-framework' ), $this->get_settings_url( $this->get_id() ), WC_Admin_Note::E_WC_ADMIN_NOTE_UNACTIONED, true );
-						$note->add_action( 'dismiss', __( 'Dismiss', 'woocommerce-plugin-framework' ) );
-					}
-
-					$note->save();
+					} catch ( \Exception $exception ) {}
 				}
 
 				// if not an enhanced admin screen, output the legacy style notice
