@@ -316,13 +316,13 @@ class SV_WC_Plugin_Compatibility {
 	/**
 	 * Determines whether the enhanced admin is available.
 	 *
-	 * This is either in WooCommerce 4.0+ or via the feature plugin.
+	 * This checks both for WooCommerce v4.0+ and the underlying package availability.
 	 *
 	 * @return bool
 	 */
 	public static function is_enhanced_admin_available() {
 
-		return self::is_wc_version_gte( '4.0' ) || class_exists( '\Automattic\WooCommerce\Admin\FeaturePlugin' );
+		return self::is_wc_version_gte( '4.0' ) && function_exists( 'wc_admin_url' ) && class_exists( '\\Automattic\\WooCommerce\\Admin\\Composer\\Package' ) && \Automattic\WooCommerce\Admin\Composer\Package::is_package_active();
 	}
 
 
