@@ -2,6 +2,7 @@
 
 2020.03.09 - version 5.6.1
  * Fix - Delete enhanced admin notes on plugin deactivation
+ * Fix - Prevent uncaught errors when creating notes when WC Admin is disabled
 
 2020.03.04 - version 5.6.0
  * Feature - Add support for WooCommerce Admin enhanced notes
