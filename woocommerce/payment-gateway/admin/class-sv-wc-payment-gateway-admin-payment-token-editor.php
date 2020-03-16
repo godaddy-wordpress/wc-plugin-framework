@@ -166,7 +166,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 		foreach ( $tokens as $data ) {
 
-			$token_id          = $data['id'];
+			$token_id          = isset( $data['id'] ) ? $data['id'] : '';
 			$original_token_id = isset( $data['original_id'] ) ? $data['original_id'] : '';
 
 			unset( $data['id'], $data['original_id'] );
