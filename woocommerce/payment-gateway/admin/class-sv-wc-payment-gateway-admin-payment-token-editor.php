@@ -187,7 +187,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 				$token = $original_token_id ? $this->get_gateway()->get_payment_tokens_handler()->get_token( $user_id, $original_token_id ) : null;
 
 				if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
-					$built_tokens[ $token_id ] = $this->update_token( $token, $token_id, $data );
+					$built_tokens[ $token_id ] = $this->set_token_props( $token, $token_id, $data );
 				} else {
 					$built_tokens[ $token_id ] = $this->build_token( $user_id, $token_id, $data );
 				}
@@ -337,7 +337,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 * @param array $data the token data
 	 * @return SV_WC_Payment_Gateway_Payment_Token
 	 */
-	protected function update_token( $token, $token_id, $data ) {
+	protected function set_token_props( $token, $token_id, $data ) {
 
 		unset( $data['type'] );
 
