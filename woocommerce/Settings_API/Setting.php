@@ -45,6 +45,9 @@ class Setting {
 	/** @var string setting name */
 	protected $name;
 
+	/** @var string setting description */
+	protected $description;
+
 
 }
 
