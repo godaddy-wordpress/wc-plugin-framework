@@ -77,6 +77,22 @@ class SettingTest extends \Codeception\Test\Unit {
 	}
 
 
+	/**
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting::set_description()
+	 *
+	 * @param string $input input description
+	 * @param string $expected expected return description
+	 *
+	 * @dataProvider provider_set_description
+	 */
+	public function test_set_description( $input, $expected ) {
+
+		$setting = new Setting();
+		$setting->set_description( $input );
+		$this->assertEquals( $expected, $setting->get_description() );
+	}
+
+
 	/** Provider methods **********************************************************************************************/
 
 
@@ -122,6 +138,20 @@ class SettingTest extends \Codeception\Test\Unit {
 
 		return [
 			[ 'My Setting', 'My Setting' ],
+			[ '', '' ],
+		];
+	}
+
+
+	/**
+	 * Provider for test_set_description()
+	 *
+	 * @return array
+	 */
+	public function provider_set_description() {
+
+		return [
+			[ 'Use this setting to configure it', 'Use this setting to configure it' ],
 			[ '', '' ],
 		];
 	}
