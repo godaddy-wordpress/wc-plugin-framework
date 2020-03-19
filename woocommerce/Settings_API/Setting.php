@@ -60,6 +60,9 @@ class Setting {
 	/** @var int|float|string|bool|array setting current value */
 	protected $value;
 
+	/** @var Control control object */
+	protected $control;
+
 
 }
 
