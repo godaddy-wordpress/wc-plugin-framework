@@ -2,6 +2,7 @@
 
 namespace Settings_API;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Control;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting;
 
 define( 'ABSPATH', true );
@@ -157,6 +158,22 @@ class SettingTest extends \Codeception\Test\Unit {
 	}
 
 
+	/**
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting::set_control()
+	 *
+	 * @param array $input input control
+	 * @param array $expected expected return control
+	 *
+	 * @dataProvider provider_set_control
+	 */
+	public function test_set_control( $input, $expected ) {
+
+		$setting = new Setting();
+		$setting->set_control( $input );
+		$this->assertEquals( $expected, $setting->get_control() );
+	}
+
+
 	/** Provider methods **********************************************************************************************/
 
 
@@ -285,6 +302,23 @@ class SettingTest extends \Codeception\Test\Unit {
 			[ 0.5, 0.5 ],
 			[ false, false ],
 			[ '', '' ],
+		];
+	}
+
+
+	/**
+	 * Provider for test_set_control()
+	 *
+	 * @return array
+	 */
+	public function provider_set_control() {
+
+		require_once( 'woocommerce/Settings_API/Control.php' );
+
+		$control = new Control();
+
+		return [
+			[ $control, $control ],
 		];
 	}
 
