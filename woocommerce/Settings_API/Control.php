@@ -205,6 +205,8 @@ class Control {
 	 */
 	public function set_options( array $options ) {
 
+		// TODO: add validation and throw an exception
+
 		$this->options = $options;
 	}
 
