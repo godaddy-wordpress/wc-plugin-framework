@@ -83,117 +83,6 @@ class Setting {
 	protected $control;
 
 
-	/** Setter Methods ************************************************************************************************/
-
-
-	/**
-	 * Sets the setting ID.
-	 *
-	 * @since x.y.z
-	 *
-	 * @param string $id
-	 */
-	public function set_id( $id ) {
-		$this->id = $id;
-	}
-
-
-	/**
-	 * Sets the setting type.
-	 *
-	 * @since x.y.z
-	 *
-	 * @param string $type
-	 */
-	public function set_type( $type ) {
-		$this->type = $type;
-	}
-
-
-	/**
-	 * Sets the setting name.
-	 *
-	 * @since x.y.z
-	 *
-	 * @param string $name
-	 */
-	public function set_name( $name ) {
-		$this->name = $name;
-	}
-
-
-	/**
-	 * Sets the setting description.
-	 *
-	 * @since x.y.z
-	 *
-	 * @param string $description
-	 */
-	public function set_description( $description ) {
-		$this->description = $description;
-	}
-
-
-	/**
-	 * Sets whether the setting holds an array of multiple values.
-	 *
-	 * @since x.y.z
-	 *
-	 * @param bool $is_multi
-	 */
-	public function set_is_multi( $is_multi ) {
-		$this->is_multi = $is_multi;
-	}
-
-
-	/**
-	 * Sets the setting options.
-	 *
-	 * @since x.y.z
-	 *
-	 * @param array $options
-	 */
-	public function set_options( $options ) {
-		$this->options = $options;
-	}
-
-
-	/**
-	 * Sets the setting default value.
-	 *
-	 * @since x.y.z
-	 *
-	 * @param array|bool|float|int|string $default
-	 */
-	public function set_default( $default ) {
-		$this->default = $default;
-	}
-
-
-	/**
-	 * Sets the setting current value.
-	 *
-	 * @since x.y.z
-	 *
-	 * @param array|bool|float|int|string $value
-	 */
-	public function set_value( $value ) {
-		$this->value = $value;
-	}
-
-
-	/**
-	 * Sets the setting control.
-	 *
-	 * @since x.y.z
-	 *
-	 * @param Control $control
-	 */
-	public function set_control( $control ) {
-		$this->control = $control;
-	}
-
-
 	/** Getter Methods ************************************************************************************************/
 
 
@@ -302,6 +191,117 @@ class Setting {
 	 */
 	public function get_control() {
 		return $this->control;
+	}
+
+
+	/** Setter Methods ************************************************************************************************/
+
+
+	/**
+	 * Sets the setting ID.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $id
+	 */
+	public function set_id( $id ) {
+		$this->id = $id;
+	}
+
+
+	/**
+	 * Sets the setting type.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $type
+	 */
+	public function set_type( $type ) {
+		$this->type = $type;
+	}
+
+
+	/**
+	 * Sets the setting name.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $name
+	 */
+	public function set_name( $name ) {
+		$this->name = $name;
+	}
+
+
+	/**
+	 * Sets the setting description.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $description
+	 */
+	public function set_description( $description ) {
+		$this->description = $description;
+	}
+
+
+	/**
+	 * Sets whether the setting holds an array of multiple values.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param bool $is_multi
+	 */
+	public function set_is_multi( $is_multi ) {
+		$this->is_multi = $is_multi;
+	}
+
+
+	/**
+	 * Sets the setting options.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array $options
+	 */
+	public function set_options( $options ) {
+		$this->options = $options;
+	}
+
+
+	/**
+	 * Sets the setting default value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array|bool|float|int|string $default
+	 */
+	public function set_default( $default ) {
+		$this->default = $default;
+	}
+
+
+	/**
+	 * Sets the setting current value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array|bool|float|int|string $value
+	 */
+	public function set_value( $value ) {
+		$this->value = $value;
+	}
+
+
+	/**
+	 * Sets the setting control.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param Control $control
+	 */
+	public function set_control( $control ) {
+		$this->control = $control;
 	}
 
 
