@@ -61,6 +61,22 @@ class SettingTest extends \Codeception\Test\Unit {
 	}
 
 
+	/**
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting::set_name()
+	 *
+	 * @param string $input input name
+	 * @param string $expected expected return name
+	 *
+	 * @dataProvider provider_set_name
+	 */
+	public function test_set_name( $input, $expected ) {
+
+		$setting = new Setting();
+		$setting->set_name( $input );
+		$this->assertEquals( $expected, $setting->get_name() );
+	}
+
+
 	/** Provider methods **********************************************************************************************/
 
 
@@ -92,6 +108,21 @@ class SettingTest extends \Codeception\Test\Unit {
 			[ 'integer', 'integer' ],
 			[ 'float', 'float' ],
 			[ 'boolean', 'boolean' ],
+			[ '', '' ],
+		];
+	}
+
+
+	/**
+	 * Provider for test_set_name()
+	 *
+	 * @return array
+	 */
+	public function provider_set_name() {
+
+		return [
+			[ 'My Setting', 'My Setting' ],
+			[ '', '' ],
 		];
 	}
 
