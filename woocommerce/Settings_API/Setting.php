@@ -57,6 +57,9 @@ class Setting {
 	/** @var int|float|string|bool|array setting default value */
 	protected $default;
 
+	/** @var int|float|string|bool|array setting current value */
+	protected $value;
+
 
 }
 
