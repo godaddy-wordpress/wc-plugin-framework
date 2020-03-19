@@ -109,6 +109,22 @@ class SettingTest extends \Codeception\Test\Unit {
 	}
 
 
+	/**
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting::set_options()
+	 *
+	 * @param array $input input options
+	 * @param array $expected expected return options
+	 *
+	 * @dataProvider provider_set_options
+	 */
+	public function test_set_options( $input, $expected ) {
+
+		$setting = new Setting();
+		$setting->set_options( $input );
+		$this->assertEquals( $expected, $setting->get_options() );
+	}
+
+
 	/** Provider methods **********************************************************************************************/
 
 
@@ -183,6 +199,22 @@ class SettingTest extends \Codeception\Test\Unit {
 		return [
 			[ true, true ],
 			[ false, false ],
+		];
+	}
+
+
+	/**
+	 * Provider for test_set_options()
+	 *
+	 * @return array
+	 */
+	public function provider_set_options() {
+
+		return [
+			[ [ 'string 1', 'string 2' ], [ 'string 1', 'string 2' ] ],
+			[ [ -1, 1, 2 ], [ -1, 1, 2 ] ],
+			[ [ 1.5, 2.5, -3 ], [ 1.5, 2.5, -3 ] ],
+			[ [ true, false ], [ true, false ] ],
 		];
 	}
 
