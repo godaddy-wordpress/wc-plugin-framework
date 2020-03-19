@@ -35,6 +35,26 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Settings
  */
 class Setting {
 
+
+	/** @var string the string setting type */
+	const TYPE_STRING = 'string';
+
+	/** @var string the URL setting type */
+	const TYPE_URL = 'url';
+
+	/** @var string the email setting type */
+	const TYPE_EMAIL = 'email';
+
+	/** @var string the integer setting type */
+	const TYPE_INNTEGER = 'integer';
+
+	/** @var string the float setting type */
+	const TYPE_FLOAT = 'float';
+
+	/** @var string the boolean setting type */
+	const TYPE_BOOLEAN = 'boolean';
+
+
 }
 
 endif;
