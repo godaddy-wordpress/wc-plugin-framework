@@ -38,6 +38,43 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Settings
 class Control {
 
 
+	/** @var string the text control type */
+	const TYPE_TEXT = 'text';
+
+	/** @var string the textarea control type */
+	const TYPE_TEXTAREA = 'textarea';
+
+	/** @var string the number control type */
+	const TYPE_NUMBER = 'number';
+
+	/** @var string the email control type */
+	const TYPE_EMAIL = 'email';
+
+	/** @var string the password control type */
+	const TYPE_PASSWORD = 'password';
+
+	/** @var string the date control type */
+	const TYPE_DATE = 'date';
+
+	/** @var string the checkbox control type */
+	const TYPE_CHECKBOX = 'checkbox';
+
+	/** @var string the radio control type */
+	const TYPE_RADIO = 'radio';
+
+	/** @var string the select control type */
+	const TYPE_SELECT = 'select';
+
+	/** @var string the file control type */
+	const TYPE_FILE = 'file';
+
+	/** @var string the color control type */
+	const TYPE_COLOR = 'color';
+
+	/** @var string the range control type */
+	const TYPE_RANGE = 'range';
+  
+  
 	/** @var string|null the setting ID to which this control belongs */
 	protected $setting_id;
 
