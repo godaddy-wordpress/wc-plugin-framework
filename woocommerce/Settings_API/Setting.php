@@ -175,6 +175,117 @@ class Setting {
 	}
 
 
+	/** Getter Methods ************************************************************************************************/
+
+
+	/**
+	 * Gets the setting ID.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_id() {
+		return $this->id;
+	}
+
+
+	/**
+	 * Gets the setting type.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_type() {
+		return $this->type;
+	}
+
+
+	/**
+	 * Gets the setting name.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_name() {
+		return $this->name;
+	}
+
+
+	/**
+	 * Gets the setting description.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_description() {
+		return $this->description;
+	}
+
+
+	/**
+	 * Returns whether the setting holds an array of multiple values.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	public function is_is_multi() {
+		return $this->is_multi;
+	}
+
+
+	/**
+	 * Gets the setting options.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return array
+	 */
+	public function get_options() {
+		return $this->options;
+	}
+
+
+	/**
+	 * Gets the setting default value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return array|bool|float|int|string
+	 */
+	public function get_default() {
+		return $this->default;
+	}
+
+
+	/**
+	 * Gets the setting current value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return array|bool|float|int|string
+	 */
+	public function get_value() {
+		return $this->value;
+	}
+
+
+	/**
+	 * Gets the setting control.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return Control
+	 */
+	public function get_control() {
+		return $this->control;
+	}
+
+
 }
 
 endif;
