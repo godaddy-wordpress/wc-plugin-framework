@@ -93,6 +93,22 @@ class SettingTest extends \Codeception\Test\Unit {
 	}
 
 
+	/**
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting::set_is_multi()
+	 *
+	 * @param bool $input input value
+	 * @param bool $expected expected return value
+	 *
+	 * @dataProvider provider_set_is_multi
+	 */
+	public function test_set_is_multi( $input, $expected ) {
+
+		$setting = new Setting();
+		$setting->set_is_multi( $input );
+		$this->assertEquals( $expected, $setting->is_is_multi() );
+	}
+
+
 	/** Provider methods **********************************************************************************************/
 
 
@@ -153,6 +169,20 @@ class SettingTest extends \Codeception\Test\Unit {
 		return [
 			[ 'Use this setting to configure it', 'Use this setting to configure it' ],
 			[ '', '' ],
+		];
+	}
+
+
+	/**
+	 * Provider for test_set_is_multi()
+	 *
+	 * @return array
+	 */
+	public function provider_set_is_multi() {
+
+		return [
+			[ true, true ],
+			[ false, false ],
 		];
 	}
 
