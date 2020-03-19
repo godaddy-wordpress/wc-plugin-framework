@@ -24,7 +24,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -170,12 +170,12 @@ class Control {
 	 * @since x.y.z
 	 *
 	 * @param string $value setting ID to set
-	 * @throws SV_WC_Plugin_Exception
+	 * @throws Framework\SV_WC_Plugin_Exception
 	 */
 	public function set_setting_id( $value ) {
 
 		if ( ! is_string( $value ) ) {
-			throw new SV_WC_Plugin_Exception( 'Setting ID value must be a string' );
+			throw new Framework\SV_WC_Plugin_Exception( 'Setting ID value must be a string' );
 		}
 
 		$this->setting_id = $value;
@@ -203,12 +203,12 @@ class Control {
 	 * @since x.y.z
 	 *
 	 * @param string $value control name to set
-	 * @throws SV_WC_Plugin_Exception
+	 * @throws Framework\SV_WC_Plugin_Exception
 	 */
 	public function set_name( $value ) {
 
 		if ( ! is_string( $value ) ) {
-			throw new SV_WC_Plugin_Exception( 'Control name value must be a string' );
+			throw new Framework\SV_WC_Plugin_Exception( 'Control name value must be a string' );
 		}
 
 		$this->name = $value;
@@ -221,12 +221,12 @@ class Control {
 	 * @since x.y.z
 	 *
 	 * @param string $value control description to set
-	 * @throws SV_WC_Plugin_Exception
+	 * @throws Framework\SV_WC_Plugin_Exception
 	 */
 	public function set_description( $value ) {
 
 		if ( ! is_string( $value ) ) {
-			throw new SV_WC_Plugin_Exception( 'Control description value must be a string' );
+			throw new Framework\SV_WC_Plugin_Exception( 'Control description value must be a string' );
 		}
 
 		$this->description = $value;
