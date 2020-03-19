@@ -186,6 +186,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 				$token = $original_token_id ? $this->get_gateway()->get_payment_tokens_handler()->get_token( $user_id, $original_token_id ) : null;
 
+				// update the token props if a token with the original ID already exists to avoid creating another core token in SV_WC_Payment_Gateway_Payment_Token::save()
 				if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
 					$built_tokens[ $token_id ] = $this->set_token_props( $token, $token_id, $data );
 				} else {
