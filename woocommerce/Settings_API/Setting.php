@@ -473,6 +473,22 @@ class Setting {
 	}
 
 
+	/** Helper Methods ************************************************************************************************/
+
+
+	/**
+	 * Returns the valid control types for the setting.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string[]
+	 */
+	public function get_valid_control_types() {
+
+		return [];
+	}
+
+
 }
 
 endif;
