@@ -188,10 +188,18 @@ class Control {
 	 * @since x.y.z
 	 *
 	 * @param string $value setting ID to set
+	 * @param string[] $valid_types allowed control types
+	 * @throws Framework\SV_WC_Plugin_Exception
 	 */
-	public function set_type( $value ) {
+	public function set_type( $value, array $valid_types = [] ) {
 
-		// TODO: add validation and throw an exception
+		if ( ! empty( $valid_types ) && ! in_array( $value, $valid_types, true ) ) {
+
+			throw new Framework\SV_WC_Plugin_Exception( sprintf(
+				'Control type must be one of %s',
+				Framework\SV_WC_Helper::list_array_items( $valid_types, 'or' )
+			) );
+		}
 
 		$this->type = $value;
 	}
