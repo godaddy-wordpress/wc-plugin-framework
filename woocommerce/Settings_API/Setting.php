@@ -54,6 +54,9 @@ class Setting {
 	/** @var array valid setting options */
 	protected $options = [];
 
+	/** @var int|float|string|bool|array setting default value */
+	protected $default;
+
 
 }
 
