@@ -52,6 +52,76 @@ class Control {
 	protected $options = [];
 
 
+	/** Getter methods ************************************************************************************************/
+
+
+	/**
+	 * The setting ID to which this control belongs.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return null|string
+	 */
+	public function get_setting_id() {
+
+		return $this->setting_id;
+	}
+
+
+	/**
+	 * Gets the control type.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return null|string
+	 */
+	public function get_type() {
+
+		return $this->type;
+	}
+
+
+	/**
+	 * Gets the control name.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_name() {
+
+		return $this->name;
+	}
+
+
+	/**
+	 * Gets the control description.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_description() {
+
+		return $this->description;
+	}
+
+
+	/**
+	 * Gets the control options.
+	 *
+	 * As $option => $label for display.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return array
+	 */
+	public function get_options() {
+
+		return $this->options;
+	}
+
+
 }
 
 endif;
