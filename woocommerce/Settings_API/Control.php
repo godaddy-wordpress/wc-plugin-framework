@@ -183,7 +183,7 @@ class Control {
 
 
 	/**
-	 * Sets the setting ID.
+	 * Sets the type.
 	 *
 	 * @since x.y.z
 	 *
