@@ -39,6 +39,9 @@ class Setting {
 	/** @var string unique setting ID */
 	protected $id;
 
+	/** @var string setting type */
+	protected $type;
+
 
 }
 
