@@ -46,7 +46,7 @@ class Setting {
 	const TYPE_EMAIL = 'email';
 
 	/** @var string the integer setting type */
-	const TYPE_INNTEGER = 'integer';
+	const TYPE_INTEGER = 'integer';
 
 	/** @var string the float setting type */
 	const TYPE_FLOAT = 'float';
