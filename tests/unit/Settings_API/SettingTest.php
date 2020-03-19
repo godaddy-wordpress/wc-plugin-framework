@@ -141,6 +141,22 @@ class SettingTest extends \Codeception\Test\Unit {
 	}
 
 
+	/**
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting::set_value()
+	 *
+	 * @param array $input input value
+	 * @param array $expected expected return value
+	 *
+	 * @dataProvider provider_set_value
+	 */
+	public function test_set_value( $input, $expected ) {
+
+		$setting = new Setting();
+		$setting->set_value( $input );
+		$this->assertEquals( $expected, $setting->get_value() );
+	}
+
+
 	/** Provider methods **********************************************************************************************/
 
 
@@ -227,7 +243,7 @@ class SettingTest extends \Codeception\Test\Unit {
 	public function provider_set_options() {
 
 		return [
-			[ [ 'string 1', 'string 2' ], [ 'string 1', 'string 2' ] ],
+			[ [ 'example 1', 'example 2' ], [ 'example 1', 'example 2' ] ],
 			[ [ -1, 1, 2 ], [ -1, 1, 2 ] ],
 			[ [ 1.5, 2.5, -3 ], [ 1.5, 2.5, -3 ] ],
 			[ [ true, false ], [ true, false ] ],
@@ -243,7 +259,26 @@ class SettingTest extends \Codeception\Test\Unit {
 	public function provider_set_default() {
 
 		return [
-			[ 'string', 'string' ],
+			[ 'example', 'example' ],
+			[ 'example.com', 'example.com' ],
+			[ 'test@example.com', 'test@example.com' ],
+			[ 1, 1 ],
+			[ 0.5, 0.5 ],
+			[ false, false ],
+			[ '', '' ],
+		];
+	}
+
+
+	/**
+	 * Provider for test_set_value()
+	 *
+	 * @return array
+	 */
+	public function provider_set_value() {
+
+		return [
+			[ 'example', 'example' ],
 			[ 'example.com', 'example.com' ],
 			[ 'test@example.com', 'test@example.com' ],
 			[ 1, 1 ],
