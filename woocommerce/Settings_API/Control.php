@@ -35,6 +35,23 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Settings
  */
 class Control {
 
+
+	/** @var string|null the setting ID to which this control belongs */
+	protected $setting_id;
+
+	/** @var string|null the control type */
+	protected $type;
+
+	/** @var string the control name */
+	protected $name = '';
+
+	/** @var string the control description */
+	protected $description = '';
+
+	/** @var array the control options, as $option => $label  */
+	protected $options = [];
+
+
 }
 
 endif;
