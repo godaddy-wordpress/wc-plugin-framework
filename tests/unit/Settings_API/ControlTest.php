@@ -16,6 +16,7 @@ class ControlTest extends \Codeception\Test\Unit {
 	protected function _before() {
 
 		require_once( 'woocommerce/class-sv-wc-plugin-exception.php' );
+		require_once( 'woocommerce/class-sv-wc-helper.php' );
 		require_once( 'woocommerce/Settings_API/Control.php' );
 	}
 
@@ -116,6 +117,41 @@ class ControlTest extends \Codeception\Test\Unit {
 			[ 'yes', 'yes' ],
 			[ '', '' ],
 			[ false, '', true ],
+		];
+	}
+
+
+	/**
+	 * @see Control::set_type()
+	 *
+	 * @param mixed $value value to pass to the method
+	 * @param array $allowed_types allowed control types
+	 * @param string $expected expected value
+	 * @param bool $exception whether an exception is expected
+	 * @throws SV_WC_Plugin_Exception
+	 *
+	 * @dataProvider provider_set_type
+	 */
+	public function test_set_type( $value, array $allowed_types, $expected, $exception = false ) {
+
+		if ( $exception ) {
+			$this->expectException( SV_WC_Plugin_Exception::class );
+		}
+
+		$control = new Control();
+		$control->set_type( $value, $allowed_types );
+
+		$this->assertSame( $expected, $control->get_type() );
+	}
+
+
+	/** @see test_set_type() */
+	public function provider_set_type() {
+
+		return [
+			[ 'yes', [ 'yes', 'maybe' ], 'yes' ],     // valid value
+			[ 'no', [ 'yes', 'maybe' ], null, true ], // invalid value
+			[ 'no', [], 'no' ],                       // no types to validate
 		];
 	}
 
