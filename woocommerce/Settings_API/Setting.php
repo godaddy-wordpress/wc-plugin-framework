@@ -94,6 +94,7 @@ class Setting {
 	 * @return string
 	 */
 	public function get_id() {
+
 		return $this->id;
 	}
 
@@ -106,6 +107,7 @@ class Setting {
 	 * @return string
 	 */
 	public function get_type() {
+
 		return $this->type;
 	}
 
@@ -118,6 +120,7 @@ class Setting {
 	 * @return string
 	 */
 	public function get_name() {
+
 		return $this->name;
 	}
 
@@ -130,6 +133,7 @@ class Setting {
 	 * @return string
 	 */
 	public function get_description() {
+
 		return $this->description;
 	}
 
@@ -142,6 +146,7 @@ class Setting {
 	 * @return bool
 	 */
 	public function is_is_multi() {
+
 		return $this->is_multi;
 	}
 
@@ -154,6 +159,7 @@ class Setting {
 	 * @return array
 	 */
 	public function get_options() {
+
 		return $this->options;
 	}
 
@@ -166,6 +172,7 @@ class Setting {
 	 * @return array|bool|float|int|string
 	 */
 	public function get_default() {
+
 		return $this->default;
 	}
 
@@ -178,6 +185,7 @@ class Setting {
 	 * @return array|bool|float|int|string
 	 */
 	public function get_value() {
+
 		return $this->value;
 	}
 
@@ -190,6 +198,7 @@ class Setting {
 	 * @return Control
 	 */
 	public function get_control() {
+
 		return $this->control;
 	}
 
@@ -205,6 +214,7 @@ class Setting {
 	 * @param string $id
 	 */
 	public function set_id( $id ) {
+
 		$this->id = $id;
 	}
 
@@ -217,6 +227,7 @@ class Setting {
 	 * @param string $type
 	 */
 	public function set_type( $type ) {
+
 		$this->type = $type;
 	}
 
@@ -229,6 +240,7 @@ class Setting {
 	 * @param string $name
 	 */
 	public function set_name( $name ) {
+
 		$this->name = $name;
 	}
 
@@ -241,6 +253,7 @@ class Setting {
 	 * @param string $description
 	 */
 	public function set_description( $description ) {
+
 		$this->description = $description;
 	}
 
@@ -253,6 +266,7 @@ class Setting {
 	 * @param bool $is_multi
 	 */
 	public function set_is_multi( $is_multi ) {
+
 		$this->is_multi = $is_multi;
 	}
 
@@ -265,6 +279,7 @@ class Setting {
 	 * @param array $options
 	 */
 	public function set_options( $options ) {
+
 		$this->options = $options;
 	}
 
@@ -277,6 +292,7 @@ class Setting {
 	 * @param array|bool|float|int|string $default
 	 */
 	public function set_default( $default ) {
+
 		$this->default = $default;
 	}
 
@@ -289,6 +305,7 @@ class Setting {
 	 * @param array|bool|float|int|string $value
 	 */
 	public function set_value( $value ) {
+
 		$this->value = $value;
 	}
 
@@ -301,6 +318,7 @@ class Setting {
 	 * @param Control $control
 	 */
 	public function set_control( $control ) {
+
 		$this->control = $control;
 	}
 

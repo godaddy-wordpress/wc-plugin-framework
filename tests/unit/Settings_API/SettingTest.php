@@ -42,6 +42,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 		$setting = new Setting();
 		$setting->set_id( $input );
+
 		$this->assertEquals( $expected, $setting->get_id() );
 	}
 
@@ -58,6 +59,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 		$setting = new Setting();
 		$setting->set_type( $input );
+
 		$this->assertEquals( $expected, $setting->get_type() );
 	}
 
@@ -74,6 +76,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 		$setting = new Setting();
 		$setting->set_name( $input );
+
 		$this->assertEquals( $expected, $setting->get_name() );
 	}
 
@@ -90,6 +93,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 		$setting = new Setting();
 		$setting->set_description( $input );
+
 		$this->assertEquals( $expected, $setting->get_description() );
 	}
 
@@ -106,6 +110,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 		$setting = new Setting();
 		$setting->set_is_multi( $input );
+
 		$this->assertEquals( $expected, $setting->is_is_multi() );
 	}
 
@@ -122,6 +127,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 		$setting = new Setting();
 		$setting->set_options( $input );
+
 		$this->assertEquals( $expected, $setting->get_options() );
 	}
 
@@ -138,6 +144,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 		$setting = new Setting();
 		$setting->set_default( $input );
+
 		$this->assertEquals( $expected, $setting->get_default() );
 	}
 
@@ -154,6 +161,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 		$setting = new Setting();
 		$setting->set_value( $input );
+
 		$this->assertEquals( $expected, $setting->get_value() );
 	}
 
@@ -170,6 +178,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 		$setting = new Setting();
 		$setting->set_control( $input );
+
 		$this->assertEquals( $expected, $setting->get_control() );
 	}
 
