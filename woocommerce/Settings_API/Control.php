@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin_Exception;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Settings_API\\Control' ) ) :
@@ -119,6 +121,91 @@ class Control {
 	public function get_options() {
 
 		return $this->options;
+	}
+
+
+	/** Setter methods ************************************************************************************************/
+
+
+	/**
+	 * Sets the setting ID.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $value setting ID to set
+	 * @throws SV_WC_Plugin_Exception
+	 */
+	public function set_setting_id( $value ) {
+
+		if ( ! is_string( $value ) ) {
+			throw new SV_WC_Plugin_Exception( 'Setting ID value must be a string' );
+		}
+
+		$this->setting_id = $value;
+	}
+
+
+	/**
+	 * Sets the setting ID.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $value setting ID to set
+	 */
+	public function set_type( $value ) {
+
+		// TODO: add validation and throw an exception
+
+		$this->type = $value;
+	}
+
+
+	/**
+	 * Sets the name.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $value control name to set
+	 * @throws SV_WC_Plugin_Exception
+	 */
+	public function set_name( $value ) {
+
+		if ( ! is_string( $value ) ) {
+			throw new SV_WC_Plugin_Exception( 'Control name value must be a string' );
+		}
+
+		$this->name = $value;
+	}
+
+
+	/**
+	 * Sets the description.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $value control description to set
+	 * @throws SV_WC_Plugin_Exception
+	 */
+	public function set_description( $value ) {
+
+		if ( ! is_string( $value ) ) {
+			throw new SV_WC_Plugin_Exception( 'Control description value must be a string' );
+		}
+
+		$this->description = $value;
+	}
+
+
+	/**
+	 * Sets the options.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array $options options to set
+	 */
+	public function set_options( array $options ) {
+
+		$this->options = $options;
 	}
 
 
