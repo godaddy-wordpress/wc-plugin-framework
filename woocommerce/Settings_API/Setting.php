@@ -48,6 +48,9 @@ class Setting {
 	/** @var string setting description */
 	protected $description;
 
+	/** @var bool whether the setting holds an array of multiple values */
+	protected $is_multi = false;
+
 
 }
 
