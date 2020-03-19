@@ -125,6 +125,22 @@ class SettingTest extends \Codeception\Test\Unit {
 	}
 
 
+	/**
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting::set_default()
+	 *
+	 * @param array $input input default value
+	 * @param array $expected expected return default value
+	 *
+	 * @dataProvider provider_set_default
+	 */
+	public function test_set_default( $input, $expected ) {
+
+		$setting = new Setting();
+		$setting->set_default( $input );
+		$this->assertEquals( $expected, $setting->get_default() );
+	}
+
+
 	/** Provider methods **********************************************************************************************/
 
 
@@ -215,6 +231,25 @@ class SettingTest extends \Codeception\Test\Unit {
 			[ [ -1, 1, 2 ], [ -1, 1, 2 ] ],
 			[ [ 1.5, 2.5, -3 ], [ 1.5, 2.5, -3 ] ],
 			[ [ true, false ], [ true, false ] ],
+		];
+	}
+
+
+	/**
+	 * Provider for test_set_default()
+	 *
+	 * @return array
+	 */
+	public function provider_set_default() {
+
+		return [
+			[ 'string', 'string' ],
+			[ 'example.com', 'example.com' ],
+			[ 'test@example.com', 'test@example.com' ],
+			[ 1, 1 ],
+			[ 0.5, 0.5 ],
+			[ false, false ],
+			[ '', '' ],
 		];
 	}
 
