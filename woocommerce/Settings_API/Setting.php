@@ -51,6 +51,9 @@ class Setting {
 	/** @var bool whether the setting holds an array of multiple values */
 	protected $is_multi = false;
 
+	/** @var array valid setting options */
+	protected $options = [];
+
 
 }
 
