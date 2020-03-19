@@ -35,6 +35,11 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Settings
  */
 class Setting {
 
+
+	/** @var string unique setting ID */
+	protected $id;
+
+
 }
 
 endif;
