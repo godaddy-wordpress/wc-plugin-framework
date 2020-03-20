@@ -130,7 +130,7 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 
 		$this->assertIsArray( $this->get_settings_instance()->get_setting_types() );
 
-		add_filter( "{$this->get_settings_instance()->get_id()}_setting_types", function() {
+		add_filter( "wc_{$this->get_settings_instance()->get_id()}_settings_api_setting_types", function() {
 
 			return [ 'my_type' ];
 		} );
@@ -144,7 +144,7 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 
 		$this->assertIsArray( $this->get_settings_instance()->get_control_types() );
 
-		add_filter( "{$this->get_settings_instance()->get_id()}_control_types", function() {
+		add_filter( "wc_{$this->get_settings_instance()->get_id()}_settings_api_control_types", function() {
 
 			return [ 'my_type' ];
 		} );
