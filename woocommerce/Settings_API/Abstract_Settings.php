@@ -492,6 +492,21 @@ abstract class Abstract_Settings {
 
 
 	/**
+	 * Returns the valid control types for a setting.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $setting_id setting ID
+	 * @param string[] $control_types setting valid control types
+	 * @return string[]
+	 */
+	public static function get_valid_control_types( $setting_id, $control_types ) {
+
+		return $control_types;
+	}
+
+
+	/**
 	 * Gets the prefix for db option names.
 	 *
 	 * @since x.y.z
