@@ -80,6 +80,61 @@ abstract class Abstract_Settings {
 
 
 	/**
+	 * Registers a setting.
+	 *
+	 * @param string $id unique setting ID
+	 * @param string $type setting type
+	 * @param array $args setting arguments
+	 * @return bool
+	 */
+	public function register_setting( $id, $type, array $args ) {
+
+		try {
+
+			if ( ! empty( $this->settings[ $id ] ) ) {
+				throw new Framework\SV_WC_Plugin_Exception( "Setting {$id} is already registered" );
+			}
+
+			if ( ! in_array( $type, $this->get_setting_types(), true ) ) {
+				throw new Framework\SV_WC_Plugin_Exception( "{$type} is not a valid setting type" );
+			}
+
+			$setting = new Setting();
+
+			$setting->set_id( $id );
+			$setting->set_type( $type );
+
+			$args = wp_parse_args( $args, [
+				'name'         => '',
+				'description'  => '',
+				'is_multi'     => false,
+				'options'      => [],
+				'default'      => null,
+			] );
+
+			$setting->set_name( $args['name'] );
+			$setting->set_description( $args['description'] );
+			$setting->set_default( $args['default'] );
+			$setting->set_is_multi( $args['is_multi'] );
+
+			if ( is_array( $args['options'] ) ) {
+				$setting->set_options( $args['options'] );
+			}
+
+			$this->settings[ $id ] = $setting;
+
+			return true;
+
+		} catch ( \Exception $exception ) {
+
+			wc_doing_it_wrong( __METHOD__, 'Could not register setting: ' . $exception->getMessage(), 'x.y.z' );
+
+			return false;
+		}
+	}
+
+
+	/**
 	 * Unregisters a setting.
 	 *
 	 * @since x.y.z
