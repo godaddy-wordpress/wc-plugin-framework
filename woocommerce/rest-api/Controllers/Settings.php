@@ -42,6 +42,22 @@ class Settings extends \WP_REST_Controller {
 	protected $settings;
 
 
+	/**
+	 * Settings constructor.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param Abstract_Settings $settings settings handler
+	 */
+	public function __construct( Abstract_Settings $settings ) {
+
+		$this->settings = $settings;
+		$this->namespace = 'wc/v3';
+
+		// TODO: set $this->rest_base when Abstract_Settings has a get_id() method
+	}
+
+
 }
 
 endif;
