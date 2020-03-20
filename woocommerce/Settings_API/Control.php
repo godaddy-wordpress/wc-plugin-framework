@@ -243,7 +243,12 @@ class Control {
 	 */
 	public function set_options( array $options, array $valid_options = array() ) {
 
-		// TODO: add validation and throw an exception
+		foreach ( array_keys( $options ) as $key ) {
+
+			if ( ! in_array( $key, $valid_options, true ) ) {
+				unset( $options[ $key ] );
+			}
+		}
 
 		$this->options = $options;
 	}
