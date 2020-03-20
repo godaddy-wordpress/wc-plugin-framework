@@ -35,10 +35,10 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	/** Tests *********************************************************************************************************/
 
 
-	/** @see Abstract_Settings::__construct() */
-	public function test_constructor() {
+	/** @see Abstract_Settings::get_id() */
+	public function test_get_id() {
 
-		$this->assertEquals( 'test-plugin', $this->get_settings_instance()->id );
+		$this->assertEquals( 'test-plugin', $this->get_settings_instance()->get_id() );
 	}
 
 
