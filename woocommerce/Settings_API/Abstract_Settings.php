@@ -205,6 +205,32 @@ abstract class Abstract_Settings {
 	}
 
 
+	/**
+	 * Gets the list of valid setting types.
+	 *
+	 * @return array
+	 */
+	public function get_setting_types() {
+
+		$setting_types = [
+			Setting::TYPE_STRING,
+			Setting::TYPE_URL,
+			Setting::TYPE_EMAIL,
+			Setting::TYPE_INTEGER,
+			Setting::TYPE_FLOAT,
+			Setting::TYPE_BOOLEAN,
+		];
+
+		/**
+		 * Filters the list of valid setting types.
+		 *
+		 * @param array $setting_types valid setting types
+		 * @param Abstract_Settings $settings the settings handler instance
+		 */
+		return apply_filters( "{$this->get_id()}_setting_types", $setting_types, $this );
+	}
+
+
 }
 
 endif;
