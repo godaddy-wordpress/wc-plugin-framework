@@ -18,6 +18,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 		require_once( 'woocommerce/class-sv-wc-plugin-exception.php' );
 		require_once( 'woocommerce/class-sv-wc-helper.php' );
+		require_once( 'woocommerce/Settings_API/Abstract_Settings.php' );
 		require_once( 'woocommerce/Settings_API/Setting.php' );
 	}
 
