@@ -47,11 +47,11 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function test_unregister_setting() {
 
-		$this->assertInstanceOf( Setting::class, $this->get_settings_instance()->get_setting( 'test-setting' ) );
+		$this->assertInstanceOf( Setting::class, $this->get_settings_instance()->get_setting( 'test-setting-a' ) );
 
-		$this->get_settings_instance()->unregister_setting( 'test-setting' );
+		$this->get_settings_instance()->unregister_setting( 'test-setting-a' );
 
-		$this->assertNull( $this->get_settings_instance()->get_setting( 'test-setting' ) );
+		$this->assertNull( $this->get_settings_instance()->get_setting( 'test-setting-a' ) );
 	}
 
 
