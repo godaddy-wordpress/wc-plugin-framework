@@ -106,7 +106,9 @@ abstract class Abstract_Settings {
 
 
 	/**
-	 * Gets all registered settings.
+	 * Gets registered settings.
+	 *
+	 * It returns all settings by default, but you can pass an array of IDs to filter the results.
 	 *
 	 * @param string[] $ids setting IDs to get
 	 * @return Setting[]
