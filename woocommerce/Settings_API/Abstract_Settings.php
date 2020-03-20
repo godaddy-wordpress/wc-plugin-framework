@@ -156,6 +156,8 @@ abstract class Abstract_Settings {
 	/**
 	 * Converts the value of a setting to be stored in an option.
 	 *
+	 * @since x.y.z
+	 *
 	 * @param Setting $setting
 	 * @return mixed
 	 */
@@ -173,6 +175,8 @@ abstract class Abstract_Settings {
 
 	/**
 	 * Converts the stored value of a setting to the proper setting type.
+	 *
+	 * @since x.y.z
 	 *
 	 * @param mixed $value the value stored in an option
 	 * @param Setting $setting
