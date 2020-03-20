@@ -122,6 +122,12 @@ class Settings extends \WP_REST_Controller {
 	}
 
 
+	// TODO: get_items()
+
+
+	// TODO: get_item()
+
+
 	/** Update methods ************************************************************************************************/
 
 
@@ -141,6 +147,18 @@ class Settings extends \WP_REST_Controller {
 
 		return true;
 	}
+
+
+	// TODO: update_item()
+
+
+	/** Utility methods ***********************************************************************************************/
+
+
+	// TODO: prepare_item_for_response()
+
+
+	// TODO: get_item_schema()
 
 
 }
