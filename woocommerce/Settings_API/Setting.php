@@ -280,6 +280,13 @@ class Setting {
 	 */
 	public function set_options( $options ) {
 
+		foreach ( $options as $key => $option ) {
+
+			if ( ! $this->validate_value( $option ) ) {
+				unset( $options[ $key ] );
+			}
+		}
+
 		$this->options = $options;
 	}
 
