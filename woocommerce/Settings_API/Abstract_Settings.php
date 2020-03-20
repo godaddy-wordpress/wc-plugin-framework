@@ -171,6 +171,23 @@ abstract class Abstract_Settings {
 	}
 
 
+	/**
+	 * Converts the stored value of a setting to the proper setting type.
+	 *
+	 * @param mixed $value the value stored in an option
+	 * @param Setting $setting
+	 * @return mixed
+	 */
+	protected function get_value_from_database( $value, Setting $setting ) {
+
+		if ( null !== $value && Setting::TYPE_BOOLEAN === $setting->get_type() ) {
+			$value = wc_string_to_bool( $value );
+		}
+
+		return $value;
+	}
+
+
 }
 
 endif;
