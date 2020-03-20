@@ -327,6 +327,7 @@ class Setting {
 	 * Validates the setting value.
 	 *
 	 * TODO: add integration test to confirm URL values are properly validated {WV 2020-03-19}
+	 * TODO: add integration test to confirm email values are properly validated {WV 2020-03-19}
 	 *
 	 * @since x.y.z
 	 *
@@ -366,6 +367,20 @@ class Setting {
 	public function validate_url_value( $value ) {
 
 		return wc_is_valid_url( $value );
+	}
+
+
+	/**
+	 * Validates an email value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param mixed $value value to validate
+	 * @return bool
+	 */
+	public function validate_email_value( $value ) {
+
+		return is_email( $value );
 	}
 
 
