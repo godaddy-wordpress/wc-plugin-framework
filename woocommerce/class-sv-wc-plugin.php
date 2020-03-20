@@ -933,6 +933,21 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Gets the settings API handler instance.
+	 *
+	 * Plugins can use this to init the settings API handler.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return void|Abstract_Settings
+	 */
+	public function get_settings_handler() {
+
+		return;
+	}
+
+
+	/**
 	 * Returns the plugin version name.  Defaults to wc_{plugin id}_version
 	 *
 	 * @since 2.0.0
