@@ -78,4 +78,43 @@ class SettingTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/**
+	 * @see Setting::set_options()
+	 *
+	 * @param string $setting_type setting type
+	 * @param array $input input options
+	 * @param array $expected expected return options
+	 *
+	 * @dataProvider provider_set_options
+	 */
+	public function test_set_options( $setting_type, $input, $expected ) {
+
+		$setting = new Setting();
+		$setting->set_type( $setting_type );
+		$setting->set_options( $input );
+
+		$this->assertEquals( $expected, $setting->get_options() );
+	}
+
+
+	/**
+	 * Provider for test_set_options()
+	 *
+	 * @return array
+	 */
+	public function provider_set_options() {
+
+		require_once( 'woocommerce/Settings_API/Setting.php' );
+
+		return [
+			[ Setting::TYPE_STRING, [ 'example 1', 'example 2', 0 ], [ 'example 1', 'example 2' ] ],
+			[ Setting::TYPE_URL, [ 'http://www.example1.test', 'https://www.example2.test', 'invalid-url' ], [ 'http://www.example1.test', 'https://www.example2.test' ] ],
+			[ Setting::TYPE_EMAIL, [ 'example@example1.test', 'example@example2.test', 'invalid-email' ], [ 'example@example1.test', 'example@example2.test' ] ],
+			[ Setting::TYPE_INTEGER, [ - 1, 1, 2, 2.4 ], [ - 1, 1, 2 ] ],
+			[ Setting::TYPE_FLOAT, [ 1.5, 2.5, - 3.0, 'invalid-float' ], [ 1.5, 2.5, - 3.0 ] ],
+			[ Setting::TYPE_BOOLEAN, [ true, false, 'invalid-boolean' ], [ true, false ] ],
+		];
+	}
+
+
 }
