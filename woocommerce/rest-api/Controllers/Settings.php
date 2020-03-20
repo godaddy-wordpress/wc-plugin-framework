@@ -58,6 +58,27 @@ class Settings extends \WP_REST_Controller {
 	}
 
 
+	/** Read methods **************************************************************************************************/
+
+
+	/**
+	 * Checks whether the user has permissions to get settings.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param \WP_REST_Request $request request object
+	 * @return bool|\WP_Error
+	 */
+	public function get_items_permissions_check( $request ) {
+
+		if ( ! wc_rest_check_manager_permissions( 'settings', 'read' ) ) {
+			return new \WP_Error( 'wc_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce-plugin-framework' ), [ 'status' => rest_authorization_required_code() ] );
+		}
+
+		return true;
+	}
+
+
 }
 
 endif;
