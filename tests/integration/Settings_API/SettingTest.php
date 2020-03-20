@@ -23,6 +23,44 @@ class SettingTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
+	 * @see Setting::set_default()
+	 *
+	 * @param mixed $value default value to try and set
+	 * @param string $expected expected default value
+	 * @param bool $is_multi whether the setting should be multi
+	 *
+	 * @dataProvider provider_set_default
+	 */
+	public function test_set_default( $value, $expected, $is_multi = false ) {
+
+		$setting = new Setting();
+		$setting->set_type( Setting::TYPE_STRING );
+		$setting->set_is_multi( $is_multi );
+		$setting->set_default( $value );
+
+		$this->assertSame( $expected, $setting->get_default() );
+	}
+
+
+	/** @see test_set_default() */
+	public function provider_set_default() {
+
+		return [
+			[ 'valid', 'valid' ],
+			[ 1, null ],
+			[ [ 'string-0', 'string-1' ], [ 'string-0', 'string-1' ], true ],
+			[ [ 'string-0', 1 ], [ 'string-0' ], true ],
+			[ [ 1, 2 ], null, true ],
+			[ [], null, true ],
+			[ 'valid', [ 'valid' ], true ],
+			[ 1, null, true ],
+			[ null, null ],
+			[ null, null, true ],
+		];
+	}
+
+
+	/**
 	 * @see Setting::validate_value()
 	 *
 	 * @param mixed $value value to pass to method
