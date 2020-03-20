@@ -39,7 +39,7 @@ abstract class Abstract_Settings {
 
 
 	/** @var string settings ID */
-	public $id = '';
+	public $id;
 
 	/** @var Setting[] registered settings */
 	protected $settings = [];
