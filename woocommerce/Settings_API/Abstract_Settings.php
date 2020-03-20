@@ -91,6 +91,30 @@ abstract class Abstract_Settings {
 
 
 	/**
+	 * Gets all registered settings.
+	 *
+	 * @param array $ids setting IDs to get
+	 * @return Setting[]
+	 */
+	public function get_settings( array $ids = [] ) {
+
+		$settings = $this->settings;
+
+		if ( ! empty( $ids ) ) {
+
+			foreach ( array_keys( $this->settings ) as $id ) {
+
+				if ( ! in_array( $id, $ids, true ) ) {
+					unset( $settings[ $id ] );
+				}
+			}
+		}
+
+		return $settings;
+	}
+
+
+	/**
 	 * Gets a setting object.
 	 *
 	 * @since x.y.z
