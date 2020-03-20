@@ -333,7 +333,9 @@ class Setting {
 	 */
 	public function validate_value( $value ) {
 
-		return true;
+		$validate_method = "validate_{$this->get_type()}_value";
+
+		return is_callable( [ $this, $validate_method ] ) ? $this->$validate_method( $value ) : true;
 	}
 
 
