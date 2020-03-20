@@ -81,7 +81,7 @@ class ControlTest extends \Codeception\Test\Unit {
 		];
 
 		$control = new Control();
-		$control->set_options( $options );
+		$control->set_options( $options, [ 'option-1', 'option-2' ] );
 
 		$this->assertSame( $options, $control->get_options() );
 	}
