@@ -58,6 +58,49 @@ class Settings extends \WP_REST_Controller {
 	}
 
 
+	/**
+	 * Registers the API routes.
+	 *
+	 * @since x.y.z
+	 */
+	public function register_routes() {
+
+		register_rest_route(
+			$this->namespace, "/{$this->rest_base}", [
+				[
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
+		);
+
+		register_rest_route(
+			$this->namespace, "/{$this->rest_base}/(?P<id>[\w-]+)", [
+				'args' => [
+					'id' => [
+						'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
+						'type'        => 'string',
+					],
+				],
+				[
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_item' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+				],
+				[
+					'methods'             => \WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'update_item' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::EDITABLE ),
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
+		);
+	}
+
+
 	/** Read methods **************************************************************************************************/
 
 
