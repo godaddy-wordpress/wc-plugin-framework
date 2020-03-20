@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1 as Framework;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Settings_API\\Abstract_Settings' ) ) :
@@ -125,6 +127,29 @@ abstract class Abstract_Settings {
 	public function get_setting( $id ) {
 
 		return ! empty( $this->settings[ $id ] ) ? $this->settings[ $id ] : null;
+	}
+
+
+	/**
+	 * Deletes the stored value for a setting.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $setting_id setting ID
+	 * @return bool
+	 * @throws Framework\SV_WC_Plugin_Exception
+	 */
+	public function delete_value( $setting_id ) {
+
+		$setting = $this->get_setting( $setting_id );
+
+		if ( ! $setting ) {
+			throw new Framework\SV_WC_Plugin_Exception( "Setting {$setting_id} does not exist" );
+		}
+
+		$setting->set_value( null );
+
+		return delete_option( "{$this->id}_{$setting->get_id()}" );
 	}
 
 
