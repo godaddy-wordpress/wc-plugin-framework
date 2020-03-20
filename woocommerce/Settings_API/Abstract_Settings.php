@@ -90,6 +90,20 @@ abstract class Abstract_Settings {
 	}
 
 
+	/**
+	 * Gets a setting object.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $id setting ID to get
+	 * @return Setting|null
+	 */
+	public function get_setting( $id ) {
+
+		return ! empty( $this->settings[ $id ] ) ? $this->settings[ $id ] : null;
+	}
+
+
 }
 
 endif;
