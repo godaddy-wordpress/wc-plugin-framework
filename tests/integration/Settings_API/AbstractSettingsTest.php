@@ -23,6 +23,7 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	protected function _before() {
 
 		require_once 'woocommerce/Settings_API/Abstract_Settings.php';
+		require_once 'woocommerce/Settings_API/Control.php';
 		require_once 'woocommerce/Settings_API/Setting.php';
 	}
 
@@ -119,6 +120,20 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 		} );
 
 		$this->assertEquals( [ 'my_type' ], $this->get_settings_instance()->get_setting_types() );
+	}
+
+
+	/** @see Abstract_Settings::get_control_types() */
+	public function test_get_control_types() {
+
+		$this->assertIsArray( $this->get_settings_instance()->get_control_types() );
+
+		add_filter( "{$this->get_settings_instance()->get_id()}_control_types", function() {
+
+			return [ 'my_type' ];
+		} );
+
+		$this->assertEquals( [ 'my_type' ], $this->get_settings_instance()->get_control_types() );
 	}
 
 
