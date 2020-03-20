@@ -496,11 +496,11 @@ abstract class Abstract_Settings {
 	 *
 	 * @since x.y.z
 	 *
-	 * @param string $setting_id setting ID
+	 * @param Setting $setting setting object
 	 * @param string[] $control_types setting valid control types
 	 * @return string[]
 	 */
-	public static function get_valid_control_types( $setting_id, $control_types ) {
+	public static function get_valid_control_types( $setting, $control_types ) {
 
 		// TODO: apply filter {DM 2020-03-20}
 
