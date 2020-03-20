@@ -341,7 +341,7 @@ class Setting {
 	 */
 	public function set_control( $control ) {
 
-		$control_types = $this->get_valid_control_types();
+		$control_types = Abstract_Settings::get_valid_control_types( $this->id, $this->get_valid_control_types() );
 
 		if ( ! empty( $control_types ) && ! in_array( $control->get_type(), $control_types, true ) ) {
 
