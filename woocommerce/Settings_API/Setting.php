@@ -412,6 +412,20 @@ class Setting {
 	}
 
 
+	/**
+	 * Validates a boolean value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param mixed $value value to validate
+	 * @return bool
+	 */
+	public function validate_boolean_value( $value ) {
+
+		return is_bool( $value );
+	}
+
+
 }
 
 endif;
