@@ -109,6 +109,22 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/** @see Abstract_Settings::get_value_for_database() */
+	public function test_get_value_for_database() {
+
+		// TODO: implement this test when save() is available {WV 2020-03-20}
+		$this->markTestSkipped();
+	}
+
+
+	/** @see Abstract_Settings::get_value_from_database() */
+	public function test_get_value_from_database() {
+
+		// TODO: implement this test when load_settings() is available {WV 2020-03-20}
+		$this->markTestSkipped();
+	}
+
+
 	/** @see Abstract_Settings::get_setting_types() */
 	public function test_get_setting_types() {
 
