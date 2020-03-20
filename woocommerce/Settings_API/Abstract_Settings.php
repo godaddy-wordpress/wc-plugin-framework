@@ -93,6 +93,19 @@ abstract class Abstract_Settings {
 
 
 	/**
+	 * Gets the settings ID.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_id() {
+
+		return $this->id;
+	}
+
+
+	/**
 	 * Gets all registered settings.
 	 *
 	 * @param array $ids setting IDs to get
