@@ -502,6 +502,8 @@ abstract class Abstract_Settings {
 	 */
 	public static function get_valid_control_types( $setting_id, $control_types ) {
 
+		// TODO: apply filter {DM 2020-03-20}
+
 		return $control_types;
 	}
 
