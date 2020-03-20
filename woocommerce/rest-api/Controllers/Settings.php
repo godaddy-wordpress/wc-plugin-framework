@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\REST_API\Controllers;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Abstract_Settings;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\REST_API\\Controllers\\Settings' ) ) :
@@ -34,6 +36,11 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\REST_API
  * @since x.y.z
  */
 class Settings extends \WP_REST_Controller {
+
+
+	/** @var Abstract_Settings settings handler */
+	protected $settings;
+
 
 }
 
