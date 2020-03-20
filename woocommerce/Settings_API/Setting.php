@@ -326,9 +326,6 @@ class Setting {
 	/**
 	 * Validates the setting value.
 	 *
-	 * TODO: add integration test to confirm URL values are properly validated {WV 2020-03-19}
-	 * TODO: add integration test to confirm email values are properly validated {WV 2020-03-19}
-	 *
 	 * @since x.y.z
 	 *
 	 * @param array|bool|float|int|string $value
