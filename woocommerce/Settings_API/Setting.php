@@ -323,6 +323,106 @@ class Setting {
 	}
 
 
+	/**
+	 * Validates the setting value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array|bool|float|int|string $value
+	 * @return bool
+	 */
+	public function validate_value( $value ) {
+
+		$validate_method = "validate_{$this->get_type()}_value";
+
+		return is_callable( [ $this, $validate_method ] ) ? $this->$validate_method( $value ) : true;
+	}
+
+
+	/**
+	 * Validates a string value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array|bool|float|int|string $value value to validate
+	 * @return bool
+	 */
+	protected function validate_string_value( $value ) {
+
+		return is_string( $value );
+	}
+
+
+	/**
+	 * Validates a URL value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array|bool|float|int|string $value value to validate
+	 * @return bool
+	 */
+	protected function validate_url_value( $value ) {
+
+		return wc_is_valid_url( $value );
+	}
+
+
+	/**
+	 * Validates an email value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param mixed $value value to validate
+	 * @return bool
+	 */
+	protected function validate_email_value( $value ) {
+
+		return (bool) is_email( $value );
+	}
+
+
+	/**
+	 * Validates an integer value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param mixed $value value to validate
+	 * @return bool
+	 */
+	public function validate_integer_value( $value ) {
+
+		return is_numeric( $value ) && ! is_float( $value );
+	}
+
+
+	/**
+	 * Validates a float value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param mixed $value value to validate
+	 * @return bool
+	 */
+	protected function validate_float_value( $value ) {
+
+		return is_float( $value );
+	}
+
+
+	/**
+	 * Validates a boolean value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param mixed $value value to validate
+	 * @return bool
+	 */
+	protected function validate_boolean_value( $value ) {
+
+		return is_bool( $value );
+	}
+
+
 }
 
 endif;
