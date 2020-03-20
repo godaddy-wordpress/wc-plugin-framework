@@ -326,6 +326,8 @@ class Setting {
 	/**
 	 * Validates the setting value.
 	 *
+	 * TODO: add integration test to confirm URL values are properly validated {WV 2020-03-19}
+	 *
 	 * @since x.y.z
 	 *
 	 * @param array|bool|float|int|string $value
@@ -350,6 +352,20 @@ class Setting {
 	protected function validate_string_value( $value ) {
 
 		return is_string( $value );
+	}
+
+
+	/**
+	 * Validates a URL value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array|bool|float|int|string $value value to validate
+	 * @return bool
+	 */
+	public function validate_url_value( $value ) {
+
+		return wc_is_valid_url( $value );
 	}
 
 
