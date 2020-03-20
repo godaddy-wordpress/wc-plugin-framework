@@ -260,7 +260,7 @@ abstract class Abstract_Settings {
 		/**
 		 * Filters the list of valid control types.
 		 *
-		 * @param array $setting_types valid control types
+		 * @param string[] $control_types valid control types
 		 * @param Abstract_Settings $settings the settings handler instance
 		 */
 		return apply_filters( "wc_{$this->get_id()}_settings_api_control_types", $control_types, $this );
