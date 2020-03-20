@@ -73,8 +73,8 @@ class Control {
 
 	/** @var string the range control type */
 	const TYPE_RANGE = 'range';
-  
-  
+
+
 	/** @var string|null the setting ID to which this control belongs */
 	protected $setting_id;
 
