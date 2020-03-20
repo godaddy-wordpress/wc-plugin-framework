@@ -29,6 +29,18 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/** Tests *********************************************************************************************************/
+
+
+	/**
+	 * Tests constructor sets $id property.
+	 */
+	public function test_constructor() {
+
+		$this->assertEquals( 'test-plugin', $this->get_settings()->id );
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
