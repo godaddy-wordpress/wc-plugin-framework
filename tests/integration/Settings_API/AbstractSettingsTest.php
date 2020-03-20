@@ -1,6 +1,6 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Abstract_Settings;
 
 /**
  * Tests for the Abstract_Settings class.
@@ -14,7 +14,7 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	protected $tester;
 
 
-	/** @var Framework\Settings_API\Abstract_Settings */
+	/** @var Abstract_Settings */
 	protected $settings;
 
 
@@ -32,9 +32,7 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	/** Tests *********************************************************************************************************/
 
 
-	/**
-	 * Tests constructor sets $id property.
-	 */
+	/** @see Abstract_Settings::__construct() */
 	public function test_constructor() {
 
 		$this->assertEquals( 'test-plugin', $this->get_settings()->id );
@@ -47,13 +45,13 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	/**
 	 * Gets the settings instance.
 	 *
-	 * @return Framework\Settings_API\Abstract_Settings
+	 * @return Abstract_Settings
 	 */
 	protected function get_settings() {
 
 		if ( null === $this->settings ) {
 
-			$this->settings = new class( 'test-plugin' ) extends Framework\Settings_API\Abstract_Settings {
+			$this->settings = new class( 'test-plugin' ) extends Abstract_Settings {
 
 
 				protected function register_settings() {
