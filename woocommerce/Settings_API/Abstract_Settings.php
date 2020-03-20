@@ -87,7 +87,7 @@ abstract class Abstract_Settings {
 	 * @param array $args setting arguments
 	 * @return bool
 	 */
-	public function register_setting( $id, $type, array $args ) {
+	public function register_setting( $id, $type, array $args = [] ) {
 
 		try {
 
