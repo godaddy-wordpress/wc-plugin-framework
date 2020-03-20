@@ -39,7 +39,7 @@ abstract class Abstract_Settings {
 
 
 	/** @var string settings ID */
-	public $id = '';
+	public $id;
 
 	/** @var Setting[] registered settings */
 	protected $settings = [];
@@ -106,9 +106,11 @@ abstract class Abstract_Settings {
 
 
 	/**
-	 * Gets all registered settings.
+	 * Gets registered settings.
 	 *
-	 * @param array $ids setting IDs to get
+	 * It returns all settings by default, but you can pass an array of IDs to filter the results.
+	 *
+	 * @param string[] $ids setting IDs to get
 	 * @return Setting[]
 	 */
 	public function get_settings( array $ids = [] ) {
@@ -210,7 +212,7 @@ abstract class Abstract_Settings {
 	 *
 	 * @since x.y.z
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public function get_setting_types() {
 
@@ -226,7 +228,7 @@ abstract class Abstract_Settings {
 		/**
 		 * Filters the list of valid setting types.
 		 *
-		 * @param array $setting_types valid setting types
+		 * @param string[] $setting_types valid setting types
 		 * @param Abstract_Settings $settings the settings handler instance
 		 */
 		return apply_filters( "wc_{$this->get_id()}_settings_api_setting_types", $setting_types, $this );
@@ -238,7 +240,7 @@ abstract class Abstract_Settings {
 	 *
 	 * @since x.y.z
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public function get_control_types() {
 
@@ -260,7 +262,7 @@ abstract class Abstract_Settings {
 		/**
 		 * Filters the list of valid control types.
 		 *
-		 * @param array $setting_types valid control types
+		 * @param string[] $control_types valid control types
 		 * @param Abstract_Settings $settings the settings handler instance
 		 */
 		return apply_filters( "wc_{$this->get_id()}_settings_api_control_types", $control_types, $this );

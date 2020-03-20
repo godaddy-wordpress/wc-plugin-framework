@@ -23,6 +23,44 @@ class SettingTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
+	 * @see Setting::set_default()
+	 *
+	 * @param mixed $value default value to try and set
+	 * @param string $expected expected default value
+	 * @param bool $is_multi whether the setting should be multi
+	 *
+	 * @dataProvider provider_set_default
+	 */
+	public function test_set_default( $value, $expected, $is_multi = false ) {
+
+		$setting = new Setting();
+		$setting->set_type( Setting::TYPE_STRING );
+		$setting->set_is_multi( $is_multi );
+		$setting->set_default( $value );
+
+		$this->assertSame( $expected, $setting->get_default() );
+	}
+
+
+	/** @see test_set_default() */
+	public function provider_set_default() {
+
+		return [
+			[ 'valid', 'valid' ],
+			[ 1, null ],
+			[ [ 'string-0', 'string-1' ], [ 'string-0', 'string-1' ], true ],
+			[ [ 'string-0', 1 ], [ 'string-0' ], true ],
+			[ [ 1, 2 ], null, true ],
+			[ [], null, true ],
+			[ 'valid', [ 'valid' ], true ],
+			[ 1, null, true ],
+			[ null, null ],
+			[ null, null, true ],
+		];
+	}
+
+
+	/**
 	 * @see Setting::validate_value()
 	 *
 	 * @param mixed $value value to pass to method
@@ -74,6 +112,45 @@ class SettingTest extends \Codeception\TestCase\WPTestCase {
 			[ 'no', Setting::TYPE_BOOLEAN, false ],
 			[ 1, Setting::TYPE_BOOLEAN, false ],
 			[ 0, Setting::TYPE_BOOLEAN, false ],
+		];
+	}
+
+
+	/**
+	 * @see Setting::set_options()
+	 *
+	 * @param string $setting_type setting type
+	 * @param array $input input options
+	 * @param array $expected expected return options
+	 *
+	 * @dataProvider provider_set_options
+	 */
+	public function test_set_options( $setting_type, $input, $expected ) {
+
+		$setting = new Setting();
+		$setting->set_type( $setting_type );
+		$setting->set_options( $input );
+
+		$this->assertEquals( $expected, $setting->get_options() );
+	}
+
+
+	/**
+	 * Provider for test_set_options()
+	 *
+	 * @return array
+	 */
+	public function provider_set_options() {
+
+		require_once( 'woocommerce/Settings_API/Setting.php' );
+
+		return [
+			[ Setting::TYPE_STRING, [ 'example 1', 'example 2', 0 ], [ 'example 1', 'example 2' ] ],
+			[ Setting::TYPE_URL, [ 'http://www.example1.test', 'https://www.example2.test', 'invalid-url' ], [ 'http://www.example1.test', 'https://www.example2.test' ] ],
+			[ Setting::TYPE_EMAIL, [ 'example@example1.test', 'example@example2.test', 'invalid-email' ], [ 'example@example1.test', 'example@example2.test' ] ],
+			[ Setting::TYPE_INTEGER, [ - 1, 1, 2, 2.4 ], [ - 1, 1, 2 ] ],
+			[ Setting::TYPE_FLOAT, [ 1.5, 2.5, - 3.0, 'invalid-float' ], [ 1.5, 2.5, - 3.0 ] ],
+			[ Setting::TYPE_BOOLEAN, [ true, false, 'invalid-boolean' ], [ true, false ] ],
 		];
 	}
 
