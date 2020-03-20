@@ -43,6 +43,40 @@ abstract class Abstract_Settings {
 	protected $settings = [];
 
 
+	/**
+	 * Constructs the class.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $id the ID of plugin or payment gateway that owns these settings
+	 */
+	public function __construct( $id ) {
+
+		$this->id = $id;
+
+		$this->register_settings();
+		$this->load_settings();
+	}
+
+
+	/**
+	 * Registers the settings.
+	 *
+	 * Plugins or payment gateways should overwrite this method to register their settings.
+	 *
+	 * @since x.y.z
+	 */
+	abstract protected function register_settings();
+
+
+	/**
+	 * Loads the values for all registered settings.
+	 *
+	 * @since x.y.z
+	 */
+	abstract protected function load_settings();
+
+
 }
 
 endif;
