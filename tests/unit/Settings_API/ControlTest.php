@@ -4,6 +4,7 @@ namespace Settings_API;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Control;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin_Exception;
+use TypeError;
 
 define( 'ABSPATH', true );
 
@@ -184,6 +185,78 @@ class ControlTest extends \Codeception\Test\Unit {
 			[ 'description', 'description' ],
 			[ '', '' ],
 			[ false, '', true ],
+		];
+	}
+
+
+	/**
+	 * @see Control::set_options()
+	 *
+	 * @param mixed $options value to pass to the method
+	 * @param mixed $valid_options valid option keys to check against
+	 * @param array $expected expected value
+	 * @param bool $exception whether an exception is expected
+	 *
+	 * @dataProvider provider_set_options
+	 */
+	public function test_set_options( $options, $valid_options, $expected, $exception = false ) {
+
+		if ( $exception ) {
+			$this->expectException( TypeError::class );
+		}
+
+		$control = new Control();
+		$control->set_options( $options, $valid_options );
+
+		$this->assertSame( $expected, $control->get_options() );
+	}
+
+
+	/** @see test_set_options() */
+	public function provider_set_options() {
+
+		return [
+			[
+				[],
+				[ 'b', 'd' ],
+				[],
+				false
+			],
+
+			[
+				[ 'a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D' ],
+				[ 'b', 'd' ],
+				[ 'b' => 'B', 'd' => 'D' ],
+				false
+			],
+
+			[
+				[ 'a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D' ],
+				[ 'x', 'y' ],
+				[],
+				false
+			],
+
+			[
+				[ 'a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D' ],
+				[],
+				[],
+				false
+			],
+
+			[
+				'a,b,c,d',
+				[],
+				[],
+				true
+			],
+
+			[
+				[ 'a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D' ],
+				'a',
+				[],
+				true
+			],
 		];
 	}
 
