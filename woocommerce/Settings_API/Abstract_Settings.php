@@ -208,6 +208,8 @@ abstract class Abstract_Settings {
 	/**
 	 * Gets the list of valid setting types.
 	 *
+	 * @since x.y.z
+	 *
 	 * @return array
 	 */
 	public function get_setting_types() {
@@ -228,6 +230,40 @@ abstract class Abstract_Settings {
 		 * @param Abstract_Settings $settings the settings handler instance
 		 */
 		return apply_filters( "{$this->get_id()}_setting_types", $setting_types, $this );
+	}
+
+
+	/**
+	 * Gets the list of valid control types.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return array
+	 */
+	public function get_control_types() {
+
+		$control_types = [
+			Control::TYPE_TEXT,
+			Control::TYPE_TEXTAREA,
+			Control::TYPE_NUMBER,
+			Control::TYPE_EMAIL,
+			Control::TYPE_PASSWORD,
+			Control::TYPE_DATE,
+			Control::TYPE_CHECKBOX,
+			Control::TYPE_RADIO,
+			Control::TYPE_SELECT,
+			Control::TYPE_FILE,
+			Control::TYPE_COLOR,
+			Control::TYPE_RANGE,
+		];
+
+		/**
+		 * Filters the list of valid contorl types.
+		 *
+		 * @param array $setting_types valid control types
+		 * @param Abstract_Settings $settings the settings handler instance
+		 */
+		return apply_filters( "{$this->get_id()}_control_types", $control_types, $this );
 	}
 
 
