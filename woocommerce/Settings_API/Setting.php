@@ -323,6 +323,20 @@ class Setting {
 	}
 
 
+	/**
+	 * Validates the setting value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array|bool|float|int|string $value
+	 * @return bool
+	 */
+	public function validate_value( $value ) {
+
+		return true;
+	}
+
+
 }
 
 endif;
