@@ -55,6 +55,33 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/**
+	 * @see Abstract_Settings::get_settings()
+	 *
+	 * @param array $ids settings IDs to get
+	 * @param array $expected_ids expected settings IDs to retrieve
+	 *
+	 * @dataProvider provider_get_settings
+	 */
+	public function test_get_settings( $ids, $expected_ids ) {
+
+		$settings = $this->get_settings_instance()->get_settings( $ids );
+
+		$this->assertEquals( array_keys( $settings ), $expected_ids );
+	}
+
+
+	/** @see test_get_settings() */
+	public function provider_get_settings() {
+
+		return [
+			[ [ 'test-setting-a', 'test-setting-b' ], [ 'test-setting-a', 'test-setting-b' ] ],
+			[ [], [ 'test-setting-a', 'test-setting-b', 'test-setting-c' ] ],
+			[ [ 'test-setting-x' ], [] ],
+		];
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
@@ -73,7 +100,9 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 				protected function register_settings() {
 
 					// TODO: remove when register_setting() is available and a setting object can be set in the test {WV 2020-03-20}
-					$this->settings['test-setting'] = new Setting();
+					$this->settings['test-setting-a'] = new Setting();
+					$this->settings['test-setting-b'] = new Setting();
+					$this->settings['test-setting-c'] = new Setting();
 				}
 
 
