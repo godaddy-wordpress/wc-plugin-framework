@@ -229,7 +229,7 @@ abstract class Abstract_Settings {
 		 * @param array $setting_types valid setting types
 		 * @param Abstract_Settings $settings the settings handler instance
 		 */
-		return apply_filters( "{$this->get_id()}_setting_types", $setting_types, $this );
+		return apply_filters( "wc_{$this->get_id()}_settings_api_setting_types", $setting_types, $this );
 	}
 
 
@@ -263,7 +263,7 @@ abstract class Abstract_Settings {
 		 * @param array $setting_types valid control types
 		 * @param Abstract_Settings $settings the settings handler instance
 		 */
-		return apply_filters( "{$this->get_id()}_control_types", $control_types, $this );
+		return apply_filters( "wc_{$this->get_id()}_settings_api_control_types", $control_types, $this );
 	}
 
 
