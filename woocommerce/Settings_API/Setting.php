@@ -169,7 +169,7 @@ class Setting {
 	 *
 	 * @since x.y.z
 	 *
-	 * @return array|bool|float|int|string
+	 * @return array|bool|float|int|string|null
 	 */
 	public function get_default() {
 
@@ -296,11 +296,23 @@ class Setting {
 	 *
 	 * @since x.y.z
 	 *
-	 * @param array|bool|float|int|string $default
+	 * @param array|bool|float|int|string|null $value default value to set
 	 */
-	public function set_default( $default ) {
+	public function set_default( $value ) {
 
-		$this->default = $default;
+		if ( $this->is_is_multi() ) {
+
+			$_value = array_filter( (array) $value, [ $this, 'validate_value' ] );
+
+			// clear the default if all values were invalid
+			$value = ! empty( $_value ) ? $_value : null;
+
+		} elseif ( ! $this->validate_value( $value ) ) {
+
+			$value = null;
+		}
+
+		$this->default = $value;
 	}
 
 
