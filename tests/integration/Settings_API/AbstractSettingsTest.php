@@ -108,6 +108,20 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/** @see Abstract_Settings::get_setting_types() */
+	public function test_get_setting_types() {
+
+		$this->assertIsArray( $this->get_settings_instance()->get_setting_types() );
+
+		add_filter( "{$this->get_settings_instance()->get_id()}_setting_types", function() {
+
+			return [ 'my_type' ];
+		} );
+
+		$this->assertEquals( [ 'my_type' ], $this->get_settings_instance()->get_setting_types() );
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
