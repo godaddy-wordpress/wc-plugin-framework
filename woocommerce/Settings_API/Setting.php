@@ -384,6 +384,20 @@ class Setting {
 	}
 
 
+	/**
+	 * Validates an integer value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param mixed $value value to validate
+	 * @return bool
+	 */
+	public function validate_integer_value( $value ) {
+
+		return is_numeric( $value ) && ! is_float( $value );
+	}
+
+
 }
 
 endif;
