@@ -364,7 +364,7 @@ class Setting {
 	 * @param array|bool|float|int|string $value value to validate
 	 * @return bool
 	 */
-	public function validate_url_value( $value ) {
+	protected function validate_url_value( $value ) {
 
 		return wc_is_valid_url( $value );
 	}
@@ -378,7 +378,7 @@ class Setting {
 	 * @param mixed $value value to validate
 	 * @return bool
 	 */
-	public function validate_email_value( $value ) {
+	protected function validate_email_value( $value ) {
 
 		return is_email( $value );
 	}
@@ -406,7 +406,7 @@ class Setting {
 	 * @param mixed $value value to validate
 	 * @return bool
 	 */
-	public function validate_float_value( $value ) {
+	protected function validate_float_value( $value ) {
 
 		return is_float( $value );
 	}
@@ -420,7 +420,7 @@ class Setting {
 	 * @param mixed $value value to validate
 	 * @return bool
 	 */
-	public function validate_boolean_value( $value ) {
+	protected function validate_boolean_value( $value ) {
 
 		return is_bool( $value );
 	}
