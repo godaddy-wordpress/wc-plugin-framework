@@ -108,7 +108,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Gets all registered settings.
 	 *
-	 * @param array $ids setting IDs to get
+	 * @param string[] $ids setting IDs to get
 	 * @return Setting[]
 	 */
 	public function get_settings( array $ids = [] ) {
@@ -210,7 +210,7 @@ abstract class Abstract_Settings {
 	 *
 	 * @since x.y.z
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public function get_setting_types() {
 
@@ -226,7 +226,7 @@ abstract class Abstract_Settings {
 		/**
 		 * Filters the list of valid setting types.
 		 *
-		 * @param array $setting_types valid setting types
+		 * @param string[] $setting_types valid setting types
 		 * @param Abstract_Settings $settings the settings handler instance
 		 */
 		return apply_filters( "wc_{$this->get_id()}_settings_api_setting_types", $setting_types, $this );
@@ -238,7 +238,7 @@ abstract class Abstract_Settings {
 	 *
 	 * @since x.y.z
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public function get_control_types() {
 
