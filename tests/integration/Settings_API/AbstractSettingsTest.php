@@ -1,5 +1,6 @@
 <?php
 
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1 as Framework;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Abstract_Settings;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting;
 
@@ -82,6 +83,31 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/** @see Abstract_Settings::delete_value() */
+	public function test_delete_value() {
+
+		$setting     = $this->get_settings_instance()->get_setting( 'test-setting-a' );
+		$option_name = $this->get_settings_instance()->id . '_' . $setting->get_id();
+
+		$this->assertNotEmpty( $setting->get_value() );
+		$this->assertNotEmpty( get_option( $option_name ) );
+
+		$this->get_settings_instance()->delete_value( $setting->get_id() );
+
+		$this->assertNull( $setting->get_value() );
+		$this->assertFalse( get_option( $option_name ) );
+	}
+
+
+	/** @see Abstract_Settings::delete_value() */
+	public function test_delete_value_exception() {
+
+		$this->expectException( Framework\SV_WC_Plugin_Exception::class );
+
+		$this->get_settings_instance()->delete_value( 'not_a_setting' );
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
@@ -103,6 +129,12 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 					$this->settings['test-setting-a'] = new Setting();
 					$this->settings['test-setting-b'] = new Setting();
 					$this->settings['test-setting-c'] = new Setting();
+
+					// TODO: remove when save() is available
+					$this->settings['test-setting-a']->set_id( 'test-setting-a' );
+					$this->settings['test-setting-a']->set_value( 'example' );
+
+					update_option( "{$this->id}_{$this->settings['test-setting-a']->get_id()}", 'something' );
 				}
 
 
