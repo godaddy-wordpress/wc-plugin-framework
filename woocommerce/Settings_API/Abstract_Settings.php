@@ -77,6 +77,19 @@ abstract class Abstract_Settings {
 	abstract protected function load_settings();
 
 
+	/**
+	 * Unregisters a setting.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $id setting ID to unregister
+	 */
+	public function unregister_setting( $id ) {
+
+		unset( $this->settings[ $id ] );
+	}
+
+
 }
 
 endif;
