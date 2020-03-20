@@ -4,6 +4,7 @@ namespace Settings_API;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Control;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin_Exception;
 
 define( 'ABSPATH', true );
 
@@ -15,6 +16,8 @@ class SettingTest extends \Codeception\Test\Unit {
 	 */
 	protected function _before() {
 
+		require_once( 'woocommerce/class-sv-wc-plugin-exception.php' );
+		require_once( 'woocommerce/class-sv-wc-helper.php' );
 		require_once( 'woocommerce/Settings_API/Setting.php' );
 	}
 
@@ -135,8 +138,8 @@ class SettingTest extends \Codeception\Test\Unit {
 	/**
 	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting::set_default()
 	 *
-	 * @param array $input input default value
-	 * @param array $expected expected return default value
+	 * @param int|float|string|bool|array $input input default value
+	 * @param int|float|string|bool|array $expected expected return default value
 	 *
 	 * @dataProvider provider_set_default
 	 */
@@ -152,8 +155,8 @@ class SettingTest extends \Codeception\Test\Unit {
 	/**
 	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting::set_value()
 	 *
-	 * @param array $input input value
-	 * @param array $expected expected return value
+	 * @param int|float|string|bool|array $input input value
+	 * @param int|float|string|bool|array $expected expected return value
 	 *
 	 * @dataProvider provider_set_value
 	 */
@@ -169,17 +172,32 @@ class SettingTest extends \Codeception\Test\Unit {
 	/**
 	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting::set_control()
 	 *
-	 * @param array $input input control
-	 * @param array $expected expected return control
+	 * @param Control $input input control
+	 * @param array $allowed_types allowed control types
+	 * @param Control $expected expected return control
+	 * @param bool $exception whether an exception is expected
+	 * @throws SV_WC_Plugin_Exception
 	 *
 	 * @dataProvider provider_set_control
 	 */
-	public function test_set_control( $input, $expected ) {
+	public function test_set_control( $input, array $allowed_types, $expected, $exception = false ) {
 
-		$setting = new Setting();
-		$setting->set_control( $input );
+		if ( $exception ) {
+			$this->expectException( SV_WC_Plugin_Exception::class );
+		}
 
-		$this->assertEquals( $expected, $setting->get_control() );
+		// create a mock for the Setting class
+		$setting_mock = $this->getMockBuilder(Setting::class)
+		                 ->onlyMethods(['get_valid_control_types'])
+		                 ->getMock();
+
+		// configure the mock to return the desired allowed_types
+		$setting_mock->method( 'get_valid_control_types' )
+		             ->willReturn( $allowed_types );
+
+		$setting_mock->set_control( $input );
+
+		$this->assertEquals( $expected, $setting_mock->get_control() );
 	}
 
 
@@ -324,10 +342,16 @@ class SettingTest extends \Codeception\Test\Unit {
 
 		require_once( 'woocommerce/Settings_API/Control.php' );
 
-		$control = new Control();
+		$valid_control = new Control();
+		$valid_control->set_type( Control::TYPE_TEXT );
+
+		$invalid_control = new Control();
+		$invalid_control->set_type( Control::TYPE_COLOR );
 
 		return [
-			[ $control, $control ],
+			[ $valid_control, [], $valid_control ], // any control type
+			[ $valid_control, [ Control::TYPE_TEXT ], $valid_control ], // valid control type
+			[ $invalid_control, [ Control::TYPE_CHECKBOX ], $invalid_control, true ], // invalid control type
 		];
 	}
 
