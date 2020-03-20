@@ -37,7 +37,7 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	/** @see Abstract_Settings::__construct() */
 	public function test_constructor() {
 
-		$this->assertEquals( 'test-plugin', $this->get_settings()->id );
+		$this->assertEquals( 'test-plugin', $this->get_settings_instance()->id );
 	}
 
 
@@ -47,11 +47,11 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function test_unregister_setting() {
 
-		$this->assertInstanceOf( Setting::class, $this->get_settings()->get_setting( 'test-setting' ) );
+		$this->assertInstanceOf( Setting::class, $this->get_settings_instance()->get_setting( 'test-setting' ) );
 
-		$this->get_settings()->unregister_setting( 'test-setting' );
+		$this->get_settings_instance()->unregister_setting( 'test-setting' );
 
-		$this->assertNull( $this->get_settings()->get_setting( 'test-setting' ) );
+		$this->assertNull( $this->get_settings_instance()->get_setting( 'test-setting' ) );
 	}
 
 
@@ -63,7 +63,7 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @return Abstract_Settings
 	 */
-	protected function get_settings() {
+	protected function get_settings_instance() {
 
 		if ( null === $this->settings ) {
 
