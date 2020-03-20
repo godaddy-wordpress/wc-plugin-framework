@@ -162,7 +162,7 @@ abstract class Abstract_Settings {
 
 		$setting->set_value( null );
 
-		return delete_option( "{$this->id}_{$setting->get_id()}" );
+		return delete_option( "{$this->get_option_name_prefix()}_{$setting->get_id()}" );
 	}
 
 

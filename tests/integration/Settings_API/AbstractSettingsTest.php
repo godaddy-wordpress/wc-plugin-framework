@@ -88,7 +88,7 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	public function test_delete_value() {
 
 		$setting     = $this->get_settings_instance()->get_setting( 'test-setting-a' );
-		$option_name = $this->get_settings_instance()->id . '_' . $setting->get_id();
+		$option_name = $this->get_settings_instance()->get_option_name_prefix() . '_' . $setting->get_id();
 
 		$this->assertNotEmpty( $setting->get_value() );
 		$this->assertNotEmpty( get_option( $option_name ) );
@@ -179,7 +179,7 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 					$this->settings['test-setting-a']->set_id( 'test-setting-a' );
 					$this->settings['test-setting-a']->set_value( 'example' );
 
-					update_option( "{$this->id}_{$this->settings['test-setting-a']->get_id()}", 'something' );
+					update_option( "{$this->get_option_name_prefix()}_{$this->settings['test-setting-a']->get_id()}", 'something' );
 				}
 
 
