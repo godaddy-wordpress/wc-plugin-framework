@@ -35,6 +35,14 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Settings
  */
 abstract class Abstract_Settings {
 
+
+	/** @var string settings ID */
+	public $id = '';
+
+	/** @var Setting[] registered settings */
+	protected $settings = [];
+
+
 }
 
 endif;
