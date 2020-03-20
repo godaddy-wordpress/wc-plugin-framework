@@ -44,6 +44,35 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
+	 * @see Abstract_Settings::register_setting()
+	 * @see Abstract_Settings::get_setting()
+	 */
+	public function test_register_setting() {
+
+		$this->assertTrue( $this->get_settings_instance()->register_setting( 'test-setting-d', Setting::TYPE_EMAIL, [
+			'name'        => 'Test Setting D',
+			'description' => 'Description of setting D',
+		] ) );
+
+		$this->assertInstanceOf( Setting::class, $this->get_settings_instance()->get_setting( 'test-setting-d' ) );
+
+		// existing setting ID
+		$this->assertFalse( $this->get_settings_instance()->register_setting( 'test-setting-d', Setting::TYPE_EMAIL, [
+			'name'        => 'Test Setting D',
+			'description' => 'Description of setting D',
+		] ) );
+
+		// invalid setting type
+		$this->assertFalse( $this->get_settings_instance()->register_setting( 'test-setting-e', 'invalid-type', [
+			'name'        => 'Test Setting E',
+			'description' => 'Description of setting E',
+		] ) );
+
+		$this->assertNull( $this->get_settings_instance()->get_setting( 'test-setting-e' ) );
+	}
+
+
+	/**
 	 * @see Abstract_Settings::unregister_setting()
 	 * @see Abstract_Settings::get_setting()
 	 */
