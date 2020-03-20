@@ -398,6 +398,20 @@ class Setting {
 	}
 
 
+	/**
+	 * Validates a float value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param mixed $value value to validate
+	 * @return bool
+	 */
+	public function validate_float_value( $value ) {
+
+		return is_float( $value );
+	}
+
+
 }
 
 endif;
