@@ -380,7 +380,7 @@ class Setting {
 	 */
 	protected function validate_email_value( $value ) {
 
-		return is_email( $value );
+		return (bool) is_email( $value );
 	}
 
 
