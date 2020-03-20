@@ -29,4 +29,39 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/** Helper methods ************************************************************************************************/
+
+
+	/**
+	 * Gets the settings instance.
+	 *
+	 * @return Framework\Settings_API\Abstract_Settings
+	 */
+	protected function get_settings() {
+
+		if ( null === $this->settings ) {
+
+			$this->settings = new class( 'test-plugin' ) extends Framework\Settings_API\Abstract_Settings {
+
+
+				protected function register_settings() {
+
+				}
+
+
+				/**
+				 * TODO: remove when load_settings() is implemented in Framework\Settings_API\Abstract_Settings {WV 2020-03-20}
+				 */
+				protected function load_settings() {
+
+				}
+
+
+			};
+		}
+
+		return $this->settings;
+	}
+
+
 }
