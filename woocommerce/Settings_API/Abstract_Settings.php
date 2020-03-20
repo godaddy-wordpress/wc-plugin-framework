@@ -258,7 +258,7 @@ abstract class Abstract_Settings {
 		];
 
 		/**
-		 * Filters the list of valid contorl types.
+		 * Filters the list of valid control types.
 		 *
 		 * @param array $setting_types valid control types
 		 * @param Abstract_Settings $settings the settings handler instance
