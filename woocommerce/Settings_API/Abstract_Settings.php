@@ -267,6 +267,19 @@ abstract class Abstract_Settings {
 	}
 
 
+	/**
+	 * Gets the prefix for db option names.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_option_name_prefix() {
+
+		return "wc_{$this->id}";
+	}
+
+
 }
 
 endif;
