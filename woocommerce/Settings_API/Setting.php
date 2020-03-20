@@ -337,6 +337,20 @@ class Setting {
 	}
 
 
+	/**
+	 * Validates a string value.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array|bool|float|int|string $value value to validate
+	 * @return bool
+	 */
+	protected function validate_string_value( $value ) {
+
+		return is_string( $value );
+	}
+
+
 }
 
 endif;
