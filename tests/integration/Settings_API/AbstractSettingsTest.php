@@ -116,7 +116,11 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	/** @see Abstract_Settings::delete_value() */
 	public function test_delete_value() {
 
-		$setting     = $this->get_settings_instance()->get_setting( 'test-setting-a' );
+		$setting = $this->get_settings_instance()->get_setting( 'test-setting-a' );
+
+		$setting->set_value( 'something' );
+		$this->get_settings_instance()->save( 'test-setting-a' );
+
 		$option_name = $this->get_settings_instance()->get_option_name_prefix() . '_' . $setting->get_id();
 
 		$this->assertNotEmpty( $setting->get_value() );
@@ -215,11 +219,6 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 						'description' => 'Description of setting C',
 						'default'     => true,
 					] );
-
-					// TODO: remove when save() is available
-					$this->settings['test-setting-a']->set_value( 'example' );
-
-					update_option( "{$this->get_option_name_prefix()}_{$this->settings['test-setting-a']->get_id()}", 'something' );
 				}
 
 
