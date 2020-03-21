@@ -3,6 +3,7 @@
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1 as Framework;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Abstract_Settings;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Control;
 
 /**
  * Tests for the Abstract_Settings class.
@@ -83,6 +84,45 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 		$this->get_settings_instance()->unregister_setting( 'test-setting-a' );
 
 		$this->assertNull( $this->get_settings_instance()->get_setting( 'test-setting-a' ) );
+	}
+
+
+	/**
+	 * @see Abstract_Settings::registr_control()
+	 *
+	 * @param string $setting_id the setting ID
+	 * @param string $control_type the control type
+	 * @param bool $expected whether the expected return value for register_control()
+	 *
+	 * @dataProvider provider_register_control
+	 */
+	public function test_register_control( $setting_id, $control_type, $expected ) {
+
+		$this->get_settings_instance()->register_setting( 'registered_setting', Setting::TYPE_STRING );
+
+		$this->assertSame( $expected, $this->get_settings_instance()->register_control( $setting_id, $control_type ) );
+
+		if ( $expected ) {
+
+			$this->assertInstanceOf( Control::class, $this->get_settings_instance()->get_setting( $setting_id )->get_control() );
+
+		} elseif ( $setting = $this->get_settings_instance()->get_setting( $setting_id ) ) {
+
+			$this->assertNull( $setting->get_control() );
+		}
+	}
+
+
+	/** @see test_register_control() */
+	public function provider_register_control() {
+
+		require_once 'woocommerce/Settings_API/Control.php';
+
+		return [
+			[ 'unknown_setting',    Control::TYPE_TEXT, false ],
+			[ 'registered_setting', 'invalid_type',     false ],
+			[ 'registered_setting', Control::TYPE_TEXT, true ],
+		];
 	}
 
 
