@@ -235,4 +235,33 @@ class SettingTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/**
+	 * @see Setting::set_control()
+	 *
+	 * @param string $setting_type setting type
+	 * @param Control $input input control
+	 * @param Control $expected expected return control
+	 * @param bool $exception whether an exception is expected
+	 *
+	 * @dataProvider provider_set_control
+	 */
+	public function test_set_control( $setting_type, $input, $expected, $exception = false ) {
+
+		// TODO: implement when valid control types filter is available {DM 2020-03-20}
+		$this->markTestSkipped();
+	}
+
+
+	/**
+	 * Provider for test_set_control()
+	 *
+	 * @return array
+	 */
+	public function provider_set_control() {
+
+		// TODO: implement when valid control types filter is available {DM 2020-03-20}
+		return [];
+	}
+
+
 }
