@@ -253,7 +253,7 @@ abstract class Abstract_Settings {
 
 			} else {
 
-				update_option( "{$this->get_option_name_prefix()}_{$this->settings['test-setting-a']->get_id()}", $this->get_value_for_database( $setting ) );
+				update_option( $option_name, $this->get_value_for_database( $setting ) );
 			}
 		}
 	}
