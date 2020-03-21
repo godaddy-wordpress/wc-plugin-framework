@@ -44,6 +44,35 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
+	 * @see Abstract_Settings::register_setting()
+	 * @see Abstract_Settings::get_setting()
+	 */
+	public function test_register_setting() {
+
+		$this->assertTrue( $this->get_settings_instance()->register_setting( 'test-setting-d', Setting::TYPE_EMAIL, [
+			'name'        => 'Test Setting D',
+			'description' => 'Description of setting D',
+		] ) );
+
+		$this->assertInstanceOf( Setting::class, $this->get_settings_instance()->get_setting( 'test-setting-d' ) );
+
+		// existing setting ID
+		$this->assertFalse( $this->get_settings_instance()->register_setting( 'test-setting-d', Setting::TYPE_EMAIL, [
+			'name'        => 'Test Setting D',
+			'description' => 'Description of setting D',
+		] ) );
+
+		// invalid setting type
+		$this->assertFalse( $this->get_settings_instance()->register_setting( 'test-setting-e', 'invalid-type', [
+			'name'        => 'Test Setting E',
+			'description' => 'Description of setting E',
+		] ) );
+
+		$this->assertNull( $this->get_settings_instance()->get_setting( 'test-setting-e' ) );
+	}
+
+
+	/**
 	 * @see Abstract_Settings::unregister_setting()
 	 * @see Abstract_Settings::get_setting()
 	 */
@@ -170,13 +199,24 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 
 				protected function register_settings() {
 
-					// TODO: remove when register_setting() is available and a setting object can be set in the test {WV 2020-03-20}
-					$this->settings['test-setting-a'] = new Setting();
-					$this->settings['test-setting-b'] = new Setting();
-					$this->settings['test-setting-c'] = new Setting();
+					$this->register_setting( 'test-setting-a', Setting::TYPE_STRING, [
+						'name'        => 'Test Setting A',
+						'description' => 'Description of setting A',
+					] );
+
+					$this->register_setting( 'test-setting-b', Setting::TYPE_INTEGER, [
+						'name'        => 'Test Setting B',
+						'description' => 'Description of setting B',
+						'default'     => 3600,
+					] );
+
+					$this->register_setting( 'test-setting-c', Setting::TYPE_BOOLEAN, [
+						'name'        => 'Test Setting C',
+						'description' => 'Description of setting C',
+						'default'     => true,
+					] );
 
 					// TODO: remove when save() is available
-					$this->settings['test-setting-a']->set_id( 'test-setting-a' );
 					$this->settings['test-setting-a']->set_value( 'example' );
 
 					update_option( "{$this->get_option_name_prefix()}_{$this->settings['test-setting-a']->get_id()}", 'something' );
