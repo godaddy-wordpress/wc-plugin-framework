@@ -126,6 +126,37 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/** @see Abstract_Settings::register_control() */
+	public function test_register_control_args() {
+
+		$setting_args = [
+			'name'        => 'Setting Name',
+			'description' => 'Setting Description',
+			'options'     => [ 'black', 'white' ],
+		];
+
+		$this->get_settings_instance()->register_setting( 'color', Setting::TYPE_STRING, $setting_args );
+
+		$this->get_settings_instance()->register_control( 'color', Control::TYPE_SELECT, [
+			'options' => [
+				'black' => 'Black',
+				'white' => 'White',
+				'red'	=> 'Red',
+			],
+		] );
+
+		$control = $this->get_settings_instance()->get_setting( 'color' )->get_control();
+
+		// TODO: uncomment assert for $control->get_options when https://github.com/skyverge/wc-plugin-framework/pull/453 is merged {WV 2020-03-20}
+
+		$this->assertEquals( 'color', $control->get_setting_id() );
+		$this->assertEquals( Control::TYPE_SELECT, $control->get_type() );
+		$this->assertEquals( $setting_args['name'], $control->get_name() );
+		$this->assertEquals( $setting_args['description'], $control->get_description() );
+		// $this->assertEquals( $setting_args['options'], array_keys( $control->get_options() ) );
+	}
+
+
 	/**
 	 * @see Abstract_Settings::get_settings()
 	 *
