@@ -243,10 +243,13 @@ class Control {
 	 */
 	public function set_options( array $options, array $valid_options = [] ) {
 
-		foreach ( array_keys( $options ) as $key ) {
+		if ( ! empty( $valid_options ) ) {
 
-			if ( ! in_array( $key, $valid_options, true ) ) {
-				unset( $options[ $key ] );
+			foreach ( array_keys( $options ) as $key ) {
+
+				if ( ! in_array( $key, $valid_options, true ) ) {
+					unset( $options[ $key ] );
+				}
 			}
 		}
 

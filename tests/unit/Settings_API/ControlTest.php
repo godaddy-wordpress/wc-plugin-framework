@@ -240,7 +240,7 @@ class ControlTest extends \Codeception\Test\Unit {
 			[
 				[ 'a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D' ],
 				[],
-				[],
+				[ 'a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D' ],
 				false
 			],
 
