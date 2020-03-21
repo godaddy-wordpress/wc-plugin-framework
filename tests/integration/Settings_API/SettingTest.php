@@ -99,12 +99,17 @@ class SettingTest extends \Codeception\TestCase\WPTestCase {
 			[ 'not-an-email.com', Setting::TYPE_EMAIL, false ],
 			[ '', Setting::TYPE_EMAIL, false ],
 
-			[ 1729, Setting::TYPE_INTEGER, true ],
-			[ 'hi', Setting::TYPE_INTEGER, false ],
+			[ 12345, Setting::TYPE_INTEGER, true ],
+			[ 1.345, Setting::TYPE_INTEGER, false ],
+			[ '234', Setting::TYPE_INTEGER, false ],
+			[ '2.4', Setting::TYPE_INTEGER, false ],
+			[ 'hey', Setting::TYPE_INTEGER, false ],
 
-			[ 3.14, Setting::TYPE_FLOAT, true ],
-			[ 3000, Setting::TYPE_FLOAT, false ],
-			[ 'hi', Setting::TYPE_FLOAT, false ],
+			[ 12345, Setting::TYPE_FLOAT, true ],
+			[ 1.345, Setting::TYPE_FLOAT, true ],
+			[ '234', Setting::TYPE_FLOAT, false ],
+			[ '2.4', Setting::TYPE_FLOAT, false ],
+			[ 'hey', Setting::TYPE_FLOAT, false ],
 
 			[ true, Setting::TYPE_BOOLEAN, true ],
 			[ false, Setting::TYPE_BOOLEAN, true ],
