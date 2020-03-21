@@ -92,17 +92,17 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @param string $setting_id the setting ID
 	 * @param string $control_type the control type
-	 * @param bool $expected whether the expected return value for register_control()
+	 * @param bool $registered whether the control should be succesfully registered or not
 	 *
 	 * @dataProvider provider_register_control
 	 */
-	public function test_register_control( $setting_id, $control_type, $expected ) {
+	public function test_register_control( $setting_id, $control_type, $registered ) {
 
 		$this->get_settings_instance()->register_setting( 'registered_setting', Setting::TYPE_STRING );
 
-		$this->assertSame( $expected, $this->get_settings_instance()->register_control( $setting_id, $control_type ) );
+		$this->assertSame( $registered, $this->get_settings_instance()->register_control( $setting_id, $control_type ) );
 
-		if ( $expected ) {
+		if ( $registered ) {
 
 			$this->assertInstanceOf( Control::class, $this->get_settings_instance()->get_setting( $setting_id )->get_control() );
 
