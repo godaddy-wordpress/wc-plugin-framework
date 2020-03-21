@@ -241,7 +241,7 @@ class Control {
 	 * @param array $options options to set
 	 * @param array $valid_options valid option keys to check against
 	 */
-	public function set_options( array $options, array $valid_options = array() ) {
+	public function set_options( array $options, array $valid_options = [] ) {
 
 		foreach ( array_keys( $options ) as $key ) {
 
