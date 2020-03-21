@@ -410,7 +410,7 @@ class Setting {
 	 */
 	public function validate_integer_value( $value ) {
 
-		return is_numeric( $value ) && ! is_float( $value );
+		return is_int( $value );
 	}
 
 
