@@ -16,8 +16,6 @@ class SettingTest extends \Codeception\Test\Unit {
 	 */
 	protected function _before() {
 
-		require_once( 'woocommerce/class-sv-wc-plugin-exception.php' );
-		require_once( 'woocommerce/class-sv-wc-helper.php' );
 		require_once( 'woocommerce/Settings_API/Abstract_Settings.php' );
 		require_once( 'woocommerce/Settings_API/Setting.php' );
 	}
@@ -174,31 +172,17 @@ class SettingTest extends \Codeception\Test\Unit {
 	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting::set_control()
 	 *
 	 * @param Control $input input control
-	 * @param array $allowed_types allowed control types
 	 * @param Control $expected expected return control
-	 * @param bool $exception whether an exception is expected
 	 * @throws SV_WC_Plugin_Exception
 	 *
 	 * @dataProvider provider_set_control
 	 */
-	public function test_set_control( $input, array $allowed_types, $expected, $exception = false ) {
+	public function test_set_control( $input, $expected ) {
 
-		if ( $exception ) {
-			$this->expectException( SV_WC_Plugin_Exception::class );
-		}
+		$setting = new Setting();
+		$setting->set_control( $input );
 
-		// create a mock for the Setting class
-		$setting_mock = $this->getMockBuilder(Setting::class)
-		                 ->onlyMethods(['get_valid_control_types'])
-		                 ->getMock();
-
-		// configure the mock to return the desired allowed_types
-		$setting_mock->method( 'get_valid_control_types' )
-		             ->willReturn( $allowed_types );
-
-		$setting_mock->set_control( $input );
-
-		$this->assertEquals( $expected, $setting_mock->get_control() );
+		$this->assertEquals( $expected, $setting->get_control() );
 	}
 
 
@@ -343,16 +327,10 @@ class SettingTest extends \Codeception\Test\Unit {
 
 		require_once( 'woocommerce/Settings_API/Control.php' );
 
-		$valid_control = new Control();
-		$valid_control->set_type( Control::TYPE_TEXT );
-
-		$invalid_control = new Control();
-		$invalid_control->set_type( Control::TYPE_COLOR );
+		$control = new Control();
 
 		return [
-			[ $valid_control, [], $valid_control ], // any control type
-			[ $valid_control, [ Control::TYPE_TEXT ], $valid_control ], // valid control type
-			[ $invalid_control, [ Control::TYPE_CHECKBOX ], $invalid_control, true ], // invalid control type
+			[ $control, $control ],
 		];
 	}
 
