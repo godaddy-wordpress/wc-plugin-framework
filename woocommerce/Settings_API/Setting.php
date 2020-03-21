@@ -484,9 +484,6 @@ class Setting {
 	}
 
 
-	/** Helper Methods ************************************************************************************************/
-
-
 	/**
 	 * Returns the valid control types for the setting.
 	 *
