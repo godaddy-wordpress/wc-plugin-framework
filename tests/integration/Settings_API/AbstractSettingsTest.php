@@ -113,6 +113,54 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/** @see Abstract_Settings::get_value() */
+	public function test_get_value() {
+
+		$setting = $this->get_settings_instance()->get_setting( 'test-setting-b' );
+		$setting->set_value( 1000 );
+		$this->get_settings_instance()->save( $setting->get_id() );
+
+		$this->assertEquals( 1000, $this->get_settings_instance()->get_value( $setting->get_id() ) );
+	}
+
+
+	/**
+	 * @see Abstract_Settings::get_value()
+	 *
+	 * @param mixed $expected_value the returned value
+	 * @param bool $with_default whether to return the default value if nothing is stored
+	 * @throws Framework\SV_WC_Plugin_Exception
+	 *
+	 * @dataProvider provider_get_value_nothing_stored
+	 */
+	public function test_get_value_nothing_stored( $expected_value, $with_default ) {
+
+		$setting = $this->get_settings_instance()->get_setting( 'test-setting-b' );
+		$this->get_settings_instance()->delete_value( $setting->get_id() );
+
+		$this->assertEquals( $expected_value, $this->get_settings_instance()->get_value( $setting->get_id(), $with_default ) );
+	}
+
+
+	/** @see test_get_value_nothing_stored() */
+	public function provider_get_value_nothing_stored() {
+
+		return [
+			[ 3600, true ],
+			[ null, false ],
+		];
+	}
+
+
+	/** @see Abstract_Settings::get_value() */
+	public function test_get_value_exception() {
+
+		$this->expectException( Framework\SV_WC_Plugin_Exception::class );
+
+		$this->get_settings_instance()->get_value( 'not_a_setting' );
+	}
+
+
 	/** @see Abstract_Settings::delete_value() */
 	public function test_delete_value() {
 
