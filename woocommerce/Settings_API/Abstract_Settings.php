@@ -254,8 +254,22 @@ abstract class Abstract_Settings {
 	 */
 	protected function get_value_from_database( $value, Setting $setting ) {
 
-		if ( null !== $value && Setting::TYPE_BOOLEAN === $setting->get_type() ) {
-			$value = wc_string_to_bool( $value );
+		if ( null !== $value ) {
+
+			switch ( $setting->get_type() ) {
+
+				case Setting::TYPE_BOOLEAN:
+					$value = wc_string_to_bool( $value );
+				break;
+
+				case Setting::TYPE_INTEGER:
+					$value = is_numeric( $value ) ? (int) $value : null;
+				break;
+
+				case Setting::TYPE_FLOAT:
+					$value = is_numeric( $value ) ? (float) $value : null;
+				break;
+			}
 		}
 
 		return $value;

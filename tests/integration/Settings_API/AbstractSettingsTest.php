@@ -146,11 +146,55 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
-	/** @see Abstract_Settings::get_value_from_database() */
-	public function test_get_value_from_database() {
+	/**
+	 * @see Abstract_Settings::get_value_from_database()
+	 *
+	 * @param mixed $value the value stored in the database
+	 * @param mixed $expected_value the converted value
+	 * @param string $type the setting type
+	 *
+	 * @dataProvider provider_get_value_from_database
+	 */
+	public function test_get_value_from_database( $value, $expected_value, $type ) {
 
-		// TODO: implement this test when load_settings() is available {WV 2020-03-20}
-		$this->markTestSkipped();
+		$setting = new Setting();
+		$setting->set_type( $type );
+
+		$method  = new ReflectionMethod( Abstract_Settings::class, 'get_value_from_database' );
+		$method->setAccessible( true );
+
+		$this->assertSame( $expected_value, $method->invokeArgs( $this->get_settings_instance(), [ $value, $setting ] ) );
+	}
+
+
+	/** @see test_get_value_from_database() */
+	public function provider_get_value_from_database() {
+
+		require_once 'woocommerce/Settings_API/Setting.php';
+
+		return [
+			[ '12345', 12345, Setting::TYPE_INTEGER ],
+			[ '12.45', 12,    Setting::TYPE_INTEGER ],
+			[ '0',     0,     Setting::TYPE_INTEGER ],
+			[ 'hello', null,  Setting::TYPE_INTEGER ],
+			[ null,    null,  Setting::TYPE_INTEGER ],
+			[ '',      null,  Setting::TYPE_INTEGER ],
+
+			[ '12345', 12345.0, Setting::TYPE_FLOAT ],
+			[ '12.45', 12.45,   Setting::TYPE_FLOAT ],
+			[ '0',     0.0,     Setting::TYPE_FLOAT ],
+			[ 'hello', null,    Setting::TYPE_FLOAT ],
+			[ null,    null,    Setting::TYPE_FLOAT ],
+			[ '',      null,    Setting::TYPE_FLOAT ],
+
+			[ 'yes', true,  Setting::TYPE_BOOLEAN ],
+			[ 'no',  false, Setting::TYPE_BOOLEAN ],
+			[ '1',   true,  Setting::TYPE_BOOLEAN ],
+			[ '0',   false, Setting::TYPE_BOOLEAN ],
+			[ 'hey', false, Setting::TYPE_BOOLEAN ],
+			[ null,  null,  Setting::TYPE_BOOLEAN ],
+			[ '',    false, Setting::TYPE_BOOLEAN ],
+		];
 	}
 
 
