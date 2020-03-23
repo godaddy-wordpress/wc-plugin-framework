@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1 as Framework;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Settings_API\\Setting' ) ) :
@@ -339,6 +341,35 @@ class Setting {
 	public function set_control( $control ) {
 
 		$this->control = $control;
+	}
+
+
+	/**
+	 * Sets the setting current value, after validating it against the type and, if set, options.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array|bool|float|int|string $value
+	 * @throws Framework\SV_WC_Plugin_Exception
+	 */
+	public function update_value( $value ) {
+
+		if ( ! $this->validate_value( $value ) ) {
+
+			throw new Framework\SV_WC_Plugin_Exception( "Setting value for setting {$this->id} is not valid for the setting type {$this->type}" );
+
+		} elseif ( ! empty( $this->options ) && ! in_array( $value, $this->options ) ) {
+
+			throw new Framework\SV_WC_Plugin_Exception( sprintf(
+				'Setting value for setting %s must be one of %s',
+				$this->id,
+				Framework\SV_WC_Helper::list_array_items( $this->options, 'or' )
+			) );
+
+		} else {
+
+			$this->set_value( $value );
+		}
 	}
 
 
