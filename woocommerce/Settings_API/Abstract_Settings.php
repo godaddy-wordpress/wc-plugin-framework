@@ -148,6 +148,60 @@ abstract class Abstract_Settings {
 
 
 	/**
+	 * Registers a control for a setting.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $setting_id the setting ID
+	 * @param string $type the control type
+	 * @param array $args optional args for the control
+	 * @return bool
+	 */
+	public function register_control( $setting_id, $type, array $args = [] ) {
+
+		try {
+
+			if ( ! in_array( $type, $this->get_control_types(), true ) ) {
+				throw new \UnexpectedValueException( "{$type} is not a valid control type" );
+			}
+
+			$setting = $this->get_setting( $setting_id );
+
+			if ( ! $setting ) {
+				throw new \InvalidArgumentException( "Setting {$setting_id} does not exist" );
+			}
+
+			$args = wp_parse_args( $args, [
+				'name'        => $setting->get_name(),
+				'description' => $setting->get_description(),
+				'options'     => [],
+			] );
+
+			$control = new Control();
+
+			$control->set_setting_id( $setting_id );
+			$control->set_type( $type );
+			$control->set_name( $args['name'] );
+			$control->set_description( $args['description'] );
+
+			if ( is_array( $args['options'] ) ) {
+				$control->set_options( $args['options'], $setting->get_options() );
+			}
+
+			$setting->set_control( $control );
+
+			return true;
+
+		} catch ( \Exception $exception ) {
+
+			wc_doing_it_wrong( __METHOD__, 'Could not register setting control: ' . $exception->getMessage(), 'x.y.z' );
+
+			return false;
+		}
+	}
+
+
+	/**
 	 * Gets the settings ID.
 	 *
 	 * @since x.y.z

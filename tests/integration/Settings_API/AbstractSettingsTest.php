@@ -3,6 +3,7 @@
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1 as Framework;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Abstract_Settings;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Control;
 
 /**
  * Tests for the Abstract_Settings class.
@@ -83,6 +84,76 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 		$this->get_settings_instance()->unregister_setting( 'test-setting-a' );
 
 		$this->assertNull( $this->get_settings_instance()->get_setting( 'test-setting-a' ) );
+	}
+
+
+	/**
+	 * @see Abstract_Settings::register_control()
+	 *
+	 * @param string $setting_id the setting ID
+	 * @param string $control_type the control type
+	 * @param bool $registered whether the control should be succesfully registered or not
+	 *
+	 * @dataProvider provider_register_control
+	 */
+	public function test_register_control( $setting_id, $control_type, $registered ) {
+
+		$this->get_settings_instance()->register_setting( 'registered_setting', Setting::TYPE_STRING );
+
+		$this->assertSame( $registered, $this->get_settings_instance()->register_control( $setting_id, $control_type ) );
+
+		if ( $registered ) {
+
+			$this->assertInstanceOf( Control::class, $this->get_settings_instance()->get_setting( $setting_id )->get_control() );
+
+		} elseif ( $setting = $this->get_settings_instance()->get_setting( $setting_id ) ) {
+
+			$this->assertNull( $setting->get_control() );
+		}
+	}
+
+
+	/** @see test_register_control() */
+	public function provider_register_control() {
+
+		require_once 'woocommerce/Settings_API/Control.php';
+
+		return [
+			[ 'unknown_setting',    Control::TYPE_TEXT, false ],
+			[ 'registered_setting', 'invalid_type',     false ],
+			[ 'registered_setting', Control::TYPE_TEXT, true ],
+		];
+	}
+
+
+	/** @see Abstract_Settings::register_control() */
+	public function test_register_control_args() {
+
+		$setting_args = [
+			'name'        => 'Setting Name',
+			'description' => 'Setting Description',
+			'options'     => [ 'black', 'white' ],
+		];
+
+		$this->get_settings_instance()->register_setting( 'color', Setting::TYPE_STRING, $setting_args );
+
+		$this->get_settings_instance()->register_control( 'color', Control::TYPE_SELECT, [
+			'options' => [
+				'black' => 'Black',
+				'white' => 'White',
+				'red'	=> 'Red',
+			],
+		] );
+
+		$control = $this->get_settings_instance()->get_setting( 'color' )->get_control();
+
+		// TODO: uncomment assert for $control->get_options when https://github.com/skyverge/wc-plugin-framework/pull/453 is merged {WV 2020-03-20}
+
+		$this->assertEquals( 'color', $control->get_setting_id() );
+		$this->assertEquals( Control::TYPE_SELECT, $control->get_type() );
+		$this->assertEquals( $setting_args['name'], $control->get_name() );
+		$this->assertEquals( $setting_args['description'], $control->get_description() );
+		// $this->assertEquals( $setting_args['options'], array_keys( $control->get_options() ) );
 	}
 
 
