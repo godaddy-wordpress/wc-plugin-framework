@@ -84,10 +84,9 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 			'description' => 'Description of setting D',
 		] );
 
-		// TODO: uncomment assert for test-setting-b when https://github.com/skyverge/wc-plugin-framework/pull/453 is merged {WV 2020-03-20}
 
 		$this->assertSame( 'something', $this->get_settings_instance()->get_setting( 'test-setting-a' )->get_value() );
-		// $this->assertSame( 1729, $this->get_settings_instance()->get_setting( 'test-setting-b' )->get_value() );
+		$this->assertSame( 1729, $this->get_settings_instance()->get_setting( 'test-setting-b' )->get_value() );
 		$this->assertSame( true, $this->get_settings_instance()->get_setting( 'test-setting-c' )->get_value() );
 		$this->assertSame( null, $this->get_settings_instance()->get_setting( 'test-setting-d' )->get_value() );
 	}
