@@ -88,7 +88,7 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
-	 * @see Abstract_Settings::registr_control()
+	 * @see Abstract_Settings::register_control()
 	 *
 	 * @param string $setting_id the setting ID
 	 * @param string $control_type the control type
