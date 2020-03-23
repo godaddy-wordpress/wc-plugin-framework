@@ -66,7 +66,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 
 		$setting->set_value( 'a' );
 
-		$item = $controller->prepare_item_for_response( $setting, null );
+		$item = $controller->prepare_item_for_response( $setting, null )->get_data();
 
 		$this->assertEquals( $setting->get_id(),          $item['id'] );
 		$this->assertEquals( $setting->get_type(),        $item['type'] );
@@ -92,7 +92,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 
 		$settings->register_setting( 'test', Setting::TYPE_STRING );
 
-		$item = $controller->prepare_item_for_response( $settings->get_setting( 'test' ), null );
+		$item = $controller->prepare_item_for_response( $settings->get_setting( 'test' ), null )->get_data();
 
 		$this->assertEquals( null, $item['value'] );
 	}
@@ -106,7 +106,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 
 		$settings->register_setting( 'test', Setting::TYPE_STRING );
 
-		$item = $controller->prepare_item_for_response( $settings->get_setting( 'test' ), null );
+		$item = $controller->prepare_item_for_response( $settings->get_setting( 'test' ), null )->get_data();
 
 		$this->assertArrayNotHasKey( 'control', $item );
 	}

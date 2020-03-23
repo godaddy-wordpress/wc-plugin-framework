@@ -161,7 +161,7 @@ class Settings extends \WP_REST_Controller {
 	 *
 	 * @param Setting $setting a setting object
 	 * @param \WP_REST_Request $request request object
-	 * @return array
+	 * @return WP_Error|WP_HTTP_Response
 	 */
 	public function prepare_item_for_response( $setting, $request ) {
 
@@ -192,7 +192,7 @@ class Settings extends \WP_REST_Controller {
 			$item = [];
 		}
 
-		return $item;
+		return rest_ensure_response( $item );
 	}
 
 
