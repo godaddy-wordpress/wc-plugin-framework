@@ -74,6 +74,25 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
+	 * @see Abstract_Settings::load_settings()
+	 *
+	 * Stored values are defined in get_settings_instance().
+	 */
+	public function test_load_settings() {
+
+		$this->get_settings_instance()->register_setting( 'test-setting-d', Setting::TYPE_EMAIL, [
+			'name'        => 'Test Setting D',
+			'description' => 'Description of setting D',
+		] );
+
+		$this->assertSame( 'something', $this->get_settings_instance()->get_setting( 'test-setting-a' )->get_value() );
+		$this->assertSame( 1729, $this->get_settings_instance()->get_setting( 'test-setting-b' )->get_value() );
+		$this->assertSame( true, $this->get_settings_instance()->get_setting( 'test-setting-c' )->get_value() );
+		$this->assertSame( null, $this->get_settings_instance()->get_setting( 'test-setting-d' )->get_value() );
+	}
+
+
+	/**
 	 * @see Abstract_Settings::unregister_setting()
 	 * @see Abstract_Settings::get_setting()
 	 */
@@ -394,14 +413,10 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 						'description' => 'Description of setting C',
 						'default'     => true,
 					] );
-				}
 
-
-				/**
-				 * TODO: remove when load_settings() is implemented in Framework\Settings_API\Abstract_Settings {WV 2020-03-20}
-				 */
-				protected function load_settings() {
-
+					update_option( "{$this->get_option_name_prefix()}_{$this->settings['test-setting-a']->get_id()}", 'something' );
+					update_option( "{$this->get_option_name_prefix()}_{$this->settings['test-setting-b']->get_id()}", '1729' );
+					update_option( "{$this->get_option_name_prefix()}_{$this->settings['test-setting-c']->get_id()}", 'yes' );
 				}
 
 

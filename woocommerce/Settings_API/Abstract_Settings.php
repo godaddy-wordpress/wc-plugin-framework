@@ -76,7 +76,16 @@ abstract class Abstract_Settings {
 	 *
 	 * @since x.y.z
 	 */
-	abstract protected function load_settings();
+	protected function load_settings() {
+
+		foreach ( $this->settings as $setting_id => $setting ) {
+
+			$value = get_option( $this->get_option_name_prefix() . '_' . $setting_id, null );
+			$value = $this->get_value_from_database( $value, $setting );
+
+			$this->settings[ $setting_id ]->set_value( $value );
+		}
+	}
 
 
 	/**
