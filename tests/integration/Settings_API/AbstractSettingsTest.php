@@ -116,7 +116,11 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	/** @see Abstract_Settings::delete_value() */
 	public function test_delete_value() {
 
-		$setting     = $this->get_settings_instance()->get_setting( 'test-setting-a' );
+		$setting = $this->get_settings_instance()->get_setting( 'test-setting-a' );
+
+		$setting->set_value( 'something' );
+		$this->get_settings_instance()->save( 'test-setting-a' );
+
 		$option_name = $this->get_settings_instance()->get_option_name_prefix() . '_' . $setting->get_id();
 
 		$this->assertNotEmpty( $setting->get_value() );
@@ -126,6 +130,66 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 
 		$this->assertNull( $setting->get_value() );
 		$this->assertFalse( get_option( $option_name ) );
+	}
+
+
+	/** @see Abstract_Settings::save() */
+	public function test_save() {
+
+		$setting_a = $this->get_settings_instance()->get_setting( 'test-setting-a' );
+		$setting_b = $this->get_settings_instance()->get_setting( 'test-setting-b' );
+
+		$option_name_a = $this->get_settings_instance()->get_option_name_prefix() . '_' . $setting_a->get_id();
+		update_option( $option_name_a, 'old value' );
+
+		$option_name_b = $this->get_settings_instance()->get_option_name_prefix() . '_' . $setting_b->get_id();
+		update_option( $option_name_b, - 1 );
+
+		$setting_a->set_value( 'new value' );
+		$setting_b->set_value( 2 );
+
+		$this->assertEquals( 'new value', $setting_a->get_value() );
+		$this->assertEquals( 'old value', get_option( $option_name_a ) );
+
+		$this->assertEquals( 2, $setting_b->get_value() );
+		$this->assertEquals( - 1, get_option( $option_name_b ) );
+
+		$this->get_settings_instance()->save();
+
+		$this->assertEquals( 'new value', $setting_a->get_value() );
+		$this->assertEquals( 'new value', get_option( $option_name_a ) );
+		$this->assertEquals( 2, $setting_b->get_value() );
+		$this->assertEquals( 2, get_option( $option_name_b ) );
+	}
+
+
+	/** @see Abstract_Settings::save() */
+	public function test_save_single_setting() {
+
+		$setting_a = $this->get_settings_instance()->get_setting( 'test-setting-a' );
+		$setting_b = $this->get_settings_instance()->get_setting( 'test-setting-b' );
+
+		$option_name_a = $this->get_settings_instance()->get_option_name_prefix() . '_' . $setting_a->get_id();
+		update_option( $option_name_a, 'old value' );
+
+		$option_name_b = $this->get_settings_instance()->get_option_name_prefix() . '_' . $setting_b->get_id();
+		update_option( $option_name_b, - 1 );
+
+		$setting_a->set_value( 'new value' );
+		$setting_b->set_value( 2 );
+
+		$this->assertEquals( 'new value', $setting_a->get_value() );
+		$this->assertEquals( 'old value', get_option( $option_name_a ) );
+
+		$this->assertEquals( 2, $setting_b->get_value() );
+		$this->assertEquals( - 1, get_option( $option_name_b ) );
+
+		$this->get_settings_instance()->save( 'test-setting-a' );
+
+		$this->assertEquals( 'new value', $setting_a->get_value() );
+		$this->assertEquals( 'new value', get_option( $option_name_a ) );
+		$this->assertEquals( 2, $setting_b->get_value() );
+		$this->assertEquals( - 1, get_option( $option_name_b ) );
 	}
 
 
@@ -259,11 +323,6 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 						'description' => 'Description of setting C',
 						'default'     => true,
 					] );
-
-					// TODO: remove when save() is available
-					$this->settings['test-setting-a']->set_value( 'example' );
-
-					update_option( "{$this->get_option_name_prefix()}_{$this->settings['test-setting-a']->get_id()}", 'something' );
 				}
 
 

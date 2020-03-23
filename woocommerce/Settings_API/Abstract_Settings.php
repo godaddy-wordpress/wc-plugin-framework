@@ -224,6 +224,42 @@ abstract class Abstract_Settings {
 
 
 	/**
+	 * Saves registered settings in their current state.
+	 *
+	 * It saves all settings by default, but you can pass a setting ID to save a specific setting.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $setting_id setting ID
+	 */
+	public function save( $setting_id = '' ) {
+
+		if ( ! empty( $setting_id ) ) {
+			$settings = [ $this->get_setting( $setting_id ) ];
+		} else {
+			$settings = $this->settings;
+		}
+
+		$settings = array_filter( $settings );
+
+		foreach ( $settings as $setting ) {
+
+			$option_name   = "{$this->get_option_name_prefix()}_{$setting->get_id()}";
+			$setting_value = $setting->get_value();
+
+			if ( null === $setting_value ) {
+
+				delete_option( $option_name );
+
+			} else {
+
+				update_option( $option_name, $this->get_value_for_database( $setting ) );
+			}
+		}
+	}
+
+
+	/**
 	 * Converts the value of a setting to be stored in an option.
 	 *
 	 * @since x.y.z
