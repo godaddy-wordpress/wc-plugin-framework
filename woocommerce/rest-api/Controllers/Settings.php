@@ -25,6 +25,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\REST_API\Controllers;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Abstract_Settings;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -155,7 +156,44 @@ class Settings extends \WP_REST_Controller {
 	/** Utility methods ***********************************************************************************************/
 
 
-	// TODO: prepare_item_for_response()
+	/**
+	 * @sincex.y.z
+	 *
+	 * @param Setting $setting a setting object
+	 * @param \WP_REST_Request $request request object
+	 * @return array
+	 */
+	public function prepare_item_for_response( $setting, $request ) {
+
+		if ( $setting instanceof Setting ) {
+
+			$item = [
+				'id'          => $setting->get_id(),
+				'type'        => $setting->get_type(),
+				'name'        => $setting->get_name(),
+				'description' => $setting->get_description(),
+				'is_multi'    => $setting->is_is_multi(),
+				'options'     => $setting->get_options(),
+				'default'     => $setting->get_default(),
+				'value'       => $setting->get_value(),
+			];
+
+			if ( $control = $setting->get_control() ) {
+				$item['control'] = [
+					'type'        => $control->get_type(),
+					'name'        => $control->get_name(),
+					'description' => $control->get_description(),
+					'options'     => $control->geT_options(),
+				];
+			}
+
+		} else {
+
+			$item = [];
+		}
+
+		return $item;
+	}
 
 
 	// TODO: get_item_schema()
