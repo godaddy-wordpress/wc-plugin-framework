@@ -201,6 +201,36 @@ abstract class Abstract_Settings {
 
 
 	/**
+	 * Gets the stored value for a setting.
+	 *
+	 * Optionally, will return the setting's default value if nothing is stored.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $setting_id setting ID
+	 * @param bool $with_default whether to return the default value if nothing is stored
+	 * @return array|bool|float|int|string
+	 * @throws Framework\SV_WC_Plugin_Exception
+	 */
+	public function get_value( $setting_id, $with_default = true ) {
+
+		$setting = $this->get_setting( $setting_id );
+
+		if ( ! $setting ) {
+			throw new Framework\SV_WC_Plugin_Exception( "Setting {$setting_id} does not exist" );
+		}
+
+		$value = $setting->get_value();
+
+		if ( $with_default && null === $value ) {
+			$value = $setting->get_default();
+		}
+
+		return $value;
+	}
+
+
+	/**
 	 * Deletes the stored value for a setting.
 	 *
 	 * @since x.y.z
