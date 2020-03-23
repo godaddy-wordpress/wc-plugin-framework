@@ -84,6 +84,20 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/** @see Abstract_Settings::get_id() */
+	public function test_prepare_item_for_response_value_not_set() {
+
+		$settings   = $this->get_settings_instance();
+		$controller = new Settings( $settings );
+
+		$settings->register_setting( 'test', Setting::TYPE_STRING );
+
+		$item = $controller->prepare_item_for_response( $settings->get_setting( 'test' ), null );
+
+		$this->assertEquals( null, $item['value'] );
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
