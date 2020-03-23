@@ -4,6 +4,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_6_1 as Framework;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Abstract_Settings;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Control;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin_Exception;
 
 /**
  * Tests for the Abstract_Settings class.
@@ -248,6 +249,86 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 		$this->expectException( Framework\SV_WC_Plugin_Exception::class );
 
 		$this->get_settings_instance()->get_value( 'not_a_setting' );
+	}
+
+
+	/**
+	 * @see Abstract_Settings::update_value()
+	 *
+	 * @param bool $register whether to register a new setting
+	 * @param mixed $value value to pass to method
+	 * @param string $type setting type
+	 * @param array $options setting options
+	 * @param mixed $expected setting value after execution
+	 * @param bool $exception whether an exception is expected
+	 * @throws Framework\SV_WC_Plugin_Exception
+	 *
+	 * @dataProvider provider_update_value
+	 */
+	public function test_update_value( $register, $value, $type, $options, $expected, $exception ) {
+
+		if ( $exception ) {
+			$this->expectException( SV_WC_Plugin_Exception::class );
+		}
+
+		$setting_id = 'test-setting';
+
+		if ( $register ) {
+			$this->get_settings_instance()->register_setting( $setting_id, $type, [ 'options' => $options ] );
+		}
+
+		$this->get_settings_instance()->update_value( $setting_id, $value );
+
+		$this->assertSame( $expected, $this->get_settings_instance()->get_setting( $setting_id )->get_value() );
+	}
+
+
+	/**
+	 * Provider for test_update_value()
+	 *
+	 * @return array
+	 */
+	public function provider_update_value() {
+
+		require_once( 'woocommerce/Settings_API/Setting.php' );
+
+		return [
+			[ false, 'valid', Setting::TYPE_STRING, [], null, true ],
+
+			[ true, 'valid', Setting::TYPE_STRING, [], 'valid', false ],
+			[ true, 123, Setting::TYPE_STRING, [], null, true ],
+			[ true, 'green', Setting::TYPE_STRING, [ 'green', 'red' ], 'green', false ],
+			[ true, 'not an option', Setting::TYPE_STRING, [ 'green', 'red' ], null, true ],
+
+			[ true, 'https://skyverge.com/', Setting::TYPE_URL, [], 'https://skyverge.com/', false ],
+			[ true, 'file:///tmp/', Setting::TYPE_URL, [], null, true ],
+			[ true, 'https://skyverge.com/', Setting::TYPE_URL, [ 'https://skyverge.com/', 'http://skyverge.com/' ], 'https://skyverge.com/', false ],
+			[ true, 'https://google.com/', Setting::TYPE_URL, [ 'https://skyverge.com/', 'http://skyverge.com/' ], null, true ],
+
+			[ true, 'test@example.com', Setting::TYPE_EMAIL, [], 'test@example.com', false ],
+			[ true, 'not-an-email.com', Setting::TYPE_EMAIL, [], null, true ],
+			[ true, 'test@example.com', Setting::TYPE_EMAIL, [ 'test@example.com' ], 'test@example.com', false ],
+			[ true, 'another@example.com', Setting::TYPE_EMAIL, [ 'test@example.com' ], null, true ],
+
+			[ true, 12345, Setting::TYPE_INTEGER, [], 12345, false ],
+			[ true, 1.345, Setting::TYPE_INTEGER, [], null, true ],
+			[ true, '234', Setting::TYPE_INTEGER, [], null, true ],
+			[ true, 1, Setting::TYPE_INTEGER, [ 1, 2 ], 1, false ],
+			[ true, 3, Setting::TYPE_INTEGER, [ 1, 2 ], null, true ],
+
+			[ true, 12345, Setting::TYPE_FLOAT, [], 12345, false ],
+			[ true, 1.345, Setting::TYPE_FLOAT, [], 1.345, false ],
+			[ true, '234', Setting::TYPE_FLOAT, [], null, true ],
+			[ true, 1.5, Setting::TYPE_FLOAT, [ 1.5, 2.5 ], 1.5, false ],
+			[ true, 3.5, Setting::TYPE_FLOAT, [ 1.5, 2.5 ], null, true ],
+
+			[ true, true, Setting::TYPE_BOOLEAN, [], true, false ],
+			[ true, 'yes', Setting::TYPE_BOOLEAN, [], null, true ],
+			[ true, 1, Setting::TYPE_BOOLEAN, [], null, true ],
+			// it beats me why someone would have a boolean setting with only one option, but in theory it is possible
+			[ true, true, Setting::TYPE_BOOLEAN, [ true ], true, false ],
+			[ true, false, Setting::TYPE_BOOLEAN, [ true ], null, true ],
+		];
 	}
 
 
