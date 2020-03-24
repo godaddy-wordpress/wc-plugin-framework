@@ -95,6 +95,25 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/** @see Settings::get_item() */
+	public function test_get_item_not_found() {
+
+		$settings   = $this->get_settings_instance();
+		$controller = new Settings( $settings );
+
+		$setting_id = 'test';
+
+		$request = new WP_REST_Request( 'GET', "/wc/v3/{$settings->get_id()}/settings" );
+		$request->set_url_params( [ 'id' => $setting_id ] );
+
+		$response = $controller->get_item( $request );
+
+		$this->assertTrue( $response instanceof WP_Error );
+		$this->assertSame( 'wc_rest_setting_not_found', $response->get_error_code() );
+		$this->assertSame( [ 'status' => 404 ], $response->get_error_data() );
+	}
+
+
 	/** @see Settings::prepare_item_for_response() */
 	public function test_prepare_item_for_response() {
 
