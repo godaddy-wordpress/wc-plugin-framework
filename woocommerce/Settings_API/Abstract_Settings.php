@@ -514,7 +514,7 @@ abstract class Abstract_Settings {
 		 * @param Setting $setting setting object
 		 * @param Abstract_Settings $settings the settings handler instance
 		 */
-		return apply_filters( "wc_{$this->get_id()}_settings_api_control_types", [], $setting->get_type(), $setting, $this );
+		return apply_filters( "wc_{$this->get_id()}_settings_api_setting_control_types", [], $setting->get_type(), $setting, $this );
 	}
 
 
