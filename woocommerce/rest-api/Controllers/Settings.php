@@ -175,6 +175,7 @@ class Settings extends \WP_REST_Controller {
 				'options'     => $setting->get_options(),
 				'default'     => $setting->get_default(),
 				'value'       => $setting->get_value(),
+				'control'     => null,
 			];
 
 			if ( $control = $setting->get_control() ) {
