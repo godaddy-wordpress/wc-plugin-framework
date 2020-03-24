@@ -6,7 +6,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Control;
 
 /**
- * Tests for the Abstract_Settings class.
+ * Tests for the Settings class.
  *
  * @see \SkyVerge\WooCommerce\PluginFramework\v5_6_1\REST_API\Controllers\Settings
  */
@@ -38,7 +38,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	/** Tests *********************************************************************************************************/
 
 
-	/** @see Abstract_Settings::get_id() */
+	/** @see Settings::prepare_item_for_response() */
 	public function test_prepare_item_for_response() {
 
 		$settings   = $this->get_settings_instance();
@@ -84,7 +84,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
-	/** @see Abstract_Settings::get_id() */
+	/** @see Settings::prepare_item_for_response() */
 	public function test_prepare_item_for_response_value_not_set() {
 
 		$settings   = $this->get_settings_instance();
@@ -98,7 +98,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
-	/** @see Abstract_Settings::get_id() */
+	/** @see Settings::prepare_item_for_response() */
 	public function test_prepare_item_for_response_control_not_set() {
 
 		$settings   = $this->get_settings_instance();
