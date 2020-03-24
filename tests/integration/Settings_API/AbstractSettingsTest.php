@@ -286,7 +286,7 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 		$method  = new ReflectionMethod( Abstract_Settings::class, 'get_value_from_database' );
 		$method->setAccessible( true );
 
-		$this->assertSame( $expected, $method->invokeArgs( $this->get_settings_instance(), [
+		$this->assertEquals( $expected, $method->invokeArgs( $this->get_settings_instance(), [
 			get_option( $option_name ),
 			$setting
 		] ) );
@@ -326,7 +326,7 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 			[ true, 1, Setting::TYPE_INTEGER, [ 1, 2 ], 1, false ],
 			[ true, 3, Setting::TYPE_INTEGER, [ 1, 2 ], null, true ],
 
-			[ true, 12345, Setting::TYPE_FLOAT, [], 12345.0, false ],
+			[ true, 12345, Setting::TYPE_FLOAT, [], 12345, false ],
 			[ true, 1.345, Setting::TYPE_FLOAT, [], 1.345, false ],
 			[ true, '234', Setting::TYPE_FLOAT, [], null, true ],
 			[ true, 1.5, Setting::TYPE_FLOAT, [ 1.5, 2.5 ], 1.5, false ],
