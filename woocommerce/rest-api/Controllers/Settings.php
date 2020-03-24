@@ -142,6 +142,15 @@ class Settings extends \WP_REST_Controller {
 
 		} else {
 
+			return new \WP_Error(
+				'wc_rest_setting_not_found',
+				sprintf(
+					/* translators: Placeholder: %s - setting ID */
+					__( 'Setting %s does not exist', 'woocommerce-plugin-framework' ),
+					$setting_id
+				),
+				[ 'status' => 404 ]
+			);
 		}
 	}
 
