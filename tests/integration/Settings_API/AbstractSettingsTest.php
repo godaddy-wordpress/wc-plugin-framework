@@ -519,6 +519,22 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/** @see Abstract_Settings::get_setting_control_types() */
+	public function test_get_setting_control_types() {
+
+		$setting = $this->get_settings_instance()->get_setting( 'test-setting-a' );
+
+		$this->assertIsArray( $this->get_settings_instance()->get_setting_control_types( $setting ) );
+
+		add_filter( "wc_{$this->get_settings_instance()->get_id()}_settings_api_setting_control_types", function() {
+
+			return [ 'my_type' ];
+		} );
+
+		$this->assertEquals( [ 'my_type' ], $this->get_settings_instance()->get_setting_control_types( $setting ) );
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
