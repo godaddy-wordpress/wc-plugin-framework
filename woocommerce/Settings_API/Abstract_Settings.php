@@ -312,6 +312,8 @@ abstract class Abstract_Settings {
 
 		// performs the validations and updates the value
 		$setting->update_value( $value );
+
+		$this->save( $setting_id );
 	}
 
 
