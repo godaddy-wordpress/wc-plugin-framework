@@ -294,6 +294,30 @@ abstract class Abstract_Settings {
 
 
 	/**
+	 * Updates the stored value for a setting.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $setting_id setting ID
+	 * @param array|bool|float|int|string $value
+	 * @throws Framework\SV_WC_Plugin_Exception
+	 */
+	public function update_value( $setting_id, $value ) {
+
+		$setting = $this->get_setting( $setting_id );
+
+		if ( ! $setting ) {
+			throw new Framework\SV_WC_Plugin_Exception( "Setting {$setting_id} does not exist" );
+		}
+
+		// performs the validations and updates the value
+		$setting->update_value( $value );
+
+		$this->save( $setting_id );
+	}
+
+
+	/**
 	 * Deletes the stored value for a setting.
 	 *
 	 * @since x.y.z
