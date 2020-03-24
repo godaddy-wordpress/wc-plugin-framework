@@ -156,7 +156,7 @@ class Settings extends \WP_REST_Controller {
 
 
 	/**
-	 * @sincex.y.z
+	 * @since x.y.z
 	 *
 	 * @param Setting $setting a setting object
 	 * @param \WP_REST_Request $request request object
