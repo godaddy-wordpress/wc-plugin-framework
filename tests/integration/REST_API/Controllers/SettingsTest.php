@@ -94,6 +94,8 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 
 		$item = $controller->prepare_item_for_response( $settings->get_setting( 'test' ), null )->get_data();
 
+		// $item['value'] is null if no value has been set for the setting
+		// we want users of the API to differentiate between a setting that's been set vs. a setting that has a default value but not saved yet
 		$this->assertEquals( null, $item['value'] );
 	}
 
