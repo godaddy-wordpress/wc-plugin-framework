@@ -112,13 +112,22 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @param string $setting_id the setting ID
 	 * @param string $control_type the control type
-	 * @param bool $registered whether the control should be succesfully registered or not
+	 * @param string[] $setting_control_types the control types valid for the setting
+	 * @param bool $registered whether the control should be successfully registered or not
 	 *
 	 * @dataProvider provider_register_control
 	 */
-	public function test_register_control( $setting_id, $control_type, $registered ) {
+	public function test_register_control( $setting_id, $control_type, $setting_control_types, $registered ) {
 
 		$this->get_settings_instance()->register_setting( 'registered_setting', Setting::TYPE_STRING );
+
+		if ( ! empty( $setting_control_types ) ) {
+
+			add_filter( "wc_{$this->get_settings_instance()->get_id()}_settings_api_setting_control_types", function () use ( $setting_control_types ) {
+
+				return $setting_control_types;
+			} );
+		}
 
 		$this->assertSame( $registered, $this->get_settings_instance()->register_control( $setting_id, $control_type ) );
 
@@ -139,9 +148,11 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 		require_once 'woocommerce/Settings_API/Control.php';
 
 		return [
-			[ 'unknown_setting',    Control::TYPE_TEXT, false ],
-			[ 'registered_setting', 'invalid_type',     false ],
-			[ 'registered_setting', Control::TYPE_TEXT, true ],
+			[ 'unknown_setting',    Control::TYPE_TEXT, [], false ],
+			[ 'registered_setting', 'invalid_type',     [], false ],
+			[ 'registered_setting', Control::TYPE_TEXT, [], true ],
+			[ 'registered_setting', Control::TYPE_TEXT, [ Control::TYPE_TEXT, Control::TYPE_SELECT ], true ],
+			[ 'registered_setting', Control::TYPE_EMAIL, [ Control::TYPE_TEXT, Control::TYPE_SELECT ], false ],
 		];
 	}
 
@@ -516,6 +527,22 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 		} );
 
 		$this->assertEquals( [ 'my_type' ], $this->get_settings_instance()->get_control_types() );
+	}
+
+
+	/** @see Abstract_Settings::get_setting_control_types() */
+	public function test_get_setting_control_types() {
+
+		$setting = $this->get_settings_instance()->get_setting( 'test-setting-a' );
+
+		$this->assertIsArray( $this->get_settings_instance()->get_setting_control_types( $setting ) );
+
+		add_filter( "wc_{$this->get_settings_instance()->get_id()}_settings_api_setting_control_types", function() {
+
+			return [ 'my_type' ];
+		} );
+
+		$this->assertEquals( [ 'my_type' ], $this->get_settings_instance()->get_setting_control_types( $setting ) );
 	}
 
 
