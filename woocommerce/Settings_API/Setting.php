@@ -337,7 +337,6 @@ class Setting {
 	 * @since x.y.z
 	 *
 	 * @param Control $control
-	 * @throws Framework\SV_WC_Plugin_Exception
 	 */
 	public function set_control( $control ) {
 
@@ -471,19 +470,6 @@ class Setting {
 	protected function validate_boolean_value( $value ) {
 
 		return is_bool( $value );
-	}
-
-
-	/**
-	 * Returns the valid control types for the setting.
-	 *
-	 * @since x.y.z
-	 *
-	 * @return string[]
-	 */
-	public function get_valid_control_types() {
-
-		return [];
 	}
 
 
