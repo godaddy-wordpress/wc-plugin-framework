@@ -55,7 +55,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 
 		$settings->register_control( $setting_id, Control::TYPE_SELECT, [
 			'name'        => 'Select field',
-			'description' => 'A regultar select input field',
+			'description' => 'A regular select input field',
 			'options'     => [
 				'a' => 'A',
 				'b' => 'B',
