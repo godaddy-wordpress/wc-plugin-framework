@@ -132,7 +132,19 @@ class Settings extends \WP_REST_Controller {
 	 */
 	public function get_items( $request ) {
 
+		$items = [];
 
+		foreach ( $this->settings->get_settings() as $setting ) {
+
+			$response = $this->prepare_item_for_response( $setting, $request );
+
+			// check that the response object has data
+			if ( $response instanceof \WP_REST_Response && $response->get_data() ) {
+				$items[] = $response->get_data();
+			}
+		}
+
+		return rest_ensure_response( $items );
 	}
 
 
