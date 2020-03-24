@@ -139,7 +139,7 @@ class Settings extends \WP_REST_Controller {
 
 		if ( $setting = $this->settings->get_setting( $setting_id ) ) {
 
-			return $this->prepare_item_for_response( $setting );
+			return $this->prepare_item_for_response( $setting, $request );
 
 		} else {
 
