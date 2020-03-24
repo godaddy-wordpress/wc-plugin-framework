@@ -4,6 +4,7 @@ namespace Settings_API;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Control;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin_Exception;
 
 define( 'ABSPATH', true );
 
@@ -15,6 +16,7 @@ class SettingTest extends \Codeception\Test\Unit {
 	 */
 	protected function _before() {
 
+		require_once( 'woocommerce/Settings_API/Abstract_Settings.php' );
 		require_once( 'woocommerce/Settings_API/Setting.php' );
 	}
 
@@ -135,8 +137,8 @@ class SettingTest extends \Codeception\Test\Unit {
 	/**
 	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting::set_default()
 	 *
-	 * @param array $input input default value
-	 * @param array $expected expected return default value
+	 * @param int|float|string|bool|array $input input default value
+	 * @param int|float|string|bool|array $expected expected return default value
 	 *
 	 * @dataProvider provider_set_default
 	 */
@@ -152,8 +154,8 @@ class SettingTest extends \Codeception\Test\Unit {
 	/**
 	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting::set_value()
 	 *
-	 * @param array $input input value
-	 * @param array $expected expected return value
+	 * @param int|float|string|bool|array $input input value
+	 * @param int|float|string|bool|array $expected expected return value
 	 *
 	 * @dataProvider provider_set_value
 	 */
@@ -169,8 +171,9 @@ class SettingTest extends \Codeception\Test\Unit {
 	/**
 	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting::set_control()
 	 *
-	 * @param array $input input control
-	 * @param array $expected expected return control
+	 * @param Control $input input control
+	 * @param Control $expected expected return control
+	 * @throws SV_WC_Plugin_Exception
 	 *
 	 * @dataProvider provider_set_control
 	 */
