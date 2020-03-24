@@ -108,7 +108,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 
 		$item = $controller->prepare_item_for_response( $settings->get_setting( 'test' ), null )->get_data();
 
-		$this->assertArrayNotHasKey( 'control', $item );
+		$this->assertSame( null, $item['control'] );
 	}
 
 
