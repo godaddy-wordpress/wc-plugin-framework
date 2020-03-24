@@ -134,7 +134,12 @@ class REST_API {
 	 */
 	public function register_routes() {
 
-		// stub
+		if ( $settings = $this->get_plugin()->get_settings_handler() ) {
+
+			$settings_controller = new REST_API\Controllers\Settings( $settings );
+
+			$settings_controller->register_routes();
+		}
 	}
 
 

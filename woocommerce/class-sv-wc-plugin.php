@@ -939,7 +939,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since x.y.z
 	 *
-	 * @return void|Abstract_Settings
+	 * @return void|Settings_API\Abstract_Settings
 	 */
 	public function get_settings_handler() {
 
