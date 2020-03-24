@@ -160,7 +160,7 @@ class Settings extends \WP_REST_Controller {
 	 *
 	 * @param Setting $setting a setting object
 	 * @param \WP_REST_Request $request request object
-	 * @return WP_Error|WP_HTTP_Response
+	 * @return WP_Error|WP_REST_Response
 	 */
 	public function prepare_item_for_response( $setting, $request ) {
 
