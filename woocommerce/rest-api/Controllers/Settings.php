@@ -135,6 +135,14 @@ class Settings extends \WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 
+		$setting_id = $request->get_param( 'id' );
+
+		if ( $setting = $this->settings->get_setting( $setting_id ) ) {
+
+
+		} else {
+
+		}
 	}
 
 
