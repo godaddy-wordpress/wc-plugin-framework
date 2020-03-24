@@ -38,6 +38,63 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	/** Tests *********************************************************************************************************/
 
 
+	/** @see Settings::get_item() */
+	public function test_get_item() {
+
+		$settings   = $this->get_settings_instance();
+		$controller = new Settings( $settings );
+
+		$setting_id = 'test';
+
+		$settings->register_setting( $setting_id, Setting::TYPE_STRING, [
+			'name'        => 'Test Setting',
+			'description' => 'A simple setting',
+			'options'     => [ 'a', 'b', 'c' ],
+			'default'     => 'c',
+		] );
+
+		$settings->register_control( $setting_id, Control::TYPE_SELECT, [
+			'name'        => 'Select field',
+			'description' => 'A regultar select input field',
+			'options'     => [
+				'a' => 'A',
+				'b' => 'B',
+				'c' => 'C'
+			],
+		] );
+
+		$setting = $settings->get_setting( $setting_id );
+		$control = $setting->get_control();
+
+		$setting->set_value( 'a' );
+
+		$request = new WP_REST_Request( 'GET', "/wc/v3/{$settings->get_id()}/settings" );
+		$request->set_url_params( [ 'id' => $setting_id ] );
+
+		$response = $controller->get_item( $request );
+
+		$this->assertTrue( $response instanceof WP_REST_Response );
+
+		$this->assertSame( 200, $response->get_status() );
+
+		$item = $response->get_data();
+
+		$this->assertEquals( $setting->get_id(), $item['id'] );
+		$this->assertEquals( $setting->get_type(), $item['type'] );
+		$this->assertEquals( $setting->get_name(), $item['name'] );
+		$this->assertEquals( $setting->get_description(), $item['description'] );
+		$this->assertEquals( $setting->is_is_multi(), $item['is_multi'] );
+		$this->assertEquals( $setting->get_options(), $item['options'] );
+		$this->assertEquals( $setting->get_default(), $item['default'] );
+		$this->assertEquals( $setting->get_value(), $item['value'] );
+
+		$this->assertEquals( $control->get_type(), $item['control']['type'] );
+		$this->assertEquals( $control->get_name(), $item['control']['name'] );
+		$this->assertEquals( $control->get_description(), $item['control']['description'] );
+		$this->assertEquals( $control->get_options(), $item['control']['options'] );
+	}
+
+
 	/** @see Settings::prepare_item_for_response() */
 	public function test_prepare_item_for_response() {
 
