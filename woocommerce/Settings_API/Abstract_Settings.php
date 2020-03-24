@@ -180,7 +180,8 @@ abstract class Abstract_Settings {
 				throw new \InvalidArgumentException( "Setting {$setting_id} does not exist" );
 			}
 
-			if ( ! in_array( $type, $this->get_valid_control_types( $setting ), true ) ) {
+			$setting_control_types = $this->get_valid_control_types( $setting );
+			if ( ! empty( $setting_control_types ) && ! in_array( $type, $setting_control_types, true ) ) {
 				throw new \UnexpectedValueException( "{$type} is not a valid control type for setting {$setting->get_id()} of type {$setting->get_type()}" );
 			}
 
