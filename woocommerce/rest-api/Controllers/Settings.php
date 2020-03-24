@@ -122,7 +122,18 @@ class Settings extends \WP_REST_Controller {
 	}
 
 
-	// TODO: get_items()
+	/**
+	 * Gets all registered settings.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param \WP_REST_Request $request request object
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function get_items( $request ) {
+
+
+	}
 
 
 	/**
