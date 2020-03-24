@@ -180,6 +180,10 @@ abstract class Abstract_Settings {
 				throw new \InvalidArgumentException( "Setting {$setting_id} does not exist" );
 			}
 
+			if ( ! in_array( $type, $this->get_valid_control_types( $setting ), true ) ) {
+				throw new \UnexpectedValueException( "{$type} is not a valid control type for setting {$setting->get_id()} of type {$setting->get_type()}" );
+			}
+
 			$args = wp_parse_args( $args, [
 				'name'        => $setting->get_name(),
 				'description' => $setting->get_description(),
@@ -499,7 +503,7 @@ abstract class Abstract_Settings {
 	 * @param Setting $setting setting object
 	 * @return string[]
 	 */
-	public static function get_valid_control_types( $setting ) {
+	public function get_valid_control_types( $setting ) {
 
 		// TODO: apply filter {DM 2020-03-20}
 

@@ -341,16 +341,6 @@ class Setting {
 	 */
 	public function set_control( $control ) {
 
-		$control_types = Abstract_Settings::get_valid_control_types( $this );
-
-		if ( ! empty( $control_types ) && ! in_array( $control->get_type(), $control_types, true ) ) {
-
-			throw new Framework\SV_WC_Plugin_Exception( sprintf(
-				'Control type must be one of %s',
-				Framework\SV_WC_Helper::list_array_items( $control_types, 'or' )
-			) );
-		}
-
 		$this->control = $control;
 	}
 
