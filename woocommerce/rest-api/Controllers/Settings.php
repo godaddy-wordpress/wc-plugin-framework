@@ -125,7 +125,17 @@ class Settings extends \WP_REST_Controller {
 	// TODO: get_items()
 
 
-	// TODO: get_item()
+	/**
+	 * Gets a single setting.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param \WP_REST_Request $request request object
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function get_item( $request ) {
+
+	}
 
 
 	/** Update methods ************************************************************************************************/
