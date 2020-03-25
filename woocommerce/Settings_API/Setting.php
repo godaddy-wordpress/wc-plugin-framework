@@ -356,7 +356,7 @@ class Setting {
 
 		if ( ! $this->validate_value( $value ) ) {
 
-			throw new Framework\SV_WC_Plugin_Exception( "Setting value for setting {$this->id} is not valid for the setting type {$this->type}" );
+			throw new Framework\SV_WC_Plugin_Exception( "Setting value for setting {$this->id} is not valid for the setting type {$this->type}", 400 );
 
 		} elseif ( ! empty( $this->options ) && ! in_array( $value, $this->options ) ) {
 
@@ -364,7 +364,7 @@ class Setting {
 				'Setting value for setting %s must be one of %s',
 				$this->id,
 				Framework\SV_WC_Helper::list_array_items( $this->options, 'or' )
-			) );
+			), 400 );
 
 		} else {
 
