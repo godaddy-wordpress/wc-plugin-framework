@@ -201,6 +201,8 @@ class Settings extends \WP_REST_Controller {
 
 
 	/**
+	 * Prepares the item for the REST response.
+	 *
 	 * @since x.y.z
 	 *
 	 * @param Setting $setting a setting object
