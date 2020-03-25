@@ -223,7 +223,7 @@ class Settings extends \WP_REST_Controller {
 					__( 'Could not update setting: %s', 'woocommerce-plugin-framework' ),
 					$e->getMessage()
 				),
-				[ 'status' => 400 ]
+				[ 'status' => $e->getCode() ?: 400 ]
 			);
 		}
 	}
