@@ -221,24 +221,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 		$settings   = $this->get_settings_instance();
 		$controller = new Settings( $settings );
 
-		$settings->register_setting( 'test', Setting::TYPE_STRING, [
-			'name'        => 'Test Setting',
-			'description' => 'A simple setting',
-			'options'     => [ 'a', 'b', 'c' ],
-			'default'     => 'c',
-		] );
-
-		$settings->register_control( 'test', Control::TYPE_SELECT, [
-			'name'  => 'Select field',
-			'description' => 'A regular select input field',
-			'options'     => [
-				'a' => 'A',
-				'b' => 'B',
-				'c' => 'C'
-			],
-		] );
-
-		$setting = $settings->get_setting( 'test' );
+		$setting = $settings->get_setting( 'test_one' );
 		$setting->set_value( 'a' );
 
 		$item = $controller->prepare_item_for_response( $setting, null )->get_data();
