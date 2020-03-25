@@ -87,13 +87,13 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 		$settings   = $this->get_settings_instance();
 		$controller = new Settings( $settings );
 
-		$settings_objects = [
+		$setting_objects = [
 			'test_one'   => $settings->get_setting( 'test_one' ),
 			'test_two'   => $settings->get_setting( 'test_two' ),
 			'test_three' => $settings->get_setting( 'test_three' ),
 		];
 
-		$settings_objects['test_one']->set_value( 'a' );
+		$setting_objects['test_one']->set_value( 'a' );
 
 		$request  = new WP_REST_Request( 'GET', "/wc/v3/{$settings->get_id()}/settings" );
 		$response = $controller->get_items( $request );
@@ -105,7 +105,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 
 		foreach ( $items as $item ) {
 
-			$setting = $settings_objects[ $item['id'] ];
+			$setting = $setting_objects[ $item['id'] ];
 
 			$this->assert_item_matches_setting( $item, $setting );
 
@@ -114,7 +114,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 			}
 		}
 
-		$this->assertEquals( count( $settings_objects ), count( $items ) );
+		$this->assertEquals( count( $setting_objects ), count( $items ) );
 	}
 
 
