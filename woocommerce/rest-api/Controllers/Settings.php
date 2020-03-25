@@ -194,7 +194,17 @@ class Settings extends \WP_REST_Controller {
 	}
 
 
-	// TODO: update_item()
+	/**
+	 * Updates a single setting.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param \WP_REST_Request $request request object
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function update_item( $request ) {
+
+	}
 
 
 	/** Utility methods ***********************************************************************************************/
