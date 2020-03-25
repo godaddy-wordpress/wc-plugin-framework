@@ -180,7 +180,12 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertInstanceOf( WP_REST_Response::class, $response );
 		$this->assertSame( 200, $response->get_status() );
 
-		$this->assert_item_matches_setting( $response->get_data(), $setting );
+		$data = $response->get_data();
+
+		$this->assert_item_matches_setting( $data, $setting );
+
+		$this->assertEquals( 'a', $data['value'] );
+		$this->assertEquals( 'a', get_option( $settings->get_option_name_prefix() . '_' . $setting->get_id() ) );
 	}
 
 
