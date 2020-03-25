@@ -28,6 +28,8 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 		require_once 'woocommerce/Settings_API/Control.php';
 		require_once 'woocommerce/Settings_API/Setting.php';
 
+		$settings = $this->get_settings_instance();
+
 		$settings->register_setting( 'test_one', Setting::TYPE_STRING, [
 			'name'        => 'Test Setting One',
 			'description' => 'A simple setting',
