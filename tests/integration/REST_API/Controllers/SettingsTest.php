@@ -194,10 +194,11 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @param string $setting_id setting ID
 	 * @param array|bool|float|int|string $value setting value
+	 * @param int $status WP_Error status
 	 *
 	 * @dataProvider provider_test_update_item_error
 	 */
-	public function test_update_item_error( $setting_id, $value ) {
+	public function test_update_item_error( $setting_id, $value, $status ) {
 
 		$settings   = $this->get_settings_instance();
 		$controller = new Settings( $settings );
@@ -211,7 +212,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 
 		$this->assertInstanceOf( WP_Error::class, $response );
 		$this->assertSame( 'wc_rest_setting_could_not_update', $response->get_error_code() );
-		$this->assertSame( [ 'status' => 400 ], $response->get_error_data() );
+		$this->assertSame( [ 'status' => $status ], $response->get_error_data() );
 	}
 
 
@@ -219,8 +220,9 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	public function provider_test_update_item_error() {
 
 		return [
-			'setting not found' => [ 'not_found', null ],
-			'invalid value'     => [ 'test_one', 1234 ],
+			'setting not found'    => [ 'not_found', null, 404 ],
+			'invalid value type'   => [ 'test_one', 1234, 400 ],
+			'value not in options' => [ 'test_one', 'x', 400 ],
 		];
 	}
 
