@@ -184,6 +184,42 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/**
+	 * @see Settings::update_item()
+	 *
+	 * @param string $setting_id setting ID
+	 * @param array|bool|float|int|string $value setting value
+	 *
+	 * @dataProvider provider_test_update_item_error
+	 */
+	public function test_update_item_error( $setting_id, $value ) {
+
+		$settings   = $this->get_settings_instance();
+		$controller = new Settings( $settings );
+		$request    = new WP_REST_Request( 'POST', "/wc/v3/{$settings->get_id()}/settings/{$setting_id}" );
+
+		$request->set_header( 'content-type', 'application/json' );
+		$request->set_url_params( [ 'id' => $setting_id ] );
+		$request->set_body( json_encode( [ 'value' => $value ] ) );
+
+		$response = $controller->update_item( $request );
+
+		$this->assertInstanceOf( WP_Error::class, $response );
+		$this->assertSame( 'wc_rest_setting_could_not_update', $response->get_error_code() );
+		$this->assertSame( [ 'status' => 400 ], $response->get_error_data() );
+	}
+
+
+	/** @see test_update_item_error() */
+	public function provider_test_update_item_error() {
+
+		return [
+			'setting not found' => [ 'not_found', null ],
+			'invalid value'     => [ 'test_one', 1234 ],
+		];
+	}
+
+
 	/** @see Settings::prepare_setting_item() */
 	public function test_prepare_setting_item() {
 
