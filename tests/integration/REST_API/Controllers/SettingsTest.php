@@ -79,6 +79,40 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	/** Tests *********************************************************************************************************/
 
 
+	/**
+	 * Asserts that entries in an array match the properties of a setting.
+	 *
+	 * @param array $item a data array
+	 * @param Setting $setting a setting object
+	 */
+	private function assert_item_matches_setting( array $item, $setting ) {
+
+		$this->assertEquals( $setting->get_id(), $item['id'] );
+		$this->assertEquals( $setting->get_type(), $item['type'] );
+		$this->assertEquals( $setting->get_name(), $item['name'] );
+		$this->assertEquals( $setting->get_description(), $item['description'] );
+		$this->assertEquals( $setting->is_is_multi(), $item['is_multi'] );
+		$this->assertEquals( $setting->get_options(), $item['options'] );
+		$this->assertEquals( $setting->get_default(), $item['default'] );
+		$this->assertEquals( $setting->get_value(), $item['value'] );
+	}
+
+
+	/**
+	 * Asserts that entries in an array match the properties of a control
+	 *
+	 * @param array $item a data array
+	 * @param Control $control a control object
+	 */
+	private function assert_item_matches_control( array $item, $control ) {
+
+		$this->assertEquals( $control->get_type(), $item['type'] );
+		$this->assertEquals( $control->get_name(), $item['name'] );
+		$this->assertEquals( $control->get_description(), $item['description'] );
+		$this->assertEquals( $control->get_options(), $item['options'] );
+	}
+
+
 	/** @see Settings::get_item() */
 	public function test_get_item() {
 
