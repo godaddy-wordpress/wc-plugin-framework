@@ -125,7 +125,35 @@ class Settings extends \WP_REST_Controller {
 	// TODO: get_items()
 
 
-	// TODO: get_item()
+	/**
+	 * Gets a single setting.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param \WP_REST_Request $request request object
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function get_item( $request ) {
+
+		$setting_id = $request->get_param( 'id' );
+
+		if ( $setting = $this->settings->get_setting( $setting_id ) ) {
+
+			return $this->prepare_item_for_response( $setting, $request );
+
+		} else {
+
+			return new \WP_Error(
+				'wc_rest_setting_not_found',
+				sprintf(
+					/* translators: Placeholder: %s - setting ID */
+					__( 'Setting %s does not exist', 'woocommerce-plugin-framework' ),
+					$setting_id
+				),
+				[ 'status' => 404 ]
+			);
+		}
+	}
 
 
 	/** Update methods ************************************************************************************************/
