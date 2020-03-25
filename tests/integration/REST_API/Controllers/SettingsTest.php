@@ -79,6 +79,43 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	/** Tests *********************************************************************************************************/
 
 
+	/** @see Settings::get_items() */
+	public function test_get_items() {
+
+		$settings   = $this->get_settings_instance();
+		$controller = new Settings( $settings );
+
+		$settings_objects = [
+			'test_one'   => $settings->get_setting( 'test_one' ),
+			'test_two'   => $settings->get_setting( 'test_two' ),
+			'test_three' => $settings->get_setting( 'test_three' ),
+		];
+
+		$settings_objects['test_one']->set_value( 'a' );
+
+		$request  = new WP_REST_Request( 'GET', "/wc/v3/{$settings->get_id()}/settings" );
+		$response = $controller->get_items( $request );
+
+		$this->assertTrue( $response instanceof WP_REST_Response );
+		$this->assertSame( 200, $response->get_status() );
+
+		$items = $response->get_data();
+
+		foreach ( $items as $item ) {
+
+			$setting = $settings_objects[ $item['id'] ];
+
+			$this->assert_item_matches_setting( $item, $setting );
+
+			if ( $control = $setting->get_control() ) {
+				$this->assert_item_matches_control( $item['control'], $control );
+			}
+		}
+
+		$this->assertEquals( count( $settings_objects ), count( $items ) );
+	}
+
+
 	/**
 	 * Asserts that entries in an array match the properties of a setting.
 	 *
