@@ -206,6 +206,14 @@ class Settings extends \WP_REST_Controller {
 
 		try {
 
+			$setting_id = $request->get_param( 'id' );
+			$value      = $request->get_param( 'value' );
+
+			// throws an exception if the setting doesn't exist
+			$this->settings->update_value( $setting_id, $value );
+
+			return $this->prepare_item_for_response( $this->settings->get_setting( $setting_id ), $request );
+
 		} catch ( \Exception $e ) {
 
 			return new \WP_Error(
