@@ -204,6 +204,19 @@ class Settings extends \WP_REST_Controller {
 	 */
 	public function update_item( $request ) {
 
+		try {
+
+		} catch ( \Exception $e ) {
+
+			return new \WP_Error(
+				'wc_rest_setting_could_not_update',
+				sprintf(
+					/* Placeholders: %s - error message */
+					__( 'Could not update setting: %s', 'woocommerce-plugin-framework' ),
+					$e->getMessage()
+				)
+			);
+		}
 	}
 
 
