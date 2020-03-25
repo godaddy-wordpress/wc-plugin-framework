@@ -194,13 +194,47 @@ class Settings extends \WP_REST_Controller {
 	}
 
 
-	// TODO: update_item()
+	/**
+	 * Updates a single setting.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param \WP_REST_Request $request request object
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function update_item( $request ) {
+
+		try {
+
+			$setting_id = $request->get_param( 'id' );
+			$value      = $request->get_param( 'value' );
+
+			// throws an exception if the setting doesn't exist or the value is not valid
+			$this->settings->update_value( $setting_id, $value );
+
+			return rest_ensure_response( $this->prepare_setting_item( $this->settings->get_setting( $setting_id ), $request ) );
+
+		} catch ( \Exception $e ) {
+
+			return new \WP_Error(
+				'wc_rest_setting_could_not_update',
+				sprintf(
+					/* Placeholders: %s - error message */
+					__( 'Could not update setting: %s', 'woocommerce-plugin-framework' ),
+					$e->getMessage()
+				),
+				[ 'status' => $e->getCode() ?: 400 ]
+			);
+		}
+	}
 
 
 	/** Utility methods ***********************************************************************************************/
 
 
 	/**
+	 * Prepares the item for the REST response.
+	 *
 	 * @since x.y.z
 	 *
 	 * @param Setting $setting a setting object

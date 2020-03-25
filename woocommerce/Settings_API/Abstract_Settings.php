@@ -312,7 +312,7 @@ abstract class Abstract_Settings {
 		$setting = $this->get_setting( $setting_id );
 
 		if ( ! $setting ) {
-			throw new Framework\SV_WC_Plugin_Exception( "Setting {$setting_id} does not exist" );
+			throw new Framework\SV_WC_Plugin_Exception( "Setting {$setting_id} does not exist", 404 );
 		}
 
 		// performs the validations and updates the value
