@@ -27,6 +27,47 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 		require_once 'woocommerce/Settings_API/Abstract_Settings.php';
 		require_once 'woocommerce/Settings_API/Control.php';
 		require_once 'woocommerce/Settings_API/Setting.php';
+
+		$settings->register_setting( 'test_one', Setting::TYPE_STRING, [
+			'name'        => 'Test Setting One',
+			'description' => 'A simple setting',
+			'options'     => [ 'a', 'b', 'c' ],
+			'default'     => 'c',
+		] );
+
+		$settings->register_control( 'test_one', Control::TYPE_SELECT, [
+			'name'        => 'Select field',
+			'description' => 'A regular select input field for setting one',
+			'options'     => [
+				'a' => 'A',
+				'b' => 'B',
+				'c' => 'C'
+			],
+		] );
+
+		$settings->register_setting( 'test_two', Setting::TYPE_STRING, [
+			'name'        => 'Test Setting Two',
+			'description' => 'Another simple setting',
+			'options'     => [ 'a', 'b', 'c' ],
+			'default'     => 'b',
+		] );
+
+		$settings->register_control( 'test_two', Control::TYPE_SELECT, [
+			'name'        => 'Select field',
+			'description' => 'A regular select input field for setting two',
+			'options'     => [
+				'a' => 'A',
+				'b' => 'B',
+				'c' => 'C'
+			],
+		] );
+
+		$settings->register_setting( 'test_three', Setting::TYPE_STRING, [
+			'name'        => 'Test Setting Three',
+			'description' => 'A third simple setting',
+			'options'     => [ 'a', 'b', 'c' ],
+			'default'     => 'a',
+		] );
 	}
 
 
