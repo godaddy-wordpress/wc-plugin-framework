@@ -162,8 +162,8 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
-	/** @see Settings::prepare_item_for_response() */
-	public function test_prepare_item_for_response() {
+	/** @see Settings::prepare_setting_item() */
+	public function test_prepare_setting_item() {
 
 		$settings   = $this->get_settings_instance();
 		$controller = new Settings( $settings );
@@ -171,22 +171,22 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 		$setting = $settings->get_setting( 'test_one' );
 		$setting->set_value( 'a' );
 
-		$item = $controller->prepare_item_for_response( $setting, null )->get_data();
+		$item = $controller->prepare_setting_item( $setting, null );
 
 		$this->assert_item_matches_setting( $item, $setting );
 		$this->assert_item_matches_control( $item['control'], $setting->get_control() );
 	}
 
 
-	/** @see Settings::prepare_item_for_response() */
-	public function test_prepare_item_for_response_value_not_set() {
+	/** @see Settings::prepare_setting_item() */
+	public function test_prepare_setting_item_value_not_set() {
 
 		$settings   = $this->get_settings_instance();
 		$controller = new Settings( $settings );
 
 		$settings->register_setting( 'test', Setting::TYPE_STRING );
 
-		$item = $controller->prepare_item_for_response( $settings->get_setting( 'test' ), null )->get_data();
+		$item = $controller->prepare_setting_item( $settings->get_setting( 'test' ), null );
 
 		// $item['value'] is null if no value has been set for the setting
 		// we want users of the API to differentiate between a setting that's been set vs. a setting that has a default value but not saved yet
@@ -194,15 +194,15 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
-	/** @see Settings::prepare_item_for_response() */
-	public function test_prepare_item_for_response_control_not_set() {
+	/** @see Settings::prepare_setting_item() */
+	public function test_prepare_setting_item_control_not_set() {
 
 		$settings   = $this->get_settings_instance();
 		$controller = new Settings( $settings );
 
 		$settings->register_setting( 'test', Setting::TYPE_STRING );
 
-		$item = $controller->prepare_item_for_response( $settings->get_setting( 'test' ), null )->get_data();
+		$item = $controller->prepare_setting_item( $settings->get_setting( 'test' ), null );
 
 		$this->assertSame( null, $item['control'] );
 	}

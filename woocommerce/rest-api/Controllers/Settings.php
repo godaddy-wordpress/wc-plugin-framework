@@ -135,13 +135,7 @@ class Settings extends \WP_REST_Controller {
 		$items = [];
 
 		foreach ( $this->settings->get_settings() as $setting ) {
-
-			$response = $this->prepare_item_for_response( $setting, $request );
-
-			// check that the response object has data
-			if ( $response instanceof \WP_REST_Response && $response->get_data() ) {
-				$items[] = $response->get_data();
-			}
+			$items[] = $this->prepare_setting_item( $setting, $request );
 		}
 
 		return rest_ensure_response( $items );
@@ -162,7 +156,7 @@ class Settings extends \WP_REST_Controller {
 
 		if ( $setting = $this->settings->get_setting( $setting_id ) ) {
 
-			return $this->prepare_item_for_response( $setting, $request );
+			return rest_ensure_response( $this->prepare_setting_item( $setting, $request ) );
 
 		} else {
 
@@ -211,9 +205,9 @@ class Settings extends \WP_REST_Controller {
 	 *
 	 * @param Setting $setting a setting object
 	 * @param \WP_REST_Request $request request object
-	 * @return WP_Error|WP_REST_Response
+	 * @return array
 	 */
-	public function prepare_item_for_response( $setting, $request ) {
+	public function prepare_setting_item( $setting, $request ) {
 
 		if ( $setting instanceof Setting ) {
 
@@ -243,7 +237,7 @@ class Settings extends \WP_REST_Controller {
 			$item = [];
 		}
 
-		return rest_ensure_response( $item );
+		return $item;
 	}
 
 
