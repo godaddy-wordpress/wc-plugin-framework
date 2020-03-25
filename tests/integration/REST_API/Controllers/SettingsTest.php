@@ -138,7 +138,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
-	 * Asserts that entries in an array match the properties of a control
+	 * Asserts that entries in an array match the properties of a control.
 	 *
 	 * @param array $item a data array
 	 * @param Control $control a control object
