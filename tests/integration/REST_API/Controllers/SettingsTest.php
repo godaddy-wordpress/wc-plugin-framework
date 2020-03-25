@@ -68,7 +68,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 
 		$setting->set_value( 'a' );
 
-		$request = new WP_REST_Request( 'GET', "/wc/v3/{$settings->get_id()}/settings" );
+		$request = new WP_REST_Request( 'GET', "/wc/v3/{$settings->get_id()}/settings/{$setting_id}" );
 		$request->set_url_params( [ 'id' => $setting_id ] );
 
 		$response = $controller->get_item( $request );
