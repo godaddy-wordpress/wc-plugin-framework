@@ -162,6 +162,28 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/** @see Settings::update_item() */
+	public function test_update_item() {
+
+		$settings   = $this->get_settings_instance();
+		$controller = new Settings( $settings );
+
+		$setting = $settings->get_setting( 'test_one' );
+		$request = new WP_REST_Request( 'POST', "/wc/v3/{$settings->get_id()}/settings/{$setting->get_id()}" );
+
+		$request->set_header( 'content-type', 'application/json' );
+		$request->set_url_params( [ 'id' => $setting->get_id() ] );
+		$request->set_body( json_encode( [ 'value' => 'a' ] ) );
+
+		$response = $controller->update_item( $request );
+
+		$this->assertInstanceOf( WP_REST_Response::class, $response );
+		$this->assertSame( 200, $response->get_status() );
+
+		$this->assert_item_matches_setting( $response->get_data(), $setting );
+	}
+
+
 	/** @see Settings::prepare_setting_item() */
 	public function test_prepare_setting_item() {
 
