@@ -178,8 +178,6 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 		] );
 
 		$setting = $settings->get_setting( $setting_id );
-		$control = $setting->get_control();
-
 		$setting->set_value( 'a' );
 
 		$request = new WP_REST_Request( 'GET', "/wc/v3/{$settings->get_id()}/settings/{$setting_id}" );
@@ -193,19 +191,8 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 
 		$item = $response->get_data();
 
-		$this->assertEquals( $setting->get_id(), $item['id'] );
-		$this->assertEquals( $setting->get_type(), $item['type'] );
-		$this->assertEquals( $setting->get_name(), $item['name'] );
-		$this->assertEquals( $setting->get_description(), $item['description'] );
-		$this->assertEquals( $setting->is_is_multi(), $item['is_multi'] );
-		$this->assertEquals( $setting->get_options(), $item['options'] );
-		$this->assertEquals( $setting->get_default(), $item['default'] );
-		$this->assertEquals( $setting->get_value(), $item['value'] );
-
-		$this->assertEquals( $control->get_type(), $item['control']['type'] );
-		$this->assertEquals( $control->get_name(), $item['control']['name'] );
-		$this->assertEquals( $control->get_description(), $item['control']['description'] );
-		$this->assertEquals( $control->get_options(), $item['control']['options'] );
+		$this->assert_item_matches_setting( $item, $setting );
+		$this->assert_item_matches_control( $item['control'], $setting->get_control() );
 	}
 
 
