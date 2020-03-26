@@ -73,8 +73,8 @@ class Control {
 
 	/** @var string the range control type */
 	const TYPE_RANGE = 'range';
-  
-  
+
+
 	/** @var string|null the setting ID to which this control belongs */
 	protected $setting_id;
 
@@ -247,10 +247,19 @@ class Control {
 	 * @since x.y.z
 	 *
 	 * @param array $options options to set
+	 * @param array $valid_options valid option keys to check against
 	 */
-	public function set_options( array $options ) {
+	public function set_options( array $options, array $valid_options = [] ) {
 
-		// TODO: add validation and throw an exception
+		if ( ! empty( $valid_options ) ) {
+
+			foreach ( array_keys( $options ) as $key ) {
+
+				if ( ! in_array( $key, $valid_options, true ) ) {
+					unset( $options[ $key ] );
+				}
+			}
+		}
 
 		$this->options = $options;
 	}
