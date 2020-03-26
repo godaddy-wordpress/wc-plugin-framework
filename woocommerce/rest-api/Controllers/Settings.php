@@ -339,6 +339,33 @@ class Settings extends \WP_REST_Controller {
 				'control'     => [
 					'description' => __( 'Optional object that defines how the user will interact with and update the setting.', 'woocommerce-memberships' ),
 					'type'        => 'object',
+					'properties'  => [
+						'type'        => [
+							'description' => __( 'The type of the control.', 'woocommerce-plugin-framework' ),
+							'type'        => 'string',
+							'context'     => [ 'view', 'edit' ],
+							'enum'        => $this->settings->get_control_types(),
+							'readonly'    => true,
+						],
+						'name'        => [
+							'description' => __( "The name of the control. Inherits the setting's name.", 'woocommerce-plugin-framework' ),
+							'type'        => 'string',
+							'context'     => [ 'view', 'edit' ],
+							'readonly'    => true,
+						],
+						'description' => [
+							'description' => __( "The description of the control. Inherits the setting's description.", 'woocommerce-plugin-framework' ),
+							'type'        => 'string',
+							'context'     => [ 'view', 'edit' ],
+							'readonly'    => true,
+						],
+						'options'     => [
+							'description' => __( 'A list of key/value pairs defining the display value of each setting option.  The keys should match the options defined in the base setting for validation.', 'woocommerce-plugin-framework' ),
+							'type'        => 'array',
+							'context'     => [ 'view', 'edit' ],
+							'readonly'    => true,
+						],
+					],
 					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
 				],
