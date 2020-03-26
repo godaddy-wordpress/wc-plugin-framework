@@ -273,6 +273,52 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/** @see Settings::get_item_schema() */
+	public function test_get_item_schema() {
+
+		$controller = new Settings( $this->get_settings_instance() );
+
+		$setting_schema     = $controller->get_item_schema();
+		$setting_properties = [
+			'id',
+			'type',
+			'name',
+			'description',
+			'is_multi',
+			'options',
+			'default',
+			'value',
+			'control',
+		];
+
+		foreach ( $setting_properties as $property ) {
+
+			$this->assertArrayHasKey( $property, $setting_schema['properties'] );
+
+			// all Setting properties but 'value' should be marked as readonly
+			if ( 'value' === $property ) {
+				$this->assertArrayNotHasKey( 'readonly', $setting_schema['properties'][ $property ] );
+			} else {
+				$this->assertTrue( $setting_schema['properties'][ $property ]['readonly'] );
+			}
+		}
+
+		$control_schema     = $setting_schema['properties']['control'];
+		$control_properties = [
+			'type',
+			'name',
+			'description',
+			'options',
+		];
+
+		foreach ( $control_properties as $property ) {
+
+			$this->assertArrayHasKey( $property, $control_schema['properties'] );
+			$this->assertTrue( $control_schema['properties'][ $property ]['readonly'] );
+		}
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
