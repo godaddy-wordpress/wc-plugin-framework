@@ -274,8 +274,19 @@ class Settings extends \WP_REST_Controller {
 		return $item;
 	}
 
+	/**
+	 * Retrieves the item's schema, conforming to JSON Schema.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return array
+	 */
+	public function get_item_schema() {
 
-	// TODO: get_item_schema()
+		$schema = [];
+
+		return $this->add_additional_fields_schema( $schema );
+	}
 
 
 }
