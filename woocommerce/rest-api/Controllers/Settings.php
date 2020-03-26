@@ -283,7 +283,67 @@ class Settings extends \WP_REST_Controller {
 	 */
 	public function get_item_schema() {
 
-		$schema = [];
+		$schema = [
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
+			'title'      => "{$this->settings->get_id()}_setting",
+			'type'       => 'object',
+			'properties' => [
+				'id'          => [
+					'description' => __( 'Unique identifier of the setting.', 'woocommerce-plugin-framework' ),
+					'type'        => 'string',
+					'context'     => [ 'view', 'edit' ],
+					'readonly'    => true,
+				],
+				'type'        => [
+					'description' => __( 'The type of the setting.', 'woocommerce-plugin-framework' ),
+					'type'        => 'string',
+					'context'     => [ 'view', 'edit' ],
+					'enum'        => $this->settings->get_setting_types(),
+					'readonly'    => true,
+				],
+				'name'        => [
+					'description' => __( 'The name of the setting.', 'woocommerce-plugin-framework' ),
+					'type'        => 'string',
+					'context'     => [ 'view', 'edit' ],
+					'readonly'    => true,
+				],
+				'description' => [
+					'description' => __( 'The description of the setting. It may or may not be used for display.', 'woocommerce-plugin-framework' ),
+					'type'        => 'string',
+					'context'     => [ 'view', 'edit' ],
+					'readonly'    => true,
+				],
+				'is_multi'    => [
+					'description' => __( 'Whether the setting stores an array of values or a single value.', 'woocommerce-plugin-framework' ),
+					'type'        => 'boolean',
+					'context'     => [ 'view', 'edit' ],
+					'readonly'    => true,
+				],
+				'options'     => [
+					'description' => __( 'A list of valid options, used for validation before storing the value.', 'woocommerce-plugin-framework' ),
+					'type'        => 'array',
+					'context'     => [ 'view', 'edit' ],
+					'readonly'    => true,
+				],
+				'default'     => [
+					'description' => __( 'Optional default value for the setting.', 'woocommerce-plugin-framework' ),
+					'type'        => 'string',
+					'context'     => [ 'view', 'edit' ],
+					'readonly'    => true,
+				],
+				'value'       => [
+					'description' => __( 'The value of the setting.', 'woocommerce-plugin-framework' ),
+					'type'        => 'string',
+					'context'     => [ 'view', 'edit' ],
+				],
+				'control'     => [
+					'description' => __( 'Optional object that defines how the user will interact with and update the setting.', 'woocommerce-memberships' ),
+					'type'        => 'object',
+					'context'     => [ 'view', 'edit' ],
+					'readonly'    => true,
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
