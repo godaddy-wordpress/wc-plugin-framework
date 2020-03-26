@@ -274,6 +274,7 @@ class Settings extends \WP_REST_Controller {
 		return $item;
 	}
 
+	
 	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
