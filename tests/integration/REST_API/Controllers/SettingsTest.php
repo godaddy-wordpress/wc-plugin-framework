@@ -319,6 +319,23 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/** @see Settings::get_item_schema() */
+	public function test_get_item_schema_additional_fields() {
+
+		register_rest_field( "{$this->get_settings_instance()->get_id()}_setting", 'test', [
+			'schema' => [
+				'description' => 'A test field.',
+				'type'        => 'string',
+			],
+		] );
+
+		$controller = new Settings( $this->get_settings_instance() );
+		$schema     = $controller->get_item_schema();
+
+		$this->assertArrayHasKey( 'test', $schema['properties'] );
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
