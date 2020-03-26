@@ -442,11 +442,41 @@ class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
-	/** @see Abstract_Settings::get_value_for_database() */
-	public function test_get_value_for_database() {
+	/**
+	 * @see Abstract_Settings::get_value_for_database()
+	 *
+	 * @param string $type the setting type
+	 * @param mixed $value the current setting value
+	 * @param mixed $expected_value the converted value
+	 *
+	 * @dataProvider provider_get_value_for_database
+	 */
+	public function test_get_value_for_database( $type, $value, $expected_value ) {
 
-		// TODO: implement this test when save() is available {WV 2020-03-20}
-		$this->markTestSkipped();
+		$setting = new Setting();
+
+		$setting->set_type( $type );
+		$setting->set_value( $value );
+
+		$method  = new ReflectionMethod( Abstract_Settings::class, 'get_value_for_database' );
+		$method->setAccessible( true );
+
+		$this->assertSame( $expected_value, $method->invoke( $this->get_settings_instance(), $setting ) );
+	}
+
+
+	/** @see test_get_value_for_database() */
+	public function provider_get_value_for_database() {
+
+		return [
+			'string'        => [ Setting::TYPE_STRING, 'hello', 'hello' ],
+			'url'           => [ Setting::TYPE_URL, 'https://skyverge.com', 'https://skyverge.com' ],
+			'email'         => [ Setting::TYPE_EMAIL, 'hello@example.com', 'hello@example.com' ],
+			'integer'       => [ Setting::TYPE_INTEGER, 1234, 1234 ],
+			'float'         => [ Setting::TYPE_FLOAT, 12.4, 12.4 ],
+			'boolean true'  => [ Setting::TYPE_BOOLEAN, true, 'yes' ],
+			'boolean false' => [ Setting::TYPE_BOOLEAN, false, 'no' ],
+		];
 	}
 
 
