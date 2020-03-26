@@ -360,7 +360,7 @@ class Settings extends \WP_REST_Controller {
 							'readonly'    => true,
 						],
 						'options'     => [
-							'description' => __( 'A list of key/value pairs defining the display value of each setting option.  The keys should match the options defined in the base setting for validation.', 'woocommerce-plugin-framework' ),
+							'description' => __( 'A list of key/value pairs defining the display value of each setting option. The keys should match the options defined in the base setting for validation.', 'woocommerce-plugin-framework' ),
 							'type'        => 'array',
 							'context'     => [ 'view', 'edit' ],
 							'readonly'    => true,
