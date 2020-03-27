@@ -237,7 +237,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 
 			$window_object = 'wc_' . esc_js( $this->get_plugin()->get_id() ) . '_payment_methods_handler';
 			$load_function = 'load_' . esc_js( $this->get_plugin()->get_id() ) . '_payment_methods_handler';
-			$loaded_event  = esc_js( $this->get_plugin()->get_id() ) . '_payment_methods_handler_loaded';
+			$loaded_event  = strtolower( $this->get_js_handler_class_name() ) . '_loaded';
 
 			?>
 			function <?php echo esc_js( $load_function ) ?>() {

@@ -166,7 +166,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 		ob_start();
 
 		$load_function = 'load_' . esc_js( $this->get_gateway()->get_id() ) . '_apple_pay_handler';
-		$loaded_event  = esc_js( $this->get_gateway()->get_id() ) . '_apple_pay_handler_loaded';
+		$loaded_event  = strtolower( $handler_name ) . '_loaded';
 
 		?>
 		function <?php echo esc_js( $load_function ) ?>() {
