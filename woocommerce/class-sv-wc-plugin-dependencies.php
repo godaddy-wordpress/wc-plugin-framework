@@ -348,6 +348,19 @@ class SV_WC_Plugin_Dependencies {
 	}
 
 
+	/**
+	 * Returns true if any of the known scripts optimization plugins is active.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	public function is_scripts_optimization_plugin_active() {
+
+		return ! empty( $this->get_active_scripts_optimization_plugins() );
+	}
+
+
 	/** Getter methods ********************************************************/
 
 
