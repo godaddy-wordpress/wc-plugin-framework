@@ -418,6 +418,11 @@ abstract class SV_WC_Plugin {
 		require_once(  $framework_path . '/Addresses/Address.php' );
 		require_once(  $framework_path . '/Addresses/Customer_Address.php' );
 
+		// Settings API
+		require_once( $framework_path . '/Settings_API/Abstract_Settings.php' );
+		require_once( $framework_path . '/Settings_API/Setting.php' );
+		require_once( $framework_path . '/Settings_API/Control.php' );
+
 		// common utility methods
 		require_once( $framework_path . '/class-sv-wc-helper.php' );
 		require_once( $framework_path . '/Country_Helper.php' );
@@ -445,6 +450,9 @@ abstract class SV_WC_Plugin {
 		// JSON API base
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
+
+		// REST API Controllers
+		require_once( $framework_path . '/rest-api/Controllers/Settings.php' );
 
 		// Handlers
 		require_once( $framework_path . '/class-sv-wc-plugin-dependencies.php' );
@@ -929,6 +937,21 @@ abstract class SV_WC_Plugin {
 	public function get_admin_notice_handler() {
 
 		return $this->admin_notice_handler;
+	}
+
+
+	/**
+	 * Gets the settings API handler instance.
+	 *
+	 * Plugins can use this to init the settings API handler.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return void|Settings_API\Abstract_Settings
+	 */
+	public function get_settings_handler() {
+
+		return;
 	}
 
 
