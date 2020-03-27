@@ -256,6 +256,36 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 
 
 	/**
+	 * Gets the JS args for the payment methods handler.
+	 *
+	 * Payment gateways can overwrite this method to define specific args.
+	 * render_js() will apply filters to the returned array of args.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return array
+	 */
+	protected function get_js_args() {
+
+		$args = [
+			'id'              => $this->get_plugin()->get_id(),
+			'slug'            => $this->get_plugin()->get_id_dasherized(),
+			'has_core_tokens' => (bool) wc_get_customer_saved_methods_list( get_current_user_id() ),
+			'ajax_url'        => admin_url( 'admin-ajax.php' ),
+			'ajax_nonce'      => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
+			'i18n'            => [
+				'edit_button'   => esc_html__( 'Edit', 'woocommerce-plugin-framework' ),
+				'cancel_button' => esc_html__( 'Cancel', 'woocommerce-plugin-framework' ),
+				'save_error'    => esc_html__( 'Oops, there was an error updating your payment method. Please try again.', 'woocommerce-plugin-framework' ),
+				'delete_ays'    => esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ),
+			],
+		];
+
+		return $args;
+	}
+
+
+	/**
 	 * Gets the JS handler class name.
 	 *
 	 * Plugins can override this for their own JS implementations.
