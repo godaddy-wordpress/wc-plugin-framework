@@ -1011,7 +1011,12 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 		 */
 		$args = apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_js_args', $args, $this );
 
-		wc_enqueue_js( sprintf( 'window.wc_%s_payment_form_handler = new SV_WC_Payment_Form_Handler_5_6_1( %s );', esc_js( $this->get_gateway()->get_id() ), json_encode( $args ) ) );
+		wc_enqueue_js( sprintf(
+			'window.wc_%s_payment_form_handler = new %s( %s );',
+			esc_js( $this->get_gateway()->get_id() ),
+			parent::get_js_handler_class_name(),
+			json_encode( $args )
+		) );
 	}
 
 
