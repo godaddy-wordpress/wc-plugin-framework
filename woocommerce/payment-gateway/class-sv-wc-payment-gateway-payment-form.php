@@ -48,6 +48,9 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 	/** @var bool default to show new payment method form */
 	protected $default_new_payment_method = true;
 
+	/** @var string JS handler base class name, without the FW version */
+	protected $js_handler_base_class_name = 'SV_WC_Payment_Form_Handler';
+
 
 	/**
 	 * Sets up class.
