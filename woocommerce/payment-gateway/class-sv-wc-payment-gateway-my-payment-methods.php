@@ -37,7 +37,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\SV_WC_Pa
  *
  * @since 4.0.0
  */
-class SV_WC_Payment_Gateway_My_Payment_Methods {
+class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 
 
 	/** @var SV_WC_Payment_Gateway_Plugin */
