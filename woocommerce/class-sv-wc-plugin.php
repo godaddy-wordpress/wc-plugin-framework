@@ -37,13 +37,13 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\SV_WC_Pl
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 5.6.1
+ * @version 5.7.0
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.6.1';
+	const VERSION = '5.7.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
