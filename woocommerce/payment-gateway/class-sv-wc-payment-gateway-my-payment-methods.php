@@ -55,6 +55,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 	/** @var bool true if there are tokens */
 	protected $has_tokens;
 
+	/** @var string JS handler base class name, without the FW version */
+	protected $js_handler_base_class_name = 'SV_WC_Payment_Methods_Handler';
+
 
 	/**
 	 * Setup Class
