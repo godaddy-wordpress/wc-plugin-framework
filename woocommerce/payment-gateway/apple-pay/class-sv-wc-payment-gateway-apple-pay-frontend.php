@@ -46,6 +46,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 	/** @var SV_WC_Payment_Gateway $gateway the gateway instance */
 	protected $gateway;
 
+	/** @var string JS handler base class name, without the FW version */
+	protected $js_handler_base_class_name = 'SV_WC_Apple_Pay_Handler';
+
 
 	/**
 	 * Constructs the class.
