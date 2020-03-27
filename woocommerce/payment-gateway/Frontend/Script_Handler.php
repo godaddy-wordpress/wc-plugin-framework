@@ -38,6 +38,11 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Frontend
  */
 abstract class Script_Handler {
 
+
+	/** @var string JS handler base class name, without the FW version */
+	protected $js_handler_base_class_name = '';
+
+
 }
 
 endif;
