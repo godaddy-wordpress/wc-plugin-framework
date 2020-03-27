@@ -43,6 +43,18 @@ abstract class Script_Handler {
 	protected $js_handler_base_class_name = '';
 
 
+	/**
+	 * Returns the JS handler class name.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	protected function get_js_handler_class_name() {
+
+	}
+
+
 }
 
 endif;
