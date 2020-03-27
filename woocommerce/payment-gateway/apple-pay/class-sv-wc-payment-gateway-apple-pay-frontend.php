@@ -182,7 +182,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 */
 	protected function get_js_handler_name() {
 
-		return 'SV_WC_Apple_Pay_Handler';
+		return 'SV_WC_Apple_Pay_Handler_5_6_1';
 	}
 
 
