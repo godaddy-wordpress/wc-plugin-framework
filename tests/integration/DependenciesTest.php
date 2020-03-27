@@ -31,11 +31,20 @@ class DependenciesTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
-	 * @see \SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin_Dependencies::get_active_scripts_optimization_plugins
+	 * @see \SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin_Dependencies::get_active_scripts_optimization_plugins()
 	 */
 	public function test_get_active_scripts_optimization_plugins() {
 
 		$this->assertEquals( [], $this->get_plugin()->get_dependency_handler()->get_active_scripts_optimization_plugins() );
+	}
+
+
+	/**
+	 * @see \SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin_Dependencies::is_scripts_optimization_plugin_active()
+	 */
+	public function test_is_scripts_optimization_plugin_active() {
+
+		$this->assertEquals( false, $this->get_plugin()->get_dependency_handler()->is_scripts_optimization_plugin_active() );
 	}
 
 
