@@ -155,7 +155,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 		}
 
 		if ( ! $handler_name ) {
-			$handler_name = $this->get_js_handler_name();
+			$handler_name = parent::get_js_handler_class_name();
 		}
 
 		$args = array_merge( $args, $this->get_js_handler_params() );
@@ -177,12 +177,15 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 	 * Concrete implementations can override this with their own handler.
 	 *
 	 * @since 5.6.0
+	 * @deprecated x.y.z
 	 *
 	 * @return string
 	 */
 	protected function get_js_handler_name() {
 
-		return 'SV_WC_Apple_Pay_Handler_5_6_1';
+		wc_deprecated_function( __METHOD__, 'x.y.z', parent::get_js_handler_class_name() );
+
+		return parent::get_js_handler_class_name();
 	}
 
 
