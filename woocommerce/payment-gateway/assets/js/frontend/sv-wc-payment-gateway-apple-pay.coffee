@@ -14,7 +14,7 @@ jQuery( document ).ready ($) ->
 	# The WooCommerce Apple Pay handler base class.
 	#
 	# @since 4.7.0
-	class window.SV_WC_Apple_Pay_Handler
+	class window.SV_WC_Apple_Pay_Handler_5_6_1
 
 
 		# Constructs the handler.
