@@ -981,7 +981,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 	 */
 	public function render_js() {
 
-		$args = $this->get_js_args();
+		$args = $this->get_js_handler_params();
 
 		/**
 		 * Payment Gateway Payment Form JS Arguments Filter.
@@ -1039,7 +1039,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 	 *
 	 * @return array
 	 */
-	protected function get_js_args() {
+	protected function get_js_handler_params() {
 
 		$args = [
 			'plugin_id'               => $this->get_gateway()->get_plugin()->get_id(),

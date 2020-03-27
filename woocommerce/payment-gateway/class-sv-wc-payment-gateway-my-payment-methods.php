@@ -221,7 +221,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 
 		if ( $this->has_tokens ) {
 
-			$args = $this->get_js_args();
+			$args = $this->get_js_handler_params();
 
 			/**
 			 * Filters the payment gateway payment methods JavaScript args.
@@ -271,7 +271,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 	 *
 	 * @return array
 	 */
-	protected function get_js_args() {
+	protected function get_js_handler_params() {
 
 		$args = [
 			'id'              => $this->get_plugin()->get_id(),
