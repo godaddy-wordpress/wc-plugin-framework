@@ -1000,12 +1000,32 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 		 */
 		$args = apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_js_args', $args, $this );
 
-		wc_enqueue_js( sprintf(
-			'window.wc_%s_payment_form_handler = new %s( %s );',
-			esc_js( $this->get_gateway()->get_id() ),
-			parent::get_js_handler_class_name(),
-			json_encode( $args )
-		) );
+		ob_start();
+
+		$window_object = 'wc_' . esc_js( $this->get_gateway()->get_id() ) . '_payment_form_handler';
+		$load_function = 'load_' . esc_js( $this->get_gateway()->get_id() ) . '_payment_form_handler';
+		$loaded_event  = esc_js( $this->get_gateway()->get_id() ) . '_payment_form_handler_loaded';
+
+		?>
+		function <?php echo esc_js( $load_function ) ?>() {
+
+			window.<?php echo esc_js( $window_object ); ?> = new <?php echo esc_js( $this->get_js_handler_class_name() ); ?>( <?php echo json_encode( $args ); ?> );
+
+			window.jQuery( document.body ).trigger( 'update_checkout' );
+		}
+
+		try {
+			if ( 'undefined' !== typeof <?php echo esc_js( $this->get_js_handler_class_name() ); ?> ) {
+				<?php echo esc_js( $load_function ); ?>();
+			} else {
+				window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+			}
+		} catch( err ) {
+			window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+		}
+		<?php
+
+		wc_enqueue_js( ob_get_clean() );
 	}
 
 
