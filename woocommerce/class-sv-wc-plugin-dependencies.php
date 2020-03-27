@@ -312,6 +312,42 @@ class SV_WC_Plugin_Dependencies {
 	}
 
 
+	/**
+	 * Returns the active scripts optimization plugins.
+	 *
+	 * Returns a key-value array where the key contains the plugin file identifier and the value is the name of the plugin.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return array
+	 */
+	public function get_active_scripts_optimization_plugins() {
+
+		// optimization plugins to look for, indexed by the plugin file identifier
+		$plugins = [
+			'async-javascript.php' => 'Async JavaScript',
+			'autoptimize.php'      => 'Autoptimize',
+			'wp-hummingbird.php'   => 'Hummingbird',
+			'sg-optimizer.php'     => 'SG Optimizer',
+			'w3-total-cache.php'   => 'W3 Total Cache',
+			'wpFastestCache.php'   => 'WP Fastest Cache',
+			'wp-rocket.php'        => 'WP Rocket',
+		];
+
+		$active_plugins = [];
+
+		foreach ( $plugins as $filename => $plugin_name ) {
+
+			if ( $this->get_plugin()->is_plugin_active( $filename ) ) {
+
+				$active_plugins[ $filename ] = $plugin_name;
+			}
+		}
+
+		return $active_plugins;
+	}
+
+
 	/** Getter methods ********************************************************/
 
 
