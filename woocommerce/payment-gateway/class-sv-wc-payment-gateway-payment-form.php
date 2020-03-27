@@ -1020,6 +1020,35 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 	}
 
 
+	/**
+	 * Gets the JS args for the payment form handler.
+	 *
+	 * Payment gateways can overwrite this method to define specific args.
+	 * render_js() will apply filters to the returned array of args.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return array
+	 */
+	protected function get_js_args() {
+
+		$args = [
+			'plugin_id'               => $this->get_gateway()->get_plugin()->get_id(),
+			'id'                      => $this->get_gateway()->get_id(),
+			'id_dasherized'           => $this->get_gateway()->get_id_dasherized(),
+			'type'                    => $this->get_gateway()->get_payment_type(),
+			'csc_required'            => $this->get_gateway()->csc_enabled(),
+			'csc_required_for_tokens' => $this->get_gateway()->csc_enabled_for_tokens(),
+		];
+
+		if ( $this->get_gateway()->supports_card_types() ) {
+			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
+		}
+
+		return $args;
+	}
+
+
 }
 
 
