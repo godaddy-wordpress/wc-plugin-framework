@@ -216,3 +216,7 @@ jQuery( document ).ready ($) ->
 			columns = $( ".wc-#{@slug}-my-payment-methods thead tr th" ).size()
 
 			$( '<tr class="error"><td colspan="' + columns + '">' + message + '</td></tr>' ).insertAfter( row ).find( 'td' ).delay( 8000 ).slideUp( 200 )
+
+
+	# dispatch loaded event
+	$( document.body ).trigger( 'sv_wc_payment_methods_handler_5_6_1_loaded' )
