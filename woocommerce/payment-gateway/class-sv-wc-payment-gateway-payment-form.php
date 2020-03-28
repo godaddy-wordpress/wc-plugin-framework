@@ -1003,8 +1003,8 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 		ob_start();
 
 		$handler_name  = $this->get_js_handler_class_name();
-		$window_object = 'wc_' . esc_js( $this->get_gateway()->get_id() ) . '_payment_form_handler';
-		$load_function = 'load_' . esc_js( $this->get_gateway()->get_id() ) . '_payment_form_handler';
+		$window_object = 'wc_' . $this->get_gateway()->get_id() . '_payment_form_handler';
+		$load_function = 'load_' . $this->get_gateway()->get_id() . '_payment_form_handler';
 		$loaded_event  = strtolower( $handler_name ) . '_loaded';
 
 		?>
