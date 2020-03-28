@@ -267,7 +267,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 	 */
 	protected function get_js_handler_class() {
 
-		wc_deprecated_function( __METHOD__, 'x.y.z', parent::get_js_handler_class_name() );
+		wc_deprecated_function( __METHOD__, 'x.y.z', __CLASS__ . '::get_js_handler_class_name()' );
 
 		return parent::get_js_handler_class_name();
 	}
