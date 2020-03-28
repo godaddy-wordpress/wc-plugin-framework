@@ -37,7 +37,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\SV_WC_Pa
  *
  * @since 4.0.0
  */
-class SV_WC_Payment_Gateway_My_Payment_Methods {
+class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 
 
 	/** @var SV_WC_Payment_Gateway_Plugin */
@@ -54,6 +54,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 	/** @var bool true if there are tokens */
 	protected $has_tokens;
+
+	/** @var string JS handler base class name, without the FW version */
+	protected $js_handler_base_class_name = 'SV_WC_Payment_Methods_Handler';
 
 
 	/**
@@ -245,7 +248,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			wc_enqueue_js( sprintf(
 				'window.wc_%1$s_payment_methods_handler = new %2$s( %3$s );',
 				esc_js( $this->get_plugin()->get_id() ),
-				esc_js( $this->get_js_handler_class() ),
+				esc_js( parent::get_js_handler_class_name() ),
 				json_encode( $args )
 			) );
 		}
@@ -258,12 +261,15 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * Plugins can override this for their own JS implementations.
 	 *
 	 * @since 5.1.0
+	 * @deprecated x.y.z
 	 *
 	 * @return string
 	 */
 	protected function get_js_handler_class() {
 
-		return 'SV_WC_Payment_Methods_Handler_5_6_1';
+		wc_deprecated_function( __METHOD__, 'x.y.z', __CLASS__ . '::get_js_handler_class_name()' );
+
+		return parent::get_js_handler_class_name();
 	}
 
 

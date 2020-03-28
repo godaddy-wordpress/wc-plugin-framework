@@ -34,7 +34,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\SV_WC_Pa
  *
  * @since 4.7.0
  */
-class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
+class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 
 
 	/** @var SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance */
@@ -45,6 +45,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 	/** @var SV_WC_Payment_Gateway $gateway the gateway instance */
 	protected $gateway;
+
+	/** @var string JS handler base class name, without the FW version */
+	protected $js_handler_base_class_name = 'SV_WC_Apple_Pay_Handler';
 
 
 	/**
@@ -155,7 +158,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		}
 
 		if ( ! $handler_name ) {
-			$handler_name = $this->get_js_handler_name();
+			$handler_name = parent::get_js_handler_class_name();
 		}
 
 		$args = array_merge( $args, $this->get_js_handler_params() );
@@ -177,12 +180,15 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * Concrete implementations can override this with their own handler.
 	 *
 	 * @since 5.6.0
+	 * @deprecated x.y.z
 	 *
 	 * @return string
 	 */
 	protected function get_js_handler_name() {
 
-		return 'SV_WC_Apple_Pay_Handler_5_6_1';
+		wc_deprecated_function( __METHOD__, 'x.y.z', __CLASS__ . '::get_js_handler_class_name()' );
+
+		return parent::get_js_handler_class_name();
 	}
 
 
