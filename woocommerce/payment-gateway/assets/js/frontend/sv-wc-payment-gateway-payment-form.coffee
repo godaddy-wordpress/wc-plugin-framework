@@ -382,3 +382,7 @@ jQuery( document ).ready ($) ->
 		#
 		# @since 3.0.0
 		unblock_ui: -> @form.unblock()
+
+
+	# dispatch loaded event
+	$( document.body ).trigger( "wc_#{ @plugin_id }_payment_form_handler_loaded" )
