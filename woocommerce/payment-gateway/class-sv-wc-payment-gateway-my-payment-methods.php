@@ -235,18 +235,19 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 
 			ob_start();
 
+			$handler_name  = $this->get_js_handler_class_name();
 			$window_object = 'wc_' . esc_js( $this->get_plugin()->get_id() ) . '_payment_methods_handler';
 			$load_function = 'load_' . esc_js( $this->get_plugin()->get_id() ) . '_payment_methods_handler';
-			$loaded_event  = strtolower( $this->get_js_handler_class_name() ) . '_loaded';
+			$loaded_event  = strtolower( $handler_name ) . '_loaded';
 
 			?>
 			function <?php echo esc_js( $load_function ) ?>() {
 
-				window.<?php echo esc_js( $window_object ); ?> = new <?php echo esc_js( $this->get_js_handler_class_name() ); ?>( <?php echo json_encode( $args ); ?> );
+				window.<?php echo esc_js( $window_object ); ?> = new <?php echo esc_js( $handler_name ); ?>( <?php echo json_encode( $args ); ?> );
 			}
 
 			try {
-				if ( 'undefined' !== typeof <?php echo esc_js( $this->get_js_handler_class_name() ); ?> ) {
+				if ( 'undefined' !== typeof <?php echo esc_js( $handler_name ); ?> ) {
 					<?php echo esc_js( $load_function ); ?>();
 				} else {
 					window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
