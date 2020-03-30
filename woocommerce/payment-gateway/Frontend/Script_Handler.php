@@ -77,9 +77,9 @@ abstract class Script_Handler {
 		var errorName    = '',
 		    errorMessage = '';
 
-		if ( undefined === err || 0 === err.length ) {
-			errorName    = '<?php echo esc_js( sprintf( 'The script %s could not be loaded.', $this->get_js_handler_class_name() ) ); ?>';
-			errorMessage = '<?php echo esc_js( 'An error has occurred.' ); ?>';
+		if ( 'undefined' === typeof err || 0 === err.length || ! err ) {
+			errorName    = '<?php echo esc_js( 'A script error has occurred.' ); ?>';
+			errorMessage = '<?php echo esc_js( sprintf( 'The script %s could not be loaded.', $this->get_js_handler_class_name() ) ); ?>';
 		} else {
 			errorName    = err.name;
 			errorMessage = err.message;

@@ -1020,9 +1020,11 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 				<?php echo esc_js( $load_function ); ?>();
 			} else {
 				window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+				<?php echo $this->get_js_handler_event_debug_log_request(); ?>
 			}
 		} catch( err ) {
 			window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+			<?php echo $this->get_js_handler_event_debug_log_request(); ?>
 		}
 		<?php
 
