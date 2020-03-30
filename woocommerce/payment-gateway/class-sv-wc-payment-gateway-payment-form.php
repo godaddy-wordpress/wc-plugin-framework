@@ -80,6 +80,8 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 	 */
 	protected function add_hooks() {
 
+		parent::add_hooks();
+
 		$gateway_id = $this->get_gateway()->get_id();
 
 		// payment form description

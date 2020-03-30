@@ -68,10 +68,23 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 
 		if ( $this->get_handler()->is_available() ) {
 
-			add_action( 'wp', array( $this, 'init' ) );
-
-			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+			$this->add_hooks();
 		}
+	}
+
+
+	/**
+	 * Adds hooks.
+	 *
+	 * @since x.y.z
+	 */
+	protected function add_hooks() {
+
+		parent::add_hooks();
+
+		add_action( 'wp', [ $this, 'init' ] );
+
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 	}
 
 

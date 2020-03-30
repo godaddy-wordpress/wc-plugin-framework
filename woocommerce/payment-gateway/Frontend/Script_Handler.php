@@ -52,7 +52,7 @@ abstract class Script_Handler {
 	 *
 	 * @since x.y.z
 	 */
-	protected function init_hooks() {
+	protected function add_hooks() {
 
 		$plugin    = is_callable( [ $this, 'get_plugin' ] ) ? $this->get_plugin() : null;
 		$plugin_id = $plugin instanceof SV_WC_Plugin ? $plugin->get_id() : '';
