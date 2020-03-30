@@ -242,7 +242,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 
 			?>
 			function <?php echo esc_js( $load_function ) ?>() {
-
 				window.<?php echo esc_js( $window_object ); ?> = new <?php echo esc_js( $handler_name ); ?>( <?php echo json_encode( $args ); ?> );
 			}
 
@@ -251,9 +250,11 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 					<?php echo esc_js( $load_function ); ?>();
 				} else {
 					window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+					<?php echo $this->get_js_handler_event_debug_log_request(); ?>
 				}
 			} catch( err ) {
 				window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+				<?php echo $this->get_js_handler_event_debug_log_request(); ?>
 			}
 			<?php
 
