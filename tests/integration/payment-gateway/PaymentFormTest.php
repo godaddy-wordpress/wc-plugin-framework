@@ -91,8 +91,8 @@ class PaymentFormTest extends \Codeception\TestCase\WPTestCase {
 
 		$this->get_plugin()->get_gateway()->get_payment_form_instance()->render_js();
 
-		$this->assertStringContainsString('function load_test_gateway_payment_form_handler', $wc_queued_js);
-		$this->assertStringContainsString('window.jQuery( document.body ).on( \'sv_wc_payment_form_handler_5_6_1_loaded\', load_test_gateway_payment_form_handler );', $wc_queued_js);
+		$this->assertStringContainsString( 'function load_test_gateway_payment_form_handler', $wc_queued_js );
+		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_payment_form_handler_5_6_1_loaded\', load_test_gateway_payment_form_handler );', $wc_queued_js );
 	}
 
 
