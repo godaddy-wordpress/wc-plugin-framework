@@ -57,6 +57,46 @@ class ApplePayFrontendTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
+	 * @see SV_WC_Payment_Gateway_Apple_Pay_Frontend::get_js_handler_params.
+	 */
+	public function test_get_js_handler_params() {
+
+		$property = new ReflectionProperty( SV_WC_Payment_Gateway_Apple_Pay::class, 'frontend' );
+		$property->setAccessible( true );
+
+		$frontend = $property->getValue( $this->get_plugin()->get_apple_pay_instance() );
+
+		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_Apple_Pay_Frontend::class, 'get_js_handler_params' );
+		$method->setAccessible( true );
+
+		$result = $method->invoke( $frontend );
+
+		$get_handler_method = new ReflectionMethod( SV_WC_Payment_Gateway_Apple_Pay_Frontend::class, 'get_handler' );
+		$get_handler_method->setAccessible( true );
+
+		$expected_result = [
+			'gateway_id'               => $this->get_plugin()->get_gateway()->get_id(),
+			'gateway_id_dasherized'    => $this->get_plugin()->get_gateway()->get_id_dasherized(),
+			'merchant_id'              => $get_handler_method->invoke( $frontend )->get_merchant_id(),
+			'ajax_url'                 => admin_url( 'admin-ajax.php' ),
+			'validate_nonce'           => wp_create_nonce( 'wc_' . $this->get_plugin()->get_gateway()->get_id() . '_apple_pay_validate_merchant' ),
+			'recalculate_totals_nonce' => wp_create_nonce( 'wc_' . $this->get_plugin()->get_gateway()->get_id() . '_apple_pay_recalculate_totals' ),
+			'process_nonce'            => wp_create_nonce( 'wc_' . $this->get_plugin()->get_gateway()->get_id() . '_apple_pay_process_payment' ),
+			'generic_error'            => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
+		];
+
+		$this->assertNotEmpty( $result );
+
+		// because assertArraySubset is being deprecated
+		foreach ( $expected_result as $key => $value ) {
+
+			$this->assertArrayHasKey( $key, $result );
+			$this->assertSame( $value, $result[ $key ] );
+		}
+	}
+
+
+	/**
 	 * @see SV_WC_Payment_Gateway_Apple_Pay_Frontend::enqueue_js_handler.
 	 */
 	public function test_enqueue_js_handler() {
