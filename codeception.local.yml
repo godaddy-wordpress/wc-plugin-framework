@@ -6,5 +6,6 @@ extensions:
             files:
                 woocommerce: 'tests/_support/plugins/test-plugin/vendor/skyverge/wc-plugin-framework/woocommerce'
                 tests/_support/plugins/test-plugin: '%WP_ROOT_FOLDER%/wp-content/plugins/test-plugin'
+                tests/_support/plugins/gateway-test-plugin: '%WP_ROOT_FOLDER%/wp-content/plugins/gateway-test-plugin'
 params:
     - .env
