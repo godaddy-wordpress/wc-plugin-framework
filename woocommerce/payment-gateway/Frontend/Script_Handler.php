@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Frontend;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Frontend\\Script_Handler' ) ) :
@@ -53,6 +55,35 @@ abstract class Script_Handler {
 	protected function get_js_handler_class_name() {
 
 		return sprintf( '%s_5_6_1', $this->js_handler_base_class_name );
+	}
+
+
+	/**
+	 * Gets inline JavaScript code to issue an AJAX request to add a script error event to the debug log.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	protected function get_js_handler_event_debug_log_request() {
+
+		$plugin    = is_callable( [ $this, 'get_plugin' ] ) ? $this->get_plugin() : null;
+		$plugin_id = $plugin instanceof SV_WC_Plugin ? $plugin->get_id() : '';
+
+		ob_start();
+
+		?>
+		jQuery.post( '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ; ?>', {
+			action:   '<?php echo esc_js( "wc_{$plugin_id}_log_script_event" ); ?>',
+			security: '<?php echo esc_js( wp_create_nonce( "wc-{$plugin_id}-log-script-event" ); ?>',
+			script:   '<?php echo esc_js( $this->get_js_handler_class_name() ); ?>',
+			type:     'error',
+			name:     err.name,
+			message:  err.message,
+		} );
+		<?php
+
+		return ob_get_clean();
 	}
 
 
