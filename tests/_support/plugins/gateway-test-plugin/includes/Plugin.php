@@ -28,9 +28,12 @@ class Plugin extends Framework\SV_WC_Payment_Gateway_Plugin {
 		parent::__construct(
 			self::PLUGIN_ID,
 			self::VERSION,
-			array(
+			[
 				'text_domain' => 'sv-wc-gateway-test-plugin',
-			)
+				'gateways'    => [
+					'test_gateway' => '\SkyVerge\WooCommerce\GatewayTestPlugin\Gateway',
+				]
+			]
 		);
 
 		add_filter( 'wc_payment_gateway_gateway_test_plugin_activate_apple_pay', '__return_true' );
@@ -58,12 +61,6 @@ class Plugin extends Framework\SV_WC_Payment_Gateway_Plugin {
 	protected function get_file() {
 
 		return __DIR__;
-	}
-
-
-	public function supports_apple_pay() {
-
-		return true;
 	}
 
 
