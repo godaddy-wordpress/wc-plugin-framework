@@ -73,14 +73,27 @@ abstract class Script_Handler {
 		ob_start();
 
 		?>
+
+		var errorName    = '',
+		    errorMessage = '';
+
+		if ( undefined === err || 0 === err.length ) {
+			errorName    = '<?php echo esc_js( sprintf( 'The script %s could not be loaded.', $this->get_js_handler_class_name() ) ); ?>';
+			errorMessage = '<?php echo esc_js( 'An error has occurred.' ); ?>';
+		} else {
+			errorName    = err.name;
+			errorMessage = err.message;
+		}
+
 		jQuery.post( '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ; ?>', {
 			action:   '<?php echo esc_js( "wc_{$plugin_id}_log_script_event" ); ?>',
 			security: '<?php echo esc_js( wp_create_nonce( "wc-{$plugin_id}-log-script-event" ); ?>',
 			script:   '<?php echo esc_js( $this->get_js_handler_class_name() ); ?>',
 			type:     'error',
-			name:     err.name,
-			message:  err.message,
+			name:     errorName,
+			message:  errorMessage,
 		} );
+
 		<?php
 
 		return ob_get_clean();
