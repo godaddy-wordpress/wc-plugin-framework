@@ -117,6 +117,33 @@ abstract class Script_Handler {
 	}
 
 
+	/**
+	 * Logs a script error from AJAX request.
+	 *
+	 * @see Script_Handler::get_js_handler_event_debug_log_request()
+	 *
+	 * @since x.y.z
+	 *
+	 * @internal
+	 */
+	public function log_script_event() {
+
+		$plugin    = is_callable( [ $this, 'get_plugin' ] ) ? $this->get_plugin() : null;
+		$plugin_id = $plugin instanceof SV_WC_Plugin ? $plugin->get_id() : '';
+
+		check_ajax_referer( "wc-{$plugin_id}-log-script-event", 'security' );
+
+		$type    = isset( $_POST['type'] )    ? $_POST['type']            : '';
+		$title   = isset( $_POST['name'] )    ? trim( $_POST['name'] )    : '';
+		$message = isset( $_POST['message'] ) ? trim( $_POST['message'] ) : '';
+
+		if ( $title && $message && 'error' === $type && $plugin instanceof SV_WC_Plugin ) {
+
+			$plugin->log( sprintf( '%1$s: %2$s', $title, $message ) );
+		}
+	}
+
+
 }
 
 endif;
