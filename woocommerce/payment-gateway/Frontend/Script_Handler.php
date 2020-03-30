@@ -87,7 +87,7 @@ abstract class Script_Handler {
 
 		jQuery.post( '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ; ?>', {
 			action:   '<?php echo esc_js( "wc_{$plugin_id}_log_script_event" ); ?>',
-			security: '<?php echo esc_js( wp_create_nonce( "wc-{$plugin_id}-log-script-event" ); ?>',
+			security: '<?php echo esc_js( wp_create_nonce( "wc-{$plugin_id}-log-script-event" ) ); ?>',
 			script:   '<?php echo esc_js( $this->get_js_handler_class_name() ); ?>',
 			type:     'error',
 			name:     errorName,
