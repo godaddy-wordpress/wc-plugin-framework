@@ -158,6 +158,19 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 
 
 	/**
+	 * Gets the main plugin instance from the gateway.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return SV_WC_Payment_Gateway_Plugin
+	 */
+	protected function get_plugin() {
+
+		return $this->get_gateway()->get_plugin();
+	}
+
+
+	/**
 	 * Return true if the current user has active tokens to display
 	 *
 	 * @since 4.0.0
