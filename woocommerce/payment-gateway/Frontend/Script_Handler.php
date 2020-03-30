@@ -48,8 +48,6 @@ abstract class Script_Handler {
 	/**
 	 * Adds hooks.
 	 *
-	 * Child classes might want to call this method from their constructors.
-	 *
 	 * @since x.y.z
 	 */
 	protected function add_hooks() {
