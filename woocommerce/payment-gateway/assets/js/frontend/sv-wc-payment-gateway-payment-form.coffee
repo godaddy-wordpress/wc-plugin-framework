@@ -385,4 +385,4 @@ jQuery( document ).ready ($) ->
 
 
 	# dispatch loaded event
-	$( document.body ).trigger( "wc_#{ @plugin_id }_payment_form_handler_loaded" )
+	$( document.body ).trigger( "sv_wc_payment_form_handler_5_6_1_loaded" )
