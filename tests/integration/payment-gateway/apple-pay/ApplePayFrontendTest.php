@@ -56,6 +56,31 @@ class ApplePayFrontendTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/**
+	 * @see SV_WC_Payment_Gateway_Apple_Pay_Frontend::enqueue_js_handler.
+	 */
+	public function test_enqueue_js_handler() {
+
+		global $wc_queued_js;
+
+		// reset queued scripts
+		$wc_queued_js = '';
+
+		$property = new ReflectionProperty( SV_WC_Payment_Gateway_Apple_Pay::class, 'frontend' );
+		$property->setAccessible( true );
+
+		$frontend = $property->getValue( $this->get_plugin()->get_apple_pay_instance() );
+
+		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_Apple_Pay_Frontend::class, 'enqueue_js_handler' );
+		$method->setAccessible( true );
+
+		$method->invokeArgs( $frontend, [[]] );
+
+		$this->assertStringContainsString( 'function load_test_gateway_apple_pay_handler', $wc_queued_js );
+		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_apple_pay_handler_5_6_1_loaded\', load_test_gateway_apple_pay_handler );', $wc_queued_js );
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
