@@ -37,6 +37,12 @@ class Plugin extends Framework\SV_WC_Payment_Gateway_Plugin {
 		);
 
 		add_filter( 'wc_payment_gateway_gateway_test_plugin_activate_apple_pay', '__return_true' );
+
+		// make this plugin's gateway the one set up for Apple Pay
+		add_filter( 'pre_option_sv_wc_apple_pay_payment_gateway', function () {
+
+			return $this->get_gateway()->get_id();
+		} );
 	}
 
 
