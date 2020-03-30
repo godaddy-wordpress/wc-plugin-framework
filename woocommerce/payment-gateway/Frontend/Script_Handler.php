@@ -46,6 +46,23 @@ abstract class Script_Handler {
 
 
 	/**
+	 * Adds hooks.
+	 *
+	 * Child classes might want to call this method from their constructors.
+	 *
+	 * @since x.y.z
+	 */
+	protected function init_hooks() {
+
+		$plugin    = is_callable( [ $this, 'get_plugin' ] ) ? $this->get_plugin() : null;
+		$plugin_id = $plugin instanceof SV_WC_Plugin ? $plugin->get_id() : '';
+
+		add_action( "wp_ajax_wc_{$plugin_id}_log_script_event",        [ $this, 'log_script_event' ] );
+		add_action( "wp_ajax_nopriv_wc_{$plugin_id}_log_script_event", [ $this, 'log_script_event' ] );
+	}
+
+
+	/**
 	 * Returns the JS handler class name.
 	 *
 	 * @since x.y.z
