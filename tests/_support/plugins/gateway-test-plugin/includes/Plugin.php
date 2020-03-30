@@ -32,6 +32,8 @@ class Plugin extends Framework\SV_WC_Payment_Gateway_Plugin {
 				'text_domain' => 'sv-wc-gateway-test-plugin',
 			)
 		);
+
+		add_filter( 'wc_payment_gateway_gateway_test_plugin_activate_apple_pay', '__return_true' );
 	}
 
 
@@ -56,6 +58,12 @@ class Plugin extends Framework\SV_WC_Payment_Gateway_Plugin {
 	protected function get_file() {
 
 		return __DIR__;
+	}
+
+
+	public function supports_apple_pay() {
+
+		return true;
 	}
 
 
