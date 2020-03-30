@@ -49,6 +49,36 @@ class PaymentFormTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/**
+	 * @see SV_WC_Payment_Gateway_Payment_Form::get_js_handler_params.
+	 */
+	public function test_get_js_handler_params() {
+
+		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_Payment_Form::class, 'get_js_handler_params' );
+		$method->setAccessible( true );
+
+		$result = $method->invoke( $this->get_plugin()->get_gateway()->get_payment_form_instance() );
+
+		$expected_result = [
+			'plugin_id'               => $this->get_plugin()->get_id(),
+			'id'                      => $this->get_plugin()->get_gateway()->get_id(),
+			'id_dasherized'           => $this->get_plugin()->get_gateway()->get_id_dasherized(),
+			'type'                    => $this->get_plugin()->get_gateway()->get_payment_type(),
+			'csc_required'            => $this->get_plugin()->get_gateway()->csc_enabled(),
+			'csc_required_for_tokens' => $this->get_plugin()->get_gateway()->csc_enabled_for_tokens(),
+		];
+
+		$this->assertNotEmpty( $result );
+
+		// because assertArraySubset is being deprecated
+		foreach ( $expected_result as $key => $value ) {
+
+			$this->assertArrayHasKey( $key, $result );
+			$this->assertSame( $value, $result[ $key ] );
+		}
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
