@@ -163,14 +163,30 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 
 		$args = array_merge( $args, $this->get_js_handler_params() );
 
-		wc_enqueue_js(
-			sprintf(
-				'window.%1$s = new %2$s(%3$s); window.%1$s.init()',
-				esc_attr( $object_name ),
-				esc_attr( $handler_name ),
-				json_encode( $args )
-			)
-		);
+		ob_start();
+
+		$load_function = 'load_' . $this->get_gateway()->get_id() . '_apple_pay_handler';
+		$loaded_event  = strtolower( $handler_name ) . '_loaded';
+
+		?>
+		function <?php echo esc_js( $load_function ) ?>() {
+
+			window.<?php echo esc_js( $object_name ); ?> = new <?php echo esc_js( $handler_name ); ?>( <?php echo json_encode( $args ); ?> );
+			window.<?php echo esc_js( $object_name ); ?>.init();
+		}
+
+		try {
+			if ( 'undefined' !== typeof <?php echo esc_js( $handler_name ); ?> ) {
+				<?php echo esc_js( $load_function ); ?>();
+			} else {
+				window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+			}
+		} catch( err ) {
+			window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+		}
+		<?php
+
+		wc_enqueue_js( ob_get_clean() );
 	}
 
 

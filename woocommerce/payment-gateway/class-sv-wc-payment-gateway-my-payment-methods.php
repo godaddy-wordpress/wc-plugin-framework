@@ -221,19 +221,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 
 		if ( $this->has_tokens ) {
 
-			$args = array(
-				'id'              => $this->get_plugin()->get_id(),
-				'slug'            => $this->get_plugin()->get_id_dasherized(),
-				'has_core_tokens' => (bool) wc_get_customer_saved_methods_list( get_current_user_id() ),
-				'ajax_url'        => admin_url( 'admin-ajax.php' ),
-				'ajax_nonce'      => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
-				'i18n'            => array(
-					'edit_button'   => esc_html__( 'Edit', 'woocommerce-plugin-framework' ),
-					'cancel_button' => esc_html__( 'Cancel', 'woocommerce-plugin-framework' ),
-					'save_error'    => esc_html__( 'Oops, there was an error updating your payment method. Please try again.', 'woocommerce-plugin-framework' ),
-					'delete_ays'    => esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ),
-				),
-			);
+			$args = $this->get_js_handler_params();
 
 			/**
 			 * Filters the payment gateway payment methods JavaScript args.
@@ -245,13 +233,62 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 			 */
 			$args = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_payment_methods_js_args', $args, $this );
 
-			wc_enqueue_js( sprintf(
-				'window.wc_%1$s_payment_methods_handler = new %2$s( %3$s );',
-				esc_js( $this->get_plugin()->get_id() ),
-				esc_js( parent::get_js_handler_class_name() ),
-				json_encode( $args )
-			) );
+			ob_start();
+
+			$handler_name  = $this->get_js_handler_class_name();
+			$window_object = 'wc_' . $this->get_plugin()->get_id() . '_payment_methods_handler';
+			$load_function = 'load_' . $this->get_plugin()->get_id() . '_payment_methods_handler';
+			$loaded_event  = strtolower( $handler_name ) . '_loaded';
+
+			?>
+			function <?php echo esc_js( $load_function ) ?>() {
+
+				window.<?php echo esc_js( $window_object ); ?> = new <?php echo esc_js( $handler_name ); ?>( <?php echo json_encode( $args ); ?> );
+			}
+
+			try {
+				if ( 'undefined' !== typeof <?php echo esc_js( $handler_name ); ?> ) {
+					<?php echo esc_js( $load_function ); ?>();
+				} else {
+					window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+				}
+			} catch( err ) {
+				window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+			}
+			<?php
+
+			wc_enqueue_js( ob_get_clean() );
 		}
+	}
+
+
+	/**
+	 * Gets the JS args for the payment methods handler.
+	 *
+	 * Payment gateways can overwrite this method to define specific args.
+	 * render_js() will apply filters to the returned array of args.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return array
+	 */
+	protected function get_js_handler_params() {
+
+		$args = [
+			'id'              => $this->get_plugin()->get_id(),
+			'slug'            => $this->get_plugin()->get_id_dasherized(),
+			'has_core_tokens' => (bool) wc_get_customer_saved_methods_list( get_current_user_id() ),
+			'ajax_url'        => admin_url( 'admin-ajax.php' ),
+			'ajax_nonce'      => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
+			'i18n'            => [
+				'edit_button'   => esc_html__( 'Edit', 'woocommerce-plugin-framework' ),
+				'cancel_button' => esc_html__( 'Cancel', 'woocommerce-plugin-framework' ),
+				'save_error'    => esc_html__( 'Oops, there was an error updating your payment method. Please try again.', 'woocommerce-plugin-framework' ),
+				'delete_ays'    => esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ),
+			],
+		];
+
+		return $args;
 	}
 
 

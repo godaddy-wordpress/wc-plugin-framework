@@ -981,18 +981,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 	 */
 	public function render_js() {
 
-		$args = array(
-			'plugin_id'               => $this->get_gateway()->get_plugin()->get_id(),
-			'id'                      => $this->get_gateway()->get_id(),
-			'id_dasherized'           => $this->get_gateway()->get_id_dasherized(),
-			'type'                    => $this->get_gateway()->get_payment_type(),
-			'csc_required'            => $this->get_gateway()->csc_enabled(),
-			'csc_required_for_tokens' => $this->get_gateway()->csc_enabled_for_tokens(),
-		);
-
-		if ( $this->get_gateway()->supports_card_types() ) {
-			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
-		}
+		$args = $this->get_js_handler_params();
 
 		/**
 		 * Payment Gateway Payment Form JS Arguments Filter.
@@ -1011,12 +1000,62 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 		 */
 		$args = apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_js_args', $args, $this );
 
-		wc_enqueue_js( sprintf(
-			'window.wc_%s_payment_form_handler = new %s( %s );',
-			esc_js( $this->get_gateway()->get_id() ),
-			parent::get_js_handler_class_name(),
-			json_encode( $args )
-		) );
+		ob_start();
+
+		$handler_name  = $this->get_js_handler_class_name();
+		$window_object = 'wc_' . $this->get_gateway()->get_id() . '_payment_form_handler';
+		$load_function = 'load_' . $this->get_gateway()->get_id() . '_payment_form_handler';
+		$loaded_event  = strtolower( $handler_name ) . '_loaded';
+
+		?>
+		function <?php echo esc_js( $load_function ) ?>() {
+
+			window.<?php echo esc_js( $window_object ); ?> = new <?php echo esc_js( $handler_name ); ?>( <?php echo json_encode( $args ); ?> );
+
+			window.jQuery( document.body ).trigger( 'update_checkout' );
+		}
+
+		try {
+			if ( 'undefined' !== typeof <?php echo esc_js( $handler_name ); ?> ) {
+				<?php echo esc_js( $load_function ); ?>();
+			} else {
+				window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+			}
+		} catch( err ) {
+			window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+		}
+		<?php
+
+		wc_enqueue_js( ob_get_clean() );
+	}
+
+
+	/**
+	 * Gets the JS args for the payment form handler.
+	 *
+	 * Payment gateways can overwrite this method to define specific args.
+	 * render_js() will apply filters to the returned array of args.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return array
+	 */
+	protected function get_js_handler_params() {
+
+		$args = [
+			'plugin_id'               => $this->get_gateway()->get_plugin()->get_id(),
+			'id'                      => $this->get_gateway()->get_id(),
+			'id_dasherized'           => $this->get_gateway()->get_id_dasherized(),
+			'type'                    => $this->get_gateway()->get_payment_type(),
+			'csc_required'            => $this->get_gateway()->csc_enabled(),
+			'csc_required_for_tokens' => $this->get_gateway()->csc_enabled_for_tokens(),
+		];
+
+		if ( $this->get_gateway()->supports_card_types() ) {
+			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
+		}
+
+		return $args;
 	}
 
 
