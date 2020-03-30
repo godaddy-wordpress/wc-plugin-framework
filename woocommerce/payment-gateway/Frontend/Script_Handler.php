@@ -59,7 +59,7 @@ abstract class Script_Handler {
 
 
 	/**
-	 * Gets inline JavaScript code to issue an AJAX request to add a script error event to the debug log.
+	 * Gets inline JavaScript code to issue an AJAX request to log a script error event.
 	 *
 	 * @since x.y.z
 	 *
