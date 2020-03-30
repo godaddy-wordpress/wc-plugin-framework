@@ -55,6 +55,46 @@ class MyPaymentMethodsTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 
+	/**
+	 * @see SV_WC_Payment_Gateway_My_Payment_Methods::get_js_handler_params.
+	 */
+	public function test_get_js_handler_params() {
+
+		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_Plugin::class, 'get_my_payment_methods_instance' );
+		$method->setAccessible( true );
+
+		$payment_methods = $method->invoke( $this->get_plugin() );
+
+		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_My_Payment_Methods::class, 'get_js_handler_params' );
+		$method->setAccessible( true );
+
+		$result = $method->invoke( $payment_methods );
+
+		$expected_result = [
+			'id'              => $this->get_plugin()->get_id(),
+			'slug'            => $this->get_plugin()->get_id_dasherized(),
+			'has_core_tokens' => false,
+			'ajax_url'        => admin_url( 'admin-ajax.php' ),
+			'ajax_nonce'      => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
+			'i18n'            => [
+				'edit_button'   => esc_html__( 'Edit', 'woocommerce-plugin-framework' ),
+				'cancel_button' => esc_html__( 'Cancel', 'woocommerce-plugin-framework' ),
+				'save_error'    => esc_html__( 'Oops, there was an error updating your payment method. Please try again.', 'woocommerce-plugin-framework' ),
+				'delete_ays'    => esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ),
+			],
+		];
+
+		$this->assertNotEmpty( $result );
+
+		// because assertArraySubset is being deprecated
+		foreach ( $expected_result as $key => $value ) {
+
+			$this->assertArrayHasKey( $key, $result );
+			$this->assertSame( $value, $result[ $key ] );
+		}
+	}
+
+
 	/** Helper methods ************************************************************************************************/
 
 
