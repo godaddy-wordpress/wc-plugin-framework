@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2020.nn.nn - version 5.7.0
+ * Tweak - Update Apple Pay to allow all currencies by default
 
 2020.03.09 - version 5.6.1
  * Fix - Delete enhanced admin notes on plugin deactivation
