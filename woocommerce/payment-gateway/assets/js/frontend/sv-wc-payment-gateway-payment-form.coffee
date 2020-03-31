@@ -10,7 +10,7 @@ jQuery( document ).ready ($) ->
 	"use strict"
 
 
-	class window.SV_WC_Payment_Form_Handler_5_6_1
+	class window.SV_WC_Payment_Form_Handler_v5_6_1
 
 
 		# Public: Instantiate Payment Form Handler
