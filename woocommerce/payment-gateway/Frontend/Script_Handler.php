@@ -24,6 +24,9 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Frontend;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Payment_Gateway_Apple_Pay_Frontend;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Payment_Gateway_My_Payment_Methods;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Payment_Gateway_Payment_Form;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin;
 
 defined( 'ABSPATH' ) or exit;
@@ -61,7 +64,7 @@ abstract class Script_Handler {
 
 
 	/**
-	 * Returns the JS handler class name.
+	 * Gets the JS handler class name.
 	 *
 	 * @since x.y.z
 	 *
@@ -76,6 +79,11 @@ abstract class Script_Handler {
 	/**
 	 * Gets inline JavaScript code to issue an AJAX request to add a script error event to the debug log.
 	 *
+	 * See for example the following use cases:
+	 * @see SV_WC_Payment_Gateway_Payment_Form::render_js()
+	 * @see SV_WC_Payment_Gateway_My_Payment_Methods::render_js()
+	 * @see SV_WC_Payment_Gateway_Apple_Pay_Frontend::enqueue_js_handler()
+	 *
 	 * @since x.y.z
 	 *
 	 * @return string
@@ -89,25 +97,25 @@ abstract class Script_Handler {
 
 		?>
 
-		var errorName    = '',
-		    errorMessage = '';
+			var errorName    = '',
+			    errorMessage = '';
 
-		if ( 'undefined' === typeof err || 0 === err.length || ! err ) {
-			errorName    = '<?php echo esc_js( 'A script error has occurred.' ); ?>';
-			errorMessage = '<?php echo esc_js( sprintf( 'The script %s could not be loaded.', $this->get_js_handler_class_name() ) ); ?>';
-		} else {
-			errorName    = err.name;
-			errorMessage = err.message;
-		}
+			if ( 'undefined' === typeof err || 0 === err.length || ! err ) {
+				errorName    = '<?php echo esc_js( 'A script error has occurred.' ); ?>';
+				errorMessage = '<?php echo esc_js( sprintf( 'The script %s could not be loaded.', $this->get_js_handler_class_name() ) ); ?>';
+			} else {
+				errorName    = err.name;
+				errorMessage = err.message;
+			}
 
-		jQuery.post( '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ; ?>', {
-			action:   '<?php echo esc_js( "wc_{$plugin_id}_log_script_event" ); ?>',
-			security: '<?php echo esc_js( wp_create_nonce( "wc-{$plugin_id}-log-script-event" ) ); ?>',
-			script:   '<?php echo esc_js( $this->get_js_handler_class_name() ); ?>',
-			type:     'error',
-			name:     errorName,
-			message:  errorMessage,
-		} );
+			jQuery.post( '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ; ?>', {
+				action:   '<?php echo esc_js( "wc_{$plugin_id}_log_script_event" ); ?>',
+				security: '<?php echo esc_js( wp_create_nonce( "wc-{$plugin_id}-log-script-event" ) ); ?>',
+				script:   '<?php echo esc_js( $this->get_js_handler_class_name() ); ?>',
+				type:     'error',
+				name:     errorName,
+				message:  errorMessage,
+			} );
 
 		<?php
 
@@ -132,13 +140,19 @@ abstract class Script_Handler {
 		check_ajax_referer( "wc-{$plugin_id}-log-script-event", 'security' );
 
 		$type    = isset( $_POST['type'] )    ? $_POST['type']            : '';
-		$title   = isset( $_POST['name'] )    ? trim( $_POST['name'] )    : '';
+		$name    = isset( $_POST['name'] )    ? trim( $_POST['name'] )    : '';
 		$message = isset( $_POST['message'] ) ? trim( $_POST['message'] ) : '';
 
-		if ( $title && $message && 'error' === $type && $plugin instanceof SV_WC_Plugin ) {
+		if ( $name && $message && 'error' === $type && $plugin instanceof SV_WC_Plugin ) {
 
-			$plugin->log( sprintf( '%1$s: %2$s', $title, $message ) );
+			$entry = sprintf( '%1$s: %2$s', $name, $message );
+
+			$plugin->log( $entry );
+
+			wp_send_json_success( $entry );
 		}
+
+		wp_send_json_error();
 	}
 
 
