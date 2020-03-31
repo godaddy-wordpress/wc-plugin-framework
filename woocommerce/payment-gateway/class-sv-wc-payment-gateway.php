@@ -3419,11 +3419,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		check_ajax_referer( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-log-script-event', 'security' );
 
-		$type    = isset( $_POST['type'] )    ? $_POST['type']            : '';
-		$name    = isset( $_POST['name'] )    ? trim( $_POST['name'] )    : '';
-		$message = isset( $_POST['message'] ) ? trim( $_POST['message'] ) : '';
+		$type    = isset( $_POST['type'] )    && is_string( $_POST['type'] )    ? $_POST['type']            : '';
+		$name    = isset( $_POST['name'] )    && is_string( $_POST['name'] )    ? trim( $_POST['name'] )    : '';
+		$message = isset( $_POST['message'] ) && is_string( $_POST['message'] ) ? trim( $_POST['message'] ) : '';
 
-		if ( $name && $message && 'error' === $type ) {
+		if ( '' !== $name && '' !== $message && 'error' === $type ) {
 
 			$entry = sprintf( '%1$s: %2$s', $name, $message );
 

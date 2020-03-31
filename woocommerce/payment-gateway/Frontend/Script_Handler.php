@@ -93,8 +93,8 @@ abstract class Script_Handler {
 				errorName    = '<?php echo esc_js( 'A script error has occurred.' ); ?>';
 				errorMessage = '<?php echo esc_js( sprintf( 'The script %s could not be loaded.', $this->get_js_handler_class_name() ) ); ?>';
 			} else {
-				errorName    = err.name;
-				errorMessage = err.message;
+				errorName    = 'undefined' !== typeof err.name    ? err.name    : '';
+				errorMessage = 'undefined' !== typeof err.message ? err.message : '';
 			}
 
 			jQuery.post( '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ; ?>', {
