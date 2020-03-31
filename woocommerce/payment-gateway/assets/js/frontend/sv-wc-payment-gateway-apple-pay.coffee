@@ -434,4 +434,4 @@ jQuery( document ).ready ($) ->
 
 
 	# dispatch loaded event
-	$( document.body ).trigger( 'sv_wc_apple_pay_handler_5_6_1_loaded' )
+	$( document.body ).trigger( 'sv_wc_apple_pay_handler_v5_6_1_loaded' )
