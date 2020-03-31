@@ -35,9 +35,9 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Frontend
 
 
 /**
- * Script Handler Abstract Class
+ * Script Handler Abstract Class.
  *
- * Handles initializing the payment registered JavaScripts
+ * Handles initializing the payment registered JavaScripts.
  *
  * @since x.y.z
  */
