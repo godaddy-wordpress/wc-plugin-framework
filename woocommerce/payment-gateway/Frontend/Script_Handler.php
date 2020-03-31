@@ -44,23 +44,8 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Frontend
 abstract class Script_Handler {
 
 
-	/** @var string JS handler base class name, without the FW version */
+	/** @var string JS handler base class name, without the framework version namespace */
 	protected $js_handler_base_class_name = '';
-
-
-	/**
-	 * Adds hooks.
-	 *
-	 * @since x.y.z
-	 */
-	protected function add_hooks() {
-
-		$plugin    = is_callable( [ $this, 'get_plugin' ] ) ? $this->get_plugin() : null;
-		$plugin_id = $plugin instanceof SV_WC_Plugin ? $plugin->get_id() : '';
-
-		add_action( "wp_ajax_wc_{$plugin_id}_log_script_event",        [ $this, 'log_script_event' ] );
-		add_action( "wp_ajax_nopriv_wc_{$plugin_id}_log_script_event", [ $this, 'log_script_event' ] );
-	}
 
 
 	/**
@@ -90,8 +75,12 @@ abstract class Script_Handler {
 	 */
 	protected function get_js_handler_event_debug_log_request() {
 
-		$plugin    = is_callable( [ $this, 'get_plugin' ] ) ? $this->get_plugin() : null;
-		$plugin_id = $plugin instanceof SV_WC_Plugin ? $plugin->get_id() : '';
+		if ( ! is_callable( [ $this, 'get_plugin' ] ) ) {
+			return '';
+		}
+
+		/** @var SV_WC_Plugin $plugin */
+		$plugin = $this->get_plugin();
 
 		ob_start();
 
@@ -109,8 +98,8 @@ abstract class Script_Handler {
 			}
 
 			jQuery.post( '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ; ?>', {
-				action:   '<?php echo esc_js( "wc_{$plugin_id}_log_script_event" ); ?>',
-				security: '<?php echo esc_js( wp_create_nonce( "wc-{$plugin_id}-log-script-event" ) ); ?>',
+				action:   '<?php echo esc_js( 'wc_' . $plugin->get_id() . '_log_script_event' ); ?>',
+				security: '<?php echo esc_js( wp_create_nonce( 'wc-' . $plugin->get_id_dasherized() . '-log-script-event' ) ); ?>',
 				script:   '<?php echo esc_js( $this->get_js_handler_class_name() ); ?>',
 				type:     'error',
 				name:     errorName,
@@ -120,39 +109,6 @@ abstract class Script_Handler {
 		<?php
 
 		return ob_get_clean();
-	}
-
-
-	/**
-	 * Logs a script error from AJAX request.
-	 *
-	 * @see Script_Handler::get_js_handler_event_debug_log_request()
-	 *
-	 * @since x.y.z
-	 *
-	 * @internal
-	 */
-	public function log_script_event() {
-
-		$plugin    = is_callable( [ $this, 'get_plugin' ] ) ? $this->get_plugin() : null;
-		$plugin_id = $plugin instanceof SV_WC_Plugin ? $plugin->get_id() : '';
-
-		check_ajax_referer( "wc-{$plugin_id}-log-script-event", 'security' );
-
-		$type    = isset( $_POST['type'] )    ? $_POST['type']            : '';
-		$name    = isset( $_POST['name'] )    ? trim( $_POST['name'] )    : '';
-		$message = isset( $_POST['message'] ) ? trim( $_POST['message'] ) : '';
-
-		if ( $name && $message && 'error' === $type && $plugin instanceof SV_WC_Plugin ) {
-
-			$entry = sprintf( '%1$s: %2$s', $name, $message );
-
-			$plugin->log( $entry );
-
-			wp_send_json_success( $entry );
-		}
-
-		wp_send_json_error();
 	}
 
 

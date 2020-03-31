@@ -316,8 +316,15 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			add_action( 'woocommerce_update_options_payment_gateways_' . $this->get_id(), array( $this, 'process_admin_options' ) );
 		}
 
-		// Enqueue the necessary scripts & styles
+		// enqueue the necessary scripts & styles
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+		if ( is_ajax() ) {
+
+			// log front end script errors
+			add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_log_script_event',         [ $this, 'log_script_event' ] );
+			add_action( 'wp_ajax_nopriv_wc_' . $this->get_plugin()->get_id()  . '_log_script_event', [ $this, 'log_script_event' ] );
+		}
 
 		// add API request logging
 		$this->add_api_request_logging();
@@ -3396,6 +3403,36 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		wc_deprecated_function( __METHOD__, '5.5.0', SV_WC_Helper::class . '::get_requested_value()' );
 
 		return SV_WC_Helper::get_requested_value( $key );
+	}
+
+
+	/**
+	 * Logs a script error from AJAX request.
+	 *
+	 * @see Script_Handler::get_js_handler_event_debug_log_request()
+	 *
+	 * @since x.y.z
+	 *
+	 * @internal
+	 */
+	public function log_script_event() {
+
+		check_ajax_referer( 'wc-' . $this->get_plugin()->get_id_dasherized() . '-log-script-event', 'security' );
+
+		$type    = isset( $_POST['type'] )    ? $_POST['type']            : '';
+		$name    = isset( $_POST['name'] )    ? trim( $_POST['name'] )    : '';
+		$message = isset( $_POST['message'] ) ? trim( $_POST['message'] ) : '';
+
+		if ( $name && $message && 'error' === $type ) {
+
+			$entry = sprintf( '%1$s: %2$s', $name, $message );
+
+			$this->get_plugin()->log( $entry );
+
+			wp_send_json_success( $entry );
+		}
+
+		wp_send_json_error();
 	}
 
 
