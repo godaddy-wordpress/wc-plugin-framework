@@ -52,7 +52,7 @@ abstract class Script_Handler {
 	 */
 	protected function get_js_handler_class_name() {
 
-		return sprintf( '%s_5_6_1', $this->js_handler_base_class_name );
+		return sprintf( '%s_v5_6_1', $this->js_handler_base_class_name );
 	}
 
 
