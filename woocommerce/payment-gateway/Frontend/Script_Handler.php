@@ -59,7 +59,7 @@ abstract class Script_Handler {
 
 
 	/**
-	 * Returns the JS loaded event triggered after the JS handler class is loaded.
+	 * Returns the JS event triggered after the JS handler class is loaded.
 	 *
 	 * @since x.y.z
 	 *
