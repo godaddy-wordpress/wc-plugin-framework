@@ -165,7 +165,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 
 		ob_start();
 
-		$load_function = 'load_' . esc_js( $this->get_gateway()->get_id() ) . '_apple_pay_handler';
+		$load_function = 'load_' . $this->get_gateway()->get_id() . '_apple_pay_handler';
 		$loaded_event  = $this->get_js_loaded_event();
 
 		?>
@@ -180,9 +180,11 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 				<?php echo esc_js( $load_function ); ?>();
 			} else {
 				window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+				<?php echo $this->get_js_handler_event_debug_log_request(); ?>
 			}
 		} catch( err ) {
 			window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+			<?php echo $this->get_js_handler_event_debug_log_request(); ?>
 		}
 		<?php
 
@@ -202,7 +204,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 	 */
 	protected function get_js_handler_name() {
 
-		wc_deprecated_function( __METHOD__, 'x.y.z', parent::get_js_handler_class_name() );
+		wc_deprecated_function( __METHOD__, 'x.y.z', __CLASS__ . '::get_js_handler_class_name()' );
 
 		return parent::get_js_handler_class_name();
 	}
