@@ -827,7 +827,12 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		$is_available = wc_site_is_https() && $this->is_configured();
 
-		$is_available = $is_available && in_array( get_woocommerce_currency(), $this->get_accepted_currencies(), true );
+		$accepted_currencies = $this->get_accepted_currencies();
+
+		if ( ! empty( $accepted_currencies ) ) {
+
+			$is_available = $is_available && in_array( get_woocommerce_currency(), $accepted_currencies, true );
+		}
 
 		/**
 		 * Filters whether Apple Pay should be made available to users.

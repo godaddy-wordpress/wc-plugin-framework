@@ -1055,13 +1055,15 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Gets the currencies supported by Apple Pay.
 	 *
+	 * This method should be overwritten by any gateway that needs to restrict the supported currencies.
+	 *
 	 * @since 4.7.0
 	 *
 	 * @return array
 	 */
 	public function get_apple_pay_currencies() {
 
-		return array( 'USD' );
+		return [];
 	}
 
 

@@ -313,9 +313,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 		}
 
 		// Currency notice
-		if ( ! in_array( get_woocommerce_currency(), $this->handler->get_accepted_currencies(), true ) ) {
+		$accepted_currencies = $this->handler->get_accepted_currencies();
 
-			$accepted_currencies = $this->handler->get_accepted_currencies();
+		if ( ! empty( $accepted_currencies ) && ! in_array( get_woocommerce_currency(), $accepted_currencies, true ) ) {
 
 			$errors[] = sprintf(
 				/* translators: Placeholders: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag */
