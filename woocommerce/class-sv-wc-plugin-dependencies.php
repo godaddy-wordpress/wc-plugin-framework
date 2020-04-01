@@ -323,8 +323,14 @@ class SV_WC_Plugin_Dependencies {
 	 */
 	public function get_active_scripts_optimization_plugins() {
 
-		// optimization plugins to look for, indexed by the plugin file identifier
-		$plugins = [
+		/**
+		 * Filters script optimization plugins to look for.
+		 *
+		 * @since x.y.z
+		 *
+		 * @param array $plugins an array of file identifiers (keys) and plugin names (values)
+		 */
+		$plugins = (array) apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_scripts_optimization_plugins', [
 			'async-javascript.php' => 'Async JavaScript',
 			'autoptimize.php'      => 'Autoptimize',
 			'wp-hummingbird.php'   => 'Hummingbird',
@@ -332,7 +338,7 @@ class SV_WC_Plugin_Dependencies {
 			'w3-total-cache.php'   => 'W3 Total Cache',
 			'wpFastestCache.php'   => 'WP Fastest Cache',
 			'wp-rocket.php'        => 'WP Rocket',
-		];
+		] );
 
 		$active_plugins = [];
 

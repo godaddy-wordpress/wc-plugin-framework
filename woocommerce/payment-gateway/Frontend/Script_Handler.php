@@ -62,7 +62,7 @@ abstract class Script_Handler {
 
 
 	/**
-	 * Gets inline JavaScript code to issue an AJAX request to add a script error event to the debug log.
+	 * Gets inline JavaScript code to issue an AJAX request to log a script error event.
 	 *
 	 * See for example the following use cases:
 	 * @see SV_WC_Payment_Gateway_Payment_Form::render_js()
