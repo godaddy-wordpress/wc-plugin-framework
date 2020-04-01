@@ -118,23 +118,7 @@ http://www.gnu.org/licenses/gpl-3.0.html
 	}
 }
 
-// add payment method form card images
-#add_payment_method {
-	ul.payment_methods li {
-		list-style-type: none;
-		img {
-			vertical-align: middle;
-			margin: -2px 0 0 .5em;
-			padding: 0;
-			position: relative;
-			box-shadow: none;
-			& + img {
-				margin-left: 2px;
-			}
-		}
-	}
-}
-
+// payment form card images
 ul.payment_methods li {
 
 	div {
