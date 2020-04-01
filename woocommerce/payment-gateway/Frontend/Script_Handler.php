@@ -54,7 +54,20 @@ abstract class Script_Handler {
 	 */
 	protected function get_js_handler_class_name() {
 
-		return sprintf( '%s_5_6_1', $this->js_handler_base_class_name );
+		return sprintf( '%s_v5_6_1', $this->js_handler_base_class_name );
+	}
+
+
+	/**
+	 * Gets the JS event triggered after the JS handler class is loaded.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	protected function get_js_loaded_event() {
+
+		return sprintf( '%s_loaded', strtolower( $this->get_js_handler_class_name() ) );
 	}
 
 
