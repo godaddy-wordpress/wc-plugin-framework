@@ -1573,6 +1573,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		// credit card images
 		if ( ! $icon && $this->supports_card_types() && $this->get_card_types() ) {
 
+			$icon .= '<div>';
+
 			// display icons for the selected card types
 			foreach ( $this->get_card_types() as $card_type ) {
 
@@ -1582,6 +1584,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 					$icon .= sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" width="40" height="25" style="width: 40px; height: 25px;" />', esc_url( $url ), esc_attr( $card_type ), esc_attr( $this->get_id_dasherized() ) );
 				}
 			}
+
+			$icon .= '</div>';
 		}
 
 		// echeck image
