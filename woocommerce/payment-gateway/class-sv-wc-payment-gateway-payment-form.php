@@ -327,7 +327,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 				'value' => $defaults['account-number'],
 			],
 			'card-expiry' => [
-				'type'              => 'text',
+				'type'              => 'tel',
 				'label'             => esc_html__( 'Expiration (MM/YY)', 'woocommerce-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-expiry',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-expiry',
