@@ -307,64 +307,64 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 		$defaults = $this->get_gateway()->get_payment_method_defaults();
 
-		$fields = array(
-			'card-number' => array(
+		$fields = [
+			'card-number' => [
 				'type'              => 'tel',
 				'label'             => esc_html__( 'Card Number', 'woocommerce-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
 				'placeholder'       => '•••• •••• •••• ••••',
 				'required'          => true,
-				'class'             => array( 'form-row-wide' ),
-				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-account-number' ),
+				'class'             => [ 'form-row-wide' ],
+				'input_class'       => [ 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-account-number' ],
 				'maxlength'         => 20,
-				'custom_attributes' => array(
+				'custom_attributes' => [
 					'autocomplete'   => 'cc-number',
 					'autocorrect'    => 'no',
 					'autocapitalize' => 'no',
 					'spellcheck'     => 'no',
-				),
+				],
 				'value' => $defaults['account-number'],
-			),
-			'card-expiry' => array(
+			],
+			'card-expiry' => [
 				'type'              => 'text',
 				'label'             => esc_html__( 'Expiration (MM/YY)', 'woocommerce-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-expiry',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-expiry',
 				'placeholder'       => esc_html__( 'MM / YY', 'woocommerce-plugin-framework' ),
 				'required'          => true,
-				'class'             => array( 'form-row-first' ),
-				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-expiry' ),
-				'custom_attributes' => array(
+				'class'             => [ 'form-row-first' ],
+				'input_class'       => [ 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-expiry' ],
+				'custom_attributes' => [
 					'autocomplete'   => 'cc-exp',
 					'autocorrect'    => 'no',
 					'autocapitalize' => 'no',
 					'spellcheck'     => 'no',
-				),
+				],
 				'value' => $defaults['expiry'],
-			),
-		);
+			],
+		];
 
 		if ( $this->get_gateway()->csc_enabled() ) {
 
-			$fields['card-csc'] = array(
+			$fields['card-csc'] = [
 				'type'              => 'tel',
 				'label'             => esc_html__( 'Card Security Code', 'woocommerce-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
 				'placeholder'       => esc_html__( 'CSC', 'woocommerce-plugin-framework' ),
 				'required'          => true,
-				'class'             => array( 'form-row-last' ),
-				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-csc' ),
+				'class'             => [ 'form-row-last' ],
+				'input_class'       => [ 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-csc' ],
 				'maxlength'         => 4,
-				'custom_attributes' => array(
+				'custom_attributes' => [
 					'autocomplete'   => 'off',
 					'autocorrect'    => 'no',
 					'autocapitalize' => 'no',
 					'spellcheck'     => 'no',
-				),
+				],
 				'value' => $defaults['csc'],
-			);
+			];
 		}
 
 		/**
