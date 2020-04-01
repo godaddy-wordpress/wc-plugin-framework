@@ -340,6 +340,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 					'autocorrect'    => 'no',
 					'autocapitalize' => 'no',
 					'spellcheck'     => 'no',
+					'maxlength'      => 7, // the spaces before and after the slash are counted
 				],
 				'value' => $defaults['expiry'],
 			],
