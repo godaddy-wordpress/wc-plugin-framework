@@ -1573,7 +1573,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		// credit card images
 		if ( ! $icon && $this->supports_card_types() && $this->get_card_types() ) {
 
-			$icon .= '<div>';
+			$icon .= '<div class="sv-wc-payment-gateway-card-icons">';
 
 			// display icons for the selected card types
 			foreach ( $this->get_card_types() as $card_type ) {
