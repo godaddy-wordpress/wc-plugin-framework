@@ -199,6 +199,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/** @var array of SV_WC_Payment_Gateway_Integration objects for Subscriptions, Pre-Orders, etc. */
 	protected $integrations;
 
+	/** @var SV_WC_Payment_Gateway_Payment_Form|null payment form instance */
+	protected $payment_form;
+
 
 	/**
 	 * Initialize the gateway
@@ -302,6 +305,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		// initialize the capture handler
 		$this->init_capture_handler();
+
+		// initialize the payment form
+		$this->maybe_init_payment_form();
 
 		// pay page fallback
 		$this->add_pay_page_handler();
@@ -624,6 +630,42 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
+	 * Initializes the payment form handler.
+	 *
+	 * @internal
+	 *
+	 * @since x.y.z
+	 */
+	public function maybe_init_payment_form() {
+
+		// only if the gateway supports it
+		if ( ! $this->supports_payment_form() ) {
+			return;
+		}
+
+		// only load on the frontend and AJAX
+		if ( is_admin() && ! is_ajax() ) {
+			return;
+		}
+
+		$this->payment_form = $this->init_payment_form_instance();
+	}
+
+
+	/**
+	 * Initializes the payment form instance.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return SV_WC_Payment_Gateway_Payment_Form
+	 */
+	protected function init_payment_form_instance() {
+
+		return new SV_WC_Payment_Gateway_Payment_Form( $this );
+	}
+
+
+	/**
 	 * Returns true if on the pay page and this is the currently selected gateway
 	 *
 	 * @since 1.0.0
@@ -732,11 +774,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 4.1.2
 	 *
-	 * @return SV_WC_Payment_Gateway_Payment_Form
+	 * @return SV_WC_Payment_Gateway_Payment_Form|null
 	 */
 	public function get_payment_form_instance() {
 
-		return new SV_WC_Payment_Gateway_Payment_Form( $this );
+		return $this->payment_form;
 	}
 
 
