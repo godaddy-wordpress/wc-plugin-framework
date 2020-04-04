@@ -24,7 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Frontend;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin_Exception;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -80,9 +81,6 @@ abstract class Script_Handler {
 	 */
 	protected function get_js_handler_event_debug_log_request() {
 
-		$plugin    = is_callable( [ $this, 'get_plugin' ] ) ? $this->get_plugin() : null;
-		$plugin_id = $plugin instanceof SV_WC_Plugin ? $plugin->get_id() : '';
-
 		ob_start();
 
 		?>
@@ -94,15 +92,13 @@ abstract class Script_Handler {
 			errorName    = '<?php echo esc_js( 'A script error has occurred.' ); ?>';
 			errorMessage = '<?php echo esc_js( sprintf( 'The script %s could not be loaded.', $this->get_js_handler_class_name() ) ); ?>';
 		} else {
-			errorName    = err.name;
-			errorMessage = err.message;
+			errorName    = 'undefined' !== typeof err.name    ? err.name    : '';
+			errorMessage = 'undefined' !== typeof err.message ? err.message : '';
 		}
 
 		jQuery.post( '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ; ?>', {
-			action:   '<?php echo esc_js( "wc_{$plugin_id}_log_script_event" ); ?>',
-			security: '<?php echo esc_js( wp_create_nonce( "wc-{$plugin_id}-log-script-event" ) ); ?>',
-			script:   '<?php echo esc_js( $this->get_js_handler_class_name() ); ?>',
-			type:     'error',
+			action:   '<?php echo esc_js( 'wc_' . $this->get_id() . '_log_script_event' ); ?>',
+			security: '<?php echo esc_js( wp_create_nonce( 'wc-' . $this->get_id_dasherized() . '-log-script-event' ) ); ?>',
 			name:     errorName,
 			message:  errorMessage,
 		} );
