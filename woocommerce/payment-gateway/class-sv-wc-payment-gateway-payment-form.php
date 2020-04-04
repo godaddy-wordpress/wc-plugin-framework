@@ -106,6 +106,32 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 
 
 	/**
+	 * Gets the script ID.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_id() {
+
+		return $this->get_gateway()->get_id();
+	}
+
+
+	/**
+	 * Gets the script ID, dasherized.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_id_dasherized() {
+
+		return $this->get_gateway()->get_id_dasherized();
+	}
+
+
+	/**
 	 * Returns the active tokens for the current user/gateway
 	 *
 	 * @since 4.0.0
@@ -1058,6 +1084,32 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 		}
 
 		return $args;
+	}
+
+
+	/**
+	 * Adds a log entry.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $message message to log
+	 */
+	protected function log_event( $message ) {
+
+		$this->get_gateway()->add_debug_message( $message );
+	}
+
+
+	/**
+	 * Determines whether logging is enabled.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	protected function is_logging_enabled() {
+
+		return $this->get_gateway()->debug_log();
 	}
 
 

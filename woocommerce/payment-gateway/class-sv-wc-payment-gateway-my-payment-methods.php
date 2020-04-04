@@ -79,6 +79,32 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 
 
 	/**
+	 * Gets the script ID.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_id() {
+
+		return $this->get_plugin()->get_id();
+	}
+
+
+	/**
+	 * Gets the script ID, dasherized.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_id_dasherized() {
+
+		return $this->get_plugin()->get_id_dasherized();
+	}
+
+
+	/**
 	 * Initializes the My Payment Methods table
 	 *
 	 * @since 5.1.0
@@ -308,6 +334,47 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 		wc_deprecated_function( __METHOD__, 'x.y.z', __CLASS__ . '::get_js_handler_class_name()' );
 
 		return parent::get_js_handler_class_name();
+	}
+
+
+	/**
+	 * Adds a log entry.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $message message to log
+	 */
+	protected function log_event( $message ) {
+
+		$this->get_plugin()->log( $message );
+	}
+
+
+	/**
+	 * Determines whether logging is enabled.
+	 *
+	 * Considers logging enabled at the plugin level if at least one gateway has logging enabled.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	protected function is_logging_enabled() {
+
+		$is_logging_enabled = parent::is_logging_enabled();
+
+		if ( ! $is_logging_enabled ) {
+
+			foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
+
+				if ( $gateway->debug_log() ) {
+					$is_logging_enabled = true;
+					break;
+				}
+			}
+		}
+
+		return $is_logging_enabled;
 	}
 
 
