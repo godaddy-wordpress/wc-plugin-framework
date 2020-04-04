@@ -47,6 +47,30 @@ abstract class Script_Handler {
 
 
 	/**
+	 * Script_Handler constructor.
+	 *
+	 * @since x.y.z
+	 */
+	public function __construct() {
+
+		// add the action and filter hooks
+		$this->add_hooks();
+	}
+
+
+	/**
+	 * Adds the action and filter hooks.
+	 *
+	 * @since x.y.z
+	 */
+	protected function add_hooks() {
+
+		add_action( 'wp_ajax_wc_' . $this->get_id() . '_log_script_event',         [ $this, 'ajax_log_event' ] );
+		add_action( 'wp_ajax_nopriv_wc_' . $this->get_id()  . '_log_script_event', [ $this, 'ajax_log_event' ] );
+	}
+
+
+	/**
 	 * Returns the JS handler class name.
 	 *
 	 * @since x.y.z
@@ -106,6 +130,44 @@ abstract class Script_Handler {
 		<?php
 
 		return ob_get_clean();
+	}
+
+
+	/**
+	 * Logs an event via AJAX.
+	 *
+	 * @since x.y.z
+	 */
+	public function ajax_log_event() {
+
+		// silently bail if nothing should be logged
+		if ( ! $this->is_logging_enabled() ) {
+			return;
+		}
+
+		try {
+
+			if ( ! wp_verify_nonce( SV_WC_Helper::get_posted_value( 'security' ), 'wc-' . $this->get_id_dasherized() . '-log-script-event' ) ) {
+				throw new SV_WC_Plugin_Exception( 'Invalid nonce.' );
+			}
+
+			$name    = isset( $_POST['name'] )    && is_string( $_POST['name'] )    ? trim( $_POST['name'] )    : '';
+			$message = isset( $_POST['message'] ) && is_string( $_POST['message'] ) ? trim( $_POST['message'] ) : '';
+
+			if ( ! $message ) {
+				throw new SV_WC_Plugin_Exception( 'A message is required.' );
+			}
+
+			if ( $name ) {
+				$message = "{$name} {$message}";
+			}
+
+			$this->log_event( $message );
+
+		} catch ( SV_WC_Plugin_Exception $exception ) {
+
+			wp_send_json_error( $exception->getMessage() );
+		}
 	}
 
 
