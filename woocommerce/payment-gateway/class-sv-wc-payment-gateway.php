@@ -632,11 +632,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Initializes the payment form handler.
 	 *
-	 * @internal
-	 *
 	 * @since x.y.z
 	 */
-	public function maybe_init_payment_form() {
+	protected function maybe_init_payment_form() {
 
 		// only if the gateway supports it
 		if ( ! $this->supports_payment_form() ) {
