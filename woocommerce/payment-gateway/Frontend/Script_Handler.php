@@ -113,6 +113,58 @@ abstract class Script_Handler {
 	}
 
 
+	/**
+	 * Adds a log entry.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $message message to log
+	 */
+	abstract protected function log_event( $message );
+
+
+	/** Conditional methods *******************************************************************************************/
+
+
+	/**
+	 * Determines whether logging is enabled.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	protected function is_logging_enabled() {
+
+		return false;
+	}
+
+
+	/** Getter methods ************************************************************************************************/
+
+
+	/**
+	 * Gets the ID of this script handler.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	abstract public function get_id();
+
+
+	/**
+	 * Gets the ID, but dasherized.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_id_dasherized() {
+
+		return str_replace( '_', '-', $this->get_id() );
+	}
+
+
 }
 
 endif;
