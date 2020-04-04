@@ -66,7 +66,20 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 
 		$this->gateway = $this->get_handler()->get_processing_gateway();
 
+		parent::__construct();
+	}
+
+
+	/**
+	 * Adds the action and filter hooks.
+	 *
+	 * @since x.y.z
+	 */
+	protected function add_hooks() {
+
 		if ( $this->get_handler()->is_available() ) {
+
+			parent::add_hooks();
 
 			add_action( 'wp', array( $this, 'init' ) );
 

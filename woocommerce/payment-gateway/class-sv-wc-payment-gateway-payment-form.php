@@ -63,11 +63,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 
 		$this->gateway = $gateway;
 
-		// hook up rendering
-		$this->add_hooks();
-
-		// maybe load tokens
-		$this->get_tokens();
+		parent::__construct();
 	}
 
 
@@ -79,6 +75,8 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 	 * @since 4.0.0
 	 */
 	protected function add_hooks() {
+
+		parent::add_hooks();
 
 		$gateway_id = $this->get_gateway()->get_id();
 
@@ -842,6 +840,9 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 	 * @since 4.0.0
 	 */
 	public function render() {
+
+		// maybe load tokens
+		$this->get_tokens();
 
 		/**
 		 * Payment Gateway Payment Form Start Action.

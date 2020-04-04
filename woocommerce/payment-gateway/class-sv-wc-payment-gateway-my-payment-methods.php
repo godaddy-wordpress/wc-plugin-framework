@@ -62,14 +62,25 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 	/**
 	 * Setup Class
 	 *
-	 * Note: this constructor executes during the `wp` action
-	 *
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin gateway plugin
 	 * @since 4.0.0
 	 */
 	public function __construct( $plugin ) {
 
 		$this->plugin = $plugin;
+
+		parent::__construct();
+	}
+
+
+	/**
+	 * Adds the action and filter hooks.
+	 *
+	 * @since x.y.z
+	 */
+	protected function add_hooks() {
+
+		parent::add_hooks();
 
 		add_action( 'wp', array( $this, 'init' ) );
 
