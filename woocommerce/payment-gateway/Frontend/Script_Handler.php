@@ -24,7 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Frontend;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin_Exception;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -43,6 +44,30 @@ abstract class Script_Handler {
 
 	/** @var string JS handler base class name, without the FW version */
 	protected $js_handler_base_class_name = '';
+
+
+	/**
+	 * Script_Handler constructor.
+	 *
+	 * @since x.y.z
+	 */
+	public function __construct() {
+
+		// add the action and filter hooks
+		$this->add_hooks();
+	}
+
+
+	/**
+	 * Adds the action and filter hooks.
+	 *
+	 * @since x.y.z
+	 */
+	protected function add_hooks() {
+
+		add_action( 'wp_ajax_wc_' . $this->get_id() . '_log_script_event',         [ $this, 'ajax_log_event' ] );
+		add_action( 'wp_ajax_nopriv_wc_' . $this->get_id()  . '_log_script_event', [ $this, 'ajax_log_event' ] );
+	}
 
 
 	/**
@@ -80,9 +105,6 @@ abstract class Script_Handler {
 	 */
 	protected function get_js_handler_event_debug_log_request() {
 
-		$plugin    = is_callable( [ $this, 'get_plugin' ] ) ? $this->get_plugin() : null;
-		$plugin_id = $plugin instanceof SV_WC_Plugin ? $plugin->get_id() : '';
-
 		ob_start();
 
 		?>
@@ -94,15 +116,13 @@ abstract class Script_Handler {
 			errorName    = '<?php echo esc_js( 'A script error has occurred.' ); ?>';
 			errorMessage = '<?php echo esc_js( sprintf( 'The script %s could not be loaded.', $this->get_js_handler_class_name() ) ); ?>';
 		} else {
-			errorName    = err.name;
-			errorMessage = err.message;
+			errorName    = 'undefined' !== typeof err.name    ? err.name    : '';
+			errorMessage = 'undefined' !== typeof err.message ? err.message : '';
 		}
 
 		jQuery.post( '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ; ?>', {
-			action:   '<?php echo esc_js( "wc_{$plugin_id}_log_script_event" ); ?>',
-			security: '<?php echo esc_js( wp_create_nonce( "wc-{$plugin_id}-log-script-event" ) ); ?>',
-			script:   '<?php echo esc_js( $this->get_js_handler_class_name() ); ?>',
-			type:     'error',
+			action:   '<?php echo esc_js( 'wc_' . $this->get_id() . '_log_script_event' ); ?>',
+			security: '<?php echo esc_js( wp_create_nonce( 'wc-' . $this->get_id_dasherized() . '-log-script-event' ) ); ?>',
 			name:     errorName,
 			message:  errorMessage,
 		} );
@@ -110,6 +130,98 @@ abstract class Script_Handler {
 		<?php
 
 		return ob_get_clean();
+	}
+
+
+	/**
+	 * Logs an event via AJAX.
+	 *
+	 * @internal
+	 *
+	 * @since x.y.z
+	 */
+	public function ajax_log_event() {
+
+		// silently bail if nothing should be logged
+		if ( ! $this->is_logging_enabled() ) {
+			return;
+		}
+
+		try {
+
+			if ( ! wp_verify_nonce( SV_WC_Helper::get_posted_value( 'security' ), 'wc-' . $this->get_id_dasherized() . '-log-script-event' ) ) {
+				throw new SV_WC_Plugin_Exception( 'Invalid nonce.' );
+			}
+
+			$name    = isset( $_POST['name'] )    && is_string( $_POST['name'] )    ? trim( $_POST['name'] )    : '';
+			$message = isset( $_POST['message'] ) && is_string( $_POST['message'] ) ? trim( $_POST['message'] ) : '';
+
+			if ( ! $message ) {
+				throw new SV_WC_Plugin_Exception( 'A message is required.' );
+			}
+
+			if ( $name ) {
+				$message = "{$name} {$message}";
+			}
+
+			$this->log_event( $message );
+
+		} catch ( SV_WC_Plugin_Exception $exception ) {
+
+			wp_send_json_error( $exception->getMessage() );
+		}
+	}
+
+
+	/**
+	 * Adds a log entry.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $message message to log
+	 */
+	abstract protected function log_event( $message );
+
+
+	/** Conditional methods *******************************************************************************************/
+
+
+	/**
+	 * Determines whether logging is enabled.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	protected function is_logging_enabled() {
+
+		return false;
+	}
+
+
+	/** Getter methods ************************************************************************************************/
+
+
+	/**
+	 * Gets the ID of this script handler.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	abstract public function get_id();
+
+
+	/**
+	 * Gets the ID, but dasherized.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_id_dasherized() {
+
+		return str_replace( '_', '-', $this->get_id() );
 	}
 
 

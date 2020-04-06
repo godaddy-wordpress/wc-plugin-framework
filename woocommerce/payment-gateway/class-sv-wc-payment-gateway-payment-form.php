@@ -63,11 +63,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 
 		$this->gateway = $gateway;
 
-		// hook up rendering
-		$this->add_hooks();
-
-		// maybe load tokens
-		$this->get_tokens();
+		parent::__construct();
 	}
 
 
@@ -79,6 +75,8 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 	 * @since 4.0.0
 	 */
 	protected function add_hooks() {
+
+		parent::add_hooks();
 
 		$gateway_id = $this->get_gateway()->get_id();
 
@@ -102,6 +100,32 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 
 		// payment form JS
 		add_action( "wc_{$gateway_id}_payment_form_end",   array( $this, 'render_js' ), 5 );
+	}
+
+
+	/**
+	 * Gets the script ID.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_id() {
+
+		return $this->get_gateway()->get_id();
+	}
+
+
+	/**
+	 * Gets the script ID, dasherized.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_id_dasherized() {
+
+		return $this->get_gateway()->get_id_dasherized();
 	}
 
 
@@ -817,6 +841,9 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 	 */
 	public function render() {
 
+		// maybe load tokens
+		$this->get_tokens();
+
 		/**
 		 * Payment Gateway Payment Form Start Action.
 		 *
@@ -1058,6 +1085,32 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 		}
 
 		return $args;
+	}
+
+
+	/**
+	 * Adds a log entry.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $message message to log
+	 */
+	protected function log_event( $message ) {
+
+		$this->get_gateway()->add_debug_message( $message );
+	}
+
+
+	/**
+	 * Determines whether logging is enabled.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	protected function is_logging_enabled() {
+
+		return $this->get_gateway()->debug_log();
 	}
 
 

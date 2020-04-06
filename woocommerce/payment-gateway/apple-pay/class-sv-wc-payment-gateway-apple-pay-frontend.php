@@ -66,7 +66,20 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 
 		$this->gateway = $this->get_handler()->get_processing_gateway();
 
+		parent::__construct();
+	}
+
+
+	/**
+	 * Adds the action and filter hooks.
+	 *
+	 * @since x.y.z
+	 */
+	protected function add_hooks() {
+
 		if ( $this->get_handler()->is_available() ) {
+
+			parent::add_hooks();
 
 			add_action( 'wp', array( $this, 'init' ) );
 
@@ -91,6 +104,32 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 		} else if ( is_checkout() && in_array( 'checkout', $locations, true ) ) {
 			$this->init_checkout();
 		}
+	}
+
+
+	/**
+	 * Gets the script ID.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_id() {
+
+		return $this->get_gateway()->get_id();
+	}
+
+
+	/**
+	 * Gets the script ID, dasherized.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public function get_id_dasherized() {
+
+		return $this->get_gateway()->get_id_dasherized();
 	}
 
 
@@ -207,6 +246,32 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 		wc_deprecated_function( __METHOD__, 'x.y.z', __CLASS__ . '::get_js_handler_class_name()' );
 
 		return parent::get_js_handler_class_name();
+	}
+
+
+	/**
+	 * Adds a log entry.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $message message to log
+	 */
+	protected function log_event( $message ) {
+
+		$this->get_gateway()->add_debug_message( $message );
+	}
+
+
+	/**
+	 * Determines whether logging is enabled.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	protected function is_logging_enabled() {
+
+		return $this->get_gateway()->debug_log();
 	}
 
 
