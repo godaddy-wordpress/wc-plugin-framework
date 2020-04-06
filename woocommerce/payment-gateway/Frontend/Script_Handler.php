@@ -136,6 +136,8 @@ abstract class Script_Handler {
 	/**
 	 * Logs an event via AJAX.
 	 *
+	 * @internal
+	 *
 	 * @since x.y.z
 	 */
 	public function ajax_log_event() {
