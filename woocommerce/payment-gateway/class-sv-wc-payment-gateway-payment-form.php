@@ -1008,54 +1008,27 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 	 */
 	public function render_js() {
 
-		$args = $this->get_js_handler_params();
+		wc_enqueue_js( $this->get_safe_handler_js() );
+	}
 
-		/**
-		 * Payment Gateway Payment Form JS Arguments Filter.
-		 *
-		 * Filter the arguments passed to the Payment Form handler JS class
-		 *
-		 * @since 4.0.0
-		 * @param array $result {
-		 *   @type string $plugin_id plugin ID
-		 *   @type string $id gateway ID
-		 *   @type string $id_dasherized gateway ID dasherized
-		 *   @type string $type gateway payment type (e.g. 'credit-card')
-		 *   @type bool $csc_required true if CSC field display is required
-		 * }
-		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
-		 */
-		$args = apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_js_args', $args, $this );
 
-		ob_start();
+	/**
+	 * Gets the handler instantiation JS.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array $additional_args additional handler arguments, if any
+	 * @param string $handler_name handler name, if different from self::get_js_handler_class_name()
+	 * @param string $object_name object name, if different from self::get_js_handler_object_name()
+	 * @return string
+	 */
+	protected function get_handler_js( array $additional_args = [], $handler_name = '', $object_name = '' ) {
 
-		$handler_name  = $this->get_js_handler_class_name();
-		$window_object = 'wc_' . $this->get_gateway()->get_id() . '_payment_form_handler';
-		$load_function = 'load_' . $this->get_gateway()->get_id() . '_payment_form_handler';
-		$loaded_event  = $this->get_js_loaded_event();
+		$js = parent::get_handler_js( $additional_args, $handler_name, $object_name );
 
-		?>
-		function <?php echo esc_js( $load_function ) ?>() {
+		$js .= 'window.jQuery( document.body ).trigger( "update_checkout" );';
 
-			window.<?php echo esc_js( $window_object ); ?> = new <?php echo esc_js( $handler_name ); ?>( <?php echo json_encode( $args ); ?> );
-
-			window.jQuery( document.body ).trigger( 'update_checkout' );
-		}
-
-		try {
-			if ( 'undefined' !== typeof <?php echo esc_js( $handler_name ); ?> ) {
-				<?php echo esc_js( $load_function ); ?>();
-			} else {
-				window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
-				<?php echo $this->get_js_handler_event_debug_log_request(); ?>
-			}
-		} catch( err ) {
-			window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
-			<?php echo $this->get_js_handler_event_debug_log_request(); ?>
-		}
-		<?php
-
-		wc_enqueue_js( ob_get_clean() );
+		return $js;
 	}
 
 
@@ -1069,7 +1042,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 	 *
 	 * @return array
 	 */
-	protected function get_js_handler_params() {
+	protected function get_js_handler_args() {
 
 		$args = [
 			'plugin_id'               => $this->get_gateway()->get_plugin()->get_id(),
