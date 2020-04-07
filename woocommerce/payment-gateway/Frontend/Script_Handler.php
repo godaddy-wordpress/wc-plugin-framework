@@ -273,6 +273,8 @@ abstract class Script_Handler {
 
 			$this->log_event( $message );
 
+			wp_send_json_success();
+
 		} catch ( SV_WC_Plugin_Exception $exception ) {
 
 			wp_send_json_error( $exception->getMessage() );
