@@ -116,7 +116,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 	 */
 	public function get_id() {
 
-		return $this->get_gateway()->get_id();
+		return $this->get_gateway()->get_id() . '_apple_pay';
 	}
 
 
@@ -129,7 +129,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Frontend\Script_Handler {
 	 */
 	public function get_id_dasherized() {
 
-		return $this->get_gateway()->get_id_dasherized();
+		return $this->get_gateway()->get_id_dasherized() . '-apple-pay';
 	}
 
 

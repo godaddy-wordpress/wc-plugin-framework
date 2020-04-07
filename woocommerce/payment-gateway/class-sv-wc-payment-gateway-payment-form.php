@@ -112,7 +112,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 	 */
 	public function get_id() {
 
-		return $this->get_gateway()->get_id();
+		return $this->get_gateway()->get_id() . '_payment_form';
 	}
 
 
@@ -125,7 +125,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Frontend\Script_Handler {
 	 */
 	public function get_id_dasherized() {
 
-		return $this->get_gateway()->get_id_dasherized();
+		return $this->get_gateway()->get_id_dasherized() . '-payment-form';
 	}
 
 

@@ -98,7 +98,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 	 */
 	public function get_id() {
 
-		return $this->get_plugin()->get_id();
+		return $this->get_plugin()->get_id() . '_payment_methods';
 	}
 
 
@@ -111,7 +111,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 	 */
 	public function get_id_dasherized() {
 
-		return $this->get_plugin()->get_id_dasherized();
+		return $this->get_plugin()->get_id_dasherized() . '-payment-methods';
 	}
 
 
