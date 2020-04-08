@@ -138,6 +138,19 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Sets the payment token string.
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param string $id payment token string
+	 */
+	public function set_id( $id ) {
+
+		$this->id = (string) $id;
+	}
+
+
+	/**
 	 * Gets the gateway ID for the token.
 	 *
 	 * @since 5.6.0-dev.1
@@ -720,8 +733,6 @@ class SV_WC_Payment_Gateway_Payment_Token {
 				$token->update_meta_data( $key, $value, true );
 			}
 		}
-
-		$token->apply_changes();
 
 		try {
 

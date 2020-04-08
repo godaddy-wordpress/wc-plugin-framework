@@ -159,15 +159,17 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 */
 	public function save( $user_id ) {
 
-		$tokens = ( isset( $_POST[ $this->get_input_name() ] ) ) ? $_POST[ $this->get_input_name() ] : array();
+		$tokens = ( isset( $_POST[ $this->get_input_name() ] ) ) ? $_POST[ $this->get_input_name() ] : [];
 
-		$built_tokens = array();
+		$default_token_id = SV_WC_Helper::get_posted_value( $this->get_input_name() . '_default' );
+		$built_tokens     = [];
 
 		foreach ( $tokens as $data ) {
 
-			$token_id = $data['id'];
+			$token_id          = isset( $data['id'] ) ? $data['id'] : '';
+			$original_token_id = isset( $data['original_id'] ) ? $data['original_id'] : '';
 
-			unset( $data['id'] );
+			unset( $data['id'], $data['original_id'] );
 
 			if ( ! $token_id ) {
 				continue;
@@ -178,10 +180,18 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 			}
 
 			// Set the default method
-			$data['default'] = $token_id === SV_WC_Helper::get_posted_value( $this->get_input_name() . '_default' );
+			$data['default'] = $token_id === $default_token_id || $original_token_id === $default_token_id;
 
 			if ( $data = $this->validate_token_data( $token_id, $data ) ) {
-				$built_tokens[ $token_id ] = $this->build_token( $user_id, $token_id, $data );
+
+				$token = $original_token_id ? $this->get_gateway()->get_payment_tokens_handler()->get_token( $user_id, $original_token_id ) : null;
+
+				// update the token props if a token with the original ID already exists to avoid creating another core token in SV_WC_Payment_Gateway_Payment_Token::save()
+				if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
+					$built_tokens[ $token_id ] = $this->set_token_props( $token, $token_id, $data );
+				} else {
+					$built_tokens[ $token_id ] = $this->build_token( $user_id, $token_id, $data );
+				}
 			}
 		}
 
@@ -300,7 +310,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 
 	/**
-	 * Build a token object from data saved in the admin.
+	 * Builds a token object from data saved in the admin.
 	 *
 	 * This method allows concrete gateways to add special token data.
 	 * See Authorize.net CIM for an example.
@@ -315,6 +325,33 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	protected function build_token( $user_id, $token_id, $data ) {
 
 		return $this->get_gateway()->get_payment_tokens_handler()->build_token( $token_id, $data );
+	}
+
+
+	/**
+	 * Updates a token object with data saved in the admin.
+	 *
+	 * @since 5.6.0-dev
+	 *
+	 * @param SV_WC_Payment_Gateway_Payment_Token the payment token object to update
+	 * @param string $token_id the token ID
+	 * @param array $data the token data
+	 * @return SV_WC_Payment_Gateway_Payment_Token
+	 */
+	protected function set_token_props( $token, $token_id, $data ) {
+
+		unset( $data['type'] );
+
+		foreach ( $data as $key => $value ) {
+
+			if ( is_callable( [ $token, "set_{$key}" ] ) ) {
+				$token->{"set_{$key}"}( $value );
+			}
+		}
+
+		$token->set_id( $token_id );
+
+		return $token;
 	}
 
 
