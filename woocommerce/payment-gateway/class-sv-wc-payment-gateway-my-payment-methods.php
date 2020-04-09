@@ -98,7 +98,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 	 */
 	public function get_id() {
 
-		return $this->get_plugin()->get_id();
+		return $this->get_plugin()->get_id() . '_payment_methods';
 	}
 
 
@@ -111,7 +111,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 	 */
 	public function get_id_dasherized() {
 
-		return $this->get_plugin()->get_id_dasherized();
+		return $this->get_plugin()->get_id_dasherized() . '-payment-methods';
 	}
 
 
@@ -256,47 +256,12 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 	 */
 	public function render_js() {
 
-		if ( $this->has_tokens ) {
-
-			$args = $this->get_js_handler_params();
-
-			/**
-			 * Filters the payment gateway payment methods JavaScript args.
-			 *
-			 * @since 5.1.0
-			 *
-			 * @param array $args arguments
-			 * @param SV_WC_Payment_Gateway_My_Payment_Methods $handler payment methods handler
-			 */
-			$args = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_payment_methods_js_args', $args, $this );
-
-			ob_start();
-
-			$handler_name  = $this->get_js_handler_class_name();
-			$window_object = 'wc_' . $this->get_plugin()->get_id() . '_payment_methods_handler';
-			$load_function = 'load_' . $this->get_plugin()->get_id() . '_payment_methods_handler';
-			$loaded_event  = $this->get_js_loaded_event();
-
-			?>
-			function <?php echo esc_js( $load_function ) ?>() {
-				window.<?php echo esc_js( $window_object ); ?> = new <?php echo esc_js( $handler_name ); ?>( <?php echo json_encode( $args ); ?> );
-			}
-
-			try {
-				if ( 'undefined' !== typeof <?php echo esc_js( $handler_name ); ?> ) {
-					<?php echo esc_js( $load_function ); ?>();
-				} else {
-					window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
-					<?php echo $this->get_js_handler_event_debug_log_request(); ?>
-				}
-			} catch( err ) {
-				window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
-				<?php echo $this->get_js_handler_event_debug_log_request(); ?>
-			}
-			<?php
-
-			wc_enqueue_js( ob_get_clean() );
+		// bail if the gateways have no tokens
+		if ( ! $this->has_tokens ) {
+			return;
 		}
+
+		wc_enqueue_js( $this->get_safe_handler_js() );
 	}
 
 
@@ -310,7 +275,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Frontend\Script_Handler {
 	 *
 	 * @return array
 	 */
-	protected function get_js_handler_params() {
+	protected function get_js_handler_args() {
 
 		$args = [
 			'id'              => $this->get_plugin()->get_id(),

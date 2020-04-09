@@ -84,6 +84,19 @@ abstract class Script_Handler {
 
 
 	/**
+	 * Returns the JS handler object name.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	protected function get_js_handler_object_name() {
+
+		return 'wc_' . $this->get_id() . '_handler';
+	}
+
+
+	/**
 	 * Gets the JS event triggered after the JS handler class is loaded.
 	 *
 	 * @since x.y.z
@@ -93,6 +106,100 @@ abstract class Script_Handler {
 	protected function get_js_loaded_event() {
 
 		return sprintf( '%s_loaded', strtolower( $this->get_js_handler_class_name() ) );
+	}
+
+
+	/**
+	 * Gets the handler instantiation JS wrapped in a safe load technique.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array $additional_args additional handler arguments, if any
+	 * @param string $handler_name handler name, if different from self::get_js_handler_class_name()
+	 * @param string $object_name object name, if different from self::get_js_handler_object_name()
+	 * @return string
+	 */
+	protected function get_safe_handler_js( array $additional_args = [], $handler_name = '', $object_name = '' ) {
+
+		if ( ! $handler_name ) {
+			$handler_name = $this->get_js_handler_class_name();
+		}
+
+		$load_function = 'load_' . $this->get_id() . '_handler';
+		$loaded_event  = $this->get_js_loaded_event();
+
+		ob_start();
+
+		?>
+		function <?php echo esc_js( $load_function ) ?>() {
+			<?php echo $this->get_handler_js( $additional_args, $handler_name, $object_name ); ?>
+		}
+
+		try {
+
+			if ( 'undefined' !== typeof <?php echo esc_js( $handler_name ); ?> ) {
+				<?php echo esc_js( $load_function ); ?>();
+			} else {
+				window.jQuery( document.body ).on( '<?php echo esc_js( $this->get_js_loaded_event() ); ?>', <?php echo esc_js( $load_function ); ?> );
+				<?php echo $this->get_js_handler_event_debug_log_request(); ?>
+			}
+
+		} catch( err ) {
+			window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+			<?php echo $this->get_js_handler_event_debug_log_request(); ?>
+		}
+		<?php
+
+		return ob_get_clean();
+	}
+
+
+	/**
+	 * Gets the handler instantiation JS.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array $additional_args additional handler arguments, if any
+	 * @param string $handler_name handler name, if different from self::get_js_handler_class_name()
+	 * @param string $object_name object name, if different from self::get_js_handler_object_name()
+	 * @return string
+	 */
+	protected function get_handler_js( array $additional_args = [], $handler_name = '', $object_name = '' ) {
+
+		$args = array_merge( $additional_args, $this->get_js_handler_args() );
+
+		/**
+		 * Filters the JavaScript handler arguments.
+		 *
+		 * @since x.y.z
+		 *
+		 * @param array $args arguments to pass to the JS handler
+		 * @param Script_Handler $handler script handler instance
+		 */
+		$args = apply_filters( 'wc_' . $this->get_id() . '_js_args', $args, $this );
+
+		if ( ! $handler_name ) {
+			$handler_name = $this->get_js_handler_class_name();
+		}
+
+		if ( ! $object_name ) {
+			$object_name = $this->get_js_handler_object_name();
+		}
+
+		return sprintf( 'window.%1$s = new %2$s( %3$s );', esc_js( $object_name ), esc_js( $handler_name ), json_encode( $args ) );
+	}
+
+
+	/**
+	 * Gets the JS handler arguments.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return array
+	 */
+	protected function get_js_handler_args() {
+
+		return [];
 	}
 
 
@@ -165,6 +272,8 @@ abstract class Script_Handler {
 			}
 
 			$this->log_event( $message );
+
+			wp_send_json_success();
 
 		} catch ( SV_WC_Plugin_Exception $exception ) {
 
