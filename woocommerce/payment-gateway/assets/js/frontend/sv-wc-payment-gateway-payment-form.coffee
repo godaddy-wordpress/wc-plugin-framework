@@ -10,7 +10,7 @@ jQuery( document ).ready ($) ->
 	"use strict"
 
 
-	class window.SV_WC_Payment_Form_Handler
+	class window.SV_WC_Payment_Form_Handler_v5_6_1
 
 
 		# Public: Instantiate Payment Form Handler
@@ -22,7 +22,7 @@ jQuery( document ).ready ($) ->
 		#   type - gateway type, either `credit-card` or `echeck`
 		#   csc_required - true if the gateway requires the CSC field to be displayed
 		#
-		# Returns SV_WC_Payment_Form_Handler instance
+		# Returns SV_WC_Payment_Form_Handler_5_6_1 instance
 		constructor: (args) ->
 
 			@id                      = args.id
@@ -382,3 +382,7 @@ jQuery( document ).ready ($) ->
 		#
 		# @since 3.0.0
 		unblock_ui: -> @form.unblock()
+
+
+	# dispatch loaded event
+	$( document.body ).trigger( "sv_wc_payment_form_handler_v5_6_1_loaded" )

@@ -455,6 +455,7 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/rest-api/Controllers/Settings.php' );
 
 		// Handlers
+		require_once( $framework_path . '/Handlers/Script_Handler.php' );
 		require_once( $framework_path . '/class-sv-wc-plugin-dependencies.php' );
 		require_once( $framework_path . '/class-sv-wc-hook-deprecator.php' );
 		require_once( $framework_path . '/class-sv-wp-admin-message-handler.php' );
