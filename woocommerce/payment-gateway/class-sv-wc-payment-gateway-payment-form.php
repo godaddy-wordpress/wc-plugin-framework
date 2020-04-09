@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_0\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
 
 
 /**
@@ -106,7 +106,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	/**
 	 * Gets the script ID.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
@@ -119,7 +119,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	/**
 	 * Gets the script ID, dasherized.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
@@ -1016,7 +1016,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	/**
 	 * Gets the handler instantiation JS.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param array $additional_args additional handler arguments, if any
 	 * @param string $handler_name handler name, if different from self::get_js_handler_class_name()
@@ -1039,7 +1039,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	 * Payment gateways can overwrite this method to define specific args.
 	 * render_js() will apply filters to the returned array of args.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return array
 	 */
@@ -1055,7 +1055,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 		];
 
 		if ( $this->get_gateway()->supports_card_types() ) {
-			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
+			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_7_0\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
 		}
 
 		return $args;
@@ -1065,7 +1065,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	/**
 	 * Adds a log entry.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $message message to log
 	 */
@@ -1078,7 +1078,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	/**
 	 * Determines whether logging is enabled.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return bool
 	 */

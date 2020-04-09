@@ -1,12 +1,12 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Payment_Gateway_My_Payment_Methods;
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_0\SV_WC_Payment_Gateway_My_Payment_Methods;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_0\SV_WC_Payment_Gateway_Plugin;
 
 /**
  * Tests for the SV_WC_Payment_Gateway_My_Payment_Methods class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Payment_Gateway_My_Payment_Methods
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_7_0\SV_WC_Payment_Gateway_My_Payment_Methods
  */
 class MyPaymentMethodsTest extends \Codeception\TestCase\WPTestCase {
 
@@ -116,7 +116,7 @@ class MyPaymentMethodsTest extends \Codeception\TestCase\WPTestCase {
 		$payment_methods->render_js();
 
 		$this->assertStringContainsString( 'function load_gateway_test_plugin_payment_methods_handler', $wc_queued_js );
-		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_payment_methods_handler_v5_6_1_loaded\', load_gateway_test_plugin_payment_methods_handler );', $wc_queued_js );
+		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_payment_methods_handler_v5_7_0_loaded\', load_gateway_test_plugin_payment_methods_handler );', $wc_queued_js );
 	}
 
 

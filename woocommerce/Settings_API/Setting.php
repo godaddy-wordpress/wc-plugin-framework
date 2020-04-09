@@ -22,18 +22,18 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_0\Settings_API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_0 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Settings_API\\Setting' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_0\\Settings_API\\Setting' ) ) :
 
 /**
  * The base setting object.
  *
- * @since x.y.z
+ * @since 5.7.0
  */
 class Setting {
 
@@ -91,7 +91,7 @@ class Setting {
 	/**
 	 * Gets the setting ID.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
@@ -104,7 +104,7 @@ class Setting {
 	/**
 	 * Gets the setting type.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
@@ -117,7 +117,7 @@ class Setting {
 	/**
 	 * Gets the setting name.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
@@ -130,7 +130,7 @@ class Setting {
 	/**
 	 * Gets the setting description.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
@@ -143,7 +143,7 @@ class Setting {
 	/**
 	 * Returns whether the setting holds an array of multiple values.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return bool
 	 */
@@ -156,7 +156,7 @@ class Setting {
 	/**
 	 * Gets the setting options.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return array
 	 */
@@ -169,7 +169,7 @@ class Setting {
 	/**
 	 * Gets the setting default value.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return array|bool|float|int|string|null
 	 */
@@ -182,7 +182,7 @@ class Setting {
 	/**
 	 * Gets the setting current value.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return array|bool|float|int|string
 	 */
@@ -195,7 +195,7 @@ class Setting {
 	/**
 	 * Gets the setting control.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return Control
 	 */
@@ -211,7 +211,7 @@ class Setting {
 	/**
 	 * Sets the setting ID.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $id
 	 */
@@ -224,7 +224,7 @@ class Setting {
 	/**
 	 * Sets the setting type.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $type
 	 */
@@ -237,7 +237,7 @@ class Setting {
 	/**
 	 * Sets the setting name.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $name
 	 */
@@ -250,7 +250,7 @@ class Setting {
 	/**
 	 * Sets the setting description.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $description
 	 */
@@ -263,7 +263,7 @@ class Setting {
 	/**
 	 * Sets whether the setting holds an array of multiple values.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param bool $is_multi
 	 */
@@ -276,7 +276,7 @@ class Setting {
 	/**
 	 * Sets the setting options.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param array $options
 	 */
@@ -296,7 +296,7 @@ class Setting {
 	/**
 	 * Sets the setting default value.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param array|bool|float|int|string|null $value default value to set
 	 */
@@ -321,7 +321,7 @@ class Setting {
 	/**
 	 * Sets the setting current value.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param array|bool|float|int|string $value
 	 */
@@ -334,7 +334,7 @@ class Setting {
 	/**
 	 * Sets the setting control.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param Control $control
 	 */
@@ -347,7 +347,7 @@ class Setting {
 	/**
 	 * Sets the setting current value, after validating it against the type and, if set, options.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param array|bool|float|int|string $value
 	 * @throws Framework\SV_WC_Plugin_Exception
@@ -376,7 +376,7 @@ class Setting {
 	/**
 	 * Validates the setting value.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param array|bool|float|int|string $value
 	 * @return bool
@@ -392,7 +392,7 @@ class Setting {
 	/**
 	 * Validates a string value.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param array|bool|float|int|string $value value to validate
 	 * @return bool
@@ -406,7 +406,7 @@ class Setting {
 	/**
 	 * Validates a URL value.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param array|bool|float|int|string $value value to validate
 	 * @return bool
@@ -420,7 +420,7 @@ class Setting {
 	/**
 	 * Validates an email value.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param mixed $value value to validate
 	 * @return bool
@@ -434,7 +434,7 @@ class Setting {
 	/**
 	 * Validates an integer value.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param mixed $value value to validate
 	 * @return bool
@@ -448,7 +448,7 @@ class Setting {
 	/**
 	 * Validates a float value.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param mixed $value value to validate
 	 * @return bool
@@ -462,7 +462,7 @@ class Setting {
 	/**
 	 * Validates a boolean value.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param mixed $value value to validate
 	 * @return bool

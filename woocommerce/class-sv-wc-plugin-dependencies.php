@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\SV_WC_Plugin_Dependencies' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_0\\SV_WC_Plugin_Dependencies' ) ) :
 
 
 /**
@@ -317,7 +317,7 @@ class SV_WC_Plugin_Dependencies {
 	 *
 	 * Returns a key-value array where the key contains the plugin file identifier and the value is the name of the plugin.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return array
 	 */
@@ -326,7 +326,7 @@ class SV_WC_Plugin_Dependencies {
 		/**
 		 * Filters script optimization plugins to look for.
 		 *
-		 * @since x.y.z
+		 * @since 5.7.0
 		 *
 		 * @param array $plugins an array of file identifiers (keys) and plugin names (values)
 		 */
@@ -357,7 +357,7 @@ class SV_WC_Plugin_Dependencies {
 	/**
 	 * Returns true if any of the known scripts optimization plugins is active.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return bool
 	 */

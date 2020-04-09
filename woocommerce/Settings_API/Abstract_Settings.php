@@ -22,18 +22,18 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_0\Settings_API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_0 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Settings_API\\Abstract_Settings' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_0\\Settings_API\\Abstract_Settings' ) ) :
 
 /**
  * The base settings handler.
  *
- * @since x.y.z
+ * @since 5.7.0
  */
 abstract class Abstract_Settings {
 
@@ -48,7 +48,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $id the ID of plugin or payment gateway that owns these settings
 	 */
@@ -66,7 +66,7 @@ abstract class Abstract_Settings {
 	 *
 	 * Plugins or payment gateways should overwrite this method to register their settings.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 */
 	abstract protected function register_settings();
 
@@ -74,7 +74,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Loads the values for all registered settings.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 */
 	protected function load_settings() {
 
@@ -136,7 +136,7 @@ abstract class Abstract_Settings {
 
 		} catch ( \Exception $exception ) {
 
-			wc_doing_it_wrong( __METHOD__, 'Could not register setting: ' . $exception->getMessage(), 'x.y.z' );
+			wc_doing_it_wrong( __METHOD__, 'Could not register setting: ' . $exception->getMessage(), '5.7.0' );
 
 			return false;
 		}
@@ -146,7 +146,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Unregisters a setting.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $id setting ID to unregister
 	 */
@@ -159,7 +159,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Registers a control for a setting.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $setting_id the setting ID
 	 * @param string $type the control type
@@ -208,7 +208,7 @@ abstract class Abstract_Settings {
 
 		} catch ( \Exception $exception ) {
 
-			wc_doing_it_wrong( __METHOD__, 'Could not register setting control: ' . $exception->getMessage(), 'x.y.z' );
+			wc_doing_it_wrong( __METHOD__, 'Could not register setting control: ' . $exception->getMessage(), '5.7.0' );
 
 			return false;
 		}
@@ -218,7 +218,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Gets the settings ID.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
@@ -257,7 +257,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Gets a setting object.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $id setting ID to get
 	 * @return Setting|null
@@ -273,7 +273,7 @@ abstract class Abstract_Settings {
 	 *
 	 * Optionally, will return the setting's default value if nothing is stored.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $setting_id setting ID
 	 * @param bool $with_default whether to return the default value if nothing is stored
@@ -301,7 +301,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Updates the stored value for a setting.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $setting_id setting ID
 	 * @param array|bool|float|int|string $value
@@ -325,7 +325,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Deletes the stored value for a setting.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $setting_id setting ID
 	 * @return bool
@@ -350,7 +350,7 @@ abstract class Abstract_Settings {
 	 *
 	 * It saves all settings by default, but you can pass a setting ID to save a specific setting.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $setting_id setting ID
 	 */
@@ -384,7 +384,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Converts the value of a setting to be stored in an option.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param Setting $setting
 	 * @return mixed
@@ -404,7 +404,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Converts the stored value of a setting to the proper setting type.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param mixed $value the value stored in an option
 	 * @param Setting $setting
@@ -437,7 +437,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Gets the list of valid setting types.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string[]
 	 */
@@ -465,7 +465,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Gets the list of valid control types.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string[]
 	 */
@@ -499,7 +499,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Returns the valid control types for a setting.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param Setting $setting setting object
 	 * @return string[]
@@ -521,7 +521,7 @@ abstract class Abstract_Settings {
 	/**
 	 * Gets the prefix for db option names.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */

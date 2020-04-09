@@ -22,19 +22,19 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\REST_API\Controllers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_0\REST_API\Controllers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Abstract_Settings;
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API\Setting;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_0\Settings_API\Abstract_Settings;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_0\Settings_API\Setting;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\REST_API\\Controllers\\Settings' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_0\\REST_API\\Controllers\\Settings' ) ) :
 
 /**
  * The settings controller class.
  *
- * @since x.y.z
+ * @since 5.7.0
  */
 class Settings extends \WP_REST_Controller {
 
@@ -46,7 +46,7 @@ class Settings extends \WP_REST_Controller {
 	/**
 	 * Settings constructor.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param Abstract_Settings $settings settings handler
 	 */
@@ -61,7 +61,7 @@ class Settings extends \WP_REST_Controller {
 	/**
 	 * Registers the API routes.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 */
 	public function register_routes() {
 
@@ -107,7 +107,7 @@ class Settings extends \WP_REST_Controller {
 	/**
 	 * Checks whether the user has permissions to get settings.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param \WP_REST_Request $request request object
 	 * @return bool|\WP_Error
@@ -125,7 +125,7 @@ class Settings extends \WP_REST_Controller {
 	/**
 	 * Gets all registered settings.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param \WP_REST_Request $request request object
 	 * @return \WP_REST_Response|\WP_Error
@@ -145,7 +145,7 @@ class Settings extends \WP_REST_Controller {
 	/**
 	 * Gets a single setting.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param \WP_REST_Request $request request object
 	 * @return \WP_REST_Response|\WP_Error
@@ -179,7 +179,7 @@ class Settings extends \WP_REST_Controller {
 	/**
 	 * Checks whether the user has permissions to update a setting.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param \WP_REST_Request $request request object
 	 * @return bool|\WP_Error
@@ -197,7 +197,7 @@ class Settings extends \WP_REST_Controller {
 	/**
 	 * Updates a single setting.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param \WP_REST_Request $request request object
 	 * @return WP_Error|WP_REST_Response
@@ -235,7 +235,7 @@ class Settings extends \WP_REST_Controller {
 	/**
 	 * Prepares the item for the REST response.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param Setting $setting a setting object
 	 * @param \WP_REST_Request $request request object
@@ -278,7 +278,7 @@ class Settings extends \WP_REST_Controller {
 	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return array
 	 */

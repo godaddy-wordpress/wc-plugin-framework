@@ -1,12 +1,12 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Payment_Gateway_Apple_Pay;
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Payment_Gateway_Apple_Pay_Frontend;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_0\SV_WC_Payment_Gateway_Apple_Pay;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_0\SV_WC_Payment_Gateway_Apple_Pay_Frontend;
 
 /**
  * Tests for the SV_WC_Payment_Gateway_Apple_Pay_Frontend class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Payment_Gateway_Apple_Pay_Frontend
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_7_0\SV_WC_Payment_Gateway_Apple_Pay_Frontend
  */
 class ApplePayFrontendTest extends \Codeception\TestCase\WPTestCase {
 
@@ -114,7 +114,7 @@ class ApplePayFrontendTest extends \Codeception\TestCase\WPTestCase {
 		$method->invokeArgs( $frontend, [[]] );
 
 		$this->assertStringContainsString( 'function load_test_gateway_apple_pay_handler', $wc_queued_js );
-		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_apple_pay_handler_v5_6_1_loaded\', load_test_gateway_apple_pay_handler );', $wc_queued_js );
+		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_apple_pay_handler_v5_7_0_loaded\', load_test_gateway_apple_pay_handler );', $wc_queued_js );
 	}
 
 

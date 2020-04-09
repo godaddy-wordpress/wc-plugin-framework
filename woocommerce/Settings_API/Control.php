@@ -22,18 +22,18 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Settings_API;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_0\Settings_API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_0 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Settings_API\\Control' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_0\\Settings_API\\Control' ) ) :
 
 /**
  * The base control object.
  *
- * @since x.y.z
+ * @since 5.7.0
  */
 class Control {
 
@@ -97,7 +97,7 @@ class Control {
 	/**
 	 * The setting ID to which this control belongs.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return null|string
 	 */
@@ -110,7 +110,7 @@ class Control {
 	/**
 	 * Gets the control type.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return null|string
 	 */
@@ -123,7 +123,7 @@ class Control {
 	/**
 	 * Gets the control name.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
@@ -136,7 +136,7 @@ class Control {
 	/**
 	 * Gets the control description.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
@@ -151,7 +151,7 @@ class Control {
 	 *
 	 * As $option => $label for display.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return array
 	 */
@@ -167,7 +167,7 @@ class Control {
 	/**
 	 * Sets the setting ID.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $value setting ID to set
 	 * @throws Framework\SV_WC_Plugin_Exception
@@ -185,7 +185,7 @@ class Control {
 	/**
 	 * Sets the type.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $value setting ID to set
 	 * @param string[] $valid_types allowed control types
@@ -208,7 +208,7 @@ class Control {
 	/**
 	 * Sets the name.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $value control name to set
 	 * @throws Framework\SV_WC_Plugin_Exception
@@ -226,7 +226,7 @@ class Control {
 	/**
 	 * Sets the description.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $value control description to set
 	 * @throws Framework\SV_WC_Plugin_Exception
@@ -244,7 +244,7 @@ class Control {
 	/**
 	 * Sets the options.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param array $options options to set
 	 * @param array $valid_options valid option keys to check against

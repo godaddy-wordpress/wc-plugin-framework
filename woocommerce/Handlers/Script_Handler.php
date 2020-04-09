@@ -22,14 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Handlers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_0\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_0\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_0\SV_WC_Plugin_Exception;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Handlers\\Script_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_0\\Handlers\\Script_Handler' ) ) :
 
 
 /**
@@ -37,7 +37,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Handlers
  *
  * Handles initializing the payment registered JavaScripts
  *
- * @since x.y.z
+ * @since 5.7.0
  */
 abstract class Script_Handler {
 
@@ -49,7 +49,7 @@ abstract class Script_Handler {
 	/**
 	 * Script_Handler constructor.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 */
 	public function __construct() {
 
@@ -61,7 +61,7 @@ abstract class Script_Handler {
 	/**
 	 * Adds the action and filter hooks.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 */
 	protected function add_hooks() {
 
@@ -73,20 +73,20 @@ abstract class Script_Handler {
 	/**
 	 * Returns the JS handler class name.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
 	protected function get_js_handler_class_name() {
 
-		return sprintf( '%s_v5_6_1', $this->js_handler_base_class_name );
+		return sprintf( '%s_v5_7_0', $this->js_handler_base_class_name );
 	}
 
 
 	/**
 	 * Returns the JS handler object name.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
@@ -99,7 +99,7 @@ abstract class Script_Handler {
 	/**
 	 * Gets the JS event triggered after the JS handler class is loaded.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
@@ -112,7 +112,7 @@ abstract class Script_Handler {
 	/**
 	 * Gets the handler instantiation JS wrapped in a safe load technique.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param array $additional_args additional handler arguments, if any
 	 * @param string $handler_name handler name, if different from self::get_js_handler_class_name()
@@ -155,7 +155,7 @@ abstract class Script_Handler {
 	/**
 	 * Gets the handler instantiation JS.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param array $additional_args additional handler arguments, if any
 	 * @param string $handler_name handler name, if different from self::get_js_handler_class_name()
@@ -169,7 +169,7 @@ abstract class Script_Handler {
 		/**
 		 * Filters the JavaScript handler arguments.
 		 *
-		 * @since x.y.z
+		 * @since 5.7.0
 		 *
 		 * @param array $args arguments to pass to the JS handler
 		 * @param Script_Handler $handler script handler instance
@@ -191,7 +191,7 @@ abstract class Script_Handler {
 	/**
 	 * Gets the JS handler arguments.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return array
 	 */
@@ -204,7 +204,7 @@ abstract class Script_Handler {
 	/**
 	 * Gets inline JavaScript code to issue an AJAX request to log a script error event.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
@@ -243,7 +243,7 @@ abstract class Script_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 */
 	public function ajax_log_event() {
 
@@ -283,7 +283,7 @@ abstract class Script_Handler {
 	/**
 	 * Adds a log entry.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @param string $message message to log
 	 */
@@ -296,7 +296,7 @@ abstract class Script_Handler {
 	/**
 	 * Determines whether logging is enabled.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return bool
 	 */
@@ -312,7 +312,7 @@ abstract class Script_Handler {
 	/**
 	 * Gets the ID of this script handler.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
@@ -322,7 +322,7 @@ abstract class Script_Handler {
 	/**
 	 * Gets the ID, but dasherized.
 	 *
-	 * @since x.y.z
+	 * @since 5.7.0
 	 *
 	 * @return string
 	 */
