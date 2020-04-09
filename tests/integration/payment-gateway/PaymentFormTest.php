@@ -19,8 +19,6 @@ class PaymentFormTest extends \Codeception\TestCase\WPTestCase {
 
 	protected function _before() {
 
-		require_once 'woocommerce/payment-gateway/Frontend/Script_Handler.php';
-		require_once 'woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php';
 	}
 
 
@@ -50,11 +48,11 @@ class PaymentFormTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
-	 * @see SV_WC_Payment_Gateway_Payment_Form::get_js_handler_params.
+	 * @see SV_WC_Payment_Gateway_Payment_Form::get_js_handler_args.
 	 */
-	public function test_get_js_handler_params() {
+	public function test_get_js_handler_args() {
 
-		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_Payment_Form::class, 'get_js_handler_params' );
+		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_Payment_Form::class, 'get_js_handler_args' );
 		$method->setAccessible( true );
 
 		$result = $method->invoke( $this->get_plugin()->get_gateway()->get_payment_form_instance() );
@@ -92,7 +90,7 @@ class PaymentFormTest extends \Codeception\TestCase\WPTestCase {
 		$this->get_plugin()->get_gateway()->get_payment_form_instance()->render_js();
 
 		$this->assertStringContainsString( 'function load_test_gateway_payment_form_handler', $wc_queued_js );
-		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_payment_form_handler_5_6_1_loaded\', load_test_gateway_payment_form_handler );', $wc_queued_js );
+		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_payment_form_handler_v5_6_1_loaded\', load_test_gateway_payment_form_handler );', $wc_queued_js );
 	}
 
 

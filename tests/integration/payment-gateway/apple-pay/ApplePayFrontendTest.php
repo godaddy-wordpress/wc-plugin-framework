@@ -20,9 +20,6 @@ class ApplePayFrontendTest extends \Codeception\TestCase\WPTestCase {
 
 	protected function _before() {
 
-		require_once 'woocommerce/payment-gateway/Frontend/Script_Handler.php';
-		require_once 'woocommerce/payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php';
-		require_once 'woocommerce/payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php';
 	}
 
 
@@ -59,14 +56,14 @@ class ApplePayFrontendTest extends \Codeception\TestCase\WPTestCase {
 	/**
 	 * @see SV_WC_Payment_Gateway_Apple_Pay_Frontend::get_js_handler_params.
 	 */
-	public function test_get_js_handler_params() {
+	public function test_get_js_handler_args() {
 
 		$property = new ReflectionProperty( SV_WC_Payment_Gateway_Apple_Pay::class, 'frontend' );
 		$property->setAccessible( true );
 
 		$frontend = $property->getValue( $this->get_plugin()->get_apple_pay_instance() );
 
-		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_Apple_Pay_Frontend::class, 'get_js_handler_params' );
+		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_Apple_Pay_Frontend::class, 'get_js_handler_args' );
 		$method->setAccessible( true );
 
 		$result = $method->invoke( $frontend );
@@ -117,7 +114,7 @@ class ApplePayFrontendTest extends \Codeception\TestCase\WPTestCase {
 		$method->invokeArgs( $frontend, [[]] );
 
 		$this->assertStringContainsString( 'function load_test_gateway_apple_pay_handler', $wc_queued_js );
-		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_apple_pay_handler_5_6_1_loaded\', load_test_gateway_apple_pay_handler );', $wc_queued_js );
+		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_apple_pay_handler_v5_6_1_loaded\', load_test_gateway_apple_pay_handler );', $wc_queued_js );
 	}
 
 

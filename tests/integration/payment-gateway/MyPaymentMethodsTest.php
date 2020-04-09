@@ -20,8 +20,6 @@ class MyPaymentMethodsTest extends \Codeception\TestCase\WPTestCase {
 
 	protected function _before() {
 
-		require_once 'woocommerce/payment-gateway/Frontend/Script_Handler.php';
-		require_once 'woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php';
 	}
 
 
@@ -56,16 +54,16 @@ class MyPaymentMethodsTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
-	 * @see SV_WC_Payment_Gateway_My_Payment_Methods::get_js_handler_params.
+	 * @see SV_WC_Payment_Gateway_My_Payment_Methods::get_js_handler_args.
 	 */
-	public function test_get_js_handler_params() {
+	public function test_get_js_handler_args() {
 
 		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_Plugin::class, 'get_my_payment_methods_instance' );
 		$method->setAccessible( true );
 
 		$payment_methods = $method->invoke( $this->get_plugin() );
 
-		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_My_Payment_Methods::class, 'get_js_handler_params' );
+		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_My_Payment_Methods::class, 'get_js_handler_args' );
 		$method->setAccessible( true );
 
 		$result = $method->invoke( $payment_methods );
@@ -118,7 +116,7 @@ class MyPaymentMethodsTest extends \Codeception\TestCase\WPTestCase {
 		$payment_methods->render_js();
 
 		$this->assertStringContainsString( 'function load_gateway_test_plugin_payment_methods_handler', $wc_queued_js );
-		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_payment_methods_handler_5_6_1_loaded\', load_gateway_test_plugin_payment_methods_handler );', $wc_queued_js );
+		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_payment_methods_handler_v5_6_1_loaded\', load_gateway_test_plugin_payment_methods_handler );', $wc_queued_js );
 	}
 
 
