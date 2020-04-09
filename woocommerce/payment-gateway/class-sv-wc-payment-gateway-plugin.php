@@ -282,9 +282,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		// exceptions
 		require_once( $payment_gateway_framework_path . '/exceptions/class-sv-wc-payment-gateway-exception.php' );
 
-		// frontend
-		require_once( $payment_gateway_framework_path . '/Frontend/Script_Handler.php' );
-
 		// gateway
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway.php' );
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-direct.php' );

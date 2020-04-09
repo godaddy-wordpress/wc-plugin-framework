@@ -22,14 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Frontend;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1\Handlers;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Plugin_Exception;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Frontend\\Script_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\Handlers\\Script_Handler' ) ) :
 
 
 /**
@@ -126,7 +126,6 @@ abstract class Script_Handler {
 		}
 
 		$load_function = 'load_' . $this->get_id() . '_handler';
-		$loaded_event  = $this->get_js_loaded_event();
 
 		ob_start();
 
@@ -141,11 +140,10 @@ abstract class Script_Handler {
 				<?php echo esc_js( $load_function ); ?>();
 			} else {
 				window.jQuery( document.body ).on( '<?php echo esc_js( $this->get_js_loaded_event() ); ?>', <?php echo esc_js( $load_function ); ?> );
-				<?php echo $this->get_js_handler_event_debug_log_request(); ?>
 			}
 
-		} catch( err ) {
-			window.jQuery( document.body ).on( '<?php echo esc_js( $loaded_event ); ?>', <?php echo esc_js( $load_function ); ?> );
+		} catch ( err ) {
+
 			<?php echo $this->get_js_handler_event_debug_log_request(); ?>
 		}
 		<?php
