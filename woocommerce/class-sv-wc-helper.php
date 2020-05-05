@@ -482,10 +482,11 @@ class SV_WC_Helper {
 			$product   = $item->get_product();
 			$name      = $item->get_name();
 			$quantity  = $item->get_quantity();
+			$sku       = $product instanceof \WC_Product ? $product->get_sku() : '';
 			$item_desc = [];
 
 			// add SKU to description if available
-			if ( $sku = $product->get_sku() ) {
+			if ( ! empty( $sku ) ) {
 				$item_desc[] = sprintf( 'SKU: %s', $sku );
 			}
 
