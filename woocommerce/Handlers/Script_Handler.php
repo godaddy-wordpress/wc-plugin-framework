@@ -225,6 +225,12 @@ abstract class Script_Handler {
 			errorMessage = 'undefined' !== typeof err.message ? err.message : '';
 		}
 
+		<?php if ( $this->is_logging_enabled() ) : ?>
+
+		console.log( [ errorName, errorMessage ].filter( Boolean ).join( ' ' ) );
+
+		<?php endif; ?>
+
 		jQuery.post( '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ; ?>', {
 			action:   '<?php echo esc_js( 'wc_' . $this->get_id() . '_log_script_event' ); ?>',
 			security: '<?php echo esc_js( wp_create_nonce( 'wc-' . $this->get_id_dasherized() . '-log-script-event' ) ); ?>',
