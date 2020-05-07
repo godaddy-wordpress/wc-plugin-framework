@@ -61,47 +61,50 @@ http://www.gnu.org/licenses/gpl-3.0.html
 	}
 
 	// inline credit card input icon
-	input.js-sv-wc-payment-gateway-credit-card-form-account-number {
+  	@media screen and (min-width: 330px) {
 
-		background-image: url('../../images/card-cc-plain.svg');
-		background-repeat: no-repeat;
-		background-position: right 10px center;
-		background-size: 50px 31px;
+		input.js-sv-wc-payment-gateway-credit-card-form-account-number {
 
-		&.visa {
-			background-image: url('../../images/card-visa.svg');
-		}
+			background-image: url('../../images/card-cc-plain.svg');
+			background-repeat: no-repeat;
+			background-position: right 10px center;
+			background-size: 50px 31px;
 
-		&.mastercard {
-			background-image: url('../../images/card-mastercard.svg');
-		}
+			&.visa {
+				background-image: url('../../images/card-visa.svg');
+			}
 
-		&.dinersclub {
-			background-image: url('../../images/card-dinersclub.svg');
-		}
+			&.mastercard {
+				background-image: url('../../images/card-mastercard.svg');
+			}
 
-		&.maestro {
-			background-image: url('../../images/card-maestro.svg');
-		}
+			&.dinersclub {
+				background-image: url('../../images/card-dinersclub.svg');
+			}
 
-		&.jcb {
-			background-image: url('../../images/card-jcb.svg');
-		}
+			&.maestro {
+				background-image: url('../../images/card-maestro.svg');
+			}
 
-		&.amex {
-			background-image: url('../../images/card-amex.svg');
-		}
+			&.jcb {
+				background-image: url('../../images/card-jcb.svg');
+			}
 
-		&.discover {
-			background-image: url('../../images/card-discover.svg');
-		}
+			&.amex {
+				background-image: url('../../images/card-amex.svg');
+			}
 
-		&.visaelectron {
-			background-image: url('../../images/card-visa-electron.svg');
-		}
+			&.discover {
+				background-image: url('../../images/card-discover.svg');
+			}
 
-		&.invalid-card-type {
-			background-image: url('../../images/card-cc-invalid.svg');
+			&.visaelectron {
+				background-image: url('../../images/card-visa-electron.svg');
+			}
+
+			&.invalid-card-type {
+				background-image: url('../../images/card-cc-invalid.svg');
+			}
 		}
 	}
 
@@ -118,19 +121,17 @@ http://www.gnu.org/licenses/gpl-3.0.html
 	}
 }
 
-// add payment method form card images
-#add_payment_method {
-	ul.payment_methods li {
-		list-style-type: none;
+// payment form card images
+ul.payment_methods li {
+
+	div.sv-wc-payment-gateway-card-icons {
+		vertical-align: middle;
+		display: inline-block;
+		margin-left: 22px;
+
 		img {
-			vertical-align: middle;
-			margin: -2px 0 0 .5em;
-			padding: 0;
-			position: relative;
-			box-shadow: none;
-			& + img {
-				margin-left: 2px;
-			}
+			float: left !important;
+			margin: 5px;
 		}
 	}
 }

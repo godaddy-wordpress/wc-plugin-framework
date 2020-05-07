@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_0\\SV_WC_Plugin' ) ) :
 
 
 /**
@@ -37,13 +37,13 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\SV_WC_Pl
  * plugin.  This class handles all the "non-feature" support tasks such
  * as verifying dependencies are met, loading the text domain, etc.
  *
- * @version 5.6.1
+ * @version 5.7.0
  */
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.6.1';
+	const VERSION = '5.7.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -418,6 +418,11 @@ abstract class SV_WC_Plugin {
 		require_once(  $framework_path . '/Addresses/Address.php' );
 		require_once(  $framework_path . '/Addresses/Customer_Address.php' );
 
+		// Settings API
+		require_once( $framework_path . '/Settings_API/Abstract_Settings.php' );
+		require_once( $framework_path . '/Settings_API/Setting.php' );
+		require_once( $framework_path . '/Settings_API/Control.php' );
+
 		// common utility methods
 		require_once( $framework_path . '/class-sv-wc-helper.php' );
 		require_once( $framework_path . '/Country_Helper.php' );
@@ -446,7 +451,11 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
 
+		// REST API Controllers
+		require_once( $framework_path . '/rest-api/Controllers/Settings.php' );
+
 		// Handlers
+		require_once( $framework_path . '/Handlers/Script_Handler.php' );
 		require_once( $framework_path . '/class-sv-wc-plugin-dependencies.php' );
 		require_once( $framework_path . '/class-sv-wc-hook-deprecator.php' );
 		require_once( $framework_path . '/class-sv-wp-admin-message-handler.php' );
@@ -929,6 +938,21 @@ abstract class SV_WC_Plugin {
 	public function get_admin_notice_handler() {
 
 		return $this->admin_notice_handler;
+	}
+
+
+	/**
+	 * Gets the settings API handler instance.
+	 *
+	 * Plugins can use this to init the settings API handler.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return void|Settings_API\Abstract_Settings
+	 */
+	public function get_settings_handler() {
+
+		return;
 	}
 
 

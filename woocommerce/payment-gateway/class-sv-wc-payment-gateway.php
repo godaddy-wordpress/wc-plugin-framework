@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_0\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -199,6 +199,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/** @var array of SV_WC_Payment_Gateway_Integration objects for Subscriptions, Pre-Orders, etc. */
 	protected $integrations;
 
+	/** @var SV_WC_Payment_Gateway_Payment_Form|null payment form instance */
+	protected $payment_form;
+
 
 	/**
 	 * Initialize the gateway
@@ -302,6 +305,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		// initialize the capture handler
 		$this->init_capture_handler();
+
+		// initialize the payment form
+		$this->maybe_init_payment_form();
 
 		// pay page fallback
 		$this->add_pay_page_handler();
@@ -624,6 +630,40 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
+	 * Initializes the payment form handler.
+	 *
+	 * @since 5.7.0
+	 */
+	protected function maybe_init_payment_form() {
+
+		// only if the gateway supports it
+		if ( ! $this->supports_payment_form() ) {
+			return;
+		}
+
+		// only load on the frontend and AJAX
+		if ( is_admin() && ! is_ajax() ) {
+			return;
+		}
+
+		$this->payment_form = $this->init_payment_form_instance();
+	}
+
+
+	/**
+	 * Initializes the payment form instance.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return SV_WC_Payment_Gateway_Payment_Form
+	 */
+	protected function init_payment_form_instance() {
+
+		return new SV_WC_Payment_Gateway_Payment_Form( $this );
+	}
+
+
+	/**
 	 * Returns true if on the pay page and this is the currently selected gateway
 	 *
 	 * @since 1.0.0
@@ -732,11 +772,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 4.1.2
 	 *
-	 * @return SV_WC_Payment_Gateway_Payment_Form
+	 * @return SV_WC_Payment_Gateway_Payment_Form|null
 	 */
 	public function get_payment_form_instance() {
 
-		return new SV_WC_Payment_Gateway_Payment_Form( $this );
+		return $this->payment_form;
 	}
 
 
@@ -1055,13 +1095,15 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Gets the currencies supported by Apple Pay.
 	 *
+	 * This method should be overwritten by any gateway that needs to restrict the supported currencies.
+	 *
 	 * @since 4.7.0
 	 *
 	 * @return array
 	 */
 	public function get_apple_pay_currencies() {
 
-		return array( 'USD' );
+		return [];
 	}
 
 
@@ -1573,6 +1615,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		// credit card images
 		if ( ! $icon && $this->supports_card_types() && $this->get_card_types() ) {
 
+			$icon .= '<div class="sv-wc-payment-gateway-card-icons">';
+
 			// display icons for the selected card types
 			foreach ( $this->get_card_types() as $card_type ) {
 
@@ -1582,6 +1626,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 					$icon .= sprintf( '<img src="%s" alt="%s" class="sv-wc-payment-gateway-icon wc-%s-payment-gateway-icon" width="40" height="25" style="width: 40px; height: 25px;" />', esc_url( $url ), esc_attr( $card_type ), esc_attr( $this->get_id_dasherized() ) );
 				}
 			}
+
+			$icon .= '</div>';
 		}
 
 		// echeck image

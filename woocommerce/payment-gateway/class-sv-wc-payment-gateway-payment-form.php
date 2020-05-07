@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_0\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
 
 
 /**
@@ -36,7 +36,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\SV_WC_Pa
  *
  * @since 4.0.0
  */
-class SV_WC_Payment_Gateway_Payment_Form {
+class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 
 	/** @var \SV_WC_Payment_Gateway gateway for this payment form */
@@ -47,6 +47,9 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 	/** @var bool default to show new payment method form */
 	protected $default_new_payment_method = true;
+
+	/** @var string JS handler base class name, without the FW version */
+	protected $js_handler_base_class_name = 'SV_WC_Payment_Form_Handler';
 
 
 	/**
@@ -60,11 +63,7 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 		$this->gateway = $gateway;
 
-		// hook up rendering
-		$this->add_hooks();
-
-		// maybe load tokens
-		$this->get_tokens();
+		parent::__construct();
 	}
 
 
@@ -76,6 +75,8 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 * @since 4.0.0
 	 */
 	protected function add_hooks() {
+
+		parent::add_hooks();
 
 		$gateway_id = $this->get_gateway()->get_id();
 
@@ -99,6 +100,32 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 		// payment form JS
 		add_action( "wc_{$gateway_id}_payment_form_end",   array( $this, 'render_js' ), 5 );
+	}
+
+
+	/**
+	 * Gets the script ID.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return string
+	 */
+	public function get_id() {
+
+		return $this->get_gateway()->get_id() . '_payment_form';
+	}
+
+
+	/**
+	 * Gets the script ID, dasherized.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return string
+	 */
+	public function get_id_dasherized() {
+
+		return $this->get_gateway()->get_id_dasherized() . '-payment-form';
 	}
 
 
@@ -307,64 +334,65 @@ class SV_WC_Payment_Gateway_Payment_Form {
 
 		$defaults = $this->get_gateway()->get_payment_method_defaults();
 
-		$fields = array(
-			'card-number' => array(
+		$fields = [
+			'card-number' => [
 				'type'              => 'tel',
 				'label'             => esc_html__( 'Card Number', 'woocommerce-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-account-number',
 				'placeholder'       => '•••• •••• •••• ••••',
 				'required'          => true,
-				'class'             => array( 'form-row-wide' ),
-				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-account-number' ),
+				'class'             => [ 'form-row-wide' ],
+				'input_class'       => [ 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-account-number' ],
 				'maxlength'         => 20,
-				'custom_attributes' => array(
+				'custom_attributes' => [
 					'autocomplete'   => 'cc-number',
 					'autocorrect'    => 'no',
 					'autocapitalize' => 'no',
 					'spellcheck'     => 'no',
-				),
+				],
 				'value' => $defaults['account-number'],
-			),
-			'card-expiry' => array(
-				'type'              => 'text',
+			],
+			'card-expiry' => [
+				'type'              => 'tel',
 				'label'             => esc_html__( 'Expiration (MM/YY)', 'woocommerce-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-expiry',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-expiry',
 				'placeholder'       => esc_html__( 'MM / YY', 'woocommerce-plugin-framework' ),
 				'required'          => true,
-				'class'             => array( 'form-row-first' ),
-				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-expiry' ),
-				'custom_attributes' => array(
+				'class'             => [ 'form-row-first' ],
+				'input_class'       => [ 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-expiry' ],
+				'custom_attributes' => [
 					'autocomplete'   => 'cc-exp',
 					'autocorrect'    => 'no',
 					'autocapitalize' => 'no',
 					'spellcheck'     => 'no',
-				),
+					'maxlength'      => 7, // the spaces before and after the slash are counted
+				],
 				'value' => $defaults['expiry'],
-			),
-		);
+			],
+		];
 
 		if ( $this->get_gateway()->csc_enabled() ) {
 
-			$fields['card-csc'] = array(
+			$fields['card-csc'] = [
 				'type'              => 'tel',
 				'label'             => esc_html__( 'Card Security Code', 'woocommerce-plugin-framework' ),
 				'id'                => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
 				'name'              => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-csc',
 				'placeholder'       => esc_html__( 'CSC', 'woocommerce-plugin-framework' ),
 				'required'          => true,
-				'class'             => array( 'form-row-last' ),
-				'input_class'       => array( 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-csc' ),
+				'class'             => [ 'form-row-last' ],
+				'input_class'       => [ 'js-sv-wc-payment-gateway-credit-card-form-input js-sv-wc-payment-gateway-credit-card-form-csc' ],
 				'maxlength'         => 4,
-				'custom_attributes' => array(
+				'custom_attributes' => [
 					'autocomplete'   => 'off',
 					'autocorrect'    => 'no',
 					'autocapitalize' => 'no',
 					'spellcheck'     => 'no',
-				),
+				],
 				'value' => $defaults['csc'],
-			);
+			];
 		}
 
 		/**
@@ -814,6 +842,9 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 */
 	public function render() {
 
+		// maybe load tokens
+		$this->get_tokens();
+
 		/**
 		 * Payment Gateway Payment Form Start Action.
 		 *
@@ -978,37 +1009,82 @@ class SV_WC_Payment_Gateway_Payment_Form {
 	 */
 	public function render_js() {
 
-		$args = array(
+		wc_enqueue_js( $this->get_safe_handler_js() );
+	}
+
+
+	/**
+	 * Gets the handler instantiation JS.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @param array $additional_args additional handler arguments, if any
+	 * @param string $handler_name handler name, if different from self::get_js_handler_class_name()
+	 * @param string $object_name object name, if different from self::get_js_handler_object_name()
+	 * @return string
+	 */
+	protected function get_handler_js( array $additional_args = [], $handler_name = '', $object_name = '' ) {
+
+		$js = parent::get_handler_js( $additional_args, $handler_name, $object_name );
+
+		$js .= 'window.jQuery( document.body ).trigger( "update_checkout" );';
+
+		return $js;
+	}
+
+
+	/**
+	 * Gets the JS args for the payment form handler.
+	 *
+	 * Payment gateways can overwrite this method to define specific args.
+	 * render_js() will apply filters to the returned array of args.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return array
+	 */
+	protected function get_js_handler_args() {
+
+		$args = [
 			'plugin_id'               => $this->get_gateway()->get_plugin()->get_id(),
 			'id'                      => $this->get_gateway()->get_id(),
 			'id_dasherized'           => $this->get_gateway()->get_id_dasherized(),
 			'type'                    => $this->get_gateway()->get_payment_type(),
 			'csc_required'            => $this->get_gateway()->csc_enabled(),
 			'csc_required_for_tokens' => $this->get_gateway()->csc_enabled_for_tokens(),
-		);
+		];
 
 		if ( $this->get_gateway()->supports_card_types() ) {
-			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_6_1\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
+			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_7_0\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
 		}
 
-		/**
-		 * Payment Gateway Payment Form JS Arguments Filter.
-		 *
-		 * Filter the arguments passed to the Payment Form handler JS class
-		 *
-		 * @since 4.0.0
-		 * @param array $result {
-		 *   @type string $plugin_id plugin ID
-		 *   @type string $id gateway ID
-		 *   @type string $id_dasherized gateway ID dasherized
-		 *   @type string $type gateway payment type (e.g. 'credit-card')
-		 *   @type bool $csc_required true if CSC field display is required
-		 * }
-		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
-		 */
-		$args = apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_js_args', $args, $this );
+		return $args;
+	}
 
-		wc_enqueue_js( sprintf( 'window.wc_%s_payment_form_handler = new SV_WC_Payment_Form_Handler( %s );', esc_js( $this->get_gateway()->get_id() ), json_encode( $args ) ) );
+
+	/**
+	 * Adds a log entry.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @param string $message message to log
+	 */
+	protected function log_event( $message ) {
+
+		$this->get_gateway()->add_debug_message( $message );
+	}
+
+
+	/**
+	 * Determines whether logging is enabled.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return bool
+	 */
+	protected function is_logging_enabled() {
+
+		return $this->get_gateway()->debug_log();
 	}
 
 

@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_6_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\SV_WC_Payment_Gateway_Apple_Pay_Frontend' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_0\\SV_WC_Payment_Gateway_Apple_Pay_Frontend' ) ) :
 
 
 /**
@@ -34,7 +34,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_6_1\\SV_WC_Pa
  *
  * @since 4.7.0
  */
-class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
+class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Handlers\Script_Handler {
 
 
 	/** @var SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance */
@@ -45,6 +45,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 	/** @var SV_WC_Payment_Gateway $gateway the gateway instance */
 	protected $gateway;
+
+	/** @var string JS handler base class name, without the FW version */
+	protected $js_handler_base_class_name = 'SV_WC_Apple_Pay_Handler';
 
 
 	/**
@@ -63,7 +66,20 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 
 		$this->gateway = $this->get_handler()->get_processing_gateway();
 
+		parent::__construct();
+	}
+
+
+	/**
+	 * Adds the action and filter hooks.
+	 *
+	 * @since 5.7.0
+	 */
+	protected function add_hooks() {
+
 		if ( $this->get_handler()->is_available() ) {
+
+			parent::add_hooks();
 
 			add_action( 'wp', array( $this, 'init' ) );
 
@@ -88,6 +104,32 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 		} else if ( is_checkout() && in_array( 'checkout', $locations, true ) ) {
 			$this->init_checkout();
 		}
+	}
+
+
+	/**
+	 * Gets the script ID.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return string
+	 */
+	public function get_id() {
+
+		return $this->get_gateway()->get_id() . '_apple_pay';
+	}
+
+
+	/**
+	 * Gets the script ID, dasherized.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return string
+	 */
+	public function get_id_dasherized() {
+
+		return $this->get_gateway()->get_id_dasherized() . '-apple-pay';
 	}
 
 
@@ -117,7 +159,14 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	}
 
 
-	protected function get_js_handler_params() {
+	/**
+	 * Gets the JS handler arguments.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return array
+	 */
+	protected function get_js_handler_args() {
 
 		/**
 		 * Filters the Apple Pay JS handler params.
@@ -150,24 +199,27 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 */
 	protected function enqueue_js_handler( array $args, $object_name = '', $handler_name = '' ) {
 
-		if ( ! $object_name ) {
-			$object_name = 'wc_' . $this->get_gateway()->get_id() . '_apple_pay_handler';
-		}
+		wc_enqueue_js( $this->get_safe_handler_js( $args, $handler_name, $object_name ) );
+	}
 
-		if ( ! $handler_name ) {
-			$handler_name = $this->get_js_handler_name();
-		}
 
-		$args = array_merge( $args, $this->get_js_handler_params() );
+	/**
+	 * Gets the handler instantiation JS.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @param array $additional_args additional handler arguments, if any
+	 * @param string $handler_name handler name, if different from self::get_js_handler_class_name()
+	 * @param string $object_name object name, if different from self::get_js_handler_object_name()
+	 * @return string
+	 */
+	protected function get_handler_js( array $additional_args = [], $handler_name = '', $object_name = '' ) {
 
-		wc_enqueue_js(
-			sprintf(
-				'window.%1$s = new %2$s(%3$s); window.%1$s.init()',
-				esc_attr( $object_name ),
-				esc_attr( $handler_name ),
-				json_encode( $args )
-			)
-		);
+		$js = parent::get_handler_js( $additional_args, $handler_name );
+
+		$js .= sprintf( 'window.%s.init();', $object_name ?: $this->get_js_handler_object_name() );
+
+		return $js;
 	}
 
 
@@ -177,12 +229,41 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	 * Concrete implementations can override this with their own handler.
 	 *
 	 * @since 5.6.0
+	 * @deprecated 5.7.0
 	 *
 	 * @return string
 	 */
 	protected function get_js_handler_name() {
 
-		return 'SV_WC_Apple_Pay_Handler';
+		wc_deprecated_function( __METHOD__, '5.7.0', __CLASS__ . '::get_js_handler_class_name()' );
+
+		return parent::get_js_handler_class_name();
+	}
+
+
+	/**
+	 * Adds a log entry.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @param string $message message to log
+	 */
+	protected function log_event( $message ) {
+
+		$this->get_gateway()->add_debug_message( $message );
+	}
+
+
+	/**
+	 * Determines whether logging is enabled.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return bool
+	 */
+	protected function is_logging_enabled() {
+
+		return $this->get_gateway()->debug_log();
 	}
 
 
@@ -518,6 +599,25 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend {
 	protected function get_handler() {
 
 		return $this->handler;
+	}
+
+
+	/** Deprecated methods ********************************************************************************************/
+
+
+	/**
+	 * Gets the JS handler parameters.
+	 *
+	 * @since 4.7.0
+	 * @deprecated 5.7.0
+	 *
+	 * @return array
+	 */
+	protected function get_js_handler_params() {
+
+		wc_deprecated_function( __METHOD__, '5.7.0', __CLASS__ . '::get_js_handler_args()' );
+
+		return $this->get_js_handler_args();
 	}
 
 

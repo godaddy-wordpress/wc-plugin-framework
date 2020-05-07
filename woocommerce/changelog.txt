@@ -1,5 +1,12 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2020.nn.nn - version 5.7.0
+ * Feature - Add a Settings API for easily registering plugin settings for display and REST API handling
+ * Feature - Introduce a base script handler for enqueueing and loading JavaScript objects
+ * Tweak - Ensure payment gateway scripts can be used when certain script optimization plugins are delaying load
+ * Tweak - Improve the payment form display on mobile devices
+ * Tweak - Update Apple Pay to allow all currencies by default
+
 2020.03.09 - version 5.6.1
  * Fix - Delete enhanced admin notes on plugin deactivation
  * Fix - Prevent uncaught errors when creating notes when WC Admin is disabled

@@ -12,7 +12,7 @@ jQuery( document ).ready ($) ->
 	# The My Payment Methods handler.
 	#
 	# @since 5.1.0
-	class window.SV_WC_Payment_Methods_Handler
+	class window.SV_WC_Payment_Methods_Handler_v5_7_0
 
 
 		# Constructs the class.
@@ -216,3 +216,7 @@ jQuery( document ).ready ($) ->
 			columns = $( ".wc-#{@slug}-my-payment-methods thead tr th" ).size()
 
 			$( '<tr class="error"><td colspan="' + columns + '">' + message + '</td></tr>' ).insertAfter( row ).find( 'td' ).delay( 8000 ).slideUp( 200 )
+
+
+	# dispatch loaded event
+	$( document.body ).trigger( 'sv_wc_payment_methods_handler_v5_7_0_loaded' )
