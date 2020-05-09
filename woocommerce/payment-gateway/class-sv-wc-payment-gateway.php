@@ -1699,6 +1699,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * $order->payment->type           - one of 'credit_card' or 'check'
 	 * $order->description             - an order description based on the order
 	 * $order->unique_transaction_ref  - a combination of order number + retry count, should provide a unique value for each transaction attempt
+	 * $order->idempotency_key         - a combination of order number, should provide a unique value for each transaction
 	 *
 	 * Note that not all gateways will necessarily pass or require all of the
 	 * above.  These represent the most common attributes used among a variety
@@ -1737,6 +1738,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$order->description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name(), ENT_QUOTES ), $order->get_order_number() );
 
 		$order = $this->get_order_with_unique_transaction_ref( $order );
+
+		$order = $this->get_order_idempotency_key( $order );
 
 		/**
 		 * Filters the base order for a payment transaction.
@@ -2386,6 +2389,21 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		return $order;
 	}
 
+	/**
+	 * Returns the $order object with a unique transaction ref member added.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param \WC_Order $order the order object
+	 * @return \WC_Order order object with member named idempotency_key
+	 */
+	protected function get_order_idempotency_key( $order ) {
+
+		// generate a unique transaction ref based on the WordPress Sites URL and order order number, for gateways to process the requested operation only once successfully.
+		$order->idempotency_key = crc32( get_site_url() ) . $order->get_order_number();
+
+		return $order;
+	}
 
 	/**
 	 * Called after an unsuccessful transaction attempt.
