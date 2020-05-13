@@ -786,7 +786,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 						// add the action buttons if not on the gateway's configuration page
 						if ( ! $this->is_payment_gateway_configuration_page( $gateway->get_id() ) ) {
-							$note->add_action( 'configure', __( 'Configure', 'woocommerce-plugin-framework' ), $this->get_settings_url( $this->get_id() ), WC_Admin_Note::E_WC_ADMIN_NOTE_UNACTIONED, true );
+							$note->add_action( 'configure', __( 'Configure', 'woocommerce-plugin-framework' ), $this->get_settings_url( $gateway->get_id() ), WC_Admin_Note::E_WC_ADMIN_NOTE_UNACTIONED, true );
 							$note->add_action( 'dismiss', __( 'Dismiss', 'woocommerce-plugin-framework' ) );
 						}
 
