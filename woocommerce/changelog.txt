@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2020.nn.nn - version 5.7.1
+
 2020.nn.nn - version 5.7.0
  * Feature - Add a Settings API for easily registering plugin settings for display and REST API handling
  * Feature - Introduce a base script handler for enqueueing and loading JavaScript objects
