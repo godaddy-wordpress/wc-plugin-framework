@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_7_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_0\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_1\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -446,10 +446,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$handle = 'sv-wc-payment-gateway-payment-form';
 
 		// Frontend JS
-		wp_enqueue_script( "$handle-v5_7_0", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
+		wp_enqueue_script( "$handle-v5_7_1", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
 
 		// Frontend CSS
-		wp_enqueue_style( "$handle-v5_7_0", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), SV_WC_Plugin::VERSION );
+		wp_enqueue_style( "$handle-v5_7_1", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), SV_WC_Plugin::VERSION );
 
 		// localized JS params
 		$this->localize_script( $handle, $this->get_payment_form_js_localized_script_params() );
