@@ -452,7 +452,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		wp_enqueue_style( "$handle-v5_7_1", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), SV_WC_Plugin::VERSION );
 
 		// localized JS params
-		$this->localize_script( $handle, $this->get_payment_form_js_localized_script_params() );
+		$this->localize_script( "$handle-v5_7_1", $this->get_payment_form_js_localized_script_params() );
 	}
 
 

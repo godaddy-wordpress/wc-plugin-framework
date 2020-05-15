@@ -51,7 +51,7 @@ jQuery( document ).ready ($) ->
 				return
 
 			# localized error messages
-			@params = window[ "sv_wc_payment_gateway_payment_form_params" ]
+			@params = window[ "sv_wc_payment_gateway_payment_form_v5_7_1_params" ]
 
 			# handle sample check image hint
 			@form.on( 'click', '.js-sv-wc-payment-gateway-echeck-form-check-hint, .js-sv-wc-payment-gateway-echeck-form-sample-check', => this.handle_sample_check_hint() ) if @type is 'echeck'
