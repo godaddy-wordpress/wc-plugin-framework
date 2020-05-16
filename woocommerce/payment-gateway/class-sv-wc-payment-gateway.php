@@ -443,16 +443,17 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			return;
 		}
 
-		$handle = 'sv-wc-payment-gateway-payment-form';
+		$handle           = 'sv-wc-payment-gateway-payment-form';
+		$versioned_handle = $handle . '-v5_7_1';
 
 		// Frontend JS
-		wp_enqueue_script( "$handle-v5_7_1", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
+		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
 
 		// Frontend CSS
-		wp_enqueue_style( "$handle-v5_7_1", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), SV_WC_Plugin::VERSION );
+		wp_enqueue_style( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), SV_WC_Plugin::VERSION );
 
 		// localized JS params
-		$this->localize_script( $handle, $this->get_payment_form_js_localized_script_params() );
+		$this->localize_script( $versioned_handle, $this->get_payment_form_js_localized_script_params(), 'sv_wc_payment_gateway_payment_form_params' );
 	}
 
 
@@ -608,8 +609,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @since 4.3.0
 	 * @param string $handle script handle to localize
 	 * @param array $params script params to localize
+	 * @param string $object_name the localized object name. Defaults to a snake-cased version of $handle
 	 */
-	protected function localize_script( $handle, $params ) {
+	protected function localize_script( $handle, $params, $object_name = '' ) {
 
 		// If the script isn't loaded, bail
 		if ( ! wp_script_is( $handle, 'enqueued' ) ) {
@@ -618,7 +620,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		global $wp_scripts;
 
-		$object_name = str_replace( '-', '_', $handle ) . '_params';
+		// generate the object name from the handle if none is specified
+		if ( ! $object_name ) {
+			$object_name = str_replace( '-', '_', $handle ) . '_params';
+		}
 
 		// If the plugin's JS params already exists in the localized data, bail
 		if ( $wp_scripts instanceof \WP_Scripts && strpos( $wp_scripts->get_data( $handle, 'data' ), $object_name ) ) {
