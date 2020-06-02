@@ -295,8 +295,27 @@ class SV_WC_Admin_Notice_Handler {
 			);
 		}
 
-		// move any delayed notices up into position .show();
-		$( '.js-wc-plugin-framework-admin-notice:hidden' ).insertAfter( '.js-wc-<?php echo esc_js( $plugin_slug ); ?>-admin-notice-placeholder' ).show();
+		(function() {
+
+			var $placeholder = $( '.js-wc-<?php echo esc_js( $plugin_slug ); ?>-admin-notice-placeholder' ),
+			    $container   = $placeholder.closest( '.js-wc-plugin-framework-admin-notice' );
+
+			// prevent Uncaught DOMException: Failed to execute 'insertBefore' on 'Node': The new child element contains the parent.
+			// Webcraftic's Disable Admin Notices can cause the placeholder to be included inside one of the notices
+			// here we make sure that the placeholder and other visible notices are siblings
+			if ( $container.length ) {
+
+				try {
+					$container.find( '.wbcr-dan-hide-notice-link' ).insertAfter( $container.find( '.wbcr-dan-hide-notices' ) );
+					$placeholder.insertAfter( $container );
+				} catch ( e ) {
+					// we tried...
+				}
+			}
+
+			// move any delayed notices up into position .show();
+			$( '.js-wc-plugin-framework-admin-notice:hidden' ).insertAfter( $placeholder ).show();
+		})();
 		<?php
 		$javascript = ob_get_clean();
 
