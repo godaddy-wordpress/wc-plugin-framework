@@ -242,7 +242,8 @@ class SV_WC_Admin_Notice_Handler {
 	 * Renders a JavaScript snippet used to prevent an Uncaught DOMException when Disable Admin Notices is active.
 	 *
 	 * The snippet must be rendered in all pages to prevent the error when other SkyVerge plugins using previous versions of the framework render notices.
-	 * The conflict was detected on Disable Admin Notices 1.1.1 and we don't whether there is a solution on the roadmap.
+	 * The snippet must be rendered on callback for the admin_footer action with a priority less than 20 to make sure it runs before the JS code that triggers the error.
+	 * The conflict was detected on Disable Admin Notices 1.1.1 and we don't know whether there is a solution on the roadmap.
 	 *
 	 * @internal
 	 *
