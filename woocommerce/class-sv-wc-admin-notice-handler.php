@@ -65,6 +65,7 @@ class SV_WC_Admin_Notice_Handler {
 
 		// render any admin notices, delayed notices, and
 		add_action( 'admin_notices', array( $this, 'render_admin_notices'         ), 15 );
+		add_action( 'admin_footer',  [ $this, 'render_disable_admin_notices_conflict_fix' ], 10 );
 		add_action( 'admin_footer',  array( $this, 'render_delayed_admin_notices' ), 15 );
 		add_action( 'admin_footer',  array( $this, 'render_admin_notice_js'       ), 20 );
 
@@ -238,6 +239,47 @@ class SV_WC_Admin_Notice_Handler {
 
 
 	/**
+	 * Renders a JavaScript snippet used to prevent an Uncaught DOMException when Disable Admin Notices is active.
+	 *
+	 * The snippet must be rendered in all pages to prevent the error when other SkyVerge plugins using previous versions of the framework render notices.
+	 * The conflict was detected on Disable Admin Notices 1.1.1 and we don't whether there is a solution on the roadmap.
+	 *
+	 * @internal
+	 *
+	 * @since 5.7.2
+	 */
+	public function render_disable_admin_notices_conflict_fix() {
+
+		ob_start();
+
+		?>
+
+		// prevent Uncaught DOMException: Failed to execute 'insertBefore' on 'Node': The new child element contains the parent.
+		// Webcraftic's Disable Admin Notices can cause the placeholder to be included inside one of the notices
+		// here we make sure that the placeholder and other visible notices are siblings
+		$( '[class*="admin-notice-placeholder"]' ).each( function() {
+
+			$placeholder = $( this );
+			$container   = $placeholder.closest( '.js-wc-plugin-framework-admin-notice' );
+
+			if ( $container.length ) {
+
+				try {
+					$container.find( '.wbcr-dan-hide-notice-link' ).insertAfter( $container.find( '.wbcr-dan-hide-notices' ) );
+					$placeholder.insertAfter( $container );
+				} catch ( e ) {
+					// we tried...
+				}
+			}
+		} );
+
+		<?php
+
+		wc_enqueue_js( ob_get_clean() );
+	}
+
+
+	/**
 	 * Render the javascript to handle the notice "dismiss" functionality
 	 *
 	 * @since 3.0.0
@@ -296,25 +338,8 @@ class SV_WC_Admin_Notice_Handler {
 		}
 
 		(function() {
-
-			var $placeholder = $( '.js-wc-<?php echo esc_js( $plugin_slug ); ?>-admin-notice-placeholder' ),
-			    $container   = $placeholder.closest( '.js-wc-plugin-framework-admin-notice' );
-
-			// prevent Uncaught DOMException: Failed to execute 'insertBefore' on 'Node': The new child element contains the parent.
-			// Webcraftic's Disable Admin Notices can cause the placeholder to be included inside one of the notices
-			// here we make sure that the placeholder and other visible notices are siblings
-			if ( $container.length ) {
-
-				try {
-					$container.find( '.wbcr-dan-hide-notice-link' ).insertAfter( $container.find( '.wbcr-dan-hide-notices' ) );
-					$placeholder.insertAfter( $container );
-				} catch ( e ) {
-					// we tried...
-				}
-			}
-
 			// move any delayed notices up into position .show();
-			$( '.js-wc-plugin-framework-admin-notice:hidden' ).insertAfter( $placeholder ).show();
+			$( '.js-wc-plugin-framework-admin-notice:hidden' ).insertAfter( '.js-wc-<?php echo esc_js( $plugin_slug ); ?>-admin-notice-placeholder' ).show();
 		})();
 		<?php
 		$javascript = ob_get_clean();
