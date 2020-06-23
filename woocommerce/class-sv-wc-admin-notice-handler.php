@@ -338,10 +338,8 @@ class SV_WC_Admin_Notice_Handler {
 			);
 		}
 
-		(function() {
-			// move any delayed notices up into position .show();
-			$( '.js-wc-plugin-framework-admin-notice:hidden' ).insertAfter( '.js-wc-<?php echo esc_js( $plugin_slug ); ?>-admin-notice-placeholder' ).show();
-		})();
+		// move any delayed notices up into position .show();
+		$( '.js-wc-plugin-framework-admin-notice:hidden' ).insertAfter( '.js-wc-<?php echo esc_js( $plugin_slug ); ?>-admin-notice-placeholder' ).show();
 		<?php
 		$javascript = ob_get_clean();
 
