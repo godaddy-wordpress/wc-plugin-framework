@@ -480,6 +480,7 @@ abstract class SV_WC_Plugin {
 
 		// Integrations
 		require_once( $framework_path . '/Integrations/Integrations.php' );
+		require_once( $framework_path . '/Integrations/Disable_Admin_Notices.php' );
 	}
 
 

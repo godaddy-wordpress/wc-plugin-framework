@@ -38,6 +38,9 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_1\\Integrat
  */
 class Integrations {
 
+	/** Disable Admin Notice integration ID */
+	const INTEGRATION_DISABLE_ADMIN_NOTICES = 'disable-admin-notices';
+
 	/** @var Framework\SV_WC_Plugin plugin instance */
 	protected $plugin;
 
@@ -70,6 +73,35 @@ class Integrations {
 	 */
 	protected function init_integrations() {
 
+		if ( $this->is_disable_admin_notices_active() ) {
+			$this->integrations[ self::INTEGRATION_DISABLE_ADMIN_NOTICES ] = $this->build_disable_admin_notices_integration();
+		}
+	}
+
+
+	/**
+	 * Determines whether the Disable Admin Notices plugin is active.
+	 *
+	 * @since 5.7.2-dev.1
+	 *
+	 * @return bool
+	 */
+	protected function is_disable_admin_notices_active() {
+
+		return $this->get_plugin()->is_plugin_active( 'disable-admin-notices.php' );
+	}
+
+
+	/**
+	 * Creates an instance of the integration class for Disable Admin Notices plugin.
+	 *
+	 * @since 5.7.2-dev.1
+	 *
+	 * @return object
+	 */
+	protected function build_disable_admin_notices_integration() {
+
+		return new Disable_Admin_Notices();
 	}
 
 
