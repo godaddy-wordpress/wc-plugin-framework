@@ -65,7 +65,6 @@ class SV_WC_Admin_Notice_Handler {
 
 		// render any admin notices, delayed notices, and admin notice JS
 		add_action( 'admin_notices', [ $this, 'render_admin_notices'         ],              15 );
-		add_action( 'admin_footer',  [ $this, 'render_disable_admin_notices_conflict_fix' ], 10 );
 		add_action( 'admin_footer',  [ $this, 'render_delayed_admin_notices' ],              15 );
 		add_action( 'admin_footer',  [ $this, 'render_admin_notice_js'       ],              20 );
 
@@ -235,48 +234,6 @@ class SV_WC_Admin_Notice_Handler {
 			( ! $params['is_visible'] ) ? 'style="display:none;"' : '',
 			wp_kses_post( $message )
 		);
-	}
-
-
-	/**
-	 * Renders a JavaScript snippet used to prevent an Uncaught DOMException when Disable Admin Notices is active.
-	 *
-	 * The snippet must be rendered in all pages to prevent the error when other SkyVerge plugins using previous versions of the framework render notices.
-	 * The snippet must be rendered on callback for the admin_footer action with a priority less than 20 to make sure it runs before the JS code that triggers the error.
-	 * The conflict was detected on Disable Admin Notices 1.1.1 and we don't know whether there is a solution on the roadmap.
-	 *
-	 * @internal
-	 *
-	 * @since 5.7.2
-	 */
-	public function render_disable_admin_notices_conflict_fix() {
-
-		ob_start();
-
-		?>
-
-		// prevent Uncaught DOMException: Failed to execute 'insertBefore' on 'Node': The new child element contains the parent.
-		// Webcraftic's Disable Admin Notices can cause the placeholder to be included inside one of the notices
-		// here we make sure that the placeholder and other visible notices are siblings
-		$( '[class*="admin-notice-placeholder"]' ).each( function() {
-
-			$placeholder = $( this );
-			$container   = $placeholder.closest( '.js-wc-plugin-framework-admin-notice' );
-
-			if ( $container.length ) {
-
-				try {
-					$container.find( '.wbcr-dan-hide-notice-link' ).insertAfter( $container.find( '.wbcr-dan-hide-notices' ) );
-					$placeholder.insertAfter( $container );
-				} catch ( e ) {
-					// we tried...
-				}
-			}
-		} );
-
-		<?php
-
-		wc_enqueue_js( ob_get_clean() );
 	}
 
 
