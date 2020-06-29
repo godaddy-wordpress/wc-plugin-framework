@@ -54,7 +54,7 @@ class Integrations {
 	 *
 	 * @since 4.1.0
 	 *
-	 * @param SV_WC_Payment_Gateway $gateway direct gateway instance
+	 * @param Framework\SV_WC_Plugin $gateway direct gateway instance
 	 */
 	public function __construct( Framework\SV_WC_Plugin $plugin ) {
 
