@@ -64,9 +64,9 @@ class SV_WC_Admin_Notice_Handler {
 		$this->plugin      = $plugin;
 
 		// render any admin notices, delayed notices, and admin notice JS
-		add_action( 'admin_notices', [ $this, 'render_admin_notices'         ],              15 );
-		add_action( 'admin_footer',  [ $this, 'render_delayed_admin_notices' ],              15 );
-		add_action( 'admin_footer',  [ $this, 'render_admin_notice_js'       ],              20 );
+		add_action( 'admin_notices', [ $this, 'render_admin_notices'         ], 15 );
+		add_action( 'admin_footer',  [ $this, 'render_delayed_admin_notices' ], 15 );
+		add_action( 'admin_footer',  [ $this, 'render_admin_notice_js'       ], 20 );
 
 		// AJAX handler to dismiss any warning/error notices
 		add_action( 'wp_ajax_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismiss_notice', array( $this, 'handle_dismiss_notice' ) );
