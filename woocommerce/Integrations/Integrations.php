@@ -38,6 +38,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_1\\Integrat
  */
 class Integrations {
 
+
 	/** Disable Admin Notice integration ID */
 	const INTEGRATION_DISABLE_ADMIN_NOTICES = 'disable-admin-notices';
 
