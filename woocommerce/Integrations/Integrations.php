@@ -64,9 +64,6 @@ class Integrations {
 	}
 
 
-	/** Integrations Feature **************************************************/
-
-
 	/**
 	 * Initializes supported integrations.
 	 *
