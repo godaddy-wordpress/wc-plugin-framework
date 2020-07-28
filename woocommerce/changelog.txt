@@ -5,6 +5,26 @@
  * Fix - Unblock the UI when removing a token from the admin token editor that was just added but not saved yet
  * Dev - Deprecate some filter hooks in the payment methods table
 
+2020.05.15 - version 5.7.1
+ * Fix - Prevent JavaScript error triggered when different versions of the framework are used at the same time
+ * Fix - Fix URL for the Configure link in the admin notes shown for payment gateways that are not configured
+
+2020.nn.nn - version 5.7.0
+ * Feature - Add a Settings API for easily registering plugin settings for display and REST API handling
+ * Feature - Introduce a base script handler for enqueueing and loading JavaScript objects
+ * Tweak - Ensure payment gateway scripts can be used when certain script optimization plugins are delaying load
+ * Tweak - Improve the payment form display on mobile devices
+ * Tweak - Update Apple Pay to allow all currencies by default
+
+2020.03.09 - version 5.6.1
+ * Fix - Delete enhanced admin notes on plugin deactivation
+ * Fix - Prevent uncaught errors when creating notes when WC Admin is disabled
+
+2020.03.04 - version 5.6.0
+ * Feature - Add support for WooCommerce Admin enhanced notes
+ * Tweak - Refactor Apple Pay handler classes for greater flexibility
+ * Fix - Remove gateway payment field validation on initial page load
+
 2020.01.20 - version 5.5.4
  * Tweak - Add a link to the site's terms and conditions page below Apple Pay buttons when available
  * Tweak - Adjust the place order button label for redirect/hosted gateways

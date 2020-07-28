@@ -70,7 +70,6 @@ module.exports = function( grunt ) {
 		'uglify',
 		'sass',
 		'update_translations',
-		'clean'
 	] );
 
 	// Register default task
@@ -80,7 +79,6 @@ module.exports = function( grunt ) {
 		'sass',
 		'makepot',
 		'shell:tx_push',
-		'clean'
 	] );
 
 };

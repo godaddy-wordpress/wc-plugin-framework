@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_1\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
 
 
 /**
@@ -37,7 +37,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Pa
  *
  * @since 4.0.0
  */
-class SV_WC_Payment_Gateway_My_Payment_Methods {
+class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 
 
 	/** @var SV_WC_Payment_Gateway_Plugin */
@@ -55,31 +55,68 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	/** @var bool true if there are tokens */
 	protected $has_tokens;
 
-	/** @var string the base name of the matching JS handler class used in frontend */
-	private $js_handler_base_class_name = 'SV_WC_Payment_Methods_Handler';
+	/** @var string JS handler base class name, without the FW version */
+	protected $js_handler_base_class_name = 'SV_WC_Payment_Methods_Handler';
 
 
 	/**
 	 * Sets up the class.
 	 *
-	 * Note: this constructor adds most of its functionality during the `wp` action.
+	 * @param SV_WC_Payment_Gateway_Plugin $plugin gateway plugin
 	 *
 	 * @since 4.0.0
-	 *
-	 * @param SV_WC_Payment_Gateway_Plugin $plugin gateway plugin
 	 */
 	public function __construct( $plugin ) {
 
 		$this->plugin = $plugin;
 
-		add_action( 'wp', [ $this, 'init' ] );
+		parent::__construct();
+	}
+
+
+	/**
+	 * Adds the action and filter hooks.
+	 *
+	 * @since 5.7.0
+	 */
+	protected function add_hooks() {
+
+		parent::add_hooks();
+
+		add_action( 'wp', array( $this, 'init' ) );
 
 		// save a payment method via AJAX
-		add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_save_payment_method', [ $this, 'ajax_save_payment_method' ] );
+		add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_save_payment_method', array( $this, 'ajax_save_payment_method' ) );
 
 		add_action( 'woocommerce_payment_token_set_default', [ $this, 'clear_payment_methods_transients' ], 10, 2 );
 
 		add_action( 'woocommerce_payment_token_deleted', [ $this, 'payment_token_deleted' ], 10, 2 );
+	}
+
+
+	/**
+	 * Gets the script ID.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return string
+	 */
+	public function get_id() {
+
+		return $this->get_plugin()->get_id() . '_payment_methods';
+	}
+
+
+	/**
+	 * Gets the script ID, dasherized.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return string
+	 */
+	public function get_id_dasherized() {
+
+		return $this->get_plugin()->get_id_dasherized() . '-payment-methods';
 	}
 
 
@@ -98,7 +135,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		$this->load_tokens();
 
 		// styles/scripts
-		add_action( 'wp_enqueue_scripts', [ $this, 'maybe_enqueue_styles_scripts' ] );
+		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_styles_scripts' ) );
 
 		add_filter( 'woocommerce_payment_methods_list_item', [ $this, 'add_payment_methods_list_item_id' ], 10, 2 );
 		add_filter( 'woocommerce_payment_methods_list_item', [ $this, 'add_payment_methods_list_item_edit_action' ], 10, 2 );
@@ -122,18 +159,19 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Enqueues frontend scripts and styles.
+	 * Enqueue frontend CSS/JS
 	 *
 	 * @since 4.0.0
 	 */
 	public function maybe_enqueue_styles_scripts() {
 
-		$js_class = sprintf( '%s_v5_5_4', $this->js_handler_base_class_name );
-		$handle   = strtolower( str_replace( '_', '-', $js_class ) );
+		$handle = 'sv-wc-payment-gateway-my-payment-methods';
 
-		wp_enqueue_style( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-my-payment-methods.min.css', [ 'dashicons' ], SV_WC_Plugin::VERSION );
+		wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', array( 'jquery' ), WC_VERSION, true );
 
-		wp_enqueue_script( $handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-my-payment-methods.min.js', [ 'jquery' ], SV_WC_Plugin::VERSION );
+		wp_enqueue_style( "$handle-v5_7_1", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array( 'dashicons' ), SV_WC_Plugin::VERSION );
+
+		wp_enqueue_script( "$handle-v5_7_1", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', array( 'jquery-tiptip', 'jquery' ), SV_WC_Plugin::VERSION );
 	}
 
 
@@ -379,7 +417,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 		return null;
 	}
 
-
 	/**
 	 * Adds the Title column content.
 	 *
@@ -449,10 +486,11 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			 *
 			 * Fired before WooCommerce's My Payment Methods table HTML is rendered.
 			 *
-			 * @since 4.0.0
-			 * @since 5.6.0-dev triggered on woocommerce_before_account_payment_methods
-			 *
 			 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
+			 *
+			 * @since 5.8.0-dev triggered on woocommerce_before_account_payment_methods
+			 *
+			 * @since 4.0.0
 			 */
 			do_action( 'wc_' . $this->get_plugin()->get_id() . '_before_my_payment_method_table', $this );
 		}
@@ -492,7 +530,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 *
 	 * @internal
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param int $core_token_id the ID of a core token
 	 * @param \WC_Payment_Token $core_token the core token object
@@ -520,10 +558,11 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			/**
 			 * Fires after a new payment method is deleted by a customer.
 			 *
-			 * @since 5.0.0
-			 *
 			 * @param string $token_id ID of the deleted token
 			 * @param int $user_id user ID
+			 *
+			 * @since 5.0.0
+			 *
 			 */
 			do_action( 'wc_payment_gateway_' . $core_token->get_gateway_id() . '_payment_method_deleted', $token_id, $user_id );
 		}
@@ -547,11 +586,16 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 
 
 	/**
-	 * Renders the JavaScript.
+	 * Gets the JS args for the payment methods handler.
 	 *
-	 * @since 5.1.0
+	 * Payment gateways can overwrite this method to define specific args.
+	 * render_js() will apply filters to the returned array of args.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return array
 	 */
-	public function render_js() {
+	protected function get_js_handler_args() {
 
 		$args = [
 			'id'              => $this->get_plugin()->get_id(),
@@ -559,30 +603,15 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 			'has_core_tokens' => (bool) wc_get_customer_saved_methods_list( get_current_user_id() ),
 			'ajax_url'        => admin_url( 'admin-ajax.php' ),
 			'ajax_nonce'      => wp_create_nonce( 'wc_' . $this->get_plugin()->get_id() . '_save_payment_method' ),
-			'i18n'            => array(
+			'i18n'            => [
 				'edit_button'   => esc_html__( 'Edit', 'woocommerce-plugin-framework' ),
 				'cancel_button' => esc_html__( 'Cancel', 'woocommerce-plugin-framework' ),
 				'save_error'    => esc_html__( 'Oops, there was an error updating your payment method. Please try again.', 'woocommerce-plugin-framework' ),
 				'delete_ays'    => esc_html__( 'Are you sure you want to delete this payment method?', 'woocommerce-plugin-framework' ),
-			),
+			],
 		];
 
-		/**
-		 * Filters the payment gateway payment methods JavaScript args.
-		 *
-		 * @since 5.1.0
-		 *
-		 * @param array $args arguments
-		 * @param SV_WC_Payment_Gateway_My_Payment_Methods $handler payment methods handler
-		 */
-		$args = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_payment_methods_js_args', $args, $this );
-
-		wc_enqueue_js( sprintf(
-			'window.wc_%1$s_payment_methods_handler = new %2$s( %3$s );',
-			esc_js( $this->get_plugin()->get_id() ),
-			esc_js( $this->get_js_handler_class() ),
-			json_encode( $args )
-		) );
+		return $args;
 	}
 
 
@@ -592,12 +621,56 @@ class SV_WC_Payment_Gateway_My_Payment_Methods {
 	 * Plugins can override this for their own JS implementations.
 	 *
 	 * @since 5.1.0
+	 * @deprecated 5.7.0
 	 *
 	 * @return string
 	 */
 	protected function get_js_handler_class() {
 
-		return sprintf( '%s_v5_5_4', $this->js_handler_base_class_name );
+		wc_deprecated_function( __METHOD__, '5.7.0', __CLASS__ . '::get_js_handler_class_name()' );
+
+		return parent::get_js_handler_class_name();
+	}
+
+
+	/**
+	 * Adds a log entry.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @param string $message message to log
+	 */
+	protected function log_event( $message ) {
+
+		$this->get_plugin()->log( $message );
+	}
+
+
+	/**
+	 * Determines whether logging is enabled.
+	 *
+	 * Considers logging enabled at the plugin level if at least one gateway has logging enabled.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return bool
+	 */
+	protected function is_logging_enabled() {
+
+		$is_logging_enabled = parent::is_logging_enabled();
+
+		if ( ! $is_logging_enabled ) {
+
+			foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
+
+				if ( $gateway->debug_log() ) {
+					$is_logging_enabled = true;
+					break;
+				}
+			}
+		}
+
+		return $is_logging_enabled;
 	}
 
 

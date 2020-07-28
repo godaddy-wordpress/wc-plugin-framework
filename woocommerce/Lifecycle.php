@@ -22,13 +22,16 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4\Plugin;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_1\Plugin;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_5_4\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_1\Admin\Notes_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_1\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_1\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_7_1\SV_WC_Plugin_Compatibility;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\Plugin\\Lifecycle' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_1\\Plugin\\Lifecycle' ) ) :
 
 
 /**
@@ -191,6 +194,20 @@ class Lifecycle {
 	 * @since 5.2.0
 	 */
 	public function handle_deactivation() {
+
+		// if the enhanced admin is available, delete all of this plugin's notes on deactivation
+		if ( SV_WC_Plugin_Compatibility::is_enhanced_admin_available() ) {
+
+			Notes_Helper::delete_notes_with_source( $this->get_plugin()->get_id_dasherized() );
+
+			// if this is a gateway plugin, also delete the plugin's individual gateway notes
+			if ( $this->get_plugin() instanceof SV_WC_Payment_Gateway_Plugin ) {
+
+				foreach ( $this->get_plugin()->get_gateways() as $gateway ) {
+					Notes_Helper::delete_notes_with_source( $gateway->get_id_dasherized() );
+				}
+			}
+		}
 
 		$this->deactivate();
 
@@ -637,7 +654,7 @@ class Lifecycle {
 	 *
 	 * @since 5.1.0
 	 *
-	 * @return SV_WC_Plugin
+	 * @return SV_WC_Plugin|SV_WC_Payment_Gateway_Plugin
 	 */
 	protected function get_plugin() {
 
