@@ -74,7 +74,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * A factory method to build and return a payment token object for the gateway.
 	 * Child implementations can override this method to return a custom payment token.
 	 *
-	 * From version 5.6.0-dev, this method can accept a core \WC_Payment_Token type as the second argument to read data from.
+	 * From version 5.8.0-dev, this method can accept a core \WC_Payment_Token type as the second argument to read data from.
 	 *
 	 * @since 4.3.0
 	 *
@@ -362,7 +362,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 *
 	 * Returns true if the token's local data should be removed.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param int $user_id user identifier
 	 * @param string $environment_id environment id
@@ -483,7 +483,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 *
 	 * @see SV_WC_Payment_Gateway_Payment_Token::delete()
 	 *
-	 * @since 5.6.0-dev.1
+	 * @since 5.8.0-dev.1
 	 *
 	 * @param int $user_id WordPress user ID
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token payment token object
@@ -739,7 +739,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/**
 	 * Gets token objects from the legacy user meta data store.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param int $user_id WordPress user ID
 	 * @param null|string $environment_id desired environment ID
@@ -825,7 +825,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 *
 	 * @see SV_WC_Payment_Gateway_Payment_Token::save()
 	 *
-	 * @since 5.6.0-dev.1
+	 * @since 5.8.0-dev.1
 	 *
 	 * @param int $user_id WP user ID
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token to update
@@ -1183,7 +1183,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/**
 	 * Determines whether a user's tokens have been migrated.
 	 *
-	 * @since 5.6.0-dev.1
+	 * @since 5.8.0-dev.1
 	 *
 	 * @param int $user_id WordPress user ID
 	 * @param string|null $environment_id environment ID
@@ -1200,7 +1200,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		/**
 		 * Filters whether a user's legacy tokens have been migrated.
 		 *
-		 * @since 5.6.0-dev
+		 * @since 5.8.0-dev
 		 *
 		 * @param bool $migrated whether the tokens have been migrated
 		 * @param int $user_id user ID
@@ -1213,7 +1213,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/**
 	 * Marks a user as having their tokens migrated.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param int $user_id WordPress user ID
 	 * @param string|null $environment_id environment ID
@@ -1231,7 +1231,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/**
 	 * Adds the callback action for woocommerce_payment_token_deleted.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 */
 	private function add_payment_token_deleted_action() {
 
@@ -1242,7 +1242,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	/**
 	 * Removes the callback action for woocommerce_payment_token_deleted.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 */
 	private function remove_payment_token_deleted_action() {
 
@@ -1255,7 +1255,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param int $token_id the ID of a core token
 	 * @param \WC_Payment_Token $core_token the core token object
