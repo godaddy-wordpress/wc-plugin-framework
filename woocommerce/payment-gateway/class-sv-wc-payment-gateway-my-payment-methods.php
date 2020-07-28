@@ -133,9 +133,6 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 		// initializes tokens as WooCommerce core tokens
 		$this->load_tokens();
 
-		// styles/scripts
-		add_action( 'wp_enqueue_scripts', [ $this, 'maybe_enqueue_styles_scripts' ] );
-
 		add_filter( 'woocommerce_payment_methods_list_item', [ $this, 'add_payment_methods_list_item_id' ], 10, 2 );
 		add_filter( 'woocommerce_payment_methods_list_item', [ $this, 'add_payment_methods_list_item_edit_action' ], 10, 2 );
 
