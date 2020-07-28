@@ -166,7 +166,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 */
 	public function maybe_enqueue_styles_scripts() {
 
-		$js_class = sprintf( '%s_v5_5_4', $this->js_handler_base_class_name );
+		$js_class = $this->js_handler_base_class_name;
 		$handle   = strtolower( str_replace( '_', '-', $js_class ) );
 
 		wp_enqueue_style( "$handle-v5_7_1", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array( 'dashicons' ), SV_WC_Plugin::VERSION );
