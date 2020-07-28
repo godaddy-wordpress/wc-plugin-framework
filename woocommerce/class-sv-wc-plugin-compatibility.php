@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Plugin_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_1\\SV_WC_Plugin_Compatibility' ) ) :
 
 
 /**
@@ -310,6 +310,19 @@ class SV_WC_Plugin_Compatibility {
 		$wc_version = self::get_wc_version();
 
 		return $wc_version && version_compare( $wc_version, $version, '>' );
+	}
+
+
+	/**
+	 * Determines whether the enhanced admin is available.
+	 *
+	 * This checks both for WooCommerce v4.0+ and the underlying package availability.
+	 *
+	 * @return bool
+	 */
+	public static function is_enhanced_admin_available() {
+
+		return self::is_wc_version_gte( '4.0' ) && function_exists( 'wc_admin_url' ) && class_exists( '\\Automattic\\WooCommerce\\Admin\\Composer\\Package' ) && \Automattic\WooCommerce\Admin\Composer\Package::is_package_active();
 	}
 
 

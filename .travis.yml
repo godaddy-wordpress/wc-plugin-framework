@@ -66,13 +66,16 @@ install:
   - wp rewrite structure '/%postname%/' --hard
   - wp core update-db
 
-  # copy the plugin to the plugins directory
+  # copy the plugins to the plugins directory
   - cp -r $TRAVIS_BUILD_DIR/tests/_support/plugins/test-plugin $WP_ROOT_FOLDER/wp-content/plugins/
+  - cp -r $TRAVIS_BUILD_DIR/tests/_support/plugins/gateway-test-plugin $WP_ROOT_FOLDER/wp-content/plugins/
   - cp -r $TRAVIS_BUILD_DIR/woocommerce $WP_ROOT_FOLDER/wp-content/plugins/test-plugin/vendor/skyverge/wc-plugin-framework
+  - cp -r $TRAVIS_BUILD_DIR/woocommerce $WP_ROOT_FOLDER/wp-content/plugins/gateway-test-plugin/vendor/skyverge/wc-plugin-framework
 
   # install & activate WooCommerce & the plugin
   - wp plugin install woocommerce --activate
   - wp plugin activate test-plugin
+  - wp plugin activate gateway-test-plugin
 
   # verify the active plugins
   - wp plugin list --status=active

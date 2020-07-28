@@ -10,7 +10,7 @@ jQuery( document ).ready ($) ->
 	"use strict"
 
 
-	class window.SV_WC_Payment_Form_Handler
+	class window.SV_WC_Payment_Form_Handler_v5_7_1
 
 
 		# Public: Instantiate Payment Form Handler
@@ -22,7 +22,7 @@ jQuery( document ).ready ($) ->
 		#   type - gateway type, either `credit-card` or `echeck`
 		#   csc_required - true if the gateway requires the CSC field to be displayed
 		#
-		# Returns SV_WC_Payment_Form_Handler instance
+		# Returns SV_WC_Payment_Form_Handler_5_6_1 instance
 		constructor: (args) ->
 
 			@id                      = args.id
@@ -122,9 +122,24 @@ jQuery( document ).ready ($) ->
 		# during the updated_checkout event as otherwise the reference to
 		# the checkout fields becomes stale (somehow ¯\_(ツ)_/¯)
 		#
+		# This ensures payment fields are not marked as "invalid" before the customer has interacted with them.
+		#
 		# Returns nothing.
 		set_payment_fields: ->
+
 			@payment_fields = $( ".payment_method_#{ @id }" )
+
+			$required_fields = @payment_fields.find( '.validate-required .input-text' )
+
+			$required_fields.each( ( i, input ) =>
+
+				# if any of the required fields have a value, bail this loop and proceed with WooCommerce validation
+				if $( input ).val()
+					return false
+
+				# otherwise remove all validation result classes from the inputs, since the form is freshly loaded
+				$( input ).trigger( 'input' )
+			)
 
 
 		# Public: Validate Payment data when order is placed
@@ -367,3 +382,7 @@ jQuery( document ).ready ($) ->
 		#
 		# @since 3.0.0
 		unblock_ui: -> @form.unblock()
+
+
+	# dispatch loaded event
+	$( document.body ).trigger( "sv_wc_payment_form_handler_v5_7_1_loaded" )

@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway_Apple_Pay_AJAX' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_1\\SV_WC_Payment_Gateway_Apple_Pay_AJAX' ) ) :
 
 
 /**
@@ -61,7 +61,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 	/**
 	 * Adds the action & filter hooks.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.6.0
 	 */
 	protected function add_hooks() {
 

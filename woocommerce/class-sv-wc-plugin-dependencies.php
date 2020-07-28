@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Plugin_Dependencies' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_1\\SV_WC_Plugin_Dependencies' ) ) :
 
 
 /**
@@ -309,6 +309,61 @@ class SV_WC_Plugin_Dependencies {
 		$this->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $id, array(
 			'notice_class' => $notice_class,
 		) );
+	}
+
+
+	/**
+	 * Returns the active scripts optimization plugins.
+	 *
+	 * Returns a key-value array where the key contains the plugin file identifier and the value is the name of the plugin.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return array
+	 */
+	public function get_active_scripts_optimization_plugins() {
+
+		/**
+		 * Filters script optimization plugins to look for.
+		 *
+		 * @since 5.7.0
+		 *
+		 * @param array $plugins an array of file identifiers (keys) and plugin names (values)
+		 */
+		$plugins = (array) apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_scripts_optimization_plugins', [
+			'async-javascript.php' => 'Async JavaScript',
+			'autoptimize.php'      => 'Autoptimize',
+			'wp-hummingbird.php'   => 'Hummingbird',
+			'sg-optimizer.php'     => 'SG Optimizer',
+			'w3-total-cache.php'   => 'W3 Total Cache',
+			'wpFastestCache.php'   => 'WP Fastest Cache',
+			'wp-rocket.php'        => 'WP Rocket',
+		] );
+
+		$active_plugins = [];
+
+		foreach ( $plugins as $filename => $plugin_name ) {
+
+			if ( $this->get_plugin()->is_plugin_active( $filename ) ) {
+
+				$active_plugins[ $filename ] = $plugin_name;
+			}
+		}
+
+		return $active_plugins;
+	}
+
+
+	/**
+	 * Returns true if any of the known scripts optimization plugins is active.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @return bool
+	 */
+	public function is_scripts_optimization_plugin_active() {
+
+		return ! empty( $this->get_active_scripts_optimization_plugins() );
 	}
 
 

@@ -22,11 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_5_4;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_7_1;
+
+use Automattic\WooCommerce\Admin\Notes\WC_Admin_Note;
+use Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_5_4\\SV_WC_Payment_Gateway_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_1\\SV_WC_Payment_Gateway_Plugin' ) ) :
 
 
 /**
@@ -311,7 +314,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-order.php' );
 		require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-user-handler.php' );
 		require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php' );
-
 
 		// integrations
 		require_once( $payment_gateway_framework_path . '/integrations/abstract-sv-wc-payment-gateway-integration.php' );
@@ -744,20 +746,74 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	protected function add_gateway_not_configured_notices() {
 
+		$is_enhanced_admin_available = SV_WC_Plugin_Compatibility::is_enhanced_admin_available();
+
 		foreach ( $this->get_gateways() as $gateway ) {
+
+			$note_name = $gateway->get_id_dasherized() . '-not-configured';
 
 			if ( $gateway->is_enabled() && ! $gateway->is_configured() && ! $gateway->inherit_settings() ) {
 
-				$this->get_admin_notice_handler()->add_admin_notice( $gateway->get_not_configured_error_message(), $gateway->get_id() . '-not-configured', [
-					'notice_class' => 'error',
-				] );
+				if ( $is_enhanced_admin_available ) {
+
+					try {
+
+						if ( $note = Admin\Notes_Helper::get_note_with_name( $note_name ) ) {
+
+							// if on the problem gateway's configuration page, revive the existing note that may have been dismissed
+							if ( WC_Admin_Note::E_WC_ADMIN_NOTE_ACTIONED === $note->get_status() && $this->is_payment_gateway_configuration_page( $gateway->get_id() ) ) {
+								$note->set_status( WC_Admin_Note::E_WC_ADMIN_NOTE_UNACTIONED );
+							}
+
+						} else {
+
+							$note = new WC_Admin_Note();
+
+							$note->set_name( $note_name );
+							$note->set_type( WC_Admin_Note::E_WC_ADMIN_NOTE_ERROR );
+							$note->set_source( $gateway->get_id_dasherized() );
+
+							$note->set_title( sprintf(
+								/* translators: Placeholders: %s - gateway name */
+								__( '%s is not configured', 'woocommerce-plugin-framework' ),
+								$gateway->get_method_title()
+							) );
+
+							$note->set_content( $gateway->get_not_configured_error_message() );
+						}
+
+						$note->set_actions( [] );
+
+						// add the action buttons if not on the gateway's configuration page
+						if ( ! $this->is_payment_gateway_configuration_page( $gateway->get_id() ) ) {
+							$note->add_action( 'configure', __( 'Configure', 'woocommerce-plugin-framework' ), $this->get_settings_url( $gateway->get_id() ), WC_Admin_Note::E_WC_ADMIN_NOTE_UNACTIONED, true );
+							$note->add_action( 'dismiss', __( 'Dismiss', 'woocommerce-plugin-framework' ) );
+						}
+
+						$note->save();
+
+					} catch ( \Exception $exception ) {}
+				}
+
+				// if not an enhanced admin screen, output the legacy style notice
+				if ( ! SV_WC_Helper::is_enhanced_admin_screen() ) {
+
+					$this->get_admin_notice_handler()->add_admin_notice( $gateway->get_not_configured_error_message(), $gateway->get_id() . '-not-configured', [
+						'notice_class' => 'error',
+					] );
+				}
+
+			// if all's well with this gateway, make sure and delete any previously added notes
+			} elseif ( $is_enhanced_admin_available && Admin\Notes_Helper::note_with_name_exists( $note_name ) ) {
+
+				WC_Admin_Notes::delete_notes_with_name( $note_name );
 			}
 		}
 	}
 
 
 	/**
-	 * Adds notices about Apple Pay not supportted in the current WooCommerce version.
+	 * Adds notices about Apple Pay not supported in the current WooCommerce version.
 	 *
 	 * @since 5.5.1
 	 */
