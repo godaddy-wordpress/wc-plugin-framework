@@ -230,7 +230,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param int $token_id token ID
 	 * @param \WC_Payment_Token $token core token object
@@ -255,7 +255,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param array $item individual list item from woocommerce_saved_payment_methods_list
 	 * @param \WC_Payment_Token $token payment token associated with this method entry
@@ -276,7 +276,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param array $item individual list item from woocommerce_saved_payment_methods_list
 	 * @param \WC_Payment_Token $core_token payment token associated with this method entry
@@ -304,7 +304,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 			 * Allows actors to modify the table method actions.
 			 *
 			 * @since 4.0.0
-			 * @since 5.6.0-dev defining a class for the action button is no longer supported
+			 * @since 5.8.0-dev defining a class for the action button is no longer supported
 			 *
 			 * @param $actions array {
 			 *     @type string $url action URL
@@ -327,7 +327,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param array of table columns in key => Title format
 	 * @return array of table columns in key => Title format
@@ -378,7 +378,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	/**
 	 * Gets FW token object from payment method token ID.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param string $token_id token string
 	 * @return SV_WC_Payment_Gateway_Payment_Token|null
@@ -403,7 +403,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	/**
 	 * Gets FW token object from payment method data array.
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param array $method payment method data array
 	 * @return SV_WC_Payment_Gateway_Payment_Token|null
@@ -422,7 +422,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param array $method payment method
 	 */
@@ -440,7 +440,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param array $method payment method
 	 */
@@ -458,7 +458,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param array $method payment method
 	 */
@@ -473,7 +473,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param bool $has_methods whether there any saved payment methods in the table
 	 */
@@ -502,7 +502,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since 5.6.0-dev
+	 * @since 5.8.0-dev
 	 *
 	 * @param bool $has_methods whether there any saved payment methods in the table
 	 */
@@ -516,7 +516,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 			 * Fired after WooCommerce's My Payment Methods table HTML is rendered.
 			 *
 			 * @since 4.0.0
-			 * @since 5.6.0-dev triggered on woocommerce_after_account_payment_methods
+			 * @since 5.8.0-dev triggered on woocommerce_after_account_payment_methods
 			 *
 			 * @param SV_WC_Payment_Gateway_My_Payment_Methods $this instance
 			 */
@@ -577,11 +577,11 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 * @internal
 	 *
 	 * @since 4.0.0
-	 * @deprecated 5.6.0-dev
+	 * @deprecated 5.8.0-dev
 	 */
 	public function render() {
 
-		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
+		wc_deprecated_function( __METHOD__, '5.8.0-dev' );
 	}
 
 
@@ -720,13 +720,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
 	 *
 	 * @since 4.0.0
-	 * @deprecated 5.6.0-dev
+	 * @deprecated 5.8.0-dev
 	 *
 	 * @return string table title HTML
 	 */
 	protected function get_table_title_html() {
 
-		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
+		wc_deprecated_function( __METHOD__, '5.8.0-dev' );
 
 		return '';
 	}
@@ -738,13 +738,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
 	 *
 	 * @since 4.0.0
-	 * @deprecated 5.6.0-dev
+	 * @deprecated 5.8.0-dev
 	 *
 	 * @return string table HTML
 	 */
 	public function get_table_html() {
 
-		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
+		wc_deprecated_function( __METHOD__, '5.8.0-dev' );
 
 		return '';
 	}
@@ -756,13 +756,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
 	 *
 	 * @since 4.0.0
-	 * @deprecated 5.6.0-dev
+	 * @deprecated 5.8.0-dev
 	 *
 	 * @return string table thead HTML
 	 */
 	protected function get_table_head_html() {
 
-		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
+		wc_deprecated_function( __METHOD__, '5.8.0-dev' );
 
 		return '';
 	}
@@ -774,13 +774,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 * TODO: remove this method by version 6.0.0 or by 2021-02-17 {DM 2020-02-17}
 	 *
 	 * @since 4.0.0
-	 * @deprecated 5.6.0-dev
+	 * @deprecated 5.8.0-dev
 	 *
 	 * @return array of table headers in key => Title format
 	 */
 	protected function get_table_headers() {
 
-		wc_deprecated_function( __METHOD__, '5.6.0-dev', 'SV_WC_Payment_Gateway_My_Payment_Methods::add_payment_methods_columns' );
+		wc_deprecated_function( __METHOD__, '5.8.0-dev', 'SV_WC_Payment_Gateway_My_Payment_Methods::add_payment_methods_columns' );
 
 		return $this->add_payment_methods_columns();
 	}
@@ -792,13 +792,13 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
 	 *
 	 * @since 4.0.0
-	 * @deprecated 5.6.0-dev
+	 * @deprecated 5.8.0-dev
 	 *
 	 * @return string table tbody HTML
 	 */
 	protected function get_table_body_html() {
 
-		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
+		wc_deprecated_function( __METHOD__, '5.8.0-dev' );
 
 		return '';
 	}
@@ -810,14 +810,14 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
 	 *
 	 * @since 4.0.0
-	 * @deprecated 5.6.0-dev
+	 * @deprecated 5.8.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token[] $tokens token objects
 	 * @return string table tbody > tr HTML
 	 */
 	protected function get_table_body_row_html( $tokens ) {
 
-		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
+		wc_deprecated_function( __METHOD__, '5.8.0-dev' );
 
 		return '';
 	}
@@ -829,14 +829,14 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 * TODO: remove this method by version 6.0.0 or by 2021-02-24 {FN 2020-02-21}
 	 *
 	 * @since 4.0.0
-	 * @deprecated 5.6.0-dev
+	 * @deprecated 5.8.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token the token object
 	 * @return array payment method data suitable for HTML output
 	 */
 	protected function get_table_body_row_data( $token ) {
 
-		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
+		wc_deprecated_function( __METHOD__, '5.8.0-dev' );
 
 		return [];
 	}
@@ -959,14 +959,14 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
 	 *
 	 * @since 5.1.0
-	 * @deprecated 5.6.0-dev
+	 * @deprecated 5.8.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return string
 	 */
 	protected function get_payment_method_expiry_html( SV_WC_Payment_Gateway_Payment_Token $token ) {
 
-		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
+		wc_deprecated_function( __METHOD__, '5.8.0-dev' );
 
 		return '';
 	}
@@ -978,14 +978,14 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
 	 *
 	 * @since 5.1.0
-	 * @deprecated 5.6.0-dev
+	 * @deprecated 5.8.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return string
 	 */
 	protected function get_payment_method_actions_html( SV_WC_Payment_Gateway_Payment_Token $token ) {
 
-		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
+		wc_deprecated_function( __METHOD__, '5.8.0-dev' );
 
 		return '';
 	}
@@ -997,14 +997,14 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 * TODO: remove this method by version 6.0.0 or by 2021-02-21 {WV 2020-02-21}
 	 *
 	 * @since 4.0.0
-	 * @deprecated 5.6.0-dev
+	 * @deprecated 5.8.0-dev
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token token object
 	 * @return array
 	 */
 	protected function get_payment_method_actions( $token ) {
 
-		wc_deprecated_function( __METHOD__, '5.6.0-dev' );
+		wc_deprecated_function( __METHOD__, '5.8.0-dev' );
 
 		return [];
 	}
