@@ -9,106 +9,110 @@ http://www.gnu.org/licenses/gpl-3.0.html
 
 @import '../../../../assets/css/mixins';
 
-table.sv-wc-payment-gateway-my-payment-methods-table {
+table.woocommerce-MyAccount-paymentMethods {
+
 	font-size: 0.85em;
 
 	th, td {
 		vertical-align: middle;
 	}
 
-	.button {
-		white-space: nowrap;
-	}
-
-	.sv-wc-payment-gateway-payment-method-header-details span,
-	.sv-wc-payment-gateway-payment-method-header-default span,
-	.sv-wc-payment-gateway-payment-method-header-actions span {
+	.woocommerce-PaymentMethod--title {
 		display: none;
 	}
 
-	.sv-wc-payment-gateway-payment-method-header-expiry,
-	.sv-wc-payment-gateway-payment-method-header-default {
+	th.woocommerce-PaymentMethod--details,
+	th.woocommerce-PaymentMethod--default,
+	th.woocommerce-PaymentMethod--actions {
+		span {
+			display: none;
+  		}
+	}
+
+	th.woocommerce-PaymentMethod--expires,
+	th.woocommerce-PaymentMethod--default {
 		text-align: center;
 	}
 
-	.sv-wc-payment-gateway-payment-method-header-actions {
-		text-align: right;
+	td.woocommerce-PaymentMethod--method input {
+		width: 100%;
 	}
 
-	.sv-wc-payment-gateway-my-payment-methods-method {
+	td.woocommerce-PaymentMethod--details {
+		white-space: nowrap;
 
-		.sv-wc-payment-gateway-payment-method-title input {
-			width: 100%;
-		}
-
-		.sv-wc-payment-gateway-payment-method-details {
-			white-space: nowrap;
-
-			img {
-				width: 40px;
-				height: 25px;
-				margin-right: 0.5em;
-				vertical-align: middle;
-				display: inline !important;
-			}
-		}
-
-		.sv-wc-payment-gateway-payment-method-expiry {
-			text-align: center;
-		}
-
-		.sv-wc-payment-gateway-payment-method-default {
-			text-align: center;
-
-			mark {
-				display: inline-block;
-				color: white;
-				background-color: #3d9cd2;
-				font-size: 0.75em;
-				text-transform: uppercase;
-				padding: 2px 4px;
-				border-radius: 2px;
-			}
-		}
-
-		.sv-wc-payment-gateway-payment-method-actions {
-			text-align: right;
-
-			.button {
-				margin: .125em 0 .125em .25em;
-
-				&.disabled.tip:hover {
-					cursor: help;
-				}
-			}
-		}
-
-		.cancel-edit-payment-method {
+		img {
+			width: 40px;
+			height: 25px;
 			margin-right: 0.5em;
+			vertical-align: middle;
+			display: inline !important;
+		}
+	}
+
+	td.woocommerce-PaymentMethod--expires {
+		text-align: center;
+	}
+
+	td.woocommerce-PaymentMethod--default {
+		text-align: center;
+
+		mark {
+			display: none;
+			color: white;
+			background-color: #3d9cd2;
+			font-size: 0.75em;
+			text-transform: uppercase;
+			padding: 2px 4px;
+			border-radius: 2px;
+
+			&:first-child {
+				display: inline-block;
+			}
+		}
+	}
+
+	td.woocommerce-PaymentMethod--actions {
+		text-align: center;
+
+		.button {
+			margin: .125em;
+
+			&.save {
+				display: none;
+			}
+			&.delete {
+				display: inline-block;
+			}
 		}
 	}
 
 	&.editing {
 
-		.sv-wc-payment-gateway-payment-method-header-default span {
-			display: inline;
-		}
-
-		.sv-wc-payment-gateway-my-payment-methods-method:not(.editing),
-		.sv-wc-payment-gateway-my-payment-methods-type-divider {
+		.payment-method:not(.editing) {
 			opacity: 0.5;
 		}
 
-		.sv-wc-payment-gateway-my-payment-methods-method:hover {
+		.payment-method:hover {
 			opacity: 1;
+		}
+
+		.payment-method.editing td.woocommerce-PaymentMethod--actions {
+
+			.button.save {
+				display: inline-block;
+			}
+			.button.delete {
+				display: none;
+			}
 		}
 	}
 
-	tr.sv-wc-payment-gateway-my-payment-methods-type-divider td {
-		font-weight: 700;
+	.button {
+		white-space: nowrap;
 	}
 
-	.error td {
+	tbody tr.error td {
 		color: white;
 		text-align: center;
 		background-color: #e26838;
@@ -117,111 +121,26 @@ table.sv-wc-payment-gateway-my-payment-methods-table {
 	}
 }
 
-#tiptip_holder {
-	display: none;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 99999;
-
-	&.tip_top {
-		padding-bottom: 5px;
-
-		#tiptip_arrow_inner {
-			margin-top: -7px;
-			margin-left: -6px;
-			border-top-color: #464646;
-		}
-	}
-
-	&.tip_bottom {
-		padding-top: 5px;
-
-		#tiptip_arrow_inner {
-			margin-top: -5px;
-			margin-left: -6px;
-			border-bottom-color: #464646;
-		}
-	}
-
-	&.tip_right {
-		padding-left: 5px;
-
-		#tiptip_arrow_inner {
-			margin-top: -6px;
-			margin-left: -5px;
-			border-right-color: #464646;
-		}
-	}
-
-	&.tip_left {
-		padding-right: 5px;
-
-		#tiptip_arrow_inner {
-			margin-top: -6px;
-			margin-left: -7px;
-			border-left-color: #464646;
-		}
-	}
-}
-
-#tiptip_content,
-.chart-tooltip {
-	font-size:11px;
-	color:#fff;
-	padding:.5em .5em;
-	background:#464646;
-	-webkit-border-radius:3px;
-	-moz-border-radius:3px;
-	border-radius:3px;
-	-webkit-box-shadow:1px 1px 3px rgba(0,0,0,0.1);
-	-moz-box-shadow:1px 1px 3px rgba(0,0,0,0.1);
-	box-shadow:1px 1px 3px rgba(0,0,0,0.1);
-	text-align:center;
-	max-width:150px;
-}
-#tiptip_content code,
-.chart-tooltip code {
-	background:#888;
-	padding:1px;
-}
-#tiptip_arrow,
-#tiptip_arrow_inner {
-	position:absolute;
-	border-color:transparent;
-	border-style:solid;
-	border-width:6px;
-	height:0;
-	width:0;
-}
 
 @media screen and (max-width: 768px) {
 
-	table.sv-wc-payment-gateway-my-payment-methods-table {
-
-		.sv-wc-payment-gateway-my-payment-methods-method {
-
-			.sv-wc-payment-gateway-payment-method-expiry,
-			.sv-wc-payment-gateway-payment-method-default {
-				text-align: right;
-			}
-
-			.sv-wc-payment-gateway-payment-method-actions {
-				text-align: right;
-
-				&:before {
-					display: none;
-				}
-
-				.button {
-					float: none;
-					margin: .125em .25em .125em 0;
-				}
-			}
+	table.woocommerce-MyAccount-paymentMethods {
+		td.woocommerce-PaymentMethod--expires,
+		td.woocommerce-PaymentMethod--default {
+			text-align: right;
 		}
 
-		.sv-wc-payment-gateway-my-payment-methods-type-divider td:before {
-			display: none;
+		td.woocommerce-PaymentMethod--actions {
+			text-align: center;
+
+			&:before {
+				display: none;
+			}
+
+			.button {
+				float: none;
+				margin: .125em;
+			}
 		}
 	}
 }

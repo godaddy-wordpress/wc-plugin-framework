@@ -221,7 +221,7 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function init_hook_deprecator() {
 
-		$this->hook_deprecator = new SV_WC_Hook_Deprecator( $this->get_plugin_name(), $this->get_deprecated_hooks() );
+		$this->hook_deprecator = new SV_WC_Hook_Deprecator( $this->get_plugin_name(), array_merge( $this->get_framework_deprecated_hooks(), $this->get_deprecated_hooks() ) );
 	}
 
 
@@ -466,8 +466,49 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Return deprecated/removed hooks. Implementing classes should override this
-	 * and return an array of deprecated/removed hooks in the following format:
+	 * Gets a list of framework deprecated/removed hooks.
+	 *
+	 * @see SV_WC_Plugin::init_hook_deprecator()
+	 * @see SV_WC_Plugin::get_deprecated_hooks()
+	 *
+	 * @since 5.8.0-dev
+	 *
+	 * @return array associative array
+	 */
+	private function get_framework_deprecated_hooks() {
+
+		$plugin_id          = $this->get_id();
+		$deprecated_hooks   = [];
+		$deprecated_filters = [
+			/** @see SV_WC_Payment_Gateway_My_Payment_Methods handler - once migrated to WC core tokens UI, we removed these and have no replacement */
+			// TODO: remove deprecated hooks handling by version 6.0.0 or by 2021-02-25 {FN 2020-02-25}
+			"wc_{$plugin_id}_my_payment_methods_table_html",
+			"wc_{$plugin_id}_my_payment_methods_table_head_html",
+			"wc_{$plugin_id}_my_payment_methods_table_title",
+			"wc_{$plugin_id}_my_payment_methods_table_title_html",
+			"wc_{$plugin_id}_my_payment_methods_table_row_html",
+			"wc_{$plugin_id}_my_payment_methods_table_body_html",
+			"wc_{$plugin_id}_my_payment_methods_table_body_row_data",
+			"wc_{$plugin_id}_my_payment_methods_table_method_expiry_html",
+			"wc_{$plugin_id}_my_payment_methods_table_actions_html",
+		];
+
+		foreach ( $deprecated_filters as $deprecated_filter ) {
+			$deprecated_hooks[ $deprecated_filter ] = [
+				'removed'     => true,
+				'replacement' => false,
+				'version'     => '5.8.0-dev'
+			];
+		}
+
+		return $deprecated_hooks;
+	}
+
+
+	/**
+	 * Gets a list of the plugin's deprecated/removed hooks.
+	 *
+	 * Implementing classes should override this and return an array of deprecated/removed hooks in the following format:
 	 *
 	 * $old_hook_name = array {
 	 *   @type string $version version the hook was deprecated/removed in
@@ -477,12 +518,13 @@ abstract class SV_WC_Plugin {
 	 * }
 	 *
 	 * @since 4.3.0
+	 *
 	 * @return array
 	 */
 	protected function get_deprecated_hooks() {
 
 		// stub method
-		return array();
+		return [];
 	}
 
 
