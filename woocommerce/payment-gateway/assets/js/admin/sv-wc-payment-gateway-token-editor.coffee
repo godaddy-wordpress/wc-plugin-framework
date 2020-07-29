@@ -38,7 +38,9 @@ jQuery( document ).ready ($) ->
 		row = $( this ).closest( 'tr' )
 
 		# if this is an unsaved token, just remove the row
-		return row.remove() if row.hasClass( 'new-token' )
+		if row.hasClass( 'new-token' )
+			editor.unblock()
+			return row.remove()
 
 		data =
 			action:   'wc_payment_gateway_' + editor.data( 'gateway-id' ) + '_admin_remove_payment_token'

@@ -5,7 +5,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_7_1 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
-class Plugin extends Framework\SV_WC_Plugin {
+class Plugin extends Framework\SV_WC_Payment_Gateway_Plugin {
 
 
 	/** @var Plugin single instance of this plugin */
@@ -16,6 +16,10 @@ class Plugin extends Framework\SV_WC_Plugin {
 
 	/** string the plugin ID */
 	const PLUGIN_ID = 'test_plugin';
+
+	const GATEWAY_ID = 'test_gateway';
+
+	const GATEWAY_CLASS = Gateway::class;
 
 
 	/**
@@ -28,9 +32,15 @@ class Plugin extends Framework\SV_WC_Plugin {
 		parent::__construct(
 			self::PLUGIN_ID,
 			self::VERSION,
-			array(
+			[
 				'text_domain' => 'sv-wc-test-plugin',
-			)
+				'gateways' => [
+					self::GATEWAY_ID => self::GATEWAY_CLASS,
+				],
+				'supports' => [
+					self::FEATURE_CUSTOMER_ID,
+				],
+			]
 		);
 	}
 
@@ -81,4 +91,6 @@ class Plugin extends Framework\SV_WC_Plugin {
 
 		return self::$instance;
 	}
+
+
 }

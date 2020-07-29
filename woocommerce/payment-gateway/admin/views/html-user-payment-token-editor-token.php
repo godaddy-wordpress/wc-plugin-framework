@@ -76,6 +76,7 @@
 
 	<?php endforeach; ?>
 
+	<input name="<?php echo esc_attr( $token_input_name ); ?>[original_id]" value="<?php echo esc_attr( $token['id'] ); ?>" type="hidden" />
 	<input name="<?php echo esc_attr( $token_input_name ); ?>[type]" value="<?php echo esc_attr( $type ); ?>" type="hidden" />
 
 	<td class="token-default token-attribute">
