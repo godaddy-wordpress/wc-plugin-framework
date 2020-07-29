@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_7_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_8_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_7_1\\SV_WC_Payment_Gateway_Apple_Pay_Frontend' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_0\\SV_WC_Payment_Gateway_Apple_Pay_Frontend' ) ) :
 
 
 /**
@@ -153,9 +153,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Handlers\Script_Handler {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_style( 'sv-wc-apple-pay-v5_7_1', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-apple-pay.css', array(), $this->get_plugin()->get_version() ); // TODO: min
+		wp_enqueue_style( 'sv-wc-apple-pay-v5_8_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-apple-pay.css', array(), $this->get_plugin()->get_version() ); // TODO: min
 
-		wp_enqueue_script( 'sv-wc-apple-pay-v5_7_1', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-apple-pay.min.js', array( 'jquery' ), $this->get_plugin()->get_version(), true );
+		wp_enqueue_script( 'sv-wc-apple-pay-v5_8_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-apple-pay.min.js', array( 'jquery' ), $this->get_plugin()->get_version(), true );
 	}
 
 
