@@ -1,7 +1,7 @@
 {
     "name": "skyverge/wc-plugin-framework",
     "description": "The official SkyVerge WooCommerce plugin framework",
-    "version": "5.7.1",
+    "version": "5.8.0",
     "require-dev": {
         "lucatume/wp-browser": "^2.1"
     }
