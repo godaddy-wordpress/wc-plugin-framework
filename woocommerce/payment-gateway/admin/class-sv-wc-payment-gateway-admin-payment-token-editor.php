@@ -331,7 +331,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	/**
 	 * Updates a token object with data saved in the admin.
 	 *
-	 * @since 5.8.0-dev
+	 * @since 5.8.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token the payment token object to update
 	 * @param string $token_id the token ID

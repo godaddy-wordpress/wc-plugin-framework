@@ -140,7 +140,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Sets the payment token string.
 	 *
-	 * @since 5.8.0-dev
+	 * @since 5.8.0
 	 *
 	 * @param string $id payment token string
 	 */
@@ -153,7 +153,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Gets the gateway ID for the token.
 	 *
-	 * @since 5.8.0-dev.1
+	 * @since 5.8.0
 	 *
 	 * @return string
 	 */
@@ -166,7 +166,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Sets the gateway ID for the token.
 	 *
-	 * @since 5.8.0-dev.1
+	 * @since 5.8.0
 	 *
 	 * @param string $gateway_id
 	 */
@@ -179,7 +179,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Gets the ID of the user associated with the token.
 	 *
-	 * @since 5.8.0-dev.1
+	 * @since 5.8.0
 	 *
 	 * @return int
 	 */
@@ -192,7 +192,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Sets the ID of the user associated with the token.
 	 *
-	 * @since 5.8.0-dev.1
+	 * @since 5.8.0
 	 *
 	 * @param int $user_id
 	 */
@@ -529,7 +529,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Gets the gateway environment that this token is associated with.
 	 *
-	 * @since 5.8.0-dev.1
+	 * @since 5.8.0
 	 *
 	 * @return string
 	 */
@@ -542,7 +542,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Sets the gateway environment that this token is associated with.
 	 *
-	 * @since 5.8.0-dev.1
+	 * @since 5.8.0
 	 *
 	 * @param string $value environment to set
 	 */
@@ -555,7 +555,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Determines if this token's data has been migrated to core storage.
 	 *
-	 * @since 5.8.0-dev.1
+	 * @since 5.8.0
 	 *
 	 * @return bool
 	 */
@@ -569,7 +569,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 			/**
 			 * Filters the migration status of a token.
 			 *
-			 * @since 5.8.0-dev
+			 * @since 5.8.0
 			 *
 			 * @param bool $is_migrated this would be set to true if a migration occurred
 			 * @param SV_WC_Payment_Gateway_Payment_Token $token the token object
@@ -584,7 +584,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Sets if this token's data has been migrated to core storage.
 	 *
-	 * @since 5.8.0-dev.1
+	 * @since 5.8.0
 	 *
 	 * @param bool $value if this token's data has been migrated to core storage
 	 */
@@ -597,7 +597,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * Gets the WooCommerce core payment token object related to this framework token.
 	 *
-	 * @since 5.8.0-dev.1
+	 * @since 5.8.0
 	 *
 	 * @return \WC_Payment_Token|null
 	 */
@@ -649,7 +649,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * Sets the found key-values as an array in the data property.
 	 *
-	 * @since 5.8.0-dev.1
+	 * @since 5.8.0
 	 *
 	 * @param \WC_Payment_Token $core_token
 	 */
@@ -693,7 +693,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 * Stores the token as a Woocommerce payment token.
 	 * @see \WC_Payment_Token::save()
 	 *
-	 * @since 5.8.0-dev.1
+	 * @since 5.8.0
 	 *
 	 * @return int ID of the token saved as returned by {@see \WC_Payment_Token::save()}
 	 * @throws SV_WC_Payment_Gateway_Exception when saving and validating the parent token hits an error
@@ -766,7 +766,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * @see \WC_Payment_Token::delete()
 	 *
-	 * @since 5.8.0-dev.1
+	 * @since 5.8.0
 	 *
 	 * @param bool $force_delete argument mapped to {@see \WC_Data::delete()}
 	 * @return bool

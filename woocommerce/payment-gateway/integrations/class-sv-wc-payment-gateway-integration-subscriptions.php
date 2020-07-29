@@ -147,7 +147,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 *
 	 * @see \WCS_My_Account_Payment_Methods::display_default_payment_token_change_notice()
 	 *
-	 * @since 5.8.0-dev
+	 * @since 5.8.0
 	 */
 	public function disable_default_payment_token_change_notice() {
 
@@ -693,7 +693,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 *
 	 * @internal
 	 *
-	 * @since 5.8.0-dev
+	 * @since 5.8.0
 	 *
 	 * @param array $method payment method
 	 */
@@ -713,7 +713,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	/**
 	 * Gets the HTML code for the list of subscriptions orders associated with the given token.
 	 *
-	 * @since 5.8.0-dev
+	 * @since 5.8.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Payment_Token $token the payment token
 	 * @return string
@@ -751,7 +751,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * @internal
 	 *
 	 * @since 4.3.0
-	 * @deprecated 5.8.0-dev
+	 * @deprecated 5.8.0
 	 *
 	 * @param array $method the table row data
 	 * @param \SV_WC_Payment_Gateway_Payment_Token $token the payment token
@@ -760,7 +760,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function add_my_payment_methods_table_body_row_data( $method, $token, $handler ) {
 
-		wc_deprecated_function( __METHOD__, '5.8.0-dev' );
+		wc_deprecated_function( __METHOD__, '5.8.0' );
 
 		return $method;
 	}
@@ -774,7 +774,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * @internal
 	 *
 	 * @since 4.3.0
-	 * @deprecated 5.8.0-dev
+	 * @deprecated 5.8.0
 	 *
 	 * @param array $actions the token actions
 	 * @param SV_WC_Payment_Gateway_Payment_Token the token object
@@ -783,7 +783,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function disable_my_payment_methods_table_method_delete( $actions, $token, $handler ) {
 
-		wc_deprecated_function( __METHOD__, '5.8.0-dev' );
+		wc_deprecated_function( __METHOD__, '5.8.0' );
 
 		return $actions;
 	}

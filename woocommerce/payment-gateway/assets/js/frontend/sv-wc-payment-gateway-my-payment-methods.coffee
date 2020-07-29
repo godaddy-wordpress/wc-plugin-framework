@@ -70,7 +70,7 @@ jQuery( document ).ready ($) ->
 
 		# Replace Method column content with Title column content, for FW tokens.
 		#
-		# @since 5.8.0-dev
+		# @since 5.8.0
 		replace_method_column: =>
 
 			$( '.woocommerce-MyAccount-paymentMethods' ).find( 'tr' ).each ( index, element ) =>
@@ -98,7 +98,7 @@ jQuery( document ).ready ($) ->
 		#
 		# They are already hidden using CSS, but should also be removed for accessibility.
 		#
-		# @since 5.8.0-dev
+		# @since 5.8.0
 		remove_duplicate_default_marks: =>
 
 			$( '.woocommerce-MyAccount-paymentMethods' ).find( 'tr' ).each ( index, element ) =>
