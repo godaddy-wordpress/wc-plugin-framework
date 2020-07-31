@@ -12,7 +12,7 @@ jQuery( document ).ready ($) ->
 	# The My Payment Methods handler.
 	#
 	# @since 5.1.0
-	class window.SV_WC_Payment_Methods_Handler_v5_7_1
+	class window.SV_WC_Payment_Methods_Handler_v5_8_1
 
 
 		# Constructs the class.
@@ -269,4 +269,4 @@ jQuery( document ).ready ($) ->
 
 
 	# dispatch loaded event
-	$( document.body ).trigger( 'sv_wc_payment_methods_handler_v5_7_1_loaded' )
+	$( document.body ).trigger( 'sv_wc_payment_methods_handler_v5_8_1_loaded' )
