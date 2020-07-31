@@ -15,7 +15,7 @@ class Plugin extends Test_Case {
 
 	public function test_constructor() {
 
-		$this->assertInstanceOf( '\SkyVerge\WooCommerce\PluginFramework\v5_3_0\SV_WC_Plugin', $this->plugin() );
+		$this->assertInstanceOf( '\SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Plugin', $this->plugin() );
 	}
 
 	public function test_clone() {
@@ -135,7 +135,7 @@ MSG;
 			),
 		);
 
-		return $this->getMockBuilder( '\SkyVerge\WooCommerce\PluginFramework\v5_3_0\SV_WC_Plugin' )
+		return $this->getMockBuilder( '\SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Plugin' )
 							 ->setConstructorArgs( $args )
 							 ->getMockForAbstractClass();
 	}
