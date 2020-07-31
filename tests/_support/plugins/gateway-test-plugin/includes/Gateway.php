@@ -2,7 +2,7 @@
 
 namespace SkyVerge\WooCommerce\GatewayTestPlugin;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_8_0 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_8_1 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -28,4 +28,12 @@ class Gateway extends Framework\SV_WC_Payment_Gateway {
 
 		return [];
 	}
+
+
+	public function get_api() {
+
+		return new API();
+	}
+
+
 }

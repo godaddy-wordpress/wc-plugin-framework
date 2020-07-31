@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2020.nn.nn - version 5.8.1-dev
+ * Fix - Ensure that some payment gateway scripts used for handling tokens reference the current version of the Framework
+
 2020.07.29 - version 5.8.0
  * Tweak - Migrate payment tokens to be compatible with WooCommerce core payment tokens
  * Fix - Unblock the UI when removing a token from the admin token editor that was just added but not saved yet
