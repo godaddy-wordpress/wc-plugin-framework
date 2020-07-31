@@ -43,7 +43,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.8.0';
+	const VERSION = '5.8.1';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -497,7 +497,7 @@ abstract class SV_WC_Plugin {
 			$deprecated_hooks[ $deprecated_filter ] = [
 				'removed'     => true,
 				'replacement' => false,
-				'version'     => '5.8.0'
+				'version'     => '5.8.1'
 			];
 		}
 
