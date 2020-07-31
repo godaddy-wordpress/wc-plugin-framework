@@ -28,4 +28,12 @@ class Gateway extends Framework\SV_WC_Payment_Gateway {
 
 		return [];
 	}
+
+
+	public function get_api() {
+
+		return new API();
+	}
+
+
 }
