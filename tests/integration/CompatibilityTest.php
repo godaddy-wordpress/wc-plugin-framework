@@ -11,7 +11,6 @@ class CompatibilityTest extends \Codeception\TestCase\WPTestCase {
 
 
 	public function test_is_rest_api_request() {
-		global $_SERVER;
 
 		$is_api_request = Framework\SV_WC_Plugin_Compatibility::is_rest_api_request();
 
