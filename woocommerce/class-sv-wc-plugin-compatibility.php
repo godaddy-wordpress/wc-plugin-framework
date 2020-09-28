@@ -331,7 +331,7 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * @see \WooCommerce::is_rest_api_request()
 	 *
-	 * @since 5.7.2-dev.1
+	 * @since x.y.z-dev.1
 	 *
 	 * @return bool
 	 */
