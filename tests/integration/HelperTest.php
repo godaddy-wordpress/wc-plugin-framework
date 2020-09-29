@@ -12,7 +12,7 @@ class HelperTest extends \Codeception\TestCase\WPTestCase {
 
 	public function test_is_rest_api_request() {
 
-		$is_api_request = Framework\SV_WC_Plugin_Compatibility::is_rest_api_request();
+		$is_api_request = Framework\SV_WC_Helper::is_rest_api_request();
 
 		$this->assertIsBool( $is_api_request );
 		$this->assertFalse( $is_api_request );
