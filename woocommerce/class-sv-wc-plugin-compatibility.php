@@ -337,7 +337,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function is_rest_api_request() {
 
-		if ( function_exists( 'WC' ) && is_callable( [ WC(), 'is_rest_api_request' ] ) ) {
+		if ( is_callable( 'WC' ) && is_callable( [ WC(), 'is_rest_api_request' ] ) ) {
 			return (bool) WC()->is_rest_api_request();
 		}
 
