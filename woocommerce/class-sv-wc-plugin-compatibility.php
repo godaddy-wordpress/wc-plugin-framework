@@ -326,33 +326,6 @@ class SV_WC_Plugin_Compatibility {
 	}
 
 
-	/**
-	 * Determines if the current request is for a WC REST API endpoint.
-	 *
-	 * @see \WooCommerce::is_rest_api_request()
-	 *
-	 * @since x.y.z-dev.1
-	 *
-	 * @return bool
-	 */
-	public static function is_rest_api_request() {
-
-		if ( is_callable( 'WC' ) && is_callable( [ WC(), 'is_rest_api_request' ] ) ) {
-			return (bool) WC()->is_rest_api_request();
-		}
-
-		if ( empty( $_SERVER['REQUEST_URI'] ) || ! function_exists( 'rest_get_url_prefix' ) ) {
-			return false;
-		}
-
-		$rest_prefix         = trailingslashit( rest_get_url_prefix() );
-		$is_rest_api_request = false !== strpos( $_SERVER['REQUEST_URI'], $rest_prefix );
-
-		/* applies WooCommerce core filter */
-		return (bool) apply_filters( 'woocommerce_is_rest_api_request', $is_rest_api_request );
-	}
-
-
 	/** WordPress core ******************************************************/
 
 
