@@ -23,7 +23,11 @@ jQuery( document ).ready ($) ->
 
 	addCaptureEvents = () ->
 
-		$( '.sv-wc-payment-gateway-partial-capture' ).appendTo( '#woocommerce-order-items .inside' )
+		# prevent the events to be attached again
+		if ( $( '.sv-wc-payment-gateway-partial-capture.sv-wc-payment-gateway-partial-capture-with-events' ).length )
+			return
+
+		$( '.sv-wc-payment-gateway-partial-capture' ).addClass( 'sv-wc-payment-gateway-partial-capture-with-events' ).appendTo( '#woocommerce-order-items .inside' )
 
 		$( '#woocommerce-order-items' ).on 'click', '.sv-wc-payment-gateway-capture:not(.disabled)', ( e ) ->
 
