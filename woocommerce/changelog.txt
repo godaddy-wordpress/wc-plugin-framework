@@ -2,6 +2,7 @@
 
 2020.nn.nn - version x.y.z-dev.1
  * Feature - Add helper method to detect whether the current request is a REST API request
+ * Fix - Fix a Capture Charge button issue when adding items to an order
 
 2020.07.31 - version 5.8.1
  * Fix - Ensure that some payment gateway scripts used for handling tokens reference the current version of the Framework
