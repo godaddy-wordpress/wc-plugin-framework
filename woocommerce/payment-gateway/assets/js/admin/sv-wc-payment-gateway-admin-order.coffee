@@ -15,6 +15,12 @@ jQuery( document ).ready ($) ->
 	woocommerce_admin_meta_boxes      = window.woocommerce_admin_meta_boxes ? {}
 	accounting                        = window.accounting ? {}
 
+	observer = new MutationObserver( ( e ) ->
+		addCaptureEvents()
+	)
+
+	observer.observe( $( '#woocommerce-order-items' )[0], { childList: true } )
+
 	addCaptureEvents = () ->
 
 		$( '.sv-wc-payment-gateway-partial-capture' ).appendTo( '#woocommerce-order-items .inside' )
