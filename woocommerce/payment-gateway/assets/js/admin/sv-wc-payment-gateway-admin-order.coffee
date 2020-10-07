@@ -15,52 +15,51 @@ jQuery( document ).ready ($) ->
 	woocommerce_admin_meta_boxes      = window.woocommerce_admin_meta_boxes ? {}
 	accounting                        = window.accounting ? {}
 
-	# this is ugly, but there are no actions to output this HTML where it belongs
-	$( '.sv-wc-payment-gateway-partial-capture' ).appendTo( '#woocommerce-order-items .inside' )
+	addCaptureEvents = () ->
+
+		$( '.sv-wc-payment-gateway-partial-capture' ).appendTo( '#woocommerce-order-items .inside' )
+
+		$( '#woocommerce-order-items' ).on 'click', '.sv-wc-payment-gateway-capture:not(.disabled)', ( e ) ->
+
+			e.preventDefault()
+
+			if ( $( @ ).hasClass( 'partial-capture' ) )
+
+				$( 'div.sv-wc-payment-gateway-partial-capture' ).slideDown();
+				$( 'div.wc-order-data-row-toggle' ).not( 'div.sv-wc-payment-gateway-partial-capture' ).slideUp();
+				$( 'div.wc-order-totals-items' ).slideUp();
+
+			else
+
+				submitCapture()
 
 
-	$( '#woocommerce-order-items' ).on 'click', '.sv-wc-payment-gateway-capture:not(.disabled)', ( e ) ->
+		$( '.sv-wc-payment-gateway-partial-capture' ).on 'change keyup', '#capture_amount', ( e ) ->
 
-		e.preventDefault()
+			total = accounting.unformat( $( @ ).val(), woocommerce_admin.mon_decimal_point );
 
-		if ( $( @ ).hasClass( 'partial-capture' ) )
+			if ( total )
+				$( 'button.capture-action' ).removeAttr( 'disabled' )
+			else
+				$( 'button.capture-action' ).attr( 'disabled', 'disabled' )
 
-			$( 'div.sv-wc-payment-gateway-partial-capture' ).slideDown();
-			$( 'div.wc-order-data-row-toggle' ).not( 'div.sv-wc-payment-gateway-partial-capture' ).slideUp();
-			$( 'div.wc-order-totals-items' ).slideUp();
-
-		else
-
-			submitCapture()
-
-
-	$( '.sv-wc-payment-gateway-partial-capture' ).on 'change keyup', '#capture_amount', ( e ) ->
-
-		total = accounting.unformat( $( @ ).val(), woocommerce_admin.mon_decimal_point );
-
-		if ( total )
-			$( 'button.capture-action' ).removeAttr( 'disabled' )
-		else
-			$( 'button.capture-action' ).attr( 'disabled', 'disabled' )
-
-		$( 'button .capture-amount .amount' ).text( accounting.formatMoney( total, {
-			symbol:    woocommerce_admin_meta_boxes.currency_format_symbol,
-			decimal:   woocommerce_admin_meta_boxes.currency_format_decimal_sep,
-			thousand:  woocommerce_admin_meta_boxes.currency_format_thousand_sep,
-			precision: woocommerce_admin_meta_boxes.currency_format_num_decimals,
-			format:    woocommerce_admin_meta_boxes.currency_format
-		} ) )
+			$( 'button .capture-amount .amount' ).text( accounting.formatMoney( total, {
+				symbol:    woocommerce_admin_meta_boxes.currency_format_symbol,
+				decimal:   woocommerce_admin_meta_boxes.currency_format_decimal_sep,
+				thousand:  woocommerce_admin_meta_boxes.currency_format_thousand_sep,
+				precision: woocommerce_admin_meta_boxes.currency_format_num_decimals,
+				format:    woocommerce_admin_meta_boxes.currency_format
+			} ) )
 
 
-	$( '.sv-wc-payment-gateway-partial-capture' ).on 'click', '.capture-action', ( e ) ->
+		$( '.sv-wc-payment-gateway-partial-capture' ).on 'click', '.capture-action', ( e ) ->
 
-		e.preventDefault()
+			e.preventDefault()
 
-		amount  = $( '.sv-wc-payment-gateway-partial-capture #capture_amount' ).val()
-		comment = $( '.sv-wc-payment-gateway-partial-capture #capture_comment' ).val()
+			amount  = $( '.sv-wc-payment-gateway-partial-capture #capture_amount' ).val()
+			comment = $( '.sv-wc-payment-gateway-partial-capture #capture_comment' ).val()
 
-		submitCapture( amount, comment )
-
+			submitCapture( amount, comment )
 
 	submitCapture = ( amount = '', comment = '' ) ->
 
