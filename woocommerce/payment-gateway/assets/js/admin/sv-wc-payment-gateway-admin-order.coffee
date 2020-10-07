@@ -100,3 +100,5 @@ jQuery( document ).ready ($) ->
 				# never leave the UI blocked
 				$( '#woocommerce-order-items' ).unblock()
 			)
+
+	addCaptureEvents()
