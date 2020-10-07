@@ -15,13 +15,7 @@ jQuery( document ).ready ($) ->
 	woocommerce_admin_meta_boxes      = window.woocommerce_admin_meta_boxes ? {}
 	accounting                        = window.accounting ? {}
 
-	observer = new MutationObserver( ( e ) ->
-		addCaptureEvents()
-	)
-
-	observer.observe( $( '#woocommerce-order-items' )[0], { childList: true } )
-
-	addCaptureEvents = () ->
+	window.sv_wc_payment_gateway_admin_order_add_capture_events = () ->
 
 		# prevent the events to be attached again
 		if ( $( '.sv-wc-payment-gateway-partial-capture.sv-wc-payment-gateway-partial-capture-with-events' ).length )
@@ -111,4 +105,4 @@ jQuery( document ).ready ($) ->
 				$( '#woocommerce-order-items' ).unblock()
 			)
 
-	addCaptureEvents()
+	window.sv_wc_payment_gateway_admin_order_add_capture_events()
