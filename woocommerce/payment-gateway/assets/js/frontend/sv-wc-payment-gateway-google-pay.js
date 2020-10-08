@@ -101,8 +101,6 @@ jQuery( document ).ready( ( $ ) => {
 			 * @see {@link getGooglePaymentsClient}
 			 */
 			this.paymentsClient = null;
-
-			$( '#google-pay-js' ).onload = this.onGooglePayLoaded();
 		}
 
 		/**
