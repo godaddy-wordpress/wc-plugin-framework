@@ -157,7 +157,9 @@ class Frontend extends Script_Handler {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( 'sv-wc-google-pay-v5_8_1', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-google-pay.min.js', array( 'jquery' ), $this->get_plugin()->get_version(), true );
+		wp_enqueue_script( 'google-pay-js', 'https://pay.google.com/gp/p/js/pay.js', array(), null, true );
+
+		wp_enqueue_script( 'sv-wc-google-pay-v5_8_1', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-google-pay.min.js', array( 'google-pay-js', 'jquery' ), $this->get_plugin()->get_version(), true );
 	}
 
 
