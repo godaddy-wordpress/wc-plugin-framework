@@ -1055,7 +1055,13 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 		];
 
 		if ( $this->get_gateway()->supports_card_types() ) {
-			$args['enabled_card_types'] = array_map( array( 'SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ), $this->get_gateway()->get_card_types() );
+
+			$card_types = $this->get_gateway()->get_card_types();
+
+			if ( is_array( $card_types ) && ! empty( $card_types ) ) {
+
+				$args['enabled_card_types'] = array_map( [ 'SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ], $card_types );
+			}
 		}
 
 		return $args;
