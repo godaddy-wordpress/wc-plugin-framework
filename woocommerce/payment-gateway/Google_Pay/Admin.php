@@ -48,9 +48,9 @@ class Admin {
 	 *
 	 * @since 5.9.0-dev.1
 	 *
-	 * @param Google_Pay $handler main Google Pay handler instance
+	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay $handler main Google Pay handler instance
 	 */
-	public function __construct( $handler ) {
+	public function __construct( \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay $handler ) {
 
 		$this->handler = $handler;
 

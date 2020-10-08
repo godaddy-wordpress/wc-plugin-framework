@@ -26,7 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1;
 
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Note;
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes;
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay\Google_Pay;
+use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -104,7 +104,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/** @var SV_WC_Payment_Gateway_Apple_Pay the Apple Pay handler instance */
 	private $apple_pay;
 
-	/** @var Payment_Gateway\Google_Pay\Google_Pay the Google Pay handler instance */
+	/** @var Payment_Gateway\Google_Pay the Google Pay handler instance */
 	private $google_pay;
 
 
@@ -310,7 +310,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( "{$payment_gateway_framework_path}/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-payment-response.php" );
 
 		// Google Pay
-		require_once( "{$payment_gateway_framework_path}/Google_Pay/Google_Pay.php" );
+		require_once( "{$payment_gateway_framework_path}/Google_Pay.php" );
 		require_once( "{$payment_gateway_framework_path}/Google_Pay/Admin.php" );
 		require_once( "{$payment_gateway_framework_path}/Google_Pay/Frontend.php" );
 
@@ -547,7 +547,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 5.9.0-dev.1
 	 *
-	 * @return Payment_Gateway\Google_Pay\Google_Pay
+	 * @return Payment_Gateway\Google_Pay
 	 */
 	protected function build_google_pay_instance() {
 
@@ -560,7 +560,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 5.9.0-dev.1
 	 *
-	 * @return Payment_Gateway\Google_Pay\Google_Pay
+	 * @return Payment_Gateway\Google_Pay
 	 */
 	public function get_google_pay_instance() {
 

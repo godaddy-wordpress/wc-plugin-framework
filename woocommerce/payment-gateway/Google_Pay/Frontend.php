@@ -44,7 +44,7 @@ class Frontend extends Script_Handler {
 	/** @var SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance */
 	protected $plugin;
 
-	/** @var Google_Pay $handler the Google Pay handler instance */
+	/** @var \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay $handler the Google Pay handler instance */
 	protected $handler;
 
 	/** @var SV_WC_Payment_Gateway $gateway the gateway instance */
@@ -60,9 +60,9 @@ class Frontend extends Script_Handler {
 	 * @since 5.9.0-dev.1
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance
-	 * @param Google_Pay $handler the Google Pay handler instance
+	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay $handler the Google Pay handler instance
 	 */
-	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, Google_Pay $handler ) {
+	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay $handler ) {
 
 		$this->plugin = $plugin;
 

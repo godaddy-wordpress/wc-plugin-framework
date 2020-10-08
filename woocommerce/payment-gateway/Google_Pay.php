@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway_Helper;
@@ -30,7 +30,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_1\\Payment_Gateway\\Google_Pay\\Google_Pay' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_1\\Payment_Gateway\\Google_Pay' ) ) :
 
 
 /**
@@ -41,10 +41,10 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_1\\Payment_
 class Google_Pay {
 
 
-	/** @var Admin the admin instance */
+	/** @var Google_Pay\Admin the admin instance */
 	protected $admin;
 
-	/** @var Frontend the frontend instance */
+	/** @var Google_Pay\Frontend the frontend instance */
 	protected $frontend;
 
 	/** @var SV_WC_Payment_Gateway_Plugin the plugin instance */
@@ -88,7 +88,7 @@ class Google_Pay {
 	 */
 	protected function init_admin() {
 
-		$this->admin = new Admin( $this );
+		$this->admin = new Google_Pay\Admin( $this );
 	}
 
 
@@ -99,7 +99,7 @@ class Google_Pay {
 	 */
 	protected function init_frontend() {
 
-		$this->frontend = new Frontend( $this->get_plugin(), $this );
+		$this->frontend = new Google_Pay\Frontend( $this->get_plugin(), $this );
 	}
 
 
@@ -229,7 +229,7 @@ class Google_Pay {
 		 * @since 5.9.0-dev.1
 		 *
 		 * @param array $networks the supported networks
-		 * @param \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay\Google_Pay $handler the Google Pay handler
+		 * @param \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay $handler the Google Pay handler
 		 */
 		return apply_filters( 'sv_wc_google_pay_supported_networks', array_values( $networks ), $this );
 	}
