@@ -124,6 +124,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/** Apple Pay feature */
 	const FEATURE_APPLE_PAY = 'apple_pay';
 
+	/** Google Pay feature */
+	const FEATURE_GOOGLE_PAY = 'google_pay';
+
 	/** Admin token editor feature */
 	const FEATURE_TOKEN_EDITOR = 'token_editor';
 
@@ -1131,6 +1134,37 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$order->payment->card_type      = $response->get_card_type();
 
 		return $order;
+	}
+
+
+	/** Google Pay Feature *****************************************************/
+
+
+	/**
+	 * Determines whether this gateway supports Google Pay.
+	 *
+	 * @since 5.9.0-dev.1
+	 *
+	 * @return bool
+	 */
+	public function supports_google_pay() {
+
+		return $this->supports( self::FEATURE_GOOGLE_PAY );
+	}
+
+
+	/**
+	 * Gets the currencies supported by Google Pay.
+	 *
+	 * This method should be overwritten by any gateway that needs to restrict the supported currencies.
+	 *
+	 * @since 5.9.0-dev.1
+	 *
+	 * @return array
+	 */
+	public function get_google_pay_currencies() {
+
+		return [];
 	}
 
 
