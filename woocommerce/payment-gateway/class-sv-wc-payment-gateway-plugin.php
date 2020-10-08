@@ -516,8 +516,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function maybe_init_google_pay() {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.2' ) && $this->is_google_pay_activated() && $this->supports_apple_pay() ) {
-			$this->apple_pay = $this->build_apple_pay_instance();
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.2' ) && $this->is_google_pay_activated() && $this->supports_google_pay() ) {
+			$this->google_pay = $this->build_google_pay_instance();
 		}
 	}
 
