@@ -180,10 +180,13 @@ class Frontend extends Script_Handler {
 		 * @param array $params the JS params
 		 */
 		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_js_handler_params', [
-			'gateway_id'               => $this->get_gateway()->get_id(),
-			'gateway_id_dasherized'    => $this->get_gateway()->get_id_dasherized(),
-			'button_style'             => $this->get_handler()->get_button_style(),
-			'generic_error'            => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
+			'plugin_id'             => $this->get_gateway()->get_plugin()->get_id(),
+			'merchant_id'           => method_exists( $this->get_gateway(), 'get_merchant_id' ) ? $this->get_gateway()->get_merchant_id() : '',
+			'gateway_id'            => $this->get_gateway()->get_id(),
+			'gateway_id_dasherized' => $this->get_gateway()->get_id_dasherized(),
+			'button_style'          => $this->get_handler()->get_button_style(),
+			'card_types'            => $this->get_handler()->get_supported_networks(),
+			'generic_error'         => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
 		] );
 	}
 
