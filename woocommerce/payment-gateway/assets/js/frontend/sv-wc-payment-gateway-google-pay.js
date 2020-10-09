@@ -227,8 +227,6 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		processPayment(paymentData) {
 
-			console.log('processPayment');
-
 			// show returned data in developer console for debugging
 			console.log(paymentData);
 			// @todo pass payment token to your gateway to process payment
@@ -240,12 +238,8 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		onGooglePaymentButtonClicked() {
 
-			console.log('onGooglePaymentButtonClicked');
-
 			const paymentDataRequest = this.getGooglePaymentDataRequest();
 			paymentDataRequest.transactionInfo = this.getGoogleTransactionInfo();
-
-			console.log(paymentDataRequest);
 
 			const paymentsClient = this.getGooglePaymentsClient();
 			paymentsClient.loadPaymentData(paymentDataRequest)
