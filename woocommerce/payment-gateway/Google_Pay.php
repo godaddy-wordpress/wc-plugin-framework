@@ -142,9 +142,22 @@ class Google_Pay {
 
 			$this->log( "Payment Method Response:\n" . $payment_method_data . "\n" );
 
+			$payment_method_data = json_decode( $payment_method_data );
+
 			$order = Orders::create_order( WC()->cart );
 
 			$order->set_payment_method( $this->get_processing_gateway() );
+
+			$token = new \WC_Payment_Token_CC();
+
+			$token->set_user_id( $order->get_user_id() );
+			$token->set_token( $payment_method_data['tokenizationData']['token'] );
+			$token->set_last4( $payment_method_data['info']['cardDetails'] );
+			$token->set_card_type( strtolower( $payment_method_data['info']['cardNetwork'] ) );
+
+			$token->save();
+
+			$order->add_payment_token( $token );
 
 			// TODO: set payment data
 

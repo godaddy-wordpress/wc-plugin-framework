@@ -101,6 +101,56 @@ class Orders {
 	}
 
 
+	/**
+	 * Gets an order object for payment.
+	 *
+	 * @since 5.9.0-dev.1
+	 *
+	 * @see \WC_Checkout::create_order()
+	 * @param array $order_data the order data
+	 * @return \WC_Order
+	 * @throws SV_WC_Payment_Gateway_Exception
+	 */
+	public static function get_order_object( $order_data ) {
+
+		$order_id = (int) WC()->session->get( 'order_awaiting_payment', 0 );
+		$order    = $order_id ? wc_get_order( $order_id ) : null;
+
+		if ( $order && $order->has_cart_hash( $order_data['cart_hash'] ) && $order->has_status( [ 'pending', 'failed' ] ) ) {
+
+			$order_data['order_id'] = $order_id;
+
+			$order = wc_update_order( $order_data );
+
+			if ( is_wp_error( $order ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 522 ) );
+			}
+
+			/** This action is documented by WooCommerce in includes/class-wc-checkout.php */
+			do_action( 'woocommerce_resume_order', $order_id );
+
+			$order->remove_order_items();
+
+		} else {
+
+			$order = wc_create_order( $order_data );
+
+			if ( is_wp_error( $order ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 520 ) );
+			}
+
+			if ( false === $order ) {
+				throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 521 ) );
+			}
+
+			// set the new order ID so it can be resumed in case of failure
+			WC()->session->set( 'order_awaiting_payment', $order->get_id() );
+		}
+
+		return $order;
+	}
+
+
 }
 
 
