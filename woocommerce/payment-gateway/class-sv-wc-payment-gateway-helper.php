@@ -265,6 +265,20 @@ class SV_WC_Payment_Gateway_Helper {
 	}
 
 
+	/**
+	 * Formats the given expiration year to include the last two digits only.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string $exp_year a credit card expiration year
+	 * @return string
+	 */
+	public static function format_exp_year( $exp_year ) {
+
+		return substr( $exp_year, -2 );
+	}
+
+
 }
 
 
