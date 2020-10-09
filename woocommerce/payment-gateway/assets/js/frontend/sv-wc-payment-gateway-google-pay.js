@@ -166,11 +166,12 @@ jQuery( document ).ready( ( $ ) => {
 		 * @see {@link https://developers.google.com/pay/api/web/guides/brand-guidelines|Google Pay brand guidelines}
 		 */
 		addGooglePayButton() {
+
 			const paymentsClient = this.getGooglePaymentsClient();
 			const button = paymentsClient.createButton({
 				onClick: this.onGooglePaymentButtonClicked
 			});
-			document.getElementByClass('sv-wc-google-pay-button').appendChild(button);
+			document.getElementById('sv-wc-google-pay-button-container').appendChild(button);
 		}
 
 		/**
