@@ -125,6 +125,23 @@ jQuery( document ).ready( ( $ ) => {
 		}
 
 		/**
+		 * Provide Google Pay API with a payment amount, currency, and amount status
+		 *
+		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
+		 * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
+		 */
+		getGoogleTransactionInfo() {
+
+			return {
+				countryCode: 'US',
+				currencyCode: 'USD',
+				totalPriceStatus: 'FINAL',
+				// set to cart total
+				totalPrice: '1.00'
+			};
+		}
+
+		/**
 		 * Configure support for the Google Pay API
 		 *
 		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest|PaymentDataRequest}
@@ -196,24 +213,6 @@ jQuery( document ).ready( ( $ ) => {
 					// show error in developer console for debugging
 					console.error(err);
 				});
-		}
-
-
-		/**
-		 * Provide Google Pay API with a payment amount, currency, and amount status
-		 *
-		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
-		 * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
-		 */
-		getGoogleTransactionInfo() {
-
-			return {
-				countryCode: 'US',
-				currencyCode: 'USD',
-				totalPriceStatus: 'FINAL',
-				// set to cart total
-				totalPrice: '1.00'
-			};
 		}
 
 		/**
