@@ -181,11 +181,12 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		init() {
 
+			const self = this;
 			const paymentsClient = this.getGooglePaymentsClient();
 			paymentsClient.isReadyToPay( this.getGoogleIsReadyToPayRequest() )
 				.then(function ( response ) {
 					if (response.result) {
-						this.addGooglePayButton();
+						self.addGooglePayButton();
 						// @todo prefetch payment data to improve performance after confirming site functionality
 						// prefetchGooglePaymentData();
 					}
@@ -193,8 +194,7 @@ jQuery( document ).ready( ( $ ) => {
 				.catch(function (err) {
 					// show error in developer console for debugging
 					console.error(err);
-				})
-				.bind(this);
+				});
 		}
 
 
@@ -254,16 +254,16 @@ jQuery( document ).ready( ( $ ) => {
 			paymentDataRequest.transactionInfo = this.getGoogleTransactionInfo();
 
 			const paymentsClient = this.getGooglePaymentsClient();
+			const self = this;
 			paymentsClient.loadPaymentData(paymentDataRequest)
 				.then(function (paymentData) {
 					// handle the response
-					this.processPayment(paymentData);
+					self.processPayment(paymentData);
 				})
 				.catch(function (err) {
 					// show error in developer console for debugging
 					console.error(err);
-				})
-				.bind(this);
+				});
 		}
 
 	}
