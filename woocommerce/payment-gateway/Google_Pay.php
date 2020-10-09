@@ -140,7 +140,7 @@ class Google_Pay {
 
 		try {
 
-			$this->log( "Payment Method Response:\n" . $payment_method_data->to_string_safe() . "\n" );
+			$this->log( "Payment Method Response:\n" . $payment_method_data . "\n" );
 
 			$order = Orders::create_order( WC()->cart );
 
