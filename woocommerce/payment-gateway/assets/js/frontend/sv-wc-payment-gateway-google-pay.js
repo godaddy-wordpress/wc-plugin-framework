@@ -186,7 +186,7 @@ jQuery( document ).ready( ( $ ) => {
 
 			const paymentsClient = this.getGooglePaymentsClient();
 			const button = paymentsClient.createButton({
-				onClick: () => this.onGooglePaymentButtonClicked
+				onClick: () => this.onGooglePaymentButtonClicked()
 			});
 			document.getElementById('sv-wc-google-pay-button-container').appendChild(button);
 		}
