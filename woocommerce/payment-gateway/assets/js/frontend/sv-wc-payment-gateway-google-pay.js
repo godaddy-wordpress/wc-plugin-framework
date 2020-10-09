@@ -250,7 +250,7 @@ jQuery( document ).ready( ( $ ) => {
 				console.log(response);
 
 				if (response.success) {
-					// @todo: handle success
+					window.location = response.redirect;
 				} else {
 					// @todo: handle error
 				}
