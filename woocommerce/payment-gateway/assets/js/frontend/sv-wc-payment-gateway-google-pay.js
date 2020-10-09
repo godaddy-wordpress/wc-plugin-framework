@@ -186,7 +186,7 @@ jQuery( document ).ready( ( $ ) => {
 
 			const paymentsClient = this.getGooglePaymentsClient();
 			const button = paymentsClient.createButton({
-				onClick: this.onGooglePaymentButtonClicked
+				onClick: () => this.onGooglePaymentButtonClicked
 			});
 			document.getElementById('sv-wc-google-pay-button-container').appendChild(button);
 		}
@@ -250,17 +250,16 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		init() {
 
-			const self = this;
 			const paymentsClient = this.getGooglePaymentsClient();
 			paymentsClient.isReadyToPay( this.getGoogleIsReadyToPayRequest() )
 				.then( ( response ) => {
 					if (response.result) {
-						self.addGooglePayButton();
+						this.addGooglePayButton();
 						// @todo prefetch payment data to improve performance after confirming site functionality
-						// prefetchGooglePaymentData();
+						// this.prefetchGooglePaymentData();
 					}
 				})
-				.catch(function (err) {
+				.catch( (err) => {
 					// show error in developer console for debugging
 					console.error(err);
 				});
