@@ -253,7 +253,7 @@ jQuery( document ).ready( ( $ ) => {
 			const self = this;
 			const paymentsClient = this.getGooglePaymentsClient();
 			paymentsClient.isReadyToPay( this.getGoogleIsReadyToPayRequest() )
-				.then(function ( response ) {
+				.then( ( response ) => {
 					if (response.result) {
 						self.addGooglePayButton();
 						// @todo prefetch payment data to improve performance after confirming site functionality
