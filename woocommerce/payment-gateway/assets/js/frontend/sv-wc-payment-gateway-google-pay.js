@@ -242,7 +242,7 @@ jQuery( document ).ready( ( $ ) => {
 			const data = {
 				action: `wc_${this.gatewayID}_google_pay_process_payment`,
 				nonce: this.processNonce,
-				paymentMethod: paymentData.paymentMethodData
+				paymentMethod: JSON.stringify( paymentData.paymentMethodData )
 			}
 
 			$.post(this.ajaxURL, data, (response) => {
