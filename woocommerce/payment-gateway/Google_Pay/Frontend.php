@@ -183,6 +183,8 @@ class Frontend extends Script_Handler {
 			'merchant_id'           => method_exists( $this->get_gateway(), 'get_merchant_id' ) ? $this->get_gateway()->get_merchant_id() : '',
 			'gateway_id'            => $this->get_gateway()->get_id(),
 			'gateway_id_dasherized' => $this->get_gateway()->get_id_dasherized(),
+			'ajax_url'              => admin_url( 'admin-ajax.php' ),
+			'process_nonce'         => wp_create_nonce( 'wc_' . $this->get_plugin()->get_gateway()->get_id() . '_google_pay_process_payment' ),
 			'button_style'          => $this->get_handler()->get_button_style(),
 			'card_types'            => $this->get_handler()->get_supported_networks(),
 			'generic_error'         => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
