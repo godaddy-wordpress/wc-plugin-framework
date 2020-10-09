@@ -179,7 +179,7 @@ jQuery( document ).ready( ( $ ) => {
 		 * Display a Google Pay payment button after confirmation of the viewer's
 		 * ability to pay.
 		 */
-		onGooglePayLoaded() {
+		init() {
 
 			const paymentsClient = this.getGooglePaymentsClient();
 			paymentsClient.isReadyToPay( this.getGoogleIsReadyToPayRequest() )
