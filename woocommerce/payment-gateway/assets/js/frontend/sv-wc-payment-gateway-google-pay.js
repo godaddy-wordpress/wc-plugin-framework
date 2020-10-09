@@ -31,7 +31,7 @@ jQuery( document ).ready( ( $ ) => {
 			 *
 			 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters|CardParameters}
 			 */
-			const allowedCardNetworks = card_types;
+			const allowedCardNetworks = ["AMEX","DISCOVER","JCB","MASTERCARD","VISA"];
 
 			/**
 			 * Define the version of the Google Pay API referenced when creating your configuration
