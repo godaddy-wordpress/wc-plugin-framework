@@ -156,7 +156,7 @@ jQuery( document ).ready( ( $ ) => {
 				this.paymentsClient = new google.payments.api.PaymentsClient({environment: 'TEST'});
 			}
 
-			return paymentsClient;
+			return this.paymentsClient;
 		}
 
 		/**
