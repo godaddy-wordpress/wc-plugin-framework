@@ -24,7 +24,12 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay\Admin;
+use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay\AJAX;
+use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay\Frontend;
+use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay\Orders;
 use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway_Exception;
 use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway_Plugin;
 
@@ -41,11 +46,14 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_1\\Payment_
 class Google_Pay {
 
 
-	/** @var Google_Pay\Admin the admin instance */
+	/** @var Admin the admin instance */
 	protected $admin;
 
-	/** @var Google_Pay\Frontend the frontend instance */
+	/** @var Frontend the frontend instance */
 	protected $frontend;
+
+	/** @var AJAX the AJAX instance */
+	protected $ajax;
 
 	/** @var SV_WC_Payment_Gateway_Plugin the plugin instance */
 	protected $plugin;
@@ -76,6 +84,7 @@ class Google_Pay {
 		if ( is_admin() && ! is_ajax() ) {
 			$this->init_admin();
 		} else {
+			$this->init_ajax();
 			$this->init_frontend();
 		}
 	}
@@ -88,7 +97,18 @@ class Google_Pay {
 	 */
 	protected function init_admin() {
 
-		$this->admin = new Google_Pay\Admin( $this );
+		$this->admin = new Admin( $this );
+	}
+
+
+	/**
+	 * Initializes the AJAX handler.
+	 *
+	 * @since 5.9.0-dev.1
+	 */
+	protected function init_ajax() {
+
+		$this->ajax = new AJAX( $this );
 	}
 
 
@@ -99,7 +119,111 @@ class Google_Pay {
 	 */
 	protected function init_frontend() {
 
-		$this->frontend = new Google_Pay\Frontend( $this->get_plugin(), $this );
+		$this->frontend = new Frontend( $this->get_plugin(), $this );
+	}
+
+
+	/**
+	 * Processes the payment after a Google Pay authorization.
+	 *
+	 * This method creates a new order and calls the gateway for processing.
+	 *
+	 * @since 5.9.0-dev.1
+	 *
+	 * @param mixed $payment_method_data payment method data returned by Google Pay
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function process_payment( $payment_method_data ) {
+
+		$order = null;
+
+		try {
+
+			$this->log( "Payment Method Response:\n" . $payment_method_data->to_string_safe() . "\n" );
+
+			$order = Orders::create_order( WC()->cart );
+
+			$order->set_payment_method( $this->get_processing_gateway() );
+
+			// TODO: set payment data
+
+			// if we got to this point, the payment was authorized by Google Pay
+			// from here on out, it's up to the gateway to not screw things up.
+			$order->add_order_note( __( 'Google Pay payment authorized.', 'woocommerce-plugin-framework' ) );
+
+			$order->save();
+
+			if ( $this->is_test_mode() ) {
+				$result = $this->process_test_payment( $order );
+			} else {
+				$result = $this->get_processing_gateway()->process_payment( $order->get_id() );
+			}
+
+			if ( ! isset( $result['result'] ) || 'success' !== $result['result'] ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Gateway processing error.' );
+			}
+
+			return $result;
+
+		} catch ( \Exception $e ) {
+
+			if ( $order ) {
+
+				$order->add_order_note( sprintf(
+					/** translators: Placeholders: %s - the error message */
+					__( 'Google Pay payment failed. %s', 'woocommerce-plugin-framework' ),
+					$e->getMessage()
+				) );
+			}
+
+			throw $e;
+		}
+	}
+
+
+	/**
+	 * Adds a log entry to the gateway's debug log.
+	 *
+	 * @since 5.9.0-dev.1
+	 *
+	 * @param string $message the log message to add
+	 */
+	public function log( $message ) {
+
+		$gateway = $this->get_processing_gateway();
+
+		if ( ! $gateway ) {
+			return;
+		}
+
+		if ( $gateway->debug_log() ) {
+			$gateway->get_plugin()->log( '[Google Pay] ' . $message, $gateway->get_id() );
+		}
+	}
+
+
+	/**
+	 * Simulates a successful gateway payment response.
+	 *
+	 * This provides an easy way for merchants to test that their settings are correctly configured and communicating
+	 * with Google without processing actual payments to test.
+	 *
+	 * @since 5.9.0-dev.1
+	 *
+	 * @param \WC_Order $order order object
+	 * @return array
+	 */
+	protected function process_test_payment( \WC_Order $order ) {
+
+		$order->payment_complete();
+
+		WC()->cart->empty_cart();
+
+		return array(
+			'result'   => 'success',
+			'redirect' => $this->get_processing_gateway()->get_return_url( $order ),
+		);
 	}
 
 

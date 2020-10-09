@@ -312,7 +312,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		// Google Pay
 		require_once( "{$payment_gateway_framework_path}/Google_Pay.php" );
 		require_once( "{$payment_gateway_framework_path}/Google_Pay/Admin.php" );
+		require_once( "{$payment_gateway_framework_path}/Google_Pay/AJAX.php" );
 		require_once( "{$payment_gateway_framework_path}/Google_Pay/Frontend.php" );
+		require_once( "{$payment_gateway_framework_path}/Google_Pay/Orders.php" );
 
 		// payment tokens
 		require_once( $payment_gateway_framework_path . '/payment-tokens/class-sv-wc-payment-gateway-payment-token.php' );
