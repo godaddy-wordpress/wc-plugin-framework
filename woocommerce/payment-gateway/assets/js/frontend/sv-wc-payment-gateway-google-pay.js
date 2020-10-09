@@ -192,30 +192,6 @@ jQuery( document ).ready( ( $ ) => {
 		}
 
 		/**
-		 * Initialize Google PaymentsClient after Google-hosted JavaScript has loaded
-		 *
-		 * Display a Google Pay payment button after confirmation of the viewer's
-		 * ability to pay.
-		 */
-		init() {
-
-			const self = this;
-			const paymentsClient = this.getGooglePaymentsClient();
-			paymentsClient.isReadyToPay( this.getGoogleIsReadyToPayRequest() )
-				.then(function ( response ) {
-					if (response.result) {
-						self.addGooglePayButton();
-						// @todo prefetch payment data to improve performance after confirming site functionality
-						// prefetchGooglePaymentData();
-					}
-				})
-				.catch(function (err) {
-					// show error in developer console for debugging
-					console.error(err);
-				});
-		}
-
-		/**
 		 * Prefetch payment data to improve performance
 		 *
 		 * @see {@link https://developers.google.com/pay/api/web/reference/client#prefetchPaymentData|prefetchPaymentData()}
@@ -266,6 +242,29 @@ jQuery( document ).ready( ( $ ) => {
 				});
 		}
 
+		/**
+		 * Initialize Google PaymentsClient after Google-hosted JavaScript has loaded
+		 *
+		 * Display a Google Pay payment button after confirmation of the viewer's
+		 * ability to pay.
+		 */
+		init() {
+
+			const self = this;
+			const paymentsClient = this.getGooglePaymentsClient();
+			paymentsClient.isReadyToPay( this.getGoogleIsReadyToPayRequest() )
+				.then(function ( response ) {
+					if (response.result) {
+						self.addGooglePayButton();
+						// @todo prefetch payment data to improve performance after confirming site functionality
+						// prefetchGooglePaymentData();
+					}
+				})
+				.catch(function (err) {
+					// show error in developer console for debugging
+					console.error(err);
+				});
+		}
 	}
 
 	$( document.body ).trigger( 'sv_wc_google_pay_handler_v5_8_1_loaded' );
