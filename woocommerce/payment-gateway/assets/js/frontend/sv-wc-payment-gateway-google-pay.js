@@ -251,11 +251,12 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		onGooglePaymentButtonClicked() {
 
-			const paymentDataRequest = this.getGooglePaymentDataRequest();
-			paymentDataRequest.transactionInfo = this.getGoogleTransactionInfo();
-
-			const paymentsClient = this.getGooglePaymentsClient();
 			const self = this;
+
+			const paymentDataRequest = self.getGooglePaymentDataRequest();
+			paymentDataRequest.transactionInfo = self.getGoogleTransactionInfo();
+
+			const paymentsClient = self.getGooglePaymentsClient();
 			paymentsClient.loadPaymentData(paymentDataRequest)
 				.then(function (paymentData) {
 					// handle the response
