@@ -68,3 +68,8 @@
 		<div class="clear"></div>
 	</div>
 </div>
+<script type="text/javascript">
+	if ( window.sv_wc_payment_gateway_admin_order_add_capture_events ) {
+		window.sv_wc_payment_gateway_admin_order_add_capture_events();
+	}
+</script>
