@@ -148,18 +148,11 @@ class Google_Pay {
 
 			$order->set_payment_method( $this->get_processing_gateway() );
 
-			$token = new \WC_Payment_Token_CC();
+			$order->payment->google_pay = base64_encode( json_encode( $payment_method_data->tokenizationData->token ) );
 
-			$token->set_user_id( $order->get_user_id() );
-			$token->set_token( $payment_method_data['tokenizationData']['token'] );
-			$token->set_last4( $payment_method_data['info']['cardDetails'] );
-			$token->set_card_type( strtolower( $payment_method_data['info']['cardNetwork'] ) );
-
-			$token->save();
-
-			$order->add_payment_token( $token );
-
-			// TODO: set payment data
+			// account last four
+			$order->payment->account_number = $payment_method_data->info->cardDetails;
+			$order->payment->card_type = strtolower( $payment_method_data->info->cardNetwork );
 
 			// if we got to this point, the payment was authorized by Google Pay
 			// from here on out, it's up to the gateway to not screw things up.
