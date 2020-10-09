@@ -1,5 +1,7 @@
 jQuery( document ).ready( ( $ ) => {
 
+	"use strict"
+
 	/**
 	 * Google Pay handler.
 	 *
