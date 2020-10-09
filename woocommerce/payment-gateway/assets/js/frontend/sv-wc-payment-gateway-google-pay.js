@@ -16,22 +16,33 @@ jQuery( document ).ready( ( $ ) => {
 		 *
 		 * @since 5.9.0-dev.1
 		 *
-		 * @param {string} plugin_id The plugin ID
-		 * @param {string} merchant_id The merchant ID
-		 * @param {string} gateway_id The gateway ID
-		 * @param {string} gateway_id_dasherized The gateway ID dasherized
-		 * @param {string} button_style The button style
-		 * @param {string[]} card_types The supported card types
-		 * @param {string} generic_error The generic error message
+		 * @param {Object} params The plugin ID
+		 * @param {string} params.plugin_id The plugin ID
+		 * @param {string} params.merchant_id The merchant ID
+		 * @param {string} params.gateway_id The gateway ID
+		 * @param {string} params.gateway_id_dasherized The gateway ID dasherized
+		 * @param {string} params.button_style The button style
+		 * @param {string[]} params.card_types The supported card types
+		 * @param {string} params.generic_error The generic error message
 		 */
-		constructor( plugin_id, merchant_id, gateway_id, gateway_id_dasherized, button_style, card_types, generic_error ) {
+		constructor( params ) {
+
+			let {
+				plugin_id,
+				merchant_id,
+				gateway_id,
+				gateway_id_dasherized,
+				button_style,
+				card_types,
+				generic_error
+			} = params;
 
 			/**
 			 * Card networks supported by your site and your gateway
 			 *
 			 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters|CardParameters}
 			 */
-			const allowedCardNetworks = ["AMEX","DISCOVER","JCB","MASTERCARD","VISA"];
+			const allowedCardNetworks = card_types;
 
 			/**
 			 * Define the version of the Google Pay API referenced when creating your configuration
