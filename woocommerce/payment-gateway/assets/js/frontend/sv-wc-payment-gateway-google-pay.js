@@ -215,6 +215,9 @@ jQuery( document ).ready( ( $ ) => {
 		 * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentData|PaymentData object reference}
 		 */
 		processPayment(paymentData) {
+
+			console.log('processPayment');
+
 			// show returned data in developer console for debugging
 			console.log(paymentData);
 			// @todo pass payment token to your gateway to process payment
@@ -226,17 +229,20 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		onGooglePaymentButtonClicked() {
 
+			console.log('onGooglePaymentButtonClicked');
+
 			const paymentDataRequest = this.getGooglePaymentDataRequest();
 			paymentDataRequest.transactionInfo = this.getGoogleTransactionInfo();
 
-			const self = this;
-			const paymentsClient = self.getGooglePaymentsClient();
+			console.log(paymentDataRequest);
+
+			const paymentsClient = this.getGooglePaymentsClient();
 			paymentsClient.loadPaymentData(paymentDataRequest)
-				.then(function (paymentData) {
+				.then( (paymentData) => {
 					// handle the response
-					self.processPayment(paymentData);
+					this.processPayment(paymentData);
 				})
-				.catch(function (err) {
+				.catch( (err) => {
 					// show error in developer console for debugging
 					console.error(err);
 				});
