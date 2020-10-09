@@ -21,6 +21,8 @@ jQuery( document ).ready( ( $ ) => {
 		 * @param {string} params.merchant_id The merchant ID
 		 * @param {string} params.gateway_id The gateway ID
 		 * @param {string} params.gateway_id_dasherized The gateway ID dasherized
+		 * @param {string} params.ajax_url The AJAX URL
+		 * @param {string} params.process_nonce Nonce for the process AJAX action
 		 * @param {string} params.button_style The button style
 		 * @param {string[]} params.card_types The supported card types
 		 * @param {string} params.generic_error The generic error message
@@ -32,10 +34,16 @@ jQuery( document ).ready( ( $ ) => {
 				merchant_id,
 				gateway_id,
 				gateway_id_dasherized,
+				ajax_url,
+				process_nonce,
 				button_style,
 				card_types,
 				generic_error
 			} = params;
+
+			this.gatewayID = gateway_id;
+			this.ajaxURL = ajax_url;
+			this.processNonce = process_nonce;
 
 			/**
 			 * Card networks supported by your site and your gateway
@@ -229,8 +237,24 @@ jQuery( document ).ready( ( $ ) => {
 
 			// show returned data in developer console for debugging
 			console.log(paymentData);
-			// @todo pass payment token to your gateway to process payment
-			const paymentToken = paymentData.paymentMethodData.tokenizationData.token;
+
+			// pass payment token to your gateway to process payment
+			const data = {
+				action: `wc_${this.gatewayID}_google_pay_process_payment`,
+				nonce: this.processNonce,
+				paymentMethod: paymentData.paymentMethodData
+			}
+
+			$.post(this.ajaxURL, data, (response) => {
+
+				console.log(response);
+
+				if (response.success) {
+					// @todo: handle success
+				} else {
+					// @todo: handle error
+				}
+			});
 		}
 
 		/**
