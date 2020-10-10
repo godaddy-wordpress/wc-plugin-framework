@@ -151,6 +151,8 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		getGoogleTransactionInfo() {
 
+			// @todo: get this from the actual cart/order somehow
+
 			return {
 				countryCode: 'US',
 				currencyCode: 'USD',
