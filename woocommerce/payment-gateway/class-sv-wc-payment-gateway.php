@@ -1182,7 +1182,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function get_order_for_google_pay( \WC_Order $order, $response_data ) {
 
-		$order->payment->google_pay = base64_encode( json_encode( $response_data->tokenizationData->token ) );
+		$order->payment->google_pay = base64_encode( $response_data->tokenizationData->token );
 
 		// account last four
 		$order->payment->account_number = $response_data->info->cardDetails;
