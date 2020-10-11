@@ -44,6 +44,7 @@ jQuery( document ).ready( ( $ ) => {
 			this.gatewayID = gateway_id;
 			this.ajaxURL = ajax_url;
 			this.processNonce = process_nonce;
+			this.genericError = generic_error;
 
 			/**
 			 * Card networks supported by your site and your gateway
@@ -254,7 +255,7 @@ jQuery( document ).ready( ( $ ) => {
 				if (response.success) {
 					window.location = response.redirect;
 				} else {
-					// @todo: handle error
+					this.fail_payment();
 				}
 			});
 		}
@@ -276,8 +277,7 @@ jQuery( document ).ready( ( $ ) => {
 					this.processPayment(paymentData);
 				})
 				.catch((err) => {
-					// show error in developer console for debugging
-					console.error(err);
+					this.fail_payment( err );
 				});
 		}
 
@@ -332,6 +332,36 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		init_checkout_page() {
 			this.ui_element = $('form.woocommerce-checkout');
+		}
+
+		/**
+		 * Fails the purchase based on the gateway result.
+		 */
+		fail_payment ( error ) {
+
+			console.error( '[Google Pay] ' + error );
+
+			this.unblock_ui();
+
+			this.render_errors( [ this.genericError ] );
+		}
+
+		/**
+		 * Renders any new errors and bring them into the viewport.
+ 		 */
+		render_errors( errors ) {
+
+			// hide and remove any previous errors
+			$('.woocommerce-error, .woocommerce-message').remove();
+
+			// add errors
+			this.ui_element.prepend('<ul class="woocommerce-error"><li>' + errors.join('</li><li>') + '</li></ul>');
+
+			// unblock UI
+			this.ui_element.removeClass('processing').unblock();
+
+			// scroll to top
+			$('html, body').animate({scrollTop: this.ui_element.offset().top - 100}, 1000);
 		}
 
 		/**
