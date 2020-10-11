@@ -255,7 +255,7 @@ jQuery( document ).ready( ( $ ) => {
 				if (response.success) {
 					window.location = response.redirect;
 				} else {
-					this.fail_payment();
+					this.fail_payment( 'Payment could no be processed. ' + response.data.message );
 				}
 			});
 		}
