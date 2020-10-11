@@ -144,7 +144,7 @@ class Google_Pay {
 
 			$payment_method_data = json_decode( $payment_method_data );
 
-			$this->get_handler()->store_payment_response( $payment_method_data );
+			$this->store_payment_response( $payment_method_data );
 
 			$order = Orders::create_order( WC()->cart );
 
