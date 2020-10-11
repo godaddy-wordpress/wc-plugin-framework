@@ -27,7 +27,7 @@ jQuery( document ).ready( ( $ ) => {
 		 * @param {string[]} params.card_types The supported card types
 		 * @param {string} params.generic_error The generic error message
 		 */
-		constructor( params ) {
+		constructor(params) {
 
 			let {
 				plugin_id,
@@ -244,7 +244,7 @@ jQuery( document ).ready( ( $ ) => {
 			const data = {
 				action: `wc_${this.gatewayID}_google_pay_process_payment`,
 				nonce: this.processNonce,
-				paymentMethod: JSON.stringify( paymentData.paymentMethodData )
+				paymentMethod: JSON.stringify(paymentData.paymentMethodData)
 			}
 
 			$.post(this.ajaxURL, data, (response) => {
@@ -264,16 +264,18 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		onGooglePaymentButtonClicked() {
 
+			this.block_ui();
+
 			const paymentDataRequest = this.getGooglePaymentDataRequest();
 			paymentDataRequest.transactionInfo = this.getGoogleTransactionInfo();
 
 			const paymentsClient = this.getGooglePaymentsClient();
 			paymentsClient.loadPaymentData(paymentDataRequest)
-				.then( (paymentData) => {
+				.then((paymentData) => {
 					// handle the response
 					this.processPayment(paymentData);
 				})
-				.catch( (err) => {
+				.catch((err) => {
 					// show error in developer console for debugging
 					console.error(err);
 				});
@@ -287,19 +289,63 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		init() {
 
+			// initialize for the various pages
+			if ($('form.cart').length) {
+				this.init_product_page();
+			} else if ($('form.woocommerce-cart-form').length) {
+				this.init_cart_page();
+			} else if ($('form.woocommerce-checkout').length) {
+				this.init_checkout_page()
+			}
+
 			const paymentsClient = this.getGooglePaymentsClient();
-			paymentsClient.isReadyToPay( this.getGoogleIsReadyToPayRequest() )
-				.then( ( response ) => {
+			paymentsClient.isReadyToPay(this.getGoogleIsReadyToPayRequest())
+				.then((response) => {
 					if (response.result) {
 						this.addGooglePayButton();
 						// @todo prefetch payment data to improve performance after confirming site functionality
 						// this.prefetchGooglePaymentData();
 					}
 				})
-				.catch( (err) => {
+				.catch((err) => {
 					// show error in developer console for debugging
 					console.error(err);
 				});
+		}
+
+		/**
+		 * Initializes the product page.
+		 */
+		init_product_page() {
+			this.ui_element = $('form.cart');
+		}
+
+		/**
+		 * Initializes the cart page.
+		 */
+		init_cart_page() {
+			this.ui_element = $('form.woocommerce-cart-form').parents('div.woocommerce');
+		}
+
+		/**
+		 * Initializes the checkout page.
+		 */
+		init_checkout_page() {
+			this.ui_element = $('form.woocommerce-checkout');
+		}
+
+		/**
+		 * Blocks the payment form UI.
+		 */
+		block_ui() {
+			this.ui_element.block({message: null, overlayCSS: {background: '#fff', opacity: 0.6}});
+		}
+
+		/**
+		 * Unblocks the payment form UI.
+		 */
+		unblock_ui() {
+			this.ui_element.unblock();
 		}
 	}
 
