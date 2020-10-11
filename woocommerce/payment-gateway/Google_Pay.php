@@ -144,21 +144,20 @@ class Google_Pay {
 
 			$payment_method_data = json_decode( $payment_method_data );
 
+			$this->get_handler()->store_payment_response( $payment_method_data );
+
 			$order = Orders::create_order( WC()->cart );
 
 			$order->set_payment_method( $this->get_processing_gateway() );
-
-			$order->payment->google_pay = base64_encode( json_encode( $payment_method_data->tokenizationData->token ) );
-
-			// account last four
-			$order->payment->account_number = $payment_method_data->info->cardDetails;
-			$order->payment->card_type = strtolower( $payment_method_data->info->cardNetwork );
 
 			// if we got to this point, the payment was authorized by Google Pay
 			// from here on out, it's up to the gateway to not screw things up.
 			$order->add_order_note( __( 'Google Pay payment authorized.', 'woocommerce-plugin-framework' ) );
 
 			$order->save();
+
+			// add Google Pay response data to the order
+			add_filter( 'wc_payment_gateway_' . $this->get_processing_gateway()->get_id() . '_get_order', [ $this, 'add_order_data' ] );
 
 			if ( $this->is_test_mode() ) {
 				$result = $this->process_test_payment( $order );
@@ -185,6 +184,52 @@ class Google_Pay {
 
 			throw $e;
 		}
+	}
+
+
+	/**
+	 * Gets the stored payment response data.
+	 *
+	 * @since 5.9.0-dev.1
+	 *
+	 * @return mixed|array $data
+	 */
+	public function get_stored_payment_response() {
+
+		return WC()->session->get( 'google_pay_payment_response', array() );
+	}
+
+
+	/**
+	 * Stores payment response data for later use.
+	 *
+	 * @since 5.9.0-dev.1
+	 *
+	 * @param mixed|array $data
+	 */
+	public function store_payment_response( $data ) {
+
+		WC()->session->set( 'google_pay_payment_response', $data );
+	}
+
+
+	/**
+	 * Allows the processing gateway to add Google Pay details to the payment data.
+	 *
+	 * @internal
+	 *
+	 * @since 5.9.0-dev.1
+	 *
+	 * @param \WC_Order $order the order object
+	 * @return \WC_Order
+	 */
+	public function add_order_data( $order ) {
+
+		if ( $response = $this->get_stored_payment_response() ) {
+			$order = $this->get_processing_gateway()->get_order_for_google_pay( $order, $response );
+		}
+
+		return $order;
 	}
 
 

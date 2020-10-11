@@ -1169,6 +1169,30 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
+	 * Adds the Google Pay payment data to the order object.
+	 *
+	 * Gateways should override this to set the appropriate values depending on
+	 * how their processing API needs to handle the data.
+	 *
+	 * @since 5.9.0-dev.1
+	 *
+	 * @param \WC_Order the order object
+	 * @param mixed $response authorized payment response
+	 * @return \WC_Order
+	 */
+	public function get_order_for_google_pay( \WC_Order $order, SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $response ) {
+
+		$order->payment->google_pay = base64_encode( json_encode( $response->tokenizationData->token ) );
+
+		// account last four
+		$order->payment->account_number = $response->info->cardDetails;
+		$order->payment->card_type = strtolower( $response->info->cardNetwork );
+
+		return $order;
+	}
+
+
+	/**
 	 * Get the default payment method title, which is configurable within the
 	 * admin and displayed on checkout
 	 *
