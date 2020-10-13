@@ -965,7 +965,7 @@ class SV_WC_Helper {
 	 *
 	 * @see \WooCommerce::is_rest_api_request()
 	 *
-	 * @since x.y.z-dev.1
+	 * @since 5.9.0
 	 *
 	 * @return bool
 	 */
