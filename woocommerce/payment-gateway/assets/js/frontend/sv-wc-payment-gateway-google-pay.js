@@ -42,6 +42,7 @@ jQuery( document ).ready( ( $ ) => {
 			} = params;
 
 			this.gatewayID = gateway_id;
+			this.merchantID = merchant_id;
 			this.ajaxURL = ajax_url;
 			this.processNonce = process_nonce;
 			this.genericError = generic_error;
@@ -85,7 +86,7 @@ jQuery( document ).ready( ( $ ) => {
 				type: 'PAYMENT_GATEWAY',
 				parameters: {
 					'gateway': plugin_id,
-					'gatewayMerchantId': merchant_id
+					'gatewayMerchantId': this.merchantID
 				}
 			};
 
@@ -145,25 +146,6 @@ jQuery( document ).ready( ( $ ) => {
 		}
 
 		/**
-		 * Provide Google Pay API with a payment amount, currency, and amount status
-		 *
-		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
-		 * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
-		 */
-		getGoogleTransactionInfo() {
-
-			// @todo: get this from the actual cart/order somehow
-
-			return {
-				countryCode: 'US',
-				currencyCode: 'USD',
-				totalPriceStatus: 'FINAL',
-				// set to cart total
-				totalPrice: '1.00'
-			};
-		}
-
-		/**
 		 * Configure support for the Google Pay API
 		 *
 		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest|PaymentDataRequest}
@@ -177,9 +159,15 @@ jQuery( document ).ready( ( $ ) => {
 			paymentDataRequest.merchantInfo = {
 				// @todo a merchant ID is available for a production environment after approval by Google
 				// See {@link https://developers.google.com/pay/api/web/guides/test-and-deploy/integration-checklist|Integration checklist}
-				// merchantId: '12345678901234567890',
+				// merchantId: '01234567890123456789',
 				merchantName: 'Example Merchant'
 			};
+
+			paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS",  "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
+			paymentDataRequest.shippingAddressRequired = true;
+			paymentDataRequest.shippingAddressParameters = this.getGoogleShippingAddressParameters();
+			paymentDataRequest.shippingOptionRequired = true;
+
 			return paymentDataRequest;
 		}
 
@@ -190,12 +178,246 @@ jQuery( document ).ready( ( $ ) => {
 		 * @returns {google.payments.api.PaymentsClient} Google Pay API client
 		 */
 		getGooglePaymentsClient() {
-
-			if (this.paymentsClient === null) {
-				this.paymentsClient = new google.payments.api.PaymentsClient({environment: 'TEST'});
+			if ( this.paymentsClient === null ) {
+				this.paymentsClient = new google.payments.api.PaymentsClient({
+					environment: "TEST",
+					merchantInfo: {
+						merchantName: "Example Merchant",
+						merchantId: this.merchantID
+					},
+					paymentDataCallbacks: {
+						onPaymentAuthorized: (paymentData) => this.onPaymentAuthorized(paymentData),
+						onPaymentDataChanged: (paymentData) => this.onPaymentDataChanged(paymentData)
+					}
+				});
 			}
-
 			return this.paymentsClient;
+		}
+
+		onPaymentAuthorized(paymentData) {
+
+			console.log('onPaymentAuthorized');
+			console.log(paymentData);
+
+			return new Promise((resolve, reject) => {
+
+				// handle the response
+				try {
+					this.processPayment(paymentData, resolve);
+						// .then(() => {
+						// 	resolve({transactionState: 'SUCCESS'});
+						// })
+						// .catch(() => {
+						// 	console.log('catch');
+						// 	resolve({
+						// 		transactionState: 'ERROR',
+						// 		error: {
+						// 			intent: 'SHIPPING_ADDRESS',
+						// 			message: 'Invalid data',
+						// 			reason: 'PAYMENT_DATA_INVALID'
+						// 		}
+						// 	});
+						// });
+				}	catch(err) {
+					console.log('catch');
+					// show error in developer console for debugging
+					console.error(err);
+					reject({
+						transactionState: 'ERROR',
+						error: {
+							intent: 'PAYMENT_AUTHORIZATION',
+							message: 'Insufficient funds',
+							reason: 'PAYMENT_DATA_INVALID'
+						}
+					});
+				}
+			});
+		}
+
+		/**
+		 * Handles dynamic buy flow shipping address and shipping options callback intents.
+		 *
+		 * @param {object} intermediatePaymentData response from Google Pay API a shipping address or shipping option is selected in the payment sheet.
+		 * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#IntermediatePaymentData|IntermediatePaymentData object reference}
+		 *
+		 * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentDataRequestUpdate|PaymentDataRequestUpdate}
+		 * @returns Promise<{object}> Promise of PaymentDataRequestUpdate object to update the payment sheet.
+		 */
+		onPaymentDataChanged(intermediatePaymentData) {
+
+			console.log('onPaymentDataChanged');
+			console.log(intermediatePaymentData);
+
+			return new Promise((resolve, reject) => {
+
+				console.log(resolve);
+				console.log(reject);
+
+				try {
+					let shippingAddress = intermediatePaymentData.shippingAddress;
+					let shippingOptionData = intermediatePaymentData.shippingOptionData;
+					let paymentDataRequestUpdate = {};
+
+					if (intermediatePaymentData.callbackTrigger == "INITIALIZE" || intermediatePaymentData.callbackTrigger == "SHIPPING_ADDRESS") {
+						if (shippingAddress.administrativeArea == "NJ") {
+							paymentDataRequestUpdate.error = this.getGoogleUnserviceableAddressError();
+						} else {
+							paymentDataRequestUpdate.newShippingOptionParameters = this.getGoogleDefaultShippingOptions();
+							let selectedShippingOptionId = paymentDataRequestUpdate.newShippingOptionParameters.defaultSelectedOptionId;
+							paymentDataRequestUpdate.newTransactionInfo = this.calculateNewTransactionInfo(selectedShippingOptionId);
+						}
+					} else if (intermediatePaymentData.callbackTrigger == "SHIPPING_OPTION") {
+						paymentDataRequestUpdate.newTransactionInfo = this.calculateNewTransactionInfo(shippingOptionData.id);
+					}
+
+					console.log('paymentDataRequestUpdate');
+					console.log(paymentDataRequestUpdate);
+
+					resolve(paymentDataRequestUpdate);
+				}	catch(err) {
+					console.log('catch');
+					// show error in developer console for debugging
+					console.error(err);
+					reject({
+						transactionState: 'ERROR',
+						error: {
+							intent: 'PAYMENT_AUTHORIZATION',
+							message: 'Insufficient funds',
+							reason: 'PAYMENT_DATA_INVALID'
+						}
+					});
+				}
+			});
+		}
+
+		/**
+		 * Helper function to create a new TransactionInfo object.
+
+		 * @param string shippingOptionId respresenting the selected shipping option in the payment sheet.
+		 *
+		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
+		 * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
+		 */
+		calculateNewTransactionInfo(shippingOptionId) {
+
+			let newTransactionInfo = this.getGoogleTransactionInfo();
+
+			let shippingCost = this.getShippingCosts()[shippingOptionId];
+			newTransactionInfo.displayItems.push({
+				type: "LINE_ITEM",
+				label: "Shipping cost",
+				price: shippingCost,
+				status: "FINAL"
+			});
+
+			let totalPrice = 0.00;
+			newTransactionInfo.displayItems.forEach(displayItem => totalPrice += parseFloat(displayItem.price));
+			newTransactionInfo.totalPrice = totalPrice.toString();
+
+			return newTransactionInfo;
+		}
+
+		/**
+		 * Provide Google Pay API with a payment amount, currency, and amount status
+		 *
+		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
+		 * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
+		 */
+		getGoogleTransactionInfo() {
+
+			// @todo: get this from the actual cart/order somehow
+
+			return {
+				displayItems: [
+					{
+						label: "Subtotal",
+						type: "SUBTOTAL",
+						price: "11.00",
+					},
+					{
+						label: "Tax",
+						type: "TAX",
+						price: "1.00",
+					}
+				],
+				countryCode: 'US',
+				currencyCode: "USD",
+				totalPriceStatus: "FINAL",
+				totalPrice: "12.00",
+				totalPriceLabel: "Total"
+			};
+		}
+
+		/**
+		 * Provide a key value store for shipping options.
+		 */
+		getShippingCosts() {
+
+			// TODO: get this from WC
+
+			return {
+				"shipping-001": "0.00",
+				"shipping-002": "1.99",
+				"shipping-003": "10.00"
+			}
+		}
+
+		/**
+		 * Provide Google Pay API with shipping address parameters when using dynamic buy flow.
+		 *
+		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#ShippingAddressParameters|ShippingAddressParameters}
+		 * @returns {object} shipping address details, suitable for use as shippingAddressParameters property of PaymentDataRequest
+		 */
+		getGoogleShippingAddressParameters() {
+
+			return  {
+				allowedCountryCodes: ['US'],
+				phoneNumberRequired: true
+			};
+		}
+
+		/**
+		 * Provide Google Pay API with shipping options and a default selected shipping option.
+		 *
+		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#ShippingOptionParameters|ShippingOptionParameters}
+		 * @returns {object} shipping option parameters, suitable for use as shippingOptionParameters property of PaymentDataRequest
+		 */
+		getGoogleDefaultShippingOptions() {
+
+			return {
+				defaultSelectedOptionId: "shipping-001",
+				shippingOptions: [
+					{
+						"id": "shipping-001",
+						"label": "Free: Standard shipping",
+						"description": "Free Shipping delivered in 5 business days."
+					},
+					{
+						"id": "shipping-002",
+						"label": "$1.99: Standard shipping",
+						"description": "Standard shipping delivered in 3 business days."
+					},
+					{
+						"id": "shipping-003",
+						"label": "$10: Express shipping",
+						"description": "Express shipping delivered in 1 business day."
+					},
+				]
+			};
+		}
+
+		/**
+		 * Provide Google Pay API with a payment data error.
+		 *
+		 * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentDataError|PaymentDataError}
+		 * @returns {object} payment data error, suitable for use as error property of PaymentDataRequestUpdate
+		 */
+		getGoogleUnserviceableAddressError() {
+			return {
+				reason: "SHIPPING_ADDRESS_UNSERVICEABLE",
+				message: "Cannot ship to the selected address",
+				intent: "SHIPPING_ADDRESS"
+			};
 		}
 
 		/**
@@ -234,9 +456,10 @@ jQuery( document ).ready( ( $ ) => {
 		 * Process payment data returned by the Google Pay API
 		 *
 		 * @param {object} paymentData response from Google Pay API after user approves payment
+		 * @param {function} resolve callback
 		 * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentData|PaymentData object reference}
 		 */
-		processPayment(paymentData) {
+		processPayment(paymentData, resolve) {
 
 			// show returned data in developer console for debugging
 			console.log(paymentData);
@@ -248,13 +471,19 @@ jQuery( document ).ready( ( $ ) => {
 				paymentMethod: JSON.stringify(paymentData.paymentMethodData)
 			}
 
-			$.post(this.ajaxURL, data, (response) => {
-
-				console.log(response);
-
+			return $.post(this.ajaxURL, data, (response) => {
 				if (response.success) {
-					window.location = response.redirect;
+					resolve({transactionState: 'SUCCESS'});
+					window.location = response.data.redirect;
 				} else {
+					resolve({
+						transactionState: 'ERROR',
+						error: {
+							intent: 'SHIPPING_ADDRESS',
+							message: 'Invalid data',
+							reason: 'PAYMENT_DATA_INVALID'
+						}
+					});
 					this.fail_payment( 'Payment could no be processed. ' + response.data.message );
 				}
 			});
@@ -270,15 +499,10 @@ jQuery( document ).ready( ( $ ) => {
 			const paymentDataRequest = this.getGooglePaymentDataRequest();
 			paymentDataRequest.transactionInfo = this.getGoogleTransactionInfo();
 
+			console.log(paymentDataRequest);
+
 			const paymentsClient = this.getGooglePaymentsClient();
-			paymentsClient.loadPaymentData(paymentDataRequest)
-				.then((paymentData) => {
-					// handle the response
-					this.processPayment(paymentData);
-				})
-				.catch((err) => {
-					this.fail_payment( err );
-				});
+			paymentsClient.loadPaymentData(paymentDataRequest);
 		}
 
 		/**
