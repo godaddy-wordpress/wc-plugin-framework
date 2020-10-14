@@ -412,6 +412,29 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	}
 
 
+	/** Visa Checkout ********************************************************/
+
+
+	/**
+	 * Determines if this plugin has any gateways with Visa Checkout support.
+	 *
+	 * @since 5.10.0-dev.1
+	 *
+	 * @return bool
+	 */
+	public function supports_visa_checkout() {
+
+		foreach ( $this->get_gateways() as $gateway ) {
+
+			if ( $gateway->supports_visa_checkout() ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
 	/** Apple Pay *************************************************************/
 
 
