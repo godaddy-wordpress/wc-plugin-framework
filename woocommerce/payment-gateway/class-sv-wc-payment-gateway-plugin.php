@@ -26,6 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1;
 
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Note;
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes;
+use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Visa_Checkout\Visa_Checkout;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -99,6 +100,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 	/** @var SV_WC_Payment_Gateway_My_Payment_Methods adds My Payment Method functionality */
 	private $my_payment_methods;
+
+	/** @var Visa_Checkout Visa Checkout handler instance */
+	private $visa_checkout;
 
 	/** @var SV_WC_Payment_Gateway_Apple_Pay the Apple Pay handler instance */
 	private $apple_pay;
@@ -181,6 +185,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// my payment methods feature
 		add_action( 'init', array( $this, 'maybe_init_my_payment_methods' ) );
+
+		// visa checkout feature
+		add_action( 'init', [ $this, 'maybe_init_visa_checkout' ] );
 
 		// apple pay feature
 		add_action( 'init', array( $this, 'maybe_init_apple_pay' ) );
@@ -416,6 +423,67 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/** Visa Checkout ********************************************************/
+
+
+	/**
+	 * Initializes Visa Checkout if it's supported.
+	 *
+	 * @since 5.10.0-dev.1
+	 */
+	public function maybe_init_visa_checkout() {
+
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.2' ) && $this->is_visa_checkout_activated() && $this->supports_visa_checkout() ) {
+			$this->visa_checkout = $this->build_visa_checkout_instance();
+		}
+	}
+
+
+	/**
+	 * Determines whether Visa Checkout is activated.
+	 *
+	 * @since 5.10.0-dev.1
+	 *
+	 * @return bool
+	 */
+	private function is_visa_checkout_activated() {
+
+		/**
+		 * Filters whether Visa Checkout is activated.
+		 *
+		 * @since 5.10.0-dev.1
+		 *
+		 * @param bool $activated whether Visa Checkout is activated
+		 */
+		return (bool) apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_activate_visa_checkout', false );
+	}
+
+
+	/**
+	 * Builds the Visa Checkout handler instance.
+	 *
+	 * Gateways can override this to define their own Visa Checkout class.
+	 *
+	 * @since 5.10.0-dev.1
+	 *
+	 * @return Visa_Checkout
+	 */
+	protected function build_visa_checkout_instance() {
+
+		return new Visa_Checkout( $this );
+	}
+
+
+	/**
+	 * Gets the Visa Checkout handler instance.
+	 *
+	 * @since 5.10.0-dev.1
+	 *
+	 * @return Visa_Checkout
+	 */
+	public function get_visa_checkout_instance() {
+
+		return $this->visa_checkout;
+	}
 
 
 	/**
