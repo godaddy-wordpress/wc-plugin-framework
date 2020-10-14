@@ -124,7 +124,112 @@ class Google_Pay {
 
 
 	/**
+	 * Gets Google transaction info based on WooCommerce cart data.
+	 *
+	 * @since 5.9.0-dev.1
+	 *
+	 * @param \WC_Cart $cart cart object
+	 * @return array
+	 * @throws SV_WC_Payment_Gateway_Exception
+	 */
+	public function get_transaction_info( \WC_Cart $cart ) {
+
+		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Cart::cart_contains_subscription() ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Cart contains subscriptions.' );
+		}
+
+		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Cart contains pre-orders.' );
+		}
+
+		$cart->calculate_totals();
+
+		if ( count( WC()->shipping->get_packages() ) > 1 ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Google Pay cannot be used for multiple shipments.' );
+		}
+
+		$subtotal = $cart->subtotal_ex_tax;
+		$discount = $cart->get_cart_discount_total();
+		$shipping = $cart->shipping_total;
+		$fees     = $cart->fee_total;
+		$taxes    = $cart->tax_total + $cart->shipping_tax_total;
+
+		$items = array();
+
+		// subtotal
+		if ( $subtotal > 0 ) {
+
+			$items[] = array(
+				'label' => __( 'Subtotal', 'woocommerce-plugin-framework' ),
+				'type'  => 'SUBTOTAL',
+				'price' => wc_format_decimal( $subtotal, 2 ),
+			);
+		}
+
+		// discounts
+		if ( $discount > 0 ) {
+
+			$items[] = array(
+				'label'  => __( 'Discount', 'woocommerce-plugin-framework' ),
+				'type'   => 'LINE_ITEM',
+				'amount' => abs( wc_format_decimal( $discount, 2 ) ) * - 1,
+			);
+		}
+
+		// shipping
+		if ( $shipping > 0 ) {
+
+			$items[] = array(
+				'label'  => __( 'Shipping', 'woocommerce-plugin-framework' ),
+				'type'   => 'LINE_ITEM',
+				'amount' => wc_format_decimal( $shipping, 2 ),
+			);
+		}
+
+		// fees
+		if ( $fees > 0 ) {
+
+			$items[] = array(
+				'label'  => __( 'Fees', 'woocommerce-plugin-framework' ),
+				'type'   => 'LINE_ITEM',
+				'amount' => wc_format_decimal( $fees, 2 ),
+			);
+		}
+
+		// taxes
+		if ( $taxes > 0 ) {
+
+			$items[] = array(
+				'label'  => __( 'Taxes', 'woocommerce-plugin-framework' ),
+				'type'   => 'TAX',
+				'amount' => wc_format_decimal( $taxes, 2 ),
+			);
+		}
+
+		$transaction_info = [
+			'displayItems'     => $items,
+			'countryCode'      => substr( get_option( 'woocommerce_default_country' ), 0, 2 ),
+			'currencyCode'     => get_woocommerce_currency(),
+			'totalPriceStatus' => "FINAL",
+			'totalPrice'       => wc_format_decimal( $cart->total, 2 ),
+			'totalPriceLabel'  => "Total",
+		];
+
+		/**
+		 * Filters the Google Pay cart JS transaction info.
+		 *
+		 * @since 5.9.0-dev.1
+		 *
+		 * @param array $transaction_info the cart JS transaction info
+		 * @param \WC_Cart $cart the cart object
+		 */
+		return apply_filters( 'sv_wc_google_pay_cart_transaction_info', $transaction_info, $cart );
+	}
+
+
+	/**
 	 * Processes the payment after a Google Pay authorization.
+	 *
 	 *
 	 * This method creates a new order and calls the gateway for processing.
 	 *

@@ -26,6 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay
 
 use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay;
 use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway_Exception;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -70,9 +71,43 @@ class AJAX {
 
 		$gateway_id = $this->get_handler()->get_processing_gateway()->get_id();
 
+		add_action( "wp_ajax_wc_{$gateway_id}_google_pay_get_transaction_info",        [ $this, 'get_transaction_info' ] );
+		add_action( "wp_ajax_nopriv_wc_{$gateway_id}_google_pay_get_transaction_info", [ $this, 'get_transaction_info' ] );
+
 		// process the payment
 		add_action( "wp_ajax_wc_{$gateway_id}_google_pay_process_payment",        [ $this, 'process_payment' ] );
 		add_action( "wp_ajax_nopriv_wc_{$gateway_id}_google_pay_process_payment", [ $this, 'process_payment' ] );
+	}
+
+
+	/**
+	 * Gets Google transaction info based on WooCommerce cart data.
+	 *
+	 * @internal
+	 *
+	 * @since 5.9.0-dev.1
+	 */
+	public function get_transaction_info() {
+
+		$this->get_handler()->log( 'Getting Google transaction info' );
+
+		try {
+
+			$transaction_info = $this->get_handler()->get_transaction_info( WC()->cart );
+
+			$this->get_handler()->log( "Google transaction info:\n" . print_r( $transaction_info, true ) );
+
+			wp_send_json_success( json_encode( $transaction_info ) );
+
+		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+
+			$this->get_handler()->log( 'Could not build transaction info. ' . $e->getMessage() );
+
+			wp_send_json_error( array(
+				'message' => $e->getMessage(),
+				'code'    => $e->getCode(),
+			) );
+		}
 	}
 
 
