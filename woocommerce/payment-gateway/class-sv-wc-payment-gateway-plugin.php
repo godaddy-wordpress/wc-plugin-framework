@@ -305,6 +305,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// visa checkout
 		require_once "{$payment_gateway_framework_path}/Visa_Checkout/Visa_Checkout.php";
+		require_once "{$payment_gateway_framework_path}/Visa_Checkout/Admin.php";
 
 		// apple pay
 		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay.php" );
