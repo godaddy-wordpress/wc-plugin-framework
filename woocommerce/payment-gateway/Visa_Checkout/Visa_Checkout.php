@@ -41,6 +41,9 @@ class Visa_Checkout {
 	/** @var string option used to store the ID of the gateway configured to process Visa Checkout transactionns */
 	const OPTION_PROCESSING_GATEWAY = 'sv_wc_visa_checkout_payment_gateway';
 
+	/** @var Admin the admin handler instance */
+	protected $admin;
+
 
 	/**
 	 * Constructs the class.
@@ -52,6 +55,67 @@ class Visa_Checkout {
 	public function __construct( Framework\SV_WC_Payment_Gateway_Plugin $plugin ) {
 
 		$this->plugin = $plugin;
+
+		$this->init();
+	}
+
+
+	/**
+	 * Initializes the Visa Checkout handlers.
+	 *
+	 * @since 5.10.0-dev.1
+	 */
+	protected function init() {
+
+		if ( is_admin() && ! is_ajax() ) {
+			$this->init_admin();
+		}
+	}
+
+
+	/**
+	 * Initializes the admin handler.
+	 *
+	 * @since 5.10.0-dev.1
+	 */
+	protected function init_admin() {
+
+		$this->admin = new Admin( $this );
+	}
+
+
+	/**
+	 * Determines if Visa Checkout is available.
+	 *
+	 * @since 5.10.0-dev.1
+	 *
+	 * @return bool
+	 */
+	public function is_available() {
+
+		// TODO: add implementation {WV 2020-10-14}
+		$is_available = true;
+
+		/**
+		 * Filters whether Visa Checkout should be made available to users.
+		 *
+		 * @since 5.10.0-dev.1
+		 * @param bool $is_available
+		 */
+		return apply_filters( 'sv_wc_visa_checkout_is_available', $is_available );
+	}
+
+
+	/**
+	 * Determines whether an API Key is required for configuration.
+	 *
+	 * @since 5.10.0-dev.1
+	 *
+	 * @return bool
+	 */
+	public function requires_api_key() {
+
+		return true;
 	}
 
 
