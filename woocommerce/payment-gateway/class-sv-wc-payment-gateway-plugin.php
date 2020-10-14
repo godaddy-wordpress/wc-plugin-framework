@@ -294,6 +294,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( $payment_gateway_framework_path . '/Handlers/Abstract_Hosted_Payment_Handler.php' );
 		require_once( $payment_gateway_framework_path . '/Handlers/Capture.php' );
 
+		require_once "{$payment_gateway_framework_path}/Settings_Screen.php";
+
 		// apple pay
 		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay.php" );
 		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php" );

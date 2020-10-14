@@ -121,6 +121,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/** Add new payment method feature */
 	const FEATURE_ADD_PAYMENT_METHOD = 'add_payment_method';
 
+	/** Visa Checkout feature */
+	const FEATURE_VISA_CHECKOUT = 'visa_checkout';
+
 	/** Apple Pay feature */
 	const FEATURE_APPLE_PAY = 'apple_pay';
 
