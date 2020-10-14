@@ -151,11 +151,14 @@ jQuery( document ).ready( ( $ ) => {
 		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest|PaymentDataRequest}
 		 * @returns {object} PaymentDataRequest fields
 		 */
-		getGooglePaymentDataRequest() {
+		async getGooglePaymentDataRequest() {
 
 			const paymentDataRequest = Object.assign({}, this.baseRequest);
 			paymentDataRequest.allowedPaymentMethods = [this.cardPaymentMethod];
-			paymentDataRequest.transactionInfo = this.getGoogleTransactionInfo();
+			paymentDataRequest.transactionInfo = await this.getGoogleTransactionInfo();
+
+			console.log(paymentDataRequest);
+
 			paymentDataRequest.merchantInfo = {
 				// @todo a merchant ID is available for a production environment after approval by Google
 				// See {@link https://developers.google.com/pay/api/web/guides/test-and-deploy/integration-checklist|Integration checklist}
@@ -300,21 +303,22 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		calculateNewTransactionInfo(shippingOptionId) {
 
-			let newTransactionInfo = this.getGoogleTransactionInfo();
+			this.getGoogleTransactionInfo().then( ( newTransactionInfo ) => {
 
-			let shippingCost = this.getShippingCosts()[shippingOptionId];
-			newTransactionInfo.displayItems.push({
-				type: "LINE_ITEM",
-				label: "Shipping cost",
-				price: shippingCost,
-				status: "FINAL"
-			});
+				let shippingCost = this.getShippingCosts()[shippingOptionId];
+				newTransactionInfo.displayItems.push({
+					type: "LINE_ITEM",
+					label: "Shipping cost",
+					price: shippingCost,
+					status: "FINAL"
+				});
 
-			let totalPrice = 0.00;
-			newTransactionInfo.displayItems.forEach(displayItem => totalPrice += parseFloat(displayItem.price));
-			newTransactionInfo.totalPrice = totalPrice.toString();
+				let totalPrice = 0.00;
+				newTransactionInfo.displayItems.forEach(displayItem => totalPrice += parseFloat(displayItem.price));
+				newTransactionInfo.totalPrice = totalPrice.toString();
 
-			return newTransactionInfo;
+				return newTransactionInfo;
+			} );
 		}
 
 		/**
@@ -323,29 +327,20 @@ jQuery( document ).ready( ( $ ) => {
 		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
 		 * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
 		 */
-		getGoogleTransactionInfo() {
+		async getGoogleTransactionInfo() {
 
-			// @todo: get this from the actual cart/order somehow
+			// get transaction info from cart
+			const data = {
+				action: `wc_${this.gatewayID}_google_pay_get_transaction_info`,
+			}
 
-			return {
-				displayItems: [
-					{
-						label: "Subtotal",
-						type: "SUBTOTAL",
-						price: "11.00",
-					},
-					{
-						label: "Tax",
-						type: "TAX",
-						price: "1.00",
-					}
-				],
-				countryCode: 'US',
-				currencyCode: "USD",
-				totalPriceStatus: "FINAL",
-				totalPrice: "12.00",
-				totalPriceLabel: "Total"
-			};
+			await $.post(this.ajaxURL, data, (response) => {
+				if (response.success) {
+					return $.parseJSON( response.data )
+				} else {
+					this.fail_payment( 'Could not build transaction info. ' + response.data.message );
+				}
+			});
 		}
 
 		/**
@@ -442,14 +437,16 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		prefetchGooglePaymentData() {
 
-			const paymentDataRequest = this.getGooglePaymentDataRequest();
-			// transactionInfo must be set but does not affect cache
-			paymentDataRequest.transactionInfo = {
-				totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
-				currencyCode: 'USD'
-			};
-			const paymentsClient = this.getGooglePaymentsClient();
-			paymentsClient.prefetchPaymentData(paymentDataRequest);
+			this.getGooglePaymentDataRequest().then( ( paymentDataRequest ) => {
+
+				// transactionInfo must be set but does not affect cache
+				paymentDataRequest.transactionInfo = {
+					totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
+					currencyCode: 'USD'
+				};
+				const paymentsClient = this.getGooglePaymentsClient();
+				paymentsClient.prefetchPaymentData(paymentDataRequest);
+			} );
 		}
 
 		/**
@@ -496,13 +493,12 @@ jQuery( document ).ready( ( $ ) => {
 
 			this.block_ui();
 
-			const paymentDataRequest = this.getGooglePaymentDataRequest();
-			paymentDataRequest.transactionInfo = this.getGoogleTransactionInfo();
+			this.getGooglePaymentDataRequest().then( ( paymentDataRequest ) => {
 
-			console.log(paymentDataRequest);
-
-			const paymentsClient = this.getGooglePaymentsClient();
-			paymentsClient.loadPaymentData(paymentDataRequest);
+				console.log(paymentDataRequest);
+				const paymentsClient = this.getGooglePaymentsClient();
+				paymentsClient.loadPaymentData(paymentDataRequest);
+			});
 		}
 
 		/**
