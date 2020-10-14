@@ -1,9 +1,10 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2020.nn.nn - version x.y.z-dev.1
+2020.10.09 - version 5.9.0
  * Feature - Add helper method to detect whether the current request is a REST API request
  * Fix - Fix a Capture Charge button issue when adding items to an order
  * Fix - Harden code to avoid a potential PHP warning at checkout if no card logos are configured for a gateway
+ * Fix - Update Pre-Orders and Subscriptions integrations to use 2 digits expiration years
 
 2020.07.31 - version 5.8.1
  * Fix - Ensure that some payment gateway scripts used for handling tokens reference the current version of the Framework
