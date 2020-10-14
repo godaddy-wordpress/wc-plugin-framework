@@ -1063,6 +1063,22 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	}
 
 
+	/** Visa Checkout Feature *****************************************************/
+
+
+	/**
+	 * Determines whether this gateway supports Visa Checkout.
+	 *
+	 * @since 5.10.0-dev.1
+	 *
+	 * @return bool
+	 */
+	public function supports_visa_checkout() {
+
+		return $this->supports( self::FEATURE_VISA_CHECKOUT );
+	}
+
+
 	/** Apple Pay Feature *****************************************************/
 
 
