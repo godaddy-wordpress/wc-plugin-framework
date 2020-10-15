@@ -10,6 +10,7 @@ modules:
     enabled:
         - WPDb
         - WPBrowser
+        - WPFilesystem
         - \Helper\Acceptance
     config:
         WPDb:
@@ -28,3 +29,5 @@ modules:
             adminUsername: '%ADMIN_USERNAME%'
             adminPassword: '%ADMIN_PASSWORD%'
             adminPath: '%WP_ADMIN_PATH%'
+        WPFilesystem:
+            wpRootFolder: '%WP_ROOT_FOLDER%'
