@@ -59,7 +59,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 		add_action( 'woocommerce_settings_checkout', array( $this, 'add_settings' ) );
 
 		// render the special "static" gateway select
-		add_action( 'woocommerce_admin_field_static', array( $this, 'render_static_setting' ) );
+		if ( ! has_action( 'woocommerce_admin_field_static' ) ) {
+			add_action( 'woocommerce_admin_field_static', [ $this, 'render_static_setting' ] );
+		}
 
 		// save the settings
 		add_action( 'woocommerce_settings_save_checkout', array( $this, 'save_settings' ) );
