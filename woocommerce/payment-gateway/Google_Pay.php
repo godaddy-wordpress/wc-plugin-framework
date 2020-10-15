@@ -260,9 +260,9 @@ class Google_Pay {
 		if ( $discount > 0 ) {
 
 			$items[] = array(
-				'label'  => __( 'Discount', 'woocommerce-plugin-framework' ),
-				'type'   => 'LINE_ITEM',
-				'amount' => abs( wc_format_decimal( $discount, 2 ) ) * - 1,
+				'label' => __( 'Discount', 'woocommerce-plugin-framework' ),
+				'type'  => 'LINE_ITEM',
+				'price' => abs( wc_format_decimal( $discount, 2 ) ) * - 1,
 			);
 		}
 
@@ -270,9 +270,9 @@ class Google_Pay {
 		if ( $shipping > 0 ) {
 
 			$items[] = array(
-				'label'  => __( 'Shipping', 'woocommerce-plugin-framework' ),
-				'type'   => 'LINE_ITEM',
-				'amount' => wc_format_decimal( $shipping, 2 ),
+				'label' => __( 'Shipping', 'woocommerce-plugin-framework' ),
+				'type'  => 'LINE_ITEM',
+				'price' => wc_format_decimal( $shipping, 2 ),
 			);
 		}
 
@@ -280,9 +280,9 @@ class Google_Pay {
 		if ( $fees > 0 ) {
 
 			$items[] = array(
-				'label'  => __( 'Fees', 'woocommerce-plugin-framework' ),
-				'type'   => 'LINE_ITEM',
-				'amount' => wc_format_decimal( $fees, 2 ),
+				'label' => __( 'Fees', 'woocommerce-plugin-framework' ),
+				'type'  => 'LINE_ITEM',
+				'price' => wc_format_decimal( $fees, 2 ),
 			);
 		}
 
@@ -290,9 +290,9 @@ class Google_Pay {
 		if ( $taxes > 0 ) {
 
 			$items[] = array(
-				'label'  => __( 'Taxes', 'woocommerce-plugin-framework' ),
-				'type'   => 'TAX',
-				'amount' => wc_format_decimal( $taxes, 2 ),
+				'label' => __( 'Taxes', 'woocommerce-plugin-framework' ),
+				'type'  => 'TAX',
+				'price' => wc_format_decimal( $taxes, 2 ),
 			);
 		}
 
