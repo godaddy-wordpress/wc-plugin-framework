@@ -74,6 +74,10 @@ class AJAX {
 		add_action( "wp_ajax_wc_{$gateway_id}_google_pay_get_transaction_info",        [ $this, 'get_transaction_info' ] );
 		add_action( "wp_ajax_nopriv_wc_{$gateway_id}_google_pay_get_transaction_info", [ $this, 'get_transaction_info' ] );
 
+		// recalculate the totals after selecting an address or shipping method
+		add_action( "wp_ajax_wc_{$gateway_id}_google_pay_recalculate_totals",        [ $this, 'recalculate_totals' ] );
+		add_action( "wp_ajax_nopriv_wc_{$gateway_id}_google_pay_recalculate_totals", [ $this, 'recalculate_totals' ] );
+
 		// process the payment
 		add_action( "wp_ajax_wc_{$gateway_id}_google_pay_process_payment",        [ $this, 'process_payment' ] );
 		add_action( "wp_ajax_nopriv_wc_{$gateway_id}_google_pay_process_payment", [ $this, 'process_payment' ] );
@@ -102,6 +106,69 @@ class AJAX {
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
 			$this->get_handler()->log( 'Could not build transaction info. ' . $e->getMessage() );
+
+			wp_send_json_error( array(
+				'message' => $e->getMessage(),
+				'code'    => $e->getCode(),
+			) );
+		}
+	}
+
+
+	/**
+	 * Recalculates the totals after selecting an address or shipping method.
+	 *
+	 * @internal
+	 *
+	 * @since 5.9.0-dev.1
+	 */
+	public function recalculate_totals() {
+
+		$this->get_handler()->log( 'Recalculating totals' );
+
+		check_ajax_referer( 'wc_' . $this->get_handler()->get_processing_gateway()->get_id() . '_google_pay_recalculate_totals', 'nonce' );
+
+		try {
+
+			// if a shipping address is passed, set the shipping address data
+			$shipping_address = SV_WC_Helper::get_posted_value( 'shippingAddress' );
+			if ( ! empty( $shipping_address ) && is_array( $shipping_address ) ) {
+
+				$shipping_address = wp_parse_args( $shipping_address, array(
+					'administrativeArea' => null,
+					'countryCode'        => null,
+					'locality'           => null,
+					'postalCode'         => null,
+				) );
+
+				$state    = $shipping_address['administrativeArea'];
+				$country  = $shipping_address['countryCode'];
+				$city     = $shipping_address['locality'];
+				$postcode = $shipping_address['postalCode'];
+
+				WC()->customer->set_shipping_city( $city );
+				WC()->customer->set_shipping_state( $state );
+				WC()->customer->set_shipping_country( $country );
+				WC()->customer->set_shipping_postcode( $postcode );
+
+				if ( $country ) {
+					WC()->customer->set_calculated_shipping( true );
+				}
+			}
+
+			$chosen_shipping_methods = ( $method = SV_WC_Helper::get_requested_value( 'shippingMethod' ) ) ? array( wc_clean( $method ) ) : array();
+
+			WC()->session->set( 'chosen_shipping_methods', $chosen_shipping_methods );
+
+			$payment_totals = $this->get_handler()->recalculate_totals();
+
+			$this->get_handler()->log( "New totals:\n" . print_r( $payment_totals, true ) );
+
+			wp_send_json_success( $payment_totals );
+
+		} catch ( \Exception $e ) {
+
+			$this->get_handler()->log( $e->getMessage() );
 
 			wp_send_json_error( array(
 				'message' => $e->getMessage(),

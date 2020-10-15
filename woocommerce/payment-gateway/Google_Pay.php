@@ -170,6 +170,54 @@ class Google_Pay {
 
 
 	/**
+	 * Recalculates the lines and totals after selecting an address or shipping method.
+	 *
+	 * @since 5.9.0-dev.1
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function recalculate_totals() {
+
+		if ( ! WC()->cart ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Cart data is missing.' );
+		}
+
+		$response_data = [
+			'newTransactionInfo' => $this->get_transaction_info( WC()->cart ),
+			'shippingOptions'    => array(),
+		];
+
+		$packages = WC()->shipping->get_packages();
+
+		if ( ! empty( $packages ) ) {
+
+			/** @var \WC_Shipping_Rate $method */
+			foreach ( $packages[0]['rates'] as $method ) {
+
+				/**
+				 * Filters a shipping method's description for the Google Pay payment.
+				 *
+				 * @since 5.9.0-dev.1
+				 *
+				 * @param string $description shipping method description, such as delivery estimation
+				 * @param object $method shipping method object
+				 */
+				$method_description = apply_filters( 'wc_payment_gateway_google_pay_shipping_method_description', '', $method );
+
+				$response_data['shippingOptions'][] = array(
+					'id'          => $method->get_id(),
+					'label'       => $method->get_label(),
+					'description' => $method_description,
+				);
+			}
+		}
+
+		return $response_data;
+	}
+
+
+	/**
 	 * Builds display items for the Google Pay JS.
 	 *
 	 * @since 5.9.0-dev.1
