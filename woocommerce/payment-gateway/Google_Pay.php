@@ -186,12 +186,11 @@ class Google_Pay {
 
 		$response_data = [
 			'newTransactionInfo'          => $this->get_transaction_info( WC()->cart ),
-			'newShippingOptionParameters' => array(
-				'shippingOptions' => array(),
-			),
+			'newShippingOptionParameters' => array(),
 		];
 
-		$packages = WC()->shipping->get_packages();
+		$shipping_options = array();
+		$packages         = WC()->shipping->get_packages();
 
 		if ( ! empty( $packages ) ) {
 
@@ -208,7 +207,7 @@ class Google_Pay {
 				 */
 				$method_description = apply_filters( 'wc_payment_gateway_google_pay_shipping_method_description', '', $method );
 
-				$response_data['newShippingOptionParameters']['shippingOptions'][] = array(
+				$shipping_options[] = array(
 					'id'          => $method->get_id(),
 					'label'       => $method->get_label(),
 					'description' => $method_description,
@@ -216,11 +215,13 @@ class Google_Pay {
 			}
 		}
 
+		$response_data['newShippingOptionParameters']['shippingOptions'] = $shipping_options;
+
 		if ( ! empty( $chosen_shipping_method ) ) {
 			$response_data['newShippingOptionParameters']['defaultSelectedOptionId'] = $chosen_shipping_method;
-		} else {
+		} elseif ( ! empty( $shipping_options ) ) {
 			// set the first method as the default
-			$response_data['newShippingOptionParameters']['defaultSelectedOptionId'] = $response_data['newShippingOptionParameters']['shippingOptions'][0]['id'];
+			$response_data['newShippingOptionParameters']['defaultSelectedOptionId'] = $shipping_options[0]['id'];
 		}
 
 		return $response_data;
