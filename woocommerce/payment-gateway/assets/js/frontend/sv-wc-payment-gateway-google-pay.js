@@ -343,14 +343,15 @@ jQuery( document ).ready( ( $ ) => {
 				action: `wc_${this.gatewayID}_google_pay_get_transaction_info`,
 			}
 
-			return await $.post(this.ajaxURL, data, (response) => {
-				console.log(response);
-				if (response.success) {
-					return $.parseJSON( response.data )
-				} else {
-					this.fail_payment( 'Could not build transaction info. ' + response.data.message );
-				}
-			});
+			const response = await $.post(this.ajaxURL, data);
+
+			console.log(response);
+
+			if (response.success) {
+				return $.parseJSON( response.data )
+			} else {
+				this.fail_payment( 'Could not build transaction info. ' + response.data.message );
+			}
 		}
 
 		/**
