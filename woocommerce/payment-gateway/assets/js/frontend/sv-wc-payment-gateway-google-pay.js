@@ -151,27 +151,33 @@ jQuery( document ).ready( ( $ ) => {
 		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest|PaymentDataRequest}
 		 * @returns {object} PaymentDataRequest fields
 		 */
-		async getGooglePaymentDataRequest() {
+		getGooglePaymentDataRequest() {
 
-			const paymentDataRequest = Object.assign({}, this.baseRequest);
-			paymentDataRequest.allowedPaymentMethods = [this.cardPaymentMethod];
-			paymentDataRequest.transactionInfo = await this.getGoogleTransactionInfo();
+			return this.getGoogleTransactionInfo().then( ( response ) => {
 
-			console.log(paymentDataRequest);
+				console.log( response );
 
-			paymentDataRequest.merchantInfo = {
-				// @todo a merchant ID is available for a production environment after approval by Google
-				// See {@link https://developers.google.com/pay/api/web/guides/test-and-deploy/integration-checklist|Integration checklist}
-				// merchantId: '01234567890123456789',
-				merchantName: 'Example Merchant'
-			};
+				const paymentDataRequest = Object.assign({}, this.baseRequest);
+				paymentDataRequest.allowedPaymentMethods = [this.cardPaymentMethod];
 
-			paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS",  "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
-			paymentDataRequest.shippingAddressRequired = true;
-			paymentDataRequest.shippingAddressParameters = this.getGoogleShippingAddressParameters();
-			paymentDataRequest.shippingOptionRequired = true;
+				paymentDataRequest.transactionInfo = $.parseJSON( response.data );
 
-			return paymentDataRequest;
+				console.log(paymentDataRequest);
+
+				paymentDataRequest.merchantInfo = {
+					// @todo a merchant ID is available for a production environment after approval by Google
+					// See {@link https://developers.google.com/pay/api/web/guides/test-and-deploy/integration-checklist|Integration checklist}
+					// merchantId: '01234567890123456789',
+					merchantName: 'Example Merchant'
+				};
+
+				paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS", "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
+				paymentDataRequest.shippingAddressRequired = true;
+				paymentDataRequest.shippingAddressParameters = this.getGoogleShippingAddressParameters();
+				paymentDataRequest.shippingOptionRequired = true;
+
+				return paymentDataRequest;
+			} );
 		}
 
 		/**
@@ -303,7 +309,9 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		calculateNewTransactionInfo(shippingOptionId) {
 
-			this.getGoogleTransactionInfo().then( ( newTransactionInfo ) => {
+			this.getGoogleTransactionInfo().then( ( response ) => {
+
+				let newTransactionInfo = $.parseJSON( response.data );
 
 				let shippingCost = this.getShippingCosts()[shippingOptionId];
 				newTransactionInfo.displayItems.push({
@@ -327,14 +335,15 @@ jQuery( document ).ready( ( $ ) => {
 		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
 		 * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
 		 */
-		async getGoogleTransactionInfo() {
+		getGoogleTransactionInfo() {
 
 			// get transaction info from cart
 			const data = {
 				action: `wc_${this.gatewayID}_google_pay_get_transaction_info`,
 			}
 
-			await $.post(this.ajaxURL, data, (response) => {
+			return $.post(this.ajaxURL, data, (response) => {
+				console.log(response);
 				if (response.success) {
 					return $.parseJSON( response.data )
 				} else {
@@ -496,8 +505,15 @@ jQuery( document ).ready( ( $ ) => {
 			this.getGooglePaymentDataRequest().then( ( paymentDataRequest ) => {
 
 				console.log(paymentDataRequest);
+				console.log(paymentDataRequest.transactionInfo);
+				console.log(paymentDataRequest.transactionInfo.displayItems);
 				const paymentsClient = this.getGooglePaymentsClient();
-				paymentsClient.loadPaymentData(paymentDataRequest);
+				try {
+					paymentsClient.loadPaymentData(paymentDataRequest);
+				} catch (err) {
+					// show error in developer console for debugging
+					console.error(err);
+				}
 			});
 		}
 
