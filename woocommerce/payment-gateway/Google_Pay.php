@@ -308,21 +308,21 @@ class Google_Pay {
 	 *
 	 * @since 5.9.0-dev.1
 	 *
-	 * @param mixed $payment_method_data payment method data returned by Google Pay
+	 * @param mixed $payment_data payment data returned by Google Pay
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function process_payment( $payment_method_data ) {
+	public function process_payment( $payment_data ) {
 
 		$order = null;
 
 		try {
 
-			$this->log( "Payment Method Response:\n" . $payment_method_data . "\n" );
+			$this->log( "Payment Method Response:\n" . $payment_data . "\n" );
 
-			$payment_method_data = json_decode( $payment_method_data );
+			$payment_data = json_decode( $payment_data );
 
-			$this->store_payment_response( $payment_method_data );
+			$this->store_payment_response( $payment_data );
 
 			$order = Orders::create_order( WC()->cart );
 
@@ -404,7 +404,16 @@ class Google_Pay {
 	public function add_order_data( $order ) {
 
 		if ( $response = $this->get_stored_payment_response() ) {
+
 			$order = $this->get_processing_gateway()->get_order_for_google_pay( $order, $response );
+
+			$shipping_address = $response->shippingAddress;
+			$order->set_shipping_address_1( $shipping_address->address1 );
+			$order->set_shipping_address_2( $shipping_address->address2 );
+			$order->set_shipping_state( $shipping_address->administrativeArea );
+			$order->set_shipping_country( $shipping_address->countryCode );
+			$order->set_shipping_city( $shipping_address->locality );
+			$order->set_shipping_postcode( $shipping_address->postalCode );
 		}
 
 		return $order;

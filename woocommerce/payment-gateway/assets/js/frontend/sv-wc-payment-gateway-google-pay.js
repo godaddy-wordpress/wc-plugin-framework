@@ -444,7 +444,7 @@ jQuery( document ).ready( ( $ ) => {
 			const data = {
 				action: `wc_${this.gatewayID}_google_pay_process_payment`,
 				nonce: this.processNonce,
-				paymentMethod: JSON.stringify(paymentData.paymentMethodData)
+				paymentData: JSON.stringify(paymentData)
 			}
 
 			return $.post(this.ajaxURL, data, (response) => {
