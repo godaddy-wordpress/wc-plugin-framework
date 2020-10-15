@@ -6,16 +6,16 @@ module.exports = function( grunt ) {
 	// Add Uglify task with legacy rules
 	config.uglify = {
 		uglify: {
-			options: {
+			options : {
 				sourceMap: true,
 				sourceMapIncludeSources: true,
 				sourceMapIn: '<%= dirs.gateway.js %>/frontend/sv-wc-payment-gateway-frontend.min.js.map', // input sourcemap from CoffeeScript compilation
 				sourceMapName: '<%= dirs.gateway.js %>/frontend/sv-wc-payment-gateway-frontend.min.map'
 			},
-			files: [{
+			files : [{
 				src: ['<%= dirs.gateway.js %>/js/frontend/sv-wc-payment-gateway-frontend.min.js'], // uglify JS from CoffeeScript compilation
 				dest: '<%= dirs.gateway.js %>/frontend/sv-wc-payment-gateway-frontend.min.js'
-			}],
+			}]
 		}
 	}
 
