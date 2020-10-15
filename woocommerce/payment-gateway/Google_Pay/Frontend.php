@@ -181,6 +181,7 @@ class Frontend extends Script_Handler {
 		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_js_handler_params', [
 			'plugin_id'                => $this->get_gateway()->get_plugin()->get_id(),
 			'merchant_id'              => method_exists( $this->get_gateway(), 'get_merchant_id' ) ? $this->get_gateway()->get_merchant_id() : '',
+			'merchant_name'            => get_bloginfo( 'name' ),
 			'gateway_id'               => $this->get_gateway()->get_id(),
 			'gateway_id_dasherized'    => $this->get_gateway()->get_id_dasherized(),
 			'ajax_url'                 => admin_url( 'admin-ajax.php' ),

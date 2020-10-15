@@ -19,6 +19,7 @@ jQuery( document ).ready( ( $ ) => {
 		 * @param {Object} params The plugin ID
 		 * @param {string} params.plugin_id The plugin ID
 		 * @param {string} params.merchant_id The merchant ID
+		 * @param {string} params.merchant_name The site name
 		 * @param {string} params.gateway_id The gateway ID
 		 * @param {string} params.gateway_id_dasherized The gateway ID dasherized
 		 * @param {string} params.ajax_url The AJAX URL
@@ -33,6 +34,7 @@ jQuery( document ).ready( ( $ ) => {
 			let {
 				plugin_id,
 				merchant_id,
+				merchant_name,
 				gateway_id,
 				gateway_id_dasherized,
 				ajax_url,
@@ -45,6 +47,7 @@ jQuery( document ).ready( ( $ ) => {
 
 			this.gatewayID = gateway_id;
 			this.merchantID = merchant_id;
+			this.merchantName = merchant_name;
 			this.ajaxURL = ajax_url;
 			this.recalculateTotalsNonce = recalculate_totals_nonce;
 			this.processNonce = process_nonce;
@@ -171,10 +174,8 @@ jQuery( document ).ready( ( $ ) => {
 				console.log(paymentDataRequest);
 
 				paymentDataRequest.merchantInfo = {
-					// @todo a merchant ID is available for a production environment after approval by Google
-					// See {@link https://developers.google.com/pay/api/web/guides/test-and-deploy/integration-checklist|Integration checklist}
-					// merchantId: '01234567890123456789',
-					merchantName: 'Example Merchant'
+					merchantId: this.merchantID,
+					merchantName: this.merchantName
 				};
 
 				paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS", "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
@@ -195,9 +196,8 @@ jQuery( document ).ready( ( $ ) => {
 		getGooglePaymentsClient() {
 			if ( this.paymentsClient === null ) {
 				this.paymentsClient = new google.payments.api.PaymentsClient({
-					environment: "TEST",
 					merchantInfo: {
-						merchantName: "Example Merchant",
+						merchantName: this.merchantName,
 						merchantId: this.merchantID
 					},
 					paymentDataCallbacks: {
