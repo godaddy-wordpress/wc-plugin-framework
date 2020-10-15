@@ -28,6 +28,7 @@ jQuery( document ).ready( ( $ ) => {
 		 * @param {string} params.button_style The button style
 		 * @param {string[]} params.card_types The supported card types
 		 * @param {string} params.generic_error The generic error message
+		 * @param {string} params.product_id The product ID if we are on a Product page
 		 */
 		constructor(params) {
 
@@ -52,6 +53,10 @@ jQuery( document ).ready( ( $ ) => {
 			this.recalculateTotalsNonce = recalculate_totals_nonce;
 			this.processNonce = process_nonce;
 			this.genericError = generic_error;
+
+			if (params.product_id) {
+				this.productID = params.product_id;
+			}
 
 			/**
 			 * Card networks supported by your site and your gateway
@@ -350,6 +355,10 @@ jQuery( document ).ready( ( $ ) => {
 				'nonce': this.recalculateTotalsNonce,
 				shippingAddress,
 				shippingMethod
+			}
+
+			if (this.productID) {
+				data.productID = this.productID;
 			}
 
 			$.post(this.ajaxURL, data, ( response ) => {

@@ -175,13 +175,46 @@ class Google_Pay {
 	 * @since 5.9.0-dev.1
 	 *
 	 * @param string $chosen_shipping_method chosen shipping method
+	 * @param string $product_id product ID, if we are on a Product page
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function recalculate_totals( $chosen_shipping_method ) {
+	public function recalculate_totals( $chosen_shipping_method, $product_id ) {
 
 		if ( ! WC()->cart ) {
 			throw new SV_WC_Payment_Gateway_Exception( 'Cart data is missing.' );
+		}
+
+		// if this is a single product page, make sure the cart gets populated
+		if ( ! empty( $product_id ) && $product = wc_get_product( $product_id ) ) {
+
+			if ( ! is_user_logged_in() ) {
+				WC()->session->set_customer_session_cookie( true );
+			}
+
+			// no subscription products
+			if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Product::is_subscription( $product ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Not available for subscription products.' );
+			}
+
+			// no pre-order "charge upon release" products
+			if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Not available for pre-order products that are set to charge upon release.' );
+			}
+
+			// only simple products
+			if ( ! $product->is_type( 'simple' ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Buy Now is only available for simple products' );
+			}
+
+			// if this product can't be purchased, bail
+			if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'Product is not available for purchase.' );
+			}
+
+			WC()->cart->empty_cart();
+
+			WC()->cart->add_to_cart( $product->get_id() );
 		}
 
 		$response_data = [
@@ -476,6 +509,73 @@ class Google_Pay {
 			'result'   => 'success',
 			'redirect' => $this->get_processing_gateway()->get_return_url( $order ),
 		);
+	}
+
+
+	/**
+	 * Gets a single product payment request.
+	 *
+	 * @since 5.9.0-dev.1
+	 * @see SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
+	 *
+	 * @param \WC_Product $product product object
+	 * @param bool $in_cart whether to generate a cart for this request
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function get_product_payment_request( \WC_Product $product, $in_cart = false ) {
+
+		if ( ! is_user_logged_in() ) {
+			WC()->session->set_customer_session_cookie( true );
+		}
+
+		// no subscription products
+		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Product::is_subscription( $product ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Not available for subscription products.' );
+		}
+
+		// no pre-order "charge upon release" products
+		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Not available for pre-order products that are set to charge upon release.' );
+		}
+
+		// only simple products
+		if ( ! $product->is_type( 'simple' ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Buy Now is only available for simple products' );
+		}
+
+		// if this product can't be purchased, bail
+		if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Product is not available for purchase.' );
+		}
+
+		if ( $in_cart ) {
+
+			WC()->cart->empty_cart();
+
+			WC()->cart->add_to_cart( $product->get_id() );
+
+			$request = $this->get_cart_payment_request( WC()->cart );
+
+		} else {
+
+			$request = $this->build_payment_request( $product->get_price(), array( 'needs_shipping' => $product->needs_shipping() ) );
+
+			$stored_request = $this->get_stored_payment_request();
+
+			$stored_request['product_id'] = $product->get_id();
+
+			$this->store_payment_request( $stored_request );
+		}
+
+		/**
+		 * Filters the Apple Pay Buy Now JS payment request.
+		 *
+		 * @since 4.7.0
+		 * @param array $request request data
+		 * @param \WC_Product $product product object
+		 */
+		return apply_filters( 'sv_wc_apple_pay_buy_now_payment_request', $request, $product );
 	}
 
 

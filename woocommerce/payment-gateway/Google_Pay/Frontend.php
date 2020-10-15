@@ -337,6 +337,10 @@ class Frontend extends Script_Handler {
 	 */
 	protected function get_product_js_handler_args( \WC_Product $product ) {
 
+		$args = array(
+			'product_id' => get_the_ID(),
+		);
+
 		/**
 		 * Filters the gateway Google Pay cart handler args.
 		 *
@@ -345,7 +349,7 @@ class Frontend extends Script_Handler {
 		 * @param array $args JS handler arguments
 		 * @param \WC_Product $product product object
 		 */
-		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_product_js_handler_args', array(), $product );
+		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_product_js_handler_args', $args, $product );
 	}
 
 

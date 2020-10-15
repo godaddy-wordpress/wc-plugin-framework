@@ -160,7 +160,9 @@ class AJAX {
 
 			WC()->session->set( 'chosen_shipping_methods', $chosen_shipping_methods );
 
-			$payment_totals = $this->get_handler()->recalculate_totals( wc_clean( $method ) );
+			$product_id = wc_clean( SV_WC_Helper::get_posted_value( 'productID' ) );
+
+			$payment_totals = $this->get_handler()->recalculate_totals( wc_clean( $method ), $product_id );
 
 			$this->get_handler()->log( "New totals:\n" . print_r( $payment_totals, true ) );
 
