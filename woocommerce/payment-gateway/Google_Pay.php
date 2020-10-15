@@ -332,6 +332,23 @@ class Google_Pay {
 			// from here on out, it's up to the gateway to not screw things up.
 			$order->add_order_note( __( 'Google Pay payment authorized.', 'woocommerce-plugin-framework' ) );
 
+			if ( ! empty( $adress_data = $payment_data->shippingAddress ) ) {
+
+				$address = [
+					'first_name' => '',
+					'last_name'  => isset( $adress_data->name ) ? $adress_data->name : '',
+					'address_1'  => isset( $adress_data->address1 ) ? $adress_data->address1 : '',
+					'address_2'  => isset( $adress_data->address2 ) ? $adress_data->address2 : '',
+					'city'       => isset( $adress_data->locality ) ? $adress_data->locality : '',
+					'state'      => isset( $adress_data->administrativeArea ) ? $adress_data->administrativeArea : '',
+					'postcode'   => isset( $adress_data->postalCode ) ? $adress_data->postalCode : '',
+					'country'    => isset( $adress_data->countryCode ) ? $adress_data->countryCode : '',
+				];
+
+				$order->set_address( $address, 'billing' );
+				$order->set_address( $address, 'shipping' );
+			}
+
 			$order->save();
 
 			// add Google Pay response data to the order
@@ -406,14 +423,6 @@ class Google_Pay {
 		if ( $response = $this->get_stored_payment_response() ) {
 
 			$order = $this->get_processing_gateway()->get_order_for_google_pay( $order, $response );
-
-			$shipping_address = $response->shippingAddress;
-			$order->set_shipping_address_1( $shipping_address->address1 );
-			$order->set_shipping_address_2( $shipping_address->address2 );
-			$order->set_shipping_state( $shipping_address->administrativeArea );
-			$order->set_shipping_country( $shipping_address->countryCode );
-			$order->set_shipping_city( $shipping_address->locality );
-			$order->set_shipping_postcode( $shipping_address->postalCode );
 		}
 
 		return $order;
