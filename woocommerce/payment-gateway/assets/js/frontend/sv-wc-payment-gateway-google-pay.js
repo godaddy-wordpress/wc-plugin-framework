@@ -149,9 +149,10 @@ jQuery( document ).ready( ( $ ) => {
 		 * Configure support for the Google Pay API
 		 *
 		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest|PaymentDataRequest}
+		 * @param {function} resolve callback
 		 * @returns {object} PaymentDataRequest fields
 		 */
-		getGooglePaymentDataRequest() {
+		getGooglePaymentDataRequest( resolve ) {
 
 			return this.getGoogleTransactionInfo( ( transactionInfo ) => {
 
@@ -177,7 +178,7 @@ jQuery( document ).ready( ( $ ) => {
 				paymentDataRequest.shippingAddressParameters = this.getGoogleShippingAddressParameters();
 				paymentDataRequest.shippingOptionRequired = true;
 
-				return paymentDataRequest;
+				resolve( paymentDataRequest );
 			} );
 		}
 
@@ -448,7 +449,7 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		prefetchGooglePaymentData() {
 
-			this.getGooglePaymentDataRequest().then( ( paymentDataRequest ) => {
+			this.getGooglePaymentDataRequest( ( paymentDataRequest ) => {
 
 				// transactionInfo must be set but does not affect cache
 				paymentDataRequest.transactionInfo = {
@@ -504,7 +505,7 @@ jQuery( document ).ready( ( $ ) => {
 
 			this.block_ui();
 
-			this.getGooglePaymentDataRequest().then( ( paymentDataRequest ) => {
+			this.getGooglePaymentDataRequest( ( paymentDataRequest ) => {
 
 				console.log(paymentDataRequest);
 				console.log(paymentDataRequest.transactionInfo);
