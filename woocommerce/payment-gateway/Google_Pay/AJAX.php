@@ -164,7 +164,7 @@ class AJAX {
 
 			$this->get_handler()->log( "New totals:\n" . print_r( $payment_totals, true ) );
 
-			wp_send_json_success( $payment_totals );
+			wp_send_json_success( json_encode( $payment_totals ) );
 
 		} catch ( \Exception $e ) {
 
