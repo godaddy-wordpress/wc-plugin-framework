@@ -174,18 +174,21 @@ class Google_Pay {
 	 *
 	 * @since 5.9.0-dev.1
 	 *
+	 * @param string $chosen_shipping_method chosen shipping method
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function recalculate_totals() {
+	public function recalculate_totals( $chosen_shipping_method ) {
 
 		if ( ! WC()->cart ) {
 			throw new SV_WC_Payment_Gateway_Exception( 'Cart data is missing.' );
 		}
 
 		$response_data = [
-			'newTransactionInfo' => $this->get_transaction_info( WC()->cart ),
-			'shippingOptions'    => array(),
+			'newTransactionInfo'          => $this->get_transaction_info( WC()->cart ),
+			'newShippingOptionParameters' => array(
+				'shippingOptions' => array(),
+			),
 		];
 
 		$packages = WC()->shipping->get_packages();
@@ -205,12 +208,19 @@ class Google_Pay {
 				 */
 				$method_description = apply_filters( 'wc_payment_gateway_google_pay_shipping_method_description', '', $method );
 
-				$response_data['shippingOptions'][] = array(
+				$response_data['newShippingOptionParameters']['shippingOptions'][] = array(
 					'id'          => $method->get_id(),
 					'label'       => $method->get_label(),
 					'description' => $method_description,
 				);
 			}
+		}
+
+		if ( ! empty( $chosen_shipping_method ) ) {
+			$response_data['newShippingOptionParameters']['defaultSelectedOptionId'] = $chosen_shipping_method;
+		} else {
+			// set the first method as the default
+			$response_data['newShippingOptionParameters']['defaultSelectedOptionId'] = $response_data['newShippingOptionParameters']['shippingOptions'][0]['id'];
 		}
 
 		return $response_data;
