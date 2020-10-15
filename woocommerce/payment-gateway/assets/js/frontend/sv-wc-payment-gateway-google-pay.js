@@ -335,14 +335,14 @@ jQuery( document ).ready( ( $ ) => {
 		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
 		 * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
 		 */
-		getGoogleTransactionInfo() {
+		async getGoogleTransactionInfo() {
 
 			// get transaction info from cart
 			const data = {
 				action: `wc_${this.gatewayID}_google_pay_get_transaction_info`,
 			}
 
-			return $.post(this.ajaxURL, data, (response) => {
+			return await $.post(this.ajaxURL, data, (response) => {
 				console.log(response);
 				if (response.success) {
 					return $.parseJSON( response.data )
