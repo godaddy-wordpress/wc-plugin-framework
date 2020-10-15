@@ -156,7 +156,7 @@ class AJAX {
 				}
 			}
 
-			$chosen_shipping_methods = ( $method = SV_WC_Helper::get_requested_value( 'shippingMethod' ) ) ? array( wc_clean( $method ) ) : array();
+			$chosen_shipping_methods = ( $method = SV_WC_Helper::get_posted_value( 'shippingMethod' ) ) ? array( wc_clean( $method ) ) : array();
 
 			WC()->session->set( 'chosen_shipping_methods', $chosen_shipping_methods );
 
