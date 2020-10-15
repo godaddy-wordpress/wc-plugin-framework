@@ -155,6 +155,7 @@ jQuery( document ).ready( ( $ ) => {
 
 			return this.getGoogleTransactionInfo().then( ( response ) => {
 
+				console.log( 'response' );
 				console.log( response );
 
 				const paymentDataRequest = Object.assign({}, this.baseRequest);
