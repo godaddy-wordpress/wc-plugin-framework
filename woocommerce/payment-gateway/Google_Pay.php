@@ -335,8 +335,8 @@ class Google_Pay {
 			if ( ! empty( $adress_data = $payment_data->shippingAddress ) ) {
 
 				if ( ! empty( $adress_data->name ) ) {
-					$first_name = strstr( $adress_data->name, ' ' );
-					$last_name  = strstr( $adress_data->name, ' ', true );
+					$first_name = strstr( $adress_data->name, ' ', true );
+					$last_name  = strstr( $adress_data->name, ' ' );
 				}
 
 				$address = [
