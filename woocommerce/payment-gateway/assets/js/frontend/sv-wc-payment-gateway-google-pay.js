@@ -532,6 +532,8 @@ jQuery( document ).ready( ( $ ) => {
 				this.init_cart_page();
 			} else if ($('form.woocommerce-checkout').length) {
 				this.init_checkout_page()
+			} else {
+				return;
 			}
 
 			const paymentsClient = this.getGooglePaymentsClient();
