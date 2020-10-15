@@ -22,6 +22,7 @@ jQuery( document ).ready( ( $ ) => {
 		 * @param {string} params.gateway_id The gateway ID
 		 * @param {string} params.gateway_id_dasherized The gateway ID dasherized
 		 * @param {string} params.ajax_url The AJAX URL
+		 * @param {string} params.recalculate_totals_nonce Nonce for the recalculate_totals AJAX action
 		 * @param {string} params.process_nonce Nonce for the process AJAX action
 		 * @param {string} params.button_style The button style
 		 * @param {string[]} params.card_types The supported card types
@@ -35,6 +36,7 @@ jQuery( document ).ready( ( $ ) => {
 				gateway_id,
 				gateway_id_dasherized,
 				ajax_url,
+				recalculate_totals_nonce,
 				process_nonce,
 				button_style,
 				card_types,
@@ -44,6 +46,7 @@ jQuery( document ).ready( ( $ ) => {
 			this.gatewayID = gateway_id;
 			this.merchantID = merchant_id;
 			this.ajaxURL = ajax_url;
+			this.recalculateTotalsNonce = recalculate_totals_nonce;
 			this.processNonce = process_nonce;
 			this.genericError = generic_error;
 
@@ -268,38 +271,26 @@ jQuery( document ).ready( ( $ ) => {
 				try {
 					let shippingAddress = intermediatePaymentData.shippingAddress;
 					let shippingOptionData = intermediatePaymentData.shippingOptionData;
-					let paymentDataRequestUpdate = {};
+					let chosenShippingMethod = '';
 
-					if (intermediatePaymentData.callbackTrigger == "INITIALIZE" || intermediatePaymentData.callbackTrigger == "SHIPPING_ADDRESS") {
-						if (shippingAddress.administrativeArea == "NJ") {
-							paymentDataRequestUpdate.error = this.getGoogleUnserviceableAddressError();
-
-							console.log('paymentDataRequestUpdate');
-							console.log(paymentDataRequestUpdate);
-
-							resolve(paymentDataRequestUpdate);
-						} else {
-							paymentDataRequestUpdate.newShippingOptionParameters = this.getGoogleDefaultShippingOptions();
-							let selectedShippingOptionId = paymentDataRequestUpdate.newShippingOptionParameters.defaultSelectedOptionId;
-							 this.calculateNewTransactionInfo(selectedShippingOptionId, (newTransactionInfo) => {
-
-							 	paymentDataRequestUpdate.newTransactionInfo = newTransactionInfo;
-							  console.log('paymentDataRequestUpdate');
-								console.log(paymentDataRequestUpdate);
-
-								resolve(paymentDataRequestUpdate);
-							});
-						}
-					} else if (intermediatePaymentData.callbackTrigger == "SHIPPING_OPTION") {
-						paymentDataRequestUpdate.newTransactionInfo = this.calculateNewTransactionInfo(shippingOptionData.id, (newTransactionInfo) => {
-
-							paymentDataRequestUpdate.newTransactionInfo = newTransactionInfo;
-							console.log('paymentDataRequestUpdate');
-							console.log(paymentDataRequestUpdate);
-
-							resolve(paymentDataRequestUpdate);
-						});
+					if (intermediatePaymentData.callbackTrigger == "SHIPPING_OPTION") {
+						chosenShippingMethod = shippingOptionData.id;
 					}
+
+					this.getUpdatedTotals( shippingAddress, chosenShippingMethod, ( paymentDataRequestUpdate ) => {
+
+						if (paymentDataRequestUpdate.newShippingOptionParameters.shippingOptions.length == 0) {
+							paymentDataRequestUpdate = {
+								error: this.getGoogleUnserviceableAddressError()
+							};
+						}
+
+						console.log('paymentDataRequestUpdate');
+						console.log(paymentDataRequestUpdate);
+
+						resolve(paymentDataRequestUpdate);
+					});
+
 				}	catch(err) {
 					console.log('catch');
 					// show error in developer console for debugging
@@ -314,35 +305,6 @@ jQuery( document ).ready( ( $ ) => {
 					});
 				}
 			});
-		}
-
-		/**
-		 * Helper function to create a new TransactionInfo object.
-		 *
-		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
-		 *
-		 * @param string shippingOptionId respresenting the selected shipping option in the payment sheet.
-		 * @param {function} resolve callback
-		 * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
-		 */
-		calculateNewTransactionInfo(shippingOptionId, resolve) {
-
-			this.getGoogleTransactionInfo( ( newTransactionInfo ) => {
-
-				let shippingCost = this.getShippingCosts()[shippingOptionId];
-				newTransactionInfo.displayItems.push({
-					type: "LINE_ITEM",
-					label: "Shipping cost",
-					price: shippingCost,
-					status: "FINAL"
-				});
-
-				let totalPrice = 0.00;
-				newTransactionInfo.displayItems.forEach(displayItem => totalPrice += parseFloat(displayItem.price));
-				newTransactionInfo.totalPrice = totalPrice.toString();
-
-				resolve( newTransactionInfo );
-			} );
 		}
 
 		/**
@@ -373,17 +335,33 @@ jQuery( document ).ready( ( $ ) => {
 		}
 
 		/**
-		 * Provide a key value store for shipping options.
+		 * Get updated totals and shipping options via AJAX for use in the PaymentDataRequest
+		 *
+		 * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentDataRequestUpdate|PaymentDataRequestUpdate}
+		 *
+		 * @param {object} shippingAddress shipping address
+		 * @param {object} shippingMethod chosen shipping method
+		 * @param {function} resolve callback
 		 */
-		getShippingCosts() {
+		getUpdatedTotals( shippingAddress, shippingMethod, resolve ) {
 
-			// TODO: get this from WC
-
-			return {
-				"shipping-001": "0.00",
-				"shipping-002": "1.99",
-				"shipping-003": "10.00"
+			const data = {
+				action: `wc_${this.gatewayID}_google_pay_recalculate_totals`,
+				'nonce': this.recalculateTotalsNonce,
+				shippingAddress,
+				shippingMethod
 			}
+
+			$.post(this.ajaxURL, data, ( response ) => {
+
+				console.log(response);
+
+				if (response.success) {
+					resolve( $.parseJSON( response.data ) )
+				} else {
+					this.fail_payment( 'Could not recalculate totals. ' + response.data.message );
+				}
+			} );
 		}
 
 		/**
@@ -395,38 +373,9 @@ jQuery( document ).ready( ( $ ) => {
 		getGoogleShippingAddressParameters() {
 
 			return  {
+				// @todo: get from WC
 				allowedCountryCodes: ['US'],
 				phoneNumberRequired: true
-			};
-		}
-
-		/**
-		 * Provide Google Pay API with shipping options and a default selected shipping option.
-		 *
-		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#ShippingOptionParameters|ShippingOptionParameters}
-		 * @returns {object} shipping option parameters, suitable for use as shippingOptionParameters property of PaymentDataRequest
-		 */
-		getGoogleDefaultShippingOptions() {
-
-			return {
-				defaultSelectedOptionId: "shipping-001",
-				shippingOptions: [
-					{
-						"id": "shipping-001",
-						"label": "Free: Standard shipping",
-						"description": "Free Shipping delivered in 5 business days."
-					},
-					{
-						"id": "shipping-002",
-						"label": "$1.99: Standard shipping",
-						"description": "Standard shipping delivered in 3 business days."
-					},
-					{
-						"id": "shipping-003",
-						"label": "$10: Express shipping",
-						"description": "Express shipping delivered in 1 business day."
-					},
-				]
 			};
 		}
 
