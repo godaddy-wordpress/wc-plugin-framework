@@ -149,6 +149,7 @@ jQuery( document ).ready( ( $ ) => {
 		 * Configure support for the Google Pay API
 		 *
 		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest|PaymentDataRequest}
+		 *
 		 * @param {function} resolve callback
 		 * @returns {object} PaymentDataRequest fields
 		 */
@@ -272,19 +273,33 @@ jQuery( document ).ready( ( $ ) => {
 					if (intermediatePaymentData.callbackTrigger == "INITIALIZE" || intermediatePaymentData.callbackTrigger == "SHIPPING_ADDRESS") {
 						if (shippingAddress.administrativeArea == "NJ") {
 							paymentDataRequestUpdate.error = this.getGoogleUnserviceableAddressError();
+
+							console.log('paymentDataRequestUpdate');
+							console.log(paymentDataRequestUpdate);
+
+							resolve(paymentDataRequestUpdate);
 						} else {
 							paymentDataRequestUpdate.newShippingOptionParameters = this.getGoogleDefaultShippingOptions();
 							let selectedShippingOptionId = paymentDataRequestUpdate.newShippingOptionParameters.defaultSelectedOptionId;
-							paymentDataRequestUpdate.newTransactionInfo = this.calculateNewTransactionInfo(selectedShippingOptionId);
+							 this.calculateNewTransactionInfo(selectedShippingOptionId, (newTransactionInfo) => {
+
+							 	paymentDataRequestUpdate.newTransactionInfo = newTransactionInfo;
+							  console.log('paymentDataRequestUpdate');
+								console.log(paymentDataRequestUpdate);
+
+								resolve(paymentDataRequestUpdate);
+							});
 						}
 					} else if (intermediatePaymentData.callbackTrigger == "SHIPPING_OPTION") {
-						paymentDataRequestUpdate.newTransactionInfo = this.calculateNewTransactionInfo(shippingOptionData.id);
+						paymentDataRequestUpdate.newTransactionInfo = this.calculateNewTransactionInfo(shippingOptionData.id, (newTransactionInfo) => {
+
+							paymentDataRequestUpdate.newTransactionInfo = newTransactionInfo;
+							console.log('paymentDataRequestUpdate');
+							console.log(paymentDataRequestUpdate);
+
+							resolve(paymentDataRequestUpdate);
+						});
 					}
-
-					console.log('paymentDataRequestUpdate');
-					console.log(paymentDataRequestUpdate);
-
-					resolve(paymentDataRequestUpdate);
 				}	catch(err) {
 					console.log('catch');
 					// show error in developer console for debugging
@@ -303,13 +318,14 @@ jQuery( document ).ready( ( $ ) => {
 
 		/**
 		 * Helper function to create a new TransactionInfo object.
-
-		 * @param string shippingOptionId respresenting the selected shipping option in the payment sheet.
 		 *
 		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
+		 *
+		 * @param string shippingOptionId respresenting the selected shipping option in the payment sheet.
+		 * @param {function} resolve callback
 		 * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
 		 */
-		calculateNewTransactionInfo(shippingOptionId) {
+		calculateNewTransactionInfo(shippingOptionId, resolve) {
 
 			this.getGoogleTransactionInfo( ( newTransactionInfo ) => {
 
@@ -325,7 +341,7 @@ jQuery( document ).ready( ( $ ) => {
 				newTransactionInfo.displayItems.forEach(displayItem => totalPrice += parseFloat(displayItem.price));
 				newTransactionInfo.totalPrice = totalPrice.toString();
 
-				return newTransactionInfo;
+				resolve( newTransactionInfo );
 			} );
 		}
 
@@ -333,6 +349,7 @@ jQuery( document ).ready( ( $ ) => {
 		 * Provide Google Pay API with a payment amount, currency, and amount status
 		 *
 		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
+		 *
 		 * @param {function} resolve callback
 		 * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
 		 */
@@ -464,9 +481,10 @@ jQuery( document ).ready( ( $ ) => {
 		/**
 		 * Process payment data returned by the Google Pay API
 		 *
+		 * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentData|PaymentData object reference}
+		 *
 		 * @param {object} paymentData response from Google Pay API after user approves payment
 		 * @param {function} resolve callback
-		 * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentData|PaymentData object reference}
 		 */
 		processPayment(paymentData, resolve) {
 
