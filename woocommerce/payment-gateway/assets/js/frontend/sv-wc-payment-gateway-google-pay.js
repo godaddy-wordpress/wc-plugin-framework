@@ -153,15 +153,15 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		getGooglePaymentDataRequest() {
 
-			return this.getGoogleTransactionInfo().then( ( response ) => {
+			return this.getGoogleTransactionInfo().then( ( transactionInfo ) => {
 
-				console.log( 'response' );
-				console.log( response );
+				console.log( 'transactionInfo' );
+				console.log( transactionInfo );
 
 				const paymentDataRequest = Object.assign({}, this.baseRequest);
 				paymentDataRequest.allowedPaymentMethods = [this.cardPaymentMethod];
 
-				paymentDataRequest.transactionInfo = $.parseJSON( response.data );
+				paymentDataRequest.transactionInfo = transactionInfo;
 
 				console.log(paymentDataRequest);
 
@@ -310,9 +310,7 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		calculateNewTransactionInfo(shippingOptionId) {
 
-			this.getGoogleTransactionInfo().then( ( response ) => {
-
-				let newTransactionInfo = $.parseJSON( response.data );
+			this.getGoogleTransactionInfo().then( ( newTransactionInfo ) => {
 
 				let shippingCost = this.getShippingCosts()[shippingOptionId];
 				newTransactionInfo.displayItems.push({
