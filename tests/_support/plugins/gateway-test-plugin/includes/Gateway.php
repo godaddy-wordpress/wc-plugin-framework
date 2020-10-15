@@ -18,6 +18,7 @@ class Gateway extends Framework\SV_WC_Payment_Gateway {
 				'supports'           => [
 					self::FEATURE_PAYMENT_FORM,
 					self::FEATURE_APPLE_PAY,
+					self::FEATURE_VISA_CHECKOUT,
 				],
 			]
 		);
