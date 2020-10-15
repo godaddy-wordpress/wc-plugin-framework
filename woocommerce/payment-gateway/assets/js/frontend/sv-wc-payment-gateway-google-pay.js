@@ -153,7 +153,7 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		getGooglePaymentDataRequest() {
 
-			return this.getGoogleTransactionInfo().then( ( transactionInfo ) => {
+			return this.getGoogleTransactionInfo( ( transactionInfo ) => {
 
 				console.log( 'transactionInfo' );
 				console.log( transactionInfo );
@@ -310,7 +310,7 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		calculateNewTransactionInfo(shippingOptionId) {
 
-			this.getGoogleTransactionInfo().then( ( newTransactionInfo ) => {
+			this.getGoogleTransactionInfo( ( newTransactionInfo ) => {
 
 				let shippingCost = this.getShippingCosts()[shippingOptionId];
 				newTransactionInfo.displayItems.push({
@@ -332,24 +332,26 @@ jQuery( document ).ready( ( $ ) => {
 		 * Provide Google Pay API with a payment amount, currency, and amount status
 		 *
 		 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
+		 * @param {function} resolve callback
 		 * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
 		 */
-		async getGoogleTransactionInfo() {
+		getGoogleTransactionInfo( resolve ) {
 
 			// get transaction info from cart
 			const data = {
 				action: `wc_${this.gatewayID}_google_pay_get_transaction_info`,
 			}
 
-			const response = await $.post(this.ajaxURL, data);
+			$.post(this.ajaxURL, data, ( response ) => {
 
-			console.log(response);
+				console.log(response);
 
-			if (response.success) {
-				return $.parseJSON( response.data )
-			} else {
-				this.fail_payment( 'Could not build transaction info. ' + response.data.message );
-			}
+				if (response.success) {
+					resolve( $.parseJSON( response.data ) )
+				} else {
+					this.fail_payment( 'Could not build transaction info. ' + response.data.message );
+				}
+			} );
 		}
 
 		/**
