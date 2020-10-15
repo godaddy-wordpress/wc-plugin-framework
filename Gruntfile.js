@@ -67,6 +67,7 @@ module.exports = function( grunt ) {
 	// Register build task
 	grunt.registerTask( 'build', [
 		'coffee',
+		'babel',
 		'uglify',
 		'sass',
 		'update_translations',
@@ -75,6 +76,7 @@ module.exports = function( grunt ) {
 	// Register default task
 	grunt.registerTask( 'default', [
 		'coffee',
+		'babel',
 		'uglify',
 		'sass',
 		'makepot',
