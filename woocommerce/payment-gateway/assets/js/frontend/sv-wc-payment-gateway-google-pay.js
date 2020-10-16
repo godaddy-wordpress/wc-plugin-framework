@@ -174,21 +174,13 @@ jQuery( document ).ready( ( $ ) => {
 
 			return this.getGoogleTransactionInfo( ( transactionInfo ) => {
 
-				console.log( 'transactionInfo' );
-				console.log( transactionInfo );
-
 				const paymentDataRequest = Object.assign({}, this.baseRequest);
 				paymentDataRequest.allowedPaymentMethods = [this.cardPaymentMethod];
-
 				paymentDataRequest.transactionInfo = transactionInfo;
-
-				console.log(paymentDataRequest);
-
 				paymentDataRequest.merchantInfo = {
 					merchantId: this.merchantID,
 					merchantName: this.merchantName
 				};
-
 				paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS", "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
 				paymentDataRequest.emailRequired = true;
 				paymentDataRequest.shippingAddressRequired = true;
@@ -224,32 +216,13 @@ jQuery( document ).ready( ( $ ) => {
 		onPaymentAuthorized(paymentData) {
 
 			this.block_ui();
-			console.log('onPaymentAuthorized');
-			console.log(paymentData);
 
 			return new Promise((resolve, reject) => {
 
 				// handle the response
 				try {
 					this.processPayment(paymentData, resolve);
-						// .then(() => {
-						// 	resolve({transactionState: 'SUCCESS'});
-						// })
-						// .catch(() => {
-						// 	console.log('catch');
-						// 	resolve({
-						// 		transactionState: 'ERROR',
-						// 		error: {
-						// 			intent: 'SHIPPING_ADDRESS',
-						// 			message: 'Invalid data',
-						// 			reason: 'PAYMENT_DATA_INVALID'
-						// 		}
-						// 	});
-						// });
 				}	catch(err) {
-					console.log('catch');
-					// show error in developer console for debugging
-					console.error(err);
 					reject({
 						transactionState: 'ERROR',
 						error: {
@@ -277,13 +250,7 @@ jQuery( document ).ready( ( $ ) => {
 
 			this.block_ui();
 
-			console.log('onPaymentDataChanged');
-			console.log(intermediatePaymentData);
-
 			return new Promise((resolve, reject) => {
-
-				console.log(resolve);
-				console.log(reject);
 
 				try {
 					let shippingAddress = intermediatePaymentData.shippingAddress;
@@ -302,22 +269,10 @@ jQuery( document ).ready( ( $ ) => {
 							};
 						}
 
-						console.log('paymentDataRequestUpdate');
-						console.log(paymentDataRequestUpdate);
-
-						try {
-							resolve(paymentDataRequestUpdate);
-						}	catch(err) {
-							console.log('catch on resolve');
-							// show error in developer console for debugging
-							console.error(err);
-						}
+						resolve(paymentDataRequestUpdate);
 					});
 
 				}	catch(err) {
-					console.log('catch');
-					// show error in developer console for debugging
-					console.error(err);
 					reject({
 						transactionState: 'ERROR',
 						error: {
@@ -353,8 +308,6 @@ jQuery( document ).ready( ( $ ) => {
 
 			$.post(this.ajaxURL, data, ( response ) => {
 
-				console.log(response);
-
 				if (response.success) {
 					resolve( $.parseJSON( response.data ) )
 				} else {
@@ -386,8 +339,6 @@ jQuery( document ).ready( ( $ ) => {
 			}
 
 			$.post(this.ajaxURL, data, ( response ) => {
-
-				console.log(response);
 
 				if (response.success) {
 					resolve( $.parseJSON( response.data ) )
@@ -470,9 +421,6 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		processPayment(paymentData, resolve) {
 
-			// show returned data in developer console for debugging
-			console.log(paymentData);
-
 			// pass payment token to your gateway to process payment
 			const data = {
 				action: `wc_${this.gatewayID}_google_pay_process_payment`,
@@ -509,16 +457,10 @@ jQuery( document ).ready( ( $ ) => {
 
 			this.getGooglePaymentDataRequest( ( paymentDataRequest ) => {
 
-				console.log(paymentDataRequest);
-				console.log(paymentDataRequest.transactionInfo);
-				console.log(paymentDataRequest.transactionInfo.displayItems);
 				const paymentsClient = this.getGooglePaymentsClient();
 				try {
 					paymentsClient.loadPaymentData(paymentDataRequest);
 				} catch (err) {
-					// show error in developer console for debugging
-					console.log('catch');
-					console.error(err);
 				}
 
 				this.unblock_ui();
@@ -554,8 +496,6 @@ jQuery( document ).ready( ( $ ) => {
 					}
 				})
 				.catch((err) => {
-					// show error in developer console for debugging
-					console.error(err);
 				});
 		}
 
