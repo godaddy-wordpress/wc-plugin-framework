@@ -240,7 +240,7 @@ class Google_Pay {
 		}
 
 		$response_data = [
-			'newTransactionInfo'          => $this->get_transaction_info( WC()->cart ),
+			'newTransactionInfo'          => $this->get_transaction_info( WC()->cart, $product_id ),
 			'newShippingOptionParameters' => array(),
 		];
 
