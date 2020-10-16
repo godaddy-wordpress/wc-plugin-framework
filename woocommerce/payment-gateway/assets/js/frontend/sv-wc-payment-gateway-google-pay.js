@@ -416,7 +416,7 @@ jQuery( document ).ready( ( $ ) => {
 
 			const paymentsClient = this.getGooglePaymentsClient();
 			const button = paymentsClient.createButton({
-				onClick: () => this.onGooglePaymentButtonClicked()
+				onClick: (event) => this.onGooglePaymentButtonClicked( event )
 			});
 			document.getElementById('sv-wc-google-pay-button-container').appendChild(button);
 		}
@@ -481,7 +481,9 @@ jQuery( document ).ready( ( $ ) => {
 		/**
 		 * Show Google Pay payment sheet when Google Pay payment button is clicked
 		 */
-		onGooglePaymentButtonClicked() {
+		onGooglePaymentButtonClicked(event) {
+
+			event.preventDefault();
 
 			this.block_ui();
 
