@@ -148,7 +148,7 @@ class Google_Pay {
 			throw new SV_WC_Payment_Gateway_Exception( 'Google Pay cannot be used for multiple shipments.' );
 		}
 
-		if ( ! empty( $cart->get_cart_contents() ) ) {
+		if ( ! empty( $cart->get_cart_contents_count() ) ) {
 
 			$transaction_info = [
 				'displayItems'     => $this->build_display_items( $cart ),
@@ -159,11 +159,9 @@ class Google_Pay {
 				'totalPriceLabel'  => "Total",
 			];
 
-		} else {
+		} else if ( $product = wc_get_product( get_the_ID() ) ) {
 
 			// buying from the product page
-			$product = wc_get_product( get_the_ID() );
-
 			$transaction_info = [
 				'displayItems'     => array(
 					array(
