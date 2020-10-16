@@ -265,7 +265,7 @@ class Frontend extends Script_Handler {
 	public function render_button() {
 
 		?>
-		<button id="sv-wc-google-pay-button-container"></button>
+		<div id="sv-wc-google-pay-button-container"></div>
 		<?php
 	}
 
