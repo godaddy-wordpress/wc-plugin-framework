@@ -22,26 +22,26 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay\Admin;
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay\AJAX;
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay\Frontend;
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay\Orders;
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway_Exception;
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay\Admin;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay\AJAX;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay\Frontend;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay\Orders;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_1\\Payment_Gateway\\Google_Pay' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment_Gateway\\Google_Pay' ) ) :
 
 
 /**
  * Sets up Google Pay support.
  *
- * @since 5.9.0-dev.1
+ * @since 5.10.0
  */
 class Google_Pay {
 
@@ -62,7 +62,7 @@ class Google_Pay {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the plugin instance
 	 */
@@ -77,7 +77,7 @@ class Google_Pay {
 	/**
 	 * Initializes the Google Pay handlers.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	protected function init() {
 
@@ -93,7 +93,7 @@ class Google_Pay {
 	/**
 	 * Initializes the admin handler.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	protected function init_admin() {
 
@@ -104,7 +104,7 @@ class Google_Pay {
 	/**
 	 * Initializes the AJAX handler.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	protected function init_ajax() {
 
@@ -115,7 +115,7 @@ class Google_Pay {
 	/**
 	 * Initializes the frontend handler.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	protected function init_frontend() {
 
@@ -126,7 +126,7 @@ class Google_Pay {
 	/**
 	 * Gets Google transaction info based on WooCommerce cart data.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param \WC_Cart $cart cart object
 	 * @param string $product_id product ID, if we are on a Product page
@@ -182,7 +182,7 @@ class Google_Pay {
 		/**
 		 * Filters the Google Pay cart JS transaction info.
 		 *
-		 * @since 5.9.0-dev.1
+		 * @since 5.10.0
 		 *
 		 * @param array $transaction_info the cart JS transaction info
 		 * @param \WC_Cart $cart the cart object
@@ -194,7 +194,7 @@ class Google_Pay {
 	/**
 	 * Recalculates the lines and totals after selecting an address or shipping method.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param string $chosen_shipping_method chosen shipping method
 	 * @param string $product_id product ID, if we are on a Product page
@@ -255,7 +255,7 @@ class Google_Pay {
 				/**
 				 * Filters a shipping method's description for the Google Pay payment.
 				 *
-				 * @since 5.9.0-dev.1
+				 * @since 5.10.0
 				 *
 				 * @param string $description shipping method description, such as delivery estimation
 				 * @param object $method shipping method object
@@ -286,7 +286,7 @@ class Google_Pay {
 	/**
 	 * Builds display items for the Google Pay JS.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param \WC_Cart $cart
 	 * @return array
@@ -361,7 +361,7 @@ class Google_Pay {
 	 *
 	 * This method creates a new order and calls the gateway for processing.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param mixed $payment_data payment data returned by Google Pay
 	 * @return array
@@ -407,6 +407,9 @@ class Google_Pay {
 
 				$order->set_address( $address, 'billing' );
 				$order->set_address( $address, 'shipping' );
+
+				$order->set_billing_phone( isset( $adress_data->phoneNumber ) ? $adress_data->phoneNumber : '' );
+				$order->set_billing_email( isset( $payment_data->email ) ? $payment_data->email : '' );
 			}
 
 			$order->save();
@@ -445,7 +448,7 @@ class Google_Pay {
 	/**
 	 * Gets the stored payment response data.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return mixed|array $data
 	 */
@@ -458,7 +461,7 @@ class Google_Pay {
 	/**
 	 * Stores payment response data for later use.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param mixed|array $data
 	 */
@@ -473,7 +476,7 @@ class Google_Pay {
 	 *
 	 * @internal
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param \WC_Order $order the order object
 	 * @return \WC_Order
@@ -492,7 +495,7 @@ class Google_Pay {
 	/**
 	 * Adds a log entry to the gateway's debug log.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param string $message the log message to add
 	 */
@@ -516,7 +519,7 @@ class Google_Pay {
 	 * This provides an easy way for merchants to test that their settings are correctly configured and communicating
 	 * with Google without processing actual payments to test.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param \WC_Order $order order object
 	 * @return array
@@ -537,7 +540,7 @@ class Google_Pay {
 	/**
 	 * Gets a single product payment request.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 * @see SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
 	 *
 	 * @param \WC_Product $product product object
@@ -608,7 +611,7 @@ class Google_Pay {
 	 * that Google Pay is properly configured and ready to be initiated by the
 	 * Google Pay JS.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return bool
 	 */
@@ -626,7 +629,7 @@ class Google_Pay {
 		/**
 		 * Filters whether Google Pay should be made available to users.
 		 *
-		 * @since 5.9.0-dev.1
+		 * @since 5.10.0
 		 * @param bool $is_available
 		 */
 		return apply_filters( 'sv_wc_google_pay_is_available', $is_available );
@@ -636,7 +639,7 @@ class Google_Pay {
 	/**
 	 * Determines if Google Pay settings are properly configured.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return bool
 	 */
@@ -653,7 +656,7 @@ class Google_Pay {
 	/**
 	 * Determines if Google Pay is enabled.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return bool
 	 */
@@ -666,7 +669,7 @@ class Google_Pay {
 	/**
 	 * Determines if test mode is enabled.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return bool
 	 */
@@ -679,7 +682,7 @@ class Google_Pay {
 	/**
 	 * Gets the currencies supported by the gateway and available for shipping.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array
 	 */
@@ -695,7 +698,7 @@ class Google_Pay {
 	/**
 	 * Gets the currencies accepted by the gateway's Google Pay integration.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array
 	 */
@@ -706,7 +709,7 @@ class Google_Pay {
 		/**
 		 * Filters the currencies accepted by the gateway's Google Pay integration.
 		 *
-		 * @since 5.9.0-dev.1
+		 * @since 5.10.0
 		 * @return array
 		 */
 		return apply_filters( 'sv_wc_google_pay_accepted_currencies', $currencies );
@@ -716,7 +719,7 @@ class Google_Pay {
 	/**
 	 * Gets the supported networks for Google Pay.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array
 	 */
@@ -724,7 +727,7 @@ class Google_Pay {
 
 		$accepted_card_types = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_card_types() : array();
 
-		$accepted_card_types = array_map( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_1\\SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
+		$accepted_card_types = array_map( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
 
 		$valid_networks = array(
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_AMEX       => 'AMEX',
@@ -740,10 +743,10 @@ class Google_Pay {
 		/**
 		 * Filters the supported Google Pay networks (card types).
 		 *
-		 * @since 5.9.0-dev.1
+		 * @since 5.10.0
 		 *
 		 * @param array $networks the supported networks
-		 * @param \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay $handler the Google Pay handler
+		 * @param \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler the Google Pay handler
 		 */
 		return apply_filters( 'sv_wc_google_pay_supported_networks', array_values( $networks ), $this );
 	}
@@ -752,7 +755,7 @@ class Google_Pay {
 	/**
 	 * Gets the gateways that declare Google Pay support.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array the supporting gateways as `$gateway_id => \SV_WC_Payment_Gateway`
 	 */
@@ -775,7 +778,7 @@ class Google_Pay {
 	/**
 	 * Gets the gateway set to process Google Pay transactions.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return SV_WC_Payment_Gateway|null
 	 */
@@ -792,7 +795,7 @@ class Google_Pay {
 	/**
 	 * Gets the Google Pay button style.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return string
 	 */
@@ -805,7 +808,7 @@ class Google_Pay {
 	/**
 	 * Gets the gateway plugin instance.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return SV_WC_Payment_Gateway_Plugin
 	 */

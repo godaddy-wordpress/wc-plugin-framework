@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_1\\SV_WC_Payment_Gateway_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_Payment_Gateway_Helper' ) ) :
 
 
 /**
@@ -262,6 +262,20 @@ class SV_WC_Payment_Gateway_Helper {
 				'variations' => array(),
 			),
 		);
+	}
+
+
+	/**
+	 * Formats the given expiration year to include the last two digits only.
+	 *
+	 * @since 5.9.0
+	 *
+	 * @param string $exp_year a credit card expiration year
+	 * @return string
+	 */
+	public static function format_exp_year( $exp_year ) {
+
+		return substr( $exp_year, -2 );
 	}
 
 

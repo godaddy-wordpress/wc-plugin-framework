@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_1\\SV_WC_Payment_Gateway_Integration_Subscriptions' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_Payment_Gateway_Integration_Subscriptions' ) ) :
 
 
 /**
@@ -399,7 +399,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 			$order->payment->card_type = $token->get_card_type();
 			$order->payment->exp_month = $token->get_exp_month();
-			$order->payment->exp_year  = $token->get_exp_year();
+			$order->payment->exp_year  = SV_WC_Payment_Gateway_Helper::format_exp_year( $token->get_exp_year() );
 
 		} elseif ( $token->is_echeck() ) {
 

@@ -5,16 +5,16 @@ jQuery( document ).ready( ( $ ) => {
 	/**
 	 * Google Pay handler.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
-	 * @type {SV_WC_Google_Pay_Handler_v5_8_1} object
+	 * @type {SV_WC_Google_Pay_Handler_v5_10_0} object
 	 */
-	window.SV_WC_Google_Pay_Handler_v5_8_1 = class SV_WC_Google_Pay_Handler_v5_8_1 {
+	window.SV_WC_Google_Pay_Handler_v5_10_0 = class SV_WC_Google_Pay_Handler_v5_10_0 {
 
 		/**
 		 * Handler constructor.
 		 *
-		 * @since 5.9.0-dev.1
+		 * @since 5.10.0
 		 *
 		 * @param {Object} params The plugin ID
 		 * @param {string} params.plugin_id The plugin ID
@@ -56,6 +56,7 @@ jQuery( document ).ready( ( $ ) => {
 			this.ajaxURL = ajax_url;
 			this.recalculateTotalsNonce = recalculate_totals_nonce;
 			this.processNonce = process_nonce;
+			this.buttonStyle = button_style;
 			this.availableCountries = available_countries;
 			this.currencyCode = currency_code;
 			this.genericError = generic_error;
@@ -96,7 +97,6 @@ jQuery( document ).ready( ( $ ) => {
 			 * The Google Pay API response will return an encrypted payment method capable
 			 * of being charged by a supported gateway after payer authorization
 			 *
-			 * @todo check with your gateway on the parameters to pass
 			 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#gateway|PaymentMethodTokenizationSpecification}
 			 */
 			const tokenizationSpecification = {
@@ -174,28 +174,21 @@ jQuery( document ).ready( ( $ ) => {
 
 			return this.getGoogleTransactionInfo( ( transactionInfo ) => {
 
-				console.log( 'transactionInfo' );
-				console.log( transactionInfo );
-
 				const paymentDataRequest = Object.assign({}, this.baseRequest);
 				paymentDataRequest.allowedPaymentMethods = [this.cardPaymentMethod];
-
 				paymentDataRequest.transactionInfo = transactionInfo;
-
-				console.log(paymentDataRequest);
-
 				paymentDataRequest.merchantInfo = {
 					merchantId: this.merchantID,
 					merchantName: this.merchantName
 				};
-
 				paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS", "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
+				paymentDataRequest.emailRequired = true;
 				paymentDataRequest.shippingAddressRequired = true;
 				paymentDataRequest.shippingAddressParameters = this.getGoogleShippingAddressParameters();
 				paymentDataRequest.shippingOptionRequired = true;
 
 				resolve( paymentDataRequest );
-			} );
+			});
 		}
 
 		/**
@@ -223,37 +216,18 @@ jQuery( document ).ready( ( $ ) => {
 		onPaymentAuthorized(paymentData) {
 
 			this.block_ui();
-			console.log('onPaymentAuthorized');
-			console.log(paymentData);
 
 			return new Promise((resolve, reject) => {
 
 				// handle the response
 				try {
 					this.processPayment(paymentData, resolve);
-						// .then(() => {
-						// 	resolve({transactionState: 'SUCCESS'});
-						// })
-						// .catch(() => {
-						// 	console.log('catch');
-						// 	resolve({
-						// 		transactionState: 'ERROR',
-						// 		error: {
-						// 			intent: 'SHIPPING_ADDRESS',
-						// 			message: 'Invalid data',
-						// 			reason: 'PAYMENT_DATA_INVALID'
-						// 		}
-						// 	});
-						// });
 				}	catch(err) {
-					console.log('catch');
-					// show error in developer console for debugging
-					console.error(err);
 					reject({
 						transactionState: 'ERROR',
 						error: {
 							intent: 'PAYMENT_AUTHORIZATION',
-							message: 'Insufficient funds',
+							message: 'Payment could not be processed',
 							reason: 'PAYMENT_DATA_INVALID'
 						}
 					});
@@ -276,13 +250,7 @@ jQuery( document ).ready( ( $ ) => {
 
 			this.block_ui();
 
-			console.log('onPaymentDataChanged');
-			console.log(intermediatePaymentData);
-
 			return new Promise((resolve, reject) => {
-
-				console.log(resolve);
-				console.log(reject);
 
 				try {
 					let shippingAddress = intermediatePaymentData.shippingAddress;
@@ -301,30 +269,11 @@ jQuery( document ).ready( ( $ ) => {
 							};
 						}
 
-						console.log('paymentDataRequestUpdate');
-						console.log(paymentDataRequestUpdate);
-
-						try {
-							resolve(paymentDataRequestUpdate);
-						}	catch(err) {
-							console.log('catch on resolve');
-							// show error in developer console for debugging
-							console.error(err);
-						}
+						resolve(paymentDataRequestUpdate);
 					});
 
 				}	catch(err) {
-					console.log('catch');
-					// show error in developer console for debugging
-					console.error(err);
-					reject({
-						transactionState: 'ERROR',
-						error: {
-							intent: 'PAYMENT_AUTHORIZATION',
-							message: 'Insufficient funds',
-							reason: 'PAYMENT_DATA_INVALID'
-						}
-					});
+					this.fail_payment( 'Could not load updated totals or process payment data request update. ' + err );
 				}
 
 				this.unblock_ui();
@@ -352,14 +301,12 @@ jQuery( document ).ready( ( $ ) => {
 
 			$.post(this.ajaxURL, data, ( response ) => {
 
-				console.log(response);
-
 				if (response.success) {
 					resolve( $.parseJSON( response.data ) )
 				} else {
 					this.fail_payment( 'Could not build transaction info. ' + response.data.message );
 				}
-			} );
+			});
 		}
 
 		/**
@@ -386,14 +333,12 @@ jQuery( document ).ready( ( $ ) => {
 
 			$.post(this.ajaxURL, data, ( response ) => {
 
-				console.log(response);
-
 				if (response.success) {
 					resolve( $.parseJSON( response.data ) )
 				} else {
 					this.fail_payment( 'Could not recalculate totals. ' + response.data.message );
 				}
-			} );
+			});
 		}
 
 		/**
@@ -434,7 +379,8 @@ jQuery( document ).ready( ( $ ) => {
 
 			const paymentsClient = this.getGooglePaymentsClient();
 			const button = paymentsClient.createButton({
-				onClick: (event) => this.onGooglePaymentButtonClicked( event )
+				onClick: (event) => this.onGooglePaymentButtonClicked( event ),
+				buttonColor: this.buttonStyle
 			});
 			document.getElementById('sv-wc-google-pay-button-container').appendChild(button);
 		}
@@ -455,7 +401,7 @@ jQuery( document ).ready( ( $ ) => {
 				};
 				const paymentsClient = this.getGooglePaymentsClient();
 				paymentsClient.prefetchPaymentData(paymentDataRequest);
-			} );
+			});
 		}
 
 		/**
@@ -467,9 +413,6 @@ jQuery( document ).ready( ( $ ) => {
 		 * @param {function} resolve callback
 		 */
 		processPayment(paymentData, resolve) {
-
-			// show returned data in developer console for debugging
-			console.log(paymentData);
 
 			// pass payment token to your gateway to process payment
 			const data = {
@@ -491,7 +434,7 @@ jQuery( document ).ready( ( $ ) => {
 							reason: 'PAYMENT_DATA_INVALID'
 						}
 					});
-					this.fail_payment( 'Payment could no be processed. ' + response.data.message );
+					this.fail_payment( 'Payment could not be processed. ' + response.data.message );
 				}
 			});
 		}
@@ -507,16 +450,11 @@ jQuery( document ).ready( ( $ ) => {
 
 			this.getGooglePaymentDataRequest( ( paymentDataRequest ) => {
 
-				console.log(paymentDataRequest);
-				console.log(paymentDataRequest.transactionInfo);
-				console.log(paymentDataRequest.transactionInfo.displayItems);
 				const paymentsClient = this.getGooglePaymentsClient();
 				try {
 					paymentsClient.loadPaymentData(paymentDataRequest);
 				} catch (err) {
-					// show error in developer console for debugging
-					console.log('catch');
-					console.error(err);
+					this.fail_payment( 'Could not load payment data. ' + err );
 				}
 
 				this.unblock_ui();
@@ -547,13 +485,12 @@ jQuery( document ).ready( ( $ ) => {
 				.then((response) => {
 					if (response.result) {
 						this.addGooglePayButton();
-						// @todo prefetch payment data to improve performance after confirming site functionality
-						// this.prefetchGooglePaymentData();
+						// prefetch payment data to improve performance
+						this.prefetchGooglePaymentData();
 					}
 				})
 				.catch((err) => {
-					// show error in developer console for debugging
-					console.error(err);
+					this.fail_payment( 'Google Pay is not ready. ' + err );
 				});
 		}
 
@@ -623,6 +560,6 @@ jQuery( document ).ready( ( $ ) => {
 		}
 	}
 
-	$( document.body ).trigger( 'sv_wc_google_pay_handler_v5_8_1_loaded' );
+	$( document.body ).trigger( 'sv_wc_google_pay_handler_v5_10_0_loaded' );
 
-} );
+});

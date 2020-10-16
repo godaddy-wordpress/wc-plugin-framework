@@ -22,35 +22,35 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay;
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Exception;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_1\\Payment_Gateway\\Google_Pay\\AJAX' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment_Gateway\\Google_Pay\\AJAX' ) ) :
 
 
 /**
  * The Google Pay AJAX handler.
  *
- * @since 5.9.0-dev.1
+ * @since 5.10.0
  */
 class AJAX {
 
 
-	/** @var \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay $handler the Google Pay handler instance */
+	/** @var \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler the Google Pay handler instance */
 	protected $handler;
 
 
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
-	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay $handler the Google Pay handler instance
+	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler the Google Pay handler instance
 	 */
 	public function __construct( Google_Pay $handler ) {
 
@@ -65,7 +65,7 @@ class AJAX {
 	/**
 	 * Adds the action & filter hooks.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	protected function add_hooks() {
 
@@ -89,7 +89,7 @@ class AJAX {
 	 *
 	 * @internal
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function get_transaction_info() {
 
@@ -122,7 +122,7 @@ class AJAX {
 	 *
 	 * @internal
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function recalculate_totals() {
 
@@ -187,7 +187,7 @@ class AJAX {
 	 *
 	 * @internal
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function process_payment() {
 
@@ -218,7 +218,7 @@ class AJAX {
 	/**
 	 * Gets the Google Pay handler instance.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return Google_Pay
 	 */
