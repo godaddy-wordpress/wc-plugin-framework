@@ -97,7 +97,6 @@ jQuery( document ).ready( ( $ ) => {
 			 * The Google Pay API response will return an encrypted payment method capable
 			 * of being charged by a supported gateway after payer authorization
 			 *
-			 * @todo check with your gateway on the parameters to pass
 			 * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#gateway|PaymentMethodTokenizationSpecification}
 			 */
 			const tokenizationSpecification = {
@@ -550,8 +549,8 @@ jQuery( document ).ready( ( $ ) => {
 				.then((response) => {
 					if (response.result) {
 						this.addGooglePayButton();
-						// @todo prefetch payment data to improve performance after confirming site functionality
-						// this.prefetchGooglePaymentData();
+						// prefetch payment data to improve performance
+						this.prefetchGooglePaymentData();
 					}
 				})
 				.catch((err) => {
