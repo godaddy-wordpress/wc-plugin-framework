@@ -293,7 +293,13 @@ jQuery( document ).ready( ( $ ) => {
 						console.log('paymentDataRequestUpdate');
 						console.log(paymentDataRequestUpdate);
 
-						resolve(paymentDataRequestUpdate);
+						try {
+							resolve(paymentDataRequestUpdate);
+						}	catch(err) {
+							console.log('catch on resolve');
+							// show error in developer console for debugging
+							console.error(err);
+						}
 					});
 
 				}	catch(err) {
@@ -497,6 +503,7 @@ jQuery( document ).ready( ( $ ) => {
 					paymentsClient.loadPaymentData(paymentDataRequest);
 				} catch (err) {
 					// show error in developer console for debugging
+					console.log('catch');
 					console.error(err);
 				}
 			});
