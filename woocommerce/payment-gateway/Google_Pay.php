@@ -407,6 +407,9 @@ class Google_Pay {
 
 				$order->set_address( $address, 'billing' );
 				$order->set_address( $address, 'shipping' );
+
+				$order->set_billing_phone( isset( $adress_data->phoneNumber ) ? $adress_data->phoneNumber : '' );
+				$order->set_billing_email( isset( $payment_data->email ) ? $payment_data->email : '' );
 			}
 
 			$order->save();
