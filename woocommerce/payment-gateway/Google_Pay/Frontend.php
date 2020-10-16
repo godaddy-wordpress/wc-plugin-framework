@@ -322,6 +322,26 @@ class Frontend extends Script_Handler {
 			return;
 		}
 
+		// no subscription products
+		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Product::is_subscription( $product ) ) {
+			return;
+		}
+
+		// no pre-order "charge upon release" products
+		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
+			return;
+		}
+
+		// only simple products
+		if ( ! $product->is_type( 'simple' ) ) {
+			return;
+		}
+
+		// if this product can't be purchased, bail
+		if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
+			return;
+		}
+
 		$this->enqueue_js_handler( $this->get_product_js_handler_args( $product ) );
 
 		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_button' ] );
@@ -370,6 +390,16 @@ class Frontend extends Script_Handler {
 			return;
 		}
 
+		// no subscription products
+		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Cart::cart_contains_subscription() ) {
+			return;
+		}
+
+		// no pre-order "charge upon release" products
+		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
+			return;
+		}
+
 		$this->enqueue_js_handler( $this->get_cart_js_handler_args( WC()->cart ) );
 
 		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_button' ] );
@@ -408,6 +438,23 @@ class Frontend extends Script_Handler {
 	 * @since 5.9.0-dev.1
 	 */
 	public function init_checkout() {
+
+		// no subscription products
+		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Cart::cart_contains_subscription() ) {
+			return;
+		}
+
+		// no pre-order "charge upon release" products
+		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
+			return;
+		}
+
+		WC()->cart->calculate_totals();
+
+		// no multiple shipments
+		if ( count( WC()->shipping->get_packages() ) > 1 ) {
+			return;
+		}
 
 		$this->enqueue_js_handler( $this->get_checkout_js_handler_args() );
 
