@@ -22,21 +22,21 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Handlers\Script_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Handlers\Script_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_1\\Payment_Gateway\\Google_Pay\\Frontend' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment_Gateway\\Google_Pay\\Frontend' ) ) :
 
 
 /**
  * Sets up the Google Pay front-end functionality.
  *
- * @since 5.9.0-dev.1
+ * @since 5.10.0
  */
 class Frontend extends Script_Handler {
 
@@ -44,7 +44,7 @@ class Frontend extends Script_Handler {
 	/** @var SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance */
 	protected $plugin;
 
-	/** @var \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay $handler the Google Pay handler instance */
+	/** @var \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler the Google Pay handler instance */
 	protected $handler;
 
 	/** @var SV_WC_Payment_Gateway $gateway the gateway instance */
@@ -57,12 +57,12 @@ class Frontend extends Script_Handler {
 	/**
 	 * Constructs the class.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance
-	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay $handler the Google Pay handler instance
+	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler the Google Pay handler instance
 	 */
-	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay $handler ) {
+	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler ) {
 
 		$this->plugin = $plugin;
 
@@ -77,7 +77,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Adds the action and filter hooks.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	protected function add_hooks() {
 
@@ -95,7 +95,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Initializes the scripts and hooks.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function init() {
 
@@ -114,7 +114,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Gets the script ID.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return string
 	 */
@@ -127,7 +127,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Gets the script ID, dasherized.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return string
 	 */
@@ -140,7 +140,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Gets the configured display locations.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array
 	 */
@@ -153,19 +153,19 @@ class Frontend extends Script_Handler {
 	/**
 	 * Enqueues the scripts.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function enqueue_scripts() {
 
 		wp_enqueue_script( 'google-pay-js-library', 'https://pay.google.com/gp/p/js/pay.js', array(), null, true );
-		wp_enqueue_script( 'sv-wc-google-pay-v5_8_1', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-google-pay.min.js', array( 'google-pay-js-library', 'jquery' ), $this->get_plugin()->get_version(), true );
+		wp_enqueue_script( 'sv-wc-google-pay-v5_10_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-google-pay.min.js', array( 'google-pay-js-library', 'jquery' ), $this->get_plugin()->get_version(), true );
 	}
 
 
 	/**
 	 * Gets the JS handler arguments.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array
 	 */
@@ -174,7 +174,7 @@ class Frontend extends Script_Handler {
 		/**
 		 * Filters the Google Pay JS handler params.
 		 *
-		 * @since 5.9.0-dev.1
+		 * @since 5.10.0
 		 *
 		 * @param array $params the JS params
 		 */
@@ -199,7 +199,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Enqueues a Google Pay JS handler.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param array $args handler arguments
 	 * @param string $object_name JS object name
@@ -214,7 +214,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Gets the handler instantiation JS.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param array $additional_args additional handler arguments, if any
 	 * @param string $handler_name handler name, if different from self::get_js_handler_class_name()
@@ -234,7 +234,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Adds a log entry.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param string $message message to log
 	 */
@@ -247,7 +247,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Determines whether logging is enabled.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return bool
 	 */
@@ -260,7 +260,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Renders a Google Pay button.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function render_button() {
 
@@ -277,7 +277,7 @@ class Frontend extends Script_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function render_terms_notice() {
 
@@ -294,7 +294,7 @@ class Frontend extends Script_Handler {
 			/**
 			 * Allows to filter the text for the terms & conditions notice.
 			 *
-			 * @since 5.9.0-dev.1
+			 * @since 5.10.0
 			 *
 			 * @params string $default_text default notice text
 			 */
@@ -312,7 +312,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Initializes Google Pay on the single product page.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function init_product() {
 
@@ -352,7 +352,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Gets the args passed to the product JS handler.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param \WC_Product $product product object
 	 * @return array
@@ -366,7 +366,7 @@ class Frontend extends Script_Handler {
 		/**
 		 * Filters the gateway Google Pay cart handler args.
 		 *
-		 * @since 5.9.0-dev.1
+		 * @since 5.10.0
 		 *
 		 * @param array $args JS handler arguments
 		 * @param \WC_Product $product product object
@@ -381,7 +381,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Initializes Google Pay on the cart page.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function init_cart() {
 
@@ -410,7 +410,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Gets the args passed to the cart JS handler.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param \WC_Cart $cart cart object
 	 * @return array
@@ -420,7 +420,7 @@ class Frontend extends Script_Handler {
 		/**
 		 * Filters the gateway Google Pay cart handler args.
 		 *
-		 * @since 5.9.0-dev.1
+		 * @since 5.10.0
 		 *
 		 * @param array $args JS handler arguments
 		 * @param \WC_Cart $cart cart object
@@ -435,7 +435,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Initializes Google Pay on the checkout page.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function init_checkout() {
 
@@ -470,7 +470,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Gets the args passed to the checkout JS handler.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array
 	 */
@@ -479,7 +479,7 @@ class Frontend extends Script_Handler {
 		/**
 		 * Filters the gateway Google Pay checkout handler args.
 		 *
-		 * @since 5.9.0-dev.1
+		 * @since 5.10.0
 		 *
 		 * @param array $args JS handler arguments
 		 */
@@ -490,7 +490,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Renders the Google Pay button for checkout.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function render_checkout_button() {
 
@@ -517,7 +517,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Gets the gateway instance.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return SV_WC_Payment_Gateway
 	 */
@@ -530,7 +530,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Gets the gateway plugin instance.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return SV_WC_Payment_Gateway_Plugin
 	 */
@@ -542,7 +542,7 @@ class Frontend extends Script_Handler {
 	/**
 	 * Gets the Google Pay handler instance.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return Google_Pay
 	 */

@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_1\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -447,7 +447,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
-		$versioned_handle = $handle . '-v5_8_1';
+		$versioned_handle = $handle . '-v5_10_0';
 
 		// Frontend JS
 		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
@@ -1143,7 +1143,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines whether this gateway supports Google Pay.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return bool
 	 */
@@ -1158,7 +1158,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * This method should be overwritten by any gateway that needs to restrict the supported currencies.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array
 	 */
@@ -1174,7 +1174,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Gateways should override this to set the appropriate values depending on
 	 * how their processing API needs to handle the data.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param \WC_Order the order object
 	 * @param mixed $response_data authorized payment response data

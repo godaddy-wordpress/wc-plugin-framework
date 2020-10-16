@@ -22,20 +22,20 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Payment_Gateway_Exception;
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Plugin_Compatibility;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Plugin_Compatibility;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_1\\Payment_Gateway\\Google_Pay\\Orders' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment_Gateway\\Google_Pay\\Orders' ) ) :
 
 
 /**
  * The Google Pay order handler.
  *
- * @since 5.9.0-dev.1
+ * @since 5.10.0
  */
 class Orders {
 
@@ -43,7 +43,7 @@ class Orders {
 	/**
 	 * Creates an order from a cart.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param \WC_Cart $cart cart object
 	 * @return \WC_Order|void
@@ -104,7 +104,7 @@ class Orders {
 	/**
 	 * Gets an order object for payment.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @see \WC_Checkout::create_order()
 	 * @param array $order_data the order data

@@ -22,19 +22,19 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Helper;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_1\\Payment_Gateway\\Google_Pay\\Admin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment_Gateway\\Google_Pay\\Admin' ) ) :
 
 
 /**
  * Sets up the Google Pay settings screen.
  *
- * @since 5.9.0-dev.1
+ * @since 5.10.0
  */
 class Admin {
 
@@ -46,11 +46,11 @@ class Admin {
 	/**
 	 * Construct the class.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
-	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay $handler main Google Pay handler instance
+	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler main Google Pay handler instance
 	 */
-	public function __construct( \SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay $handler ) {
+	public function __construct( \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler ) {
 
 		$this->handler = $handler;
 
@@ -76,7 +76,7 @@ class Admin {
 	 *
 	 * @internal
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param array $sections the existing sections
 	 * @return array
@@ -92,7 +92,7 @@ class Admin {
 	/**
 	 * Gets all of the combined settings.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array $settings The combined settings.
 	 */
@@ -186,7 +186,7 @@ class Admin {
 		/**
 		 * Filter the combined settings.
 		 *
-		 * @since 5.9.0-dev.1
+		 * @since 5.10.0
 		 * @param array $settings The combined settings.
 		 */
 		return apply_filters( 'woocommerce_get_settings_google_pay', $settings );
@@ -198,7 +198,7 @@ class Admin {
 	 *
 	 * @internal
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function add_settings() {
 		global $current_section;
@@ -214,7 +214,7 @@ class Admin {
 	 *
 	 * @internal
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @global string $current_section The current settings section.
 	 */
@@ -235,7 +235,7 @@ class Admin {
 	 * This "setting" just displays simple text instead of a <select> with only
 	 * one option.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param array $setting
 	 */
@@ -263,7 +263,7 @@ class Admin {
 	/**
 	 * Adds admin notices for configuration options that need attention.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function add_admin_notices() {
 
@@ -319,7 +319,7 @@ class Admin {
 	/**
 	 * Determines if the user is currently on the settings screen.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return bool
 	 */
@@ -332,7 +332,7 @@ class Admin {
 	/**
 	 * Gets the available display location options.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array
 	 */
@@ -349,7 +349,7 @@ class Admin {
 	/**
 	 * Gets the available gateway options.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array
 	 */

@@ -22,15 +22,15 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_8_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0;
 
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Note;
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes;
-use SkyVerge\WooCommerce\PluginFramework\v5_8_1\Payment_Gateway\Google_Pay;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_8_1\\SV_WC_Payment_Gateway_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_Payment_Gateway_Plugin' ) ) :
 
 
 /**
@@ -514,7 +514,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Initializes Google Pay if it's supported.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function maybe_init_google_pay() {
 
@@ -527,14 +527,14 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Determines whether Google Pay is activated.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	private function is_google_pay_activated() {
 
 		/**
 		 * Filters whether Google Pay is activated.
 		 *
-		 * @since 5.9.0-dev.1
+		 * @since 5.10.0
 		 *
 		 * @param bool $activated whether Google Pay is activated
 		 */
@@ -547,7 +547,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * Gateways can override this to define their own Google Pay class.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return Payment_Gateway\Google_Pay
 	 */
@@ -560,7 +560,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Gets the Google Pay handler instance.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return Payment_Gateway\Google_Pay
 	 */
@@ -573,7 +573,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Determines if this plugin has any gateways with Google Pay support.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return bool
 	 */
@@ -939,7 +939,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/**
 	 * Adds notices about Google Pay not supported in the current WooCommerce version.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 */
 	protected function add_google_pay_not_supported_notices() {
 

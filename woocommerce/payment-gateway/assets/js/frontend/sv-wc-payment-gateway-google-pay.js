@@ -5,16 +5,16 @@ jQuery( document ).ready( ( $ ) => {
 	/**
 	 * Google Pay handler.
 	 *
-	 * @since 5.9.0-dev.1
+	 * @since 5.10.0
 	 *
-	 * @type {SV_WC_Google_Pay_Handler_v5_8_1} object
+	 * @type {SV_WC_Google_Pay_Handler_v5_10_0} object
 	 */
-	window.SV_WC_Google_Pay_Handler_v5_8_1 = class SV_WC_Google_Pay_Handler_v5_8_1 {
+	window.SV_WC_Google_Pay_Handler_v5_10_0 = class SV_WC_Google_Pay_Handler_v5_10_0 {
 
 		/**
 		 * Handler constructor.
 		 *
-		 * @since 5.9.0-dev.1
+		 * @since 5.10.0
 		 *
 		 * @param {Object} params The plugin ID
 		 * @param {string} params.plugin_id The plugin ID
@@ -560,6 +560,6 @@ jQuery( document ).ready( ( $ ) => {
 		}
 	}
 
-	$( document.body ).trigger( 'sv_wc_google_pay_handler_v5_8_1_loaded' );
+	$( document.body ).trigger( 'sv_wc_google_pay_handler_v5_10_0_loaded' );
 
 });
