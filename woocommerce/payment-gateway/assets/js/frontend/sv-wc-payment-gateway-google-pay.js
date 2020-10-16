@@ -188,7 +188,7 @@ jQuery( document ).ready( ( $ ) => {
 				paymentDataRequest.shippingOptionRequired = true;
 
 				resolve( paymentDataRequest );
-			} );
+			});
 		}
 
 		/**
@@ -227,7 +227,7 @@ jQuery( document ).ready( ( $ ) => {
 						transactionState: 'ERROR',
 						error: {
 							intent: 'PAYMENT_AUTHORIZATION',
-							message: 'Insufficient funds',
+							message: 'Payment could not be processed',
 							reason: 'PAYMENT_DATA_INVALID'
 						}
 					});
@@ -273,14 +273,7 @@ jQuery( document ).ready( ( $ ) => {
 					});
 
 				}	catch(err) {
-					reject({
-						transactionState: 'ERROR',
-						error: {
-							intent: 'PAYMENT_AUTHORIZATION',
-							message: 'Insufficient funds',
-							reason: 'PAYMENT_DATA_INVALID'
-						}
-					});
+					this.fail_payment( 'Could not load updated totals or process payment data request update. ' + err );
 				}
 
 				this.unblock_ui();
@@ -313,7 +306,7 @@ jQuery( document ).ready( ( $ ) => {
 				} else {
 					this.fail_payment( 'Could not build transaction info. ' + response.data.message );
 				}
-			} );
+			});
 		}
 
 		/**
@@ -345,7 +338,7 @@ jQuery( document ).ready( ( $ ) => {
 				} else {
 					this.fail_payment( 'Could not recalculate totals. ' + response.data.message );
 				}
-			} );
+			});
 		}
 
 		/**
@@ -408,7 +401,7 @@ jQuery( document ).ready( ( $ ) => {
 				};
 				const paymentsClient = this.getGooglePaymentsClient();
 				paymentsClient.prefetchPaymentData(paymentDataRequest);
-			} );
+			});
 		}
 
 		/**
@@ -441,7 +434,7 @@ jQuery( document ).ready( ( $ ) => {
 							reason: 'PAYMENT_DATA_INVALID'
 						}
 					});
-					this.fail_payment( 'Payment could no be processed. ' + response.data.message );
+					this.fail_payment( 'Payment could not be processed. ' + response.data.message );
 				}
 			});
 		}
@@ -461,6 +454,7 @@ jQuery( document ).ready( ( $ ) => {
 				try {
 					paymentsClient.loadPaymentData(paymentDataRequest);
 				} catch (err) {
+					this.fail_payment( 'Could not load payment data. ' + err );
 				}
 
 				this.unblock_ui();
@@ -496,6 +490,7 @@ jQuery( document ).ready( ( $ ) => {
 					}
 				})
 				.catch((err) => {
+					this.fail_payment( 'Google Pay is not ready. ' + err );
 				});
 		}
 
@@ -567,4 +562,4 @@ jQuery( document ).ready( ( $ ) => {
 
 	$( document.body ).trigger( 'sv_wc_google_pay_handler_v5_8_1_loaded' );
 
-} );
+});
