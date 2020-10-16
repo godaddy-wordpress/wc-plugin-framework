@@ -399,7 +399,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 			$order->payment->card_type = $token->get_card_type();
 			$order->payment->exp_month = $token->get_exp_month();
-			$order->payment->exp_year  = $token->get_exp_year();
+			$order->payment->exp_year  = SV_WC_Payment_Gateway_Helper::format_exp_year( $token->get_exp_year() );
 
 		} elseif ( $token->is_echeck() ) {
 
