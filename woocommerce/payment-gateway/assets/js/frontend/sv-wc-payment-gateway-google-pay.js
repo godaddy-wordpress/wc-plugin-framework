@@ -56,6 +56,7 @@ jQuery( document ).ready( ( $ ) => {
 			this.ajaxURL = ajax_url;
 			this.recalculateTotalsNonce = recalculate_totals_nonce;
 			this.processNonce = process_nonce;
+			this.buttonStyle = button_style;
 			this.availableCountries = available_countries;
 			this.currencyCode = currency_code;
 			this.genericError = generic_error;
@@ -434,7 +435,8 @@ jQuery( document ).ready( ( $ ) => {
 
 			const paymentsClient = this.getGooglePaymentsClient();
 			const button = paymentsClient.createButton({
-				onClick: (event) => this.onGooglePaymentButtonClicked( event )
+				onClick: (event) => this.onGooglePaymentButtonClicked( event ),
+				buttonColor: this.buttonStyle
 			});
 			document.getElementById('sv-wc-google-pay-button-container').appendChild(button);
 		}
