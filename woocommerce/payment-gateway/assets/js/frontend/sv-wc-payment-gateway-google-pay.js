@@ -216,6 +216,7 @@ jQuery( document ).ready( ( $ ) => {
 
 		onPaymentAuthorized(paymentData) {
 
+			this.block_ui();
 			console.log('onPaymentAuthorized');
 			console.log(paymentData);
 
@@ -251,6 +252,8 @@ jQuery( document ).ready( ( $ ) => {
 						}
 					});
 				}
+
+				this.unblock_ui();
 			});
 		}
 
@@ -317,6 +320,8 @@ jQuery( document ).ready( ( $ ) => {
 						}
 					});
 				}
+
+				this.unblock_ui();
 			});
 		}
 
@@ -493,6 +498,8 @@ jQuery( document ).ready( ( $ ) => {
 
 			event.preventDefault();
 
+			this.block_ui();
+
 			this.getGooglePaymentDataRequest( ( paymentDataRequest ) => {
 
 				console.log(paymentDataRequest);
@@ -506,6 +513,8 @@ jQuery( document ).ready( ( $ ) => {
 					console.log('catch');
 					console.error(err);
 				}
+
+				this.unblock_ui();
 			});
 		}
 
