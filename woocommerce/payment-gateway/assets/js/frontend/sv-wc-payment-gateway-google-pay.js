@@ -191,6 +191,7 @@ jQuery( document ).ready( ( $ ) => {
 				};
 
 				paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS", "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
+				paymentDataRequest.emailRequired = true;
 				paymentDataRequest.shippingAddressRequired = true;
 				paymentDataRequest.shippingAddressParameters = this.getGoogleShippingAddressParameters();
 				paymentDataRequest.shippingOptionRequired = true;
