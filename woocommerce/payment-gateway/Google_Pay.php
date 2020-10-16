@@ -677,6 +677,22 @@ class Google_Pay {
 
 
 	/**
+	 * Gets the currencies supported by the gateway and available for shipping.
+	 *
+	 * @since 5.9.0-dev.1
+	 *
+	 * @return array
+	 */
+	public function get_available_countries() {
+
+		$gateway_available_countries = $this->get_processing_gateway()->get_available_countries();
+		$shipping_countries          = array_keys( WC()->countries->get_shipping_countries() );
+
+		return ! empty( $gateway_available_countries ) ? array_intersect( $gateway_available_countries, $shipping_countries ) : $shipping_countries;
+	}
+
+
+	/**
 	 * Gets the currencies accepted by the gateway's Google Pay integration.
 	 *
 	 * @since 5.9.0-dev.1

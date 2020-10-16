@@ -27,6 +27,8 @@ jQuery( document ).ready( ( $ ) => {
 		 * @param {string} params.process_nonce Nonce for the process AJAX action
 		 * @param {string} params.button_style The button style
 		 * @param {string[]} params.card_types The supported card types
+		 * @param {string[]} params.available_countries Array of two-letter country codes the gateway is available for
+		 * @param {string[]} params.currency_code WC configured currency
 		 * @param {string} params.generic_error The generic error message
 		 * @param {string} params.product_id The product ID if we are on a Product page
 		 */
@@ -43,6 +45,8 @@ jQuery( document ).ready( ( $ ) => {
 				process_nonce,
 				button_style,
 				card_types,
+				available_countries,
+				currency_code,
 				generic_error
 			} = params;
 
@@ -52,6 +56,8 @@ jQuery( document ).ready( ( $ ) => {
 			this.ajaxURL = ajax_url;
 			this.recalculateTotalsNonce = recalculate_totals_nonce;
 			this.processNonce = process_nonce;
+			this.availableCountries = available_countries;
+			this.currencyCode = currency_code;
 			this.genericError = generic_error;
 
 			if (params.product_id) {
@@ -399,8 +405,7 @@ jQuery( document ).ready( ( $ ) => {
 		getGoogleShippingAddressParameters() {
 
 			return  {
-				// @todo: get from WC
-				allowedCountryCodes: ['US'],
+				allowedCountryCodes: this.availableCountries,
 				phoneNumberRequired: true
 			};
 		}
@@ -446,7 +451,7 @@ jQuery( document ).ready( ( $ ) => {
 				// transactionInfo must be set but does not affect cache
 				paymentDataRequest.transactionInfo = {
 					totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
-					currencyCode: 'USD'
+					currencyCode: this.currencyCode
 				};
 				const paymentsClient = this.getGooglePaymentsClient();
 				paymentsClient.prefetchPaymentData(paymentDataRequest);

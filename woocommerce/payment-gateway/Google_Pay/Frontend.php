@@ -189,6 +189,8 @@ class Frontend extends Script_Handler {
 			'process_nonce'            => wp_create_nonce( 'wc_' . $this->get_plugin()->get_gateway()->get_id() . '_google_pay_process_payment' ),
 			'button_style'             => $this->get_handler()->get_button_style(),
 			'card_types'               => $this->get_handler()->get_supported_networks(),
+			'available_countries'	   => $this->get_handler()->get_available_countries(),
+			'currency_code'			   => get_woocommerce_currency(),
 			'generic_error'            => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
 		] );
 	}
