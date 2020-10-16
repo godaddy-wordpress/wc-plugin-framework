@@ -97,7 +97,9 @@ class AJAX {
 
 		try {
 
-			$transaction_info = $this->get_handler()->get_transaction_info( WC()->cart );
+			$product_id = wc_clean( SV_WC_Helper::get_posted_value( 'productID' ) );
+
+			$transaction_info = $this->get_handler()->get_transaction_info( WC()->cart, $product_id );
 
 			$this->get_handler()->log( "Google transaction info:\n" . print_r( $transaction_info, true ) );
 

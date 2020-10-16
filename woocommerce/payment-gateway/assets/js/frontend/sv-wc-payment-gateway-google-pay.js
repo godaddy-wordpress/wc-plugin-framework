@@ -327,6 +327,10 @@ jQuery( document ).ready( ( $ ) => {
 				action: `wc_${this.gatewayID}_google_pay_get_transaction_info`,
 			}
 
+			if (this.productID) {
+				data.productID = this.productID;
+			}
+
 			$.post(this.ajaxURL, data, ( response ) => {
 
 				console.log(response);

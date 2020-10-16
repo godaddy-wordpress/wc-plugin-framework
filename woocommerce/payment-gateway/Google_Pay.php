@@ -129,10 +129,11 @@ class Google_Pay {
 	 * @since 5.9.0-dev.1
 	 *
 	 * @param \WC_Cart $cart cart object
+	 * @param string $product_id product ID, if we are on a Product page
 	 * @return array
 	 * @throws SV_WC_Payment_Gateway_Exception
 	 */
-	public function get_transaction_info( \WC_Cart $cart ) {
+	public function get_transaction_info( \WC_Cart $cart, $product_id ) {
 
 		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Cart::cart_contains_subscription() ) {
 			throw new SV_WC_Payment_Gateway_Exception( 'Cart contains subscriptions.' );
@@ -159,7 +160,7 @@ class Google_Pay {
 				'totalPriceLabel'  => "Total",
 			];
 
-		} else if ( $product = wc_get_product( get_the_ID() ) ) {
+		} elseif ( ! empty( $product_id ) && $product = wc_get_product( $product_id ) ) {
 
 			// buying from the product page
 			$transaction_info = [
