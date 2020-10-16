@@ -265,6 +265,8 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		onPaymentDataChanged(intermediatePaymentData) {
 
+			this.block_ui();
+
 			console.log('onPaymentDataChanged');
 			console.log(intermediatePaymentData);
 
@@ -490,8 +492,6 @@ jQuery( document ).ready( ( $ ) => {
 		onGooglePaymentButtonClicked(event) {
 
 			event.preventDefault();
-
-			this.block_ui();
 
 			this.getGooglePaymentDataRequest( ( paymentDataRequest ) => {
 
