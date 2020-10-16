@@ -148,14 +148,37 @@ class Google_Pay {
 			throw new SV_WC_Payment_Gateway_Exception( 'Google Pay cannot be used for multiple shipments.' );
 		}
 
-		$transaction_info = [
-			'displayItems'     => $this->build_display_items( $cart ),
-			'countryCode'      => substr( get_option( 'woocommerce_default_country' ), 0, 2 ),
-			'currencyCode'     => get_woocommerce_currency(),
-			'totalPriceStatus' => "FINAL",
-			'totalPrice'       => wc_format_decimal( $cart->total, 2 ),
-			'totalPriceLabel'  => "Total",
-		];
+		if ( ! empty( $cart->get_cart_contents() ) ) {
+
+			$transaction_info = [
+				'displayItems'     => $this->build_display_items( $cart ),
+				'countryCode'      => substr( get_option( 'woocommerce_default_country' ), 0, 2 ),
+				'currencyCode'     => get_woocommerce_currency(),
+				'totalPriceStatus' => "FINAL",
+				'totalPrice'       => wc_format_decimal( $cart->total, 2 ),
+				'totalPriceLabel'  => "Total",
+			];
+
+		} else {
+
+			// buying from the product page
+			$product = wc_get_product( get_the_ID() );
+
+			$transaction_info = [
+				'displayItems'     => array(
+					array(
+						'label' => __( 'Subtotal', 'woocommerce-plugin-framework' ),
+						'type'  => 'SUBTOTAL',
+						'price' => wc_format_decimal( $product->get_price(), 2 ),
+					),
+				),
+				'countryCode'      => substr( get_option( 'woocommerce_default_country' ), 0, 2 ),
+				'currencyCode'     => get_woocommerce_currency(),
+				'totalPriceStatus' => "FINAL",
+				'totalPrice'       => wc_format_decimal( $product->get_price(), 2 ),
+				'totalPriceLabel'  => "Total",
+			];
+		}
 
 		/**
 		 * Filters the Google Pay cart JS transaction info.
