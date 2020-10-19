@@ -13,7 +13,7 @@ module.exports = function( grunt ) {
 				sourceMapName: '<%= dirs.gateway.js %>/frontend/sv-wc-payment-gateway-frontend.min.map'
 			},
 			files : [{
-				src: ['<%= dirs.gateway.js %>/js/frontend/sv-wc-payment-gateway-frontend.min.js'], // uglify JS from CoffeeScript compilation
+				src: [ '<%= dirs.gateway.js %>/js/frontend/sv-wc-payment-gateway-frontend.min.js' ], // uglify JS from CoffeeScript compilation
 				dest: '<%= dirs.gateway.js %>/frontend/sv-wc-payment-gateway-frontend.min.js'
 			}]
 		}
