@@ -21,8 +21,6 @@
     "build": "grunt default && npm run build:parcel"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.0",
-    "@babel/preset-env": "^7.12.0",
     "coffeescript": "^2.5.1",
     "gettext-parser": "^1.4.0",
     "grunt": "~0.4.5",
