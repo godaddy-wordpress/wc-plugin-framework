@@ -67,7 +67,6 @@ module.exports = function( grunt ) {
 	// Register build task
 	grunt.registerTask( 'build', [
 		'coffee',
-		'babel',
 		'sass',
 		'update_translations',
 	] );
@@ -75,7 +74,6 @@ module.exports = function( grunt ) {
 	// Register default task
 	grunt.registerTask( 'default', [
 		'coffee',
-		'babel',
 		'sass',
 		'makepot',
 		'shell:tx_push',
