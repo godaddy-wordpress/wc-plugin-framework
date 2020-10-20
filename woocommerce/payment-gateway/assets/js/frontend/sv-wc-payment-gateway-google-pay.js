@@ -213,6 +213,14 @@ jQuery( document ).ready( ( $ ) => {
 			return this.paymentsClient;
 		}
 
+		/**
+		 * Handles payment authorization callback intent.
+		 *
+		 * @param {object} paymentData response from Google Pay API after a payer approves payment.
+		 * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentData|PaymentData object reference}
+		 *
+		 * @returns Promise<{object}> Promise object to complete or fail the transaction.
+		 */
 		onPaymentAuthorized( paymentData ) {
 
 			this.block_ui();
