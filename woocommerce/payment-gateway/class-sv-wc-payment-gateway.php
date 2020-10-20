@@ -1188,7 +1188,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		// account last four
 		$order->payment->account_number = $payment_method_data->info->cardDetails;
-		$order->payment->card_type = strtolower( $payment_method_data->info->cardNetwork );
+		$order->payment->card_type      = SV_WC_Payment_Gateway_Helper::normalize_card_type( $payment_method_data->info->cardNetwork );
 
 		return $order;
 	}
