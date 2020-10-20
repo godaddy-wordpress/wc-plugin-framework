@@ -22,15 +22,15 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Google_Pay;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Google_Pay;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Exception;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment_Gateway\\Google_Pay\\AJAX' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment_Gateway\\External_Checkout\\Google_Pay\\AJAX' ) ) :
 
 
 /**
@@ -41,7 +41,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment
 class AJAX {
 
 
-	/** @var \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler the Google Pay handler instance */
+	/** @var Google_Pay $handler the Google Pay handler instance */
 	protected $handler;
 
 
@@ -50,7 +50,7 @@ class AJAX {
 	 *
 	 * @since 5.10.0
 	 *
-	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler the Google Pay handler instance
+	 * @param Google_Pay $handler the Google Pay handler instance
 	 */
 	public function __construct( Google_Pay $handler ) {
 

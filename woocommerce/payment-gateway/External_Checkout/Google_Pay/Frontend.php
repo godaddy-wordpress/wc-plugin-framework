@@ -22,16 +22,17 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Google_Pay;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Handlers\Script_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Google_Pay;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Exception;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment_Gateway\\Google_Pay\\Frontend' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment_Gateway\\External_Checkout\\Google_Pay\\Frontend' ) ) :
 
 
 /**
@@ -45,7 +46,7 @@ class Frontend extends Script_Handler {
 	/** @var SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance */
 	protected $plugin;
 
-	/** @var \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler the Google Pay handler instance */
+	/** @var Google_Pay $handler the Google Pay handler instance */
 	protected $handler;
 
 	/** @var SV_WC_Payment_Gateway $gateway the gateway instance */
@@ -61,9 +62,9 @@ class Frontend extends Script_Handler {
 	 * @since 5.10.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance
-	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler the Google Pay handler instance
+	 * @param Google_Pay $handler the Google Pay handler instance
 	 */
-	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler ) {
+	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, Google_Pay $handler ) {
 
 		$this->plugin = $plugin;
 

@@ -26,7 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0;
 
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Note;
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Google_Pay;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -104,7 +104,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	/** @var SV_WC_Payment_Gateway_Apple_Pay the Apple Pay handler instance */
 	private $apple_pay;
 
-	/** @var Payment_Gateway\Google_Pay the Google Pay handler instance */
+	/** @var Google_Pay the Google Pay handler instance */
 	private $google_pay;
 
 
@@ -301,20 +301,21 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( $payment_gateway_framework_path . '/Handlers/Abstract_Hosted_Payment_Handler.php' );
 		require_once( $payment_gateway_framework_path . '/Handlers/Capture.php' );
 
-		// apple pay
-		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay.php" );
-		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php" );
-		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php" );
-		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay-ajax.php" );
-		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php" );
-		require_once( "{$payment_gateway_framework_path}/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-payment-response.php" );
+		// External Checkout
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/Orders.php" );
+
+		// Apple Pay
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-ajax.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-payment-response.php" );
 
 		// Google Pay
-		require_once( "{$payment_gateway_framework_path}/Google_Pay.php" );
-		require_once( "{$payment_gateway_framework_path}/Google_Pay/Admin.php" );
-		require_once( "{$payment_gateway_framework_path}/Google_Pay/AJAX.php" );
-		require_once( "{$payment_gateway_framework_path}/Google_Pay/Frontend.php" );
-		require_once( "{$payment_gateway_framework_path}/Google_Pay/Orders.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/Google_Pay.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/Google_Pay/Admin.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/Google_Pay/AJAX.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/Google_Pay/Frontend.php" );
 
 		// payment tokens
 		require_once( $payment_gateway_framework_path . '/payment-tokens/class-sv-wc-payment-gateway-payment-token.php' );
@@ -531,7 +532,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 5.10.0
 	 *
-	 * @return Payment_Gateway\Google_Pay
+	 * @return Google_Pay
 	 */
 	protected function build_google_pay_instance() {
 
@@ -544,7 +545,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 5.10.0
 	 *
-	 * @return Payment_Gateway\Google_Pay
+	 * @return Google_Pay
 	 */
 	public function get_google_pay_instance() {
 
