@@ -818,6 +818,21 @@ class Google_Pay {
 	}
 
 
+	/**
+	 * Gets the gateway merchant ID.
+	 *
+	 * Each plugin can override this method to get the merchant ID from their own setting.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return string
+	 */
+	public function get_merchant_id() {
+
+		return method_exists( $this->get_gateway(), 'get_merchant_id' ) ? $this->get_gateway()->get_merchant_id() : '';
+	}
+
+
 }
 
 
