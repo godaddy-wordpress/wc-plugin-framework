@@ -124,7 +124,7 @@ class Google_Pay {
 
 
 	/**
-	 * Gets Google transaction info based on WooCommerce cart data.
+	 * Gets Google transaction info based on WooCommerce cart or product data.
 	 *
 	 * @since 5.10.0
 	 *
@@ -134,6 +134,37 @@ class Google_Pay {
 	 * @throws SV_WC_Payment_Gateway_Exception
 	 */
 	public function get_transaction_info( \WC_Cart $cart, $product_id ) {
+
+		if ( ! empty( $product_id ) && $product = wc_get_product( $product_id ) ) {
+			// buying from the product page
+			$transaction_info = $this->get_product_transaction_info( $product );
+		} else {
+			$transaction_info = $this->get_cart_transaction_info( $cart );
+		}
+
+		/**
+		 * Filters the Google Pay JS transaction info.
+		 *
+		 * @since 5.10.0
+		 *
+		 * @param array $transaction_info the JS transaction info
+		 * @param \WC_Cart $cart the cart object
+		 * @param \WC_Product|false $product the product object, if buying from the product page
+		 */
+		return apply_filters( 'sv_wc_google_pay_cart_transaction_info', $transaction_info, $cart, ! empty( $product ) ? $product : false );
+	}
+
+
+	/**
+	 * Gets Google transaction info based on WooCommerce cart data.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param \WC_Cart $cart cart object
+	 * @return array
+	 * @throws SV_WC_Payment_Gateway_Exception
+	 */
+	public function get_cart_transaction_info( \WC_Cart $cart ) {
 
 		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Cart::cart_contains_subscription() ) {
 			throw new SV_WC_Payment_Gateway_Exception( 'Cart contains subscriptions.' );
@@ -149,45 +180,62 @@ class Google_Pay {
 			throw new SV_WC_Payment_Gateway_Exception( 'Google Pay cannot be used for multiple shipments.' );
 		}
 
-		if ( ! empty( $cart->get_cart_contents_count() ) ) {
+		return [
+			'displayItems'     => $this->build_display_items( $cart ),
+			'countryCode'      => substr( get_option( 'woocommerce_default_country' ), 0, 2 ),
+			'currencyCode'     => get_woocommerce_currency(),
+			'totalPriceStatus' => "FINAL",
+			'totalPrice'       => wc_format_decimal( $cart->total, 2 ),
+			'totalPriceLabel'  => "Total",
+		];
+	}
 
-			$transaction_info = [
-				'displayItems'     => $this->build_display_items( $cart ),
-				'countryCode'      => substr( get_option( 'woocommerce_default_country' ), 0, 2 ),
-				'currencyCode'     => get_woocommerce_currency(),
-				'totalPriceStatus' => "FINAL",
-				'totalPrice'       => wc_format_decimal( $cart->total, 2 ),
-				'totalPriceLabel'  => "Total",
-			];
 
-		} elseif ( ! empty( $product_id ) && $product = wc_get_product( $product_id ) ) {
+	/**
+	 * Gets Google transaction info based on product data.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param \WC_Product $product product object
+	 * @return array
+	 * @throws SV_WC_Payment_Gateway_Exception
+	 */
+	public function get_product_transaction_info( \WC_Product $product ) {
 
-			// buying from the product page
-			$transaction_info = [
-				'displayItems'     => [
-					[
-						'label' => __( 'Subtotal', 'woocommerce-plugin-framework' ),
-						'type'  => 'SUBTOTAL',
-						'price' => wc_format_decimal( $product->get_price(), 2 ),
-					],
-				],
-				'countryCode'      => substr( get_option( 'woocommerce_default_country' ), 0, 2 ),
-				'currencyCode'     => get_woocommerce_currency(),
-				'totalPriceStatus' => "FINAL",
-				'totalPrice'       => wc_format_decimal( $product->get_price(), 2 ),
-				'totalPriceLabel'  => "Total",
-			];
+		// no subscription products
+		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Product::is_subscription( $product ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Not available for subscription products.' );
 		}
 
-		/**
-		 * Filters the Google Pay cart JS transaction info.
-		 *
-		 * @since 5.10.0
-		 *
-		 * @param array $transaction_info the cart JS transaction info
-		 * @param \WC_Cart $cart the cart object
-		 */
-		return apply_filters( 'sv_wc_google_pay_cart_transaction_info', $transaction_info, $cart );
+		// no pre-order "charge upon release" products
+		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Not available for pre-order products that are set to charge upon release.' );
+		}
+
+		// only simple products
+		if ( ! $product->is_type( 'simple' ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Buy Now is only available for simple products' );
+		}
+
+		// if this product can't be purchased, bail
+		if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Product is not available for purchase.' );
+		}
+
+		return [
+			'displayItems'     => [
+				[
+					'label' => __( 'Subtotal', 'woocommerce-plugin-framework' ),
+					'type'  => 'SUBTOTAL',
+					'price' => wc_format_decimal( $product->get_price(), 2 ),
+				],
+			],
+			'countryCode'      => substr( get_option( 'woocommerce_default_country' ), 0, 2 ),
+			'currencyCode'     => get_woocommerce_currency(),
+			'totalPriceStatus' => "FINAL",
+			'totalPrice'       => wc_format_decimal( $product->get_price(), 2 ),
+			'totalPriceLabel'  => "Total",
+		];
 	}
 
 
