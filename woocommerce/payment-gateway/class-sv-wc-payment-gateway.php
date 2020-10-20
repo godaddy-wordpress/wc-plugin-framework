@@ -450,7 +450,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$versioned_handle = $handle . '-v5_10_0';
 
 		// Frontend JS
-		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
+		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
 
 		// Frontend CSS
 		wp_enqueue_style( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), SV_WC_Plugin::VERSION );
@@ -512,13 +512,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	protected function enqueue_gateway_assets() {
 
 		$handle = $this->get_gateway_js_handle();
-		$js_path   = $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/' . $handle . '.min.js';
+		$js_path   = $this->get_plugin()->get_plugin_path() . '/assets/dist/frontend/' . $handle . '.js';
 		$css_path  = $this->get_plugin()->get_plugin_path() . '/assets/css/frontend/' . $handle . '.min.css';
 
 		// JS
 		if ( is_readable( $js_path ) ) {
 
-			$js_url = $this->get_plugin()->get_plugin_url() . '/assets/js/frontend/' . $handle . '.min.js';
+			$js_url = $this->get_plugin()->get_plugin_url() . '/assets/dist/frontend/' . $handle . '.js';
 
 			/**
 			 * Concrete Payment Gateway JS URL

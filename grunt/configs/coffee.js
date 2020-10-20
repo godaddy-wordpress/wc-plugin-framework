@@ -17,20 +17,6 @@ module.exports = function( grunt ) {
 					dest: '<%= dirs.general.js %>/admin/',
 					src: '*.coffee',
 					ext: '.min.js'
-				},
-				{
-					expand: true,
-					cwd: '<%= dirs.gateway.js %>/admin/',
-					dest: '<%= dirs.gateway.js %>/admin/',
-					src: '*.coffee',
-					ext: '.min.js'
-				},
-				{
-					expand: true,
-					cwd: '<%= dirs.gateway.js %>/frontend/',
-					dest: '<%= dirs.gateway.js %>/frontend/',
-					src: '*.coffee',
-					ext: '.min.js'
 				}
 			]
 		}
