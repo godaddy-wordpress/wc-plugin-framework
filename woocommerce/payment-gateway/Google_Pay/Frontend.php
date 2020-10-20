@@ -428,13 +428,6 @@ class Frontend extends Script_Handler {
 			return;
 		}
 
-		WC()->cart->calculate_totals();
-
-		// no multiple shipments
-		if ( count( WC()->shipping->get_packages() ) > 1 ) {
-			return;
-		}
-
 		$this->enqueue_js_handler( $this->get_checkout_js_handler_args() );
 
 		if ( $this->get_plugin()->is_plugin_active( 'woocommerce-checkout-add-ons.php' ) ) {
