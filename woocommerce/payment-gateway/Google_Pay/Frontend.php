@@ -26,6 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pa
 
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Handlers\Script_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Exception;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
@@ -85,9 +86,9 @@ class Frontend extends Script_Handler {
 
 			parent::add_hooks();
 
-			add_action( 'wp', array( $this, 'init' ) );
+			add_action( 'wp', [ $this, 'init' ] );
 
-			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		}
 	}
 
@@ -146,7 +147,7 @@ class Frontend extends Script_Handler {
 	 */
 	protected function get_display_locations() {
 
-		return get_option( 'sv_wc_google_pay_display_locations', array() );
+		return get_option( 'sv_wc_google_pay_display_locations', [] );
 	}
 
 
@@ -158,7 +159,7 @@ class Frontend extends Script_Handler {
 	public function enqueue_scripts() {
 
 		wp_enqueue_script( 'google-pay-js-library', 'https://pay.google.com/gp/p/js/pay.js', array(), null, true );
-		wp_enqueue_script( 'sv-wc-google-pay-v5_10_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/dist/sv-wc-payment-gateway-google-pay.js', array( 'google-pay-js-library', 'jquery' ), $this->get_plugin()->get_version(), true );
+		wp_enqueue_script( 'sv-wc-google-pay-v5_10_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/dist/sv-wc-payment-gateway-google-pay.js', [ 'google-pay-js-library', 'jquery' ], $this->get_plugin()->get_version(), true );
 	}
 
 
@@ -180,7 +181,7 @@ class Frontend extends Script_Handler {
 		 */
 		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_js_handler_params', [
 			'plugin_id'                => $this->get_gateway()->get_plugin()->get_id(),
-			'merchant_id'              => method_exists( $this->get_gateway(), 'get_merchant_id' ) ? $this->get_gateway()->get_merchant_id() : '',
+			'merchant_id'              => $this->get_handler()->get_merchant_id(),
 			'merchant_name'            => get_bloginfo( 'name' ),
 			'gateway_id'               => $this->get_gateway()->get_id(),
 			'gateway_id_dasherized'    => $this->get_gateway()->get_id_dasherized(),
@@ -322,23 +323,9 @@ class Frontend extends Script_Handler {
 			return;
 		}
 
-		// no subscription products
-		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Product::is_subscription( $product ) ) {
-			return;
-		}
-
-		// no pre-order "charge upon release" products
-		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
-			return;
-		}
-
-		// only simple products
-		if ( ! $product->is_type( 'simple' ) ) {
-			return;
-		}
-
-		// if this product can't be purchased, bail
-		if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
+		try {
+			$this->get_handler()->validate_product( $product );
+		} catch ( SV_WC_Payment_Gateway_Exception $exception ) {
 			return;
 		}
 
@@ -359,9 +346,9 @@ class Frontend extends Script_Handler {
 	 */
 	protected function get_product_js_handler_args( \WC_Product $product ) {
 
-		$args = array(
+		$args = [
 			'product_id' => get_the_ID(),
-		);
+		];
 
 		/**
 		 * Filters the gateway Google Pay cart handler args.
@@ -390,13 +377,9 @@ class Frontend extends Script_Handler {
 			return;
 		}
 
-		// no subscription products
-		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Cart::cart_contains_subscription() ) {
-			return;
-		}
-
-		// no pre-order "charge upon release" products
-		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
+		try {
+			$this->get_handler()->validate_cart( WC()->cart );
+		} catch ( SV_WC_Payment_Gateway_Exception $exception ) {
 			return;
 		}
 
@@ -425,7 +408,7 @@ class Frontend extends Script_Handler {
 		 * @param array $args JS handler arguments
 		 * @param \WC_Cart $cart cart object
 		 */
-		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_cart_js_handler_args', array(), $cart );
+		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_cart_js_handler_args', [], $cart );
 	}
 
 
@@ -439,20 +422,9 @@ class Frontend extends Script_Handler {
 	 */
 	public function init_checkout() {
 
-		// no subscription products
-		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Cart::cart_contains_subscription() ) {
-			return;
-		}
-
-		// no pre-order "charge upon release" products
-		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
-			return;
-		}
-
-		WC()->cart->calculate_totals();
-
-		// no multiple shipments
-		if ( count( WC()->shipping->get_packages() ) > 1 ) {
+		try {
+			$this->get_handler()->validate_cart( WC()->cart );
+		} catch ( SV_WC_Payment_Gateway_Exception $exception ) {
 			return;
 		}
 
@@ -483,7 +455,7 @@ class Frontend extends Script_Handler {
 		 *
 		 * @param array $args JS handler arguments
 		 */
-		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_checkout_js_handler_args', array() );
+		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_checkout_js_handler_args', [] );
 	}
 
 

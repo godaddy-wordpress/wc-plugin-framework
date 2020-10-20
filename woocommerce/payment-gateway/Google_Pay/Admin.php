@@ -55,19 +55,19 @@ class Admin {
 		$this->handler = $handler;
 
 		// add Google Pay to the checkout settings sections
-		add_filter( 'woocommerce_get_sections_checkout', array( $this, 'add_settings_section' ), 99 );
+		add_filter( 'woocommerce_get_sections_checkout', [ $this, 'add_settings_section' ], 99 );
 
 		// output the settings
-		add_action( 'woocommerce_settings_checkout', array( $this, 'add_settings' ) );
+		add_action( 'woocommerce_settings_checkout', [ $this, 'add_settings' ] );
 
 		// render the special "static" gateway select
-		add_action( 'woocommerce_admin_field_static', array( $this, 'render_static_setting' ) );
+		add_action( 'woocommerce_admin_field_static', [ $this, 'render_static_setting' ] );
 
 		// save the settings
-		add_action( 'woocommerce_settings_save_checkout', array( $this, 'save_settings' ) );
+		add_action( 'woocommerce_settings_save_checkout', [ $this, 'save_settings' ] );
 
 		// add admin notices for configuration options that need attention
-		add_action( 'admin_footer', array( $this, 'add_admin_notices' ), 10 );
+		add_action( 'admin_footer', [ $this, 'add_admin_notices' ], 10 );
 	}
 
 
@@ -98,22 +98,22 @@ class Admin {
 	 */
 	public function get_settings() {
 
-		$settings = array(
+		$settings = [
 
-			array(
+			[
 				'title' => __( 'Google Pay', 'woocommerce-plugin-framework' ),
 				'type'  => 'title',
-			),
+			],
 
-			array(
+			[
 				'id'              => 'sv_wc_google_pay_enabled',
 				'title'           => __( 'Enable / Disable', 'woocommerce-plugin-framework' ),
 				'desc'            => __( 'Accept Google Pay', 'woocommerce-plugin-framework' ),
 				'type'            => 'checkbox',
 				'default'         => 'no',
-			),
+			],
 
-			array(
+			[
 				'id'      => 'sv_wc_google_pay_display_locations',
 				'title'   => __( 'Allow Google Pay on', 'woocommerce-plugin-framework' ),
 				'type'    => 'multiselect',
@@ -121,65 +121,65 @@ class Admin {
 				'css'     => 'width: 350px;',
 				'options' => $this->get_display_location_options(),
 				'default' => array_keys( $this->get_display_location_options() ),
-			),
+			],
 
-			array(
+			[
 				'id'      => 'sv_wc_google_pay_button_style',
 				'title'   => __( 'Button Style', 'woocommerce-plugin-framework' ),
 				'type'    => 'select',
-				'options' => array(
+				'options' => [
 					'black'           => __( 'Black', 'woocommerce-plugin-framework' ),
 					'white'           => __( 'White', 'woocommerce-plugin-framework' ),
-				),
+				],
 				'default' => 'black',
-			),
+			],
 
-			array(
+			[
 				'type' => 'sectionend',
-			),
-		);
+			],
+		];
 
-		$connection_settings = array(
-			array(
+		$connection_settings = [
+			[
 				'title' => __( 'Connection Settings', 'woocommerce-plugin-framework' ),
 				'type'  => 'title',
-			),
-		);
+			],
+		];
 
 		$gateway_setting_id = 'sv_wc_google_pay_payment_gateway';
 		$gateway_options    = $this->get_gateway_options();
 
 		if ( 1 === count( $gateway_options ) ) {
 
-			$connection_settings[] = array(
+			$connection_settings[] = [
 				'id'    => $gateway_setting_id,
 				'title' => __( 'Processing Gateway', 'woocommerce-plugin-framework' ),
 				'type'  => 'static',
 				'value' => key( $gateway_options ),
 				'label' => current( $gateway_options ),
-			);
+			];
 
 		} else {
 
-			$connection_settings[] = array(
+			$connection_settings[] = [
 				'id'      => $gateway_setting_id,
 				'title'   => __( 'Processing Gateway', 'woocommerce-plugin-framework' ),
 				'type'    => 'select',
 				'options' => $this->get_gateway_options(),
-			);
+			];
 		}
 
-		$connection_settings[] = array(
+		$connection_settings[] = [
 			'id'      => 'sv_wc_google_pay_test_mode',
 			'title'   => __( 'Test Mode', 'woocommerce-plugin-framework' ),
 			'desc'    => __( 'Enable to test Google Pay functionality throughout your sites without processing real payments.', 'woocommerce-plugin-framework' ),
 			'type'    => 'checkbox',
 			'default' => 'no',
-		);
+		];
 
-		$connection_settings[] = array(
+		$connection_settings[] = [
 			'type' => 'sectionend',
-		);
+		];
 
 		$settings = array_merge( $settings, $connection_settings );
 
@@ -241,6 +241,10 @@ class Admin {
 	 */
 	public function render_static_setting( $setting ) {
 
+		if ( ! $this->is_settings_screen() ) {
+			return;
+		}
+
 		?>
 
 		<tr valign="top">
@@ -277,7 +281,7 @@ class Admin {
 			return;
 		}
 
-		$errors = array();
+		$errors = [];
 
 		// Currency notice
 		$accepted_currencies = $this->handler->get_accepted_currencies();
@@ -308,10 +312,10 @@ class Admin {
 				$message .= '<ul><li>' . implode( '</li><li>', $errors ) . '</li></ul>';
 			}
 
-			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, 'google-pay-configuration-issue', array(
+			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, 'google-pay-configuration-issue', [
 				'notice_class' => 'error',
 				'dismissible'  => false,
-			) );
+			] );
 		}
 	}
 
@@ -338,11 +342,11 @@ class Admin {
 	 */
 	protected function get_display_location_options() {
 
-		return array(
+		return [
 			'product'  => __( 'Single products', 'woocommerce-plugin-framework' ),
 			'cart'     => __( 'Cart', 'woocommerce-plugin-framework' ),
 			'checkout' => __( 'Checkout', 'woocommerce-plugin-framework' ),
-		);
+		];
 	}
 
 

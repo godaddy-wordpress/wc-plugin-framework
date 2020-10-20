@@ -190,7 +190,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		add_action( 'init', array( $this, 'maybe_init_apple_pay' ) );
 
 		// Google Pay feature
-		add_action( 'init', array( $this, 'maybe_init_google_pay' ) );
+		add_action( 'init', [ $this, 'maybe_init_google_pay' ] );
 
 		// TODO: move these to Subscriptions integration
 		if ( $this->is_subscriptions_active() ) {
@@ -518,27 +518,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function maybe_init_google_pay() {
 
-		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.2' ) && $this->is_google_pay_activated() && $this->supports_google_pay() ) {
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.2' ) && $this->supports_google_pay() ) {
 			$this->google_pay = $this->build_google_pay_instance();
 		}
-	}
-
-
-	/**
-	 * Determines whether Google Pay is activated.
-	 *
-	 * @since 5.10.0
-	 */
-	private function is_google_pay_activated() {
-
-		/**
-		 * Filters whether Google Pay is activated.
-		 *
-		 * @since 5.10.0
-		 *
-		 * @param bool $activated whether Google Pay is activated
-		 */
-		return (bool) apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_activate_google_pay', false );
 	}
 
 
@@ -943,7 +925,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	protected function add_google_pay_not_supported_notices() {
 
-		if ( 'wc-settings' === SV_WC_Helper::get_requested_value( 'page' ) && SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.2' ) && $this->is_google_pay_activated() ) {
+		if ( 'wc-settings' === SV_WC_Helper::get_requested_value( 'page' ) && SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.2' ) && $this->supports_google_pay() ) {
 
 			$this->get_admin_notice_handler()->add_admin_notice(
 				sprintf(

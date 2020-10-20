@@ -124,7 +124,7 @@ class Google_Pay {
 
 
 	/**
-	 * Gets Google transaction info based on WooCommerce cart data.
+	 * Gets Google transaction info based on WooCommerce cart or product data.
 	 *
 	 * @since 5.10.0
 	 *
@@ -134,6 +134,36 @@ class Google_Pay {
 	 * @throws SV_WC_Payment_Gateway_Exception
 	 */
 	public function get_transaction_info( \WC_Cart $cart, $product_id ) {
+
+		if ( ! empty( $product_id ) && $product = wc_get_product( $product_id ) ) {
+			// buying from the product page
+			$transaction_info = $this->get_product_transaction_info( $product );
+		} else {
+			$transaction_info = $this->get_cart_transaction_info( $cart );
+		}
+
+		/**
+		 * Filters the Google Pay JS transaction info.
+		 *
+		 * @since 5.10.0
+		 *
+		 * @param array $transaction_info the JS transaction info
+		 * @param \WC_Cart $cart the cart object
+		 * @param \WC_Product|false $product the product object, if buying from the product page
+		 */
+		return apply_filters( 'sv_wc_google_pay_cart_transaction_info', $transaction_info, $cart, ! empty( $product ) ? $product : false );
+	}
+
+
+	/**
+	 * Checks if all products in the cart can be purchased using Google Pay.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param \WC_Cart $cart cart object
+	 * @throws SV_WC_Payment_Gateway_Exception
+	 */
+	public function validate_cart( \WC_Cart $cart ) {
 
 		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Cart::cart_contains_subscription() ) {
 			throw new SV_WC_Payment_Gateway_Exception( 'Cart contains subscriptions.' );
@@ -148,46 +178,92 @@ class Google_Pay {
 		if ( count( WC()->shipping->get_packages() ) > 1 ) {
 			throw new SV_WC_Payment_Gateway_Exception( 'Google Pay cannot be used for multiple shipments.' );
 		}
+	}
 
-		if ( ! empty( $cart->get_cart_contents_count() ) ) {
 
-			$transaction_info = [
-				'displayItems'     => $this->build_display_items( $cart ),
-				'countryCode'      => substr( get_option( 'woocommerce_default_country' ), 0, 2 ),
-				'currencyCode'     => get_woocommerce_currency(),
-				'totalPriceStatus' => "FINAL",
-				'totalPrice'       => wc_format_decimal( $cart->total, 2 ),
-				'totalPriceLabel'  => "Total",
-			];
+	/**
+	 * Checks if a single product can be purchased using Google Pay.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param \WC_Product $product product object
+	 * @throws SV_WC_Payment_Gateway_Exception
+	 */
+	public function validate_product( \WC_Product $product ) {
 
-		} elseif ( ! empty( $product_id ) && $product = wc_get_product( $product_id ) ) {
-
-			// buying from the product page
-			$transaction_info = [
-				'displayItems'     => array(
-					array(
-						'label' => __( 'Subtotal', 'woocommerce-plugin-framework' ),
-						'type'  => 'SUBTOTAL',
-						'price' => wc_format_decimal( $product->get_price(), 2 ),
-					),
-				),
-				'countryCode'      => substr( get_option( 'woocommerce_default_country' ), 0, 2 ),
-				'currencyCode'     => get_woocommerce_currency(),
-				'totalPriceStatus' => "FINAL",
-				'totalPrice'       => wc_format_decimal( $product->get_price(), 2 ),
-				'totalPriceLabel'  => "Total",
-			];
+		// no subscription products
+		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Product::is_subscription( $product ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Not available for subscription products.' );
 		}
 
-		/**
-		 * Filters the Google Pay cart JS transaction info.
-		 *
-		 * @since 5.10.0
-		 *
-		 * @param array $transaction_info the cart JS transaction info
-		 * @param \WC_Cart $cart the cart object
-		 */
-		return apply_filters( 'sv_wc_google_pay_cart_transaction_info', $transaction_info, $cart );
+		// no pre-order "charge upon release" products
+		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Not available for pre-order products that are set to charge upon release.' );
+		}
+
+		// only simple products
+		if ( ! $product->is_type( 'simple' ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Buy Now is only available for simple products' );
+		}
+
+		// if this product can't be purchased, bail
+		if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Product is not available for purchase.' );
+		}
+	}
+
+
+	/**
+	 * Gets Google transaction info based on WooCommerce cart data.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param \WC_Cart $cart cart object
+	 * @return array
+	 * @throws SV_WC_Payment_Gateway_Exception
+	 */
+	public function get_cart_transaction_info( \WC_Cart $cart ) {
+
+		$this->validate_cart( $cart );
+
+		return [
+			'displayItems'     => $this->build_display_items( $cart ),
+			'countryCode'      => substr( get_option( 'woocommerce_default_country' ), 0, 2 ),
+			'currencyCode'     => get_woocommerce_currency(),
+			'totalPriceStatus' => "FINAL",
+			'totalPrice'       => wc_format_decimal( $cart->total, 2 ),
+			'totalPriceLabel'  => "Total",
+		];
+	}
+
+
+	/**
+	 * Gets Google transaction info based on product data.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param \WC_Product $product product object
+	 * @return array
+	 * @throws SV_WC_Payment_Gateway_Exception
+	 */
+	public function get_product_transaction_info( \WC_Product $product ) {
+
+		$this->validate_product( $product );
+
+		return [
+			'displayItems'     => [
+				[
+					'label' => __( 'Subtotal', 'woocommerce-plugin-framework' ),
+					'type'  => 'SUBTOTAL',
+					'price' => wc_format_decimal( $product->get_price(), 2 ),
+				],
+			],
+			'countryCode'      => substr( get_option( 'woocommerce_default_country' ), 0, 2 ),
+			'currencyCode'     => get_woocommerce_currency(),
+			'totalPriceStatus' => "FINAL",
+			'totalPrice'       => wc_format_decimal( $product->get_price(), 2 ),
+			'totalPriceLabel'  => "Total",
+		];
 	}
 
 
@@ -203,10 +279,6 @@ class Google_Pay {
 	 */
 	public function recalculate_totals( $chosen_shipping_method, $product_id ) {
 
-		if ( ! WC()->cart ) {
-			throw new SV_WC_Payment_Gateway_Exception( 'Cart data is missing.' );
-		}
-
 		// if this is a single product page, make sure the cart gets populated
 		if ( ! empty( $product_id ) && $product = wc_get_product( $product_id ) ) {
 
@@ -214,37 +286,23 @@ class Google_Pay {
 				WC()->session->set_customer_session_cookie( true );
 			}
 
-			// no subscription products
-			if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Product::is_subscription( $product ) ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Not available for subscription products.' );
-			}
-
-			// no pre-order "charge upon release" products
-			if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Not available for pre-order products that are set to charge upon release.' );
-			}
-
-			// only simple products
-			if ( ! $product->is_type( 'simple' ) ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Buy Now is only available for simple products' );
-			}
-
-			// if this product can't be purchased, bail
-			if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Product is not available for purchase.' );
-			}
+			$this->validate_product( $product );
 
 			WC()->cart->empty_cart();
 
 			WC()->cart->add_to_cart( $product->get_id() );
 		}
 
+		if ( ! WC()->cart ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Cart data is missing.' );
+		}
+
 		$response_data = [
 			'newTransactionInfo'          => $this->get_transaction_info( WC()->cart, $product_id ),
-			'newShippingOptionParameters' => array(),
+			'newShippingOptionParameters' => [],
 		];
 
-		$shipping_options = array();
+		$shipping_options = [];
 		$packages         = WC()->shipping->get_packages();
 
 		if ( ! empty( $packages ) ) {
@@ -262,11 +320,11 @@ class Google_Pay {
 				 */
 				$method_description = apply_filters( 'wc_payment_gateway_google_pay_shipping_method_description', '', $method );
 
-				$shipping_options[] = array(
+				$shipping_options[] = [
 					'id'          => $method->get_id(),
 					'label'       => $method->get_label(),
 					'description' => $method_description,
-				);
+				];
 			}
 		}
 
@@ -299,56 +357,56 @@ class Google_Pay {
 		$fees     = $cart->fee_total;
 		$taxes    = $cart->tax_total + $cart->shipping_tax_total;
 
-		$items = array();
+		$items = [];
 
 		// subtotal
 		if ( $subtotal > 0 ) {
 
-			$items[] = array(
+			$items[] = [
 				'label' => __( 'Subtotal', 'woocommerce-plugin-framework' ),
 				'type'  => 'SUBTOTAL',
 				'price' => wc_format_decimal( $subtotal, 2 ),
-			);
+			];
 		}
 
 		// discounts
 		if ( $discount > 0 ) {
 
-			$items[] = array(
+			$items[] = [
 				'label' => __( 'Discount', 'woocommerce-plugin-framework' ),
 				'type'  => 'LINE_ITEM',
 				'price' => abs( wc_format_decimal( $discount, 2 ) ) * - 1,
-			);
+			];
 		}
 
 		// shipping
 		if ( $shipping > 0 ) {
 
-			$items[] = array(
+			$items[] = [
 				'label' => __( 'Shipping', 'woocommerce-plugin-framework' ),
 				'type'  => 'LINE_ITEM',
 				'price' => wc_format_decimal( $shipping, 2 ),
-			);
+			];
 		}
 
 		// fees
 		if ( $fees > 0 ) {
 
-			$items[] = array(
+			$items[] = [
 				'label' => __( 'Fees', 'woocommerce-plugin-framework' ),
 				'type'  => 'LINE_ITEM',
 				'price' => wc_format_decimal( $fees, 2 ),
-			);
+			];
 		}
 
 		// taxes
 		if ( $taxes > 0 ) {
 
-			$items[] = array(
+			$items[] = [
 				'label' => __( 'Taxes', 'woocommerce-plugin-framework' ),
 				'type'  => 'TAX',
 				'price' => wc_format_decimal( $taxes, 2 ),
-			);
+			];
 		}
 
 		return $items;
@@ -357,7 +415,6 @@ class Google_Pay {
 
 	/**
 	 * Processes the payment after a Google Pay authorization.
-	 *
 	 *
 	 * This method creates a new order and calls the gateway for processing.
 	 *
@@ -387,28 +444,28 @@ class Google_Pay {
 			// from here on out, it's up to the gateway to not screw things up.
 			$order->add_order_note( __( 'Google Pay payment authorized.', 'woocommerce-plugin-framework' ) );
 
-			if ( ! empty( $adress_data = $payment_data->shippingAddress ) ) {
+			if ( ! empty( $address_data = $payment_data->shippingAddress ) ) {
 
-				if ( ! empty( $adress_data->name ) ) {
-					$first_name = strstr( $adress_data->name, ' ', true );
-					$last_name  = strstr( $adress_data->name, ' ' );
+				if ( ! empty( $address_data->name ) ) {
+					$first_name = strstr( $address_data->name, ' ', true );
+					$last_name  = strstr( $address_data->name, ' ' );
 				}
 
 				$address = [
 					'first_name' => isset( $first_name ) ? $first_name : '',
 					'last_name'  => isset( $last_name ) ? $last_name : '',
-					'address_1'  => isset( $adress_data->address1 ) ? $adress_data->address1 : '',
-					'address_2'  => isset( $adress_data->address2 ) ? $adress_data->address2 : '',
-					'city'       => isset( $adress_data->locality ) ? $adress_data->locality : '',
-					'state'      => isset( $adress_data->administrativeArea ) ? $adress_data->administrativeArea : '',
-					'postcode'   => isset( $adress_data->postalCode ) ? $adress_data->postalCode : '',
-					'country'    => isset( $adress_data->countryCode ) ? $adress_data->countryCode : '',
+					'address_1'  => isset( $address_data->address1 ) ? $address_data->address1 : '',
+					'address_2'  => isset( $address_data->address2 ) ? $address_data->address2 : '',
+					'city'       => isset( $address_data->locality ) ? $address_data->locality : '',
+					'state'      => isset( $address_data->administrativeArea ) ? $address_data->administrativeArea : '',
+					'postcode'   => isset( $address_data->postalCode ) ? $address_data->postalCode : '',
+					'country'    => isset( $address_data->countryCode ) ? $address_data->countryCode : '',
 				];
 
 				$order->set_address( $address, 'billing' );
 				$order->set_address( $address, 'shipping' );
 
-				$order->set_billing_phone( isset( $adress_data->phoneNumber ) ? $adress_data->phoneNumber : '' );
+				$order->set_billing_phone( isset( $address_data->phoneNumber ) ? $address_data->phoneNumber : '' );
 				$order->set_billing_email( isset( $payment_data->email ) ? $payment_data->email : '' );
 			}
 
@@ -454,7 +511,7 @@ class Google_Pay {
 	 */
 	public function get_stored_payment_response() {
 
-		return WC()->session->get( 'google_pay_payment_response', array() );
+		return WC()->session->get( 'google_pay_payment_response', [] );
 	}
 
 
@@ -530,77 +587,10 @@ class Google_Pay {
 
 		WC()->cart->empty_cart();
 
-		return array(
+		return [
 			'result'   => 'success',
 			'redirect' => $this->get_processing_gateway()->get_return_url( $order ),
-		);
-	}
-
-
-	/**
-	 * Gets a single product payment request.
-	 *
-	 * @since 5.10.0
-	 * @see SV_WC_Payment_Gateway_Apple_Pay::build_payment_request()
-	 *
-	 * @param \WC_Product $product product object
-	 * @param bool $in_cart whether to generate a cart for this request
-	 * @return array
-	 * @throws \Exception
-	 */
-	public function get_product_payment_request( \WC_Product $product, $in_cart = false ) {
-
-		if ( ! is_user_logged_in() ) {
-			WC()->session->set_customer_session_cookie( true );
-		}
-
-		// no subscription products
-		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Product::is_subscription( $product ) ) {
-			throw new SV_WC_Payment_Gateway_Exception( 'Not available for subscription products.' );
-		}
-
-		// no pre-order "charge upon release" products
-		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
-			throw new SV_WC_Payment_Gateway_Exception( 'Not available for pre-order products that are set to charge upon release.' );
-		}
-
-		// only simple products
-		if ( ! $product->is_type( 'simple' ) ) {
-			throw new SV_WC_Payment_Gateway_Exception( 'Buy Now is only available for simple products' );
-		}
-
-		// if this product can't be purchased, bail
-		if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
-			throw new SV_WC_Payment_Gateway_Exception( 'Product is not available for purchase.' );
-		}
-
-		if ( $in_cart ) {
-
-			WC()->cart->empty_cart();
-
-			WC()->cart->add_to_cart( $product->get_id() );
-
-			$request = $this->get_cart_payment_request( WC()->cart );
-
-		} else {
-
-			$request = $this->build_payment_request( $product->get_price(), array( 'needs_shipping' => $product->needs_shipping() ) );
-
-			$stored_request = $this->get_stored_payment_request();
-
-			$stored_request['product_id'] = $product->get_id();
-
-			$this->store_payment_request( $stored_request );
-		}
-
-		/**
-		 * Filters the Apple Pay Buy Now JS payment request.
-		 *
-		 * @since 4.7.0
-		 * @param array $request request data
-		 * @param \WC_Product $product product object
-		 */
-		return apply_filters( 'sv_wc_apple_pay_buy_now_payment_request', $request, $product );
+		];
 	}
 
 
@@ -704,7 +694,7 @@ class Google_Pay {
 	 */
 	public function get_accepted_currencies() {
 
-		$currencies = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_google_pay_currencies() : array();
+		$currencies = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_google_pay_currencies() : [];
 
 		/**
 		 * Filters the currencies accepted by the gateway's Google Pay integration.
@@ -725,18 +715,18 @@ class Google_Pay {
 	 */
 	public function get_supported_networks() {
 
-		$accepted_card_types = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_card_types() : array();
+		$accepted_card_types = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_card_types() : [];
 
 		$accepted_card_types = array_map( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
 
-		$valid_networks = array(
+		$valid_networks = [
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_AMEX       => 'AMEX',
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_DISCOVER   => 'DISCOVER',
 			'interac'                                          => 'INTERAC',
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_JCB        => 'JCB',
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_MASTERCARD => 'MASTERCARD',
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_VISA       => 'VISA',
-		);
+		];
 
 		$networks = array_intersect_key( $valid_networks, array_flip( $accepted_card_types ) );
 
@@ -762,7 +752,7 @@ class Google_Pay {
 	public function get_supporting_gateways() {
 
 		$available_gateways  = $this->get_plugin()->get_gateways();
-		$supporting_gateways = array();
+		$supporting_gateways = [];
 
 		foreach ( $available_gateways as $key => $gateway ) {
 
@@ -815,6 +805,21 @@ class Google_Pay {
 	public function get_plugin() {
 
 		return $this->plugin;
+	}
+
+
+	/**
+	 * Gets the gateway merchant ID.
+	 *
+	 * Each plugin can override this method to get the merchant ID from their own setting.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return string
+	 */
+	public function get_merchant_id() {
+
+		return method_exists( $this->get_processing_gateway(), 'get_merchant_id' ) ? $this->get_processing_gateway()->get_merchant_id() : '';
 	}
 
 

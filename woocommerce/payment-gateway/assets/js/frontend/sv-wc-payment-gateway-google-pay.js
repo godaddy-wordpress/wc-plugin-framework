@@ -32,7 +32,7 @@ jQuery( document ).ready( ( $ ) => {
 		 * @param {string} params.generic_error The generic error message
 		 * @param {string} params.product_id The product ID if we are on a Product page
 		 */
-		constructor(params) {
+		constructor( params ) {
 
 			let {
 				plugin_id,
@@ -50,18 +50,18 @@ jQuery( document ).ready( ( $ ) => {
 				generic_error
 			} = params;
 
-			this.gatewayID = gateway_id;
-			this.merchantID = merchant_id;
-			this.merchantName = merchant_name;
-			this.ajaxURL = ajax_url;
+			this.gatewayID              = gateway_id;
+			this.merchantID             = merchant_id;
+			this.merchantName           = merchant_name;
+			this.ajaxURL                = ajax_url;
 			this.recalculateTotalsNonce = recalculate_totals_nonce;
-			this.processNonce = process_nonce;
-			this.buttonStyle = button_style;
-			this.availableCountries = available_countries;
-			this.currencyCode = currency_code;
-			this.genericError = generic_error;
+			this.processNonce           = process_nonce;
+			this.buttonStyle            = button_style;
+			this.availableCountries     = available_countries;
+			this.currencyCode           = currency_code;
+			this.genericError           = generic_error;
 
-			if (params.product_id) {
+			if ( params.product_id ) {
 				this.productID = params.product_id;
 			}
 
@@ -89,7 +89,7 @@ jQuery( document ).ready( ( $ ) => {
 			 *
 			 * @todo confirm your processor supports Android device tokens for your supported card networks
 			 */
-			const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
+			const allowedCardAuthMethods = [ 'PAN_ONLY', 'CRYPTOGRAM_3DS' ];
 
 			/**
 			 * Identify your gateway and your site's gateway merchant identifier
@@ -157,7 +157,7 @@ jQuery( document ).ready( ( $ ) => {
 				{},
 				this.baseRequest,
 				{
-					allowedPaymentMethods: [this.baseCardPaymentMethod]
+					allowedPaymentMethods: [ this.baseCardPaymentMethod ]
 				}
 			);
 		}
@@ -174,21 +174,21 @@ jQuery( document ).ready( ( $ ) => {
 
 			return this.getGoogleTransactionInfo( ( transactionInfo ) => {
 
-				const paymentDataRequest = Object.assign({}, this.baseRequest);
-				paymentDataRequest.allowedPaymentMethods = [this.cardPaymentMethod];
+				const paymentDataRequest = Object.assign( {}, this.baseRequest );
+				paymentDataRequest.allowedPaymentMethods = [ this.cardPaymentMethod ];
 				paymentDataRequest.transactionInfo = transactionInfo;
 				paymentDataRequest.merchantInfo = {
 					merchantId: this.merchantID,
 					merchantName: this.merchantName
 				};
-				paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS", "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
+				paymentDataRequest.callbackIntents = [ 'SHIPPING_ADDRESS', 'SHIPPING_OPTION', 'PAYMENT_AUTHORIZATION' ];
 				paymentDataRequest.emailRequired = true;
 				paymentDataRequest.shippingAddressRequired = true;
 				paymentDataRequest.shippingAddressParameters = this.getGoogleShippingAddressParameters();
 				paymentDataRequest.shippingOptionRequired = true;
 
 				resolve( paymentDataRequest );
-			});
+			} );
 		}
 
 		/**
@@ -199,42 +199,50 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		getGooglePaymentsClient() {
 			if ( this.paymentsClient === null ) {
-				this.paymentsClient = new google.payments.api.PaymentsClient({
+				this.paymentsClient = new google.payments.api.PaymentsClient( {
 					merchantInfo: {
 						merchantName: this.merchantName,
 						merchantId: this.merchantID
 					},
 					paymentDataCallbacks: {
-						onPaymentAuthorized: (paymentData) => this.onPaymentAuthorized(paymentData),
-						onPaymentDataChanged: (paymentData) => this.onPaymentDataChanged(paymentData)
+						onPaymentAuthorized: ( paymentData ) => this.onPaymentAuthorized( paymentData ),
+						onPaymentDataChanged: ( paymentData ) => this.onPaymentDataChanged( paymentData )
 					}
-				});
+				} );
 			}
 			return this.paymentsClient;
 		}
 
-		onPaymentAuthorized(paymentData) {
+		/**
+		 * Handles payment authorization callback intent.
+		 *
+		 * @param {object} paymentData response from Google Pay API after a payer approves payment.
+		 * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentData|PaymentData object reference}
+		 *
+		 * @returns Promise<{object}> Promise object to complete or fail the transaction.
+		 */
+		onPaymentAuthorized( paymentData ) {
 
 			this.block_ui();
 
-			return new Promise((resolve, reject) => {
+			return new Promise( (resolve, reject) => {
 
 				// handle the response
 				try {
-					this.processPayment(paymentData, resolve);
-				}	catch(err) {
-					reject({
+					this.processPayment( paymentData, resolve );
+				}	catch( err ) {
+					reject( {
 						transactionState: 'ERROR',
 						error: {
 							intent: 'PAYMENT_AUTHORIZATION',
 							message: 'Payment could not be processed',
 							reason: 'PAYMENT_DATA_INVALID'
 						}
-					});
+					} );
 				}
 
 				this.unblock_ui();
-			});
+			} );
 		}
 
 		/**
@@ -246,38 +254,38 @@ jQuery( document ).ready( ( $ ) => {
 		 * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentDataRequestUpdate|PaymentDataRequestUpdate}
 		 * @returns Promise<{object}> Promise of PaymentDataRequestUpdate object to update the payment sheet.
 		 */
-		onPaymentDataChanged(intermediatePaymentData) {
+		onPaymentDataChanged( intermediatePaymentData ) {
 
 			this.block_ui();
 
-			return new Promise((resolve, reject) => {
+			return new Promise(( resolve, reject ) => {
 
 				try {
 					let shippingAddress = intermediatePaymentData.shippingAddress;
 					let shippingOptionData = intermediatePaymentData.shippingOptionData;
 					let chosenShippingMethod = '';
 
-					if (intermediatePaymentData.callbackTrigger == "SHIPPING_OPTION") {
+					if ( intermediatePaymentData.callbackTrigger == 'SHIPPING_OPTION' ) {
 						chosenShippingMethod = shippingOptionData.id;
 					}
 
 					this.getUpdatedTotals( shippingAddress, chosenShippingMethod, ( paymentDataRequestUpdate ) => {
 
-						if (paymentDataRequestUpdate.newShippingOptionParameters.shippingOptions.length == 0) {
+						if ( paymentDataRequestUpdate.newShippingOptionParameters.shippingOptions.length == 0 ) {
 							paymentDataRequestUpdate = {
 								error: this.getGoogleUnserviceableAddressError()
 							};
 						}
 
-						resolve(paymentDataRequestUpdate);
-					});
+						resolve( paymentDataRequestUpdate );
+					} );
 
-				}	catch(err) {
+				}	catch( err ) {
 					this.fail_payment( 'Could not load updated totals or process payment data request update. ' + err );
 				}
 
 				this.unblock_ui();
-			});
+			} );
 		}
 
 		/**
@@ -295,18 +303,18 @@ jQuery( document ).ready( ( $ ) => {
 				action: `wc_${this.gatewayID}_google_pay_get_transaction_info`,
 			}
 
-			if (this.productID) {
+			if ( this.productID ) {
 				data.productID = this.productID;
 			}
 
-			$.post(this.ajaxURL, data, ( response ) => {
+			$.post( this.ajaxURL, data, ( response ) => {
 
-				if (response.success) {
+				if ( response.success ) {
 					resolve( $.parseJSON( response.data ) )
 				} else {
 					this.fail_payment( 'Could not build transaction info. ' + response.data.message );
 				}
-			});
+			} );
 		}
 
 		/**
@@ -327,18 +335,18 @@ jQuery( document ).ready( ( $ ) => {
 				shippingMethod
 			}
 
-			if (this.productID) {
+			if ( this.productID ) {
 				data.productID = this.productID;
 			}
 
-			$.post(this.ajaxURL, data, ( response ) => {
+			$.post( this.ajaxURL, data, ( response ) => {
 
-				if (response.success) {
+				if ( response.success ) {
 					resolve( $.parseJSON( response.data ) )
 				} else {
 					this.fail_payment( 'Could not recalculate totals. ' + response.data.message );
 				}
-			});
+			} );
 		}
 
 		/**
@@ -349,7 +357,7 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		getGoogleShippingAddressParameters() {
 
-			return  {
+			return {
 				allowedCountryCodes: this.availableCountries,
 				phoneNumberRequired: true
 			};
@@ -363,9 +371,9 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		getGoogleUnserviceableAddressError() {
 			return {
-				reason: "SHIPPING_ADDRESS_UNSERVICEABLE",
-				message: "Cannot ship to the selected address",
-				intent: "SHIPPING_ADDRESS"
+				reason: 'SHIPPING_ADDRESS_UNSERVICEABLE',
+				message: 'Cannot ship to the selected address',
+				intent: 'SHIPPING_ADDRESS'
 			};
 		}
 
@@ -378,11 +386,11 @@ jQuery( document ).ready( ( $ ) => {
 		addGooglePayButton() {
 
 			const paymentsClient = this.getGooglePaymentsClient();
-			const button = paymentsClient.createButton({
-				onClick: (event) => this.onGooglePaymentButtonClicked( event ),
+			const button = paymentsClient.createButton( {
+				onClick: ( event ) => this.onGooglePaymentButtonClicked( event ),
 				buttonColor: this.buttonStyle
-			});
-			document.getElementById('sv-wc-google-pay-button-container').appendChild(button);
+			} );
+			document.getElementById( 'sv-wc-google-pay-button-container' ).appendChild( button );
 		}
 
 		/**
@@ -400,8 +408,8 @@ jQuery( document ).ready( ( $ ) => {
 					currencyCode: this.currencyCode
 				};
 				const paymentsClient = this.getGooglePaymentsClient();
-				paymentsClient.prefetchPaymentData(paymentDataRequest);
-			});
+				paymentsClient.prefetchPaymentData( paymentDataRequest );
+			} );
 		}
 
 		/**
@@ -412,37 +420,39 @@ jQuery( document ).ready( ( $ ) => {
 		 * @param {object} paymentData response from Google Pay API after user approves payment
 		 * @param {function} resolve callback
 		 */
-		processPayment(paymentData, resolve) {
+		processPayment( paymentData, resolve ) {
 
 			// pass payment token to your gateway to process payment
 			const data = {
 				action: `wc_${this.gatewayID}_google_pay_process_payment`,
 				nonce: this.processNonce,
-				paymentData: JSON.stringify(paymentData)
+				paymentData: JSON.stringify( paymentData )
 			}
 
-			return $.post(this.ajaxURL, data, (response) => {
-				if (response.success) {
-					resolve({transactionState: 'SUCCESS'});
+			return $.post( this.ajaxURL, data, ( response ) => {
+				if ( response.success ) {
+					resolve( {
+						transactionState: 'SUCCESS'
+					} );
 					window.location = response.data.redirect;
 				} else {
-					resolve({
+					resolve( {
 						transactionState: 'ERROR',
 						error: {
 							intent: 'SHIPPING_ADDRESS',
 							message: 'Invalid data',
 							reason: 'PAYMENT_DATA_INVALID'
 						}
-					});
+					} );
 					this.fail_payment( 'Payment could not be processed. ' + response.data.message );
 				}
-			});
+			} );
 		}
 
 		/**
 		 * Show Google Pay payment sheet when Google Pay payment button is clicked
 		 */
-		onGooglePaymentButtonClicked(event) {
+		onGooglePaymentButtonClicked( event ) {
 
 			event.preventDefault();
 
@@ -452,13 +462,13 @@ jQuery( document ).ready( ( $ ) => {
 
 				const paymentsClient = this.getGooglePaymentsClient();
 				try {
-					paymentsClient.loadPaymentData(paymentDataRequest);
-				} catch (err) {
+					paymentsClient.loadPaymentData( paymentDataRequest );
+				} catch ( err ) {
 					this.fail_payment( 'Could not load payment data. ' + err );
 				}
 
 				this.unblock_ui();
-			});
+			} );
 		}
 
 		/**
@@ -470,55 +480,55 @@ jQuery( document ).ready( ( $ ) => {
 		init() {
 
 			// initialize for the various pages
-			if ($('form.cart').length) {
+			if ( $( 'form.cart' ).length ) {
 				this.init_product_page();
-			} else if ($('form.woocommerce-cart-form').length) {
+			} else if ( $( 'form.woocommerce-cart-form' ).length ) {
 				this.init_cart_page();
-			} else if ($('form.woocommerce-checkout').length) {
+			} else if ( $( 'form.woocommerce-checkout' ).length) {
 				this.init_checkout_page()
 			} else {
 				return;
 			}
 
 			const paymentsClient = this.getGooglePaymentsClient();
-			paymentsClient.isReadyToPay(this.getGoogleIsReadyToPayRequest())
-				.then((response) => {
-					if (response.result) {
+			paymentsClient.isReadyToPay( this.getGoogleIsReadyToPayRequest() )
+				.then( ( response ) => {
+					if ( response.result ) {
 						this.addGooglePayButton();
 						// prefetch payment data to improve performance
 						this.prefetchGooglePaymentData();
 					}
-				})
-				.catch((err) => {
+				} )
+				.catch( ( err ) => {
 					this.fail_payment( 'Google Pay is not ready. ' + err );
-				});
+				} );
 		}
 
 		/**
 		 * Initializes the product page.
 		 */
 		init_product_page() {
-			this.ui_element = $('form.cart');
+			this.ui_element = $( 'form.cart' );
 		}
 
 		/**
 		 * Initializes the cart page.
 		 */
 		init_cart_page() {
-			this.ui_element = $('form.woocommerce-cart-form').parents('div.woocommerce');
+			this.ui_element = $( 'form.woocommerce-cart-form' ).parents( 'div.woocommerce' );
 		}
 
 		/**
 		 * Initializes the checkout page.
 		 */
 		init_checkout_page() {
-			this.ui_element = $('form.woocommerce-checkout');
+			this.ui_element = $( 'form.woocommerce-checkout' );
 		}
 
 		/**
 		 * Fails the purchase based on the gateway result.
 		 */
-		fail_payment ( error ) {
+		fail_payment( error ) {
 
 			console.error( '[Google Pay] ' + error );
 
@@ -533,23 +543,23 @@ jQuery( document ).ready( ( $ ) => {
 		render_errors( errors ) {
 
 			// hide and remove any previous errors
-			$('.woocommerce-error, .woocommerce-message').remove();
+			$( '.woocommerce-error, .woocommerce-message' ).remove();
 
 			// add errors
-			this.ui_element.prepend('<ul class="woocommerce-error"><li>' + errors.join('</li><li>') + '</li></ul>');
+			this.ui_element.prepend( '<ul class="woocommerce-error"><li>' + errors.join( '</li><li>' ) + '</li></ul>' );
 
 			// unblock UI
-			this.ui_element.removeClass('processing').unblock();
+			this.ui_element.removeClass( 'processing' ).unblock();
 
 			// scroll to top
-			$('html, body').animate({scrollTop: this.ui_element.offset().top - 100}, 1000);
+			$( 'html, body' ).animate( { scrollTop: this.ui_element.offset().top - 100 }, 1000 );
 		}
 
 		/**
 		 * Blocks the payment form UI.
 		 */
 		block_ui() {
-			this.ui_element.block({message: null, overlayCSS: {background: '#fff', opacity: 0.6}});
+			this.ui_element.block( { message: null, overlayCSS: { background: '#fff', opacity: 0.6 } } );
 		}
 
 		/**
@@ -562,4 +572,4 @@ jQuery( document ).ready( ( $ ) => {
 
 	$( document.body ).trigger( 'sv_wc_google_pay_handler_v5_10_0_loaded' );
 
-});
+} );

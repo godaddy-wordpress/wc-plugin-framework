@@ -109,10 +109,10 @@ class AJAX {
 
 			$this->get_handler()->log( 'Could not build transaction info. ' . $e->getMessage() );
 
-			wp_send_json_error( array(
+			wp_send_json_error( [
 				'message' => $e->getMessage(),
 				'code'    => $e->getCode(),
-			) );
+			] );
 		}
 	}
 
@@ -136,12 +136,12 @@ class AJAX {
 			$shipping_address = SV_WC_Helper::get_posted_value( 'shippingAddress' );
 			if ( ! empty( $shipping_address ) && is_array( $shipping_address ) ) {
 
-				$shipping_address = wp_parse_args( $shipping_address, array(
+				$shipping_address = wp_parse_args( $shipping_address, [
 					'administrativeArea' => null,
 					'countryCode'        => null,
 					'locality'           => null,
 					'postalCode'         => null,
-				) );
+				] );
 
 				$state    = $shipping_address['administrativeArea'];
 				$country  = $shipping_address['countryCode'];
@@ -158,7 +158,7 @@ class AJAX {
 				}
 			}
 
-			$chosen_shipping_methods = ( $method = SV_WC_Helper::get_posted_value( 'shippingMethod' ) ) ? array( wc_clean( $method ) ) : array();
+			$chosen_shipping_methods = ( $method = SV_WC_Helper::get_posted_value( 'shippingMethod' ) ) ? [ wc_clean( $method ) ] : [];
 
 			WC()->session->set( 'chosen_shipping_methods', $chosen_shipping_methods );
 
@@ -174,10 +174,10 @@ class AJAX {
 
 			$this->get_handler()->log( $e->getMessage() );
 
-			wp_send_json_error( array(
+			wp_send_json_error( [
 				'message' => $e->getMessage(),
 				'code'    => $e->getCode(),
-			) );
+			] );
 		}
 	}
 
@@ -207,10 +207,10 @@ class AJAX {
 
 			$this->get_handler()->log( 'Payment failed. ' . $e->getMessage() );
 
-			wp_send_json_error( array(
+			wp_send_json_error( [
 				'message' => $e->getMessage(),
 				'code'    => $e->getCode(),
-			) );
+			] );
 		}
 	}
 
