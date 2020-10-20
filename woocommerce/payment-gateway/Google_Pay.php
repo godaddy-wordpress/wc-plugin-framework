@@ -819,7 +819,7 @@ class Google_Pay {
 	 */
 	public function get_merchant_id() {
 
-		return method_exists( $this->get_gateway(), 'get_merchant_id' ) ? $this->get_gateway()->get_merchant_id() : '';
+		return method_exists( $this->get_processing_gateway(), 'get_merchant_id' ) ? $this->get_processing_gateway()->get_merchant_id() : '';
 	}
 
 
