@@ -164,13 +164,13 @@ class Google_Pay {
 
 			// buying from the product page
 			$transaction_info = [
-				'displayItems'     => array(
-					array(
+				'displayItems'     => [
+					[
 						'label' => __( 'Subtotal', 'woocommerce-plugin-framework' ),
 						'type'  => 'SUBTOTAL',
 						'price' => wc_format_decimal( $product->get_price(), 2 ),
-					),
-				),
+					],
+				],
 				'countryCode'      => substr( get_option( 'woocommerce_default_country' ), 0, 2 ),
 				'currencyCode'     => get_woocommerce_currency(),
 				'totalPriceStatus' => "FINAL",
@@ -241,10 +241,10 @@ class Google_Pay {
 
 		$response_data = [
 			'newTransactionInfo'          => $this->get_transaction_info( WC()->cart, $product_id ),
-			'newShippingOptionParameters' => array(),
+			'newShippingOptionParameters' => [],
 		];
 
-		$shipping_options = array();
+		$shipping_options = [];
 		$packages         = WC()->shipping->get_packages();
 
 		if ( ! empty( $packages ) ) {
@@ -262,11 +262,11 @@ class Google_Pay {
 				 */
 				$method_description = apply_filters( 'wc_payment_gateway_google_pay_shipping_method_description', '', $method );
 
-				$shipping_options[] = array(
+				$shipping_options[] = [
 					'id'          => $method->get_id(),
 					'label'       => $method->get_label(),
 					'description' => $method_description,
-				);
+				];
 			}
 		}
 
@@ -299,56 +299,56 @@ class Google_Pay {
 		$fees     = $cart->fee_total;
 		$taxes    = $cart->tax_total + $cart->shipping_tax_total;
 
-		$items = array();
+		$items = [];
 
 		// subtotal
 		if ( $subtotal > 0 ) {
 
-			$items[] = array(
+			$items[] = [
 				'label' => __( 'Subtotal', 'woocommerce-plugin-framework' ),
 				'type'  => 'SUBTOTAL',
 				'price' => wc_format_decimal( $subtotal, 2 ),
-			);
+			];
 		}
 
 		// discounts
 		if ( $discount > 0 ) {
 
-			$items[] = array(
+			$items[] = [
 				'label' => __( 'Discount', 'woocommerce-plugin-framework' ),
 				'type'  => 'LINE_ITEM',
 				'price' => abs( wc_format_decimal( $discount, 2 ) ) * - 1,
-			);
+			];
 		}
 
 		// shipping
 		if ( $shipping > 0 ) {
 
-			$items[] = array(
+			$items[] = [
 				'label' => __( 'Shipping', 'woocommerce-plugin-framework' ),
 				'type'  => 'LINE_ITEM',
 				'price' => wc_format_decimal( $shipping, 2 ),
-			);
+			];
 		}
 
 		// fees
 		if ( $fees > 0 ) {
 
-			$items[] = array(
+			$items[] = [
 				'label' => __( 'Fees', 'woocommerce-plugin-framework' ),
 				'type'  => 'LINE_ITEM',
 				'price' => wc_format_decimal( $fees, 2 ),
-			);
+			];
 		}
 
 		// taxes
 		if ( $taxes > 0 ) {
 
-			$items[] = array(
+			$items[] = [
 				'label' => __( 'Taxes', 'woocommerce-plugin-framework' ),
 				'type'  => 'TAX',
 				'price' => wc_format_decimal( $taxes, 2 ),
-			);
+			];
 		}
 
 		return $items;
@@ -454,7 +454,7 @@ class Google_Pay {
 	 */
 	public function get_stored_payment_response() {
 
-		return WC()->session->get( 'google_pay_payment_response', array() );
+		return WC()->session->get( 'google_pay_payment_response', [] );
 	}
 
 
@@ -530,10 +530,10 @@ class Google_Pay {
 
 		WC()->cart->empty_cart();
 
-		return array(
+		return [
 			'result'   => 'success',
 			'redirect' => $this->get_processing_gateway()->get_return_url( $order ),
-		);
+		];
 	}
 
 
@@ -584,7 +584,7 @@ class Google_Pay {
 
 		} else {
 
-			$request = $this->build_payment_request( $product->get_price(), array( 'needs_shipping' => $product->needs_shipping() ) );
+			$request = $this->build_payment_request( $product->get_price(), [ 'needs_shipping' => $product->needs_shipping() ] );
 
 			$stored_request = $this->get_stored_payment_request();
 
@@ -704,7 +704,7 @@ class Google_Pay {
 	 */
 	public function get_accepted_currencies() {
 
-		$currencies = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_google_pay_currencies() : array();
+		$currencies = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_google_pay_currencies() : [];
 
 		/**
 		 * Filters the currencies accepted by the gateway's Google Pay integration.
@@ -725,18 +725,18 @@ class Google_Pay {
 	 */
 	public function get_supported_networks() {
 
-		$accepted_card_types = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_card_types() : array();
+		$accepted_card_types = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_card_types() : [];
 
 		$accepted_card_types = array_map( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
 
-		$valid_networks = array(
+		$valid_networks = [
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_AMEX       => 'AMEX',
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_DISCOVER   => 'DISCOVER',
 			'interac'                                          => 'INTERAC',
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_JCB        => 'JCB',
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_MASTERCARD => 'MASTERCARD',
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_VISA       => 'VISA',
-		);
+		];
 
 		$networks = array_intersect_key( $valid_networks, array_flip( $accepted_card_types ) );
 
@@ -762,7 +762,7 @@ class Google_Pay {
 	public function get_supporting_gateways() {
 
 		$available_gateways  = $this->get_plugin()->get_gateways();
-		$supporting_gateways = array();
+		$supporting_gateways = [];
 
 		foreach ( $available_gateways as $key => $gateway ) {
 

@@ -85,9 +85,9 @@ class Frontend extends Script_Handler {
 
 			parent::add_hooks();
 
-			add_action( 'wp', array( $this, 'init' ) );
+			add_action( 'wp', [ $this, 'init' ] );
 
-			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		}
 	}
 
@@ -146,7 +146,7 @@ class Frontend extends Script_Handler {
 	 */
 	protected function get_display_locations() {
 
-		return get_option( 'sv_wc_google_pay_display_locations', array() );
+		return get_option( 'sv_wc_google_pay_display_locations', [] );
 	}
 
 
@@ -157,8 +157,8 @@ class Frontend extends Script_Handler {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( 'google-pay-js-library', 'https://pay.google.com/gp/p/js/pay.js', array(), null, true );
-		wp_enqueue_script( 'sv-wc-google-pay-v5_10_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-google-pay.min.js', array( 'google-pay-js-library', 'jquery' ), $this->get_plugin()->get_version(), true );
+		wp_enqueue_script( 'google-pay-js-library', 'https://pay.google.com/gp/p/js/pay.js', [], null, true );
+		wp_enqueue_script( 'sv-wc-google-pay-v5_10_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/sv-wc-payment-gateway-google-pay.min.js', [ 'google-pay-js-library', 'jquery' ], $this->get_plugin()->get_version(), true );
 	}
 
 
@@ -359,9 +359,9 @@ class Frontend extends Script_Handler {
 	 */
 	protected function get_product_js_handler_args( \WC_Product $product ) {
 
-		$args = array(
+		$args = [
 			'product_id' => get_the_ID(),
-		);
+		];
 
 		/**
 		 * Filters the gateway Google Pay cart handler args.
@@ -425,7 +425,7 @@ class Frontend extends Script_Handler {
 		 * @param array $args JS handler arguments
 		 * @param \WC_Cart $cart cart object
 		 */
-		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_cart_js_handler_args', array(), $cart );
+		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_cart_js_handler_args', [], $cart );
 	}
 
 
@@ -483,7 +483,7 @@ class Frontend extends Script_Handler {
 		 *
 		 * @param array $args JS handler arguments
 		 */
-		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_checkout_js_handler_args', array() );
+		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_checkout_js_handler_args', [] );
 	}
 
 
