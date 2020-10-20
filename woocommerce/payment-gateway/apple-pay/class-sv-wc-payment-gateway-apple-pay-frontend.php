@@ -155,7 +155,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Handlers\Script_Handler {
 
 		wp_enqueue_style( 'sv-wc-apple-pay-v5_10_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-apple-pay.css', array(), $this->get_plugin()->get_version() ); // TODO: min
 
-		wp_enqueue_script( 'sv-wc-apple-pay-v5_10_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/dist/sv-wc-payment-gateway-apple-pay.js', array( 'jquery' ), $this->get_plugin()->get_version(), true );
+		wp_enqueue_script( 'sv-wc-apple-pay-v5_10_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/sv-wc-payment-gateway-apple-pay.js', array( 'jquery' ), $this->get_plugin()->get_version(), true );
 	}
 
 
