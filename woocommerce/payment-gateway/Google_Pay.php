@@ -387,28 +387,28 @@ class Google_Pay {
 			// from here on out, it's up to the gateway to not screw things up.
 			$order->add_order_note( __( 'Google Pay payment authorized.', 'woocommerce-plugin-framework' ) );
 
-			if ( ! empty( $adress_data = $payment_data->shippingAddress ) ) {
+			if ( ! empty( $address_data = $payment_data->shippingAddress ) ) {
 
-				if ( ! empty( $adress_data->name ) ) {
-					$first_name = strstr( $adress_data->name, ' ', true );
-					$last_name  = strstr( $adress_data->name, ' ' );
+				if ( ! empty( $address_data->name ) ) {
+					$first_name = strstr( $address_data->name, ' ', true );
+					$last_name  = strstr( $address_data->name, ' ' );
 				}
 
 				$address = [
 					'first_name' => isset( $first_name ) ? $first_name : '',
 					'last_name'  => isset( $last_name ) ? $last_name : '',
-					'address_1'  => isset( $adress_data->address1 ) ? $adress_data->address1 : '',
-					'address_2'  => isset( $adress_data->address2 ) ? $adress_data->address2 : '',
-					'city'       => isset( $adress_data->locality ) ? $adress_data->locality : '',
-					'state'      => isset( $adress_data->administrativeArea ) ? $adress_data->administrativeArea : '',
-					'postcode'   => isset( $adress_data->postalCode ) ? $adress_data->postalCode : '',
-					'country'    => isset( $adress_data->countryCode ) ? $adress_data->countryCode : '',
+					'address_1'  => isset( $address_data->address1 ) ? $address_data->address1 : '',
+					'address_2'  => isset( $address_data->address2 ) ? $address_data->address2 : '',
+					'city'       => isset( $address_data->locality ) ? $address_data->locality : '',
+					'state'      => isset( $address_data->administrativeArea ) ? $address_data->administrativeArea : '',
+					'postcode'   => isset( $address_data->postalCode ) ? $address_data->postalCode : '',
+					'country'    => isset( $address_data->countryCode ) ? $address_data->countryCode : '',
 				];
 
 				$order->set_address( $address, 'billing' );
 				$order->set_address( $address, 'shipping' );
 
-				$order->set_billing_phone( isset( $adress_data->phoneNumber ) ? $adress_data->phoneNumber : '' );
+				$order->set_billing_phone( isset( $address_data->phoneNumber ) ? $address_data->phoneNumber : '' );
 				$order->set_billing_email( isset( $payment_data->email ) ? $payment_data->email : '' );
 			}
 
