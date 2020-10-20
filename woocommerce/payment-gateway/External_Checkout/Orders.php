@@ -16,55 +16,52 @@
  * versions in the future. If you wish to customize the plugin for your
  * needs please refer to http://www.skyverge.com
  *
- * @package   SkyVerge/WooCommerce/Payment-Gateway/Apple-Pay
+ * @package   SkyVerge/WooCommerce/Payment_Gateway/External_Checkout
  * @author    SkyVerge
  * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout;
+
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_Payment_Gateway_Apple_Pay_Orders' ) ) :
-
+if ( ! class_exists( __NAMESPACE__ . '\\Orders' ) ) :
 
 /**
- * The Apple Pay order handler.
+ * A helper that handles order creation outside the regular WC checkout process.
  *
- * @since 4.7.0
+ * @see \WC_Checkout
+ *
+ * @since 5.10.0-dev.1
  */
-class SV_WC_Payment_Gateway_Apple_Pay_Orders {
+class Orders {
 
 
 	/**
 	 * Creates an order from a cart.
 	 *
-	 * @since 4.7.0
+	 * @since 5.10.0-dev.1
 	 *
 	 * @param \WC_Cart $cart cart object
-	 * @return \WC_Order|void
-	 * @throws SV_WC_Payment_Gateway_Exception
+	 * @param array $order_data order data
+	 * @return \WC_Order
+	 * @throws Framework\SV_WC_Payment_Gateway_Exception
 	 * @throws \Exception
 	 */
-	public static function create_order( \WC_Cart $cart ) {
+	public static function create_order( \WC_Cart $cart, $order_data = [] ) {
 
 		$cart->calculate_totals();
 
 		try {
 
-			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.6' ) ) {
-				$cart_hash = $cart->get_cart_hash();
-			} else {
-				$cart_hash = md5( json_encode( wc_clean( $cart->get_cart_for_session() ) ) . $cart->get_total( 'edit' ) );
-			}
-
-			$order_data = [
+			$order_data = wp_parse_args( $order_data, [
 				'status'      => apply_filters( 'woocommerce_default_order_status', 'pending' ),
 				'customer_id' => apply_filters( 'woocommerce_checkout_customer_id', get_current_user_id() ),
-				'cart_hash'   => $cart_hash,
-				'created_via' => 'apple_pay',
-			];
+				'cart_hash'   => self::get_cart_hash( $cart ),
+			] );
 
 			$order = self::get_order_object( $order_data );
 
@@ -92,21 +89,41 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 
 			return $order;
 
-		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
+		} catch ( Framework\SV_WC_Payment_Gateway_Exception $e ) {
+
 			throw $e;
 		}
 	}
 
 
 	/**
+	 * Gets the hash of the cart based on the cart contents.
+	 *
+	 * @since 5.10.0-dev.1
+	 *
+	 * @param \WC_Cart $cart cart object
+	 * @return string
+	 */
+	private static function get_cart_hash( \WC_Cart $cart ) {
+
+		if ( Framework\SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.6' ) ) {
+			return $cart->get_cart_hash();
+		}
+
+		return md5( json_encode( wc_clean( $cart->get_cart_for_session() ) ) . $cart->get_total( 'edit' ) );
+	}
+
+
+	/**
 	 * Gets an order object for payment.
 	 *
-	 * @since 4.7.0
+	 * @since 5.10.0-dev.1
 	 *
 	 * @see \WC_Checkout::create_order()
+	 *
 	 * @param array $order_data the order data
 	 * @return \WC_Order
-	 * @throws SV_WC_Payment_Gateway_Exception
+	 * @throws Framework\SV_WC_Payment_Gateway_Exception
 	 */
 	public static function get_order_object( $order_data ) {
 
@@ -120,7 +137,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 			$order = wc_update_order( $order_data );
 
 			if ( is_wp_error( $order ) ) {
-				throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 522 ) );
+				throw new Framework\SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 522 ) );
 			}
 
 			/** This action is documented by WooCommerce in includes/class-wc-checkout.php */
@@ -133,11 +150,11 @@ class SV_WC_Payment_Gateway_Apple_Pay_Orders {
 			$order = wc_create_order( $order_data );
 
 			if ( is_wp_error( $order ) ) {
-				throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 520 ) );
+				throw new Framework\SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 520 ) );
 			}
 
 			if ( false === $order ) {
-				throw new SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 521 ) );
+				throw new Framework\SV_WC_Payment_Gateway_Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce-plugin-framework' ), 521 ) );
 			}
 
 			// set the new order ID so it can be resumed in case of failure

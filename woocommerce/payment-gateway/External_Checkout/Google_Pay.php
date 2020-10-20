@@ -22,12 +22,12 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay\Admin;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay\AJAX;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay\Frontend;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay\Orders;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Google_Pay\Admin;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Google_Pay\AJAX;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Google_Pay\Frontend;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Orders;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Exception;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Helper;
@@ -35,7 +35,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment_Gateway\\Google_Pay' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment_Gateway\\External_Checkout\\Google_Pay' ) ) :
 
 
 /**
@@ -736,7 +736,7 @@ class Google_Pay {
 		 * @since 5.10.0
 		 *
 		 * @param array $networks the supported networks
-		 * @param \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler the Google Pay handler
+		 * @param Google_Pay $handler the Google Pay handler
 		 */
 		return apply_filters( 'sv_wc_google_pay_supported_networks', array_values( $networks ), $this );
 	}

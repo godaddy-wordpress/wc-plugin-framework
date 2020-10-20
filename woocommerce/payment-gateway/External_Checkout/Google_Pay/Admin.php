@@ -22,13 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Google_Pay;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Google_Pay;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Helper;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment_Gateway\\Google_Pay\\Admin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment_Gateway\\External_Checkout\\Google_Pay\\Admin' ) ) :
 
 
 /**
@@ -48,9 +49,9 @@ class Admin {
 	 *
 	 * @since 5.10.0
 	 *
-	 * @param \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler main Google Pay handler instance
+	 * @param Google_Pay $handler main Google Pay handler instance
 	 */
-	public function __construct( \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pay $handler ) {
+	public function __construct( Google_Pay $handler ) {
 
 		$this->handler = $handler;
 

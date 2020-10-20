@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Orders;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_Payment_Gateway_Apple_Pay' ) ) :
@@ -145,7 +147,7 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 			$this->log( "Payment Response:\n" . $payment_response->to_string_safe() . "\n" );
 
-			$order = SV_WC_Payment_Gateway_Apple_Pay_Orders::create_order( WC()->cart );
+			$order = Orders::create_order( WC()->cart, [ 'created_via' => 'apple_pay' ] );
 
 			$order->set_payment_method( $this->get_processing_gateway() );
 
@@ -780,9 +782,9 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 
 		if ( ! $this->api instanceof SV_WC_Payment_Gateway_Apple_Pay_API ) {
 
-			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api.php');
-			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api-request.php');
-			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api-response.php');
+			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/External_Checkout/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api.php');
+			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/External_Checkout/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api-request.php');
+			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/External_Checkout/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api-response.php');
 
 			$this->api = new SV_WC_Payment_Gateway_Apple_Pay_API( $this->get_processing_gateway() );
 		}
