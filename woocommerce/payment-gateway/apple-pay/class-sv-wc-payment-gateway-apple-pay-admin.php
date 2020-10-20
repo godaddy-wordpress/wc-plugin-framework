@@ -269,6 +269,10 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin {
 	 */
 	public function render_static_setting( $setting ) {
 
+		if ( ! $this->is_settings_screen() ) {
+			return;
+		}
+
 		?>
 
 		<tr valign="top">
