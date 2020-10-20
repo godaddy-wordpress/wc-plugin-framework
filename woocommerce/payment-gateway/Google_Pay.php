@@ -358,7 +358,6 @@ class Google_Pay {
 	/**
 	 * Processes the payment after a Google Pay authorization.
 	 *
-	 *
 	 * This method creates a new order and calls the gateway for processing.
 	 *
 	 * @since 5.10.0
