@@ -156,15 +156,14 @@ class Google_Pay {
 
 
 	/**
-	 * Gets Google transaction info based on WooCommerce cart data.
+	 * Checks if all products in the cart can be purchased using Google Pay.
 	 *
 	 * @since 5.10.0
 	 *
 	 * @param \WC_Cart $cart cart object
-	 * @return array
 	 * @throws SV_WC_Payment_Gateway_Exception
 	 */
-	public function get_cart_transaction_info( \WC_Cart $cart ) {
+	public function validate_cart( \WC_Cart $cart ) {
 
 		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Cart::cart_contains_subscription() ) {
 			throw new SV_WC_Payment_Gateway_Exception( 'Cart contains subscriptions.' );
@@ -179,6 +178,53 @@ class Google_Pay {
 		if ( count( WC()->shipping->get_packages() ) > 1 ) {
 			throw new SV_WC_Payment_Gateway_Exception( 'Google Pay cannot be used for multiple shipments.' );
 		}
+	}
+
+
+	/**
+	 * Checks if a single product can be purchased using Google Pay.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param \WC_Product $product product object
+	 * @throws SV_WC_Payment_Gateway_Exception
+	 */
+	public function validate_product( \WC_Product $product ) {
+
+		// no subscription products
+		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Product::is_subscription( $product ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Not available for subscription products.' );
+		}
+
+		// no pre-order "charge upon release" products
+		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Not available for pre-order products that are set to charge upon release.' );
+		}
+
+		// only simple products
+		if ( ! $product->is_type( 'simple' ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Buy Now is only available for simple products' );
+		}
+
+		// if this product can't be purchased, bail
+		if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Product is not available for purchase.' );
+		}
+	}
+
+
+	/**
+	 * Gets Google transaction info based on WooCommerce cart data.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param \WC_Cart $cart cart object
+	 * @return array
+	 * @throws SV_WC_Payment_Gateway_Exception
+	 */
+	public function get_cart_transaction_info( \WC_Cart $cart ) {
+
+		$this->validate_cart( $cart );
 
 		return [
 			'displayItems'     => $this->build_display_items( $cart ),
@@ -202,25 +248,7 @@ class Google_Pay {
 	 */
 	public function get_product_transaction_info( \WC_Product $product ) {
 
-		// no subscription products
-		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Product::is_subscription( $product ) ) {
-			throw new SV_WC_Payment_Gateway_Exception( 'Not available for subscription products.' );
-		}
-
-		// no pre-order "charge upon release" products
-		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
-			throw new SV_WC_Payment_Gateway_Exception( 'Not available for pre-order products that are set to charge upon release.' );
-		}
-
-		// only simple products
-		if ( ! $product->is_type( 'simple' ) ) {
-			throw new SV_WC_Payment_Gateway_Exception( 'Buy Now is only available for simple products' );
-		}
-
-		// if this product can't be purchased, bail
-		if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
-			throw new SV_WC_Payment_Gateway_Exception( 'Product is not available for purchase.' );
-		}
+		$this->validate_product( $product );
 
 		return [
 			'displayItems'     => [
@@ -251,10 +279,6 @@ class Google_Pay {
 	 */
 	public function recalculate_totals( $chosen_shipping_method, $product_id ) {
 
-		if ( ! WC()->cart ) {
-			throw new SV_WC_Payment_Gateway_Exception( 'Cart data is missing.' );
-		}
-
 		// if this is a single product page, make sure the cart gets populated
 		if ( ! empty( $product_id ) && $product = wc_get_product( $product_id ) ) {
 
@@ -262,29 +286,15 @@ class Google_Pay {
 				WC()->session->set_customer_session_cookie( true );
 			}
 
-			// no subscription products
-			if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Product::is_subscription( $product ) ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Not available for subscription products.' );
-			}
-
-			// no pre-order "charge upon release" products
-			if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Not available for pre-order products that are set to charge upon release.' );
-			}
-
-			// only simple products
-			if ( ! $product->is_type( 'simple' ) ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Buy Now is only available for simple products' );
-			}
-
-			// if this product can't be purchased, bail
-			if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
-				throw new SV_WC_Payment_Gateway_Exception( 'Product is not available for purchase.' );
-			}
+			$this->validate_product( $product );
 
 			WC()->cart->empty_cart();
 
 			WC()->cart->add_to_cart( $product->get_id() );
+		}
+
+		if ( ! WC()->cart ) {
+			throw new SV_WC_Payment_Gateway_Exception( 'Cart data is missing.' );
 		}
 
 		$response_data = [

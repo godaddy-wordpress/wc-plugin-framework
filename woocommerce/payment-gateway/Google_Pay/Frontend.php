@@ -26,6 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\Google_Pa
 
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Handlers\Script_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Exception;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
@@ -322,23 +323,9 @@ class Frontend extends Script_Handler {
 			return;
 		}
 
-		// no subscription products
-		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Product::is_subscription( $product ) ) {
-			return;
-		}
-
-		// no pre-order "charge upon release" products
-		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Product::product_is_charged_upon_release( $product ) ) {
-			return;
-		}
-
-		// only simple products
-		if ( ! $product->is_type( 'simple' ) ) {
-			return;
-		}
-
-		// if this product can't be purchased, bail
-		if ( ! $product->is_purchasable() || ! $product->is_in_stock() || ! $product->has_enough_stock( 1 ) ) {
+		try {
+			$this->get_handler()->validate_product( $product );
+		} catch ( SV_WC_Payment_Gateway_Exception $exception ) {
 			return;
 		}
 
@@ -390,13 +377,9 @@ class Frontend extends Script_Handler {
 			return;
 		}
 
-		// no subscription products
-		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Cart::cart_contains_subscription() ) {
-			return;
-		}
-
-		// no pre-order "charge upon release" products
-		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
+		try {
+			$this->get_handler()->validate_cart( WC()->cart );
+		} catch ( SV_WC_Payment_Gateway_Exception $exception ) {
 			return;
 		}
 
@@ -439,13 +422,9 @@ class Frontend extends Script_Handler {
 	 */
 	public function init_checkout() {
 
-		// no subscription products
-		if ( $this->get_plugin()->is_subscriptions_active() && \WC_Subscriptions_Cart::cart_contains_subscription() ) {
-			return;
-		}
-
-		// no pre-order "charge upon release" products
-		if ( $this->get_plugin()->is_pre_orders_active() && \WC_Pre_Orders_Cart::cart_contains_pre_order() ) {
+		try {
+			$this->get_handler()->validate_cart( WC()->cart );
+		} catch ( SV_WC_Payment_Gateway_Exception $exception ) {
 			return;
 		}
 
