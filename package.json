@@ -16,8 +16,8 @@
     "node": ">= 0.10.0"
   },
   "scripts": {
-    "clean": "rimraf woocommerce/payment-gateway/assets/js/admin/dist && rimraf woocommerce/payment-gateway/assets/js/frontend/dist",
-    "build:parcel": "parcel build 'woocommerce/payment-gateway/assets/js/admin/*.js' 'woocommerce/payment-gateway/assets/js/admin/*.coffee' --out-dir woocommerce/payment-gateway/assets/js/admin/dist && parcel build 'woocommerce/payment-gateway/assets/js/frontend/*.js' 'woocommerce/payment-gateway/assets/js/frontend/*.coffee' --out-dir woocommerce/payment-gateway/assets/js/frontend/dist",
+    "clean": "rimraf woocommerce/payment-gateway/assets/dist",
+    "build:parcel": "parcel build 'woocommerce/payment-gateway/assets/js/**/*.js' 'woocommerce/payment-gateway/assets/js/**/*.coffee' --out-dir woocommerce/payment-gateway/assets/dist",
     "build": "grunt default && npm run build:parcel"
   },
   "devDependencies": {
