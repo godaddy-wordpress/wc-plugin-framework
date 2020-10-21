@@ -312,7 +312,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-payment-response.php" );
 
 		// Google Pay
-		require_once( "{$payment_gateway_framework_path}/External_Checkout/Google_Pay.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/Google_Pay/Google_Pay.php" );
 		require_once( "{$payment_gateway_framework_path}/External_Checkout/Google_Pay/Admin.php" );
 		require_once( "{$payment_gateway_framework_path}/External_Checkout/Google_Pay/AJAX.php" );
 		require_once( "{$payment_gateway_framework_path}/External_Checkout/Google_Pay/Frontend.php" );
