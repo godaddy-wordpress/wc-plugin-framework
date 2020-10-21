@@ -26,7 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0;
 
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Note;
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Google_Pay;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\External_Checkout;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -100,6 +100,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 	/** @var SV_WC_Payment_Gateway_My_Payment_Methods adds My Payment Method functionality */
 	private $my_payment_methods;
+
+	/** @var External_Checkout the external checkout handler instance */
+	private $external_checkout;
 
 	/** @var SV_WC_Payment_Gateway_Apple_Pay the Apple Pay handler instance */
 	private $apple_pay;
@@ -185,6 +188,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// my payment methods feature
 		add_action( 'init', array( $this, 'maybe_init_my_payment_methods' ) );
+
+		// external checkout features
+		add_action( 'init', array( $this, 'init_external_checkout' ) );
 
 		// apple pay feature
 		add_action( 'init', array( $this, 'maybe_init_apple_pay' ) );
@@ -424,6 +430,35 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	public function supports_my_payment_methods() {
 
 		return $this->supports( self::FEATURE_MY_PAYMENT_METHODS );
+	}
+
+
+	/** External Checkout *************************************************************/
+
+
+	/**
+	 * Initializes external checkout features.
+	 *
+	 * @since 5.10.0
+	 */
+	public function init_external_checkout() {
+
+		$this->external_checkout = $this->build_external_checkout_instance();
+	}
+
+
+	/**
+	 * Builds the external checkout handler instance.
+	 *
+	 * Gateways can override this to define their own external checkout handler class.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return External_Checkout
+	 */
+	protected function build_external_checkout_instance() {
+
+		return new External_Checkout( $this );
 	}
 
 
