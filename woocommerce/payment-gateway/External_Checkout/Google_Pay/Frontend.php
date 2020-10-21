@@ -193,7 +193,6 @@ class Frontend extends Script_Handler {
 			'card_types'               => $this->get_handler()->get_supported_networks(),
 			'available_countries'	   => $this->get_handler()->get_available_countries(),
 			'currency_code'			   => get_woocommerce_currency(),
-			'needs_shipping'           => WC()->cart->needs_shipping(),
 			'generic_error'            => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
 		] );
 	}
@@ -403,6 +402,10 @@ class Frontend extends Script_Handler {
 	 */
 	protected function get_cart_js_handler_args( \WC_Cart $cart ) {
 
+		$args = [
+			'needs_shipping' => $cart->needs_shipping(),
+		];
+
 		/**
 		 * Filters the gateway Google Pay cart handler args.
 		 *
@@ -411,7 +414,7 @@ class Frontend extends Script_Handler {
 		 * @param array $args JS handler arguments
 		 * @param \WC_Cart $cart cart object
 		 */
-		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_cart_js_handler_args', [], $cart );
+		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_cart_js_handler_args', $args, $cart );
 	}
 
 
@@ -451,6 +454,10 @@ class Frontend extends Script_Handler {
 	 */
 	protected function get_checkout_js_handler_args() {
 
+		$args = [
+			'needs_shipping' => WC()->cart->needs_shipping(),
+		];
+
 		/**
 		 * Filters the gateway Google Pay checkout handler args.
 		 *
@@ -458,7 +465,7 @@ class Frontend extends Script_Handler {
 		 *
 		 * @param array $args JS handler arguments
 		 */
-		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_checkout_js_handler_args', [] );
+		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_checkout_js_handler_args', $args );
 	}
 
 
