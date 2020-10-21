@@ -234,7 +234,7 @@ class Frontend {
 			return;
 		}
 
-		wp_enqueue_style( 'sv-wc-external-checkout-v5_10_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-external-checkout.css', array(), $this->get_plugin()->get_version() ); // TODO: min
+		wp_enqueue_style( 'sv-wc-external-checkout-v5_10_0', $this->get_handler()->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-external-checkout.css', array(), $this->get_plugin()->get_version() ); // TODO: min
 	}
 
 
