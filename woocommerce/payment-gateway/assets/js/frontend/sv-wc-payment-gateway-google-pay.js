@@ -116,7 +116,8 @@ jQuery( document ).ready( ( $ ) => {
 				type: 'CARD',
 				parameters: {
 					allowedAuthMethods: allowedCardAuthMethods,
-					allowedCardNetworks: allowedCardNetworks
+					allowedCardNetworks: allowedCardNetworks,
+					billingAddressRequired: true
 				}
 			};
 
