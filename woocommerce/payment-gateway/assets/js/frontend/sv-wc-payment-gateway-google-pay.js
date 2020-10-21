@@ -191,6 +191,7 @@ jQuery( document ).ready( ( $ ) => {
 				};
 
 				paymentDataRequest.emailRequired = true;
+				paymentDataRequest.callbackIntents = [ 'PAYMENT_AUTHORIZATION' ];
 
 				if ( this.needsShipping ) {
 					paymentDataRequest.callbackIntents = [ 'SHIPPING_ADDRESS', 'SHIPPING_OPTION', 'PAYMENT_AUTHORIZATION' ];
