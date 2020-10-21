@@ -436,7 +436,7 @@ class Google_Pay {
 
 			$this->store_payment_response( $payment_data );
 
-			$order = Orders::create_order( WC()->cart );
+			$order = Orders::create_order( WC()->cart, [ 'created_via' => 'google_pay' ] );
 
 			$order->set_payment_method( $this->get_processing_gateway() );
 
