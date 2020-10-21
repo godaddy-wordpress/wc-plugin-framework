@@ -444,29 +444,50 @@ class Google_Pay {
 			// from here on out, it's up to the gateway to not screw things up.
 			$order->add_order_note( __( 'Google Pay payment authorized.', 'woocommerce-plugin-framework' ) );
 
-			if ( ! empty( $address_data = $payment_data->shippingAddress ) ) {
+			if ( ! empty( $billing_address_data = $payment_data->paymentMethodData->info->billingAddress ) ) {
 
-				if ( ! empty( $address_data->name ) ) {
-					$first_name = strstr( $address_data->name, ' ', true );
-					$last_name  = strstr( $address_data->name, ' ' );
+				if ( ! empty( $billing_address_data->name ) ) {
+					$first_name = strstr( $billing_address_data->name, ' ', true );
+					$last_name  = strstr( $billing_address_data->name, ' ' );
 				}
 
-				$address = [
+				$billing_address = [
 					'first_name' => isset( $first_name ) ? $first_name : '',
 					'last_name'  => isset( $last_name ) ? $last_name : '',
-					'address_1'  => isset( $address_data->address1 ) ? $address_data->address1 : '',
-					'address_2'  => isset( $address_data->address2 ) ? $address_data->address2 : '',
-					'city'       => isset( $address_data->locality ) ? $address_data->locality : '',
-					'state'      => isset( $address_data->administrativeArea ) ? $address_data->administrativeArea : '',
-					'postcode'   => isset( $address_data->postalCode ) ? $address_data->postalCode : '',
-					'country'    => isset( $address_data->countryCode ) ? $address_data->countryCode : '',
+					'address_1'  => isset( $billing_address_data->address1 ) ? $billing_address_data->address1 : '',
+					'address_2'  => isset( $billing_address_data->address2 ) ? $billing_address_data->address2 : '',
+					'city'       => isset( $billing_address_data->locality ) ? $billing_address_data->locality : '',
+					'state'      => isset( $billing_address_data->administrativeArea ) ? $billing_address_data->administrativeArea : '',
+					'postcode'   => isset( $billing_address_data->postalCode ) ? $billing_address_data->postalCode : '',
+					'country'    => isset( $billing_address_data->countryCode ) ? $billing_address_data->countryCode : '',
 				];
 
-				$order->set_address( $address, 'billing' );
-				$order->set_address( $address, 'shipping' );
+				$order->set_address( $billing_address, 'billing' );
 
-				$order->set_billing_phone( isset( $address_data->phoneNumber ) ? $address_data->phoneNumber : '' );
-				$order->set_billing_email( isset( $payment_data->email ) ? $payment_data->email : '' );
+				$order->set_billing_phone( isset( $billing_address_data->phoneNumber ) ? $billing_address_data->phoneNumber : '' );
+			}
+
+			$order->set_billing_email( isset( $payment_data->email ) ? $payment_data->email : '' );
+
+			if ( ! empty( $shipping_address_data = $payment_data->shippingAddress ) ) {
+
+				if ( ! empty( $shipping_address_data->name ) ) {
+					$first_name = strstr( $shipping_address_data->name, ' ', true );
+					$last_name  = strstr( $shipping_address_data->name, ' ' );
+				}
+
+				$shipping_address = [
+					'first_name' => isset( $first_name ) ? $first_name : '',
+					'last_name'  => isset( $last_name ) ? $last_name : '',
+					'address_1'  => isset( $shipping_address_data->address1 ) ? $shipping_address_data->address1 : '',
+					'address_2'  => isset( $shipping_address_data->address2 ) ? $shipping_address_data->address2 : '',
+					'city'       => isset( $shipping_address_data->locality ) ? $shipping_address_data->locality : '',
+					'state'      => isset( $shipping_address_data->administrativeArea ) ? $shipping_address_data->administrativeArea : '',
+					'postcode'   => isset( $shipping_address_data->postalCode ) ? $shipping_address_data->postalCode : '',
+					'country'    => isset( $shipping_address_data->countryCode ) ? $shipping_address_data->countryCode : '',
+				];
+
+				$order->set_address( $shipping_address, 'shipping' );
 			}
 
 			$order->save();
