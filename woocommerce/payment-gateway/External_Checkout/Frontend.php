@@ -132,7 +132,7 @@ class Frontend {
 	 */
 	public function init_checkout() {
 
-		if ( $this->get_plugin()->is_plugin_active( 'woocommerce-checkout-add-ons.php' ) ) {
+		if ( $this->get_handler()->get_plugin()->is_plugin_active( 'woocommerce-checkout-add-ons.php' ) ) {
 			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_external_checkout_buttons' ] );
 			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_terms_notice' ] );
 		} else {

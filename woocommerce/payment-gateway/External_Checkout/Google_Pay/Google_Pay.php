@@ -93,11 +93,13 @@ class Google_Pay {
 	/**
 	 * Registers this handler as an external checkout handler.
 	 *
+	 * @internal
+	 *
 	 * @since 5.10.0
 	 *
 	 * @param array $handlers
 	 */
-	protected function register_handler( $handlers ) {
+	public function register_handler( $handlers ) {
 
 		$handlers[] = $this;
 	}
