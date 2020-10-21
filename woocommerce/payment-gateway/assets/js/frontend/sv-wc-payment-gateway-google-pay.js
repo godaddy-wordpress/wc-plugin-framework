@@ -29,6 +29,7 @@ jQuery( document ).ready( ( $ ) => {
 		 * @param {string[]} params.card_types The supported card types
 		 * @param {string[]} params.available_countries Array of two-letter country codes the gateway is available for
 		 * @param {string[]} params.currency_code WC configured currency
+		 * @param {boolean} params.needs_shipping Whether or not the cart or product needs shipping
 		 * @param {string} params.generic_error The generic error message
 		 * @param {string} params.product_id The product ID if we are on a Product page
 		 */
@@ -47,6 +48,7 @@ jQuery( document ).ready( ( $ ) => {
 				card_types,
 				available_countries,
 				currency_code,
+				needs_shipping,
 				generic_error
 			} = params;
 
@@ -59,6 +61,7 @@ jQuery( document ).ready( ( $ ) => {
 			this.buttonStyle            = button_style;
 			this.availableCountries     = available_countries;
 			this.currencyCode           = currency_code;
+			this.needsShipping          = needs_shipping;
 			this.genericError           = generic_error;
 
 			if ( params.product_id ) {
@@ -186,11 +189,15 @@ jQuery( document ).ready( ( $ ) => {
 					merchantId: this.merchantID,
 					merchantName: this.merchantName
 				};
-				paymentDataRequest.callbackIntents = [ 'SHIPPING_ADDRESS', 'SHIPPING_OPTION', 'PAYMENT_AUTHORIZATION' ];
+
 				paymentDataRequest.emailRequired = true;
-				paymentDataRequest.shippingAddressRequired = true;
-				paymentDataRequest.shippingAddressParameters = this.getGoogleShippingAddressParameters();
-				paymentDataRequest.shippingOptionRequired = true;
+
+				if ( this.needsShipping ) {
+					paymentDataRequest.callbackIntents = [ 'SHIPPING_ADDRESS', 'SHIPPING_OPTION', 'PAYMENT_AUTHORIZATION' ];
+					paymentDataRequest.shippingAddressRequired = true;
+					paymentDataRequest.shippingAddressParameters = this.getGoogleShippingAddressParameters();
+					paymentDataRequest.shippingOptionRequired = true;
+				}
 
 				resolve( paymentDataRequest );
 			} );
@@ -204,16 +211,21 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		getGooglePaymentsClient() {
 			if ( this.paymentsClient === null ) {
-				this.paymentsClient = new google.payments.api.PaymentsClient( {
+				let args = {
 					merchantInfo: {
 						merchantName: this.merchantName,
 						merchantId: this.merchantID
-					},
-					paymentDataCallbacks: {
+					}
+				};
+
+				if ( this.needsShipping ) {
+					args.paymentDataCallbacks = {
 						onPaymentAuthorized: ( paymentData ) => this.onPaymentAuthorized( paymentData ),
 						onPaymentDataChanged: ( paymentData ) => this.onPaymentDataChanged( paymentData )
-					}
-				} );
+					};
+				}
+
+				this.paymentsClient = new google.payments.api.PaymentsClient( args );
 			}
 			return this.paymentsClient;
 		}

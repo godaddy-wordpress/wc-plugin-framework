@@ -193,6 +193,7 @@ class Frontend extends Script_Handler {
 			'card_types'               => $this->get_handler()->get_supported_networks(),
 			'available_countries'	   => $this->get_handler()->get_available_countries(),
 			'currency_code'			   => get_woocommerce_currency(),
+			'needs_shipping'           => WC()->cart->needs_shipping(),
 			'generic_error'            => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
 		] );
 	}
@@ -287,7 +288,7 @@ class Frontend extends Script_Handler {
 		if ( apply_filters( 'woocommerce_checkout_show_terms', true ) && function_exists( 'wc_terms_and_conditions_checkbox_enabled' ) && wc_terms_and_conditions_checkbox_enabled() ) {
 
 			$default_text = sprintf(
-				/** translators: Placeholders: %1$s - opening HTML link tag pointing to the terms & conditions page, %2$s closing HTML link tag */
+				/** transalators: Placeholders: %1$s - opening HTML link tag pointing to the terms & conditions page, %2$s closing HTML link tag */
 				__( 'By submitting your payment, you agree to our %1$sterms and conditions%2$s.', 'woocommerce-plugin-framework' ),
 				'<a href="' . esc_url( get_permalink( wc_terms_and_conditions_page_id() ) ) . '" class="sv-wc-google-pay-terms-and-conditions-link" target="_blank">',
 				'</a>'
@@ -348,7 +349,8 @@ class Frontend extends Script_Handler {
 	protected function get_product_js_handler_args( \WC_Product $product ) {
 
 		$args = [
-			'product_id' => get_the_ID(),
+			'product_id'     => get_the_ID(),
+			'needs_shipping' => $product->needs_shipping(),
 		];
 
 		/**
