@@ -105,6 +105,8 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	public function register_handler( $handlers ) {
 
 		$handlers[] = $this;
+
+		return $handlers;
 	}
 
 

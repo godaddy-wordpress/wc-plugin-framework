@@ -102,6 +102,8 @@ class Google_Pay {
 	public function register_handler( $handlers ) {
 
 		$handlers[] = $this;
+
+		return $handlers;
 	}
 
 

@@ -73,12 +73,9 @@ class Frontend {
 	 */
 	protected function add_hooks() {
 
-		if ( $this->get_handler()->is_available() ) {
+		add_action( 'wp', [ $this, 'init' ] );
 
-			add_action( 'wp', [ $this, 'init' ] );
-
-			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		}
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 	}
 
 
@@ -88,6 +85,10 @@ class Frontend {
 	 * @since 5.10.0
 	 */
 	public function init() {
+
+		if ( ! $this->get_handler()->is_available() ) {
+			return;
+		}
 
 		$locations = $this->get_handler()->get_display_locations();
 
@@ -228,6 +229,10 @@ class Frontend {
 	 * @since 5.10.0
 	 */
 	public function enqueue_scripts() {
+
+		if ( ! $this->get_handler()->is_available() ) {
+			return;
+		}
 
 		wp_enqueue_style( 'sv-wc-external-checkout-v5_10_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-external-checkout.css', array(), $this->get_plugin()->get_version() ); // TODO: min
 	}
