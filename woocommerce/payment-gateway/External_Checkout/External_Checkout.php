@@ -149,12 +149,12 @@ class External_Checkout {
 
 		$display_locations = [];
 
-		foreach ($this->get_handlers() as $handler ) {
+		foreach ( $this->get_handlers() as $handler ) {
 
-			$display_locations[] = $handler->get_display_locations();
+			$display_locations= array_merge( $display_locations, $handler->get_display_locations() );
 		}
 
-		return array_unique( $display_locations );
+		return $display_locations;
 	}
 
 
