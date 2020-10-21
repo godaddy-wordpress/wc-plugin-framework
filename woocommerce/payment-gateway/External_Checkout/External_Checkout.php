@@ -40,6 +40,9 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment
 class External_Checkout {
 
 
+	/** @var Frontend the frontend instance */
+	protected $frontend;
+
 	/** @var SV_WC_Payment_Gateway_Plugin the plugin instance */
 	protected $plugin;
 
@@ -60,7 +63,7 @@ class External_Checkout {
 
 
 	/**
-	 * Initializes the Google Pay handlers.
+	 * Initializes the external checkout handlers.
 	 *
 	 * @since 5.10.0
 	 */
@@ -93,8 +96,7 @@ class External_Checkout {
 	 */
 	protected function init_frontend() {
 
-		// TODO: add external checkout frontend handler class
-		// $this->frontend = new Frontend( $this->get_plugin(), $this );
+		 $this->frontend = new Frontend( $this->get_plugin(), $this );
 	}
 
 
@@ -147,7 +149,7 @@ class External_Checkout {
 
 		$display_locations = [];
 
-		foreach ( $this->get_handlers() as $handler ) {
+		foreach ($this->get_handlers() as $handler ) {
 
 			$display_locations[] = $handler->get_display_locations();
 		}

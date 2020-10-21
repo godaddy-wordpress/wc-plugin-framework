@@ -95,7 +95,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Handlers\Script_Handler {
 	 */
 	public function init() {
 
-		$locations = $this->get_display_locations();
+		$locations = $this->get_handler()->get_display_locations();
 
 		if ( is_product() && in_array( 'product', $locations, true ) ) {
 			$this->init_product();
@@ -130,19 +130,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Handlers\Script_Handler {
 	public function get_id_dasherized() {
 
 		return $this->get_gateway()->get_id_dasherized() . '-apple-pay';
-	}
-
-
-	/**
-	 * Gets the configured display locations.
-	 *
-	 * @since 4.7.0
-	 *
-	 * @return array
-	 */
-	protected function get_display_locations() {
-
-		return get_option( 'sv_wc_apple_pay_display_locations', array() );
 	}
 
 
@@ -315,45 +302,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Handlers\Script_Handler {
 
 
 	/**
-	 * Renders a notice informing the customer that by purchasing they are accepting the website's terms and conditions.
-	 *
-	 * Only displayed if a Terms and conditions page is configured.
-	 *
-	 * @internal
-	 *
-	 * @since 5.5.4
-	 */
-	public function render_terms_notice() {
-
-		/** This filter is documented by WooCommerce in templates/checkout/terms.php */
-		if ( apply_filters( 'woocommerce_checkout_show_terms', true ) && function_exists( 'wc_terms_and_conditions_checkbox_enabled' ) && wc_terms_and_conditions_checkbox_enabled() ) {
-
-			$default_text = sprintf(
-				/** translators: Placeholders: %1$s - opening HTML link tag pointing to the terms & conditions page, %2$s closing HTML link tag */
-				__( 'By submitting your payment, you agree to our %1$sterms and conditions%2$s.', 'woocommerce-plugin-framework' ),
-				'<a href="' . esc_url( get_permalink( wc_terms_and_conditions_page_id() ) ) . '" class="sv-wc-apple-pay-terms-and-conditions-link" target="_blank">',
-				'</a>'
-			);
-
-			/**
-			 * Allows to filter the text for the terms & conditions notice.
-			 *
-			 * @since 5.5.4
-			 *
-			 * @params string $default_text default notice text
-			 */
-			$text = apply_filters( 'sv_wc_apple_pay_terms_notice_text', $default_text );
-
-			?>
-			<div class="sv-wc-apple-pay-terms woocommerce-terms-and-conditions-wrapper">
-				<p><small><?php echo wp_kses_post( $text ); ?></small></p>
-			</div>
-			<?php
-		}
-	}
-
-
-	/**
 	 * Initializes Apple Pay on the single product page.
 	 *
 	 * @since 4.7.0
@@ -368,8 +316,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Handlers\Script_Handler {
 
 		$this->enqueue_js_handler( $this->get_product_js_handler_args( $product ) );
 
-		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_button' ] );
-		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_terms_notice' ] );
+		add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_button' ] );
 	}
 
 
@@ -382,7 +329,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Handlers\Script_Handler {
 	 * @return array
 	 */
 	protected function get_product_js_handler_args( \WC_Product $product ) {
-
 
 		$args = [];
 
@@ -436,8 +382,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Handlers\Script_Handler {
 
 		$this->enqueue_js_handler( $this->get_cart_js_handler_args( WC()->cart ) );
 
-		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_button' ] );
-		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_terms_notice' ] );
+		add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_button' ] );
 	}
 
 
@@ -498,12 +443,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Handlers\Script_Handler {
 
 		$this->enqueue_js_handler( $this->get_checkout_js_handler_args() );
 
-		if ( $this->get_plugin()->is_plugin_active( 'woocommerce-checkout-add-ons.php' ) ) {
-			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_button' ] );
-			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_terms_notice' ] );
-		} else {
-			add_action( 'woocommerce_before_checkout_form', [ $this, 'render_checkout_button' ], 15 );
-		}
+		add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_button' ] );
 	}
 
 
@@ -534,33 +474,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends Handlers\Script_Handler {
 		 * @param array $args JS handler arguments
 		 */
 		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_apple_pay_checkout_js_handler_args', $args );
-	}
-
-
-	/**
-	 * Renders the Apple Pay button for checkout.
-	 *
-	 * @since 4.7.0
-	 */
-	public function render_checkout_button() {
-
-		?>
-
-		<div class="sv-wc-apply-pay-checkout">
-
-			<?php
-				$this->render_button();
-				$this->render_terms_notice();
-			?>
-
-			<span class="divider">
-				<?php /** translators: "or" as in "Pay with Apple Pay [or] regular checkout" */
-				esc_html_e( 'or', 'woocommerce-plugin-framework' ); ?>
-			</span>
-
-		</div>
-
-		<?php
 	}
 
 

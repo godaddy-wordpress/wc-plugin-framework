@@ -78,12 +78,28 @@ class Google_Pay {
 	 */
 	protected function init() {
 
+		// register this handler as an external checkout handler
+		add_filter( 'sv_wc_external_checkout_handlers', [ $this, 'register_handler' ] );
+
 		if ( is_admin() && ! is_ajax() ) {
 			$this->init_admin();
 		} else {
 			$this->init_ajax();
 			$this->init_frontend();
 		}
+	}
+
+
+	/**
+	 * Registers this handler as an external checkout handler.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param array $handlers
+	 */
+	protected function register_handler( $handlers ) {
+
+		$handlers[] = $this;
 	}
 
 
@@ -117,6 +133,19 @@ class Google_Pay {
 	protected function init_frontend() {
 
 		$this->frontend = new Frontend( $this->get_plugin(), $this );
+	}
+
+
+	/**
+	 * Gets the configured display locations.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return array
+	 */
+	public function get_display_locations() {
+
+		return get_option( 'sv_wc_google_pay_display_locations', [] );
 	}
 
 
