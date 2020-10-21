@@ -363,8 +363,7 @@ jQuery( document ).ready( ( $ ) => {
 		getGoogleShippingAddressParameters() {
 
 			return {
-				allowedCountryCodes: this.availableCountries,
-				phoneNumberRequired: true
+				allowedCountryCodes: this.availableCountries
 			};
 		}
 
