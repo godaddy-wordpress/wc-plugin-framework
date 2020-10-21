@@ -215,14 +215,14 @@ jQuery( document ).ready( ( $ ) => {
 					merchantInfo: {
 						merchantName: this.merchantName,
 						merchantId: this.merchantID
+					},
+					paymentDataCallbacks: {
+						onPaymentAuthorized: ( paymentData ) => this.onPaymentAuthorized( paymentData ),
 					}
 				};
 
 				if ( this.needsShipping ) {
-					args.paymentDataCallbacks = {
-						onPaymentAuthorized: ( paymentData ) => this.onPaymentAuthorized( paymentData ),
-						onPaymentDataChanged: ( paymentData ) => this.onPaymentDataChanged( paymentData )
-					};
+					args.paymentDataCallbacks.onPaymentDataChanged = ( paymentData ) => this.onPaymentDataChanged( paymentData );
 				}
 
 				this.paymentsClient = new google.payments.api.PaymentsClient( args );
