@@ -117,7 +117,11 @@ jQuery( document ).ready( ( $ ) => {
 				parameters: {
 					allowedAuthMethods: allowedCardAuthMethods,
 					allowedCardNetworks: allowedCardNetworks,
-					billingAddressRequired: true
+					billingAddressRequired: true,
+					billingAddressParameters: {
+						format: 'FULL',
+						phoneNumberRequired: true
+					}
 				}
 			};
 
