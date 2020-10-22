@@ -80,7 +80,7 @@ class Google_Pay {
 
 		if ( is_admin() && ! is_ajax() ) {
 			$this->init_admin();
-		} else {
+		} else if ( $this->get_plugin()->get_id() === $this->get_processing_gateway()->get_plugin()->get_id() ) {
 			$this->init_ajax();
 			$this->init_frontend();
 		}
