@@ -405,7 +405,8 @@ jQuery( document ).ready( ( $ ) => {
 			const paymentsClient = this.getGooglePaymentsClient();
 			const button = paymentsClient.createButton( {
 				onClick: ( event ) => this.onGooglePaymentButtonClicked( event ),
-				buttonColor: this.buttonStyle
+				buttonColor: this.buttonStyle,
+				buttonSizeMode: 'fill'
 			} );
 			document.getElementById( 'sv-wc-google-pay-button-container' ).appendChild( button );
 		}
