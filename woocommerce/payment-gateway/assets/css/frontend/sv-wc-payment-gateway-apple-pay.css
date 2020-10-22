@@ -100,13 +100,3 @@
 		background-color: white;
 	}
 }
-
-.sv-wc-apple-pay-checkout {
-	display: none;
-	max-width: 510px;
-	margin: 0 auto 2em;
-	text-align: center;
-}
-.sv-wc-apple-pay-checkout .sv-wc-apple-pay-button {
-	display: block;
-}
