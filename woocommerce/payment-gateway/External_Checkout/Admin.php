@@ -61,7 +61,7 @@ abstract class Admin {
 	protected function add_hooks() {
 
 		// bail if another plugin has already added the settings for this external checkout integration
-		$sections = apply_filters( 'woocommerce_get_sections_checkout', $sections );
+		$sections = apply_filters( 'woocommerce_get_sections_checkout', [] );
 		if ( ! empty( $sections[ $this->section_id ] ) ) {
 			return;
 		}
