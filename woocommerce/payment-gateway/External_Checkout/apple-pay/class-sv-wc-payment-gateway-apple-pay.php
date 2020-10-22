@@ -81,32 +81,12 @@ class SV_WC_Payment_Gateway_Apple_Pay {
 	 */
 	protected function init() {
 
-		// register this handler as an external checkout handler
-		add_filter( 'sv_wc_external_checkout_handlers', [ $this, 'register_handler' ] );
-
 		if ( is_admin() && ! is_ajax() ) {
 			$this->init_admin();
 		} else {
 			$this->init_ajax();
 			$this->init_frontend();
 		}
-	}
-
-
-	/**
-	 * Registers this handler as an external checkout handler.
-	 *
-	 * @internal
-	 *
-	 * @since 5.10.0
-	 *
-	 * @param array $handlers
-	 */
-	public function register_handler( $handlers ) {
-
-		$handlers[] = $this;
-
-		return $handlers;
 	}
 
 
