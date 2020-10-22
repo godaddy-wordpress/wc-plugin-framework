@@ -158,24 +158,24 @@ class Admin extends \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gatewa
 	protected function get_connection_settings() {
 
 		$connection_settings = [
-				[
-						'title' => __( 'Connection Settings', 'woocommerce-plugin-framework' ),
-						'type'  => 'title',
-				],
+			[
+				'title' => __( 'Connection Settings', 'woocommerce-plugin-framework' ),
+				'type'  => 'title',
+			],
 		];
 
 		$connection_settings = $this->add_processing_gateway_settings( $connection_settings );
 
 		$connection_settings[] = [
-				'id'      => 'sv_wc_google_pay_test_mode',
-				'title'   => __( 'Test Mode', 'woocommerce-plugin-framework' ),
-				'desc'    => __( 'Enable to test Google Pay functionality throughout your sites without processing real payments.', 'woocommerce-plugin-framework' ),
-				'type'    => 'checkbox',
-				'default' => 'no',
+			'id'      => 'sv_wc_google_pay_test_mode',
+			'title'   => __( 'Test Mode', 'woocommerce-plugin-framework' ),
+			'desc'    => __( 'Enable to test Google Pay functionality throughout your sites without processing real payments.', 'woocommerce-plugin-framework' ),
+			'type'    => 'checkbox',
+			'default' => 'no',
 		];
 
 		$connection_settings[] = [
-				'type' => 'sectionend',
+			'type' => 'sectionend',
 		];
 
 		return $connection_settings;
