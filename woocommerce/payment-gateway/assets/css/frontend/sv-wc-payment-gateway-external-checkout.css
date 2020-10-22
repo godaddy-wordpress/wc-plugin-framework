@@ -3,13 +3,9 @@
 }
 
 .sv-wc-external-checkout {
-	display: none;
 	max-width: 510px;
 	margin: 0 auto 2em;
 	text-align: center;
-}
-.sv-wc-external-checkout #sv-wc-external-checkout-buttons-container {
-	display: block;
 }
 
 .sv-wc-external-checkout .divider {
