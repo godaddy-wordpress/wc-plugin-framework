@@ -127,9 +127,18 @@ abstract class Frontend extends Script_Handler {
 
 		$this->enqueue_js_handler( $this->get_product_js_handler_args( $product ) );
 
-		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_external_checkout_buttons' ] );
-		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_terms_notice' ] );
-		add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_button' ] );
+		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'maybe_render_buttons' ] );
+		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'maybe_render_terms_notice' ] );
+
+		if ( ! has_action( 'sv_wc_external_checkout_buttons' ) ) {
+			add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_buttons' ] );
+		}
+
+		if ( ! has_action( 'sv_wc_external_checkout_terms_notice' ) ) {
+			add_action( 'sv_wc_external_checkout_terms_notice', [ $this, 'render_terms_notice' ] );
+		}
+
+		add_action( 'sv_wc_external_checkout_button', [ $this, 'render_button' ] );
 	}
 
 
@@ -149,9 +158,18 @@ abstract class Frontend extends Script_Handler {
 
 		$this->enqueue_js_handler( $this->get_cart_js_handler_args( WC()->cart ) );
 
-		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_external_checkout_buttons' ] );
-		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_terms_notice' ] );
-		add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_button' ] );
+		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'maybe_render_buttons' ] );
+		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'maybe_render_terms_notice' ] );
+
+		if ( ! has_action( 'sv_wc_external_checkout_buttons' ) ) {
+			add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_buttons' ] );
+		}
+
+		if ( ! has_action( 'sv_wc_external_checkout_terms_notice' ) ) {
+			add_action( 'sv_wc_external_checkout_terms_notice', [ $this, 'render_terms_notice' ] );
+		}
+
+		add_action( 'sv_wc_external_checkout_button', [ $this, 'render_button' ] );
 	}
 
 
@@ -167,13 +185,36 @@ abstract class Frontend extends Script_Handler {
 		$this->enqueue_js_handler( $this->get_checkout_js_handler_args() );
 
 		if ( $this->get_handler()->get_plugin()->is_plugin_active( 'woocommerce-checkout-add-ons.php' ) ) {
-			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_external_checkout_buttons' ] );
-			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_terms_notice' ] );
+			add_action( 'woocommerce_review_order_before_payment', [ $this, 'maybe_render_buttons' ] );
+			add_action( 'woocommerce_review_order_before_payment', [ $this, 'maybe_render_terms_notice' ] );
 		} else {
-			add_action( 'woocommerce_before_checkout_form', [ $this, 'render_external_checkout_buttons_with_divider' ], 15 );
+			add_action( 'woocommerce_before_checkout_form', [ $this, 'maybe_render_buttons_with_divider' ], 15 );
 		}
 
-		add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_button' ] );
+		if ( ! has_action( 'sv_wc_external_checkout_buttons' ) ) {
+			add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_buttons' ] );
+		}
+
+		if ( ! has_action( 'sv_wc_external_checkout_terms_notice' ) ) {
+			add_action( 'sv_wc_external_checkout_terms_notice', [ $this, 'render_terms_notice' ] );
+		}
+
+		if ( ! has_action( 'sv_wc_external_checkout_buttons_with_divider' ) ) {
+			add_action( 'sv_wc_external_checkout_buttons_with_divider', [ $this, 'render_buttons_with_divider' ] );
+		}
+
+		add_action( 'sv_wc_external_checkout_button', [ $this, 'render_button' ] );
+	}
+
+
+	/**
+	 * Maybe renders the external checkout buttons.
+	 *
+	 * @since 5.10.0
+	 */
+	public function maybe_render_buttons() {
+
+		do_action( 'sv_wc_external_checkout_buttons' );
 	}
 
 
@@ -182,13 +223,23 @@ abstract class Frontend extends Script_Handler {
 	 *
 	 * @since 5.10.0
 	 */
-	public function render_external_checkout_buttons() {
-
+	public function render_buttons() {
 		?>
 		<div id="sv-wc-external-checkout-buttons-container">
-			<?php do_action( 'sv_wc_external_checkout_buttons' ); ?>
+			<?php do_action( 'sv_wc_external_checkout_button' ); ?>
 		</div>
 		<?php
+	}
+
+
+	/**
+	 * Maybe renders the external checkout buttons with a divider.
+	 *
+	 * @since 5.10.0
+	 */
+	public function maybe_render_buttons_with_divider() {
+
+		do_action( 'sv_wc_external_checkout_buttons_with_divider' );
 	}
 
 
@@ -197,7 +248,7 @@ abstract class Frontend extends Script_Handler {
 	 *
 	 * @since 5.10.0
 	 */
-	public function render_external_checkout_buttons_with_divider() {
+	public function render_buttons_with_divider() {
 
 		?>
 
@@ -216,6 +267,19 @@ abstract class Frontend extends Script_Handler {
 		</div>
 
 		<?php
+	}
+
+
+	/**
+	 * Maybe renders a notice informing the customer that by purchasing they are accepting the website's terms and conditions.
+	 *
+	 * @internal
+	 *
+	 * @since 5.10.0
+	 */
+	public function maybe_render_terms_notice() {
+
+		do_action( 'sv_wc_external_checkout_terms_notice' );
 	}
 
 
