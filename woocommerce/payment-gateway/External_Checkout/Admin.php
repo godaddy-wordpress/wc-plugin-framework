@@ -83,7 +83,9 @@ abstract class Admin {
 	 */
 	public function add_settings_section( $sections ) {
 
-		$sections[ $this->section_id ] = $this->get_settings_section_name();
+		if ( empty( $sections[ $this->section_id ] ) ) {
+			$sections[ $this->section_id ] = $this->get_settings_section_name();
+		}
 
 		return $sections;
 	}
