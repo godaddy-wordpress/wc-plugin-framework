@@ -52,11 +52,10 @@ class Admin extends \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gatewa
 	 */
 	public function __construct( Google_Pay $handler ) {
 
-		parent::__construct();
-
 		$this->section_id = 'google-pay';
 		$this->handler    = $handler;
 
+		parent::__construct();
 	}
 
 

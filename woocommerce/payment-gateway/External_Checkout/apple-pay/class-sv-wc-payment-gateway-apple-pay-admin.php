@@ -52,10 +52,10 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin extends Admin {
 	 */
 	public function __construct( $handler ) {
 
-		parent::__construct();
-
 		$this->section_id = 'apple-pay';
 		$this->handler    = $handler;
+
+		parent::__construct();
 	}
 
 
