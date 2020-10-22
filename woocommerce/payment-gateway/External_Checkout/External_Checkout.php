@@ -151,7 +151,7 @@ class External_Checkout {
 
 		foreach ( $this->get_handlers() as $handler ) {
 
-			$display_locations= array_merge( $display_locations, $handler->get_display_locations() );
+			$display_locations = array_merge( $display_locations, $handler->get_display_locations() );
 		}
 
 		return $display_locations;
