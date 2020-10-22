@@ -101,21 +101,12 @@
 	}
 }
 
-.sv-wc-apply-pay-checkout {
+.sv-wc-apple-pay-checkout {
 	display: none;
 	max-width: 510px;
 	margin: 0 auto 2em;
 	text-align: center;
 }
-.sv-wc-apply-pay-checkout .sv-wc-apple-pay-button {
+.sv-wc-apple-pay-checkout .sv-wc-apple-pay-button {
 	display: block;
-}
-.sv-wc-apply-pay-checkout .divider {
-	font-size: 1.15em;
-	font-style: italic;
-	text-transform: uppercase;
-}
-.sv-wc-apply-pay-checkout .divider::before,
-.sv-wc-apply-pay-checkout .divider::after {
-	content: "\2014";
 }

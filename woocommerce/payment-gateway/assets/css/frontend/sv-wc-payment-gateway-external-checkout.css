@@ -1,3 +1,13 @@
 #sv-wc-external-checkout-buttons-container {
 	margin-bottom: 1em;
 }
+
+.sv-wc-external-checkout .divider {
+	font-size: 1.15em;
+	font-style: italic;
+	text-transform: uppercase;
+}
+.sv-wc-external-checkout .divider::before,
+.sv-wc-external-checkout .divider::after {
+	content: "\2014";
+}
