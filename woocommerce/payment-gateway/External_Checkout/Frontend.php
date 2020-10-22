@@ -261,7 +261,7 @@ abstract class Frontend extends Script_Handler {
 		<div class="sv-wc-external-checkout">
 
 			<?php
-			$this->render_external_checkout_buttons();
+			$this->render_buttons();
 			$this->render_terms_notice();
 			?>
 
