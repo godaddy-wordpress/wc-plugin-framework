@@ -802,12 +802,12 @@ class Google_Pay {
 	 */
 	public function get_supporting_gateways() {
 
-		$available_gateways  = $this->get_plugin()->get_gateways();
+		$available_gateways  = WC()->payment_gateways->get_available_payment_gateways();
 		$supporting_gateways = [];
 
 		foreach ( $available_gateways as $key => $gateway ) {
 
-			if ( $gateway->supports_google_pay() ) {
+			if ( method_exists( $gateway, 'supports_google_pay' ) && $gateway->supports_google_pay() ) {
 				$supporting_gateways[ $gateway->get_id() ] = $gateway;
 			}
 		}
