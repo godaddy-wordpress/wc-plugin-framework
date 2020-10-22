@@ -214,7 +214,10 @@ abstract class Frontend extends Script_Handler {
 	 */
 	public function maybe_render_buttons() {
 
-		do_action( 'sv_wc_external_checkout_buttons' );
+		if ( ! did_action( 'sv_wc_external_checkout_buttons' ) ) {
+
+			do_action( 'sv_wc_external_checkout_buttons' );
+		}
 	}
 
 
@@ -239,7 +242,10 @@ abstract class Frontend extends Script_Handler {
 	 */
 	public function maybe_render_buttons_with_divider() {
 
-		do_action( 'sv_wc_external_checkout_buttons_with_divider' );
+		if ( ! did_action( 'sv_wc_external_checkout_buttons_with_divider' ) ) {
+
+			do_action( 'sv_wc_external_checkout_buttons_with_divider' );
+		}
 	}
 
 
@@ -279,7 +285,10 @@ abstract class Frontend extends Script_Handler {
 	 */
 	public function maybe_render_terms_notice() {
 
-		do_action( 'sv_wc_external_checkout_terms_notice' );
+		if ( ! did_action( 'sv_wc_external_checkout_terms_notice' ) ) {
+
+			do_action( 'sv_wc_external_checkout_terms_notice' );
+		}
 	}
 
 
