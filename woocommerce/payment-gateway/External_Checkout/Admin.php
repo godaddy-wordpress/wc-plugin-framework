@@ -60,6 +60,11 @@ abstract class Admin {
 	 */
 	protected function add_hooks() {
 
+		// bail if another plugin has already added the settings for this external checkout integration
+		if ( ! empty( $sections[ $this->section_id ] ) ) {
+			return;
+		}
+
 		add_filter( 'woocommerce_get_sections_checkout',  [ $this, 'add_settings_section' ], 99 );
 		add_action( 'woocommerce_settings_checkout',      [ $this, 'add_settings' ] );
 		add_action( 'woocommerce_settings_save_checkout', [ $this, 'save_settings' ] );
@@ -83,9 +88,7 @@ abstract class Admin {
 	 */
 	public function add_settings_section( $sections ) {
 
-		if ( empty( $sections[ $this->section_id ] ) ) {
-			$sections[ $this->section_id ] = $this->get_settings_section_name();
-		}
+		$sections[ $this->section_id ] = $this->get_settings_section_name();
 
 		return $sections;
 	}
