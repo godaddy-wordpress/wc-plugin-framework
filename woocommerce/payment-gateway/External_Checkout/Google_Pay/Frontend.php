@@ -24,8 +24,6 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Google_Pay;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Handlers\Script_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Exception;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Plugin;
 
@@ -39,17 +37,11 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment
  *
  * @since 5.10.0
  */
-class Frontend extends Script_Handler {
+class Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Frontend {
 
-
-	/** @var SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance */
-	protected $plugin;
 
 	/** @var Google_Pay $handler the Google Pay handler instance */
 	protected $handler;
-
-	/** @var SV_WC_Payment_Gateway $gateway the gateway instance */
-	protected $gateway;
 
 	/** @var string JS handler base class name, without the FW version */
 	protected $js_handler_base_class_name = 'SV_WC_Google_Pay_Handler';
@@ -65,50 +57,9 @@ class Frontend extends Script_Handler {
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, Google_Pay $handler ) {
 
-		$this->plugin = $plugin;
-
 		$this->handler = $handler;
 
-		$this->gateway = $this->get_handler()->get_processing_gateway();
-
-		parent::__construct();
-	}
-
-
-	/**
-	 * Adds the action and filter hooks.
-	 *
-	 * @since 5.10.0
-	 */
-	protected function add_hooks() {
-
-		if ( $this->get_handler()->is_available() ) {
-
-			parent::add_hooks();
-
-			add_action( 'wp', [ $this, 'init' ] );
-
-			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-		}
-	}
-
-
-	/**
-	 * Initializes the scripts and hooks.
-	 *
-	 * @since 5.10.0
-	 */
-	public function init() {
-
-		$locations = $this->get_handler()->get_display_locations();
-
-		if ( is_product() && in_array( 'product', $locations, true ) ) {
-			$this->init_product();
-		} else if ( is_cart() && in_array( 'cart', $locations, true ) ) {
-			$this->init_cart();
-		} else if ( is_checkout() && in_array( 'checkout', $locations, true ) ) {
-			$this->init_checkout();
-		}
+		parent::__construct( $plugin, $this->get_handler()->get_processing_gateway() );
 	}
 
 
@@ -144,6 +95,8 @@ class Frontend extends Script_Handler {
 	 * @since 5.10.0
 	 */
 	public function enqueue_scripts() {
+
+		parent::enqueue_scripts();
 
 		wp_enqueue_script( 'google-pay-js-library', 'https://pay.google.com/gp/p/js/pay.js', array(), null, true );
 		wp_enqueue_script( 'sv-wc-google-pay-v5_10_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/sv-wc-payment-gateway-google-pay.js', [ 'google-pay-js-library', 'jquery' ], $this->get_plugin()->get_version(), true );
@@ -185,67 +138,6 @@ class Frontend extends Script_Handler {
 
 
 	/**
-	 * Enqueues a Google Pay JS handler.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @param array $args handler arguments
-	 * @param string $object_name JS object name
-	 * @param string $handler_name handler class name
-	 */
-	protected function enqueue_js_handler( array $args, $object_name = '', $handler_name = '' ) {
-
-		wc_enqueue_js( $this->get_safe_handler_js( $args, $handler_name, $object_name ) );
-	}
-
-
-	/**
-	 * Gets the handler instantiation JS.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @param array $additional_args additional handler arguments, if any
-	 * @param string $handler_name handler name, if different from self::get_js_handler_class_name()
-	 * @param string $object_name object name, if different from self::get_js_handler_object_name()
-	 * @return string
-	 */
-	protected function get_handler_js( array $additional_args = [], $handler_name = '', $object_name = '' ) {
-
-		$js = parent::get_handler_js( $additional_args, $handler_name );
-
-		$js .= sprintf( 'window.%s.init();', $object_name ?: $this->get_js_handler_object_name() );
-
-		return $js;
-	}
-
-
-	/**
-	 * Adds a log entry.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @param string $message message to log
-	 */
-	protected function log_event( $message ) {
-
-		$this->get_gateway()->add_debug_message( $message );
-	}
-
-
-	/**
-	 * Determines whether logging is enabled.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return bool
-	 */
-	protected function is_logging_enabled() {
-
-		return $this->get_gateway()->debug_log();
-	}
-
-
-	/**
 	 * Renders a Google Pay button.
 	 *
 	 * @since 5.10.0
@@ -277,9 +169,7 @@ class Frontend extends Script_Handler {
 			return;
 		}
 
-		$this->enqueue_js_handler( $this->get_product_js_handler_args( $product ) );
-
-		add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_button' ] );
+		parent::init_product();
 	}
 
 
@@ -320,20 +210,13 @@ class Frontend extends Script_Handler {
 	 */
 	public function init_cart() {
 
-		// bail if the cart is missing or empty
-		if ( ! WC()->cart || WC()->cart->is_empty() ) {
-			return;
-		}
-
 		try {
 			$this->get_handler()->validate_cart( WC()->cart );
 		} catch ( SV_WC_Payment_Gateway_Exception $exception ) {
 			return;
 		}
 
-		$this->enqueue_js_handler( $this->get_cart_js_handler_args( WC()->cart ) );
-
-		add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_button' ] );
+		parent::init_cart();
 	}
 
 
@@ -379,9 +262,7 @@ class Frontend extends Script_Handler {
 			return;
 		}
 
-		$this->enqueue_js_handler( $this->get_checkout_js_handler_args() );
-
-		add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_button' ] );
+		parent::init_checkout();
 	}
 
 
@@ -406,44 +287,6 @@ class Frontend extends Script_Handler {
 		 * @param array $args JS handler arguments
 		 */
 		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_checkout_js_handler_args', $args );
-	}
-
-
-	/**
-	 * Gets the gateway instance.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return SV_WC_Payment_Gateway
-	 */
-	protected function get_gateway() {
-
-		return $this->gateway;
-	}
-
-
-	/**
-	 * Gets the gateway plugin instance.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return SV_WC_Payment_Gateway_Plugin
-	 */
-	protected function get_plugin() {
-
-		return $this->plugin;
-	}
-
-	/**
-	 * Gets the Google Pay handler instance.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return Google_Pay
-	 */
-	protected function get_handler() {
-
-		return $this->handler;
 	}
 
 

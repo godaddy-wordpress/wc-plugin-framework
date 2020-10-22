@@ -25,6 +25,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Handlers\Script_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
@@ -33,18 +35,18 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment
 
 
 /**
- * Sets up the external checkout front-end functionality.
+ * Base class to set up an external checkout front-end functionality.
  *
  * @since 5.10.0
  */
-class Frontend {
+abstract class Frontend extends Script_Handler {
 
 
 	/** @var SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance */
 	protected $plugin;
 
-	/** @var External_Checkout $handler the external checkout handler instance */
-	protected $handler;
+	/** @var SV_WC_Payment_Gateway $gateway the gateway instance */
+	protected $gateway;
 
 
 	/**
@@ -53,16 +55,18 @@ class Frontend {
 	 * @since 5.10.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance
-	 * @param External_Checkout $handler the external checkout handler instance
+	 * @param SV_WC_Payment_Gateway $gateway the gateway instance
 	 */
-	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, External_Checkout $handler ) {
+	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, SV_WC_Payment_Gateway $gateway ) {
 
 		$this->plugin = $plugin;
 
-		$this->handler = $handler;
+		$this->gateway = $gateway;
 
 		// add the action and filter hooks
 		$this->add_hooks();
+
+		parent::__construct();
 	}
 
 
@@ -73,9 +77,13 @@ class Frontend {
 	 */
 	protected function add_hooks() {
 
+		if ( ! $this->get_handler()->is_available() ) {
+			return;
+		}
+
 		add_action( 'wp', [ $this, 'init' ] );
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 	}
 
 
@@ -105,33 +113,58 @@ class Frontend {
 	/**
 	 * Initializes external checkout on the single product page.
 	 *
+	 * Each handler can override this method to add specific product validation.
+	 *
 	 * @since 5.10.0
 	 */
 	public function init_product() {
 
+		$product = wc_get_product( get_the_ID() );
+
+		if ( ! $product ) {
+			return;
+		}
+
+		$this->enqueue_js_handler( $this->get_product_js_handler_args( $product ) );
+
 		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_external_checkout_buttons' ] );
 		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_terms_notice' ] );
+		add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_button' ] );
 	}
 
 
 	/**
 	 * Initializes external checkout on the cart page.
 	 *
+	 * Each handler can override this method to add specific cart validation.
+	 *
 	 * @since 5.10.0
 	 */
 	public function init_cart() {
 
+		// bail if the cart is missing or empty
+		if ( ! WC()->cart || WC()->cart->is_empty() ) {
+			return;
+		}
+
+		$this->enqueue_js_handler( $this->get_cart_js_handler_args( WC()->cart ) );
+
 		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_external_checkout_buttons' ] );
 		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'render_terms_notice' ] );
+		add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_button' ] );
 	}
 
 
 	/**
 	 * Initializes external checkout on the checkout page.
 	 *
+	 * Each handler can override this method to add specific cart validation.
+	 *
 	 * @since 5.10.0
 	 */
 	public function init_checkout() {
+
+		$this->enqueue_js_handler( $this->get_checkout_js_handler_args() );
 
 		if ( $this->get_handler()->get_plugin()->is_plugin_active( 'woocommerce-checkout-add-ons.php' ) ) {
 			add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_external_checkout_buttons' ] );
@@ -139,6 +172,8 @@ class Frontend {
 		} else {
 			add_action( 'woocommerce_before_checkout_form', [ $this, 'render_external_checkout_buttons_with_divider' ], 15 );
 		}
+
+		add_action( 'sv_wc_external_checkout_buttons', [ $this, 'render_button' ] );
 	}
 
 
@@ -226,15 +261,110 @@ class Frontend {
 	/**
 	 * Enqueues the scripts.
 	 *
+	 * Each handler should override this method to add its specific JS.
+	 *
 	 * @since 5.10.0
 	 */
 	public function enqueue_scripts() {
 
-		if ( ! $this->get_handler()->is_available() ) {
-			return;
-		}
-
 		wp_enqueue_style( 'sv-wc-external-checkout-v5_10_0', $this->get_handler()->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-external-checkout.css', array(), $this->get_handler()->get_plugin()->get_version() ); // TODO: min
+	}
+
+
+	/**
+	 * Enqueues an external checkout JS handler.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param array $args handler arguments
+	 * @param string $object_name JS object name
+	 * @param string $handler_name handler class name
+	 */
+	protected function enqueue_js_handler( array $args, $object_name = '', $handler_name = '' ) {
+
+		wc_enqueue_js( $this->get_safe_handler_js( $args, $handler_name, $object_name ) );
+	}
+
+
+	/**
+	 * Gets the handler instantiation JS.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param array $additional_args additional handler arguments, if any
+	 * @param string $handler_name handler name, if different from self::get_js_handler_class_name()
+	 * @param string $object_name object name, if different from self::get_js_handler_object_name()
+	 * @return string
+	 */
+	protected function get_handler_js( array $additional_args = [], $handler_name = '', $object_name = '' ) {
+
+		$js = parent::get_handler_js( $additional_args, $handler_name );
+
+		$js .= sprintf( 'window.%s.init();', $object_name ?: $this->get_js_handler_object_name() );
+
+		return $js;
+	}
+
+
+	/**
+	 * Adds a log entry.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param string $message message to log
+	 */
+	protected function log_event( $message ) {
+
+		$this->get_gateway()->add_debug_message( $message );
+	}
+
+
+	/**
+	 * Determines whether logging is enabled.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return bool
+	 */
+	protected function is_logging_enabled() {
+
+		return $this->get_gateway()->debug_log();
+	}
+
+
+	/**
+	 * Renders an external checkout button.
+	 *
+	 * Each handler should override this method to render its own button.
+	 *
+	 * @since 5.10.0
+	 */
+	abstract public function render_button();
+
+
+	/**
+	 * Gets the gateway instance.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return SV_WC_Payment_Gateway
+	 */
+	protected function get_gateway() {
+
+		return $this->gateway;
+	}
+
+
+	/**
+	 * Gets the gateway plugin instance.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return SV_WC_Payment_Gateway_Plugin
+	 */
+	protected function get_plugin() {
+
+		return $this->plugin;
 	}
 
 
@@ -243,9 +373,9 @@ class Frontend {
 	 *
 	 * @since 5.10.0
 	 *
-	 * @returns External_Checkout
+	 * @return Google_Pay|\SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Apple_Pay
 	 */
-	protected function get_handler() {
+	protected function get_handler()  {
 
 		return $this->handler;
 	}
