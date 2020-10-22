@@ -36,7 +36,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment
  *
  * @since 5.10.0
  */
-class Admin {
+class Admin extends \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Admin {
 
 
 	/** @var Google_Pay the Google Pay handler instance */
@@ -52,19 +52,22 @@ class Admin {
 	 */
 	public function __construct( Google_Pay $handler ) {
 
-		$this->handler = $handler;
+		parent::__construct();
 
-		// add Google Pay to the checkout settings sections
-		add_filter( 'woocommerce_get_sections_checkout', [ $this, 'add_settings_section' ], 99 );
+		$this->section_id = 'google-pay';
+		$this->handler    = $handler;
 
-		// output the settings
-		add_action( 'woocommerce_settings_checkout', [ $this, 'add_settings' ] );
+	}
 
-		// render the special "static" gateway select
-		add_action( 'woocommerce_admin_field_static', [ $this, 'render_static_setting' ] );
 
-		// save the settings
-		add_action( 'woocommerce_settings_save_checkout', [ $this, 'save_settings' ] );
+	/**
+	 * Sets up the necessary hooks.
+	 *
+	 * @since 5.10.0
+	 */
+	protected function add_hooks() {
+
+		parent::add_hooks();
 
 		// add admin notices for configuration options that need attention
 		add_action( 'admin_footer', [ $this, 'add_admin_notices' ], 10 );
@@ -72,20 +75,15 @@ class Admin {
 
 
 	/**
-	 * Adds Google Pay to the checkout settings sections.
-	 *
-	 * @internal
+	 * Gets the name of the Google Pay settings section.
 	 *
 	 * @since 5.10.0
 	 *
-	 * @param array $sections the existing sections
-	 * @return array
+	 * @return string
 	 */
-	public function add_settings_section( $sections ) {
+	protected function get_settings_section_name() {
 
-		$sections['google-pay'] = __( 'Google Pay', 'woocommerce-plugin-framework' );
-
-		return $sections;
+		return __( 'Google Pay', 'woocommerce-plugin-framework' );
 	}
 
 
@@ -94,7 +92,7 @@ class Admin {
 	 *
 	 * @since 5.10.0
 	 *
-	 * @return array $settings The combined settings.
+	 * @return array $settings combined settings.
 	 */
 	public function get_settings() {
 
@@ -139,128 +137,62 @@ class Admin {
 			],
 		];
 
-		$connection_settings = [
-			[
-				'title' => __( 'Connection Settings', 'woocommerce-plugin-framework' ),
-				'type'  => 'title',
-			],
-		];
-
-		$gateway_setting_id = 'sv_wc_google_pay_payment_gateway';
-		$gateway_options    = $this->get_gateway_options();
-
-		if ( 1 === count( $gateway_options ) ) {
-
-			$connection_settings[] = [
-				'id'    => $gateway_setting_id,
-				'title' => __( 'Processing Gateway', 'woocommerce-plugin-framework' ),
-				'type'  => 'static',
-				'value' => key( $gateway_options ),
-				'label' => current( $gateway_options ),
-			];
-
-		} else {
-
-			$connection_settings[] = [
-				'id'      => $gateway_setting_id,
-				'title'   => __( 'Processing Gateway', 'woocommerce-plugin-framework' ),
-				'type'    => 'select',
-				'options' => $this->get_gateway_options(),
-			];
-		}
-
-		$connection_settings[] = [
-			'id'      => 'sv_wc_google_pay_test_mode',
-			'title'   => __( 'Test Mode', 'woocommerce-plugin-framework' ),
-			'desc'    => __( 'Enable to test Google Pay functionality throughout your sites without processing real payments.', 'woocommerce-plugin-framework' ),
-			'type'    => 'checkbox',
-			'default' => 'no',
-		];
-
-		$connection_settings[] = [
-			'type' => 'sectionend',
-		];
-
-		$settings = array_merge( $settings, $connection_settings );
+		$settings = array_merge( $settings, $this->get_connection_settings() );
 
 		/**
-		 * Filter the combined settings.
+		 * Filter the settings fields for Google Pay.
 		 *
 		 * @since 5.10.0
-		 * @param array $settings The combined settings.
+		 * @param array $settings combined settings.
 		 */
 		return apply_filters( 'woocommerce_get_settings_google_pay', $settings );
 	}
 
 
 	/**
-	 * Outputs the settings fields.
-	 *
-	 * @internal
+	 * Gets the connection settings for Google Pay.
 	 *
 	 * @since 5.10.0
+	 *
+	 * @return array $settings connection settings
 	 */
-	public function add_settings() {
-		global $current_section;
+	protected function get_connection_settings() {
 
-		if ( 'google-pay' === $current_section ) {
-			\WC_Admin_Settings::output_fields( $this->get_settings() );
-		}
+		$connection_settings = [
+				[
+						'title' => __( 'Connection Settings', 'woocommerce-plugin-framework' ),
+						'type'  => 'title',
+				],
+		];
+
+		$connection_settings = $this->add_processing_gateway_settings( $connection_settings );
+
+		$connection_settings[] = [
+				'id'      => 'sv_wc_google_pay_test_mode',
+				'title'   => __( 'Test Mode', 'woocommerce-plugin-framework' ),
+				'desc'    => __( 'Enable to test Google Pay functionality throughout your sites without processing real payments.', 'woocommerce-plugin-framework' ),
+				'type'    => 'checkbox',
+				'default' => 'no',
+		];
+
+		$connection_settings[] = [
+				'type' => 'sectionend',
+		];
+
+		return $connection_settings;
 	}
 
 
 	/**
-	 * Saves the settings.
-	 *
-	 * @internal
+	 * Gets the gateways that declare support for Google Pay.
 	 *
 	 * @since 5.10.0
 	 *
-	 * @global string $current_section The current settings section.
+	 * @return array
 	 */
-	public function save_settings() {
-		global $current_section;
+	protected function get_supporting_gateways() {
 
-		// Output the general settings
-		if ( 'google-pay' == $current_section ) {
-
-			\WC_Admin_Settings::save_fields( $this->get_settings() );
-		}
-	}
-
-
-	/**
-	 * Renders a static setting.
-	 *
-	 * This "setting" just displays simple text instead of a <select> with only
-	 * one option.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @param array $setting
-	 */
-	public function render_static_setting( $setting ) {
-
-		if ( ! $this->is_settings_screen() ) {
-			return;
-		}
-
-		?>
-
-		<tr valign="top">
-			<th scope="row" class="titledesc">
-				<label for="<?php echo esc_attr( $setting['id'] ); ?>"><?php echo esc_html( $setting['title'] ); ?></label>
-			</th>
-			<td class="forminp forminp-<?php echo sanitize_title( $setting['type'] ) ?>">
-				<?php echo esc_html( $setting['label'] ); ?>
-				<input
-					name="<?php echo esc_attr( $setting['id'] ); ?>"
-					id="<?php echo esc_attr( $setting['id'] ); ?>"
-					value="<?php echo esc_html( $setting['value'] ); ?>"
-					type="hidden"
-					>
-			</td>
-		</tr><?php
+		return $this->handler->get_supporting_gateways();
 	}
 
 
@@ -317,55 +249,6 @@ class Admin {
 				'dismissible'  => false,
 			] );
 		}
-	}
-
-
-	/**
-	 * Determines if the user is currently on the settings screen.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return bool
-	 */
-	protected function is_settings_screen() {
-
-		return 'wc-settings' === SV_WC_Helper::get_requested_value( 'page' ) && 'google-pay' === SV_WC_Helper::get_requested_value( 'section' );
-	}
-
-
-	/**
-	 * Gets the available display location options.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return array
-	 */
-	protected function get_display_location_options() {
-
-		return [
-			'product'  => __( 'Single products', 'woocommerce-plugin-framework' ),
-			'cart'     => __( 'Cart', 'woocommerce-plugin-framework' ),
-			'checkout' => __( 'Checkout', 'woocommerce-plugin-framework' ),
-		];
-	}
-
-
-	/**
-	 * Gets the available gateway options.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return array
-	 */
-	protected function get_gateway_options() {
-
-		$gateways = $this->handler->get_supporting_gateways();
-
-		foreach ( $gateways as $id => $gateway ) {
-			$gateways[ $id ] = $gateway->get_method_title();
-		}
-
-		return $gateways;
 	}
 
 

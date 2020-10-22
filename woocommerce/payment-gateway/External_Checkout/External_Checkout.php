@@ -69,23 +69,9 @@ class External_Checkout {
 	 */
 	protected function init() {
 
-		if ( is_admin() && ! is_ajax() ) {
-			$this->init_admin();
-		} else {
+		if ( ! is_admin() || is_ajax() ) {
 			$this->init_frontend();
 		}
-	}
-
-
-	/**
-	 * Initializes the admin handler.
-	 *
-	 * @since 5.10.0
-	 */
-	protected function init_admin() {
-
-		// TODO: add external checkout admin handler class
-		// $this->admin = new Admin( $this );
 	}
 
 
