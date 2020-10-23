@@ -226,6 +226,7 @@ abstract class Frontend extends Script_Handler {
 				<?php do_action( 'sv_wc_external_checkout_button' ); ?>
 			</div>
 			<?php do_action( 'sv_wc_external_checkout_terms_notice' ); ?>
+		</div>
 		<?php
 	}
 
