@@ -107,6 +107,18 @@ abstract class Frontend extends Script_Handler {
 		} else if ( is_checkout() && in_array( 'checkout', $locations, true ) ) {
 			$this->init_checkout();
 		}
+
+		// only render external checkout container if not rendered yet
+		if ( ! has_action( 'sv_wc_external_checkout' ) ) {
+			add_action( 'sv_wc_external_checkout', [ $this, 'render_external_checkout' ] );
+		}
+
+		add_action( 'sv_wc_external_checkout_button', [ $this, 'render_button' ] );
+
+		// only render terms notice if not rendered yet
+		if ( ! has_action( 'sv_wc_external_checkout_terms_notice' ) ) {
+			add_action( 'sv_wc_external_checkout_terms_notice', [ $this, 'render_terms_notice' ] );
+		}
 	}
 
 
@@ -128,14 +140,6 @@ abstract class Frontend extends Script_Handler {
 		$this->enqueue_js_handler( $this->get_product_js_handler_args( $product ) );
 
 		add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'maybe_render_external_checkout' ] );
-
-		// only render external checkout container if not rendered yet
-		if ( ! has_action( 'sv_wc_external_checkout' ) ) {
-			add_action( 'sv_wc_external_checkout', [ $this, 'render_external_checkout' ] );
-		}
-
-		add_action( 'sv_wc_external_checkout_button', [ $this, 'render_button' ] );
-		add_action( 'sv_wc_external_checkout_terms_notice', [ $this, 'render_terms_notice' ] );
 	}
 
 
@@ -156,14 +160,6 @@ abstract class Frontend extends Script_Handler {
 		$this->enqueue_js_handler( $this->get_cart_js_handler_args( WC()->cart ) );
 
 		add_action( 'woocommerce_proceed_to_checkout', [ $this, 'maybe_render_external_checkout' ] );
-
-		// only render external checkout container if not rendered yet
-		if ( ! has_action( 'sv_wc_external_checkout' ) ) {
-			add_action( 'sv_wc_external_checkout', [ $this, 'render_external_checkout' ] );
-		}
-
-		add_action( 'sv_wc_external_checkout_button', [ $this, 'render_button' ] );
-		add_action( 'sv_wc_external_checkout_terms_notice', [ $this, 'render_terms_notice' ] );
 	}
 
 
@@ -183,19 +179,6 @@ abstract class Frontend extends Script_Handler {
 		} else {
 			add_action( 'woocommerce_before_checkout_form', [ $this, 'maybe_render_external_checkout_with_divider' ], 15 );
 		}
-
-		// only render external checkout container if not rendered yet
-		if ( ! has_action( 'sv_wc_external_checkout' ) ) {
-			add_action( 'sv_wc_external_checkout', [ $this, 'render_external_checkout' ] );
-		}
-
-		// only render external checkout container if not rendered yet
-		if ( ! has_action( 'sv_wc_external_checkout_with_divider' ) ) {
-			add_action( 'sv_wc_external_checkout_with_divider', [ $this, 'render_external_checkout_with_divider' ] );
-		}
-
-		add_action( 'sv_wc_external_checkout_button', [ $this, 'render_button' ] );
-		add_action( 'sv_wc_external_checkout_terms_notice', [ $this, 'render_terms_notice' ] );
 	}
 
 
