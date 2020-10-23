@@ -1,4 +1,5 @@
 .sv-wc-apple-pay-button {
+	display: none;
 	width: 100%;
 	height: 44px;
 	margin: 0 0 1em 0;

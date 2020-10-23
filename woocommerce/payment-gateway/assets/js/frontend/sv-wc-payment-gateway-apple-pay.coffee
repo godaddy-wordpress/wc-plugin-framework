@@ -32,8 +32,9 @@ jQuery( document ).ready ($) ->
 			@payment_request          = args.payment_request
 			@generic_error            = args.generic_error
 
-			@buttons = '.sv-wc-apple-pay-button'
-			@terms   = '.sv-wc-apple-pay-terms'
+			@container = '#sv-wc-external-checkout-buttons-container'
+			@buttons   = '.sv-wc-apple-pay-button'
+			@terms     = '.sv-wc-external-checkout-terms'
 
 
 		# Determines if Apple Pay is available.
@@ -53,6 +54,10 @@ jQuery( document ).ready ($) ->
 		#
 		# @since 4.7.0
 		init: ->
+
+			# hide the terms if Apple Pay is the only button
+			if $( @container ).children.length is 1
+				$( @terms ).hide()
 
 			return unless this.is_available()
 
