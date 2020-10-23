@@ -267,69 +267,87 @@ msgid "Set as %1$s - %2$s is required."
 msgstr ""
 
 #: class-sv-wc-plugin.php:1040
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:889
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:876
 msgid "Configure"
 msgstr ""
 
-#: payment-gateway/Google_Pay/Admin.php:86
-#: payment-gateway/Google_Pay/Admin.php:104
+#: payment-gateway/External_Checkout/Admin.php:134
+#: payment-gateway/External_Checkout/Admin.php:144
+msgid "Processing Gateway"
+msgstr ""
+
+#: payment-gateway/External_Checkout/Admin.php:284
+msgid "Single products"
+msgstr ""
+
+#: payment-gateway/External_Checkout/Admin.php:285
+msgid "Cart"
+msgstr ""
+
+#: payment-gateway/External_Checkout/Admin.php:286
+msgid "Checkout"
+msgstr ""
+
+#: payment-gateway/External_Checkout/Frontend.php:266
+msgid "or"
+msgstr ""
+
+#: payment-gateway/External_Checkout/Frontend.php:301
+msgid "By submitting your payment, you agree to our %1$sterms and conditions%2$s."
+msgstr ""
+
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:85
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:101
 msgid "Google Pay"
 msgstr ""
 
-#: payment-gateway/Google_Pay/Admin.php:110
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:108
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:107
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:107
 #: payment-gateway/class-sv-wc-payment-gateway.php:1249
 msgid "Enable / Disable"
 msgstr ""
 
-#: payment-gateway/Google_Pay/Admin.php:111
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:108
 msgid "Accept Google Pay"
 msgstr ""
 
-#: payment-gateway/Google_Pay/Admin.php:118
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:115
 msgid "Allow Google Pay on"
 msgstr ""
 
-#: payment-gateway/Google_Pay/Admin.php:128
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:126
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:125
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:125
 msgid "Button Style"
 msgstr ""
 
-#: payment-gateway/Google_Pay/Admin.php:131
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:129
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:128
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:128
 msgid "Black"
 msgstr ""
 
-#: payment-gateway/Google_Pay/Admin.php:132
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:130
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:129
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:129
 msgid "White"
 msgstr ""
 
-#: payment-gateway/Google_Pay/Admin.php:144
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:143
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:162
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:164
 #: payment-gateway/class-sv-wc-payment-gateway.php:1424
 msgid "Connection Settings"
 msgstr ""
 
-#: payment-gateway/Google_Pay/Admin.php:156
-#: payment-gateway/Google_Pay/Admin.php:166
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:184
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:194
-msgid "Processing Gateway"
-msgstr ""
-
-#: payment-gateway/Google_Pay/Admin.php:174
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:202
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:171
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:202
 msgid "Test Mode"
 msgstr ""
 
-#: payment-gateway/Google_Pay/Admin.php:175
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:172
 msgid ""
 "Enable to test Google Pay functionality throughout your sites without "
 "processing real payments."
 msgstr ""
 
-#: payment-gateway/Google_Pay/Admin.php:289
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:224
 #. translators: Placeholders: %1$s - plugin name, %2$s - a
 #. currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
 msgid ""
@@ -341,81 +359,132 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: payment-gateway/Google_Pay/Admin.php:303
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:238
 msgid "Google Pay is disabled."
 msgstr ""
 
-#: payment-gateway/Google_Pay/Admin.php:342
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:387
-msgid "Single products"
-msgstr ""
-
-#: payment-gateway/Google_Pay/Admin.php:343
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:388
-msgid "Cart"
-msgstr ""
-
-#: payment-gateway/Google_Pay/Admin.php:344
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:389
-msgid "Checkout"
-msgstr ""
-
-#: payment-gateway/Google_Pay/Frontend.php:194
+#: payment-gateway/External_Checkout/Google_Pay/Frontend.php:135
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:146
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:99
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:186
 msgid "An error occurred, please try again or try an alternate form of payment"
 msgstr ""
 
-#: payment-gateway/Google_Pay/Frontend.php:289
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:333
-msgid "By submitting your payment, you agree to our %1$sterms and conditions%2$s."
-msgstr ""
-
-#: payment-gateway/Google_Pay/Frontend.php:508
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:558
-msgid "or"
-msgstr ""
-
-#: payment-gateway/Google_Pay/Orders.php:126
-#: payment-gateway/Google_Pay/Orders.php:139
-#: payment-gateway/Google_Pay/Orders.php:143
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:123
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:136
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php:140
-msgid "Error %d: Unable to create order. Please try again."
-msgstr ""
-
-#: payment-gateway/Google_Pay.php:169 payment-gateway/Google_Pay.php:308
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:566
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:222
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:332
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:525
 msgid "Subtotal"
 msgstr ""
 
-#: payment-gateway/Google_Pay.php:318
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:576
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:342
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:535
 msgid "Discount"
 msgstr ""
 
-#: payment-gateway/Google_Pay.php:328
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:586
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:352
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:545
 msgid "Shipping"
 msgstr ""
 
-#: payment-gateway/Google_Pay.php:338
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:596
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:362
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:555
 msgid "Fees"
 msgstr ""
 
-#: payment-gateway/Google_Pay.php:348
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:606
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:372
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:565
 msgid "Taxes"
 msgstr ""
 
-#: payment-gateway/Google_Pay.php:388
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:411
 msgid "Google Pay payment authorized."
 msgstr ""
 
-#: payment-gateway/Google_Pay.php:438
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:482
 msgid "Google Pay payment failed. %s"
+msgstr ""
+
+#: payment-gateway/External_Checkout/Orders.php:140
+#: payment-gateway/External_Checkout/Orders.php:153
+#: payment-gateway/External_Checkout/Orders.php:157
+msgid "Error %d: Unable to create order. Please try again."
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:85
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:101
+msgid "Apple Pay"
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:108
+msgid "Accept Apple Pay"
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:115
+msgid "Allow Apple Pay on"
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:130
+msgid "White with outline"
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:173
+msgid "Apple Merchant ID"
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:177
+msgid "This is found in your %1$sApple developer account%2$s"
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:187
+msgid "Certificate Path"
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:192
+#. translators: Placeholders: %s - the server's web root path
+msgid "For reference, your current web root path is: %s"
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:203
+msgid ""
+"Enable to test Apple Pay functionality throughout your sites without "
+"processing real payments."
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:250
+msgid "Your site must be served over HTTPS with a valid SSL certificate."
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:260
+#. translators: Placeholders: %1$s - plugin name, %2$s - a
+#. currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
+msgid ""
+"Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s "
+"to enable Apple Pay."
+msgid_plural ""
+"Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to "
+"accept one of %1$s to enable Apple Pay."
+msgstr[0] ""
+msgstr[1] ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:279
+msgid ""
+"Your %1$sMerchant Identity Certificate%2$s cannot be found. Please check "
+"your path configuration."
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:286
+msgid "Apple Pay is disabled."
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:181
+msgid "Buy with"
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:138
+msgid "Apple Pay payment authorized."
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:172
+msgid "Apple Pay payment failed. %s"
 msgstr ""
 
 #: payment-gateway/Handlers/Abstract_Hosted_Payment_Handler.php:179
@@ -876,84 +945,6 @@ msgid ""
 "Please verify the address and try again."
 msgstr ""
 
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:84
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:102
-msgid "Apple Pay"
-msgstr ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:109
-msgid "Accept Apple Pay"
-msgstr ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:116
-msgid "Allow Apple Pay on"
-msgstr ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:131
-msgid "White with outline"
-msgstr ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:152
-msgid "Apple Merchant ID"
-msgstr ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:156
-msgid "This is found in your %1$sApple developer account%2$s"
-msgstr ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:166
-msgid "Certificate Path"
-msgstr ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:171
-#. translators: Placeholders: %s - the server's web root path
-msgid "For reference, your current web root path is: %s"
-msgstr ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:203
-msgid ""
-"Enable to test Apple Pay functionality throughout your sites without "
-"processing real payments."
-msgstr ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:312
-msgid "Your site must be served over HTTPS with a valid SSL certificate."
-msgstr ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:322
-#. translators: Placeholders: %1$s - plugin name, %2$s - a
-#. currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
-msgid ""
-"Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s "
-"to enable Apple Pay."
-msgid_plural ""
-"Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to "
-"accept one of %1$s to enable Apple Pay."
-msgstr[0] ""
-msgstr[1] ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:341
-msgid ""
-"Your %1$sMerchant Identity Certificate%2$s cannot be found. Please check "
-"your path configuration."
-msgstr ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:348
-msgid "Apple Pay is disabled."
-msgstr ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:300
-msgid "Buy with"
-msgstr ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:154
-msgid "Apple Pay payment authorized."
-msgstr ""
-
-#: payment-gateway/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:188
-msgid "Apple Pay payment failed. %s"
-msgstr ""
-
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:61
 msgid ""
 "Payment error, please try another payment method or contact us to complete "
@@ -1291,7 +1282,7 @@ msgstr ""
 msgid "Payment Info"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:719
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:706
 #. translators: Placeholders: %1$s - plugin name, %2$s - <a> tag, %3$s - </a>
 #. tag
 msgid ""
@@ -1299,7 +1290,7 @@ msgid ""
 "data may be at risk. %2$sVerify your site URLs here%3$s"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:736
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:723
 #. translators: Placeholders: %s - payment gateway name
 msgid ""
 "%s will soon require TLS 1.2 support to process transactions and your "
@@ -1308,7 +1299,7 @@ msgid ""
 "and request they make any necessary updates."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:792
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:779
 #. translators: Placeholders: %1$s - plugin name, %2$s - a
 #. currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
 msgid ""
@@ -1320,7 +1311,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:827
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:814
 #. translators: Placeholders: %1$s - payment gateway name, %2$s - opening <a>
 #. tag, %3$s - closing </a> tag
 msgid ""
@@ -1329,16 +1320,16 @@ msgid ""
 "processing, we recommend %2$sturning off Debug Mode%3$s"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:878
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:865
 #. translators: Placeholders: %s - gateway name
 msgid "%s is not configured"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:890
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:877
 msgid "Dismiss"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:927
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:914
 #. translators: Placeholders: %1$s - plugin name, %2$s - opening <a> HTML link
 #. tag, %3$s - closing </a> HTML link tag
 msgid ""
@@ -1346,7 +1337,7 @@ msgid ""
 "Please %2$supdate WooCommerce%3$s."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:951
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:938
 #. translators: Placeholders: %1$s - plugin name, %2$s - opening <a> HTML link
 #. tag, %3$s - closing </a> HTML link tag
 msgid ""
@@ -1354,7 +1345,7 @@ msgid ""
 "Please %2$supdate WooCommerce%3$s."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:987
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:974
 #. translators: Placeholders: %1$s - payment gateway title (such as
 #. Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
 msgid ""
@@ -1362,7 +1353,7 @@ msgid ""
 "tokenization%3$s to activate %1$s for Subscriptions."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:1005
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:992
 #. translators: Placeholders: %1$s - payment gateway title (such as
 #. Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
 msgid ""
@@ -1370,13 +1361,13 @@ msgid ""
 "tokenization%3$s to activate %1$s for Pre-Orders."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:1042
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:1029
 msgid ""
 "You must enable tokenization for this gateway in order to support automatic "
 "renewal payments with the WooCommerce Subscriptions extension."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:1043
+#: payment-gateway/class-sv-wc-payment-gateway-plugin.php:1030
 msgid "Inactive"
 msgstr ""
 
