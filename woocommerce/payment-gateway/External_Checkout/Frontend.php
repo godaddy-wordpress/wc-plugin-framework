@@ -280,7 +280,7 @@ abstract class Frontend extends Script_Handler {
 			$default_text = sprintf(
 			/** transalators: Placeholders: %1$s - opening HTML link tag pointing to the terms & conditions page, %2$s closing HTML link tag */
 				__( 'By submitting your payment, you agree to our %1$sterms and conditions%2$s.', 'woocommerce-plugin-framework' ),
-				'<a href="' . esc_url( get_permalink( wc_terms_and_conditions_page_id() ) ) . '" class="sv-wc-external-checkout-terms-and-conditions-link" target="_blank">',
+				'<a href="' . esc_url( get_permalink( wc_terms_and_conditions_page_id() ) ) . '" class="terms-link" target="_blank">',
 				'</a>'
 			);
 
@@ -294,7 +294,7 @@ abstract class Frontend extends Script_Handler {
 			$text = apply_filters( 'sv_wc_external_checkout_terms_notice_text', $default_text );
 
 			?>
-			<div class="sv-wc-external-checkout-terms woocommerce-terms-and-conditions-wrapper">
+			<div class="terms-notice woocommerce-terms-and-conditions-wrapper">
 				<p><small><?php echo wp_kses_post( $text ); ?></small></p>
 			</div>
 			<?php
