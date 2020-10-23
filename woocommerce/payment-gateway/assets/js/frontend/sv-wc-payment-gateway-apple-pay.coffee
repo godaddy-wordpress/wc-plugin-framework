@@ -32,9 +32,9 @@ jQuery( document ).ready ($) ->
 			@payment_request          = args.payment_request
 			@generic_error            = args.generic_error
 
-			@container = '#sv-wc-external-checkout-buttons-container'
-			@buttons   = '.sv-wc-apple-pay-button'
-			@terms     = '.sv-wc-external-checkout-terms'
+			@wrapper   = '.sv-wc-external-checkout'
+			@container = '.sv-wc-external-checkout-buttons-container'
+			@button    = '.sv-wc-apple-pay-button'
 
 
 		# Determines if Apple Pay is available.
@@ -55,9 +55,9 @@ jQuery( document ).ready ($) ->
 		# @since 4.7.0
 		init: ->
 
-			# hide the terms if Apple Pay is the only button
-			if $( @container ).children.length is 1
-				$( @terms ).hide()
+			# hide the wrapper if Apple Pay is the only button
+			if $( @container ).children().length is 1
+				$( @wrapper ).hide()
 
 			return unless this.is_available()
 
@@ -73,8 +73,8 @@ jQuery( document ).ready ($) ->
 			return unless @ui_element
 
 			if @payment_request
-				$( @buttons ).show()
-				$( @terms ).show()
+				$( @button ).show()
+				$( @wrapper ).show()
 
 			$( document.body ).on 'click', '.sv-wc-apple-pay-button', ( e ) =>
 
@@ -128,7 +128,6 @@ jQuery( document ).ready ($) ->
 		init_checkout_page: =>
 
 			@ui_element = $( 'form.woocommerce-checkout' )
-			@buttons    = '.sv-wc-apply-pay-checkout'
 
 			$( document.body ).on 'updated_checkout', =>
 
@@ -371,8 +370,8 @@ jQuery( document ).ready ($) ->
 
 			this.get_payment_request( data ).then ( response ) =>
 
-				$( @buttons ).show()
-				$( @terms ).show()
+				$( @button ).show()
+				$( @wrapper ).show()
 
 				@payment_request = $.parseJSON( response )
 
@@ -382,8 +381,10 @@ jQuery( document ).ready ($) ->
 
 				console.error '[Apple Pay] Could not build payment request. ' + response.message
 
-				$( @buttons ).hide()
-				$( @terms ).hide()
+				$( @button ).hide()
+				# hide the wrapper if Apple Pay is the only button
+				if $( @container ).children().length is 1
+					$( @wrapper ).hide()
 
 				this.unblock_ui()
 
