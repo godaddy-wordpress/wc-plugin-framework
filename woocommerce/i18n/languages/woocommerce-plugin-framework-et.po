@@ -299,11 +299,11 @@ msgstr ""
 msgid "Checkout"
 msgstr "E-tšekk"
 
-#: payment-gateway/External_Checkout/Frontend.php:265
+#: payment-gateway/External_Checkout/Frontend.php:255
 msgid "or"
 msgstr ""
 
-#: payment-gateway/External_Checkout/Frontend.php:299
+#: payment-gateway/External_Checkout/Frontend.php:289
 msgid ""
 "By submitting your payment, you agree to our %1$sterms and conditions%2$s."
 msgstr ""
