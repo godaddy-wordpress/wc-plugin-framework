@@ -17,7 +17,7 @@
   },
   "scripts": {
     "clean": "rimraf woocommerce/payment-gateway/assets/dist",
-    "build:parcel": "parcel build 'woocommerce/payment-gateway/assets/js/**/*.js' 'woocommerce/payment-gateway/assets/js/**/*.coffee' --out-dir woocommerce/payment-gateway/assets/dist",
+    "build:parcel": "parcel build 'woocommerce/payment-gateway/assets/js/**/*.js' 'woocommerce/payment-gateway/assets/js/**/*.coffee' --out-dir woocommerce/payment-gateway/assets/dist --public-url ..",
     "build": "grunt default && npm run build:parcel"
   },
   "devDependencies": {
