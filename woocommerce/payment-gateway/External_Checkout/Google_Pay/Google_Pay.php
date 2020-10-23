@@ -24,11 +24,11 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Google_Pay;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\External_Checkout;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Orders;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Exception;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -40,8 +40,11 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment
  *
  * @since 5.10.0
  */
-class Google_Pay {
+class Google_Pay extends External_Checkout {
 
+
+	/** @var string external checkout ID */
+	protected $id = 'google_pay';
 
 	/** @var Admin the admin instance */
 	protected $admin;
@@ -51,40 +54,6 @@ class Google_Pay {
 
 	/** @var AJAX the AJAX instance */
 	protected $ajax;
-
-	/** @var SV_WC_Payment_Gateway_Plugin the plugin instance */
-	protected $plugin;
-
-
-	/**
-	 * Constructs the class.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @param SV_WC_Payment_Gateway_Plugin $plugin the plugin instance
-	 */
-	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin ) {
-
-		$this->plugin = $plugin;
-
-		$this->init();
-	}
-
-
-	/**
-	 * Initializes the Google Pay handlers.
-	 *
-	 * @since 5.10.0
-	 */
-	protected function init() {
-
-		if ( is_admin() && ! is_ajax() ) {
-			$this->init_admin();
-		} else if ( $this->get_plugin()->get_id() === $this->get_processing_gateway()->get_plugin()->get_id() ) {
-			$this->init_ajax();
-			$this->init_frontend();
-		}
-	}
 
 
 	/**
@@ -117,19 +86,6 @@ class Google_Pay {
 	protected function init_frontend() {
 
 		$this->frontend = new Frontend( $this->get_plugin(), $this );
-	}
-
-
-	/**
-	 * Gets the configured display locations.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return array
-	 */
-	public function get_display_locations() {
-
-		return get_option( 'sv_wc_google_pay_display_locations', [] );
 	}
 
 
@@ -581,126 +537,6 @@ class Google_Pay {
 
 
 	/**
-	 * Adds a log entry to the gateway's debug log.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @param string $message the log message to add
-	 */
-	public function log( $message ) {
-
-		$gateway = $this->get_processing_gateway();
-
-		if ( ! $gateway ) {
-			return;
-		}
-
-		if ( $gateway->debug_log() ) {
-			$gateway->get_plugin()->log( '[Google Pay] ' . $message, $gateway->get_id() );
-		}
-	}
-
-
-	/**
-	 * Simulates a successful gateway payment response.
-	 *
-	 * This provides an easy way for merchants to test that their settings are correctly configured and communicating
-	 * with Google without processing actual payments to test.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @param \WC_Order $order order object
-	 * @return array
-	 */
-	protected function process_test_payment( \WC_Order $order ) {
-
-		$order->payment_complete();
-
-		WC()->cart->empty_cart();
-
-		return [
-			'result'   => 'success',
-			'redirect' => $this->get_processing_gateway()->get_return_url( $order ),
-		];
-	}
-
-
-	/**
-	 * Determines if Google Pay is available.
-	 *
-	 * This does not indicate browser support or a user's ability, but rather
-	 * that Google Pay is properly configured and ready to be initiated by the
-	 * Google Pay JS.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return bool
-	 */
-	public function is_available() {
-
-		$is_available = $this->is_configured();
-
-		$accepted_currencies = $this->get_accepted_currencies();
-
-		if ( ! empty( $accepted_currencies ) ) {
-
-			$is_available = $is_available && in_array( get_woocommerce_currency(), $accepted_currencies, true );
-		}
-
-		/**
-		 * Filters whether Google Pay should be made available to users.
-		 *
-		 * @since 5.10.0
-		 * @param bool $is_available
-		 */
-		return apply_filters( 'sv_wc_google_pay_is_available', $is_available );
-	}
-
-
-	/**
-	 * Determines if Google Pay settings are properly configured.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return bool
-	 */
-	public function is_configured() {
-
-		if ( ! $this->get_processing_gateway() ) {
-			return false;
-		}
-
-		return $this->is_enabled() && $this->get_processing_gateway()->is_enabled();
-	}
-
-
-	/**
-	 * Determines if Google Pay is enabled.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return bool
-	 */
-	public function is_enabled() {
-
-		return 'yes' === get_option( 'sv_wc_google_pay_enabled' );
-	}
-
-
-	/**
-	 * Determines if test mode is enabled.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return bool
-	 */
-	public function is_test_mode() {
-
-		return 'yes' === get_option( 'sv_wc_google_pay_test_mode' );
-	}
-
-
-	/**
 	 * Gets the currencies supported by the gateway and available for shipping.
 	 *
 	 * @since 5.10.0
@@ -770,72 +606,6 @@ class Google_Pay {
 		 * @param Google_Pay $handler the Google Pay handler
 		 */
 		return apply_filters( 'sv_wc_google_pay_supported_networks', array_values( $networks ), $this );
-	}
-
-
-	/**
-	 * Gets the gateways that declare Google Pay support.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return array the supporting gateways as `$gateway_id => \SV_WC_Payment_Gateway`
-	 */
-	public function get_supporting_gateways() {
-
-		$available_gateways  = WC()->payment_gateways->get_available_payment_gateways();
-		$supporting_gateways = [];
-
-		foreach ( $available_gateways as $key => $gateway ) {
-
-			if ( method_exists( $gateway, 'supports_google_pay' ) && $gateway->supports_google_pay() ) {
-				$supporting_gateways[ $gateway->get_id() ] = $gateway;
-			}
-		}
-
-		return $supporting_gateways;
-	}
-
-
-	/**
-	 * Gets the gateway set to process Google Pay transactions.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return SV_WC_Payment_Gateway|null
-	 */
-	public function get_processing_gateway() {
-
-		$gateways = $this->get_supporting_gateways();
-
-		$gateway_id = get_option( 'sv_wc_google_pay_payment_gateway' );
-
-		return isset( $gateways[ $gateway_id ] ) ? $gateways[ $gateway_id ] : null;
-	}
-
-
-	/**
-	 * Gets the Google Pay button style.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return string
-	 */
-	public function get_button_style() {
-
-		return get_option( 'sv_wc_google_pay_button_style', 'black' );
-	}
-
-
-	/**
-	 * Gets the gateway plugin instance.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return SV_WC_Payment_Gateway_Plugin
-	 */
-	public function get_plugin() {
-
-		return $this->plugin;
 	}
 
 

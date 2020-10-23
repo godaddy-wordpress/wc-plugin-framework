@@ -303,6 +303,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( $payment_gateway_framework_path . '/Handlers/Capture.php' );
 
 		// External Checkout
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/External_Checkout.php" );
 		require_once( "{$payment_gateway_framework_path}/External_Checkout/Admin.php" );
 		require_once( "{$payment_gateway_framework_path}/External_Checkout/Frontend.php" );
 		require_once( "{$payment_gateway_framework_path}/External_Checkout/Orders.php" );
