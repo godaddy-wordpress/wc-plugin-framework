@@ -222,7 +222,7 @@ abstract class Frontend extends Script_Handler {
 	public function render_external_checkout() {
 		?>
 		<div class="sv-wc-external-checkout">
-			<div class="sv-wc-external-checkout-buttons-container">
+			<div class="buttons-container">
 				<?php do_action( 'sv_wc_external_checkout_button' ); ?>
 			</div>
 			<?php do_action( 'sv_wc_external_checkout_terms_notice' ); ?>
@@ -256,17 +256,14 @@ abstract class Frontend extends Script_Handler {
 		?>
 
 		<div class="sv-wc-external-checkout">
-
-			<?php
-			$this->render_button();
-			$this->render_terms_notice();
-			?>
-
+			<div class="buttons-container">
+				<?php do_action( 'sv_wc_external_checkout_button' ); ?>
+			</div>
+			<?php do_action( 'sv_wc_external_checkout_terms_notice' ); ?>
 			<span class="divider">
 				<?php /** translators: "or" as in "Pay with XYZ [or] regular checkout" */
 				esc_html_e( 'or', 'woocommerce-plugin-framework' ); ?>
 			</span>
-
 		</div>
 
 		<?php

@@ -33,7 +33,7 @@ jQuery( document ).ready ($) ->
 			@generic_error            = args.generic_error
 
 			@wrapper   = '.sv-wc-external-checkout'
-			@container = '.sv-wc-external-checkout-buttons-container'
+			@container = '.buttons-container'
 			@button    = '.sv-wc-apple-pay-button'
 
 
