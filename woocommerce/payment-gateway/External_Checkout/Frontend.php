@@ -106,6 +106,8 @@ abstract class Frontend extends Script_Handler {
 			$this->init_cart();
 		} else if ( is_checkout() && in_array( 'checkout', $locations, true ) ) {
 			$this->init_checkout();
+		} else {
+			return;
 		}
 
 		// only render external checkout container if not rendered yet
