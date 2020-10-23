@@ -288,11 +288,11 @@ msgstr ""
 msgid "Checkout"
 msgstr ""
 
-#: payment-gateway/External_Checkout/Frontend.php:266
+#: payment-gateway/External_Checkout/Frontend.php:265
 msgid "or"
 msgstr ""
 
-#: payment-gateway/External_Checkout/Frontend.php:301
+#: payment-gateway/External_Checkout/Frontend.php:299
 msgid "By submitting your payment, you agree to our %1$sterms and conditions%2$s."
 msgstr ""
 
