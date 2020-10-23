@@ -278,7 +278,7 @@ abstract class Frontend extends Script_Handler {
 		if ( apply_filters( 'woocommerce_checkout_show_terms', true ) && function_exists( 'wc_terms_and_conditions_checkbox_enabled' ) && wc_terms_and_conditions_checkbox_enabled() ) {
 
 			$default_text = sprintf(
-			/** transalators: Placeholders: %1$s - opening HTML link tag pointing to the terms & conditions page, %2$s closing HTML link tag */
+				/** translators: Placeholders: %1$s - opening HTML link tag pointing to the terms & conditions page, %2$s closing HTML link tag */
 				__( 'By submitting your payment, you agree to our %1$sterms and conditions%2$s.', 'woocommerce-plugin-framework' ),
 				'<a href="' . esc_url( get_permalink( wc_terms_and_conditions_page_id() ) ) . '" class="terms-link" target="_blank">',
 				'</a>'
