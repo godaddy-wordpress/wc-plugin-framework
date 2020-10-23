@@ -179,6 +179,11 @@ abstract class Frontend extends Script_Handler {
 		} else {
 			add_action( 'woocommerce_before_checkout_form', [ $this, 'maybe_render_external_checkout_with_divider' ], 15 );
 		}
+
+		// only render external checkout container if not rendered yet
+		if ( ! has_action( 'sv_wc_external_checkout_with_divider' ) ) {
+			add_action( 'sv_wc_external_checkout_with_divider', [ $this, 'render_external_checkout_with_divider' ] );
+		}
 	}
 
 
