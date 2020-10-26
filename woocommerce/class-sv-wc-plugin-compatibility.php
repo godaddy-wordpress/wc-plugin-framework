@@ -318,6 +318,8 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * This checks both for WooCommerce v4.0+ and the underlying package availability.
 	 *
+	 * @since 5.6.0
+	 *
 	 * @return bool
 	 */
 	public static function is_enhanced_admin_available() {
