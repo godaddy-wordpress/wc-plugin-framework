@@ -228,18 +228,20 @@ class Google_Pay extends External_Checkout {
 
 		$this->validate_product( $product );
 
+		$price = wc_format_decimal( wc_get_price_including_tax( $product ), 2 );
+
 		return [
 			'displayItems'     => [
 				[
 					'label' => __( 'Subtotal', 'woocommerce-plugin-framework' ),
 					'type'  => 'SUBTOTAL',
-					'price' => wc_format_decimal( $product->get_price(), 2 ),
+					'price' => $price,
 				],
 			],
 			'countryCode'      => substr( get_option( 'woocommerce_default_country' ), 0, 2 ),
 			'currencyCode'     => get_woocommerce_currency(),
 			'totalPriceStatus' => "FINAL",
-			'totalPrice'       => wc_format_decimal( $product->get_price(), 2 ),
+			'totalPrice'       => $price,
 			'totalPriceLabel'  => "Total",
 		];
 	}
