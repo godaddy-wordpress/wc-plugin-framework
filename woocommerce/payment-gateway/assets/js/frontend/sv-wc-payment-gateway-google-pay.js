@@ -241,7 +241,7 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		onPaymentAuthorized( paymentData ) {
 
-			this.block_ui();
+			this.blockUI();
 
 			return new Promise( (resolve, reject) => {
 
@@ -259,7 +259,7 @@ jQuery( document ).ready( ( $ ) => {
 					} );
 				}
 
-				this.unblock_ui();
+				this.unblockUI();
 			} );
 		}
 
@@ -274,7 +274,7 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		onPaymentDataChanged( intermediatePaymentData ) {
 
-			this.block_ui();
+			this.blockUI();
 
 			return new Promise(( resolve, reject ) => {
 
@@ -299,10 +299,10 @@ jQuery( document ).ready( ( $ ) => {
 					} );
 
 				}	catch( err ) {
-					this.fail_payment( 'Could not load updated totals or process payment data request update. ' + err );
+					this.failPayment( 'Could not load updated totals or process payment data request update. ' + err );
 				}
 
-				this.unblock_ui();
+				this.unblockUI();
 			} );
 		}
 
@@ -330,7 +330,7 @@ jQuery( document ).ready( ( $ ) => {
 				if ( response.success ) {
 					resolve( $.parseJSON( response.data ) )
 				} else {
-					this.fail_payment( 'Could not build transaction info. ' + response.data.message );
+					this.failPayment( 'Could not build transaction info. ' + response.data.message );
 				}
 			} );
 		}
@@ -362,7 +362,7 @@ jQuery( document ).ready( ( $ ) => {
 				if ( response.success ) {
 					resolve( $.parseJSON( response.data ) )
 				} else {
-					this.fail_payment( 'Could not recalculate totals. ' + response.data.message );
+					this.failPayment( 'Could not recalculate totals. ' + response.data.message );
 				}
 			} );
 		}
@@ -466,7 +466,7 @@ jQuery( document ).ready( ( $ ) => {
 							reason: 'PAYMENT_DATA_INVALID'
 						}
 					} );
-					this.fail_payment( 'Payment could not be processed. ' + response.data.message );
+					this.failPayment( 'Payment could not be processed. ' + response.data.message );
 				}
 			} );
 		}
@@ -478,7 +478,7 @@ jQuery( document ).ready( ( $ ) => {
 
 			event.preventDefault();
 
-			this.block_ui();
+			this.blockUI();
 
 			this.getGooglePaymentDataRequest( ( paymentDataRequest ) => {
 
@@ -486,10 +486,10 @@ jQuery( document ).ready( ( $ ) => {
 				try {
 					paymentsClient.loadPaymentData( paymentDataRequest );
 				} catch ( err ) {
-					this.fail_payment( 'Could not load payment data. ' + err );
+					this.failPayment( 'Could not load payment data. ' + err );
 				}
 
-				this.unblock_ui();
+				this.unblockUI();
 			} );
 		}
 
@@ -503,11 +503,11 @@ jQuery( document ).ready( ( $ ) => {
 
 			// initialize for the various pages
 			if ( $( 'form.cart' ).length ) {
-				this.init_product_page();
+				this.initProductPage();
 			} else if ( $( 'form.woocommerce-cart-form' ).length ) {
-				this.init_cart_page();
+				this.initCartPage();
 			} else if ( $( 'form.woocommerce-checkout' ).length) {
-				this.init_checkout_page()
+				this.initCheckoutPage()
 			} else {
 				return;
 			}
@@ -522,73 +522,73 @@ jQuery( document ).ready( ( $ ) => {
 					}
 				} )
 				.catch( ( err ) => {
-					this.fail_payment( 'Google Pay is not ready. ' + err );
+					this.failPayment( 'Google Pay is not ready. ' + err );
 				} );
 		}
 
 		/**
 		 * Initializes the product page.
 		 */
-		init_product_page() {
-			this.ui_element = $( 'form.cart' );
+		initProductPage() {
+			this.uiElement = $( 'form.cart' );
 		}
 
 		/**
 		 * Initializes the cart page.
 		 */
-		init_cart_page() {
-			this.ui_element = $( 'form.woocommerce-cart-form' ).parents( 'div.woocommerce' );
+		initCartPage() {
+			this.uiElement = $( 'form.woocommerce-cart-form' ).parents( 'div.woocommerce' );
 		}
 
 		/**
 		 * Initializes the checkout page.
 		 */
-		init_checkout_page() {
-			this.ui_element = $( 'form.woocommerce-checkout' );
+		initCheckoutPage() {
+			this.uiElement = $( 'form.woocommerce-checkout' );
 		}
 
 		/**
 		 * Fails the purchase based on the gateway result.
 		 */
-		fail_payment( error ) {
+		failPayment( error ) {
 
 			console.error( '[Google Pay] ' + error );
 
-			this.unblock_ui();
+			this.unblockUI();
 
-			this.render_errors( [ this.genericError ] );
+			this.renderErrors( [ this.genericError ] );
 		}
 
 		/**
 		 * Renders any new errors and bring them into the viewport.
  		 */
-		render_errors( errors ) {
+		renderErrors( errors ) {
 
 			// hide and remove any previous errors
 			$( '.woocommerce-error, .woocommerce-message' ).remove();
 
 			// add errors
-			this.ui_element.prepend( '<ul class="woocommerce-error"><li>' + errors.join( '</li><li>' ) + '</li></ul>' );
+			this.uiElement.prepend( '<ul class="woocommerce-error"><li>' + errors.join( '</li><li>' ) + '</li></ul>' );
 
 			// unblock UI
-			this.ui_element.removeClass( 'processing' ).unblock();
+			this.uiElement.removeClass( 'processing' ).unblock();
 
 			// scroll to top
-			$( 'html, body' ).animate( { scrollTop: this.ui_element.offset().top - 100 }, 1000 );
+			$( 'html, body' ).animate( { scrollTop: this.uiElement.offset().top - 100 }, 1000 );
 		}
 
 		/**
 		 * Blocks the payment form UI.
 		 */
-		block_ui() {
-			this.ui_element.block( { message: null, overlayCSS: { background: '#fff', opacity: 0.6 } } );
+		blockUI() {
+			this.uiElement.block( { message: null, overlayCSS: { background: '#fff', opacity: 0.6 } } );
 		}
 
 		/**
 		 * Unblocks the payment form UI.
 		 */
-		unblock_ui() {
-			this.ui_element.unblock();
+		unblockUI() {
+			this.uiElement.unblock();
 		}
 	}
 
