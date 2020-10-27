@@ -99,7 +99,7 @@ class Google_Pay extends External_Checkout {
 	 * @return array
 	 * @throws SV_WC_Payment_Gateway_Exception
 	 */
-	public function get_transaction_info( \WC_Cart $cart, $product_id ) {
+	public function get_transaction_info( \WC_Cart $cart, $product_id = '' ) {
 
 		if ( ! empty( $product_id ) && $product = wc_get_product( $product_id ) ) {
 			// buying from the product page
@@ -264,7 +264,8 @@ class Google_Pay extends External_Checkout {
 		}
 
 		$response_data = [
-			'newTransactionInfo'          => $this->get_transaction_info( WC()->cart, $product_id ),
+			// we do not pass the product ID here because we want to get the totals from the cart (including tax and shipping)
+			'newTransactionInfo'          => $this->get_transaction_info( WC()->cart ),
 			'newShippingOptionParameters' => [],
 		];
 
