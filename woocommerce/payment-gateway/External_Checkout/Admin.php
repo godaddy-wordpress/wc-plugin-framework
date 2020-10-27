@@ -281,9 +281,9 @@ abstract class Admin {
 	protected function get_display_location_options() {
 
 		return [
-				'product'  => __( 'Single products', 'woocommerce-plugin-framework' ),
-				'cart'     => __( 'Cart', 'woocommerce-plugin-framework' ),
-				'checkout' => __( 'Checkout', 'woocommerce-plugin-framework' ),
+			'product'  => __( 'Single products', 'woocommerce-plugin-framework' ),
+			'cart'     => __( 'Cart', 'woocommerce-plugin-framework' ),
+			'checkout' => __( 'Checkout', 'woocommerce-plugin-framework' ),
 		];
 	}
 
