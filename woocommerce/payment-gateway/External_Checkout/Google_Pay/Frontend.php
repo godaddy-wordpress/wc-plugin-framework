@@ -126,7 +126,7 @@ class Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gat
 			'button_style'             => $this->get_handler()->get_button_style(),
 			'card_types'               => $this->get_handler()->get_supported_networks(),
 			'available_countries'	   => $this->get_handler()->get_available_countries(),
-			'currency_code'			   => get_woocommerce_currency(),
+			'currency_code'            => get_woocommerce_currency(),
 			'generic_error'            => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
 		] );
 	}
