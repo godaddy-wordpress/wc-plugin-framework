@@ -1177,18 +1177,18 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @since 5.10.0
 	 *
 	 * @param \WC_Order the order object
-	 * @param mixed $response_data authorized payment response data
+	 * @param mixed|array $response_data authorized payment response data
 	 * @return \WC_Order
 	 */
 	public function get_order_for_google_pay( \WC_Order $order, $response_data ) {
 
-		$payment_method_data = $response_data->paymentMethodData;
+		$payment_method_data = $response_data['paymentMethodData'];
 
-		$order->payment->google_pay = base64_encode( $payment_method_data->tokenizationData->token );
+		$order->payment->google_pay = base64_encode( $payment_method_data['tokenizationData']['token'] );
 
 		// account last four
-		$order->payment->account_number = $payment_method_data->info->cardDetails;
-		$order->payment->card_type      = SV_WC_Payment_Gateway_Helper::normalize_card_type( $payment_method_data->info->cardNetwork );
+		$order->payment->account_number = $payment_method_data['info']['cardDetails'];
+		$order->payment->card_type      = SV_WC_Payment_Gateway_Helper::normalize_card_type( $payment_method_data['info']['cardNetwork'] );
 
 		return $order;
 	}
