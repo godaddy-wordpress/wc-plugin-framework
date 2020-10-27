@@ -130,8 +130,10 @@ abstract class External_Checkout {
 			return;
 		}
 
+		$prefix = ucwords( str_replace( '_', ' ', $this->id ) );
+
 		if ( $gateway->debug_log() ) {
-			$gateway->get_plugin()->log( '[Google Pay] ' . $message, $gateway->get_id() );
+			$gateway->get_plugin()->log( "[$prefix] $message", $gateway->get_id() );
 		}
 	}
 
