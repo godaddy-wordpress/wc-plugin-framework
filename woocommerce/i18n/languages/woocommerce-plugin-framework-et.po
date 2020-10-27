@@ -299,11 +299,11 @@ msgstr ""
 msgid "Checkout"
 msgstr "E-tšekk"
 
-#: payment-gateway/External_Checkout/Frontend.php:255
+#: payment-gateway/External_Checkout/Frontend.php:259
 msgid "or"
 msgstr ""
 
-#: payment-gateway/External_Checkout/Frontend.php:289
+#: payment-gateway/External_Checkout/Frontend.php:293
 msgid ""
 "By submitting your payment, you agree to our %1$sterms and conditions%2$s."
 msgstr ""
@@ -376,45 +376,45 @@ msgstr[1] ""
 msgid "Google Pay is disabled."
 msgstr ""
 
-#: payment-gateway/External_Checkout/Google_Pay/Frontend.php:135
-#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:146
+#: payment-gateway/External_Checkout/Google_Pay/Frontend.php:130
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:141
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:99
 msgid "An error occurred, please try again or try an alternate form of payment"
 msgstr "Esines viga, palun proovi uuesti või kasuta teistsugust makseviisi"
 
-#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:222
-#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:332
-#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:525
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:236
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:361
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:524
 msgid "Subtotal"
 msgstr ""
 
-#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:342
-#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:535
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:371
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:534
 #, fuzzy
 msgid "Discount"
 msgstr "Konto"
 
-#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:352
-#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:545
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:381
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:544
 msgid "Shipping"
 msgstr ""
 
-#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:362
-#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:555
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:391
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:554
 msgid "Fees"
 msgstr ""
 
-#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:372
-#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:565
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:401
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:564
 msgid "Taxes"
 msgstr ""
 
-#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:411
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:444
 #, fuzzy
 msgid "Google Pay payment authorized."
 msgstr "%1$s: makse ebaõnnestus (%2$s)"
 
-#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:482
+#: payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:515
 #, fuzzy
 msgid "Google Pay payment failed. %s"
 msgstr "%1$s: makse ebaõnnestus (%2$s)"
@@ -491,15 +491,15 @@ msgstr ""
 msgid "Apple Pay is disabled."
 msgstr ""
 
-#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:181
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:176
 msgid "Buy with"
 msgstr ""
 
-#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:138
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:137
 msgid "Apple Pay payment authorized."
 msgstr ""
 
-#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:172
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:171
 #, fuzzy
 msgid "Apple Pay payment failed. %s"
 msgstr "%1$s: makse ebaõnnestus (%2$s)"
