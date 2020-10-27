@@ -63,9 +63,6 @@ abstract class Frontend extends Script_Handler {
 
 		$this->gateway = $gateway;
 
-		// add the action and filter hooks
-		$this->add_hooks();
-
 		parent::__construct();
 	}
 
@@ -84,6 +81,8 @@ abstract class Frontend extends Script_Handler {
 		add_action( 'wp', [ $this, 'init' ] );
 
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+
+		parent::add_hooks();
 	}
 
 
