@@ -24,7 +24,6 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Plugin;
 
@@ -39,6 +38,9 @@ if ( ! class_exists( __NAMESPACE__ . '\\External_Checkout' ) ) :
  */
 abstract class External_Checkout {
 
+
+	/** @var string external checkout ID */
+	protected $id;
 
 	/** @var SV_WC_Payment_Gateway_Plugin the plugin instance */
 	protected $plugin;
@@ -138,7 +140,7 @@ abstract class External_Checkout {
 	 * Simulates a successful gateway payment response.
 	 *
 	 * This provides an easy way for merchants to test that their settings are correctly configured and communicating
-	 * with Google without processing actual payments to test.
+	 * with the external checkout provider without processing actual payments to test.
 	 *
 	 * @since 5.10.0
 	 *

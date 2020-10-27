@@ -26,9 +26,9 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_
 
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\External_Checkout;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Orders;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Exception;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -43,9 +43,6 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment
 class Google_Pay extends External_Checkout {
 
 
-	/** @var string external checkout ID */
-	protected $id = 'google_pay';
-
 	/** @var Admin the admin instance */
 	protected $admin;
 
@@ -54,6 +51,21 @@ class Google_Pay extends External_Checkout {
 
 	/** @var AJAX the AJAX instance */
 	protected $ajax;
+
+
+	/**
+	 * Constructs the class.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param SV_WC_Payment_Gateway_Plugin $plugin the plugin instance
+	 */
+	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin ) {
+
+		$this->id = 'google_pay';
+
+		parent::__construct( $plugin );
+	}
 
 
 	/**

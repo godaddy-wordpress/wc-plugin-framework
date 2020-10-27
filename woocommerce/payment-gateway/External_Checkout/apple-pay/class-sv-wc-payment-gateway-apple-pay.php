@@ -39,9 +39,6 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_P
 class SV_WC_Payment_Gateway_Apple_Pay extends Payment_Gateway\External_Checkout\External_Checkout {
 
 
-	/** @var string external checkout ID */
-	protected $id = 'apple_pay';
-
 	/** @var SV_WC_Payment_Gateway_Apple_Pay_Admin the admin instance */
 	protected $admin;
 
@@ -63,6 +60,8 @@ class SV_WC_Payment_Gateway_Apple_Pay extends Payment_Gateway\External_Checkout\
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the plugin instance
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin ) {
+
+		$this->id = 'apple_pay';
 
 		parent::__construct( $plugin );
 
