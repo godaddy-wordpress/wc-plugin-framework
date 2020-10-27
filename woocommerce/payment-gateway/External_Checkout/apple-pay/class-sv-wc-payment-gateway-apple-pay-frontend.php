@@ -51,7 +51,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends \SkyVerge\WooCommerce\Plu
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, SV_WC_Payment_Gateway_Apple_Pay $handler ) {
 
-		parent::__construct( $plugin, $this->get_handler()->get_processing_gateway(), $handler );
+		parent::__construct( $plugin, $handler );
 	}
 
 
