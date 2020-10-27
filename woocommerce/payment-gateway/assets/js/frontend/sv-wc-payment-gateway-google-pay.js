@@ -512,6 +512,14 @@ jQuery( document ).ready( ( $ ) => {
 				return;
 			}
 
+			this.initGooglePay();
+		}
+
+		/**
+		 * Initializes Google Pay.
+		 */
+		initGooglePay() {
+
 			const paymentsClient = this.getGooglePaymentsClient();
 			paymentsClient.isReadyToPay( this.getGoogleIsReadyToPayRequest() )
 				.then( ( response ) => {
@@ -538,6 +546,11 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		initCartPage() {
 			this.uiElement = $( 'form.woocommerce-cart-form' ).parents( 'div.woocommerce' );
+
+			// re-init if the cart totals are updated
+			$( document.body ).on( 'updated_cart_totals', () => {
+				this.initGooglePay();
+			} );
 		}
 
 		/**
