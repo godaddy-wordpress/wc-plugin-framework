@@ -234,18 +234,15 @@ class Google_Pay extends External_Checkout {
 
 
 	/**
-	 * Recalculates the lines and totals after selecting an address or shipping method.
+	 * Populates cart with a single product.
 	 *
 	 * @since 5.10.0
 	 *
-	 * @param string $chosen_shipping_method chosen shipping method
 	 * @param string $product_id product ID, if we are on a Product page
-	 * @return array
 	 * @throws \Exception
 	 */
-	public function recalculate_totals( $chosen_shipping_method, $product_id ) {
+	public function add_product_to_cart( $product_id ) {
 
-		// if this is a single product page, make sure the cart gets populated
 		if ( ! empty( $product_id ) && $product = wc_get_product( $product_id ) ) {
 
 			if ( ! is_user_logged_in() ) {
@@ -258,6 +255,23 @@ class Google_Pay extends External_Checkout {
 
 			WC()->cart->add_to_cart( $product->get_id() );
 		}
+	}
+
+
+	/**
+	 * Recalculates the lines and totals after selecting an address or shipping method.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param string $chosen_shipping_method chosen shipping method
+	 * @param string $product_id product ID, if we are on a Product page
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function recalculate_totals( $chosen_shipping_method, $product_id ) {
+
+		// if this is a single product page, make sure the cart gets populated
+		$this->add_product_to_cart( $product_id );
 
 		if ( ! WC()->cart ) {
 			throw new SV_WC_Payment_Gateway_Exception( 'Cart data is missing.' );
@@ -388,10 +402,11 @@ class Google_Pay extends External_Checkout {
 	 * @since 5.10.0
 	 *
 	 * @param mixed $payment_data payment data returned by Google Pay
+	 * @param string $product_id product ID, if we are on a Product page
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function process_payment( $payment_data ) {
+	public function process_payment( $payment_data, $product_id ) {
 
 		$order = null;
 
@@ -402,6 +417,9 @@ class Google_Pay extends External_Checkout {
 			$payment_data = json_decode( $payment_data, true );
 
 			$this->store_payment_response( $payment_data );
+
+			// if this is a single product page, make sure the cart gets populated
+			$this->add_product_to_cart( $product_id );
 
 			$order = Orders::create_order( WC()->cart, [ 'created_via' => 'google_pay' ] );
 

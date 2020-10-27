@@ -444,7 +444,11 @@ jQuery( document ).ready( ( $ ) => {
 			const data = {
 				action: `wc_${this.gatewayID}_google_pay_process_payment`,
 				nonce: this.processNonce,
-				paymentData: JSON.stringify( paymentData )
+				paymentData: JSON.stringify( paymentData ),
+			}
+
+			if ( this.productID && ! this.needsShipping ) {
+				data.productID = this.productID;
 			}
 
 			return $.post( this.ajaxURL, data, ( response ) => {

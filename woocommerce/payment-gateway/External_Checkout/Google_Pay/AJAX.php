@@ -195,10 +195,11 @@ class AJAX {
 		check_ajax_referer( 'wc_' . $this->get_handler()->get_processing_gateway()->get_id() . '_google_pay_process_payment', 'nonce' );
 
 		$payment_data = stripslashes( SV_WC_Helper::get_posted_value( 'paymentData' ) );
+		$product_id   = wc_clean( SV_WC_Helper::get_posted_value( 'productID' ) );
 
 		try {
 
-			$result = $this->get_handler()->process_payment( $payment_data );
+			$result = $this->get_handler()->process_payment( $payment_data, $product_id );
 
 			wp_send_json_success( $result );
 
