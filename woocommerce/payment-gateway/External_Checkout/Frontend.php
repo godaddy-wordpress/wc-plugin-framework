@@ -26,6 +26,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Handlers\Script_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Plugin;
 
@@ -100,11 +101,12 @@ abstract class Frontend extends Script_Handler {
 			return;
 		}
 
-		$locations = $this->get_handler()->get_display_locations();
+		$locations    = $this->get_handler()->get_display_locations();
+		$is_cart_ajax = is_ajax() && 'update_shipping_method' === SV_WC_Helper::get_requested_value( 'wc-ajax' );
 
 		if ( is_product() && in_array( 'product', $locations, true ) ) {
 			$this->init_product();
-		} else if ( is_cart() && in_array( 'cart', $locations, true ) ) {
+		} else if ( ( is_cart() || $is_cart_ajax ) && in_array( 'cart', $locations, true ) ) {
 			$this->init_cart();
 		} else if ( is_checkout() && in_array( 'checkout', $locations, true ) ) {
 			$this->init_checkout();
