@@ -68,7 +68,7 @@ abstract class External_Checkout {
 
 		if ( is_admin() && ! is_ajax() ) {
 			$this->init_admin();
-		} else if ( $this->get_processing_gateway() && $this->get_plugin()->get_id() === $this->get_processing_gateway()->get_plugin()->get_id() ) {
+		} elseif ( $this->get_processing_gateway() && $this->get_plugin()->get_id() === $this->get_processing_gateway()->get_plugin()->get_id() ) {
 			$this->init_ajax();
 			$this->init_frontend();
 		}
