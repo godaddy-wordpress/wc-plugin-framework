@@ -439,17 +439,17 @@ class Google_Pay extends External_Checkout {
 				$billing_address = [
 					'first_name' => isset( $first_name ) ? $first_name : '',
 					'last_name'  => isset( $last_name ) ? $last_name : '',
-					'address_1'  => isset( billing_address_data['address1'] ) ? billing_address_data['address1'] : '',
-					'address_2'  => isset( billing_address_data['address2'] ) ? billing_address_data['address2'] : '',
-					'city'       => isset( billing_address_data['locality'] ) ? billing_address_data['locality'] : '',
-					'state'      => isset( billing_address_data['administrativeArea'] ) ? billing_address_data['administrativeArea'] : '',
-					'postcode'   => isset( billing_address_data['postalCode'] ) ? billing_address_data['postalCode'] : '',
-					'country'    => isset( billing_address_data['countryCode'] ) ? billing_address_data['countryCode'] : '',
+					'address_1'  => isset( $billing_address_data['address1'] ) ? $billing_address_data['address1'] : '',
+					'address_2'  => isset( $billing_address_data['address2'] ) ? $billing_address_data['address2'] : '',
+					'city'       => isset( $billing_address_data['locality'] ) ? $billing_address_data['locality'] : '',
+					'state'      => isset( $billing_address_data['administrativeArea'] ) ? $billing_address_data['administrativeArea'] : '',
+					'postcode'   => isset( $billing_address_data['postalCode'] ) ? $billing_address_data['postalCode'] : '',
+					'country'    => isset( $billing_address_data['countryCode'] ) ? $billing_address_data['countryCode'] : '',
 				];
 
 				$order->set_address( $billing_address, 'billing' );
 
-				$order->set_billing_phone( isset( billing_address_data['phoneNumber'] ) ? billing_address_data['phoneNumber'] : '' );
+				$order->set_billing_phone( isset( $billing_address_data['phoneNumber'] ) ? $billing_address_data['phoneNumber'] : '' );
 			}
 
 			$order->set_billing_email( isset( $payment_data['email'] ) ? $payment_data['email'] : '' );
