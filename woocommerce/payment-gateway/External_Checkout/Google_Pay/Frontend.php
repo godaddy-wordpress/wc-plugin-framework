@@ -40,9 +40,6 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Payment
 class Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Frontend {
 
 
-	/** @var Google_Pay $handler the Google Pay handler instance */
-	protected $handler;
-
 	/** @var string JS handler base class name, without the FW version */
 	protected $js_handler_base_class_name = 'SV_WC_Google_Pay_Handler';
 
@@ -57,9 +54,7 @@ class Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gat
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, Google_Pay $handler ) {
 
-		$this->handler = $handler;
-
-		parent::__construct( $plugin, $this->get_handler()->get_processing_gateway() );
+		parent::__construct( $plugin, $this->get_handler()->get_processing_gateway(), $handler );
 	}
 
 

@@ -37,9 +37,6 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_P
 class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Frontend {
 
 
-	/** @var SV_WC_Payment_Gateway_Apple_Pay $handler the Apple Pay handler instance */
-	protected $handler;
-
 	/** @var string JS handler base class name, without the FW version */
 	protected $js_handler_base_class_name = 'SV_WC_Apple_Pay_Handler';
 
@@ -54,9 +51,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends \SkyVerge\WooCommerce\Plu
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, SV_WC_Payment_Gateway_Apple_Pay $handler ) {
 
-		$this->handler = $handler;
-
-		parent::__construct( $plugin, $this->get_handler()->get_processing_gateway() );
+		parent::__construct( $plugin, $this->get_handler()->get_processing_gateway(), $handler );
 	}
 
 

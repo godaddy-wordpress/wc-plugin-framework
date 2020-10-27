@@ -48,6 +48,9 @@ abstract class Frontend extends Script_Handler {
 	/** @var SV_WC_Payment_Gateway $gateway the gateway instance */
 	protected $gateway;
 
+	/** @var External_Checkout $handler the external checkout handler instance */
+	protected $handler;
+
 
 	/**
 	 * Constructs the class.
@@ -56,12 +59,13 @@ abstract class Frontend extends Script_Handler {
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the gateway plugin instance
 	 * @param SV_WC_Payment_Gateway $gateway the gateway instance
+	 * @param External_Checkout the handler instance
 	 */
-	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, SV_WC_Payment_Gateway $gateway ) {
+	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, SV_WC_Payment_Gateway $gateway, External_Checkout $handler ) {
 
-		$this->plugin = $plugin;
-
+		$this->plugin  = $plugin;
 		$this->gateway = $gateway;
+		$this->handler = $handler;
 
 		parent::__construct();
 	}
