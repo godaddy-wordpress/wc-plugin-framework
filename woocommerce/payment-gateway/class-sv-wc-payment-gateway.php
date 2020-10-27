@@ -512,7 +512,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	protected function enqueue_gateway_assets() {
 
 		$handle = $this->get_gateway_js_handle();
-		$js_path   = $this->get_plugin()->get_plugin_path() . '/assets/dist/frontend/' . $handle . '.js';
+		$js_path   = $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/' . $handle . '.min.js';
 		$css_path  = $this->get_plugin()->get_plugin_path() . '/assets/css/frontend/' . $handle . '.min.css';
 
 		// JS
