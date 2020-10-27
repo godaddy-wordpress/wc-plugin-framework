@@ -518,7 +518,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		// JS
 		if ( is_readable( $js_path ) ) {
 
-			$js_url = $this->get_plugin()->get_plugin_url() . '/assets/dist/frontend/' . $handle . '.js';
+			$js_url = $this->get_plugin()->get_plugin_url() . '/assets/js/frontend/' . $handle . '.min.js';
 
 			/**
 			 * Concrete Payment Gateway JS URL
