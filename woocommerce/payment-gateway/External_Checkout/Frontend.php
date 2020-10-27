@@ -413,7 +413,7 @@ abstract class Frontend extends Script_Handler {
 	 *
 	 * @since 5.10.0
 	 *
-	 * @return Google_Pay|\SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Apple_Pay
+	 * @return External_Checkout
 	 */
 	protected function get_handler()  {
 
