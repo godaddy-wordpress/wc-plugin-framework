@@ -573,13 +573,11 @@ class Google_Pay extends External_Checkout {
 	 */
 	public function set_customer_taxable_address( $address ) {
 
-		$billing_country = WC()->customer->get_billing_country();
-
 		// set to the shipping address provided by Apple Pay if:
 		// 1. billing is not available
 		// 2. shipping is available
 		// 3. taxes aren't configured to use the shop base
-		if ( ! $billing_country && WC()->customer->get_shipping_country() && $address[0] !== WC()->countries->get_base_country() ) {
+		if ( empty( WC()->customer->get_billing_postcode() ) && WC()->customer->get_shipping_postcode() && 'base' !== get_option( 'woocommerce_tax_based_on' ) ) {
 
 			$address = [
 				WC()->customer->get_shipping_country(),
