@@ -65,6 +65,10 @@ class Google_Pay extends External_Checkout {
 		$this->id = 'google_pay';
 
 		parent::__construct( $plugin );
+
+		if ( $this->is_available() ) {
+			add_filter( 'woocommerce_customer_taxable_address', [ $this, 'set_customer_taxable_address' ] );
+		}
 	}
 
 
@@ -549,6 +553,43 @@ class Google_Pay extends External_Checkout {
 	public function store_payment_response( $data ) {
 
 		WC()->session->set( 'google_pay_payment_response', $data );
+	}
+
+
+	/**
+	 * Filters and sets the customer's taxable address.
+	 *
+	 * This is necessary because Google Pay doesn't ever provide a billing
+	 * address until after payment is complete. If the shop is set to calculate
+	 * tax based on the billing address, we need to use the shipping address
+	 * to at least get some rates for new customers.
+	 *
+	 * @internal
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param array $address taxable address
+	 * @return array
+	 */
+	public function set_customer_taxable_address( $address ) {
+
+		$billing_country = WC()->customer->get_billing_country();
+
+		// set to the shipping address provided by Apple Pay if:
+		// 1. billing is not available
+		// 2. shipping is available
+		// 3. taxes aren't configured to use the shop base
+		if ( ! $billing_country && WC()->customer->get_shipping_country() && $address[0] !== WC()->countries->get_base_country() ) {
+
+			$address = [
+				WC()->customer->get_shipping_country(),
+				WC()->customer->get_shipping_state(),
+				WC()->customer->get_shipping_postcode(),
+				WC()->customer->get_shipping_city(),
+			];
+		}
+
+		return $address;
 	}
 
 
