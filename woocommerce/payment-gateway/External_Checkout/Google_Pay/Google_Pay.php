@@ -443,7 +443,9 @@ class Google_Pay extends External_Checkout {
 			// from here on out, it's up to the gateway to not screw things up.
 			$order->add_order_note( __( 'Google Pay payment authorized.', 'woocommerce-plugin-framework' ) );
 
-			if ( ! empty( $billing_address_data = $payment_data['paymentMethodData']['info']['billingAddress'] ) ) {
+			if ( ! empty( $payment_data['paymentMethodData']['info']['billingAddress'] ) ) {
+
+				$billing_address_data = $payment_data['paymentMethodData']['info']['billingAddress'];
 
 				if ( ! empty( $billing_address_data['name'] ) ) {
 					$first_name = strstr( $billing_address_data['name'], ' ', true );
@@ -468,7 +470,9 @@ class Google_Pay extends External_Checkout {
 
 			$order->set_billing_email( isset( $payment_data['email'] ) ? $payment_data['email'] : '' );
 
-			if ( ! empty( $shipping_address_data = $payment_data['shippingAddress'] ) ) {
+			if ( ! empty( $payment_data['shippingAddress'] ) ) {
+
+				$shipping_address_data = $payment_data['shippingAddress'];
 
 				if ( ! empty( $shipping_address_data['name'] ) ) {
 					$first_name = strstr( $shipping_address_data['name'], ' ', true );
