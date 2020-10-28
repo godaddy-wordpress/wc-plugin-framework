@@ -573,7 +573,7 @@ class Google_Pay extends External_Checkout {
 	 */
 	public function set_customer_taxable_address( $address ) {
 
-		// set to the shipping address provided by Apple Pay if:
+		// set to the shipping address provided by Google Pay if:
 		// 1. billing is not available
 		// 2. shipping is available
 		// 3. taxes aren't configured to use the shop base
