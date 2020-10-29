@@ -408,6 +408,19 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
+	 * Gets the IDs of sibling gateways that this gateway can inherit settings from.
+	 *
+	 * @since 5.10.0-dev.1
+	 *
+	 * @return array
+	 */
+	protected function get_ids_of_gateways_to_inherit_settings_from() {
+
+		return array_diff( $this->get_plugin()->get_gateway_ids(), [ $this->get_id() ] );
+	}
+
+
+	/**
 	 * Enqueue the necessary scripts & styles for the gateway, including the
 	 * payment form assets (if supported) and any gateway-specific assets.
 	 *
