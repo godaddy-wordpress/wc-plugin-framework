@@ -171,7 +171,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 
 		wp_enqueue_style( "$handle-v5_10_0", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array( 'dashicons' ), SV_WC_Plugin::VERSION );
 
-		wp_enqueue_script( "$handle-v5_10_0", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', array( 'jquery-tiptip', 'jquery' ), SV_WC_Plugin::VERSION );
+		wp_enqueue_script( "$handle-v5_10_0", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-tiptip', 'jquery' ), SV_WC_Plugin::VERSION );
 	}
 
 
