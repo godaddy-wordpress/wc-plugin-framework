@@ -560,7 +560,7 @@ class SV_WC_Helper {
 		$virtual_products = wc_get_products( [
 			'virtual' => true,
 			'status'  => 'publish',
-			'limit'   => - 1,
+			'limit'   => 1,
 		] );
 
 		return sizeof( $virtual_products ) > 0;
