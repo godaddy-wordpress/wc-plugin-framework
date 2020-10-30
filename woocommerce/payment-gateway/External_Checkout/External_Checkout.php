@@ -105,6 +105,18 @@ abstract class External_Checkout {
 
 
 	/**
+	 * Checks if the external checkout provides the customer billing address to WC before payment confirmation.
+	 *
+	 * Each external checkout handler should implement this method according to the external checkout behavior.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return bool
+	 */
+	abstract public function is_billing_address_available_before_payment();
+
+
+	/**
 	 * Gets the configured display locations.
 	 *
 	 * @since 5.10.0

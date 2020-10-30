@@ -107,6 +107,20 @@ class Google_Pay extends External_Checkout {
 
 
 	/**
+	 * Checks if the external checkout provides the customer billing address to WC before payment confirmation.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return bool
+	 */
+	public function is_billing_address_available_before_payment() {
+
+		// Google Pay does not provide billing information until the payment is confirmed
+		return false;
+	}
+
+
+	/**
 	 * Gets Google transaction info based on WooCommerce cart or product data.
 	 *
 	 * @since 5.10.0

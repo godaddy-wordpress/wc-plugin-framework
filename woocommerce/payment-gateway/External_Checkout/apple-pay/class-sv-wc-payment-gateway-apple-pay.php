@@ -106,6 +106,20 @@ class SV_WC_Payment_Gateway_Apple_Pay extends Payment_Gateway\External_Checkout\
 
 
 	/**
+	 * Checks if the external checkout provides the customer billing address to WC before payment confirmation.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return bool
+	 */
+	public function is_billing_address_available_before_payment() {
+
+		// Apple Pay does not provide billing information until the payment is confirmed
+		return false;
+	}
+
+
+	/**
 	 * Processes the payment after an Apple Pay authorization.
 	 *
 	 * This method creates a new order and calls the gateway for processing.
