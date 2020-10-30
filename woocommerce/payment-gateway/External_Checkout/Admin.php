@@ -424,6 +424,14 @@ abstract class Admin {
 
 		$warnings = [];
 
+		if ( $this->should_display_shipping_based_tax_notice() ) {
+			$warnings[] = $this->get_shipping_based_tax_notice();
+		}
+
+		if ( $this->should_display_billing_based_tax_notice() ) {
+			$warnings[] = $this->get_billing_based_tax_notice();
+		}
+
 		return $warnings;
 	}
 
