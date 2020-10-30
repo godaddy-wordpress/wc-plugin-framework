@@ -359,7 +359,7 @@ abstract class Admin {
 
 			$message = sprintf(
 				/* translators: Placeholders:  - external checkout label, %2$s - <strong> tag, %3$s - </strong> tag */
-				__( '%2$S%1$s Notice!%3$S', 'woocommerce-plugin-framework' ),
+				__( '%2$s%1$s Notice!%3$s', 'woocommerce-plugin-framework' ),
 				$this->handler->get_label(),
 				'<strong>', '</strong>',
 			);
