@@ -62,7 +62,8 @@ class Google_Pay extends External_Checkout {
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin ) {
 
-		$this->id = 'google_pay';
+		$this->id    = 'google_pay';
+		$this->label = __( 'Google Pay', 'woocommerce-plugin-framework' );
 
 		parent::__construct( $plugin );
 

@@ -42,6 +42,9 @@ abstract class External_Checkout {
 	/** @var string external checkout ID */
 	protected $id;
 
+	/** @var string external checkout human-readable label (used in notices and log entries) */
+	protected $label;
+
 	/** @var SV_WC_Payment_Gateway_Plugin the plugin instance */
 	protected $plugin;
 
