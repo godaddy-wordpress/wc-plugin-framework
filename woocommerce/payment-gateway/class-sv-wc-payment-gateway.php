@@ -384,7 +384,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	protected function load_shared_settings() {
 
 		// get any other sibling gateways
-		$other_gateway_ids = array_diff( $this->get_plugin()->get_gateway_ids(), array( $this->get_id() ) );
+		$other_gateway_ids = $this->get_ids_of_gateways_to_inherit_settings_from();
 
 		// determine if any sibling gateways have any configured shared settings
 		foreach ( $other_gateway_ids as $other_gateway_id ) {
@@ -407,6 +407,19 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				}
 			}
 		}
+	}
+
+
+	/**
+	 * Gets the IDs of sibling gateways that this gateway can inherit settings from.
+	 *
+	 * @since 5.10.0-dev.1
+	 *
+	 * @return array
+	 */
+	protected function get_ids_of_gateways_to_inherit_settings_from() {
+
+		return array_diff( $this->get_plugin()->get_gateway_ids(), [ $this->get_id() ] );
 	}
 
 
@@ -1395,7 +1408,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	protected function add_shared_settings_form_fields( $form_fields ) {
 
 		// get any sibling gateways
-		$other_gateway_ids                  = array_diff( $this->get_plugin()->get_gateway_ids(), array( $this->get_id() ) );
+		$other_gateway_ids                  = $this->get_ids_of_gateways_to_inherit_settings_from();
 		$configured_other_gateway_ids       = array();
 		$inherit_settings_other_gateway_ids = array();
 
