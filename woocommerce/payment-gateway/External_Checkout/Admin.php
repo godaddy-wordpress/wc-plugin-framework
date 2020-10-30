@@ -385,7 +385,7 @@ abstract class Admin {
 	 *
 	 * @return string[] error messages
 	 */
-	public function get_configuration_errors() {
+	protected function get_configuration_errors() {
 
 		$errors = [];
 
@@ -420,7 +420,7 @@ abstract class Admin {
 	 *
 	 * @return string[] error messages
 	 */
-	public function get_configuration_warnings() {
+	protected function get_configuration_warnings() {
 
 		$warnings = [];
 

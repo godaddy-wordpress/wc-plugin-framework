@@ -219,7 +219,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin extends Admin {
 	 *
 	 * @return string[] error messages
 	 */
-	public function get_configuration_errors() {
+	protected function get_configuration_errors() {
 
 		$errors = parent::get_configuration_errors();
 
