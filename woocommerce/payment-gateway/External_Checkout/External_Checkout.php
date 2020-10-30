@@ -42,6 +42,9 @@ abstract class External_Checkout {
 	/** @var string external checkout ID */
 	protected $id;
 
+	/** @var string external checkout human-readable label (used in notices and log entries) */
+	protected $label;
+
 	/** @var SV_WC_Payment_Gateway_Plugin the plugin instance */
 	protected $plugin;
 
@@ -102,6 +105,18 @@ abstract class External_Checkout {
 
 
 	/**
+	 * Checks if the external checkout provides the customer billing address to WC before payment confirmation.
+	 *
+	 * Each external checkout handler should implement this method according to the external checkout behavior.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return bool
+	 */
+	abstract public function is_billing_address_available_before_payment();
+
+
+	/**
 	 * Gets the configured display locations.
 	 *
 	 * @since 5.10.0
@@ -130,10 +145,8 @@ abstract class External_Checkout {
 			return;
 		}
 
-		$prefix = ucwords( str_replace( '_', ' ', $this->id ) );
-
 		if ( $gateway->debug_log() ) {
-			$gateway->get_plugin()->log( "[$prefix] $message", $gateway->get_id() );
+			$gateway->get_plugin()->log( "[{$this->label}] $message", $gateway->get_id() );
 		}
 	}
 
@@ -296,6 +309,19 @@ abstract class External_Checkout {
 	public function get_plugin() {
 
 		return $this->plugin;
+	}
+
+
+	/**
+	 * Gets the external checkout label.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return string
+	 */
+	public function get_label() {
+
+		return $this->label;
 	}
 
 

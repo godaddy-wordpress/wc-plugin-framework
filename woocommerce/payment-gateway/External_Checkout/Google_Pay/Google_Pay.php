@@ -62,7 +62,8 @@ class Google_Pay extends External_Checkout {
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin ) {
 
-		$this->id = 'google_pay';
+		$this->id    = 'google_pay';
+		$this->label = __( 'Google Pay', 'woocommerce-plugin-framework' );
 
 		parent::__construct( $plugin );
 
@@ -102,6 +103,20 @@ class Google_Pay extends External_Checkout {
 	protected function init_frontend() {
 
 		$this->frontend = new Frontend( $this->get_plugin(), $this );
+	}
+
+
+	/**
+	 * Checks if the external checkout provides the customer billing address to WC before payment confirmation.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return bool
+	 */
+	public function is_billing_address_available_before_payment() {
+
+		// Google Pay does not provide billing information until the payment is confirmed
+		return false;
 	}
 
 

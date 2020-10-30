@@ -74,6 +74,9 @@ abstract class Admin {
 		if ( ! has_action( 'woocommerce_admin_field_static' ) ) {
 			add_action( 'woocommerce_admin_field_static', [ $this, 'render_static_setting' ] );
 		}
+
+		// add admin notices for configuration issues
+		add_action( 'admin_footer', [ $this, 'add_admin_notices' ], 10 );
 	}
 
 
@@ -285,6 +288,192 @@ abstract class Admin {
 			'cart'     => __( 'Cart', 'woocommerce-plugin-framework' ),
 			'checkout' => __( 'Checkout', 'woocommerce-plugin-framework' ),
 		];
+	}
+
+
+	/**
+	 * Adds admin notices for configuration issues.
+	 *
+	 * @since 5.10.0
+	 */
+	public function add_admin_notices() {
+
+		// if the feature is not enabled, bail
+		if ( ! $this->handler->is_enabled() ) {
+			return;
+		}
+
+		// if not on the settings screen, bail
+		if ( ! $this->is_settings_screen() ) {
+			return;
+		}
+
+		$this->add_configuration_errors_notice();
+
+		$this->add_configuration_warnings_notices();
+	}
+
+
+	/**
+	 * Adds one error notice for all configuration options that need attention.
+	 *
+	 * @since 5.10.0
+	 */
+	protected function add_configuration_errors_notice() {
+
+		$errors = $this->get_configuration_errors();
+
+		if ( ! empty( $errors ) ) {
+
+			$message = sprintf(
+				/* translators: Placeholders:  - external checkout label, %2$s - <strong> tag, %3$s - </strong> tag */
+				__( '%2$S%1$s is disabled.%3$S', 'woocommerce-plugin-framework' ),
+				$this->handler->get_label(),
+				'<strong>', '</strong>'
+			);
+
+			if ( 1 === count( $errors ) ) {
+				$message .= ' ' . current( $errors );
+			} else {
+				$message .= '<ul><li>' . implode( '</li><li>', $errors ) . '</li></ul>';
+			}
+
+			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $this->section_id . '-configuration-issue', [
+				'notice_class' => 'error',
+				'dismissible'  => false,
+			] );
+		}
+	}
+
+
+	/**
+	 * Adds warning notices for each configuration option that may need attention.
+	 *
+	 * @since 5.10.0
+	 */
+	protected function add_configuration_warnings_notices() {
+
+		if ( $this->should_display_shipping_based_tax_notice() ) {
+
+			$message = $this->get_shipping_based_tax_notice();
+
+			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $this->section_id . '-shipping-based-tax', [
+				'notice_class' => 'notice-warning',
+				'dismissible'  => true,
+			] );
+		}
+
+		if ( $this->should_display_billing_based_tax_notice() ) {
+			$message = $this->get_billing_based_tax_notice();
+
+			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $this->section_id . '-billing-based-tax', [
+				'notice_class' => 'notice-warning',
+				'dismissible'  => true,
+			] );
+		}
+	}
+
+
+	/**
+	 * Gets the error messages for configuration issues that need attention.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return string[] error messages
+	 */
+	protected function get_configuration_errors() {
+
+		$errors = [];
+
+		// currency notice
+		$accepted_currencies = $this->handler->get_accepted_currencies();
+
+		if ( ! empty( $accepted_currencies ) && ! in_array( get_woocommerce_currency(), $accepted_currencies, true ) ) {
+
+			$errors[] = sprintf(
+				/* translators: Placeholders: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag, %5$s - external checkout label */
+				_n(
+					'Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s.',
+					'Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept one of %1$s to enable %4$s.',
+					count( $accepted_currencies ),
+					'woocommerce-plugin-framework'
+				),
+				'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
+				'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=general' ) ) . '">',
+				'</a>',
+				$this->handler->get_label()
+			);
+		}
+
+		return $errors;
+	}
+
+
+	/**
+	 * Checks if the shipping based tax notice should be displayed.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return bool
+	 */
+	protected function should_display_shipping_based_tax_notice() {
+
+		return 'shipping' === get_option( 'woocommerce_tax_based_on' ) &&
+			   SV_WC_Helper::shop_has_virtual_products();
+	}
+
+
+	/**
+	 * Gets the shipping based tax notice text.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return string
+	 */
+	protected function get_shipping_based_tax_notice() {
+
+		return sprintf(
+			/** translators: Placeholders: %1$s - external checkout label, %2$s - <a> tag, %3$s - </a> tag, %4$s - <strong> tag, %5$s - </strong> tag */
+			__( '%4$s%1$s Notice!%5$s Your store %2$scalculates taxes%3$s based on the shipping address, but %1$s %4$sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead.', 'woocommerce-plugin-framework' ),
+			$this->handler->get_label(),
+			'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=tax' ) ) . '">',
+			'</a>',
+			'<strong>', '</strong>'
+		);
+	}
+
+
+	/**
+	 * Checks if the billing based tax notice should be displayed.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return bool
+	 */
+	protected function should_display_billing_based_tax_notice() {
+
+		return 'billing' === get_option( 'woocommerce_tax_based_on' ) &&
+				! $this->handler->is_billing_address_available_before_payment();
+	}
+
+
+	/**
+	 * Gets the billing based tax notice text.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return string
+	 */
+	protected function get_billing_based_tax_notice() {
+
+		return sprintf(
+			/** translators: Placeholders: %1$s - external checkout label, %2$s - <a> tag, %3$s - </a> tag, %4$s - <strong> tag, %5$s - </strong> tag */
+			__( '%4$s%1$s Notice!%5$s Your store %2$scalculates taxes%3$s based on the billing address, but %1$s %4$sdoes not%5$s share the customer billing address with your store before payment. These orders will have their taxes calculated based on the shipping address (or shop address, for orders with only virtual products).', 'woocommerce-plugin-framework' ),
+			$this->handler->get_label(),
+			'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=tax' ) ) . '">',
+			'</a>',
+			'<strong>', '</strong>'
+		);
 	}
 
 

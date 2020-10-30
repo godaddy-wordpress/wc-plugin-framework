@@ -549,6 +549,25 @@ class SV_WC_Helper {
 
 
 	/**
+	 * Determines if a shop has any published virtual products.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return bool
+	 */
+	public static function shop_has_virtual_products() {
+
+		$virtual_products = wc_get_products( [
+			'virtual' => true,
+			'status'  => 'publish',
+			'limit'   => 1,
+		] );
+
+		return sizeof( $virtual_products ) > 0;
+	}
+
+
+	/**
 	 * Safely gets and trims data from $_POST.
 	 *
 	 * @since 3.0.0

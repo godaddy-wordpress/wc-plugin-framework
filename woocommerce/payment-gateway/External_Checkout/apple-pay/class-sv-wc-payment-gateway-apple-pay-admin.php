@@ -60,20 +60,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin extends Admin {
 
 
 	/**
-	 * Sets up the necessary hooks.
-	 *
-	 * @since 5.10.0
-	 */
-	protected function add_hooks() {
-
-		parent::add_hooks();
-
-		// add admin notices for configuration options that need attention
-		add_action( 'admin_footer', [ $this, 'add_admin_notices' ], 10 );
-	}
-
-
-	/**
 	 * Gets the name of the Apple Pay settings section.
 	 *
 	 * @since 5.10.0
@@ -227,46 +213,19 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin extends Admin {
 
 
 	/**
-	 * Adds admin notices for configuration options that need attention.
+	 * Gets the error messages for configuration issues that need attention.
 	 *
-	 * @since 4.7.0
+	 * @since 5.10.0
+	 *
+	 * @return string[] error messages
 	 */
-	public function add_admin_notices() {
+	protected function get_configuration_errors() {
 
-		// if the feature is not enabled, bail
-		if ( ! $this->handler->is_enabled() ) {
-			return;
-		}
-
-		// if not on the settings screen, bail
-		if ( ! $this->is_settings_screen() ) {
-			return;
-		}
-
-		$errors = array();
+		$errors = parent::get_configuration_errors();
 
 		// HTTPS notice
 		if ( ! wc_site_is_https() ) {
 			$errors[] = __( 'Your site must be served over HTTPS with a valid SSL certificate.', 'woocommerce-plugin-framework' );
-		}
-
-		// Currency notice
-		$accepted_currencies = $this->handler->get_accepted_currencies();
-
-		if ( ! empty( $accepted_currencies ) && ! in_array( get_woocommerce_currency(), $accepted_currencies, true ) ) {
-
-			$errors[] = sprintf(
-				/* translators: Placeholders: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag */
-				_n(
-					'Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable Apple Pay.',
-					'Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept one of %1$s to enable Apple Pay.',
-					count( $accepted_currencies ),
-					'woocommerce-plugin-framework'
-				),
-				'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
-				'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=general' ) ) . '">',
-				'</a>'
-			);
 		}
 
 		// bad cert config notice
@@ -281,21 +240,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin extends Admin {
 			);
 		}
 
-		if ( ! empty( $errors ) ) {
-
-			$message = '<strong>' . __( 'Apple Pay is disabled.', 'woocommerce-plugin-framework' ) . '</strong>';
-
-			if ( 1 === count( $errors ) ) {
-				$message .= ' ' . current( $errors );
-			} else {
-				$message .= '<ul><li>' . implode( '</li><li>', $errors ) . '</li></ul>';
-			}
-
-			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, 'apple-pay-https-required', array(
-				'notice_class' => 'error',
-				'dismissible'  => false,
-			) );
-		}
+		return $errors;
 	}
 
 
