@@ -470,7 +470,7 @@ abstract class Admin {
 
 
 	/**
-	 * Checks if the  billing based tax notice should be displayed.
+	 * Checks if the billing based tax notice should be displayed.
 	 *
 	 * @since 5.10.0
 	 *
@@ -478,7 +478,8 @@ abstract class Admin {
 	 */
 	protected function should_display_billing_based_tax_notice() {
 
-		return false;
+		return 'billing' === get_option( 'woocommerce_tax_based_on' ) &&
+				! $this->handler->is_billing_address_available_before_payment();
 	}
 
 
