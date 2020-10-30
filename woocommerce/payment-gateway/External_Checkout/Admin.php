@@ -358,7 +358,7 @@ abstract class Admin {
 			$message = $this->get_shipping_based_tax_notice();
 
 			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $this->section_id . '-shipping-based-tax', [
-				'notice_class' => 'warning',
+				'notice_class' => 'notice-warning',
 				'dismissible'  => true,
 			] );
 		}
@@ -367,7 +367,7 @@ abstract class Admin {
 			$message = $this->get_billing_based_tax_notice();
 
 			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $this->section_id . '-billing-based-tax', [
-				'notice_class' => 'warning',
+				'notice_class' => 'notice-warning',
 				'dismissible'  => true,
 			] );
 		}
