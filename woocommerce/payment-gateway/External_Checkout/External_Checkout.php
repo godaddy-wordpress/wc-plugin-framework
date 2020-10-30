@@ -300,6 +300,19 @@ abstract class External_Checkout {
 	}
 
 
+	/**
+	 * Gets the external checkout label.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return string
+	 */
+	public function get_label() {
+
+		return $this->label;
+	}
+
+
 }
 
 endif;

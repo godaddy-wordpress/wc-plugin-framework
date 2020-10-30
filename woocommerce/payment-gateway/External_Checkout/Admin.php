@@ -74,6 +74,9 @@ abstract class Admin {
 		if ( ! has_action( 'woocommerce_admin_field_static' ) ) {
 			add_action( 'woocommerce_admin_field_static', [ $this, 'render_static_setting' ] );
 		}
+
+		// add admin notices for configuration issues
+		add_action( 'admin_footer', [ $this, 'add_admin_notices' ], 10 );
 	}
 
 
@@ -285,6 +288,94 @@ abstract class Admin {
 			'cart'     => __( 'Cart', 'woocommerce-plugin-framework' ),
 			'checkout' => __( 'Checkout', 'woocommerce-plugin-framework' ),
 		];
+	}
+
+
+	/**
+	 * Adds admin notices for configuration issues.
+	 *
+	 * @since 5.10.0
+	 */
+	public function add_admin_notices() {
+
+		// if the feature is not enabled, bail
+		if ( ! $this->handler->is_enabled() ) {
+			return;
+		}
+
+		// if not on the settings screen, bail
+		if ( ! $this->is_settings_screen() ) {
+			return;
+		}
+
+		$this->add_configuration_errors_notices();
+	}
+
+
+	/**
+	 * Adds error notices for configuration options that need attention.
+	 *
+	 * @since 5.10.0
+	 */
+	protected function add_configuration_errors_notices() {
+
+		$errors = $this->get_configuration_errors();
+
+		if ( ! empty( $errors ) ) {
+
+			$message = sprintf(
+				/* translators: Placeholders:  - external checkout label, %2$s - <strong> tag, %3$s - </strong> tag */
+				__( '%2$S%1$s is disabled.%3$S', 'woocommerce-plugin-framework' ),
+				$this->handler->get_label(),
+				'<strong>', '</strong>',
+			);
+
+			if ( 1 === count( $errors ) ) {
+				$message .= ' ' . current( $errors );
+			} else {
+				$message .= '<ul><li>' . implode( '</li><li>', $errors ) . '</li></ul>';
+			}
+
+			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $this->section_id . '-configuration-issue', [
+				'notice_class' => 'error',
+				'dismissible'  => false,
+			] );
+		}
+	}
+
+
+	/**
+	 * Gets the error messages for configuration issues that need attention.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return string[] error messages
+	 */
+	public function get_configuration_errors() {
+
+		$errors = [];
+
+		// currency notice
+		$accepted_currencies = $this->handler->get_accepted_currencies();
+
+		if ( ! empty( $accepted_currencies ) && ! in_array( get_woocommerce_currency(), $accepted_currencies, true ) ) {
+
+			$errors[] = sprintf(
+				/* translators: Placeholders: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag, %5$s - external checkout label */
+				_n(
+					'Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %5$s.',
+					'Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept one of %1$s to enable %5$s.',
+					count( $accepted_currencies ),
+					'woocommerce-plugin-framework'
+				),
+				'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
+				'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=general' ) ) . '">',
+				'</a>',
+				$this->handler->get_label(),
+			);
+		}
+
+		return $errors;
 	}
 
 
