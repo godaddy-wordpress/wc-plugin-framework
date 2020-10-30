@@ -461,7 +461,7 @@ abstract class Admin {
 
 		return sprintf(
 			/** translators: Placeholders: %1$s - external checkout label, %2$s - <a> tag, %3$s - </a> tag, %4$s - <strong> tag, %5$s - </strong> tag */
-			__( 'Your store %2$scalculates taxes%3$s based on the shipping address, but %1$s $4%sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead.', 'woocommerce-plugin-framework' ),
+			__( 'Your store %2$scalculates taxes%3$s based on the shipping address, but %1$s %4$sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead.', 'woocommerce-plugin-framework' ),
 			$this->handler->get_label(),
 			'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=tax' ) ) . '">',
 			'</a>',
@@ -495,7 +495,7 @@ abstract class Admin {
 
 		return sprintf(
 			/** translators: Placeholders: %1$s - external checkout label, %2$s - <a> tag, %3$s - </a> tag, %4$s - <strong> tag, %5$s - </strong> tag */
-			__( 'Your store %2$scalculates taxes%3$s based on the billing address, but %1$s $4%sdoes not%5$s share the customer billing address with your store before payment. These orders will have their taxes calculated based on the shipping address (or shop address, for orders with only virtual products).', 'woocommerce-plugin-framework' ),
+			__( 'Your store %2$scalculates taxes%3$s based on the billing address, but %1$s %4$sdoes not%5$s share the customer billing address with your store before payment. These orders will have their taxes calculated based on the shipping address (or shop address, for orders with only virtual products).', 'woocommerce-plugin-framework' ),
 			$this->handler->get_label(),
 			'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=tax' ) ) . '">',
 			'</a>',
