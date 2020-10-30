@@ -393,8 +393,8 @@ abstract class Admin {
 			$errors[] = sprintf(
 				/* translators: Placeholders: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag, %5$s - external checkout label */
 				_n(
-					'Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %5$s.',
-					'Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept one of %1$s to enable %5$s.',
+					'Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s.',
+					'Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept one of %1$s to enable %4$s.',
 					count( $accepted_currencies ),
 					'woocommerce-plugin-framework'
 				),
