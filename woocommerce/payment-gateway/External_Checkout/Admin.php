@@ -445,7 +445,8 @@ abstract class Admin {
 	 */
 	protected function should_display_shipping_based_tax_notice() {
 
-		return false;
+		return 'shipping' === get_option( 'woocommerce_tax_based_on' ) &&
+			   SV_WC_Helper::shop_has_virtual_products();
 	}
 
 
