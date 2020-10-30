@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2020.nn.nn - version 5.10.0
+ * Feature - Add Google Pay support
 
 2020.10.09 - version 5.9.0
  * Feature - Add helper method to detect whether the current request is a REST API request
