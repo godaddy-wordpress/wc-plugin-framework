@@ -308,18 +308,18 @@ abstract class Admin {
 			return;
 		}
 
-		$this->add_configuration_errors_notices();
+		$this->add_configuration_errors_notice();
 
 		$this->add_configuration_warnings_notices();
 	}
 
 
 	/**
-	 * Adds error notices for configuration options that need attention.
+	 * Adds one error notice for all configuration options that need attention.
 	 *
 	 * @since 5.10.0
 	 */
-	protected function add_configuration_errors_notices() {
+	protected function add_configuration_errors_notice() {
 
 		$errors = $this->get_configuration_errors();
 
@@ -347,30 +347,26 @@ abstract class Admin {
 
 
 	/**
-	 * Adds warning notices for configuration options that may need attention.
+	 * Adds warning notices for each configuration option that may need attention.
 	 *
 	 * @since 5.10.0
 	 */
 	protected function add_configuration_warnings_notices() {
 
-		$warnings = $this->get_configuration_warnings();
+		if ( $this->should_display_shipping_based_tax_notice() ) {
 
-		if ( ! empty( $warnings ) ) {
+			$message = $this->get_shipping_based_tax_notice();
 
-			$message = sprintf(
-				/* translators: Placeholders:  - external checkout label, %2$s - <strong> tag, %3$s - </strong> tag */
-				__( '%2$s%1$s Notice!%3$s', 'woocommerce-plugin-framework' ),
-				$this->handler->get_label(),
-				'<strong>', '</strong>',
-			);
+			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $this->section_id . '-shipping-based-tax', [
+				'notice_class' => 'warning',
+				'dismissible'  => true,
+			] );
+		}
 
-			if ( 1 === count( $warnings ) ) {
-				$message .= ' ' . current( $warnings );
-			} else {
-				$message .= '<ul><li>' . implode( '</li><li>', $warnings ) . '</li></ul>';
-			}
+		if ( $this->should_display_billing_based_tax_notice() ) {
+			$message = $this->get_billing_based_tax_notice();
 
-			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $this->section_id . '-configuration-issue-notice', [
+			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $this->section_id . '-billing-based-tax', [
 				'notice_class' => 'warning',
 				'dismissible'  => true,
 			] );
@@ -414,29 +410,6 @@ abstract class Admin {
 
 
 	/**
-	 * Gets the notice messages for configuration issues that may need attention.
-	 *
-	 * @since 5.10.0
-	 *
-	 * @return string[] error messages
-	 */
-	protected function get_configuration_warnings() {
-
-		$warnings = [];
-
-		if ( $this->should_display_shipping_based_tax_notice() ) {
-			$warnings[] = $this->get_shipping_based_tax_notice();
-		}
-
-		if ( $this->should_display_billing_based_tax_notice() ) {
-			$warnings[] = $this->get_billing_based_tax_notice();
-		}
-
-		return $warnings;
-	}
-
-
-	/**
 	 * Checks if the shipping based tax notice should be displayed.
 	 *
 	 * @since 5.10.0
@@ -461,7 +434,7 @@ abstract class Admin {
 
 		return sprintf(
 			/** translators: Placeholders: %1$s - external checkout label, %2$s - <a> tag, %3$s - </a> tag, %4$s - <strong> tag, %5$s - </strong> tag */
-			__( 'Your store %2$scalculates taxes%3$s based on the shipping address, but %1$s %4$sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead.', 'woocommerce-plugin-framework' ),
+			__( '%4$s%1$s Notice!%5$s Your store %2$scalculates taxes%3$s based on the shipping address, but %1$s %4$sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead.', 'woocommerce-plugin-framework' ),
 			$this->handler->get_label(),
 			'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=tax' ) ) . '">',
 			'</a>',
@@ -495,7 +468,7 @@ abstract class Admin {
 
 		return sprintf(
 			/** translators: Placeholders: %1$s - external checkout label, %2$s - <a> tag, %3$s - </a> tag, %4$s - <strong> tag, %5$s - </strong> tag */
-			__( 'Your store %2$scalculates taxes%3$s based on the billing address, but %1$s %4$sdoes not%5$s share the customer billing address with your store before payment. These orders will have their taxes calculated based on the shipping address (or shop address, for orders with only virtual products).', 'woocommerce-plugin-framework' ),
+			__( '%4$s%1$s Notice!%5$s Your store %2$scalculates taxes%3$s based on the billing address, but %1$s %4$sdoes not%5$s share the customer billing address with your store before payment. These orders will have their taxes calculated based on the shipping address (or shop address, for orders with only virtual products).', 'woocommerce-plugin-framework' ),
 			$this->handler->get_label(),
 			'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=tax' ) ) . '">',
 			'</a>',
