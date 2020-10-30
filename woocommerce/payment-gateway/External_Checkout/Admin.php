@@ -309,6 +309,8 @@ abstract class Admin {
 		}
 
 		$this->add_configuration_errors_notices();
+
+		$this->add_configuration_warnings_notices();
 	}
 
 
@@ -339,6 +341,38 @@ abstract class Admin {
 			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $this->section_id . '-configuration-issue', [
 				'notice_class' => 'error',
 				'dismissible'  => false,
+			] );
+		}
+	}
+
+
+	/**
+	 * Adds warning notices for configuration options that may need attention.
+	 *
+	 * @since 5.10.0
+	 */
+	protected function add_configuration_warnings_notices() {
+
+		$warnings = $this->get_configuration_warnings();
+
+		if ( ! empty( $warnings ) ) {
+
+			$message = sprintf(
+				/* translators: Placeholders:  - external checkout label, %2$s - <strong> tag, %3$s - </strong> tag */
+				__( '%2$S%1$s Notice!%3$S', 'woocommerce-plugin-framework' ),
+				$this->handler->get_label(),
+				'<strong>', '</strong>',
+			);
+
+			if ( 1 === count( $warnings ) ) {
+				$message .= ' ' . current( $warnings );
+			} else {
+				$message .= '<ul><li>' . implode( '</li><li>', $warnings ) . '</li></ul>';
+			}
+
+			$this->handler->get_plugin()->get_admin_notice_handler()->add_admin_notice( $message, $this->section_id . '-configuration-issue-notice', [
+				'notice_class' => 'warning',
+				'dismissible'  => true,
 			] );
 		}
 	}
@@ -376,6 +410,21 @@ abstract class Admin {
 		}
 
 		return $errors;
+	}
+
+
+	/**
+	 * Gets the notice messages for configuration issues that may need attention.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return string[] error messages
+	 */
+	public function get_configuration_warnings() {
+
+		$warnings = [];
+
+		return $warnings;
 	}
 
 
