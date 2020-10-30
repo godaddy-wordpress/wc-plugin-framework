@@ -329,7 +329,7 @@ abstract class Admin {
 				/* translators: Placeholders:  - external checkout label, %2$s - <strong> tag, %3$s - </strong> tag */
 				__( '%2$S%1$s is disabled.%3$S', 'woocommerce-plugin-framework' ),
 				$this->handler->get_label(),
-				'<strong>', '</strong>',
+				'<strong>', '</strong>'
 			);
 
 			if ( 1 === count( $errors ) ) {
@@ -401,7 +401,7 @@ abstract class Admin {
 				'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
 				'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=general' ) ) . '">',
 				'</a>',
-				$this->handler->get_label(),
+				$this->handler->get_label()
 			);
 		}
 
