@@ -428,6 +428,58 @@ abstract class Admin {
 	}
 
 
+	/**
+	 * Checks if the shipping based tax notice should be displayed.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return bool
+	 */
+	protected function should_display_shipping_based_tax_notice() {
+
+		return false;
+	}
+
+
+	/**
+	 * Gets the shipping based tax notice text.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return string
+	 */
+	protected function get_shipping_based_tax_notice() {
+
+		return '';
+	}
+
+
+	/**
+	 * Checks if the  billing based tax notice should be displayed.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return bool
+	 */
+	protected function should_display_billing_based_tax_notice() {
+
+		return false;
+	}
+
+
+	/**
+	 * Gets the billing based tax notice text.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return string
+	 */
+	protected function get_billing_based_tax_notice() {
+
+		return '';
+	}
+
+
 }
 
 endif;
