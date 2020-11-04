@@ -653,12 +653,15 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0.0
 	 *
 	 * @param \WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response optional check transaction response
 	 * @return SV_WC_Payment_Gateway_API_Response the response
 	 * @throws SV_WC_Plugin_Exception network timeouts, etc
 	 */
-	protected function do_check_transaction( $order ) {
+	protected function do_check_transaction( $order, $response = null ) {
 
-		$response = $this->get_api()->check_debit( $order );
+		if ( is_null( $response ) ) {
+			$response = $this->get_api()->check_debit( $order );
+		}
 
 		// success! update order record
 		if ( $response->transaction_approved() ) {
