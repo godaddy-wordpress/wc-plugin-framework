@@ -653,12 +653,15 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0.0
 	 *
 	 * @param \WC_Order $order the order object
+	 * @param SV_WC_Payment_Gateway_API_Response $response optional check transaction response
 	 * @return SV_WC_Payment_Gateway_API_Response the response
 	 * @throws SV_WC_Plugin_Exception network timeouts, etc
 	 */
-	protected function do_check_transaction( $order ) {
+	protected function do_check_transaction( $order, $response = null ) {
 
-		$response = $this->get_api()->check_debit( $order );
+		if ( is_null( $response ) ) {
+			$response = $this->get_api()->check_debit( $order );
+		}
 
 		// success! update order record
 		if ( $response->transaction_approved() ) {
@@ -914,16 +917,20 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 
 	/**
-	 * Perform the transaction to add the customer's payment method to their
-	 * account
+	 * Performs the transaction to add the customer's payment method to their account.
 	 *
 	 * @since 4.0.0
+	 *
+	 * @param \WC_Order $order order object
+	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response optional payment token transaction response
 	 * @return array result with success/error message and request status (success/failure)
 	 * @throws SV_WC_Plugin_Exception
 	 */
-	protected function do_add_payment_method_transaction( \WC_Order $order ) {
+	protected function do_add_payment_method_transaction( \WC_Order $order, SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response = null ) {
 
-		$response = $this->get_api()->tokenize_payment_method( $order );
+		if ( is_null( $response ) ) {
+			$response = $this->get_api()->tokenize_payment_method( $order );
+		}
 
 		if ( $response->transaction_approved() ) {
 
