@@ -922,7 +922,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 4.0.0
 	 *
 	 * @param \WC_Order $order order object
-	 * @param \SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response optional payment token transaction response
+	 * @param SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response optional payment token transaction response
 	 * @return array result with success/error message and request status (success/failure)
 	 * @throws SV_WC_Plugin_Exception
 	 */
