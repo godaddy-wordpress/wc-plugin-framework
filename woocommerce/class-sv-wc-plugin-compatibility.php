@@ -318,11 +318,13 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * This checks both for WooCommerce v4.0+ and the underlying package availability.
 	 *
+	 * @since 5.6.0
+	 *
 	 * @return bool
 	 */
 	public static function is_enhanced_admin_available() {
 
-		return self::is_wc_version_gte( '4.0' ) && function_exists( 'wc_admin_url' ) && class_exists( '\\Automattic\\WooCommerce\\Admin\\Composer\\Package' ) && \Automattic\WooCommerce\Admin\Composer\Package::is_package_active();
+		return self::is_wc_version_gte( '4.0' ) && function_exists( 'wc_admin_url' );
 	}
 
 
