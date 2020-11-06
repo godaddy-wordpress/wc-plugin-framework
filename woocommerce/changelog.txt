@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2020.nn.nn - version 5.10.0
+2020.11.06 - version 5.10.0
  * Feature - Add Google Pay support
  * Tweak - Improve multiple gateway settings inheritance to allow for more than two gateways
  * Tweak - Add admin notices for tax configurations that are incompatible with Apple Pay
