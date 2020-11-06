@@ -33,7 +33,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Admin' ) ) :
 /**
  * Base class to set up a Payments settings screen, used by external checkout integrations.
  *
- * @since 5.10.0-dev.1
+ * @since 5.10.0
  */
 abstract class Admin {
 
@@ -45,7 +45,7 @@ abstract class Admin {
 	/**
 	 * Construct the class.
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 */
 	public function __construct() {
 
@@ -56,7 +56,7 @@ abstract class Admin {
 	/**
 	 * Sets up the necessary hooks.
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 */
 	protected function add_hooks() {
 
@@ -85,7 +85,7 @@ abstract class Admin {
 	 *
 	 * @internal
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param array $sections the existing sections
 	 * @return array
@@ -101,7 +101,7 @@ abstract class Admin {
 	/**
 	 * Gets the name of the settings section.
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return string
 	 */
@@ -111,7 +111,7 @@ abstract class Admin {
 	/**
 	 * Gets all of the combined settings.
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array $settings combined settings.
 	 */
@@ -121,7 +121,7 @@ abstract class Admin {
 	/**
 	 * Adds the definition for a Processing Gateway setting.
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param array $settings setting definitions
 	 * @return array
@@ -157,7 +157,7 @@ abstract class Admin {
 	/**
 	 * Gets the ID for the Processing Gateway setting.
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return string
 	 */
@@ -170,7 +170,7 @@ abstract class Admin {
 	/**
 	 * Gets an array IDs and names of payment gateways that declare support.
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array
 	 */
@@ -188,7 +188,7 @@ abstract class Admin {
 	/**
 	 * Gets the gateways that declare support.
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array the supporting gateways as `$gateway_id => \SV_WC_Payment_Gateway`
 	 */
@@ -200,7 +200,7 @@ abstract class Admin {
 	 *
 	 * @internal
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @global string $current_section current settings section.
 	 */
@@ -218,7 +218,7 @@ abstract class Admin {
 	 *
 	 * @internal
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @global string $current_section current settings section.
 	 */
@@ -236,7 +236,7 @@ abstract class Admin {
 	 *
 	 * This "setting" just displays simple text instead of a <select> with only one option.
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param array $setting
 	 */

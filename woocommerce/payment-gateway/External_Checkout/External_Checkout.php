@@ -34,7 +34,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\External_Checkout' ) ) :
 /**
  * Base class to set up an external checkout integration.
  *
- * @since 5.10.0-dev.1
+ * @since 5.10.0
  */
 abstract class External_Checkout {
 

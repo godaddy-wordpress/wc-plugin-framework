@@ -35,7 +35,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Orders' ) ) :
  *
  * @see \WC_Checkout
  *
- * @since 5.10.0-dev.1
+ * @since 5.10.0
  */
 class Orders {
 
@@ -43,7 +43,7 @@ class Orders {
 	/**
 	 * Creates an order from a cart.
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param \WC_Cart $cart cart object
 	 * @param array $order_data order data
@@ -99,7 +99,7 @@ class Orders {
 	/**
 	 * Gets the hash of the cart based on the cart contents.
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @param \WC_Cart $cart cart object
 	 * @return string
@@ -117,7 +117,7 @@ class Orders {
 	/**
 	 * Gets an order object for payment.
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @see \WC_Checkout::create_order()
 	 *

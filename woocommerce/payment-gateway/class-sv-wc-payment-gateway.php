@@ -413,7 +413,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Gets the IDs of sibling gateways that this gateway can inherit settings from.
 	 *
-	 * @since 5.10.0-dev.1
+	 * @since 5.10.0
 	 *
 	 * @return array
 	 */
