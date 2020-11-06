@@ -22,14 +22,16 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_9_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0;
 
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Note;
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\External_Checkout;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_9_0\\SV_WC_Payment_Gateway_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_Payment_Gateway_Plugin' ) ) :
 
 
 /**
@@ -102,6 +104,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 	/** @var SV_WC_Payment_Gateway_Apple_Pay the Apple Pay handler instance */
 	private $apple_pay;
+
+	/** @var Google_Pay the Google Pay handler instance */
+	private $google_pay;
 
 
 	/**
@@ -184,6 +189,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// apple pay feature
 		add_action( 'init', array( $this, 'maybe_init_apple_pay' ) );
+
+		// Google Pay feature
+		add_action( 'init', [ $this, 'maybe_init_google_pay' ] );
 
 		// TODO: move these to Subscriptions integration
 		if ( $this->is_subscriptions_active() ) {
@@ -294,13 +302,24 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( $payment_gateway_framework_path . '/Handlers/Abstract_Hosted_Payment_Handler.php' );
 		require_once( $payment_gateway_framework_path . '/Handlers/Capture.php' );
 
-		// apple pay
-		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay.php" );
-		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php" );
-		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php" );
-		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay-ajax.php" );
-		require_once( "{$payment_gateway_framework_path}/apple-pay/class-sv-wc-payment-gateway-apple-pay-orders.php" );
-		require_once( "{$payment_gateway_framework_path}/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-payment-response.php" );
+		// External Checkout
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/External_Checkout.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/Admin.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/Frontend.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/Orders.php" );
+
+		// Apple Pay
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-ajax.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-payment-response.php" );
+
+		// Google Pay
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/Google_Pay/Google_Pay.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/Google_Pay/Admin.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/Google_Pay/AJAX.php" );
+		require_once( "{$payment_gateway_framework_path}/External_Checkout/Google_Pay/Frontend.php" );
 
 		// payment tokens
 		require_once( $payment_gateway_framework_path . '/payment-tokens/class-sv-wc-payment-gateway-payment-token.php' );
@@ -494,6 +513,72 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	}
 
 
+	/** Google Pay *************************************************************/
+
+
+	/**
+	 * Initializes Google Pay if it's supported.
+	 *
+	 * @since 5.10.0
+	 */
+	public function maybe_init_google_pay() {
+
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.2' ) && $this->supports_google_pay() ) {
+			$this->google_pay = $this->build_google_pay_instance();
+		}
+	}
+
+
+	/**
+	 * Builds the Google Pay handler instance.
+	 *
+	 * Gateways can override this to define their own Google Pay class.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return Google_Pay
+	 */
+	protected function build_google_pay_instance() {
+
+		return new Google_Pay( $this );
+	}
+
+
+	/**
+	 * Gets the Google Pay handler instance.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return Google_Pay
+	 */
+	public function get_google_pay_instance() {
+
+		return $this->google_pay;
+	}
+
+
+	/**
+	 * Determines if this plugin has any gateways with Google Pay support.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return bool
+	 */
+	public function supports_google_pay() {
+
+		$is_supported = false;
+
+		foreach ( $this->get_gateways() as $gateway ) {
+
+			if ( $gateway->supports_google_pay() ) {
+				$is_supported = true;
+			}
+		}
+
+		return $is_supported;
+	}
+
+
 	/** Admin methods ******************************************************/
 
 
@@ -584,6 +669,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		$this->add_gateway_not_configured_notices();
 
 		$this->add_apple_pay_not_supported_notices();
+
+		$this->add_google_pay_not_supported_notices();
 	}
 
 
@@ -830,6 +917,30 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 					'</a>'
 				),
 				$this->get_id_dasherized() . '-apple-pay-requires-wc-version-3-2',
+				[ 'notice_class' => 'error' ]
+			);
+		}
+	}
+
+
+	/**
+	 * Adds notices about Google Pay not supported in the current WooCommerce version.
+	 *
+	 * @since 5.10.0
+	 */
+	protected function add_google_pay_not_supported_notices() {
+
+		if ( 'wc-settings' === SV_WC_Helper::get_requested_value( 'page' ) && SV_WC_Plugin_Compatibility::is_wc_version_lt( '3.2' ) && $this->supports_google_pay() ) {
+
+			$this->get_admin_notice_handler()->add_admin_notice(
+				sprintf(
+					/* translators: Placeholders: %1$s - plugin name, %2$s - opening <a> HTML link tag, %3$s - closing </a> HTML link tag */
+					__( 'Heads up! Google Pay for %1$s requires WooCommerce version 3.2 or greater. Please %2$supdate WooCommerce%3$s.', 'woocommerce-plugin-framework' ),
+					$this->get_plugin_name(),
+					'<a href="' . esc_url( admin_url( 'update-core.php' ) ) .'">',
+					'</a>'
+				),
+				$this->get_id_dasherized() . '-google-pay-requires-wc-version-3-2',
 				[ 'notice_class' => 'error' ]
 			);
 		}

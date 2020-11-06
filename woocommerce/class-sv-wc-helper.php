@@ -22,13 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_9_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0;
 
 use Automattic\WooCommerce\Admin\Loader;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_9_0\\SV_WC_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_Helper' ) ) :
 
 
 /**
@@ -545,6 +545,25 @@ class SV_WC_Helper {
 		}
 
 		return $is_virtual;
+	}
+
+
+	/**
+	 * Determines if a shop has any published virtual products.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return bool
+	 */
+	public static function shop_has_virtual_products() {
+
+		$virtual_products = wc_get_products( [
+			'virtual' => true,
+			'status'  => 'publish',
+			'limit'   => 1,
+		] );
+
+		return sizeof( $virtual_products ) > 0;
 	}
 
 

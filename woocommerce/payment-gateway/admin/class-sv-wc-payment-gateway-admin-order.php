@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_9_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_9_0\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
 
 
 /**
@@ -111,7 +111,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 */
 	protected function enqueue_edit_order_assets( \WC_Order $order ) {
 
-		wp_enqueue_script( 'sv-wc-payment-gateway-admin-order', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/admin/sv-wc-payment-gateway-admin-order.min.js', array( 'jquery' ), SV_WC_Plugin::VERSION, true );
+		wp_enqueue_script( 'sv-wc-payment-gateway-admin-order', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/admin/sv-wc-payment-gateway-admin-order.js', array( 'jquery' ), SV_WC_Plugin::VERSION, true );
 
 		wp_localize_script( 'sv-wc-payment-gateway-admin-order', 'sv_wc_payment_gateway_admin_order', array(
 			'ajax_url'       => admin_url( 'admin-ajax.php' ),

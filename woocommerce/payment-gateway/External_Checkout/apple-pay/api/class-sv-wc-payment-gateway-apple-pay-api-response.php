@@ -16,17 +16,17 @@
  * versions in the future. If you wish to customize the plugin for your
  * needs please refer to http://www.skyverge.com
  *
- * @package   SkyVerge/WooCommerce/Payment-Gateway/Apple-Pay
+ * @package   SkyVerge/WooCommerce/Payment-Gateway/External_Checkout/Apple-Pay
  * @author    SkyVerge
  * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_9_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_9_0\\SV_WC_Payment_Gateway_Apple_Pay_API_Response' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_Payment_Gateway_Apple_Pay_API_Response' ) ) :
 
 
 /**

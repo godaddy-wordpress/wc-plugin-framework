@@ -79,9 +79,9 @@ class SV_WC_Plugin_Framework_Tests_Bootstrap {
 		require_once( $this->framework_dir . '/woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php' );
 		require_once( $this->framework_dir . '/woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-token.php' );
 		require_once( $this->framework_dir . '/woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php' );
-		require_once( $this->framework_dir . '/woocommerce/payment-gateway/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api-request.php' );
-		require_once( $this->framework_dir . '/woocommerce/payment-gateway/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api-response.php' );
-		require_once( $this->framework_dir . '/woocommerce/payment-gateway/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-payment-response.php' );
+		require_once( $this->framework_dir . '/woocommerce/payment-gateway/External_Checkout/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api-request.php' );
+		require_once( $this->framework_dir . '/woocommerce/payment-gateway/External_Checkout/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api-response.php' );
+		require_once( $this->framework_dir . '/woocommerce/payment-gateway/External_Checkout/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-payment-response.php' );
 
 		// addresses
 		require_once( $this->framework_dir . '/woocommerce/Addresses/Address.php' );

@@ -1,12 +1,13 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v5_9_0\SV_WC_Payment_Gateway_Apple_Pay;
-use SkyVerge\WooCommerce\PluginFramework\v5_9_0\SV_WC_Payment_Gateway_Apple_Pay_Frontend;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Apple_Pay;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Apple_Pay_Frontend;
 
 /**
  * Tests for the SV_WC_Payment_Gateway_Apple_Pay_Frontend class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_9_0\SV_WC_Payment_Gateway_Apple_Pay_Frontend
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Payment_Gateway_Apple_Pay_Frontend
  */
 class ApplePayFrontendTest extends \Codeception\TestCase\WPTestCase {
 
@@ -37,15 +38,12 @@ class ApplePayFrontendTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function test_get_js_handler_class_name() {
 
-		$property = new ReflectionProperty( SV_WC_Payment_Gateway_Apple_Pay::class, 'frontend' );
-		$property->setAccessible( true );
+		$frontend_instance = $this->get_frontend_instance();
 
-		$frontend = $property->getValue( $this->get_plugin()->get_apple_pay_instance() );
-
-		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_Apple_Pay_Frontend::class, 'get_js_handler_class_name' );
+		$method  = new ReflectionMethod( $frontend_instance, 'get_js_handler_class_name' );
 		$method->setAccessible( true );
 
-		$result = $method->invoke( $frontend );
+		$result = $method->invoke( $frontend_instance );
 
 		$this->assertNotEmpty( $result );
 		$this->assertStringContainsString( 'SV_WC_Apple_Pay_Handler', $result );
@@ -58,23 +56,20 @@ class ApplePayFrontendTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function test_get_js_handler_args() {
 
-		$property = new ReflectionProperty( SV_WC_Payment_Gateway_Apple_Pay::class, 'frontend' );
-		$property->setAccessible( true );
+		$frontend_instance = $this->get_frontend_instance();
 
-		$frontend = $property->getValue( $this->get_plugin()->get_apple_pay_instance() );
-
-		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_Apple_Pay_Frontend::class, 'get_js_handler_args' );
+		$method  = new ReflectionMethod( $frontend_instance, 'get_js_handler_args' );
 		$method->setAccessible( true );
 
-		$result = $method->invoke( $frontend );
+		$result = $method->invoke( $frontend_instance );
 
-		$get_handler_method = new ReflectionMethod( SV_WC_Payment_Gateway_Apple_Pay_Frontend::class, 'get_handler' );
+		$get_handler_method = new ReflectionMethod( $frontend_instance, 'get_handler' );
 		$get_handler_method->setAccessible( true );
 
 		$expected_result = [
 			'gateway_id'               => $this->get_plugin()->get_gateway()->get_id(),
 			'gateway_id_dasherized'    => $this->get_plugin()->get_gateway()->get_id_dasherized(),
-			'merchant_id'              => $get_handler_method->invoke( $frontend )->get_merchant_id(),
+			'merchant_id'              => $get_handler_method->invoke( $frontend_instance )->get_merchant_id(),
 			'ajax_url'                 => admin_url( 'admin-ajax.php' ),
 			'validate_nonce'           => wp_create_nonce( 'wc_' . $this->get_plugin()->get_gateway()->get_id() . '_apple_pay_validate_merchant' ),
 			'recalculate_totals_nonce' => wp_create_nonce( 'wc_' . $this->get_plugin()->get_gateway()->get_id() . '_apple_pay_recalculate_totals' ),
@@ -103,22 +98,39 @@ class ApplePayFrontendTest extends \Codeception\TestCase\WPTestCase {
 		// reset queued scripts
 		$wc_queued_js = '';
 
-		$property = new ReflectionProperty( SV_WC_Payment_Gateway_Apple_Pay::class, 'frontend' );
-		$property->setAccessible( true );
+		$frontend_instance = $this->get_frontend_instance();
 
-		$frontend = $property->getValue( $this->get_plugin()->get_apple_pay_instance() );
-
-		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_Apple_Pay_Frontend::class, 'enqueue_js_handler' );
+		$method  = new ReflectionMethod( $frontend_instance, 'enqueue_js_handler' );
 		$method->setAccessible( true );
 
-		$method->invokeArgs( $frontend, [[]] );
+		$method->invokeArgs( $frontend_instance, [[]] );
 
 		$this->assertStringContainsString( 'function load_test_gateway_apple_pay_handler', $wc_queued_js );
-		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_apple_pay_handler_v5_9_0_loaded\', load_test_gateway_apple_pay_handler );', $wc_queued_js );
+		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_apple_pay_handler_v5_10_0_loaded\', load_test_gateway_apple_pay_handler );', $wc_queued_js );
 	}
 
 
 	/** Helper methods ************************************************************************************************/
+
+
+	/**
+	 * Gets the Apple Pay frontend instance.
+	 *
+	 * @return SV_WC_Payment_Gateway_Apple_Pay_Frontend
+	 */
+	private function get_frontend_instance() {
+
+		$method  = new ReflectionMethod( SV_WC_Payment_Gateway_Plugin::class, 'get_apple_pay_instance' );
+		$method->setAccessible( true );
+
+		$apple_pay_instance = $method->invoke( $this->get_plugin() );
+
+		$apple_pay_instance = $this->make( $apple_pay_instance, [
+			'get_supporting_gateways' => [ $this->get_plugin()->get_gateway() ],
+		] );
+
+		return new SV_WC_Payment_Gateway_Apple_Pay_Frontend( $this->get_plugin(), $apple_pay_instance );
+	}
 
 
 	/**

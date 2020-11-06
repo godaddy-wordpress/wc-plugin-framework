@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_9_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_9_0\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -123,6 +123,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 	/** Apple Pay feature */
 	const FEATURE_APPLE_PAY = 'apple_pay';
+
+	/** Google Pay feature */
+	const FEATURE_GOOGLE_PAY = 'google_pay';
 
 	/** Admin token editor feature */
 	const FEATURE_TOKEN_EDITOR = 'token_editor';
@@ -381,7 +384,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	protected function load_shared_settings() {
 
 		// get any other sibling gateways
-		$other_gateway_ids = array_diff( $this->get_plugin()->get_gateway_ids(), array( $this->get_id() ) );
+		$other_gateway_ids = $this->get_ids_of_gateways_to_inherit_settings_from();
 
 		// determine if any sibling gateways have any configured shared settings
 		foreach ( $other_gateway_ids as $other_gateway_id ) {
@@ -404,6 +407,19 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				}
 			}
 		}
+	}
+
+
+	/**
+	 * Gets the IDs of sibling gateways that this gateway can inherit settings from.
+	 *
+	 * @since 5.10.0-dev.1
+	 *
+	 * @return array
+	 */
+	protected function get_ids_of_gateways_to_inherit_settings_from() {
+
+		return array_diff( $this->get_plugin()->get_gateway_ids(), [ $this->get_id() ] );
 	}
 
 
@@ -444,10 +460,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
-		$versioned_handle = $handle . '-v5_9_0';
+		$versioned_handle = $handle . '-v5_10_0';
 
 		// Frontend JS
-		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/js/frontend/' . $handle . '.min.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
+		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
 
 		// Frontend CSS
 		wp_enqueue_style( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), SV_WC_Plugin::VERSION );
@@ -1134,6 +1150,63 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	}
 
 
+	/** Google Pay Feature *****************************************************/
+
+
+	/**
+	 * Determines whether this gateway supports Google Pay.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return bool
+	 */
+	public function supports_google_pay() {
+
+		return $this->supports( self::FEATURE_GOOGLE_PAY );
+	}
+
+
+	/**
+	 * Gets the currencies supported by Google Pay.
+	 *
+	 * This method should be overwritten by any gateway that needs to restrict the supported currencies.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @return array
+	 */
+	public function get_google_pay_currencies() {
+
+		return [];
+	}
+
+
+	/**
+	 * Adds the Google Pay payment data to the order object.
+	 *
+	 * Gateways should override this to set the appropriate values depending on
+	 * how their processing API needs to handle the data.
+	 *
+	 * @since 5.10.0
+	 *
+	 * @param \WC_Order the order object
+	 * @param mixed|array $response_data authorized payment response data
+	 * @return \WC_Order
+	 */
+	public function get_order_for_google_pay( \WC_Order $order, $response_data ) {
+
+		$payment_method_data = $response_data['paymentMethodData'];
+
+		$order->payment->google_pay = base64_encode( $payment_method_data['tokenizationData']['token'] );
+
+		// account last four
+		$order->payment->account_number = $payment_method_data['info']['cardDetails'];
+		$order->payment->card_type      = SV_WC_Payment_Gateway_Helper::normalize_card_type( $payment_method_data['info']['cardNetwork'] );
+
+		return $order;
+	}
+
+
 	/**
 	 * Get the default payment method title, which is configurable within the
 	 * admin and displayed on checkout
@@ -1270,7 +1343,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		// add the special 'shared-settings-field' class name to any shared settings fields
 		foreach ( $this->shared_settings as $field_name ) {
-			$this->form_fields[ $field_name ]['class'] = trim( isset( $this->form_fields[ $field_name ]['class'] ) ? $this->form_fields[ $field_name ]['class'] : '' ) . ' shared-settings-field';
+
+			if ( ! empty( $this->form_fields[ $field_name ] ) ) {
+				$this->form_fields[ $field_name ]['class'] = trim( isset( $this->form_fields[ $field_name ]['class'] ) ? $this->form_fields[ $field_name ]['class'] : '' ) . ' shared-settings-field';
+			}
 		}
 
 		/**
@@ -1335,7 +1411,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	protected function add_shared_settings_form_fields( $form_fields ) {
 
 		// get any sibling gateways
-		$other_gateway_ids                  = array_diff( $this->get_plugin()->get_gateway_ids(), array( $this->get_id() ) );
+		$other_gateway_ids                  = $this->get_ids_of_gateways_to_inherit_settings_from();
 		$configured_other_gateway_ids       = array();
 		$inherit_settings_other_gateway_ids = array();
 

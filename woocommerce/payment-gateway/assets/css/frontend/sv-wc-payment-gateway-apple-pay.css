@@ -5,10 +5,6 @@
 	margin: 0 0 1em 0;
 }
 
-.sv-wc-apple-pay-terms {
-	display: none;
-}
-
 @supports ( -webkit-appearance: -apple-pay-button ) {
 
 	.sv-wc-apple-pay-button {
@@ -103,23 +99,4 @@
 		background-image: -webkit-named-image( apple-pay-logo-black );
 		background-color: white;
 	}
-}
-
-.sv-wc-apply-pay-checkout {
-	display: none;
-	max-width: 510px;
-	margin: 0 auto 2em;
-	text-align: center;
-}
-.sv-wc-apply-pay-checkout .sv-wc-apple-pay-button {
-	display: block;
-}
-.sv-wc-apply-pay-checkout .divider {
-	font-size: 1.15em;
-	font-style: italic;
-	text-transform: uppercase;
-}
-.sv-wc-apply-pay-checkout .divider::before,
-.sv-wc-apply-pay-checkout .divider::after {
-	content: "\2014";
 }

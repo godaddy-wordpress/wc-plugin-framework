@@ -3,7 +3,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
-use \SkyVerge\WooCommerce\PluginFramework\v5_9_0 as PluginFramework;
+use \SkyVerge\WooCommerce\PluginFramework\v5_10_0 as PluginFramework;
 
 /**
  * Plugin Test
@@ -15,7 +15,7 @@ class Plugin extends Test_Case {
 
 	public function test_constructor() {
 
-		$this->assertInstanceOf( '\SkyVerge\WooCommerce\PluginFramework\v5_9_0\SV_WC_Plugin', $this->plugin() );
+		$this->assertInstanceOf( '\SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Plugin', $this->plugin() );
 	}
 
 	public function test_clone() {
@@ -135,7 +135,7 @@ MSG;
 			),
 		);
 
-		return $this->getMockBuilder( '\SkyVerge\WooCommerce\PluginFramework\v5_9_0\SV_WC_Plugin' )
+		return $this->getMockBuilder( '\SkyVerge\WooCommerce\PluginFramework\v5_10_0\SV_WC_Plugin' )
 							 ->setConstructorArgs( $args )
 							 ->getMockForAbstractClass();
 	}

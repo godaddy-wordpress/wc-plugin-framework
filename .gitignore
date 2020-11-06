@@ -17,6 +17,7 @@ npm-debug.log
 
 # Misc
 *.zip
+.cache
 .sass-cache*
 
 # Tests
