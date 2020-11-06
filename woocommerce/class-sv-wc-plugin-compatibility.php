@@ -324,7 +324,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function is_enhanced_admin_available() {
 
-		return self::is_wc_version_gte( '4.0' ) && function_exists( 'wc_admin_url' ) && class_exists( '\\Automattic\\WooCommerce\\Admin\\Composer\\Package' ) && \Automattic\WooCommerce\Admin\Composer\Package::is_package_active();
+		return self::is_wc_version_gte( '4.0' ) && function_exists( 'wc_admin_url' );
 	}
 
 
