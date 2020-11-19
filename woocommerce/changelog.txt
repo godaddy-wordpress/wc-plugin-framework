@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2020.nn.nn - version 5.10.1-dev.1
+ * Fix - Prevent a deprecated notice for SV_WC_Payment_Gateway_Hosted::do_invalid_transaction_response() in PHP 8
 
 2020.11.06 - version 5.10.0
  * Feature - Add Google Pay support
