@@ -323,7 +323,6 @@ abstract class Setup_Wizard {
 				<?php wp_print_scripts( 'wc-setup' ); ?>
 				<?php do_action( 'admin_print_scripts' ); ?>
 				<?php do_action( 'admin_print_styles' ); ?>
-				<?php do_action( 'admin_head' ); ?>
 			</head>
 			<body class="wc-setup wp-core-ui <?php echo esc_attr( $this->get_slug() ); ?>">
 				<?php $this->render_header(); ?>
