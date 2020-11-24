@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2020.nn.nn - version 5.10.1-dev.1
+2020.11.24 - version 5.10.1
  * Fix - Prevent a deprecated notice for SV_WC_Payment_Gateway_Hosted::do_invalid_transaction_response() in PHP 8
  * Fix - Prevent PHP Notices and fatal errors on wizard steps
 
