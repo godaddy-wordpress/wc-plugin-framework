@@ -16,10 +16,12 @@
  *
  * @package   TODO: package
  * @author    SkyVerge
- * @copyright Copyright (c) 2011-2019, SkyVerge, Inc.
+ * @copyright Copyright (c) 2011-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  *
  * Woo: 99999:00000000000000000000000000000000 TODO: updater keys
+ * WC requires at least: 3.5
+ * WC tested up to: 4.7
  */
 
 defined( 'ABSPATH' ) or exit;
@@ -49,16 +51,16 @@ class SV_WC_Framework_Plugin_Loader {
 
 
 	/** minimum PHP version required by this plugin */
-	const MINIMUM_PHP_VERSION = '5.6.0';
+	const MINIMUM_PHP_VERSION = '7.0';
 
 	/** minimum WordPress version required by this plugin */
-	const MINIMUM_WP_VERSION = '4.4';
+	const MINIMUM_WP_VERSION = '5.2';
 
 	/** minimum WooCommerce version required by this plugin */
-	const MINIMUM_WC_VERSION = '3.0.9';
+	const MINIMUM_WC_VERSION = '3.5';
 
 	/** SkyVerge plugin framework version used by this plugin */
-	const FRAMEWORK_VERSION = '5.10.0'; // TODO: framework version
+	const FRAMEWORK_VERSION = '5.10.1-dev.1'; // TODO: framework version
 
 	/** the plugin name, for displaying notices */
 	const PLUGIN_NAME = 'WooCommerce Framework Plugin'; // TODO: plugin name

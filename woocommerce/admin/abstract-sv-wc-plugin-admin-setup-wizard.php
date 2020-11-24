@@ -21,13 +21,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_0\Admin;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_1\Admin;
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_0 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_1 as Framework;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_0\\Admin\\Setup_Wizard' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_1\\Admin\\Setup_Wizard' ) ) :
 
 
 /**
@@ -323,7 +323,6 @@ abstract class Setup_Wizard {
 				<?php wp_print_scripts( 'wc-setup' ); ?>
 				<?php do_action( 'admin_print_scripts' ); ?>
 				<?php do_action( 'admin_print_styles' ); ?>
-				<?php do_action( 'admin_head' ); ?>
 			</head>
 			<body class="wc-setup wp-core-ui <?php echo esc_attr( $this->get_slug() ); ?>">
 				<?php $this->render_header(); ?>

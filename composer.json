@@ -3,6 +3,8 @@
     "description": "The official SkyVerge WooCommerce plugin framework",
     "version": "5.10.0",
     "require-dev": {
-        "lucatume/wp-browser": "^2.1"
+        "lucatume/wp-browser": "^2.1",
+        "phpcompatibility/php-compatibility": "9.3.5",
+        "codeception/module-asserts": "^1.3"
     }
 }
