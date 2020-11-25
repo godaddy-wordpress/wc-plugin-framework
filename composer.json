@@ -6,6 +6,7 @@
         "lucatume/wp-browser": "2.4.6",
         "phpcompatibility/php-compatibility": "9.3.5",
         "codeception/module-db": "^1.0",
-        "codeception/module-phpbrowser": "^1.0"
+        "codeception/module-phpbrowser": "^1.0",
+        "codeception/module-asserts": "^1.3"
     }
 }

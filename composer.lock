@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2cdce90bf427e6325c9ba47649de4e7b",
+    "content-hash": "9d8dfb2c1ea78f6cf7d0588ad7db0d70",
     "packages": [],
     "packages-dev": [
         {
@@ -306,6 +306,59 @@
                 "codeception"
             ],
             "time": "2020-10-22T05:45:03+00:00"
+        },
+        {
+            "name": "codeception/module-asserts",
+            "version": "1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Codeception/module-asserts.git",
+                "reference": "59374f2fef0cabb9e8ddb53277e85cdca74328de"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Codeception/module-asserts/zipball/59374f2fef0cabb9e8ddb53277e85cdca74328de",
+                "reference": "59374f2fef0cabb9e8ddb53277e85cdca74328de",
+                "shasum": ""
+            },
+            "require": {
+                "codeception/codeception": "*@dev",
+                "codeception/lib-asserts": "^1.13.1",
+                "php": ">=5.6.0 <9.0"
+            },
+            "conflict": {
+                "codeception/codeception": "<4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Bodnarchuk"
+                },
+                {
+                    "name": "Gintautas Miselis"
+                },
+                {
+                    "name": "Gustavo Nieves",
+                    "homepage": "https://medium.com/@ganieves"
+                }
+            ],
+            "description": "Codeception module containing various assertions",
+            "homepage": "https://codeception.com/",
+            "keywords": [
+                "assertions",
+                "asserts",
+                "codeception"
+            ],
+            "time": "2020-10-21T16:48:15+00:00"
         },
         {
             "name": "codeception/module-db",
