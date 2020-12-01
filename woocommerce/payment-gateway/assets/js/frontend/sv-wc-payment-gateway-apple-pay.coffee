@@ -162,7 +162,7 @@ jQuery ( $ ) ->
 
 			this.validate_merchant( event.validationURL ).then ( merchant_session ) =>
 
-				merchant_session = $.parseJSON( merchant_session )
+				merchant_session = JSON.parse( merchant_session )
 
 				@session.completeMerchantValidation( merchant_session )
 
@@ -373,7 +373,7 @@ jQuery ( $ ) ->
 				$( @button ).show()
 				$( @wrapper ).show()
 
-				@payment_request = $.parseJSON( response )
+				@payment_request = JSON.parse( response )
 
 				this.unblock_ui()
 

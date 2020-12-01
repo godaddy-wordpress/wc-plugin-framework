@@ -328,7 +328,7 @@ jQuery( function( $ ) {
 			$.post( this.ajaxURL, data, ( response ) => {
 
 				if ( response.success ) {
-					resolve( $.parseJSON( response.data ) )
+					resolve( JSON.parse( response.data ) )
 				} else {
 					this.failPayment( 'Could not build transaction info. ' + response.data.message );
 				}
@@ -360,7 +360,7 @@ jQuery( function( $ ) {
 			$.post( this.ajaxURL, data, ( response ) => {
 
 				if ( response.success ) {
-					resolve( $.parseJSON( response.data ) )
+					resolve( JSON.parse( response.data ) )
 				} else {
 					this.failPayment( 'Could not recalculate totals. ' + response.data.message );
 				}
