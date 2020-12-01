@@ -162,7 +162,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 				?>
 					<script type="text/javascript">
 						jQuery( function ( $ ) {
-							if ( 0 == $( 'select[name^=action] option[value=wc_capture_charge]' ).size() ) {
+							if ( 0 === $( 'select[name^=action] option[value=wc_capture_charge]' ).length ) {
 								$( 'select[name^=action]' ).append(
 									$( '<option>' ).val( '<?php echo esc_js( 'wc_capture_charge' ); ?>' ).text( '<?php _e( 'Capture Charge', 'woocommerce-plugin-framework' ); ?>' )
 								);

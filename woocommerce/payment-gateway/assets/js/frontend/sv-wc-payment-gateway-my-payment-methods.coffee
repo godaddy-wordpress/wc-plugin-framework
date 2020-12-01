@@ -262,8 +262,7 @@ jQuery ( $ ) ->
 			console.error( error )
 
 			message = @i18n.save_error unless message
-
-			columns = $( ".woocommerce-MyAccount-paymentMethods thead tr th" ).size()
+			columns = $( ".woocommerce-MyAccount-paymentMethods thead tr th" ).length
 
 			$( '<tr class="error"><td colspan="' + columns + '">' + message + '</td></tr>' ).insertAfter( row ).find( 'td' ).delay( 8000 ).slideUp( 200 )
 
