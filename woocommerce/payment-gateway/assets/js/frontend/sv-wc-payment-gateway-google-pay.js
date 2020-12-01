@@ -1,4 +1,4 @@
-jQuery( document ).ready( ( $ ) => {
+jQuery( function( $ ) {
 
 	"use strict"
 
