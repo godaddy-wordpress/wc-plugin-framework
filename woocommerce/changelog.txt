@@ -1,7 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2020.12.03 - version 5.10.2
- * Misc - Updates deprecated jQuery usages
+ * Misc - Update deprecated jQuery usages
 
 2020.11.24 - version 5.10.1
  * Fix - Prevent a deprecated notice for SV_WC_Payment_Gateway_Hosted::do_invalid_transaction_response() in PHP 8
