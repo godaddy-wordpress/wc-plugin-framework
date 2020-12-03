@@ -10,7 +10,7 @@ jQuery ( $ ) ->
 	"use strict"
 
 
-	class window.SV_WC_Payment_Form_Handler_v5_10_1
+	class window.SV_WC_Payment_Form_Handler_v5_10_2
 
 
 		# Public: Instantiate Payment Form Handler
@@ -385,4 +385,4 @@ jQuery ( $ ) ->
 
 
 	# dispatch loaded event
-	$( document.body ).trigger( "sv_wc_payment_form_handler_v5_10_1_loaded" )
+	$( document.body ).trigger( "sv_wc_payment_form_handler_v5_10_2_loaded" )
