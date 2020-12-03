@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2020.nn.nn - version 5.10.2-dev.1
+2020.12.03 - version 5.10.2
  * Misc - Updates deprecated jQuery usages
 
 2020.11.24 - version 5.10.1
