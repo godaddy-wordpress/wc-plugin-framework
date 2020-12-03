@@ -6,7 +6,7 @@
  Licensed under the GNU General Public License v3.0
  http://www.gnu.org/licenses/gpl-3.0.html
 ###
-jQuery( document ).ready ($) ->
+jQuery ( $ ) ->
 	"use strict"
 
 	wc_payment_gateway_token_editor = window.wc_payment_gateway_token_editor ? {}

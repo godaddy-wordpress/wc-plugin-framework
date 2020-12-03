@@ -7,7 +7,7 @@
  http://www.gnu.org/licenses/gpl-3.0.html
 ###
 
-jQuery( document ).ready ($) ->
+jQuery ( $ ) ->
 
 	"use strict"
 
@@ -162,7 +162,7 @@ jQuery( document ).ready ($) ->
 
 			this.validate_merchant( event.validationURL ).then ( merchant_session ) =>
 
-				merchant_session = $.parseJSON( merchant_session )
+				merchant_session = JSON.parse( merchant_session )
 
 				@session.completeMerchantValidation( merchant_session )
 
@@ -373,7 +373,7 @@ jQuery( document ).ready ($) ->
 				$( @button ).show()
 				$( @wrapper ).show()
 
-				@payment_request = $.parseJSON( response )
+				@payment_request = JSON.parse( response )
 
 				this.unblock_ui()
 

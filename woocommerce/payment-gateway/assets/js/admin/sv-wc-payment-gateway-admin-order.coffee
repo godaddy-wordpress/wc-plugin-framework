@@ -7,7 +7,7 @@
  http://www.gnu.org/licenses/gpl-3.0.html
 ###
 
-jQuery( document ).ready ($) ->
+jQuery ( $ ) ->
 	"use strict"
 
 	sv_wc_payment_gateway_admin_order = window.sv_wc_payment_gateway_admin_order ? {}

@@ -506,7 +506,7 @@ msgid "An error occurred, please try again or try an alternate form of payment."
 msgstr ""
 
 #: payment-gateway/Handlers/Abstract_Hosted_Payment_Handler.php:320
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:445
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:449
 #. translators: Placeholders: %s - a WooCommerce order ID
 msgid "Could not find order %s"
 msgstr ""
@@ -543,14 +543,14 @@ msgid "Transaction ID %s"
 msgstr ""
 
 #: payment-gateway/Handlers/Abstract_Payment_Handler.php:204
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:509
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:513
 #. translators: Placeholders: %s - payment gateway title (such as
 #. Authorize.net, Braintree, etc)
 msgid "%s duplicate transaction received"
 msgstr ""
 
 #: payment-gateway/Handlers/Abstract_Payment_Handler.php:207
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:512
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:516
 msgid "Order %s is already paid for."
 msgstr ""
 
@@ -1136,23 +1136,23 @@ msgstr ""
 msgid "Bank Account"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:297
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:301
 msgid "Thank you for your order, please click the button below to pay."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:298
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:302
 msgid "Thank you for your order. We are now redirecting you to complete payment."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:299
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:303
 msgid "Pay Now"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:300
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:304
 msgid "Cancel Order"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:597
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:601
 #: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:1115
 #. translators: Placeholders: %1$s - payment gateway title (such as
 #. Authorize.net, Braintree, etc), %2$s - payment method name (mastercard, bank
@@ -1161,7 +1161,7 @@ msgstr ""
 msgid "%1$s Payment Method Saved: %2$s ending in %3$s (expires %4$s)"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:608
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:612
 #: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:1126
 #. translators: Placeholders: %1$s - payment gateway title (such as CyberSouce,
 #. NETbilling, etc), %2$s - account type (checking/savings - may or may not be
@@ -1169,13 +1169,13 @@ msgstr ""
 msgid "%1$s eCheck Payment Method Saved: %2$s account ending in %3$s"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:617
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:621
 #. translators: Placeholders: %s - payment gateway title (such as CyberSouce,
 #. NETbilling, etc)
 msgid "%s Payment Method Saved"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:626
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:630
 #. translators: Placeholders: %s - a failed tokenization API error
 msgid "Tokenization failed. %s"
 msgstr ""

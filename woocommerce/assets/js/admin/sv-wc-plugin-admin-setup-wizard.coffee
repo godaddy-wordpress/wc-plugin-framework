@@ -5,7 +5,7 @@
 #
 # @since 5.3.0
 ###
-jQuery( document ).ready ( $ ) ->
+jQuery ( $ ) ->
 
 	blockWizardUI = () ->
 

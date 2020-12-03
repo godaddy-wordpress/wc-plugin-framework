@@ -528,7 +528,7 @@ msgstr "Esines viga, palun proovi uuesti või kasuta teistsugust makseviisi."
 
 #. translators: Placeholders: %s - a WooCommerce order ID
 #: payment-gateway/Handlers/Abstract_Hosted_Payment_Handler.php:320
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:445
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:449
 msgid "Could not find order %s"
 msgstr ""
 
@@ -566,12 +566,12 @@ msgstr "Tehingu ID %s"
 #. translators: Placeholders: %s - payment gateway title (such as
 #. Authorize.net, Braintree, etc)
 #: payment-gateway/Handlers/Abstract_Payment_Handler.php:204
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:509
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:513
 msgid "%s duplicate transaction received"
 msgstr "%s: duplikaattehing"
 
 #: payment-gateway/Handlers/Abstract_Payment_Handler.php:207
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:512
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:516
 msgid "Order %s is already paid for."
 msgstr ""
 
@@ -1204,20 +1204,20 @@ msgstr "Deebet- või krediitkaart"
 msgid "Bank Account"
 msgstr "Pangakonto"
 
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:297
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:301
 msgid "Thank you for your order, please click the button below to pay."
 msgstr "Aitäh tellimuse eest. Palun kliki maksmiseks alloleval nupul."
 
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:298
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:302
 msgid ""
 "Thank you for your order. We are now redirecting you to complete payment."
 msgstr "Aitäh tellimuse eest. Makse teostamiseks suunatakse sind nüüd edasi."
 
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:299
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:303
 msgid "Pay Now"
 msgstr "Maksa"
 
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:300
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:304
 msgid "Cancel Order"
 msgstr "Tühista tellimus"
 
@@ -1225,7 +1225,7 @@ msgstr "Tühista tellimus"
 #. Authorize.net, Braintree, etc), %2$s - payment method name (mastercard, bank
 #. account, etc), %3$s - last four digits of the card/account, %4$s -
 #. card/account expiry date
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:597
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:601
 #: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:1115
 msgid "%1$s Payment Method Saved: %2$s ending in %3$s (expires %4$s)"
 msgstr ""
@@ -1234,7 +1234,7 @@ msgstr ""
 #. translators: Placeholders: %1$s - payment gateway title (such as CyberSouce,
 #. NETbilling, etc), %2$s - account type (checking/savings - may or may not be
 #. available), %3$s - last four digits of the account
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:608
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:612
 #: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:1126
 msgid "%1$s eCheck Payment Method Saved: %2$s account ending in %3$s"
 msgstr ""
@@ -1242,13 +1242,13 @@ msgstr ""
 
 #. translators: Placeholders: %s - payment gateway title (such as CyberSouce,
 #. NETbilling, etc)
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:617
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:621
 #, fuzzy
 msgid "%s Payment Method Saved"
 msgstr "Minu maksevahendid."
 
 #. translators: Placeholders: %s - a failed tokenization API error
-#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:626
+#: payment-gateway/class-sv-wc-payment-gateway-hosted.php:630
 #, fuzzy
 msgid "Tokenization failed. %s"
 msgstr "Maksevahendi salvestamise päring ebaõnnestus: %s"

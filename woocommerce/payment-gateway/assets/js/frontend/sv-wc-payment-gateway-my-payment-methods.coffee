@@ -6,7 +6,7 @@
  Licensed under the GNU General Public License v3.0
  http://www.gnu.org/licenses/gpl-3.0.html
 ###
-jQuery( document ).ready ($) ->
+jQuery ( $ ) ->
 	"use strict"
 
 	# The My Payment Methods handler.
@@ -262,8 +262,7 @@ jQuery( document ).ready ($) ->
 			console.error( error )
 
 			message = @i18n.save_error unless message
-
-			columns = $( ".woocommerce-MyAccount-paymentMethods thead tr th" ).size()
+			columns = $( ".woocommerce-MyAccount-paymentMethods thead tr th" ).length
 
 			$( '<tr class="error"><td colspan="' + columns + '">' + message + '</td></tr>' ).insertAfter( row ).find( 'td' ).delay( 8000 ).slideUp( 200 )
 
