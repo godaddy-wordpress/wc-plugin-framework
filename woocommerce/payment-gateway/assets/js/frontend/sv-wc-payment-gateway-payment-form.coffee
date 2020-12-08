@@ -22,7 +22,7 @@ jQuery ( $ ) ->
 		#   type - gateway type, either `credit-card` or `echeck`
 		#   csc_required - true if the gateway requires the CSC field to be displayed
 		#
-		# Returns SV_WC_Payment_Form_Handler_5_10_2 instance
+		# Returns SV_WC_Payment_Form_Handler_v5_10_3 instance
 		constructor: (args) ->
 
 			@id                      = args.id
