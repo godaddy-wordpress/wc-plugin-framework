@@ -1303,12 +1303,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		// add "detailed customer decline messages" option if the feature is supported
 		if ( $this->supports( self::FEATURE_DETAILED_CUSTOMER_DECLINE_MESSAGES ) ) {
-			$this->form_fields['enable_customer_decline_messages'] = array(
+			$this->form_fields['enable_customer_decline_messages'] = [
 				'title'   => esc_html__( 'Detailed Decline Messages', 'woocommerce-plugin-framework' ),
 				'type'    => 'checkbox',
 				'label'   => esc_html__( 'Check to enable detailed decline messages to the customer during checkout when possible, rather than a generic decline message.', 'woocommerce-plugin-framework' ),
-				'default' => 'no',
-			);
+				'default' => 'yes',
+			];
 		}
 
 		// debug mode
