@@ -777,7 +777,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function payment_fields() {
 
-		if ( $this->supports_payment_form() ) {
+		if ( $this->get_payment_form_instance() && is_callable( [ $this->get_payment_form_instance(), 'render' ] ) && $this->supports_payment_form() ) {
 
 			$this->get_payment_form_instance()->render();
 
