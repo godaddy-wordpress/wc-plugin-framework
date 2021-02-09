@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2021.nn.nn - version 5.10.4
+
 2020.12.08 - version 5.10.3
  * Fix - Fix enqueuing token editor JS
 
