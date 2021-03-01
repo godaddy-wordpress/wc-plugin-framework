@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_3\\SV_WC_Payment_Gateway_Apple_Pay_Frontend' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_4\\SV_WC_Payment_Gateway_Apple_Pay_Frontend' ) ) :
 
 
 /**
@@ -34,7 +34,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_3\\SV_WC_P
  *
  * @since 4.7.0
  */
-class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_10_3\Payment_Gateway\External_Checkout\Frontend {
+class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_10_4\Payment_Gateway\External_Checkout\Frontend {
 
 
 	/** @var string JS handler base class name, without the FW version */
@@ -108,9 +108,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends \SkyVerge\WooCommerce\Plu
 
 		parent::enqueue_scripts();
 
-		wp_enqueue_style( 'sv-wc-apple-pay-v5_10_3', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-apple-pay.css', array(), $this->get_plugin()->get_version() ); // TODO: min
+		wp_enqueue_style( 'sv-wc-apple-pay-v5_10_4', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-apple-pay.css', array(), $this->get_plugin()->get_version() ); // TODO: min
 
-		wp_enqueue_script( 'sv-wc-apple-pay-v5_10_3', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/sv-wc-payment-gateway-apple-pay.js', array( 'jquery' ), $this->get_plugin()->get_version(), true );
+		wp_enqueue_script( 'sv-wc-apple-pay-v5_10_4', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/sv-wc-payment-gateway-apple-pay.js', array( 'jquery' ), $this->get_plugin()->get_version(), true );
 	}
 
 

@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2021.nn.nn - version 5.10.4
+ * Fix - Prevent a Fatal error while editing the Checkout page using Elementor
+
 2020.12.08 - version 5.10.3
  * Fix - Fix enqueuing token editor JS
 
