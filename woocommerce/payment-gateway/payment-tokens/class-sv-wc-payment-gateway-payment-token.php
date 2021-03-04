@@ -599,7 +599,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * Defaults to 'echeck' if core token is not an instance of \WC_Payment_Token_CC
 	 *
-	 * @since 5.10.5-dev.1
+	 * @since 5.10.5
 	 *
 	 * @param \WC_Payment_Token $token WooCommerce core token
 	 *
@@ -654,7 +654,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	 *
 	 * If it's not a credit card, we default to echeck, so there's always an instance.
 	 *
-	 * @since 5.10.5-dev.1
+	 * @since 5.10.5
 	 *
 	 * @return \WC_Payment_Token
 	 */

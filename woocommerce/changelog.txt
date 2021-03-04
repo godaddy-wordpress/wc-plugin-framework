@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2021.nn.nn - version 5.10.5-dev.1
+2021.03.04 - version 5.10.5
  * Tweak - Add a class representation for Braintree PayPal tokens
 
 2021.03.01 - version 5.10.4
