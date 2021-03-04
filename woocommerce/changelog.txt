@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2021.nn.nn - version 5.10.5-dev.1
+
 2021.03.01 - version 5.10.4
  * Fix - Prevent a Fatal error while editing the Checkout page using Elementor
 
