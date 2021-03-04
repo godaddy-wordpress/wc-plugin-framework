@@ -66,7 +66,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * @var null|\WC_Payment_Token WooCommerce core token corresponding to the framework token, if set
 	 */
-	private $token;
+	protected $token;
 
 
 	/**
