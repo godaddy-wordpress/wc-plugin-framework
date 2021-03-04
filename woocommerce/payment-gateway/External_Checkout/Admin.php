@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_4\Payment_Gateway\External_Checkout;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_5\Payment_Gateway\External_Checkout;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_4\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_5\SV_WC_Helper;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -326,10 +326,9 @@ abstract class Admin {
 		if ( ! empty( $errors ) ) {
 
 			$message = sprintf(
-				/* translators: Placeholders:  - external checkout label, %2$s - <strong> tag, %3$s - </strong> tag */
-				__( '%2$S%1$s is disabled.%3$S', 'woocommerce-plugin-framework' ),
-				$this->handler->get_label(),
-				'<strong>', '</strong>'
+				/* translators: Placeholder: %s - external checkout label */
+				'<strong>' . __( '%s is disabled.', 'woocommerce-plugin-framework' ) . '</strong>',
+				$this->handler->get_label()
 			);
 
 			if ( 1 === count( $errors ) ) {

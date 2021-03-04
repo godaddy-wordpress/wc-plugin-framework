@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Plugin Framework 5.10.4\n"
+"Project-Id-Version: WooCommerce Plugin Framework 5.10.5\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
 "POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
 "MIME-Version: 1.0\n"
@@ -289,12 +289,11 @@ msgid "Checkout"
 msgstr ""
 
 #: payment-gateway/External_Checkout/Admin.php:330
-#. translators: Placeholders:  - external checkout label, %2$s - <strong> tag,
-#. %3$s - </strong> tag
-msgid "%2$S%1$s is disabled.%3$S"
+#. translators: Placeholder: %s - external checkout label
+msgid "%s is disabled."
 msgstr ""
 
-#: payment-gateway/External_Checkout/Admin.php:395
+#: payment-gateway/External_Checkout/Admin.php:394
 #. translators: Placeholders: %1$s - plugin name, %2$s - a
 #. currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a>
 #. tag, %5$s - external checkout label
@@ -307,7 +306,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: payment-gateway/External_Checkout/Admin.php:437
+#: payment-gateway/External_Checkout/Admin.php:436
 msgid ""
 "%4$s%1$s Notice!%5$s Your store %2$scalculates taxes%3$s based on the "
 "shipping address, but %1$s %4$sdoes not%5$s share customer shipping "
@@ -315,7 +314,7 @@ msgid ""
 "orders will have their taxes calculated based on the shop address instead."
 msgstr ""
 
-#: payment-gateway/External_Checkout/Admin.php:471
+#: payment-gateway/External_Checkout/Admin.php:470
 msgid ""
 "%4$s%1$s Notice!%5$s Your store %2$scalculates taxes%3$s based on the "
 "billing address, but %1$s %4$sdoes not%5$s share the customer billing "
@@ -823,7 +822,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: payment-gateway/admin/views/html-user-payment-token-editor-token.php:48
+#: payment-gateway/admin/views/html-user-payment-token-editor-token.php:57
 msgid "-- Select an option --"
 msgstr ""
 

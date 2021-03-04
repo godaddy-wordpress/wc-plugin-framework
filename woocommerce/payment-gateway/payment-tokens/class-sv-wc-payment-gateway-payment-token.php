@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_4;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_5;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_4\\SV_WC_Payment_Gateway_Payment_Token' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_5\\SV_WC_Payment_Gateway_Payment_Token' ) ) :
 
 
 /**
@@ -53,7 +53,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * @var array key-value array to map WooCommerce core token props to framework token `$data` keys
 	 */
-	private $props = [
+	protected $props = [
 		'gateway_id'   => 'gateway_id',
 		'user_id'      => 'user_id',
 		'is_default'   => 'default',
@@ -66,7 +66,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * @var null|\WC_Payment_Token WooCommerce core token corresponding to the framework token, if set
 	 */
-	private $token;
+	protected $token;
 
 
 	/**
@@ -595,6 +595,27 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Gets the framework token type based on the type of the associated WooCommerce core token.
+	 *
+	 * Defaults to 'echeck' if core token is not an instance of \WC_Payment_Token_CC
+	 *
+	 * @since 5.10.5
+	 *
+	 * @param \WC_Payment_Token $token WooCommerce core token
+	 *
+	 * @return string
+	 */
+	protected function get_type_from_woocommerce_payment_token( \WC_Payment_Token $token ) {
+
+		if ( $token instanceof \WC_Payment_Token_CC ) {
+			return 'credit_card';
+		}
+
+		return 'echeck';
+	}
+
+
+	/**
 	 * Gets the WooCommerce core payment token object related to this framework token.
 	 *
 	 * @since 5.8.0
@@ -625,6 +646,25 @@ class SV_WC_Payment_Gateway_Payment_Token {
 		}
 
 		return $this->token;
+	}
+
+
+	/**
+	 * Creates the WooCommerce core payment token object that store the data of this framework token.
+	 *
+	 * If it's not a credit card, we default to echeck, so there's always an instance.
+	 *
+	 * @since 5.10.5
+	 *
+	 * @return \WC_Payment_Token
+	 */
+	protected function make_new_woocommerce_payment_token() {
+
+		if ( $this->is_credit_card() ) {
+			return new \WC_Payment_Token_CC();
+		}
+
+		return new \WC_Payment_Token_ECheck();
 	}
 
 
@@ -660,12 +700,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 		unset( $token_data['meta_data'] );
 
-		/** default to 'echeck' if core token is not an instance of \WC_Payment_Token_CC */
-		if ( $core_token instanceof \WC_Payment_Token_CC ) {
-			$this->data['type'] = 'credit_card';
-		} else {
-			$this->data['type'] = 'echeck';
-		}
+		$this->data['type'] = $this->get_type_from_woocommerce_payment_token( $core_token );
 
 		foreach ( $meta_data as $meta_datum ) {
 			$token_data[ $meta_datum->key ] = $meta_datum->value;
@@ -703,13 +738,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 		$token = $this->get_woocommerce_payment_token();
 
 		if ( ! $token instanceof \WC_Payment_Token ) {
-
-			// instantiate a new token: if it's not a credit card, we default to echeck, so there's always an instance
-			if ( $this->is_credit_card() ) {
-				$token = new \WC_Payment_Token_CC();
-			} elseif ( $this->is_echeck() ) {
-				$token = new \WC_Payment_Token_ECheck();
-			}
+			$token = $this->make_new_woocommerce_payment_token();
 		}
 
 		$token->set_token( $this->get_id() );
