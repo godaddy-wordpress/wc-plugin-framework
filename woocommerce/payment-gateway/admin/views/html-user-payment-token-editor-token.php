@@ -21,6 +21,15 @@
  * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
+
+/**
+ * @type string $index token index while adding tokens in AJAX requests
+ * @type string $input_name HTML name for the token fields
+ * @type array $fields token editor fields
+ * @type array $token default payment token
+ * @type string $type payment type
+ * @type array $actions payment token actions
+ */
 ?>
 
 <?php $token_input_name = $input_name . '[' . $index . ']'; ?>
@@ -29,7 +38,7 @@
 
 	<?php foreach ( $fields as $field_id => $field ) : ?>
 
-		<?php $is_select = 'select' === $field['type'] && isset( $field['options'] ) && ! empty( $field['options'] ); ?>
+		<?php $is_select = isset( $field['type'], $field['options'] ) && 'select' === $field['type'] && ! empty( $field['options'] ); ?>
 
 		<td class="token-<?php echo esc_attr( $field_id ); ?>">
 
