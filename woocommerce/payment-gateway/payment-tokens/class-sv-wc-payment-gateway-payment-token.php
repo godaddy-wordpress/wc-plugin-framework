@@ -53,7 +53,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 	/**
 	 * @var array key-value array to map WooCommerce core token props to framework token `$data` keys
 	 */
-	private $props = [
+	protected $props = [
 		'gateway_id'   => 'gateway_id',
 		'user_id'      => 'user_id',
 		'is_default'   => 'default',
