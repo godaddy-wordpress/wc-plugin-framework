@@ -650,6 +650,25 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Creates the WooCommerce core payment token object that store the data of this framework token.
+	 *
+	 * If it's not a credit card, we default to echeck, so there's always an instance.
+	 *
+	 * @since 5.10.5-dev.1
+	 *
+	 * @return \WC_Payment_Token
+	 */
+	protected function make_new_woocommerce_payment_token() {
+
+		if ( $this->is_credit_card() ) {
+			return new \WC_Payment_Token_CC();
+		}
+
+		return new \WC_Payment_Token_ECheck();
+	}
+
+
+	/**
 	 * Gets a representation of this token suitable for persisting to a datastore.
 	 *
 	 * Note: moving forward we will use {@see \WC_Data} and {@see \WC_Payment_Token} to handle data stores.
