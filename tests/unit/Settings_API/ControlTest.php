@@ -6,7 +6,9 @@ use SkyVerge\WooCommerce\PluginFramework\v5_10_4\Settings_API\Control;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_4\SV_WC_Plugin_Exception;
 use TypeError;
 
-define( 'ABSPATH', true );
+if ( ! defined( 'ABSPATH' ) ) {
+	define( 'ABSPATH', true );
+}
 
 class ControlTest extends \Codeception\Test\Unit {
 
