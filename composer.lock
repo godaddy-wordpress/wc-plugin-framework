@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad3a26fbe240812497dc67f58ea88d55",
+    "content-hash": "ad5a89a582d6a59eae97ec35663e46c9",
     "packages": [],
     "packages-dev": [
         {
@@ -1862,16 +1862,16 @@
         },
         {
             "name": "lucatume/wp-browser",
-            "version": "2.4.6",
+            "version": "3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lucatume/wp-browser.git",
-                "reference": "59e17f28347b83aca490454fe64d85e70ab8bd60"
+                "reference": "c80a4bae00222290c0ed4ac34e9a943c08fbb9b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lucatume/wp-browser/zipball/59e17f28347b83aca490454fe64d85e70ab8bd60",
-                "reference": "59e17f28347b83aca490454fe64d85e70ab8bd60",
+                "url": "https://api.github.com/repos/lucatume/wp-browser/zipball/c80a4bae00222290c0ed4ac34e9a943c08fbb9b4",
+                "reference": "c80a4bae00222290c0ed4ac34e9a943c08fbb9b4",
                 "shasum": ""
             },
             "require": {
@@ -1882,21 +1882,21 @@
                 "ext-iconv": "*",
                 "ext-json": "*",
                 "ext-pdo": "*",
-                "gumlet/php-image-resize": "^1.6",
+                "mikehaertl/php-shellcommand": "^1.6",
                 "mikemclin/laravel-wp-password": "~2.0.0",
                 "php": ">=5.6.0",
-                "symfony/filesystem": "^3.0",
-                "symfony/process": ">=2.7 <5.0",
-                "vlucas/phpdotenv": "^3.0",
                 "vria/nodiacritic": "^0.1.2",
-                "wp-cli/wp-cli-bundle": ">=2.0 <3.0.0",
+                "wp-cli/wp-cli": ">=2.0 <3.0.0",
                 "zordius/lightncandy": "^1.2"
             },
             "require-dev": {
                 "erusev/parsedown": "^1.7",
+                "gumlet/php-image-resize": "^1.6",
                 "lucatume/codeception-snapshot-assertions": "^0.2",
                 "mikey179/vfsstream": "^1.6",
-                "victorjonsson/markdowndocs": "dev-master"
+                "victorjonsson/markdowndocs": "dev-master",
+                "vlucas/phpdotenv": "^3.0",
+                "wp-cli/wp-cli-bundle": "*"
             },
             "suggest": {
                 "codeception/module-asserts": "Codeception 4.0 compatibility.",
@@ -1905,7 +1905,9 @@
                 "codeception/module-filesystem": "Codeception 4.0 compatibility; required by the WPFilesystem module.",
                 "codeception/module-phpbrowser": "Codeception 4.0 compatibility; required by the WPBrowser module.",
                 "codeception/module-webdriver": "Codeception 4.0 compatibility; required by the WPWebDriver module.",
-                "codeception/util-universalframework": "Codeception 4.0 compatibility; required by the WordPress framework module."
+                "codeception/util-universalframework": "Codeception 4.0 compatibility; required by the WordPress framework module.",
+                "gumlet/php-image-resize": "To handle runtime image modification in the WPDb::haveAttachmentInDatabase method.",
+                "vlucas/phpdotenv:^4.0": "To manage more complex environment file based configuration of the suites."
             },
             "type": "library",
             "extra": {
@@ -1939,7 +1941,13 @@
                 "codeception",
                 "wordpress"
             ],
-            "time": "2020-04-20T14:03:06+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/lucatume",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-01-08T16:00:02+00:00"
         },
         {
             "name": "mck89/peast",
@@ -1985,6 +1993,48 @@
             ],
             "description": "Peast is PHP library that generates AST for JavaScript code",
             "time": "2021-01-08T15:16:19+00:00"
+        },
+        {
+            "name": "mikehaertl/php-shellcommand",
+            "version": "1.6.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikehaertl/php-shellcommand.git",
+                "reference": "fe86ec847877b83bf61a96719e7f2e3b3e516a6b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikehaertl/php-shellcommand/zipball/fe86ec847877b83bf61a96719e7f2e3b3e516a6b",
+                "reference": "fe86ec847877b83bf61a96719e7f2e3b3e516a6b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">= 5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">4.0 <=9.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "mikehaertl\\shellcommand\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Härtl",
+                    "email": "haertl.mike@gmail.com"
+                }
+            ],
+            "description": "An object oriented interface to shell commands",
+            "keywords": [
+                "shell"
+            ],
+            "time": "2020-11-23T17:31:15+00:00"
         },
         {
             "name": "mikemclin/laravel-wp-password",
