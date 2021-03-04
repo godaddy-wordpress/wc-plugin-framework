@@ -738,13 +738,7 @@ class SV_WC_Payment_Gateway_Payment_Token {
 		$token = $this->get_woocommerce_payment_token();
 
 		if ( ! $token instanceof \WC_Payment_Token ) {
-
-			// instantiate a new token: if it's not a credit card, we default to echeck, so there's always an instance
-			if ( $this->is_credit_card() ) {
-				$token = new \WC_Payment_Token_CC();
-			} elseif ( $this->is_echeck() ) {
-				$token = new \WC_Payment_Token_ECheck();
-			}
+			$token = $this->make_new_woocommerce_payment_token();
 		}
 
 		$token->set_token( $this->get_id() );
