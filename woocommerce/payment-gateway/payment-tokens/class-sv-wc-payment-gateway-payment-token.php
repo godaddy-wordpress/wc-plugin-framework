@@ -595,6 +595,27 @@ class SV_WC_Payment_Gateway_Payment_Token {
 
 
 	/**
+	 * Gets the framework token type based on the type of the associated WooCommerce core token.
+	 *
+	 * Defaults to 'echeck' if core token is not an instance of \WC_Payment_Token_CC
+	 *
+	 * @since 5.10.5-dev.1
+	 *
+	 * @param \WC_Payment_Token $token WooCommerce core token
+	 *
+	 * @return string
+	 */
+	protected function get_type_from_woocommerce_payment_token( \WC_Payment_Token $token ) {
+
+		if ( $token instanceof \WC_Payment_Token_CC ) {
+			return 'credit_card';
+		}
+
+		return 'echeck';
+	}
+
+
+	/**
 	 * Gets the WooCommerce core payment token object related to this framework token.
 	 *
 	 * @since 5.8.0
