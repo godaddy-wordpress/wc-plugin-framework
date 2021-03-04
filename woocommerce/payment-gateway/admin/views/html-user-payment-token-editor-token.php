@@ -29,7 +29,7 @@
 
 	<?php foreach ( $fields as $field_id => $field ) : ?>
 
-		<?php $is_select = 'select' === $field['type'] && isset( $field['options'] ) && ! empty( $field['options'] ); ?>
+		<?php $is_select = isset( $field['type'], $field['options'] ) && 'select' === $field['type'] && ! empty( $field['options'] ); ?>
 
 		<td class="token-<?php echo esc_attr( $field_id ); ?>">
 
