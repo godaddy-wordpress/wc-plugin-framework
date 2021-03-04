@@ -326,10 +326,9 @@ abstract class Admin {
 		if ( ! empty( $errors ) ) {
 
 			$message = sprintf(
-				/* translators: Placeholders:  - external checkout label, %2$s - <strong> tag, %3$s - </strong> tag */
-				__( '%2$S%1$s is disabled.%3$S', 'woocommerce-plugin-framework' ),
-				$this->handler->get_label(),
-				'<strong>', '</strong>'
+				/* translators: Placeholder: %s - external checkout label */
+				'<strong>' . __( '%s is disabled.', 'woocommerce-plugin-framework' ) . '</strong>',
+				$this->handler->get_label()
 			);
 
 			if ( 1 === count( $errors ) ) {
