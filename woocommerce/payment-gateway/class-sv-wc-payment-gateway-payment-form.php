@@ -99,7 +99,22 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 		add_action( "wc_{$gateway_id}_payment_form_end",   array( $this, 'render_fieldset_end' ), 5 );
 
 		// payment form JS
-		add_action( "wc_{$gateway_id}_payment_form_end",   array( $this, 'render_js' ), 5 );
+		add_action( 'wp_footer', [ $this, 'load_render_js' ] );
+	}
+
+
+	/**
+	 * Loads payment gateway render script if checkout page or pay page.
+	 *
+	 * @since 5.10.5
+	 */
+	public function load_render_js() {
+
+		// also make sure it's not order received page
+		if ( ! is_order_received_page() && ( is_checkout() || is_checkout_pay_page() ) ) {
+			// payment form JS
+			add_action( 'wp_footer', [ $this, 'render_js' ] );
+		}
 	}
 
 
