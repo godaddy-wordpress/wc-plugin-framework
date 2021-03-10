@@ -983,6 +983,19 @@ class SV_WC_Helper {
 
 
 	/**
+	 * Determines whether the new WooCommerce enhanced navigation is supported and enabled.
+	 *
+	 * @since 5.10.6
+	 *
+	 * @return bool
+	 */
+	public static function is_wc_navigation_enabled() {
+
+
+	}
+
+
+	/**
 	 * Determines if the current request is for a WC REST API endpoint.
 	 *
 	 * @see \WooCommerce::is_rest_api_request()
