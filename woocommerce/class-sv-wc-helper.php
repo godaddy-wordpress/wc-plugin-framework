@@ -24,6 +24,9 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_6;
 
+use Automattic\WooCommerce\Admin\Features\Navigation\Menu;
+use Automattic\WooCommerce\Admin\Features\Navigation\Screen;
+use Automattic\WooCommerce\Admin\Features\Features;
 use Automattic\WooCommerce\Admin\Loader;
 
 defined( 'ABSPATH' ) or exit;
