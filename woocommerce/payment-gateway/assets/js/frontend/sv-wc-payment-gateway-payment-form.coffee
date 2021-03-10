@@ -64,6 +64,12 @@ jQuery ( $ ) ->
 		# Returns nothing.
 		handle_checkout_page: ->
 
+			# make sure payment fields initialized upon method selection
+			$( document.body ).on( 'payment_method_selected', =>
+				if "payment_method_#{ @id }" == $( '.woocommerce-checkout input[name="payment_method"]:checked' ).attr( 'id' )
+					this.set_payment_fields( )
+			)
+
 			# format/validate credit card inputs using jQuery.payment
 			$( document.body ).on( 'updated_checkout', => this.format_credit_card_inputs() ) if @type is 'credit-card'
 
