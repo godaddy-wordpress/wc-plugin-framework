@@ -991,7 +991,7 @@ class SV_WC_Helper {
 	 */
 	public static function is_wc_navigation_enabled() {
 
-		return self::is_enhanced_admin_screen() &&
+		return
 			is_callable( [ Screen::class, 'register_post_type' ] ) &&
 			is_callable( [ Menu::class, 'add_plugin_item' ] ) &&
 			is_callable( [ Menu::class, 'add_plugin_category' ] ) &&
