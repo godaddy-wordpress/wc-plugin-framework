@@ -111,7 +111,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	public function load_render_js() {
 
 		// also make sure it's not order received page
-		if ( ! is_order_received_page() && ( is_checkout() || is_checkout_pay_page() ) ) {
+		if ( ! is_order_received_page() && ( is_checkout() || is_checkout_pay_page() || is_add_payment_method_page() ) ) {
 			// payment form JS
 			add_action( 'wp_footer', [ $this, 'render_js' ] );
 		}
