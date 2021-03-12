@@ -987,11 +987,11 @@ class SV_WC_Helper {
 	public static function is_wc_navigation_enabled() {
 
 		return
-			is_callable( [ Automattic\WooCommerce\Admin\Features\Navigation\Screen::class, 'register_post_type' ] ) &&
-			is_callable( [ Automattic\WooCommerce\Admin\Features\Navigation\Menu::class, 'add_plugin_item' ] ) &&
-			is_callable( [ Automattic\WooCommerce\Admin\Features\Navigation\Menu::class, 'add_plugin_category' ] ) &&
-			is_callable( [ Automattic\WooCommerce\Admin\Features\Features::class, 'is_enabled' ] ) &&
-			Automattic\WooCommerce\Admin\Features\Features::is_enabled( 'navigation' );
+			is_callable( [ \Automattic\WooCommerce\Admin\Features\Navigation\Screen::class, 'register_post_type' ] ) &&
+			is_callable( [ \Automattic\WooCommerce\Admin\Features\Navigation\Menu::class, 'add_plugin_item' ] ) &&
+			is_callable( [ \Automattic\WooCommerce\Admin\Features\Navigation\Menu::class, 'add_plugin_category' ] ) &&
+			is_callable( [ \Automattic\WooCommerce\Admin\Features\Features::class, 'is_enabled' ] ) &&
+			\Automattic\WooCommerce\Admin\Features\Features::is_enabled( 'navigation' );
 	}
 
 
