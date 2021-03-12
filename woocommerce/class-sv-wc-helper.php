@@ -24,8 +24,6 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_6;
 
-use Automattic\WooCommerce\Admin\Loader;
-
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_6\\SV_WC_Helper' ) ) :
@@ -975,7 +973,25 @@ class SV_WC_Helper {
 	 */
 	public static function is_enhanced_admin_screen() {
 
-		return is_admin() && SV_WC_Plugin_Compatibility::is_enhanced_admin_available() && ( Loader::is_admin_page() || Loader::is_embed_page() );
+		return is_admin() && SV_WC_Plugin_Compatibility::is_enhanced_admin_available() && ( \Automattic\WooCommerce\Admin\Loader::is_admin_page() || \Automattic\WooCommerce\Admin\Loader::is_embed_page() );
+	}
+
+
+	/**
+	 * Determines whether the new WooCommerce enhanced navigation is supported and enabled.
+	 *
+	 * @since 5.10.6
+	 *
+	 * @return bool
+	 */
+	public static function is_wc_navigation_enabled() {
+
+		return
+			is_callable( [ \Automattic\WooCommerce\Admin\Features\Navigation\Screen::class, 'register_post_type' ] ) &&
+			is_callable( [ \Automattic\WooCommerce\Admin\Features\Navigation\Menu::class, 'add_plugin_item' ] ) &&
+			is_callable( [ \Automattic\WooCommerce\Admin\Features\Navigation\Menu::class, 'add_plugin_category' ] ) &&
+			is_callable( [ \Automattic\WooCommerce\Admin\Features\Features::class, 'is_enabled' ] ) &&
+			\Automattic\WooCommerce\Admin\Features\Features::is_enabled( 'navigation' );
 	}
 
 
