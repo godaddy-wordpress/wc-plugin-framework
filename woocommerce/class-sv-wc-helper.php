@@ -973,7 +973,7 @@ class SV_WC_Helper {
 	 */
 	public static function is_enhanced_admin_screen() {
 
-		return is_admin() && SV_WC_Plugin_Compatibility::is_enhanced_admin_available() && ( Automattic\WooCommerce\Admin\Loader::is_admin_page() || Automattic\WooCommerce\Admin\Loader::is_embed_page() );
+		return is_admin() && SV_WC_Plugin_Compatibility::is_enhanced_admin_available() && ( \Automattic\WooCommerce\Admin\Loader::is_admin_page() || \Automattic\WooCommerce\Admin\Loader::is_embed_page() );
 	}
 
 
