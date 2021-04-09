@@ -188,7 +188,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		add_action( 'init', array( $this, 'maybe_init_my_payment_methods' ) );
 
 		// apple pay feature
-		add_action( 'wp_loaded', array( $this, 'maybe_init_apple_pay' ) );
+		add_action( 'wp_loaded', [ $this, 'maybe_init_apple_pay' ] );
 
 		// Google Pay feature
 		add_action( 'wp_loaded', [ $this, 'maybe_init_google_pay' ] );
