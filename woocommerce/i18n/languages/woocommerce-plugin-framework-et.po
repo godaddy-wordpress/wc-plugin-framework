@@ -2021,7 +2021,7 @@ msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
 
-#: class-sv-wc-helper.php:410
+#: class-sv-wc-helper.php:408
 msgctxt "coordinating conjunction for a list of items: a, b, and c"
 msgid "and"
 msgstr ""

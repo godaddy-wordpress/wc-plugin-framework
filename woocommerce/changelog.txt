@@ -1,5 +1,11 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2021.04.15 - version 5.10.7
+ * Fix - Prevent fatal errors by loading External_Checkout extensions in the wp_loaded action rather than on init
+
+2021.03.12 - version 5.10.6
+ * Feature - Add a helper method to determine whether the new WC navigation feature is enabled
+
 2021.03.04 - version 5.10.5
  * Tweak - Add a class representation for Braintree PayPal tokens
 

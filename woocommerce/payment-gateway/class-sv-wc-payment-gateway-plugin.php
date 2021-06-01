@@ -22,16 +22,16 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_5;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_7;
 
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Note;
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_5\Payment_Gateway\External_Checkout\External_Checkout;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_5\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_7\Payment_Gateway\External_Checkout\External_Checkout;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_7\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_5\\SV_WC_Payment_Gateway_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_7\\SV_WC_Payment_Gateway_Plugin' ) ) :
 
 
 /**
@@ -188,10 +188,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		add_action( 'init', array( $this, 'maybe_init_my_payment_methods' ) );
 
 		// apple pay feature
-		add_action( 'init', array( $this, 'maybe_init_apple_pay' ) );
+		add_action( 'wp_loaded', [ $this, 'maybe_init_apple_pay' ] );
 
 		// Google Pay feature
-		add_action( 'init', [ $this, 'maybe_init_google_pay' ] );
+		add_action( 'wp_loaded', [ $this, 'maybe_init_google_pay' ] );
 
 		// TODO: move these to Subscriptions integration
 		if ( $this->is_subscriptions_active() ) {
