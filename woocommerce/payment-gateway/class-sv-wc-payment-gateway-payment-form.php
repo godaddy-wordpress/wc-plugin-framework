@@ -51,6 +51,9 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	/** @var string JS handler base class name, without the FW version */
 	protected $js_handler_base_class_name = 'SV_WC_Payment_Form_Handler';
 
+	/** @var bool true if payment inline js is rendered */
+	protected $js_rendered = false;
+
 
 	/**
 	 * Sets up class.
@@ -99,6 +102,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 		add_action( "wc_{$gateway_id}_payment_form_end",   array( $this, 'render_fieldset_end' ), 5 );
 
 		// payment form JS
+		add_action( "wc_{$gateway_id}_payment_form_end", [ $this, 'render_js' ], 5 );
 		add_action( 'wp_footer', [ $this, 'load_render_js' ] );
 	}
 
@@ -1028,7 +1032,27 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	 */
 	public function render_js() {
 
-		wc_enqueue_js( $this->get_safe_handler_js() );
+		// skip if script already rendered
+		if ( true === $this->js_rendered ) {
+			return;
+		}
+
+		$safe_handler_js = '<script type="text/javascript">jQuery(function($) { ' . $this->get_safe_handler_js() . ' });</script>';
+
+		// mark the script as rendered
+		$this->js_rendered = true;
+
+		/**
+		 * Payment Gateway Payment Form Safe Handler Javascript.
+		 *
+		 * Filters the js code to handler and initialize the payment form.
+		 *
+		 * @since 5.10.7
+		 *
+		 * @param string $safe_handler_js
+		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 */
+		echo apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_safe_handler_js', $safe_handler_js, $this );
 	}
 
 
