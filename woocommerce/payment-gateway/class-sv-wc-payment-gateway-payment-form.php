@@ -110,7 +110,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	/**
 	 * Loads payment gateway render script if checkout page or pay page.
 	 *
-	 * @since 5.10.5
+	 * @since 5.10.7
 	 */
 	public function load_render_js() {
 
