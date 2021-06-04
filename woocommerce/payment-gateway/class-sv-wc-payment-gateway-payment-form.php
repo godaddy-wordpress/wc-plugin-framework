@@ -1040,16 +1040,23 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	 */
 	public function render_js() {
 
+		$gateway_id = $this->get_gateway()->get_id();
+
 		// bail if the payment form JS was already rendered for the current gateway
-		if ( in_array( $this->get_gateway()->get_id(), $this->payment_form_js_rendered, true ) ) {
+		if ( in_array( $gateway_id, $this->payment_form_js_rendered, true ) ) {
 			return;
 		}
 
-		$this->payment_form_js_rendered[] = $this->get_gateway()->get_id();
+		$this->payment_form_js_rendered[] = $gateway_id;
 
-		?>
-		<script type="text/javascript">jQuery(function($){<?php echo $this->get_safe_handler_js(); ?>});</script>
-		<?php
+		switch ( current_action() ) :
+			case 'wp_footer' :
+				?><script type="text/javascript">jQuery(function($){<?php echo $this->get_safe_handler_js(); ?>});</script><?php
+			break;
+			case "wc_{$gateway_id}_payment_form_end" :
+				wc_enqueue_js( $this->get_safe_handler_js() );
+			break;
+		endswitch;
 	}
 
 
