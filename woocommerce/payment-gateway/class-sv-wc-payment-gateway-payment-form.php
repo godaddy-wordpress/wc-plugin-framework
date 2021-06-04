@@ -1013,8 +1013,6 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	 *
 	 * This is hooking directly into `wp_footer` in case the `wc_{$gateway_id}_payment_form_end` didn't trigger already.
 	 *
-	 * @internal
-	 *
 	 * @since 5.10.8
 	 */
 	public function maybe_render_js() {
@@ -1033,8 +1031,6 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	 * This may happen when the customer reaches checkout with a $0 value order.
 	 *
 	 * @see SV_WC_Payment_Gateway_Payment_Form::get_safe_handler_js()
-	 *
-	 * @internal
 	 *
 	 * @since 4.0.0
 	 */
