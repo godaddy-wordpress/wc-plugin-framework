@@ -1047,13 +1047,13 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 			return;
 		}
 
-		$this->payment_form_js_rendered[] = $gateway_id;
-
 		switch ( current_action() ) :
 			case 'wp_footer' :
+				$this->payment_form_js_rendered[] = $gateway_id;
 				?><script type="text/javascript">jQuery(function($){<?php echo $this->get_safe_handler_js(); ?>});</script><?php
 			break;
 			case "wc_{$gateway_id}_payment_form_end" :
+				$this->payment_form_js_rendered[] = $gateway_id;
 				wc_enqueue_js( $this->get_safe_handler_js() );
 			break;
 		endswitch;
