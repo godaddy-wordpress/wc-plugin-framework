@@ -1009,7 +1009,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 
 	/**
-	 * Renders the payment gateway JS on checkout or pay pages.
+	 * Maybe renders the payment gateway JS on checkout or pay pages.
 	 *
 	 * This is hooking directly into `wp_footer` in case the `wc_{$gateway_id}_payment_form_end` didn't trigger.
 	 *
@@ -1031,33 +1031,23 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	 * This is normally hooked to `wc_{$gateway_id}_payment_form_end` with priority 5.
 	 * However, in the circumstances this doesn't trigger, {@see SV_WC_Payment_Gateway_Payment_Form::maybe_render_js()} hooked to footer.
 	 *
+	 * @see SV_WC_Payment_Gateway_Payment_Form::get_safe_handler_js()
+	 *
 	 * @internal
 	 *
 	 * @since 4.0.0
 	 */
 	public function render_js() {
 
-		// skip if script already rendered
 		if ( true === $this->js_rendered ) {
 			return;
 		}
 
-		$safe_handler_js = '<script type="text/javascript">jQuery(function($) { ' . $this->get_safe_handler_js() . ' });</script>';
-
-		// mark the script as rendered
 		$this->js_rendered = true;
 
-		/**
-		 * Payment Gateway Payment Form Safe Handler Javascript.
-		 *
-		 * Filters the js code to handler and initialize the payment form.
-		 *
-		 * @since 5.10.7
-		 *
-		 * @param string $safe_handler_js
-		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
-		 */
-		echo apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_safe_handler_js', $safe_handler_js, $this );
+		?>
+		<script type="text/javascript">jQuery(function($){<?php echo $this->get_safe_handler_js(); ?>});</script>
+		<?php
 	}
 
 
