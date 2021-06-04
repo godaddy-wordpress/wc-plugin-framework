@@ -1015,7 +1015,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	 *
 	 * @internal
 	 *
-	 * @since 5.10.7
+	 * @since 5.10.8
 	 */
 	public function maybe_render_js() {
 
