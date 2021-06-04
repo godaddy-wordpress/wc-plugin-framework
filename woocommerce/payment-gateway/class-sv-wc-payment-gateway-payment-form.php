@@ -103,22 +103,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 		// payment form JS
 		add_action( "wc_{$gateway_id}_payment_form_end", [ $this, 'render_js' ], 5 );
-		add_action( 'wp_footer', [ $this, 'load_render_js' ] );
-	}
-
-
-	/**
-	 * Loads payment gateway render script if checkout page or pay page.
-	 *
-	 * @since 5.10.7
-	 */
-	public function load_render_js() {
-
-		// also make sure it's not order received page
-		if ( ! is_order_received_page() && ( is_checkout() || is_checkout_pay_page() || is_add_payment_method_page() ) ) {
-			// payment form JS
-			$this->render_js();
-		}
+		add_action( 'wp_footer', [ $this, 'maybe_render_js'] );
 	}
 
 
@@ -1024,9 +1009,29 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 
 	/**
-	 * Renders the payment form JS
+	 * Renders the payment gateway JS on checkout or pay pages.
 	 *
-	 * @hooked wc_{gateway ID}_payment_form_end @ priority 5
+	 * This is hooking directly into `wp_footer` in case the `wc_{$gateway_id}_payment_form_end` didn't trigger.
+	 *
+	 * @internal
+	 *
+	 * @since 5.10.7
+	 */
+	public function maybe_render_js() {
+
+		if ( ! is_order_received_page() && ( is_checkout() || is_checkout_pay_page() || is_add_payment_method_page() ) ) {
+			$this->render_js();
+		}
+	}
+
+
+	/**
+	 * Renders the payment form JS.
+	 *
+	 * This is normally hooked to `wc_{$gateway_id}_payment_form_end` with priority 5.
+	 * However, in the circumstances this doesn't trigger, {@see SV_WC_Payment_Gateway_Payment_Form::maybe_render_js()} hooked to footer.
+	 *
+	 * @internal
 	 *
 	 * @since 4.0.0
 	 */
