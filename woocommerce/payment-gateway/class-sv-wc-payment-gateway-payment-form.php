@@ -51,6 +51,9 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	/** @var string JS handler base class name, without the FW version */
 	protected $js_handler_base_class_name = 'SV_WC_Payment_Form_Handler';
 
+	/** @var bool memoization to account whether the payment JS has been rendered for a gateway */
+	protected $payment_form_js_rendered = [];
+
 
 	/**
 	 * Sets up class.
@@ -99,7 +102,8 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 		add_action( "wc_{$gateway_id}_payment_form_end",   array( $this, 'render_fieldset_end' ), 5 );
 
 		// payment form JS
-		add_action( "wc_{$gateway_id}_payment_form_end",   array( $this, 'render_js' ), 5 );
+		add_action( "wc_{$gateway_id}_payment_form_end", [ $this, 'render_js' ], 5 );
+		add_action( 'wp_footer', [ $this, 'maybe_render_js' ] );
 	}
 
 
@@ -1005,15 +1009,50 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 
 	/**
-	 * Renders the payment form JS
+	 * Maybe renders the payment gateway JS on checkout or pay pages.
 	 *
-	 * @hooked wc_{gateway ID}_payment_form_end @ priority 5
+	 * This is hooking directly into `wp_footer` in case the `wc_{$gateway_id}_payment_form_end` didn't trigger already.
+	 *
+	 * @since 5.10.8
+	 */
+	public function maybe_render_js() {
+
+		if ( ! is_order_received_page() && ( is_checkout() || is_checkout_pay_page() || is_add_payment_method_page() ) ) {
+			$this->render_js();
+		}
+	}
+
+
+	/**
+	 * Renders the payment form JS.
+	 *
+	 * This is normally hooked to `wc_{$gateway_id}_payment_form_end` with priority 5.
+	 * However, in the circumstance this doesn't trigger, {@see SV_WC_Payment_Gateway_Payment_Form::maybe_render_js()} hooked to footer.
+	 * This may happen when the customer reaches checkout with a $0 value order.
+	 *
+	 * @see SV_WC_Payment_Gateway_Payment_Form::get_safe_handler_js()
 	 *
 	 * @since 4.0.0
 	 */
 	public function render_js() {
 
-		wc_enqueue_js( $this->get_safe_handler_js() );
+		$gateway_id = $this->get_gateway()->get_id();
+
+		// bail if the payment form JS was already rendered for the current gateway
+		if ( in_array( $gateway_id, $this->payment_form_js_rendered, true ) ) {
+			return;
+		}
+
+		switch ( current_action() ) :
+			case 'wp_footer' :
+				$this->payment_form_js_rendered[] = $gateway_id;
+				?><script type="text/javascript">jQuery(function($){<?php echo $this->get_safe_handler_js(); ?>});</script><?php
+			break;
+			case "wc_{$gateway_id}_payment_form_end" :
+				$this->payment_form_js_rendered[] = $gateway_id;
+				wc_enqueue_js( $this->get_safe_handler_js() );
+			break;
+		endswitch;
 	}
 
 
