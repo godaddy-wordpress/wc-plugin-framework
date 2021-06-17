@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2021.nn.nn - version 5.10.8
+2021.06.17 - version 5.10.8
+ * Fix - Address an issue at checkout with payment form JS never loaded a $0 order has a total updated later
 
 2021.04.15 - version 5.10.7
  * Fix - Prevent fatal errors by loading External_Checkout extensions in the wp_loaded action rather than on init
