@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2021.nn.nn - version 5.10.8
+
 2021.04.15 - version 5.10.7
  * Fix - Prevent fatal errors by loading External_Checkout extensions in the wp_loaded action rather than on init
 
