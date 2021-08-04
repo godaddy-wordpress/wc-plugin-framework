@@ -158,12 +158,12 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		//  for logged-out users to use the customer session ID instead of 0 for user ID. We *want* to check
 		//  against a UID of 0 (since that's how the nonce was created), so we temporarily pause the
 		//  logged-out nonce hijacking before standing aside.
-		remove_filter( 'nonce_user_logged_out', array( WC()->session, 'nonce_user_logged_out' ) );
+		remove_filter( 'nonce_user_logged_out', array( WC()->session, 'maybe_update_nonce_user_logged_out' ) );
 
 		check_ajax_referer( $this->identifier, 'nonce' );
 
 		// sorry, later nonce users! please play again
-		add_filter( 'nonce_user_logged_out', array( WC()->session, 'nonce_user_logged_out' ) );
+		add_filter( 'nonce_user_logged_out', array( WC()->session, 'maybe_update_nonce_user_logged_out' ) );
 
 		$this->handle();
 
