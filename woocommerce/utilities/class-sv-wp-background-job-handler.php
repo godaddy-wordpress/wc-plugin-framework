@@ -150,20 +150,26 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 			wp_die();
 		}
 
-		// WC core does 2 things here that can interfere with our nonce check:
-		// 1. WooCommerce starts a session due to our GET request to dispatch a job
-		//  However, this happens *after* we've generated a nonce without a session (in CRON context)
-		// 2. it then filters nonces for logged-out users indiscriminately without checking the nonce action; if
-		//  there is a session created (and now the server does have one), it tries to filter every.single.nonce
-		//  for logged-out users to use the customer session ID instead of 0 for user ID. We *want* to check
-		//  against a UID of 0 (since that's how the nonce was created), so we temporarily pause the
-		//  logged-out nonce hijacking before standing aside.
-		remove_filter( 'nonce_user_logged_out', array( WC()->session, 'nonce_user_logged_out' ) );
+		/**
+		 * WC core does 2 things here that can interfere with our nonce check:
+		 *
+		 * 1. WooCommerce starts a session due to our GET request to dispatch a job
+		 *  However, this happens *after* we've generated a nonce without a session (in CRON context)
+		 * 2. it then filters nonces for logged-out users indiscriminately without checking the nonce action; if
+		 *  there is a session created (and now the server does havegit  one), it tries to filter every.single.nonce
+		 *  for logged-out users to use the customer session ID instead of 0 for user ID. We *want* to check
+		 *  against a UID of 0 (since that's how the nonce was created), so we temporarily pause the
+		 *  logged-out nonce hijacking before standing aside.
+		 *
+		 * @see \WC_Session_Handler::nonce_user_logged_out() WC < 5.3
+		 * @see \WC_Session_Handler::maybe_update_nonce_user_logged_out() WC >= 5.3
+		 */
+		remove_filter( 'nonce_user_logged_out', [ WC()->session, SV_WC_Plugin_Compatibility::is_wc_version_gte('5.3') ? 'maybe_update_nonce_user_logged_out' : 'nonce_user_logged_out' ] );
 
 		check_ajax_referer( $this->identifier, 'nonce' );
 
 		// sorry, later nonce users! please play again
-		add_filter( 'nonce_user_logged_out', array( WC()->session, 'nonce_user_logged_out' ) );
+		add_filter( 'nonce_user_logged_out', [ WC()->session, SV_WC_Plugin_Compatibility::is_wc_version_gte('5.3') ? 'maybe_update_nonce_user_logged_out' : 'nonce_user_logged_out' ] );
 
 		$this->handle();
 
