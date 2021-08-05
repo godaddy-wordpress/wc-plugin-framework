@@ -167,10 +167,10 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 */
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte('5.3') ) {
 			$callback = [ WC()->session, 'maybe_update_nonce_user_logged_out' ];
-			$arguments = 1;
+			$arguments = 2;
 		} else {
 			$callback = [ WC()->session, 'nonce_user_logged_out' ];
-			$arguments = 2;
+			$arguments = 1;
 		}
 
 		remove_filter( 'nonce_user_logged_out', $callback );
