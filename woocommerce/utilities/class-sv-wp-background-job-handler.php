@@ -161,15 +161,24 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		 *  against a UID of 0 (since that's how the nonce was created), so we temporarily pause the
 		 *  logged-out nonce hijacking before standing aside.
 		 *
-		 * @see \WC_Session_Handler::nonce_user_logged_out() WC < 5.3
-		 * @see \WC_Session_Handler::maybe_update_nonce_user_logged_out() WC >= 5.3
+		 * @see \WC_Session_Handler::init() when the action is hooked
+		 * @see \WC_Session_Handler::nonce_user_logged_out() WC < 5.3 callback
+		 * @see \WC_Session_Handler::maybe_update_nonce_user_logged_out() WC >= 5.3 callback
 		 */
-		remove_filter( 'nonce_user_logged_out', [ WC()->session, SV_WC_Plugin_Compatibility::is_wc_version_gte('5.3') ? 'maybe_update_nonce_user_logged_out' : 'nonce_user_logged_out' ] );
+		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte('5.3') ) {
+			$callback = [ WC()->session, 'maybe_update_nonce_user_logged_out' ];
+			$arguments = 1;
+		} else {
+			$callback = [ WC()->session, 'nonce_user_logged_out' ];
+			$arguments = 2;
+		}
+
+		remove_filter( 'nonce_user_logged_out', $callback );
 
 		check_ajax_referer( $this->identifier, 'nonce' );
 
 		// sorry, later nonce users! please play again
-		add_filter( 'nonce_user_logged_out', [ WC()->session, SV_WC_Plugin_Compatibility::is_wc_version_gte('5.3') ? 'maybe_update_nonce_user_logged_out' : 'nonce_user_logged_out' ] );
+		add_filter( 'nonce_user_logged_out', $callback, 10, $arguments );
 
 		$this->handle();
 
