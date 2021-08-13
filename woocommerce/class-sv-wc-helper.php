@@ -1095,7 +1095,18 @@ class SV_WC_Helper {
 		}
 	}
 
-
+	/**
+	 * Returns a string of placeholders correlating to the quantity of the passed in array.
+	 *
+	 * This function prepares a string list of placeholders to be utilized with $wpdb::prepare().
+	 *
+	 * @since x.y.z
+	 * @param array $array An array of SQL query args.
+	 * @param string $placeholder Optional. The placeholder type.
+	 */
+	public static function get_placeholder_list( array $array, string $placeholder = '%s' ) : string {
+		return implode( ', ', array_fill( 0, count( $array ), $placeholder ) );
+	}
 }
 
 
