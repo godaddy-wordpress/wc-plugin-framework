@@ -1102,7 +1102,7 @@ class SV_WC_Helper {
 	 *
 	 * @since x.y.z
 	 * @param array $array An array of SQL query args.
-	 * @param string $placeholder Optional. The placeholder type.
+	 * @param string $placeholder Optional. The placeholder type. defaults to '%s'
 	 */
 	public static function get_placeholder_list( array $array, string $placeholder = '%s' ) : string {
 		return implode( ', ', array_fill( 0, count( $array ), $placeholder ) );
