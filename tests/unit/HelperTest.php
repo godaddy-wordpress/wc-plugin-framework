@@ -14,22 +14,18 @@ class HelperTest extends \Codeception\Test\Unit {
 		require_once( 'woocommerce/class-sv-wc-helper.php' );
 	}
 
-	protected function _after() {
-
-	}
-
 	/**
 	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_10_8\SV_WC_Helper::get_placeholder_list()
 	 *
-	 * @param array $array input country code
+	 * @param array $array values to generate list from
 	 * @param string $expected expected return value
+	 * @param string $placeholder placeholder to be used in list
 	 *
 	 * @dataProvider provider_can_get_placeholder_list
 	 */
-	public function test_can_get_placeholder_list( array $array, $expected, $placeholder ) {
+	public function test_can_get_placeholder_list( array $array, string $expected, string $placeholder ) {
 
-		$result = \SkyVerge\WooCommerce\PluginFramework\v5_10_8\SV_WC_Helper::get_placeholder_list( $array, $placeholder );
-		$this->assertEquals( $expected, $result );
+		$this->assertEquals( $expected, \SkyVerge\WooCommerce\PluginFramework\v5_10_8\SV_WC_Helper::get_placeholder_list( $array, $placeholder ) );
 	}
 
 
@@ -38,8 +34,7 @@ class HelperTest extends \Codeception\Test\Unit {
 	 *
 	 * @return array
 	 */
-	public function provider_can_get_placeholder_list() {
-
+	public function provider_can_get_placeholder_list() : array {
 		return [
 			'Floating point values' => [ [1.1, 2.1], '%f, %f', '%f' ],
 			'Integer values' => [ [1, 2], '%d, %d', '%d' ],
