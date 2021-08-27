@@ -237,7 +237,7 @@ class SV_WC_Helper {
 	/**
 	 * Formats a number as a percentage.
 	 *
-	 * @since x.y.z
+	 * @since 5.10.9
 	 *
 	 * @NOTE The second and third parameter below are directly passed to {@see wc_format_decimal()} in case the decimal output or rounding needs to be tweaked.
 	 *
@@ -1119,7 +1119,7 @@ class SV_WC_Helper {
 	 *
 	 * This can be safely used in SQL IN clauses.
 	 *
-	 * @since x.y.z
+	 * @since 5.10.9
 	 *
 	 * @param string[] $values
 	 * @return string
@@ -1136,7 +1136,7 @@ class SV_WC_Helper {
 	 *
 	 * This can be safely used for SQL IN clauses.
 	 *
-	 * @since x.y.z
+	 * @since 5.10.9
 	 *
 	 * @param int[] $ids
 	 * @return string
