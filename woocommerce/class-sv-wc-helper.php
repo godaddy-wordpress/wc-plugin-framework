@@ -1109,9 +1109,7 @@ class SV_WC_Helper {
 	public static function get_escaped_string_list( array $values ) : string {
 		global $wpdb;
 
-		$result = $wpdb->prepare( implode( ', ', array_fill( 0, count( $values ), '%s' ) ), $values );
-
-		return is_string( $result ) ? $result : '';
+		return (string) $wpdb->prepare( implode( ', ', array_fill( 0, count( $values ), '%s' ) ), $values );
 	}
 
 
