@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2021, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_8;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_9;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_8\\SV_WC_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_9\\SV_WC_Helper' ) ) :
 
 
 /**
@@ -231,6 +231,24 @@ class SV_WC_Helper {
 
 		// preg_replace with the /u modifier can return null or false on failure
 		return ( is_null( $sane_string ) || false === $sane_string ) ? $string : $sane_string;
+	}
+
+
+	/**
+	 * Formats a number as a percentage.
+	 *
+	 * @since 5.10.9
+	 *
+	 * @NOTE The second and third parameter below are directly passed to {@see wc_format_decimal()} in case the decimal output or rounding needs to be tweaked.
+	 *
+	 * @param float|int|string $fraction the fraction to format as percentage
+	 * @param int|string|false number of decimal points to use, empty string to use {@see woocommerce_price_num_decimals(), or false to avoid rounding (optional, default).
+	 * @param bool $trim_zeros from end of string (optional, default false)
+	 * @return string fraction formatted as percentage
+	 */
+	public static function format_percentage( $fraction, $decimal_points = false, $trim_zeros = false ) {
+
+		return sprintf( '%s%%', (string) wc_format_decimal( $fraction * 100, $decimal_points, $trim_zeros ) );
 	}
 
 
@@ -1093,6 +1111,39 @@ class SV_WC_Helper {
 
 			trigger_error( $message, $type );
 		}
+	}
+
+
+	/**
+	 * Converts an array of strings to a comma separated list of strings, escaped for SQL use.
+	 *
+	 * This can be safely used in SQL IN clauses.
+	 *
+	 * @since 5.10.9
+	 *
+	 * @param string[] $values
+	 * @return string
+	 */
+	public static function get_escaped_string_list( array $values ) {
+		global $wpdb;
+
+		return (string) $wpdb->prepare( implode( ', ', array_fill( 0, count( $values ), '%s' ) ), $values );
+	}
+
+
+	/**
+	 * Converts an array of numerical integers into a comma separated list of IDs.
+	 *
+	 * This can be safely used for SQL IN clauses.
+	 *
+	 * @since 5.10.9
+	 *
+	 * @param int[] $ids
+	 * @return string
+	 */
+	public static function get_escaped_id_list( array $ids ) {
+
+		return implode( ',', array_unique( array_map( 'intval', $ids ) ) );
 	}
 
 

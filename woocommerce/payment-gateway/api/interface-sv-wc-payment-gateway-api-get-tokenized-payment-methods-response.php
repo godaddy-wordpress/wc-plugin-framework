@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/API
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2020, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2021, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_8;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_9;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_8\\SV_WC_API_Get_Tokenized_Payment_Methods_Response' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_9\\SV_WC_API_Get_Tokenized_Payment_Methods_Response' ) ) :
 
 
 /**
