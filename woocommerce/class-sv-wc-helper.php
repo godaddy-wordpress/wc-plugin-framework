@@ -235,6 +235,24 @@ class SV_WC_Helper {
 
 
 	/**
+	 * Formats a number as a percentage.
+	 *
+	 * @since x.y.z
+	 *
+	 * @NOTE The second and third parameter below are directly passed to {@see wc_format_decimal()} in case the decimal output or rounding needs to be tweaked.
+	 *
+	 * @param float|int|string $fraction the fraction to format as percentage
+	 * @param int|string|false number of decimal points to use, empty string to use {@see woocommerce_price_num_decimals(), or false to avoid rounding (optional, default).
+	 * @param bool $trim_zeros from end of string (optional, default false)
+	 * @return string fraction formatted as percentage
+	 */
+	public static function format_percentage( $fraction, $decimal_points = false, $trim_zeros = false ) : string {
+
+		return sprintf( '%s%%', (string) wc_format_decimal( $fraction * 100, $decimal_points, $trim_zeros ) );
+	}
+
+
+	/**
 	 * Helper method to check if the multibyte extension is loaded, which
 	 * indicates it's safe to use the mb_*() string methods
 	 *
