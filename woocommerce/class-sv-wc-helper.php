@@ -246,7 +246,7 @@ class SV_WC_Helper {
 	 * @param bool $trim_zeros from end of string (optional, default false)
 	 * @return string fraction formatted as percentage
 	 */
-	public static function format_percentage( $fraction, $decimal_points = false, $trim_zeros = false ) : string {
+	public static function format_percentage( $fraction, $decimal_points = false, $trim_zeros = false ) {
 
 		return sprintf( '%s%%', (string) wc_format_decimal( $fraction * 100, $decimal_points, $trim_zeros ) );
 	}
@@ -1124,7 +1124,7 @@ class SV_WC_Helper {
 	 * @param string[] $values
 	 * @return string
 	 */
-	public static function get_escaped_string_list( array $values ) : string {
+	public static function get_escaped_string_list( array $values ) {
 		global $wpdb;
 
 		return (string) $wpdb->prepare( implode( ', ', array_fill( 0, count( $values ), '%s' ) ), $values );
@@ -1141,7 +1141,7 @@ class SV_WC_Helper {
 	 * @param int[] $ids
 	 * @return string
 	 */
-	public static function get_escaped_id_list( array $ids ) : string {
+	public static function get_escaped_id_list( array $ids ) {
 
 		return implode( ',', array_unique( array_map( 'intval', $ids ) ) );
 	}
