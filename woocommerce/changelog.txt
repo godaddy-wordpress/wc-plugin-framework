@@ -1,6 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2021.nn.nn - version 5.10.9
+ * Feature - Add helper methods to convert arrays to comma separated lists for database IN clauses use
+ * Feature - Add helper method to format a percentage
 
 2021.06.17 - version 5.10.8
  * Fix - Address an issue at checkout with payment form JS never loaded when a $0 order has a total updated later
