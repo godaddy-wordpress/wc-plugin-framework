@@ -60,8 +60,8 @@ class HelperTest extends \Codeception\TestCase\WPTestCase {
 	public function provider_get_escaped_string_list() : array {
 
 		return [
-			'Strings'        => [['foo', 'bar', 'baz'], 'foo,bar.baz'],
-			'Mixed content'  => [['foo', 0, 1, '2', -3, '-4.5'], 'foo,0,1,2,-3,-4.5'],
+			'Strings'        => [['foo', 'bar', 'baz'], "'foo', 'bar', 'baz'"],
+			'Mixed content'  => [['foo', 0, 1, '2', -3, '-4.5'], "'foo', '0', '1', '2', '-3', '-4.5'"],
 		];
 	}
 
@@ -84,7 +84,7 @@ class HelperTest extends \Codeception\TestCase\WPTestCase {
 	public function provider_get_escaped_id_list() : array {
 
 		return [
-			'Non-numbers'                => [[null, false, true, 'test'], '0,0,1,1'],
+			'Non-numbers'                => [[null, false, true, 'test'], '0,1'],
 			'Integers'                   => [[1, 2, 3], '1,2,3'],
 			'Negative integers'          => [[-1, -2, -3], '1,2,3'],
 			'Numerical strings'          => [['1', '2', '3'], '1,2,3'],
