@@ -2,7 +2,7 @@
  WooCommerce SkyVerge Payment Gateway My Payment Methods CoffeeScript
  Version 5.1.0
 
- Copyright (c) 2014-2020, SkyVerge, Inc.
+ Copyright (c) 2014-2021, SkyVerge, Inc.
  Licensed under the GNU General Public License v3.0
  http://www.gnu.org/licenses/gpl-3.0.html
 ###
@@ -12,7 +12,7 @@ jQuery ( $ ) ->
 	# The My Payment Methods handler.
 	#
 	# @since 5.1.0
-	class window.SV_WC_Payment_Methods_Handler_v5_10_8
+	class window.SV_WC_Payment_Methods_Handler_v5_10_9
 
 
 		# Constructs the class.
@@ -268,4 +268,4 @@ jQuery ( $ ) ->
 
 
 	# dispatch loaded event
-	$( document.body ).trigger( 'sv_wc_payment_methods_handler_v5_10_8_loaded' )
+	$( document.body ).trigger( 'sv_wc_payment_methods_handler_v5_10_9_loaded' )

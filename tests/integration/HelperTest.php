@@ -1,11 +1,11 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_8 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_9 as Framework;
 
 /**
  * Tests for the helper class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_10_8\SV_WC_Plugin_Compatibility
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_10_9\SV_WC_Plugin_Compatibility
  */
 class HelperTest extends \Codeception\TestCase\WPTestCase {
 
@@ -57,11 +57,12 @@ class HelperTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/** @see can_get_escaped_string_list **/
-	public function provider_get_escaped_string_list() : array {
+	public function provider_get_escaped_string_list() : array
+	{
 
 		return [
-			'Strings'        => [['foo', 'bar', 'baz'], "'foo', 'bar', 'baz'"],
-			'Mixed content'  => [['foo', 0, 1, '2', -3, '-4.5'], "'foo', '0', '1', '2', '-3', '-4.5'"],
+			'Strings' => [['foo', 'bar', 'baz'], "'foo', 'bar', 'baz'"],
+			'Mixed content' => [['foo', 0, 1, '2', -3, '-4.5'], "'foo', '0', '1', '2', '-3', '-4.5'"],
 		];
 	}
 
@@ -89,6 +90,38 @@ class HelperTest extends \Codeception\TestCase\WPTestCase {
 			'Negative integers'          => [[-1, -2, -3], '-1,-2,-3'],
 			'Numerical strings'          => [['1', '2', '3'], '1,2,3'],
 			'Negative numerical strings' => [['-1', '-2', '-3'], '-1,-2,-3'],
+		];
+	}
+
+
+	/**
+	 * Tests {@see Framework\SV_WC_Helper::format_percentage()}.
+	 *
+	 * @dataProvider provider_format_percentage
+	 *
+	 * @param float|int|string $number the number to format as percentage
+	 * @param string $expected result
+	 *
+	 */
+	public function test_format_percentage( $number, string $expected ) {
+
+		$this->assertSame( $expected, Framework\SV_WC_Helper::format_percentage( $number ) );
+	}
+
+
+	/**
+	 * Data provider for {@see HelperTest::test_format_percentage()}.
+	 *
+	 * @return array[]
+	 */
+	public function provider_format_percentage() {
+
+		return [
+			[ 0.5, '50%' ],
+			[ '0.5', '50%' ],
+			[ 0, '0%' ],
+			[ 1, '100%' ],
+			[ 1.333333, '133.33%' ],
 		];
 	}
 
