@@ -86,9 +86,9 @@ class HelperTest extends \Codeception\TestCase\WPTestCase {
 		return [
 			'Non-numbers'                => [[null, false, true, 'test'], '0,1'],
 			'Integers'                   => [[1, 2, 3], '1,2,3'],
-			'Negative integers'          => [[-1, -2, -3], '1,2,3'],
+			'Negative integers'          => [[-1, -2, -3], '-1,-2,-3'],
 			'Numerical strings'          => [['1', '2', '3'], '1,2,3'],
-			'Negative numerical strings' => [['-1', '-2', '-3'], '1,2,3'],
+			'Negative numerical strings' => [['-1', '-2', '-3'], '-1,-2,-3'],
 		];
 	}
 

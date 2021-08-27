@@ -1127,7 +1127,7 @@ class SV_WC_Helper {
 	 */
 	public static function get_escaped_id_list( array $ids ) : string {
 
-		return implode( ',', array_unique( array_map( 'absint', $ids ) ) );
+		return implode( ',', array_unique( array_map( 'intval', $ids ) ) );
 	}
 
 
