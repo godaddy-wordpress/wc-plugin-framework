@@ -1095,18 +1095,42 @@ class SV_WC_Helper {
 		}
 	}
 
+
 	/**
-	 * Returns a string of placeholders correlating to the quantity of the passed in array.
+	 * Converts an array of strings to a comma separated list of strings, escaped for SQL use.
 	 *
-	 * This function prepares a string list of placeholders to be utilized with $wpdb::prepare().
+	 * This can be safely used in SQL IN clauses.
 	 *
 	 * @since x.y.z
-	 * @param array $array An array of SQL query args.
-	 * @param string $placeholder Optional. The placeholder type. defaults to '%s'
+	 *
+	 * @param string[] $values
+	 * @return string
 	 */
-	public static function get_placeholder_list( array $array, string $placeholder = '%s' ) : string {
-		return implode( ', ', array_fill( 0, count( $array ), $placeholder ) );
+	public static function get_escaped_string_list( array $values ) : string {
+		global $wpdb;
+
+		$result = $wpdb->prepare( implode( ', ', array_fill( 0, count( $values ), '%s' ) ), $values );
+
+		return is_string( $result ) ? $result : '';
 	}
+
+
+	/**
+	 * Converts an array of numerical integers into a comma separated list of IDs.
+	 *
+	 * This can be safely used for SQL IN clauses.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param int[] $ids
+	 * @return string
+	 */
+	public static function get_escaped_id_list( array $ids ) : string {
+
+		return implode( ',', array_unique( array_map( 'absint', $ids ) ) );
+	}
+
+
 }
 
 
