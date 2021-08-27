@@ -1114,6 +1114,39 @@ class SV_WC_Helper {
 	}
 
 
+	/**
+	 * Converts an array of strings to a comma separated list of strings, escaped for SQL use.
+	 *
+	 * This can be safely used in SQL IN clauses.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string[] $values
+	 * @return string
+	 */
+	public static function get_escaped_string_list( array $values ) : string {
+		global $wpdb;
+
+		return (string) $wpdb->prepare( implode( ', ', array_fill( 0, count( $values ), '%s' ) ), $values );
+	}
+
+
+	/**
+	 * Converts an array of numerical integers into a comma separated list of IDs.
+	 *
+	 * This can be safely used for SQL IN clauses.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param int[] $ids
+	 * @return string
+	 */
+	public static function get_escaped_id_list( array $ids ) : string {
+
+		return implode( ',', array_unique( array_map( 'intval', $ids ) ) );
+	}
+
+
 }
 
 
