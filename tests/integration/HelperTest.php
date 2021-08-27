@@ -45,6 +45,30 @@ class HelperTest extends \Codeception\TestCase\WPTestCase {
 	/**
 	 * Tests that can convert an array of IDs to a comma separated list.
 	 *
+	 * @dataProvider provider_get_escaped_string_list
+	 *
+	 * @param array $strings
+	 * @param string $expected
+	 */
+	public function can_get_escaped_string_list( array $strings, string $expected ) {
+
+		$this->assertSame( $expected, Framework\SV_WC_Helper::get_escaped_string_list( $strings ) );
+	}
+
+
+	/** @see can_get_escaped_string_list **/
+	public function provider_get_escaped_string_list() : array {
+
+		return [
+			'Strings'        => [['foo', 'bar', 'baz'], 'foo,bar.baz'],
+			'Mixed content'  => [['foo', 0, 1, '2', -3, '-4.5'], 'foo,0,1,2,-3,-4.5'],
+		];
+	}
+
+
+	/**
+	 * Tests that can convert an array of IDs to a comma separated list.
+	 *
 	 * @dataProvider can_get_escaped_id_list
 	 *
 	 * @param array $ids
@@ -52,7 +76,7 @@ class HelperTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function can_get_escaped_id_list( array $ids, string $expected ) {
 
-		$this->assertSame( $expected, Framework\SV_WC_Helper::get_escaped_id_list($ids) );
+		$this->assertSame( $expected, Framework\SV_WC_Helper::get_escaped_id_list( $ids ) );
 	}
 
 
