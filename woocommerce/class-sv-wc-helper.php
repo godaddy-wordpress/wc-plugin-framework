@@ -235,6 +235,25 @@ class SV_WC_Helper {
 
 
 	/**
+	 * Formats a number as a percentage.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param float|int|string $fraction the fraction to format as percentage
+	 * @return string fraction formatted as percentage
+	 */
+	public static function format_percentage( $fraction ) : string {
+
+		// use NumberFormatter from ext_intl if available
+		if ( class_exists( 'NumberFormatter' ) ) {
+			return ( new \NumberFormatter( get_locale(), \NumberFormatter::PERCENT ) )->format( $fraction );
+		}
+
+		return sprintf( '%f%%', wc_format_decimal( $fraction * 100 ) );
+	}
+
+
+	/**
 	 * Helper method to check if the multibyte extension is loaded, which
 	 * indicates it's safe to use the mb_*() string methods
 	 *
