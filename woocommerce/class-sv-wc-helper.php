@@ -244,11 +244,6 @@ class SV_WC_Helper {
 	 */
 	public static function format_percentage( $fraction ) : string {
 
-		// use NumberFormatter from ext_intl if available
-		if ( class_exists( 'NumberFormatter' ) ) {
-			return ( new \NumberFormatter( get_locale(), \NumberFormatter::PERCENT ) )->format( $fraction );
-		}
-
 		return sprintf( '%f%%', wc_format_decimal( $fraction * 100 ) );
 	}
 
