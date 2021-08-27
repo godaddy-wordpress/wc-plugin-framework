@@ -244,7 +244,7 @@ class SV_WC_Helper {
 	 */
 	public static function format_percentage( $fraction ) : string {
 
-		return sprintf( '%f%%', wc_format_decimal( $fraction * 100 ) );
+		return sprintf( '%s%%', wc_format_decimal( $fraction * 100, 2, true ) );
 	}
 
 
