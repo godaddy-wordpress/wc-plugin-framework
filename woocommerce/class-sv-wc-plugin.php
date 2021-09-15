@@ -43,7 +43,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.10.9';
+	const VERSION = '5.10.10';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
