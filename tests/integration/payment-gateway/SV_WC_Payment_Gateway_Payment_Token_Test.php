@@ -1,11 +1,11 @@
 <?php
 
-use \SkyVerge\WooCommerce\PluginFramework\v5_10_9 as Framework;
+use \SkyVerge\WooCommerce\PluginFramework\v5_10_10 as Framework;
 
 /**
  * Tests for the payment token object
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_10_9\SV_WC_Payment_Gateway_Payment_Token
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_10_10\SV_WC_Payment_Gateway_Payment_Token
  */
 class SV_WC_Payment_Gateway_Payment_Token_Test extends \Codeception\TestCase\WPTestCase {
 
