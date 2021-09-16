@@ -1,0 +1,1 @@
+C:37:"PHPUnit\Runner\DefaultTestResultCache":179:{a:2:{s:7:"defects";a:1:{s:54:"API\CacheableRequestTraitTest::test_get_cache_lifetime";i:4;}s:5:"times";a:1:{s:54:"API\CacheableRequestTraitTest::test_get_cache_lifetime";d:0.01;}}}
