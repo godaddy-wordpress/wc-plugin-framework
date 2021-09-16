@@ -583,6 +583,19 @@ abstract class SV_WC_API_Base {
 	}
 
 
+	/**
+	 * Checks whether the current request is cacheable.
+	 *
+	 * @since 5.10.10
+	 *
+	 * @return bool
+	 */
+	protected function is_request_cacheable() : bool {
+
+		return in_array( CacheableRequestTrait::class, class_uses( $this->request ), true) ;
+	}
+
+
 	/** Response Getters ******************************************************/
 
 
