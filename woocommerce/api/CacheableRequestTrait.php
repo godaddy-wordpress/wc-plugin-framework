@@ -41,7 +41,7 @@ trait CacheableRequestTrait {
 	 * @param int $lifetime cache lifetime, in seconds
 	 * @return $this
 	 */
-	public function set_cache_lifetime( int $lifetime ) : self {
+	public function set_cache_lifetime( int $lifetime ) {
 
 		$this->cache_lifetime = $lifetime;
 
