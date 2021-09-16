@@ -81,6 +81,8 @@ abstract class SV_WC_API_Base {
 	/** @var SV_WC_API_Response|object response */
 	protected $response;
 
+	/** @var bool whether the response was loaded from cache */
+	protected $response_loaded_from_cache = false;
 
 	/**
 	 * Perform the request and return the parsed response
@@ -265,10 +267,11 @@ abstract class SV_WC_API_Base {
 		);
 
 		$response_data = array(
-			'code'    => $this->get_response_code(),
-			'message' => $this->get_response_message(),
-			'headers' => $this->get_response_headers(),
-			'body'    => $this->get_sanitized_response_body() ? $this->get_sanitized_response_body() : $this->get_raw_response_body(),
+			'code'       => $this->get_response_code(),
+			'message'    => $this->get_response_message(),
+			'headers'    => $this->get_response_headers(),
+			'body'       => $this->get_sanitized_response_body() ? $this->get_sanitized_response_body() : $this->get_raw_response_body(),
+			'from_cache' => $this->is_response_loaded_from_cache(),
 		);
 
 		/**
@@ -291,6 +294,7 @@ abstract class SV_WC_API_Base {
 		 *     @type string $message response message
 		 *     @type string $headers response HTTP headers
 		 *     @type string $body response body
+		 *     @type bool $from_cache whether the response was loaded from cache or not
 		 * }
 		 * @param SV_WC_API_Base $this instance
 		 */
@@ -305,12 +309,13 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function reset_response() {
 
-		$this->response_code     = null;
-		$this->response_message  = null;
-		$this->response_headers  = null;
-		$this->raw_response_body = null;
-		$this->response          = null;
-		$this->request_duration  = null;
+		$this->response_code              = null;
+		$this->response_message           = null;
+		$this->response_headers           = null;
+		$this->raw_response_body          = null;
+		$this->response                   = null;
+		$this->request_duration           = null;
+		$this->response_loaded_from_cache = false;
 	}
 
 
@@ -665,6 +670,17 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function get_sanitized_response_body() {
 		return is_callable( array( $this->get_response(), 'to_string_safe' ) ) ? $this->get_response()->to_string_safe() : null;
+	}
+
+
+	/**
+	 * Determine whether the response was loaded from cache or not.
+	 *
+	 * @since 5.10.10
+	 * @return bool
+	 */
+	protected function is_response_loaded_from_cache() : bool {
+		return $this->response_loaded_from_cache;
 	}
 
 
