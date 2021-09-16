@@ -880,6 +880,32 @@ abstract class SV_WC_API_Base {
 	}
 
 
+	/**
+	 * Loads the response for the current request from the cache, if available.
+	 *
+	 * @since 5.10.10
+	 *
+	 * @return array|null
+	 */
+	protected function load_response_from_cache() {
+
+		return get_transient( $this->get_request_transient_key() );
+	}
+
+
+	/**
+	 * Saves the response to cache.
+	 *
+	 * @since 5.10.10
+	 *
+	 * @param array $response
+	 */
+	protected function save_response_to_cache( array $response ) {
+
+		set_transient( $this->get_request_transient_key(), $response, $this->request->get_cache_lifetime() );
+	}
+
+
 }
 
 
