@@ -103,13 +103,20 @@ abstract class SV_WC_API_Base {
 
 		$start_time = microtime( true );
 
-		// if this API requires TLS v1.2, force it
-		if ( $this->get_plugin()->require_tls_1_2() ) {
-			add_action( 'http_api_curl', array( $this, 'set_tls_1_2_request' ), 10, 3 );
-		}
+		if ( $this->is_request_cacheable() && ! $this->request->should_refresh() && $response = $this->load_response_from_cache() ) {
 
-		// perform the request
-		$response = $this->do_remote_request( $this->get_request_uri(), $this->get_request_args() );
+			$this->response_loaded_from_cache = true;
+
+		} else {
+
+			// if this API requires TLS v1.2, force it
+			if ( $this->get_plugin()->require_tls_1_2() ) {
+				add_action( 'http_api_curl', array( $this, 'set_tls_1_2_request' ), 10, 3 );
+			}
+
+			// perform the request
+			$response = $this->do_remote_request( $this->get_request_uri(), $this->get_request_args() );
+		}
 
 		// calculate request duration
 		$this->request_duration = round( microtime( true ) - $start_time, 5 );
@@ -117,7 +124,13 @@ abstract class SV_WC_API_Base {
 		try {
 
 			// parse & validate response
-			$response = $this->handle_response( $response );
+			$parsed_response = $this->handle_response( $response );
+
+			// cache the response
+			if ( ! $this->is_response_loaded_from_cache() && $this->is_request_cacheable() ) {
+
+				$this->save_response_to_cache( $response );
+			}
 
 		} catch ( SV_WC_Plugin_Exception $e ) {
 
@@ -127,7 +140,7 @@ abstract class SV_WC_API_Base {
 			throw $e;
 		}
 
-		return $response;
+		return $parsed_response;
 	}
 
 
