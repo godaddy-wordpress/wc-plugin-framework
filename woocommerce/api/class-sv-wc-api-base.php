@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_10_10\API\CacheableRequestTrait;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_10\\SV_WC_API_Base' ) ) :
