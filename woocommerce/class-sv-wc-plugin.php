@@ -725,7 +725,14 @@ abstract class SV_WC_Plugin {
 		$messages[] = isset( $data['uri'] ) && $data['uri'] ? 'Request' : 'Response';
 
 		foreach ( (array) $data as $key => $value ) {
-			$messages[] = trim( sprintf( '%s: %s', $key, is_array( $value ) || ( is_object( $value ) && 'stdClass' == get_class( $value ) ) ? print_r( (array) $value, true ) : $value ) );
+
+			if ( is_array( $value ) || ( is_object( $value ) && 'stdClass' == get_class( $value ) ) ) {
+				$value = print_r( (array) $value, true );
+			} else if ( is_bool( $value ) ) {
+				$value = wc_bool_to_string( $value );
+			}
+
+			$messages[] = trim( sprintf( '%s: %s', $key, $value ) );
 		}
 
 		return implode( "\n", $messages ) . "\n";
