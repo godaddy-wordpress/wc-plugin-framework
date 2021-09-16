@@ -284,8 +284,11 @@ abstract class SV_WC_API_Base {
 			'message'    => $this->get_response_message(),
 			'headers'    => $this->get_response_headers(),
 			'body'       => $this->get_sanitized_response_body() ? $this->get_sanitized_response_body() : $this->get_raw_response_body(),
-			'from_cache' => $this->is_response_loaded_from_cache(),
 		);
+
+		if ( $this->is_request_cacheable() ) {
+			$response_data['from_cache'] = $this->is_response_loaded_from_cache();
+		}
 
 		/**
 		 * API Base Request Performed Action.
@@ -307,7 +310,7 @@ abstract class SV_WC_API_Base {
 		 *     @type string $message response message
 		 *     @type string $headers response HTTP headers
 		 *     @type string $body response body
-		 *     @type bool $from_cache whether the response was loaded from cache or not
+		 *     @type bool $from_cache whether the response was loaded from cache or not - only provided if the request supports caching
 		 * }
 		 * @param SV_WC_API_Base $this instance
 		 */
