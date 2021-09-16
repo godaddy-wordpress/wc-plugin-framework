@@ -39,7 +39,7 @@ trait CacheableRequestTrait {
 	 * @since 5.10.10
 	 *
 	 * @param int $lifetime cache lifetime, in seconds
-	 * @return $this
+	 * @return CacheableRequestTrait $this
 	 */
 	public function set_cache_lifetime( int $lifetime ) {
 
@@ -68,7 +68,7 @@ trait CacheableRequestTrait {
 	 * @since 5.10.10
 	 *
 	 * @param bool $force whether to force a fresh request, or not
-	 * @return $this
+	 * @return CacheableRequestTrait $this
 	 */
 	public function set_force_refresh( bool $force ) {
 
