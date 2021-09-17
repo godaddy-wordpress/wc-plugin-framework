@@ -619,6 +619,29 @@ abstract class SV_WC_API_Base {
 	}
 
 
+	/**
+	 * Gets the cache lifetime for the current request.
+	 *
+	 * @since 5.10.10
+	 *
+	 * @return int
+	 */
+	protected function get_request_cache_lifetime() : int {
+
+		/**
+		 * Filters API request cache lifetime.
+		 *
+		 * Allows actors to override cache lifetime for cacheable API requests. This may be useful for debugging
+		 * API requests by temporarily setting short cache timeouts.
+		 *
+		 * @since 5.10.10
+		 * @param int $lifetime cache lifetime in seconds, 0 = unlimited
+		 * @param SV_WC_API_Request $request the request instance
+		 */
+		return (int) apply_filters( 'wc_plugin_' . $this->get_plugin()->get_id() . '_api_request_cache_lifetime' , $this->request->get_cache_lifetime(), $this->request );
+	}
+
+
 	/** Response Getters ******************************************************/
 
 
@@ -934,7 +957,7 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function save_response_to_cache( array $response ) {
 
-		set_transient( $this->get_request_transient_key(), $response, $this->request->get_cache_lifetime() );
+		set_transient( $this->get_request_transient_key(), $response, $this->get_request_cache_lifetime());
 	}
 
 
