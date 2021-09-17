@@ -582,11 +582,10 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function get_request_transient_key() : string {
 
-		// ex: wc_sv_requests_<md5 hash of plugin_id, request uri and request data>
-		return sprintf( 'wc_sv_requests_%s', md5( implode( '_', [
-			$this->get_plugin()->get_id(),
+		// ex: wc_<plugin_id>_<md5 hash of request uri and request data>
+		return sprintf( 'wc_%s_api_response_%s', $this->get_plugin()->get_id(), md5( implode( '_', [
 			$this->get_request_uri(),
-			$this->get_request_body(),
+			$this->get_request_body()
 		] ) ) );
 	}
 
