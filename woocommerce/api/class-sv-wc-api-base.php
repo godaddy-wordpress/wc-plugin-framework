@@ -615,7 +615,24 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function is_request_cacheable() : bool {
 
-		return in_array( CacheableRequestTrait::class, class_uses( $this->request ), true) ;
+		if ( ! in_array( CacheableRequestTrait::class, class_uses( $this->request ), true ) ) {
+			return false;
+		}
+
+		/**
+		 * Filters whether the API request is cacheable.
+		 *
+		 * Allows actors to disable API request caching when a request is normally cacheable. This may be useful
+		 * primarily for debugging situations.
+		 *
+		 * Note: this filter is only applied if the request is originally cacheable, in order to prevent issues when
+		 * a non-cacheable request is accidentally flagged as cacheable.
+		 *
+		 * @since 5.10.10
+		 * @param bool $is_cacheable whether the request is cacheable
+		 * @param SV_WC_API_Request $request the request instance
+		 */
+		return (bool) apply_filters( 'wc_plugin_' . $this->get_plugin()->get_id() . '_api_request_is_cacheable', true, $this->request );
 	}
 
 
