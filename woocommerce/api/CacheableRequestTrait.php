@@ -26,8 +26,9 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10\API;
 
 trait CacheableRequestTrait {
 
-	/** @var int the cache lifetime for the request, in seconds, defaults to 0 (unlimited) */
-	protected $cache_lifetime = 0;
+
+	/** @var int the cache lifetime for the request, in seconds, defaults to 86400 (24 hours) */
+	protected $cache_lifetime = 86400;
 
 	/** @var bool whether to force a fresh request regardless if a cached response is available */
 	protected $force_refresh = false;
@@ -38,7 +39,7 @@ trait CacheableRequestTrait {
 	 *
 	 * @since 5.10.10
 	 *
-	 * @param int $lifetime cache lifetime, in seconds
+	 * @param int $lifetime cache lifetime, in seconds. Set to 0 for unlimited
 	 * @return CacheableRequestTrait $this
 	 */
 	public function set_cache_lifetime( int $lifetime ) {

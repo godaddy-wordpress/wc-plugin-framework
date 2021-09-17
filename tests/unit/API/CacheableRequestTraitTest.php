@@ -29,7 +29,7 @@ class CacheableRequestTraitTest extends \Codeception\Test\Unit
 	public function test_get_cache_lifetime() {
 		$request = $this->get_test_request_instance();
 
-		$this->assertSame( 0, $request->get_cache_lifetime() );
+		$this->assertSame( 86400, $request->get_cache_lifetime() );
 	}
 
 	/** @see CacheableRequest::set_cache_lifetime() */
