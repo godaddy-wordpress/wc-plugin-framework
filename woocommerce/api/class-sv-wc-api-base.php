@@ -583,26 +583,10 @@ abstract class SV_WC_API_Base {
 	protected function get_request_transient_key() : string {
 
 		// ex: wc_sv_requests_<md5 hash of plugin_id and request data>
-		$key = sprintf( 'wc_sv_requests_%s', md5( implode( '_', [
+		return sprintf( 'wc_sv_requests_%s', md5( implode( '_', [
 			$this->get_plugin()->get_id(),
 			$this->request->to_string(),
 		] ) ) );
-
-		/**
-		 * Filters API request transient key.
-		 *
-		 * Warning: this filter should generally only be used to disable API request
-		 * transients by returning false or an empty string. Setting an incorrect or invalid
-		 * transient key (e.g. not keyed to the current plugin or request) can
-		 * result in unexpected and difficult to debug situations.
-		 *
-		 * Filter responsibly!
-		 *
-		 * @since 5.10.10
-		 * @param string $key transient key (must be 45 chars or less)
-		 * @param SV_WC_API_Request $request the request instance
-		 */
-		return apply_filters( 'wc_plugin_' . $this->get_plugin()->get_id() . '_api_request_transient_key', $key, $this->request );
 	}
 
 
