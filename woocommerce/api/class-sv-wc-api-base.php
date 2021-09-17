@@ -103,7 +103,7 @@ abstract class SV_WC_API_Base {
 
 		$start_time = microtime( true );
 
-		if ( $this->is_request_cacheable() && ! $this->request->should_refresh() && $response = $this->load_response_from_cache() ) {
+		if ( $this->is_request_cacheable() && ! $this->get_request()->should_refresh() && $response = $this->load_response_from_cache() ) {
 
 			$this->response_loaded_from_cache = true;
 
@@ -585,7 +585,7 @@ abstract class SV_WC_API_Base {
 		// ex: wc_sv_requests_<md5 hash of plugin_id and request data>
 		return sprintf( 'wc_sv_requests_%s', md5( implode( '_', [
 			$this->get_plugin()->get_id(),
-			$this->request->to_string(),
+			$this->get_request()->to_string(),
 		] ) ) );
 	}
 
@@ -599,7 +599,7 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function is_request_cacheable() : bool {
 
-		if ( ! in_array( CacheableRequestTrait::class, class_uses( $this->request ), true ) ) {
+		if ( ! in_array( CacheableRequestTrait::class, class_uses( $this->get_request() ), true ) ) {
 			return false;
 		}
 
@@ -616,7 +616,7 @@ abstract class SV_WC_API_Base {
 		 * @param bool $is_cacheable whether the request is cacheable
 		 * @param SV_WC_API_Request $request the request instance
 		 */
-		return (bool) apply_filters( 'wc_plugin_' . $this->get_plugin()->get_id() . '_api_request_is_cacheable', true, $this->request );
+		return (bool) apply_filters( 'wc_plugin_' . $this->get_plugin()->get_id() . '_api_request_is_cacheable', true, $this->get_request() );
 	}
 
 
@@ -639,7 +639,7 @@ abstract class SV_WC_API_Base {
 		 * @param int $lifetime cache lifetime in seconds, 0 = unlimited
 		 * @param SV_WC_API_Request $request the request instance
 		 */
-		return (int) apply_filters( 'wc_plugin_' . $this->get_plugin()->get_id() . '_api_request_cache_lifetime' , $this->request->get_cache_lifetime(), $this->request );
+		return (int) apply_filters( 'wc_plugin_' . $this->get_plugin()->get_id() . '_api_request_cache_lifetime' , $this->get_request()->get_cache_lifetime(), $this->get_request() );
 	}
 
 
