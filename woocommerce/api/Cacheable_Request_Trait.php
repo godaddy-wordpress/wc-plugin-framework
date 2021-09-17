@@ -24,6 +24,15 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10\API;
 
+/**
+ * This trait can be used to add response caching support to API requests.
+ *
+ * It is intended to be used by a class implementing the SV_WC_API_Request interface. Caching itself is handled
+ * by the SV_WC_API_Base class in the perform_request method.
+ *
+ * Simply adding `use Cacheable_Request_Trait;` to a request class will enable caching, but it's also possible to
+ * customize the cache lifetime by setting it in the request constructor.
+ */
 trait Cacheable_Request_Trait {
 
 
@@ -37,10 +46,10 @@ trait Cacheable_Request_Trait {
 	/**
 	 * Sets the cache lifetime for this request.
 	 *
-	 * @param int $lifetime cache lifetime, in seconds. Set to 0 for unlimited
-	 * @return Cacheable_Request_Trait $this
 	 * @since 5.10.10
 	 *
+	 * @param int $lifetime cache lifetime, in seconds. Set to 0 for unlimited
+	 * @return Cacheable_Request_Trait $this
 	 */
 	public function set_cache_lifetime( int $lifetime ) {
 
