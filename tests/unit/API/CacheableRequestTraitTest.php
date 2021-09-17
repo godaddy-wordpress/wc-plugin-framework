@@ -2,9 +2,8 @@
 
 namespace API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_10\API\CacheableRequestTrait;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_10\API\Cacheable_Request_Trait;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_10\SV_WC_API_JSON_Request;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_10\SV_WC_API_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', true );
@@ -22,7 +21,7 @@ class CacheableRequestTraitTest extends \Codeception\Test\Unit
 
 		require_once('woocommerce/api/interface-sv-wc-api-request.php');
 		require_once('woocommerce/api/abstract-sv-wc-api-json-request.php');
-		require_once('woocommerce/api/CacheableRequestTrait.php');
+		require_once('woocommerce/api/Cacheable_Request_Trait.php');
 	}
 
 	/** @see CacheableRequest::get_cache_lifetime() */
@@ -62,7 +61,7 @@ class CacheableRequestTraitTest extends \Codeception\Test\Unit
 	 */
 	protected function get_test_request_instance() : SV_WC_API_JSON_Request {
 		return new class extends SV_WC_API_JSON_Request {
-			use CacheableRequestTrait;
+			use Cacheable_Request_Trait;
 		};
 	}
 }
