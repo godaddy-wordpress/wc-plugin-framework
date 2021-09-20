@@ -192,6 +192,28 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 	 *
 	 * @return array
 	 */
+	protected function get_request_data_for_broadcast() : array {
+
+		$request_data = parent::get_request_data_for_broadcast();
+
+		if ( $this->is_request_cacheable() ) {
+			$request_data['force_refresh'] = $this->get_request()->should_refresh();
+			$request_data['should_cache']  = $this->get_request()->should_cache();
+		}
+
+		return $request_data;
+	}
+
+
+	/**
+	 * Gets the response data for broadcasting the request.
+	 *
+	 * Adds a flag to the response data indicating whether the response was loaded from cache.
+	 *
+	 * @since 5.10.10
+	 *
+	 * @return array
+	 */
 	protected function get_response_data_for_broadcast() : array {
 
 		$response_data = parent::get_response_data_for_broadcast();
