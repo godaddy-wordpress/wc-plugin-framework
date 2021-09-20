@@ -2,7 +2,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_10\API\CacheableRequestTrait;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_10\API\Cacheable_Request_Trait;
 
 abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 {
@@ -100,7 +100,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 	 */
 	protected function is_request_cacheable() : bool {
 
-		if ( ! in_array( CacheableRequestTrait::class, class_uses( $this->get_request() ), true ) ) {
+		if ( ! in_array( Cacheable_Request_Trait::class, class_uses( $this->get_request() ), true ) ) {
 			return false;
 		}
 
