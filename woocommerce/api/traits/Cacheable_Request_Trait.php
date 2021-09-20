@@ -56,7 +56,7 @@ trait Cacheable_Request_Trait {
 	 * @since 5.10.10
 	 *
 	 * @param int $lifetime cache lifetime, in seconds. Set to 0 for unlimited
-	 * @return Cacheable_Request_Trait $this
+	 * @return self
 	 */
 	public function set_cache_lifetime( int $lifetime ) {
 
@@ -85,9 +85,9 @@ trait Cacheable_Request_Trait {
 	 * @since 5.10.10
 	 *
 	 * @param bool $value whether to force a fresh request, or not
-	 * @return Cacheable_Request_Trait $this
+	 * @return self
 	 */
-	public function set_force_refresh( bool $value) {
+	public function set_force_refresh( bool $value ) {
 
 		$this->force_refresh = $value;
 
@@ -114,7 +114,7 @@ trait Cacheable_Request_Trait {
 	 * @since 5.10.10
 	 *
 	 * @param bool $value whether to cache the request, or not
-	 * @return Cacheable_Request_Trait $this
+	 * @return self
 	 */
 	public function set_should_cache( bool $value ) {
 
@@ -144,7 +144,7 @@ trait Cacheable_Request_Trait {
 	 *
 	 * @since 5.10.10
 	 *
-	 * @return Cacheable_Request_Trait $this
+	 * @return self
 	 */
 	public function bypass_cache() {
 
