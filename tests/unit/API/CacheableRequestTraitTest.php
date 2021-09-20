@@ -54,6 +54,21 @@ class CacheableRequestTraitTest extends \Codeception\Test\Unit
 		$this->assertTrue( $request->should_refresh() );
 	}
 
+	/** @see CacheableRequest::should_refresh() */
+	public function test_should_cache() {
+		$request = $this->get_test_request_instance();
+
+		$this->asserttrue( $request->should_cache() );
+	}
+
+	/** @see CacheableRequest::set_should_cache() */
+	public function test_set_should_cache() {
+		$request = $this->get_test_request_instance();
+
+		$this->assertSame( $request, $request->set_should_cache( true ) );
+		$this->assertTrue( $request->should_cache() );
+	}
+
 	/**
 	 * Gets a test request instance using the CacheableRequestTrait.
 	 *

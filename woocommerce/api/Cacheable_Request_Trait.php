@@ -42,6 +42,9 @@ trait Cacheable_Request_Trait {
 	/** @var bool whether to force a fresh request regardless if a cached response is available */
 	protected $force_refresh = false;
 
+	/** @var bool whether to the current request should be cached or not */
+	protected $should_cache = true;
+
 
 	/**
 	 * Sets the cache lifetime for this request.
@@ -77,12 +80,12 @@ trait Cacheable_Request_Trait {
 	 *
 	 * @since 5.10.10
 	 *
-	 * @param bool $force whether to force a fresh request, or not
+	 * @param bool $value whether to force a fresh request, or not
 	 * @return Cacheable_Request_Trait $this
 	 */
-	public function set_force_refresh( bool $force ) {
+	public function set_force_refresh( bool $value) {
 
-		$this->force_refresh = $force;
+		$this->force_refresh = $value;
 
 		return $this;
 	}
@@ -98,6 +101,35 @@ trait Cacheable_Request_Trait {
 	public function should_refresh() : bool {
 
 		return $this->force_refresh;
+	}
+
+
+	/**
+	 * Sets whether the request's response should be stored in cache.
+	 *
+	 * @since 5.10.10
+	 *
+	 * @param bool $value whether to cache the request, or not
+	 * @return Cacheable_Request_Trait $this
+	 */
+	public function set_should_cache( bool $value ) {
+
+		$this->should_cache = $value;
+
+		return $this;
+	}
+
+
+	/**
+	 * Determines whether the request's response should be stored in cache.
+	 *
+	 * @since 5.10.10
+	 *
+	 * @return bool
+	 */
+	public function should_cache() : bool {
+
+		return $this->should_cache;
 	}
 
 }
