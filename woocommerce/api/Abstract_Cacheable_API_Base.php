@@ -17,7 +17,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 	 * and provide their own transport mechanism if needed, e.g. a custom
 	 * cURL implementation
 	 *
-	 * @since 2.2.0
+	 * @since 5.10.10
 	 *
 	 * @param string $request_uri
 	 * @param string $request_args
@@ -40,6 +40,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 	 * Handle and parse the response
 	 *
 	 * @since 2.2.0
+	 *
 	 * @param array|\WP_Error $response response data
 	 * @throws SV_WC_API_Exception network issues, timeouts, API errors, etc
 	 * @return SV_WC_API_Request|object request class instance that implements SV_WC_API_Request
@@ -59,7 +60,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 
 
 	/**
-	 * Reset the API response members to their
+	 * Resets the API response members to their default values.
 	 *
 	 * @since 1.0.0
 	 */
@@ -114,6 +115,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 		 * a non-cacheable request is accidentally flagged as cacheable.
 		 *
 		 * @since 5.10.10
+		 *
 		 * @param bool $is_cacheable whether the request is cacheable
 		 * @param SV_WC_API_Request $request the request instance
 		 */
@@ -137,6 +139,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 		 * API requests by temporarily setting short cache timeouts.
 		 *
 		 * @since 5.10.10
+		 *
 		 * @param int $lifetime cache lifetime in seconds, 0 = unlimited
 		 * @param SV_WC_API_Request $request the request instance
 		 */
@@ -149,6 +152,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 	 * Determine whether the response was loaded from cache or not.
 	 *
 	 * @since 5.10.10
+	 *
 	 * @return bool
 	 */
 	protected function is_response_loaded_from_cache() : bool {
