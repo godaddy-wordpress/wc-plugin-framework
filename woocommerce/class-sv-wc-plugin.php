@@ -452,7 +452,7 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
 
 		// Cacheable API Requests
-		require_once( $framework_path . '/api/CacheableRequestTrait.php' );
+		require_once( $framework_path . '/api/Cacheable_Request_Trait.php' );
 
 		// REST API Controllers
 		require_once( $framework_path . '/rest-api/Controllers/Settings.php' );
