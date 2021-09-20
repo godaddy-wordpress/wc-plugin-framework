@@ -236,8 +236,10 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 		$request_data = parent::get_request_data_for_broadcast();
 
 		if ( $this->is_request_cacheable() ) {
-			$request_data['force_refresh'] = $this->get_request()->should_refresh();
-			$request_data['should_cache']  = $this->get_request()->should_cache();
+			$request_data = [
+				'force_refresh' => $this->get_request()->should_refresh(),
+				'should_cache'  => $this->get_request()->should_cache(),
+			] + $request_data;
 		}
 
 		return $request_data;
@@ -258,7 +260,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 		$response_data = parent::get_response_data_for_broadcast();
 
 		if ( $this->is_request_cacheable() ) {
-			$response_data['from_cache'] = $this->is_response_loaded_from_cache();
+			$response_data = [ 'from_cache' => $this->is_response_loaded_from_cache() ] + $response_data;
 		}
 
 		return $response_data;
