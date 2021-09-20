@@ -24,6 +24,10 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10\API;
 
+defined( 'ABSPATH' ) or exit;
+
+if ( ! trait_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_10\\Cacheable_Request_Trait' ) ) :
+
 /**
  * This trait can be used to add response caching support to API requests.
  *
@@ -151,3 +155,6 @@ trait Cacheable_Request_Trait {
 	}
 
 }
+
+
+endif;
