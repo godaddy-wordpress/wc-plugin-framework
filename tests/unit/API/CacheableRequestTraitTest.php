@@ -2,9 +2,8 @@
 
 namespace API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_10\API\CacheableRequestTrait;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_10\API\Cacheable_Request_Trait;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_10\SV_WC_API_JSON_Request;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_10\SV_WC_API_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', true );
@@ -22,7 +21,7 @@ class CacheableRequestTraitTest extends \Codeception\Test\Unit
 
 		require_once('woocommerce/api/interface-sv-wc-api-request.php');
 		require_once('woocommerce/api/abstract-sv-wc-api-json-request.php');
-		require_once('woocommerce/api/CacheableRequestTrait.php');
+		require_once('woocommerce/api/Cacheable_Request_Trait.php');
 	}
 
 	/** @see CacheableRequest::get_cache_lifetime() */
@@ -55,6 +54,30 @@ class CacheableRequestTraitTest extends \Codeception\Test\Unit
 		$this->assertTrue( $request->should_refresh() );
 	}
 
+	/** @see CacheableRequest::should_refresh() */
+	public function test_should_cache() {
+		$request = $this->get_test_request_instance();
+
+		$this->assertTrue( $request->should_cache() );
+	}
+
+	/** @see CacheableRequest::set_should_cache() */
+	public function test_set_should_cache() {
+		$request = $this->get_test_request_instance();
+
+		$this->assertSame( $request, $request->set_should_cache( false ) );
+		$this->assertFalse( $request->should_cache() );
+	}
+
+	/** @see CacheableRequest::bypass_cache() */
+	public function bypass_cache() {
+		$request = $this->get_test_request_instance();
+
+		$this->assertSame( $request, $request->bypass_cache() );
+		$this->assertTrue( $request->should_refresh() );
+		$this->assertFalse( $request->should_cache() );
+	}
+
 	/**
 	 * Gets a test request instance using the CacheableRequestTrait.
 	 *
@@ -62,7 +85,7 @@ class CacheableRequestTraitTest extends \Codeception\Test\Unit
 	 */
 	protected function get_test_request_instance() : SV_WC_API_JSON_Request {
 		return new class extends SV_WC_API_JSON_Request {
-			use CacheableRequestTrait;
+			use Cacheable_Request_Trait;
 		};
 	}
 }

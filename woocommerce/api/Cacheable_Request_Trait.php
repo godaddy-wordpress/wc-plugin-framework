@@ -24,7 +24,16 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10\API;
 
-trait CacheableRequestTrait {
+/**
+ * This trait can be used to add response caching support to API requests.
+ *
+ * It is intended to be used by a class implementing the SV_WC_API_Request interface. Caching itself is handled
+ * by the SV_WC_API_Base class in the perform_request method.
+ *
+ * Simply adding `use Cacheable_Request_Trait;` to a request class will enable caching, but it's also possible to
+ * customize the cache lifetime by setting it in the request constructor.
+ */
+trait Cacheable_Request_Trait {
 
 
 	/** @var int the cache lifetime for the request, in seconds, defaults to 86400 (24 hours) */
@@ -33,6 +42,9 @@ trait CacheableRequestTrait {
 	/** @var bool whether to force a fresh request regardless if a cached response is available */
 	protected $force_refresh = false;
 
+	/** @var bool whether to the current request should be cached or not */
+	protected $should_cache = true;
+
 
 	/**
 	 * Sets the cache lifetime for this request.
@@ -40,7 +52,7 @@ trait CacheableRequestTrait {
 	 * @since 5.10.10
 	 *
 	 * @param int $lifetime cache lifetime, in seconds. Set to 0 for unlimited
-	 * @return CacheableRequestTrait $this
+	 * @return Cacheable_Request_Trait $this
 	 */
 	public function set_cache_lifetime( int $lifetime ) {
 
@@ -68,12 +80,12 @@ trait CacheableRequestTrait {
 	 *
 	 * @since 5.10.10
 	 *
-	 * @param bool $force whether to force a fresh request, or not
-	 * @return CacheableRequestTrait $this
+	 * @param bool $value whether to force a fresh request, or not
+	 * @return Cacheable_Request_Trait $this
 	 */
-	public function set_force_refresh( bool $force ) {
+	public function set_force_refresh( bool $value) {
 
-		$this->force_refresh = $force;
+		$this->force_refresh = $value;
 
 		return $this;
 	}
@@ -89,6 +101,53 @@ trait CacheableRequestTrait {
 	public function should_refresh() : bool {
 
 		return $this->force_refresh;
+	}
+
+
+	/**
+	 * Sets whether the request's response should be stored in cache.
+	 *
+	 * @since 5.10.10
+	 *
+	 * @param bool $value whether to cache the request, or not
+	 * @return Cacheable_Request_Trait $this
+	 */
+	public function set_should_cache( bool $value ) {
+
+		$this->should_cache = $value;
+
+		return $this;
+	}
+
+
+	/**
+	 * Determines whether the request's response should be stored in cache.
+	 *
+	 * @since 5.10.10
+	 *
+	 * @return bool
+	 */
+	public function should_cache() : bool {
+
+		return $this->should_cache;
+	}
+
+
+	/**
+	 * Bypasses caching for this request completely.
+	 *
+	 * When called, sets the `force_refresh` flag to true and `should_cache` flag to false
+	 *
+	 * @since 5.10.10
+	 *
+	 * @return Cacheable_Request_Trait $this
+	 */
+	public function bypass_cache() {
+
+		$this->set_force_refresh( true );
+		$this->set_should_cache( false );
+
+		return $this;
 	}
 
 }
