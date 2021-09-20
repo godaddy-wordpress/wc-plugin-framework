@@ -132,4 +132,22 @@ trait Cacheable_Request_Trait {
 		return $this->should_cache;
 	}
 
+
+	/**
+	 * Bypasses caching for this request completely.
+	 *
+	 * When called, sets the `force_refresh` flag to true and `should_cache` flag to false
+	 *
+	 * @since 5.10.10
+	 *
+	 * @return Cacheable_Request_Trait $this
+	 */
+	public function bypass_cache() {
+
+		$this->set_force_refresh( true );
+		$this->set_should_cache( false );
+
+		return $this;
+	}
+
 }
