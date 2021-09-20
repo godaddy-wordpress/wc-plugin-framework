@@ -1,9 +1,44 @@
 <?php
+/**
+ * WooCommerce Plugin Framework
+ *
+ * This source file is subject to the GNU General Public License v3.0
+ * that is bundled with this package in the file license.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-3.0.html
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@skyverge.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the plugin to newer
+ * versions in the future. If you wish to customize the plugin for your
+ * needs please refer to http://www.skyverge.com
+ *
+ * @package   SkyVerge/WooCommerce/API
+ * @author    SkyVerge
+ * @copyright Copyright (c) 2013-2021, SkyVerge, Inc.
+ * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
+ */
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_10\API\Cacheable_Request_Trait;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_10\API\Traits\Cacheable_Request_Trait;
 
+defined( 'ABSPATH' ) or exit;
+
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_10\\Abstract_Cacheable_API_Base' ) ) :
+
+
+/**
+ * Abstract API base class with caching support.
+ *
+ * Plugins which need to use API request caching should use extend this API base class rather than SV_WC_API_Base.
+ * In addition, each request class which needs caching, should use the Cacheable_Request_Trait.
+ *
+ * @since 5.10.10
+ */
 abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 {
 
@@ -39,7 +74,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 	/**
 	 * Handle and parse the response
 	 *
-	 * @since 2.2.0
+	 * @since 5.10.10
 	 *
 	 * @param array|\WP_Error $response response data
 	 * @throws SV_WC_API_Exception network issues, timeouts, API errors, etc
@@ -62,7 +97,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 	/**
 	 * Resets the API response members to their default values.
 	 *
-	 * @since 1.0.0
+	 * @since 5.10.10
 	 */
 	protected function reset_response() {
 
@@ -230,3 +265,6 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 	}
 
 }
+
+
+endif;
