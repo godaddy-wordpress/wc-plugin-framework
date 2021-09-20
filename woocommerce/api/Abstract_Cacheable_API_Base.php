@@ -183,4 +183,24 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 	}
 
 
+	/**
+	 * Gets the response data for broadcasting the request.
+	 *
+	 * Adds a flag to the response data indicating whether the response was loaded from cache.
+	 *
+	 * @since 5.10.10
+	 *
+	 * @return array
+	 */
+	protected function get_response_data_for_broadcast() : array {
+
+		$response_data = parent::get_response_data_for_broadcast();
+
+		if ( $this->is_request_cacheable() ) {
+			$response_data['from_cache'] = $this->is_response_loaded_from_cache();
+		}
+
+		return $response_data;
+	}
+
 }
