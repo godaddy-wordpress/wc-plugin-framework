@@ -24,8 +24,6 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_10\API\CacheableRequestTrait;
-
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_10\\SV_WC_API_Base' ) ) :
@@ -81,9 +79,6 @@ abstract class SV_WC_API_Base {
 	/** @var SV_WC_API_Response|object response */
 	protected $response;
 
-	/** @var bool whether the response was loaded from cache */
-	protected $response_loaded_from_cache = false;
-
 	/**
 	 * Perform the request and return the parsed response
 	 *
@@ -103,20 +98,13 @@ abstract class SV_WC_API_Base {
 
 		$start_time = microtime( true );
 
-		if ( $this->is_request_cacheable() && ! $this->get_request()->should_refresh() && $response = $this->load_response_from_cache() ) {
-
-			$this->response_loaded_from_cache = true;
-
-		} else {
-
-			// if this API requires TLS v1.2, force it
-			if ( $this->get_plugin()->require_tls_1_2() ) {
-				add_action( 'http_api_curl', array( $this, 'set_tls_1_2_request' ), 10, 3 );
-			}
-
-			// perform the request
-			$response = $this->do_remote_request( $this->get_request_uri(), $this->get_request_args() );
+		// if this API requires TLS v1.2, force it
+		if ( $this->get_plugin()->require_tls_1_2() ) {
+			add_action( 'http_api_curl', array( $this, 'set_tls_1_2_request' ), 10, 3 );
 		}
+
+		// perform the request
+		$response = $this->do_remote_request( $this->get_request_uri(), $this->get_request_args() );
 
 		// calculate request duration
 		$this->request_duration = round( microtime( true ) - $start_time, 5 );
@@ -124,13 +112,7 @@ abstract class SV_WC_API_Base {
 		try {
 
 			// parse & validate response
-			$parsed_response = $this->handle_response( $response );
-
-			// cache the response
-			if ( ! $this->is_response_loaded_from_cache() && $this->is_request_cacheable() ) {
-
-				$this->save_response_to_cache( $response );
-			}
+			$response = $this->handle_response( $response );
 
 		} catch ( SV_WC_Plugin_Exception $e ) {
 
@@ -140,7 +122,7 @@ abstract class SV_WC_API_Base {
 			throw $e;
 		}
 
-		return $parsed_response;
+		return $response;
 	}
 
 
@@ -331,7 +313,6 @@ abstract class SV_WC_API_Base {
 		$this->raw_response_body          = null;
 		$this->response                   = null;
 		$this->request_duration           = null;
-		$this->response_loaded_from_cache = false;
 	}
 
 
@@ -571,79 +552,6 @@ abstract class SV_WC_API_Base {
 	}
 
 
-	/**
-	 * Gets the request transient key for the current plugin and request data.
-	 *
-	 * Request transients can be disabled by using the filter below.
-	 *
-	 * @since 5.10.10
-	 *
-	 * @return string transient key
-	 */
-	protected function get_request_transient_key() : string {
-
-		// ex: wc_<plugin_id>_<md5 hash of request uri, request data and cache lifetime>
-		return sprintf( 'wc_%s_api_response_%s', $this->get_plugin()->get_id(), md5( implode( '_', [
-			$this->get_request_uri(),
-			$this->get_request_body(),
-			$this->get_request_cache_lifetime(),
-		] ) ) );
-	}
-
-
-	/**
-	 * Checks whether the current request is cacheable.
-	 *
-	 * @since 5.10.10
-	 *
-	 * @return bool
-	 */
-	protected function is_request_cacheable() : bool {
-
-		if ( ! in_array( CacheableRequestTrait::class, class_uses( $this->get_request() ), true ) ) {
-			return false;
-		}
-
-		/**
-		 * Filters whether the API request is cacheable.
-		 *
-		 * Allows actors to disable API request caching when a request is normally cacheable. This may be useful
-		 * primarily for debugging situations.
-		 *
-		 * Note: this filter is only applied if the request is originally cacheable, in order to prevent issues when
-		 * a non-cacheable request is accidentally flagged as cacheable.
-		 *
-		 * @since 5.10.10
-		 * @param bool $is_cacheable whether the request is cacheable
-		 * @param SV_WC_API_Request $request the request instance
-		 */
-		return (bool) apply_filters( 'wc_plugin_' . $this->get_plugin()->get_id() . '_api_request_is_cacheable', true, $this->get_request() );
-	}
-
-
-	/**
-	 * Gets the cache lifetime for the current request.
-	 *
-	 * @since 5.10.10
-	 *
-	 * @return int
-	 */
-	protected function get_request_cache_lifetime() : int {
-
-		/**
-		 * Filters API request cache lifetime.
-		 *
-		 * Allows actors to override cache lifetime for cacheable API requests. This may be useful for debugging
-		 * API requests by temporarily setting short cache timeouts.
-		 *
-		 * @since 5.10.10
-		 * @param int $lifetime cache lifetime in seconds, 0 = unlimited
-		 * @param SV_WC_API_Request $request the request instance
-		 */
-		return (int) apply_filters( 'wc_plugin_' . $this->get_plugin()->get_id() . '_api_request_cache_lifetime' , $this->get_request()->get_cache_lifetime(), $this->get_request() );
-	}
-
-
 	/** Response Getters ******************************************************/
 
 
@@ -711,17 +619,6 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function get_sanitized_response_body() {
 		return is_callable( array( $this->get_response(), 'to_string_safe' ) ) ? $this->get_response()->to_string_safe() : null;
-	}
-
-
-	/**
-	 * Determine whether the response was loaded from cache or not.
-	 *
-	 * @since 5.10.10
-	 * @return bool
-	 */
-	protected function is_response_loaded_from_cache() : bool {
-		return $this->response_loaded_from_cache;
 	}
 
 
@@ -934,32 +831,6 @@ abstract class SV_WC_API_Base {
 		 * @param SV_WC_API_Base $api API class instance
 		 */
 		return (bool) apply_filters( 'wc_' . $this->get_plugin()->get_id() . '_api_is_tls_1_2_available', $this->get_plugin()->is_tls_1_2_available(), $this );
-	}
-
-
-	/**
-	 * Loads the response for the current request from the cache, if available.
-	 *
-	 * @since 5.10.10
-	 *
-	 * @return array|null
-	 */
-	protected function load_response_from_cache() {
-
-		return get_transient( $this->get_request_transient_key() );
-	}
-
-
-	/**
-	 * Saves the response to cache.
-	 *
-	 * @since 5.10.10
-	 *
-	 * @param array $response
-	 */
-	protected function save_response_to_cache( array $response ) {
-
-		set_transient( $this->get_request_transient_key(), $response, $this->get_request_cache_lifetime());
 	}
 
 
