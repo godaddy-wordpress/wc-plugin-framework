@@ -22,7 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10\API;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10\API\Traits;
+
+defined( 'ABSPATH' ) or exit;
+
+if ( ! trait_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_10\\API\\Traits\\Cacheable_Request_Trait' ) ) :
 
 /**
  * This trait can be used to add response caching support to API requests.
@@ -52,7 +56,7 @@ trait Cacheable_Request_Trait {
 	 * @since 5.10.10
 	 *
 	 * @param int $lifetime cache lifetime, in seconds. Set to 0 for unlimited
-	 * @return Cacheable_Request_Trait $this
+	 * @return self
 	 */
 	public function set_cache_lifetime( int $lifetime ) {
 
@@ -81,9 +85,9 @@ trait Cacheable_Request_Trait {
 	 * @since 5.10.10
 	 *
 	 * @param bool $value whether to force a fresh request, or not
-	 * @return Cacheable_Request_Trait $this
+	 * @return self
 	 */
-	public function set_force_refresh( bool $value) {
+	public function set_force_refresh( bool $value ) {
 
 		$this->force_refresh = $value;
 
@@ -110,7 +114,7 @@ trait Cacheable_Request_Trait {
 	 * @since 5.10.10
 	 *
 	 * @param bool $value whether to cache the request, or not
-	 * @return Cacheable_Request_Trait $this
+	 * @return self
 	 */
 	public function set_should_cache( bool $value ) {
 
@@ -140,7 +144,7 @@ trait Cacheable_Request_Trait {
 	 *
 	 * @since 5.10.10
 	 *
-	 * @return Cacheable_Request_Trait $this
+	 * @return self
 	 */
 	public function bypass_cache() {
 
@@ -151,3 +155,6 @@ trait Cacheable_Request_Trait {
 	}
 
 }
+
+
+endif;
