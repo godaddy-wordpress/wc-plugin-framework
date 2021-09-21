@@ -13,6 +13,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 
 	/**
+	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::reset_response()}.
+	 * @throws ReflectionException
+	 */
+	public function test_reset_response() {
+
+		$api = $this->get_new_api_instance();
+
+		$property = new ReflectionProperty( get_class( $api ), 'response_loaded_from_cache' );
+		$property->setAccessible( true );
+
+		$this->assertFalse( $property->getValue( $api ) );
+
+		$property->setValue( $api, true );
+
+		$this->assertTrue( $property->getValue( $api ) );
+
+		$method = new ReflectionMethod( get_class( $api ), 'reset_response' );
+		$method->setAccessible( true );
+		$method->invoke( $api );
+
+		$this->assertFalse( $property->getValue( $api ) );
+	}
+
+
+	/**
 	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::get_request_transient_key()}.
 	 *
 	 * @dataProvider provider_get_request_transient_key
@@ -23,6 +48,7 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 	 * @throws ReflectionException
 	 */
 	public function test_get_request_transient_key( string $uri, string $body, int $lifetime ) {
+
 		$api = $this->get_new_api_instance(['get_request_uri', 'get_request_body']);
 		$request = $this->get_new_request_instance()->set_cache_lifetime( $lifetime );
 
