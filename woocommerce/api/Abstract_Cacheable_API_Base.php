@@ -22,13 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10\API;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_10_10\SV_WC_API_Base;
 use SkyVerge\WooCommerce\PluginFramework\v5_10_10\API\Traits\Cacheable_Request_Trait;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_10\\Abstract_Cacheable_API_Base' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_10\\API\\Abstract_Cacheable_API_Base' ) ) :
 
 
 /**
@@ -134,7 +135,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 	 *
 	 * @return bool
 	 */
-	protected function is_request_cacheable() : bool {
+	public function is_request_cacheable() : bool {
 
 		if ( ! in_array( Cacheable_Request_Trait::class, class_uses( $this->get_request() ), true ) ) {
 			return false;
