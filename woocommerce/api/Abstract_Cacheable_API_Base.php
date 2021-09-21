@@ -135,7 +135,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 	 *
 	 * @return bool
 	 */
-	public function is_request_cacheable() : bool {
+	protected function is_request_cacheable() : bool {
 
 		if ( ! in_array( Cacheable_Request_Trait::class, class_uses( $this->get_request() ), true ) ) {
 			return false;
