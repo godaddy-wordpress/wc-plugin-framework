@@ -291,12 +291,12 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function reset_response() {
 
-		$this->response_code              = null;
-		$this->response_message           = null;
-		$this->response_headers           = null;
-		$this->raw_response_body          = null;
-		$this->response                   = null;
-		$this->request_duration           = null;
+		$this->response_code     = null;
+		$this->response_message  = null;
+		$this->response_headers  = null;
+		$this->raw_response_body = null;
+		$this->response          = null;
+		$this->request_duration  = null;
 	}
 
 
