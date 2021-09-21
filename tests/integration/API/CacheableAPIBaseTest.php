@@ -14,7 +14,7 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
-	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::format_percentage()}.
+	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::is_request_cacheable()}.
 	 *
 	 * @dataProvider provider_is_request_cacheable
 	 *
@@ -40,7 +40,10 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 				}, 10, 2 );
 		}
 
-		$this->assertEquals( $expected, $api->is_request_cacheable() );
+		$method = new ReflectionMethod( get_class( $api ), 'is_request_cacheable' );
+		$method->setAccessible( true );
+
+		$this->assertEquals( $expected, $method->invoke( $api ) );
 	}
 
 	/**
