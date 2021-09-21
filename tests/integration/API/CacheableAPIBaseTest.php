@@ -63,6 +63,54 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
+	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::get_request_cache_lifetime()}.
+	 *
+	 * @dataProvider provider_get_request_cache_lifetime
+	 *
+	 * @param int $lifetime request cache lifetime
+	 * @param null|int $filter_value when provided, will filter cache_lifetime with the given value
+	 * @param int $expected expected return value
+	 * @throws ReflectionException
+	 */
+	public function test_get_request_cache_lifetime( int $lifetime, $filter_value = null, int $expected )
+	{
+		$api = $this->get_new_api_instance();
+		$request = $this->get_new_request_instance()->set_cache_lifetime( $lifetime );
+
+		$property = new ReflectionProperty( get_class( $api ), 'request' );
+		$property->setAccessible( true );
+		$property->setValue( $api, $request );
+
+		if ( is_int( $filter_value ) ) {
+			add_filter(
+				'wc_plugin_' . sv_wc_test_plugin()->get_id() . '_api_request_cache_lifetime',
+				// the typehints in the closure ensure we're passing the correct arguments to the filter from `is_request_cacheable`
+				static function( int $lifetime, SV_WC_API_Request $request ) use ( $filter_value ) {
+					return $filter_value;
+				}, 10, 2 );
+		}
+
+		$method = new ReflectionMethod( get_class( $api ), 'get_request_cache_lifetime' );
+		$method->setAccessible( true );
+
+		$this->assertEquals( $expected, $method->invoke( $api ) );
+	}
+
+	/**
+	 * Data provider for {@see CacheableAPIBaseTest::test_get_request_cache_lifetime()}.
+	 *
+	 * @return array[]
+	 */
+	public function provider_get_request_cache_lifetime() : array
+	{
+		return [
+			'non-filtered' => [100, null, 100],
+			'filtered'     => [100, 200, 200],
+		];
+	}
+
+
+	/**
 	 * Gets a test request instance using the CacheableRequestTrait.
 	 */
 	protected function get_new_request_instance( $cacheable = true ) {
