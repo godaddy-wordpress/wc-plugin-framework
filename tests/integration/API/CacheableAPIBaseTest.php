@@ -68,6 +68,51 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
+	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::handle_response()}.
+	 *
+	 * @dataProvider provider_handle_response
+	 *
+	 * @param bool $is_cacheable
+	 * @param bool|null $loaded_from_cache
+	 * @param bool $should_save_response_to_cache
+	 * @throws ReflectionException
+	 */
+	public function test_handle_response( bool $is_cacheable, bool $loaded_from_cache = false, bool $should_save_response_to_cache = false ) {
+
+		$api     = $this->get_new_api_instance(['is_response_loaded_from_cache', 'get_response_handler', 'save_response_to_cache']);
+		$request = $this->get_new_request_instance( $is_cacheable );
+
+		$api->method('get_response_handler')->willReturn( new stdClass );
+		$api->method('is_response_loaded_from_cache')->willReturn( $loaded_from_cache );
+
+		$property = new ReflectionProperty( get_class( $api ), 'request' );
+		$property->setAccessible( true );
+		$property->setValue( $api, $request );
+
+		$method = new ReflectionMethod( get_class( $api ), 'handle_response' );
+		$method->setAccessible( true );
+
+		$api->expects( $should_save_response_to_cache ? $this->once() : $this->never() )->method( 'save_response_to_cache' );
+
+		$method->invoke( $api, [] );
+	}
+
+
+	/**
+	 * Data provider for {@see CacheableAPIBaseTest::test_handle_response()}.
+	 *
+	 * @return array[]
+	 */
+	public function provider_handle_response() : array {
+		return [
+			'cacheable, response loaded from cache'          => [true, true, false],
+			'cacheable, response not loaded from cache'      => [true, false, true],
+			'non-cacheable'                                  => [false, false, false],
+		];
+	}
+
+
+	/**
 	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::load_response_from_cache()}.
 	 * @throws ReflectionException
 	 */
