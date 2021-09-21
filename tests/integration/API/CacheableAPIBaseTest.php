@@ -13,6 +13,57 @@ if ( ! defined( 'ABSPATH' ) ) {
 class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 
 	/**
+	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::load_response_from_cache()}.
+	 * @throws ReflectionException
+	 */
+	public function test_load_response_from_cache() {
+
+		$api     = $this->get_new_api_instance(['get_request_transient_key']);
+		$request = $this->get_new_request_instance();
+
+		$property = new ReflectionProperty( get_class( $api ), 'request' );
+		$property->setAccessible( true );
+		$property->setValue( $api, $request );
+
+		$api->method('get_request_transient_key')->willReturn( 'foo' );
+
+		set_transient( 'foo', 'bar' );
+
+		$method = new ReflectionMethod( get_class( $api ), 'load_response_from_cache' );
+		$method->setAccessible( true );
+
+		$this->assertEquals( 'bar', $method->invoke( $api ) );
+	}
+
+
+	/**
+	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::save_response_to_cache()}.
+	 * @throws ReflectionException
+	 */
+	public function test_save_response_to_cache() {
+
+		$api     = $this->get_new_api_instance(['get_request_transient_key']);
+		$request = $this->get_new_request_instance();
+
+		$property = new ReflectionProperty( get_class( $api ), 'request' );
+		$property->setAccessible( true );
+		$property->setValue( $api, $request );
+
+		$api->method('get_request_transient_key')->willReturn( 'foo' );
+
+		$method = new ReflectionMethod( get_class( $api ), 'save_response_to_cache' );
+		$method->setAccessible( true );
+
+		$data = ['bar' => 'baz'];
+
+		$method->invoke( $api, $data );
+
+		$this->assertEquals( get_transient( 'foo' ), $data );
+		$this->assertNotFalse( get_option( '_transient_timeout_foo' ) ); // ensure a timeout was set
+	}
+
+
+	/**
 	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::is_response_loaded_from_cache()}.
 	 * @throws ReflectionException
 	 */

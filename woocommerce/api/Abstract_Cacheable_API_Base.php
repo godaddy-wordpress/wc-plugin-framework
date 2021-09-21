@@ -219,7 +219,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 	 */
 	protected function save_response_to_cache( array $response ) {
 
-		set_transient( $this->get_request_transient_key(), $response, $this->get_request_cache_lifetime());
+		set_transient( $this->get_request_transient_key(), $response, $this->get_request_cache_lifetime() );
 	}
 
 
