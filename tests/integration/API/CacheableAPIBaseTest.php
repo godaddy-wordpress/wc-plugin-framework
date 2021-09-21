@@ -14,6 +14,60 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
+	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::do_remote_request()}.
+	 *
+	 * @dataProvider provider_do_remote_request
+	 *
+	 * @param bool $is_cacheable
+	 * @param bool|null $force_refresh
+	 * @param bool|null $cache_exists
+	 * @param bool $should_load_from_cache
+	 * @throws ReflectionException
+	 */
+	public function test_do_remote_request( bool $is_cacheable, bool $force_refresh = null, bool $cache_exists = null, bool $should_load_from_cache = false ) {
+
+		$api     = $this->get_new_api_instance(['load_response_from_cache']);
+		$request = $this->get_new_request_instance( $is_cacheable );
+
+		if ( $is_cacheable ) {
+			$request->set_force_refresh( $force_refresh );
+		}
+
+		$api->method('load_response_from_cache')->willReturn( $cache_exists ? ['foo' => 'bar'] : null );
+
+		$property = new ReflectionProperty( get_class( $api ), 'request' );
+		$property->setAccessible( true );
+		$property->setValue( $api, $request );
+
+		$loaded_from_cache = new ReflectionProperty( get_class( $api ), 'response_loaded_from_cache' );
+		$loaded_from_cache->setAccessible( true );
+
+		$method = new ReflectionMethod( get_class( $api ), 'do_remote_request' );
+		$method->setAccessible( true );
+
+		$method->invoke( $api, 'foo', [] );
+
+		$this->assertEquals( $should_load_from_cache, $loaded_from_cache->getValue( $api ) );
+	}
+
+
+	/**
+	 * Data provider for {@see CacheableAPIBaseTest::test_do_remote_request()}.
+	 *
+	 * @return array[]
+	 */
+	public function provider_do_remote_request() : array {
+		return [
+			'cacheable, no refresh, cache exists'            => [true, false, true, true],
+			'cacheable, no refresh, cache does not exist'    => [true, false, false, false],
+			'cacheable, force refresh, cache exists'         => [true, true, true, false],
+			'cacheable, force refresh, cache does not exist' => [true, true, false, false],
+			'non-cacheable'                                  => [false, null, null, false],
+		];
+	}
+
+
+	/**
 	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::load_response_from_cache()}.
 	 * @throws ReflectionException
 	 */
