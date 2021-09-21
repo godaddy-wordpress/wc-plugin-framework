@@ -308,7 +308,7 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 	/**
-	 * Data provider for {@see CacheableAPIBaseTest::get_request_data_for_broadcast()}.
+	 * Data provider for {@see CacheableAPIBaseTest::test_get_request_data_for_broadcast()}.
 	 *
 	 * @return array[]
 	 */
@@ -317,6 +317,62 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 			'cacheable, no refresh, should cache' => [true, false, true],
 			'cacheable, force refresh, should cache' => [true, true, true],
 			'cacheable, force refresh, no cache' => [true, true, false],
+			'non-cacheable' => [false],
+		];
+	}
+
+
+	/**
+	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::get_response_data_for_broadcast()}.
+	 *
+	 * @dataProvider provider_get_response_data_for_broadcast
+	 *
+	 * @param bool $is_cacheable
+	 * @param bool|null $cache_exists
+	 * @param bool|null $force_refresh
+	 * @param bool|null $expected_from_cache
+	 * @throws ReflectionException
+	 */
+	public function test_get_response_data_for_broadcast( bool $is_cacheable, bool $response_loaded_from_cache = false ) {
+
+		$api     = $this->get_new_api_instance( [ 'is_response_loaded_from_cache' ] );
+		$request = $this->get_new_request_instance( $is_cacheable );
+
+		$api->method( 'is_response_loaded_from_cache' )->willReturn( $response_loaded_from_cache );
+
+		$property = new ReflectionProperty( get_class( $api ), 'request' );
+		$property->setAccessible( true );
+		$property->setValue( $api, $request );
+
+		$method = new ReflectionMethod( get_class( $api ), 'get_response_data_for_broadcast' );
+		$method->setAccessible( true );
+
+		$response_data = $method->invoke( $api );
+
+		if ( $is_cacheable ) {
+			$keys = array_keys( $response_data );
+
+			// ensure our keys are at the top of the array
+			$this->assertEquals( 'from_cache', $keys[0] );
+			$this->assertEquals( 'code', $keys[1] );
+
+			$this->assertEquals( $response_loaded_from_cache, $response_data['from_cache'] );
+
+		} else {
+
+			$this->assertArrayNotHasKey( 'from_cache', $response_data );
+		}
+	}
+
+	/**
+	 * Data provider for {@see CacheableAPIBaseTest::test_get_response_data_for_broadcast()}.
+	 *
+	 * @return array[]
+	 */
+	public function provider_get_response_data_for_broadcast() : array {
+		return [
+			'cacheable, loading response from cache' => [true, true],
+			'cacheable, not loading response from cache'  => [true, false],
 			'non-cacheable' => [false],
 		];
 	}
