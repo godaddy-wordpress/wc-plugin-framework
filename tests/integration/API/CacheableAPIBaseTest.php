@@ -12,6 +12,55 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 
+	/**
+	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::get_request_transient_key()}.
+	 *
+	 * @dataProvider provider_get_request_transient_key
+	 *
+	 * @param string $uri request uri
+	 * @param string $body request body
+	 * @param int $lifetime request lifetime
+	 * @throws ReflectionException
+	 */
+	public function test_get_request_transient_key( string $uri, string $body, int $lifetime ) {
+		$api = $this->get_new_api_instance(['get_request_uri', 'get_request_body']);
+		$request = $this->get_new_request_instance()->set_cache_lifetime( $lifetime );
+
+		$api->method('get_request_uri')->willReturn( $uri );
+		$api->method('get_request_body')->willReturn( $body );
+
+		$property = new ReflectionProperty( get_class( $api ), 'request' );
+		$property->setAccessible( true );
+		$property->setValue( $api, $request );
+
+		$method = new ReflectionMethod( get_class( $api ), 'get_request_transient_key' );
+		$method->setAccessible( true );
+
+		$this->assertEquals(
+			sprintf( 'wc_%s_api_response_%s', sv_wc_test_plugin()->get_id(), md5( implode( '_', [
+				$uri,
+				$body,
+				$lifetime,
+			] ) ) ),
+			$method->invoke( $api )
+		);
+	}
+
+	/**
+	 * Data provider for {@see CacheableAPIBaseTest::_get_request_transient_key()}.
+	 *
+	 * @return array[]
+	 */
+	public function provider_get_request_transient_key() : array {
+		return [
+			['foo', 'a=1', 100],
+			['foo', 'a=2', 100],
+			['foo', 'a=2', 200],
+			['bar', '', 100],
+			['bar/baz', '', 100],
+		];
+	}
+
 
 	/**
 	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::is_request_cacheable()}.
@@ -23,8 +72,7 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 	 * @param bool $expected expected return value
 	 * @throws ReflectionException
 	 */
-	public function test_is_request_cacheable( bool $cacheable, $filter_value = null, bool $expected )
-	{
+	public function test_is_request_cacheable( bool $cacheable, $filter_value = null, bool $expected ) {
 		$api = $this->get_new_api_instance();
 
 		$property = new ReflectionProperty( get_class( $api ), 'request' );
@@ -51,8 +99,7 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @return array[]
 	 */
-	public function provider_is_request_cacheable() : array
-	{
+	public function provider_is_request_cacheable() : array {
 		return [
 			'cacheable request, no filtering'          => [true, null, true],
 			'non-cacheable request, no filtering'      => [false, null, false],
@@ -72,8 +119,7 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 	 * @param int $expected expected return value
 	 * @throws ReflectionException
 	 */
-	public function test_get_request_cache_lifetime( int $lifetime, $filter_value = null, int $expected )
-	{
+	public function test_get_request_cache_lifetime( int $lifetime, $filter_value = null, int $expected ) {
 		$api = $this->get_new_api_instance();
 		$request = $this->get_new_request_instance()->set_cache_lifetime( $lifetime );
 
@@ -101,8 +147,7 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @return array[]
 	 */
-	public function provider_get_request_cache_lifetime() : array
-	{
+	public function provider_get_request_cache_lifetime() : array {
 		return [
 			'non-filtered' => [100, null, 100],
 			'filtered'     => [100, 200, 200],
@@ -112,8 +157,10 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 
 	/**
 	 * Gets a test request instance using the CacheableRequestTrait.
+	 *
+	 * @param bool $cacheable whether to return a cacheable or regular request
 	 */
-	protected function get_new_request_instance( $cacheable = true ) {
+	protected function get_new_request_instance( bool $cacheable = true ) {
 		return $cacheable
 			? new class extends SV_WC_API_JSON_Request {
 				use Cacheable_Request_Trait;
@@ -122,10 +169,21 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 	/**
-	 * Gets a test request instance using the CacheableRequestTrait.
+	 * Gets a test API instance extending Abstract_Cacheable_API_Base class.
+	 *
+	 * @param array $mockMethods additional methods to mock on the class
 	 */
-	protected function get_new_api_instance() {
-		$api = $this->getMockForAbstractClass( Abstract_Cacheable_API_Base::class );
+	protected function get_new_api_instance( array $mockMethods = [] ) {
+
+		$api = $this->getMockForAbstractClass(
+			Abstract_Cacheable_API_Base::class,
+			[],
+			'',
+            true,
+            true,
+            true,
+			$mockMethods
+		);
 
 		$api->method('get_plugin')->willReturn( sv_wc_test_plugin() );
 
