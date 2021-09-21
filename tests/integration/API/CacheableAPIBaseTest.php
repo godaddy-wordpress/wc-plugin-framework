@@ -13,6 +13,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 
 	/**
+	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::is_response_loaded_from_cache()}.
+	 * @throws ReflectionException
+	 */
+	public function test_is_response_loaded_from_cache() {
+
+		$api = $this->get_new_api_instance();
+
+		$property = new ReflectionProperty( get_class( $api ), 'response_loaded_from_cache' );
+		$property->setAccessible( true );
+
+		$method = new ReflectionMethod( get_class( $api ), 'is_response_loaded_from_cache' );
+		$method->setAccessible( true );
+		$method->invoke( $api );
+
+		$this->assertFalse( $method->invoke( $api ) );
+
+		$property->setValue( $api, true );
+
+		$this->assertTrue( $method->invoke( $api ) );
+	}
+
+
+	/**
 	 * Tests {@see Framework\API\Abstract_Cacheable_API_Base::reset_response()}.
 	 * @throws ReflectionException
 	 */
