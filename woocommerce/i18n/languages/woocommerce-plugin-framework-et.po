@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC Plugin Framework\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
-"POT-Creation-Date: 2015-07-22 12:09:16+00:00\n"
+"POT-Creation-Date: 2021-09-22 12:47:39+00:00\n"
 "PO-Revision-Date: 2017-03-27 11:59-0700\n"
 "Last-Translator: Illimar Tambek <illimar.tambek@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/wc-plugin-"
@@ -256,7 +256,7 @@ msgstr "%s eksemplari ei saa deserialiseerida (unserialize)."
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - WooCommerce version
 #. number, %3$s - opening <a> HTML link tag, %4$s - closing </a> HTML link tag
-#: class-sv-wc-plugin.php:615
+#: class-sv-wc-plugin.php:619
 msgid ""
 "Heads up! %1$s will soon discontinue support for WooCommerce %2$s. Please "
 "%3$supdate WooCommerce%4$s to take advantage of the latest updates and "
@@ -264,19 +264,19 @@ msgid ""
 msgstr ""
 
 #. translators: Docs as in Documentation
-#: class-sv-wc-plugin.php:658
+#: class-sv-wc-plugin.php:662
 msgid "Docs"
 msgstr "Dokumentatsioon"
 
-#: class-sv-wc-plugin.php:751
+#: class-sv-wc-plugin.php:762
 msgid "%1$s - A minimum of %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:760
+#: class-sv-wc-plugin.php:771
 msgid "Set as %1$s - %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:1040
+#: class-sv-wc-plugin.php:1051
 #: payment-gateway/class-sv-wc-payment-gateway-plugin.php:876
 msgid "Configure"
 msgstr "Seadista"
@@ -729,13 +729,13 @@ msgid "Last Four"
 msgstr "Viimased 4 numbrit"
 
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:574
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:358
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:362
 msgid "Expiration (MM/YY)"
 msgstr "Aegub (KK/AA)"
 
 #. translators: e-check account type, HTML form field label
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:595
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:466
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:470
 #: payment-gateway/class-sv-wc-payment-gateway-privacy.php:299
 msgid "Account Type"
 msgstr "Konto tüüp"
@@ -1134,7 +1134,7 @@ msgstr "%1$s %2$s: %3$s kinnitatud: %4$s lõpeb numbritega %5$s (aegub %6$s)"
 
 #. translators: Placeholders: %s - expiry date
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:760
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:714
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:718
 #: payment-gateway/class-sv-wc-payment-gateway.php:2698
 msgid "(expires %s)"
 msgstr "(aegub %s)"
@@ -1300,67 +1300,67 @@ msgstr "Oih, sul läks liiga kaua aega - palun proovi uuesti."
 msgid "There was an error with your request, please try again."
 msgstr "Sinu päringuga esines viga, palun proovi uuesti."
 
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:340
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:344
 msgid "Card Number"
 msgstr "Kaardi number"
 
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:361
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:365
 msgid "MM / YY"
 msgstr "KK / AA"
 
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:380
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:384
 msgid "Card Security Code"
 msgstr "Kaardi turvakood"
 
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:383
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:387
 msgid "CSC"
 msgstr "Turvakood"
 
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:423
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:427
 msgid "Where do I find this?"
 msgstr "Kust ma selle leian?"
 
 #. translators: e-check routing number, HTML form field label,
 #. https:en.wikipedia.org/wiki/Routing_transit_number
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:429
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:433
 msgid "Routing Number"
 msgstr "Suunakood"
 
 #. translators: e-check account number, HTML form field label
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:448
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:452
 msgid "Account Number"
 msgstr "Kontonumber"
 
 #. translators: Test mode refers to the current software environment
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:514
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:518
 msgid "TEST MODE ENABLED"
 msgstr "TESTREŽIIM SISSE LÜLITATUD"
 
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:541
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:545
 #, fuzzy
 msgid "Sample Check"
 msgstr "E-tšekk"
 
 #. translators: Payment method as in a specific credit card, eCheck or bank
 #. account
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:616
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:620
 msgid "Manage Payment Methods"
 msgstr "Halda maksevahendeid"
 
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:753
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:757
 msgid "Use a new card"
 msgstr "Kasuta uut kaarti"
 
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:753
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:757
 msgid "Use a new bank account"
 msgstr "Kasuta uut pangakontot"
 
 #. translators: account as in customer's account on the eCommerce site
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:816
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:820
 msgid "Securely Save to Account"
 msgstr "Salvesta turvaliselt oma kontole"
 
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:950
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:954
 #, fuzzy
 msgid "Payment Info"
 msgstr "Maksevahendid"
@@ -2021,17 +2021,17 @@ msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
 
-#: class-sv-wc-helper.php:408
+#: class-sv-wc-helper.php:426
 msgctxt "coordinating conjunction for a list of items: a, b, and c"
 msgid "and"
 msgstr ""
 
-#: class-sv-wc-plugin.php:663
+#: class-sv-wc-plugin.php:667
 msgctxt "noun"
 msgid "Support"
 msgstr "Kasutajatugi"
 
-#: class-sv-wc-plugin.php:668
+#: class-sv-wc-plugin.php:672
 msgctxt "verb"
 msgid "Review"
 msgstr ""
@@ -2117,13 +2117,13 @@ msgid "Diners"
 msgstr "Diners"
 
 #. translators: http:www.investopedia.com/terms/c/checkingaccount.asp
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:474
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:478
 msgctxt "account type"
 msgid "Checking"
 msgstr "Tšekikonto"
 
 #. translators: http:www.investopedia.com/terms/s/savingsaccount.asp
-#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:476
+#: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:480
 msgctxt "account type"
 msgid "Savings"
 msgstr "Hoiuarve"
