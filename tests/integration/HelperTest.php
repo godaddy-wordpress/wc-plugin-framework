@@ -101,11 +101,11 @@ class HelperTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @param float|int|string $number the number to format as percentage
 	 * @param string $expected result
-	 *
+	 * @param int|bool|null $decimal_points optional, the number of decimal points to use
 	 */
-	public function test_format_percentage( $number, string $expected ) {
+	public function test_format_percentage( $number, string $expected, $decimal_points = false ) {
 
-		$this->assertSame( $expected, Framework\SV_WC_Helper::format_percentage( $number ) );
+		$this->assertSame( $expected, Framework\SV_WC_Helper::format_percentage( $number, $decimal_points ) );
 	}
 
 
@@ -121,7 +121,9 @@ class HelperTest extends \Codeception\TestCase\WPTestCase {
 			[ '0.5', '50%' ],
 			[ 0, '0%' ],
 			[ 1, '100%' ],
-			[ 1.333333, '133.33%' ],
+			[ 1.333333, '133.3333%' ],
+			[ 1.333333, '133.33%', 2 ],
+			[ 1.333333, '133%', null ],
 		];
 	}
 
