@@ -79,7 +79,6 @@ abstract class SV_WC_API_Base {
 	/** @var SV_WC_API_Response|object response */
 	protected $response;
 
-
 	/**
 	 * Perform the request and return the parsed response
 	 *
@@ -253,27 +252,16 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function broadcast_request() {
 
-		$request_data = array(
-			'method'     => $this->get_request_method(),
-			'uri'        => $this->get_request_uri(),
-			'user-agent' => $this->get_request_user_agent(),
-			'headers'    => $this->get_sanitized_request_headers(),
-			'body'       => $this->get_sanitized_request_body(),
-			'duration'   => $this->get_request_duration() . 's', // seconds
-		);
-
-		$response_data = array(
-			'code'    => $this->get_response_code(),
-			'message' => $this->get_response_message(),
-			'headers' => $this->get_response_headers(),
-			'body'    => $this->get_sanitized_response_body() ? $this->get_sanitized_response_body() : $this->get_raw_response_body(),
-		);
+		$request_data  = $this->get_request_data_for_broadcast();
+		$response_data = $this->get_response_data_for_broadcast();
 
 		/**
 		 * API Base Request Performed Action.
 		 *
 		 * Fired when an API request is performed via this base class. Plugins can
 		 * hook into this to log request/response data.
+		 *
+		 * Note: request and response data arrays may contain additional, undocumented keys provided by the implementing plugin.
 		 *
 		 * @since 2.2.0
 		 * @param array $request_data {
@@ -548,6 +536,28 @@ abstract class SV_WC_API_Base {
 	}
 
 
+	/**
+	 * Gets the request data for broadcasting the request.
+	 *
+	 * Overriding this method allows child classes to customize the request data when broadcasting the request.
+	 *
+	 * @since 5.10.10
+	 *
+	 * @return array
+	 */
+	protected function get_request_data_for_broadcast() : array {
+
+		return [
+			'method'     => $this->get_request_method(),
+			'uri'        => $this->get_request_uri(),
+			'user-agent' => $this->get_request_user_agent(),
+			'headers'    => $this->get_sanitized_request_headers(),
+			'body'       => $this->get_sanitized_request_body(),
+			'duration'   => $this->get_request_duration() . 's', // seconds
+		];
+	}
+
+
 	/** Response Getters ******************************************************/
 
 
@@ -615,6 +625,27 @@ abstract class SV_WC_API_Base {
 	 */
 	protected function get_sanitized_response_body() {
 		return is_callable( array( $this->get_response(), 'to_string_safe' ) ) ? $this->get_response()->to_string_safe() : null;
+	}
+
+
+	/**
+	 * Gets the response data for broadcasting the request.
+	 *
+	 * Overriding this method allows child classes to customize the response data when broadcasting the request.
+	 *
+	 * @since 5.10.10
+	 *
+	 * @return array
+	 * @return array
+	 */
+	protected function get_response_data_for_broadcast() : array
+	{
+		return [
+			'code'    => $this->get_response_code(),
+			'message' => $this->get_response_message(),
+			'headers' => $this->get_response_headers(),
+			'body'    => $this->get_sanitized_response_body() ?: $this->get_raw_response_body(),
+		];
 	}
 
 

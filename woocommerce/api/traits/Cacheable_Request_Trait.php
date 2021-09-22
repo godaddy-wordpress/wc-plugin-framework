@@ -32,10 +32,10 @@ if ( ! trait_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_10\\API\\T
  * This trait can be used to add response caching support to API requests.
  *
  * It is intended to be used by a class implementing the SV_WC_API_Request interface. Caching itself is handled
- * by the SV_WC_API_Base class in the perform_request method.
+ * by the Abstract_Cacheable_API_Base class, which the API handler should abstract in order to support caching.
  *
- * Simply adding `use Cacheable_Request_Trait;` to a request class will enable caching, but it's also possible to
- * customize the cache lifetime by setting it in the request constructor.
+ * Adding `use Cacheable_Request_Trait;` to a request class will declare caching support for that request class.
+ * It's also possible to customize the cache lifetime by setting it in the request constructor.
  */
 trait Cacheable_Request_Trait {
 
