@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_9;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_9\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_10\\SV_WC_Plugin' ) ) :
 
 
 /**
@@ -43,7 +43,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.10.9';
+	const VERSION = '5.10.10';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -451,6 +451,10 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
 		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
 
+		// Cacheable API
+		require_once( $framework_path . '/api/traits/Cacheable_Request_Trait.php' );
+		require_once( $framework_path . '/api/Abstract_Cacheable_API_Base.php' );
+
 		// REST API Controllers
 		require_once( $framework_path . '/rest-api/Controllers/Settings.php' );
 
@@ -722,7 +726,14 @@ abstract class SV_WC_Plugin {
 		$messages[] = isset( $data['uri'] ) && $data['uri'] ? 'Request' : 'Response';
 
 		foreach ( (array) $data as $key => $value ) {
-			$messages[] = trim( sprintf( '%s: %s', $key, is_array( $value ) || ( is_object( $value ) && 'stdClass' == get_class( $value ) ) ? print_r( (array) $value, true ) : $value ) );
+
+			if ( is_array( $value ) || ( is_object( $value ) && 'stdClass' === get_class( $value ) ) ) {
+				$value = print_r( (array) $value, true );
+			} elseif ( is_bool( $value ) ) {
+				$value = wc_bool_to_string( $value );
+			}
+
+			$messages[] = trim( sprintf( '%s: %s', $key, $value ) );
 		}
 
 		return implode( "\n", $messages ) . "\n";
