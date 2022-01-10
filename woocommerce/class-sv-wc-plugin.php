@@ -75,9 +75,6 @@ abstract class SV_WC_Plugin {
 	/** @var array memoized list of active plugins */
 	private $active_plugins = [];
 
-	/** @var int|float minimum supported WooCommerce versions before the latest (units for major releases, decimals for minor) */
-	private $min_wc_semver;
-
 	/** @var SV_WC_Plugin_Dependencies dependency handler instance */
 	private $dependency_handler;
 
@@ -132,7 +129,6 @@ abstract class SV_WC_Plugin {
 			'dependencies'  => [],
 		] );
 
-		$this->min_wc_semver = is_numeric( $args['min_wc_semver'] ) ? abs( $args['min_wc_semver'] ) : null;
 		$this->text_domain   = $args['text_domain'];
 
 		// includes that are required to be available at all times
