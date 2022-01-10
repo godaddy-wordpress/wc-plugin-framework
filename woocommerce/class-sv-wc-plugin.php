@@ -128,7 +128,7 @@ abstract class SV_WC_Plugin {
 			'dependencies'  => [],
 		] );
 
-		$this->text_domain   = $args['text_domain'];
+		$this->text_domain = $args['text_domain'];
 
 		// includes that are required to be available at all times
 		$this->includes();
