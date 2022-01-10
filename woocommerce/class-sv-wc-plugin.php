@@ -124,7 +124,6 @@ abstract class SV_WC_Plugin {
 		$this->version = $version;
 
 		$args = wp_parse_args( $args, [
-			'min_wc_semver' => 0.2, // by default, 2 minor versions behind the latest published are supported
 			'text_domain'   => '',
 			'dependencies'  => [],
 		] );
