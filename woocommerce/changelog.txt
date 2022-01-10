@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2022.nn.nn - version 5.10.11
+ * Tweak - Remove automatic notices for unsupported WooCommerce versions
+
 2021.09.22 - version 5.10.10
  * Feature - Add `Abstract_Cacheable_API_Base` and `Cacheable_Request_Trait` to support caching API request responses
  * Tweak - Allow classes extending `SV_WC_API_Base` to tweak request and response data when broadcasting a request
