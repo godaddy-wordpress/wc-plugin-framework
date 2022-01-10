@@ -2,7 +2,7 @@
  WooCommerce SkyVerge Payment Gateway Framework Payment Form CoffeeScript
  Version 4.3.0-beta
 
- Copyright (c) 2014-2021, SkyVerge, Inc.
+ Copyright (c) 2014-2022, SkyVerge, Inc.
  Licensed under the GNU General Public License v3.0
  http://www.gnu.org/licenses/gpl-3.0.html
 ###
