@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC Plugin Framework\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
-"POT-Creation-Date: 2021-09-22 12:47:39+00:00\n"
+"POT-Creation-Date: 2022-01-11 05:09:55+00:00\n"
 "PO-Revision-Date: 2017-03-27 11:59-0700\n"
 "Last-Translator: Illimar Tambek <illimar.tambek@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/wc-plugin-"
@@ -245,38 +245,29 @@ msgid ""
 msgstr ""
 
 #. translators: Placeholders: %s - plugin name
-#: class-sv-wc-plugin.php:306
+#: class-sv-wc-plugin.php:301
 msgid "You cannot clone instances of %s."
 msgstr "﻿%s eksemplari ei saa kloonida."
 
 #. translators: Placeholders: %s - plugin name
-#: class-sv-wc-plugin.php:317
+#: class-sv-wc-plugin.php:312
 msgid "You cannot unserialize instances of %s."
 msgstr "%s eksemplari ei saa deserialiseerida (unserialize)."
 
-#. translators: Placeholders: %1$s - plugin name, %2$s - WooCommerce version
-#. number, %3$s - opening <a> HTML link tag, %4$s - closing </a> HTML link tag
-#: class-sv-wc-plugin.php:619
-msgid ""
-"Heads up! %1$s will soon discontinue support for WooCommerce %2$s. Please "
-"%3$supdate WooCommerce%4$s to take advantage of the latest updates and "
-"features."
-msgstr ""
-
 #. translators: Docs as in Documentation
-#: class-sv-wc-plugin.php:662
+#: class-sv-wc-plugin.php:588
 msgid "Docs"
 msgstr "Dokumentatsioon"
 
-#: class-sv-wc-plugin.php:762
+#: class-sv-wc-plugin.php:688
 msgid "%1$s - A minimum of %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:771
+#: class-sv-wc-plugin.php:697
 msgid "Set as %1$s - %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:1051
+#: class-sv-wc-plugin.php:977
 #: payment-gateway/class-sv-wc-payment-gateway-plugin.php:876
 msgid "Configure"
 msgstr "Seadista"
@@ -2026,12 +2017,12 @@ msgctxt "coordinating conjunction for a list of items: a, b, and c"
 msgid "and"
 msgstr ""
 
-#: class-sv-wc-plugin.php:667
+#: class-sv-wc-plugin.php:593
 msgctxt "noun"
 msgid "Support"
 msgstr "Kasutajatugi"
 
-#: class-sv-wc-plugin.php:672
+#: class-sv-wc-plugin.php:598
 msgctxt "verb"
 msgid "Review"
 msgstr ""
