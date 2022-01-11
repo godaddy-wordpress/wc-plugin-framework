@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/API/Request
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2021, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2022, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_11;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_10\\SV_WC_API_Response' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_11\\SV_WC_API_Response' ) ) :
 
 
 /**

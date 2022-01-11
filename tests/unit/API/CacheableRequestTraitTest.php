@@ -2,7 +2,7 @@
 
 namespace API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_10\API\Traits\Cacheable_Request_Trait;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_11\API\Traits\Cacheable_Request_Trait;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', true );

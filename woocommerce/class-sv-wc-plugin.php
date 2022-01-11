@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2021, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2022, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_11;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_10\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_11\\SV_WC_Plugin' ) ) :
 
 
 /**
@@ -43,7 +43,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.10.10';
+	const VERSION = '5.10.11';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -74,9 +74,6 @@ abstract class SV_WC_Plugin {
 
 	/** @var array memoized list of active plugins */
 	private $active_plugins = [];
-
-	/** @var int|float minimum supported WooCommerce versions before the latest (units for major releases, decimals for minor) */
-	private $min_wc_semver;
 
 	/** @var SV_WC_Plugin_Dependencies dependency handler instance */
 	private $dependency_handler;
@@ -127,13 +124,11 @@ abstract class SV_WC_Plugin {
 		$this->version = $version;
 
 		$args = wp_parse_args( $args, [
-			'min_wc_semver' => 0.2, // by default, 2 minor versions behind the latest published are supported
 			'text_domain'   => '',
 			'dependencies'  => [],
 		] );
 
-		$this->min_wc_semver = is_numeric( $args['min_wc_semver'] ) ? abs( $args['min_wc_semver'] ) : null;
-		$this->text_domain   = $args['text_domain'];
+		$this->text_domain = $args['text_domain'];
 
 		// includes that are required to be available at all times
 		$this->includes();
@@ -550,81 +545,12 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Adds admin notices upon initialization.
 	 *
-	 * This may also produce notices if running an unsupported version of WooCommerce.
+	 * @internal
 	 *
 	 * @since 3.0.0
 	 */
 	public function add_admin_notices() {
-
-		// bail if there's no defined versions to compare
-		if ( empty( $this->min_wc_semver ) || ! is_numeric( $this->min_wc_semver ) ) {
-			return;
-		}
-
-		$latest_wc_versions = SV_WC_Plugin_Compatibility::get_latest_wc_versions();
-		$current_wc_version = SV_WC_Plugin_Compatibility::get_wc_version();
-
-		// bail if the latest WooCommerce version or the current WooCommerce versions can't be determined
-		if ( empty( $latest_wc_versions ) || empty( $current_wc_version ) ) {
-			return;
-		}
-
-		// grab latest published version
-		$supported_wc_version = $latest_wc_version = current( $latest_wc_versions );
-
-		// grab semver parts
-		$latest_semver        = explode( '.', $latest_wc_version );
-		$supported_semver     = explode( '.', (string) $this->min_wc_semver );
-		$supported_major      = max( 0,  (int) $latest_semver[0] - (int) $supported_semver[0] );
-		$supported_minor      = isset( $supported_semver[1] ) ? (int) $supported_semver[1] : 0;
-		$previous_minor       = null;
-
-		// loop known WooCommerce versions from the most recent until we get the oldest supported one
-		foreach ( $latest_wc_versions as $older_wc_version ) {
-
-			// as we loop through versions, the latest one before we break the loop will be the minimum supported one
-			$supported_wc_version = $older_wc_version;
-
-			$older_semver = explode( '.', $older_wc_version );
-			$older_major  = (int) $older_semver[0];
-			$older_minor  = isset( $older_semver[1] ) ? (int) $older_semver[1] : 0;
-
-			// if major is ignored, skip; if the minor hasn't changed (patch must be), skip
-			if ( $older_major > $supported_major || $older_minor === $previous_minor ) {
-				continue;
-			}
-
-			// we reached the maximum number of supported minor versions
-			if ( $supported_minor <= 0 ) {
-				break;
-			}
-
-			// store the previous minor while we loop patch versions, which we ignore
-			$previous_minor = $older_minor;
-
-			$supported_minor--;
-		}
-
-		// for strict comparison, we strip the patch version from the determined versions and compare only major, minor versions, ignoring patches (i.e. 1.2.3 becomes 1.2)
-		$current_wc_version   = substr( $current_wc_version, 0, strpos( $current_wc_version, '.', strpos( $current_wc_version, '.' ) + 1 ) );
-		$supported_wc_version = substr( $supported_wc_version, 0, strpos( $supported_wc_version, '.', strpos( $supported_wc_version, '.' ) + 1 ) );
-		$compared_wc_version  = $current_wc_version && $supported_wc_version ? version_compare( $current_wc_version, $supported_wc_version ) : null;
-
-		// installed version is at more than 2 minor versions ($min_wc_semver value) behind the last published version
-		if ( -1 === $compared_wc_version ) {
-
-			$this->get_admin_notice_handler()->add_admin_notice(
-				sprintf(
-					/* translators: Placeholders: %1$s - plugin name, %2$s - WooCommerce version number, %3$s - opening <a> HTML link tag, %4$s - closing </a> HTML link tag */
-					__( 'Heads up! %1$s will soon discontinue support for WooCommerce %2$s. Please %3$supdate WooCommerce%4$s to take advantage of the latest updates and features.', 'woocommerce-plugin-framework' ),
-					$this->get_plugin_name(),
-					$current_wc_version,
-					'<a href="' . esc_url( admin_url( 'update-core.php' ) ) .'">', '</a>'
-				),
-				$this->get_id_dasherized() . '-deprecated-wc-version-as-of-' . str_replace( '.', '-', $supported_wc_version ),
-				[ 'notice_class' => 'notice-info' ]
-			);
-		}
+		// stub method
 	}
 
 

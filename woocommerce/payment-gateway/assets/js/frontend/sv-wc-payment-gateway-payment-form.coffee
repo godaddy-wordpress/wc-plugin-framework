@@ -2,7 +2,7 @@
  WooCommerce SkyVerge Payment Gateway Framework Payment Form CoffeeScript
  Version 4.3.0-beta
 
- Copyright (c) 2014-2021, SkyVerge, Inc.
+ Copyright (c) 2014-2022, SkyVerge, Inc.
  Licensed under the GNU General Public License v3.0
  http://www.gnu.org/licenses/gpl-3.0.html
 ###
@@ -10,7 +10,7 @@ jQuery ( $ ) ->
 	"use strict"
 
 
-	class window.SV_WC_Payment_Form_Handler_v5_10_10
+	class window.SV_WC_Payment_Form_Handler_v5_10_11
 
 
 		# Public: Instantiate Payment Form Handler
@@ -22,7 +22,7 @@ jQuery ( $ ) ->
 		#   type - gateway type, either `credit-card` or `echeck`
 		#   csc_required - true if the gateway requires the CSC field to be displayed
 		#
-		# Returns SV_WC_Payment_Form_Handler_v5_10_10 instance
+		# Returns SV_WC_Payment_Form_Handler_v5_10_11 instance
 		constructor: (args) ->
 
 			@id                      = args.id
@@ -385,4 +385,4 @@ jQuery ( $ ) ->
 
 
 	# dispatch loaded event
-	$( document.body ).trigger( "sv_wc_payment_form_handler_v5_10_10_loaded" )
+	$( document.body ).trigger( "sv_wc_payment_form_handler_v5_10_11_loaded" )

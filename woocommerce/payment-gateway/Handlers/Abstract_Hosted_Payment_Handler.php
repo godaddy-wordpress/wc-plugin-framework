@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Admin
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2021, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2022, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_10\Payment_Gateway\Handlers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_11\Payment_Gateway\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_10 as FrameworkBase;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_11 as FrameworkBase;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_10\\Payment_Gateway\\Handlers\\Abstract_Hosted_Payment_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_11\\Payment_Gateway\\Handlers\\Abstract_Hosted_Payment_Handler' ) ) :
 
 
 /**
