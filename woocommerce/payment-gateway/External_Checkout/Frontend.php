@@ -102,7 +102,7 @@ abstract class Frontend extends Script_Handler {
 		}
 
 		$locations    = $this->get_handler()->get_display_locations();
-		$is_cart_ajax = is_ajax() && 'update_shipping_method' === SV_WC_Helper::get_requested_value( 'wc-ajax' );
+		$is_cart_ajax = wp_doing_ajax() && 'update_shipping_method' === SV_WC_Helper::get_requested_value( 'wc-ajax' );
 
 		if ( is_product() && in_array( 'product', $locations, true ) ) {
 			$this->init_product();

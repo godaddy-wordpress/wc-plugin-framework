@@ -71,7 +71,7 @@ abstract class External_Checkout {
 	 */
 	protected function init() {
 
-		if ( is_admin() && ! is_ajax() ) {
+		if ( is_admin() && ! wp_doing_ajax() ) {
 			$this->init_admin();
 		} elseif ( $this->get_processing_gateway() && $this->get_plugin()->get_id() === $this->get_processing_gateway()->get_plugin()->get_id() ) {
 			$this->init_ajax();
