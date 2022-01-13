@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2022.nn.nn - version 5.10.12
+
 2022.01.11 - version 5.10.11
  * Tweak - Remove automatic notices for unsupported WooCommerce versions
 
