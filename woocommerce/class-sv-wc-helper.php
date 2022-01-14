@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_11;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_12;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_11\\SV_WC_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_12\\SV_WC_Helper' ) ) :
 
 
 /**
@@ -1089,7 +1089,7 @@ class SV_WC_Helper {
 	 */
 	public static function trigger_error( $message, $type = E_USER_NOTICE ) {
 
-		if ( is_callable( 'is_ajax' ) && is_ajax() ) {
+		if ( is_callable( 'wp_doing_ajax' ) && wp_doing_ajax() ) {
 
 			switch ( $type ) {
 

@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2022.01.13 - version 5.10.12
+ * Fix - Remove deprecated usages of `is_ajax()` in favor of `wp_doing_ajax()`
+
 2022.01.11 - version 5.10.11
  * Tweak - Remove automatic notices for unsupported WooCommerce versions
 
