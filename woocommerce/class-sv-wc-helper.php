@@ -506,12 +506,11 @@ class SV_WC_Helper {
 				$item_desc[] = sprintf( 'SKU: %s', $sku );
 			}
 
-			$item_meta = SV_WC_Order_Compatibility::get_item_formatted_meta_data( $item, '_', true );
+			$item_meta = new \WC_Order_Item_Meta( $item );
+			$item_meta = $item_meta->get_formatted( $hide_prefix );
 
 			if ( ! empty( $item_meta ) ) {
-
 				foreach ( $item_meta as $meta ) {
-
 					$item_desc[] = sprintf( '%s: %s', $meta['label'], $meta['value'] );
 				}
 			}
