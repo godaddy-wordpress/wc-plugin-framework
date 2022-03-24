@@ -506,8 +506,15 @@ class SV_WC_Helper {
 				$item_desc[] = sprintf( 'SKU: %s', $sku );
 			}
 
-			$item_meta = new \WC_Order_Item_Meta( $item );
-			$item_meta = $item_meta->get_formatted( '-' );
+			$meta_data = $item->get_formatted_meta_data( '-', false );
+			$item_meta = [];
+
+			foreach ( $meta_data as $meta ) {
+				$item_meta[] = array(
+					'label' => $meta->display_key,
+					'value' => $meta->value,
+				);
+			}
 
 			if ( ! empty( $item_meta ) ) {
 				foreach ( $item_meta as $meta ) {
