@@ -825,22 +825,6 @@ abstract class SV_WC_API_Base {
 
 
 	/**
-	 * Determines if TLS v1.2 is required for API requests.
-	 *
-	 * @since 4.4.0
-	 * @deprecated 5.5.2
-	 *
-	 * @return bool
-	 */
-	public function require_tls_1_2() {
-
-		wc_deprecated_function( __METHOD__, '5.5.2', 'SV_WC_Plugin::require_tls_1_2()' );
-
-		return $this->get_plugin()->require_tls_1_2();
-	}
-
-
-	/**
 	 * Determines if TLS 1.2 is available.
 	 *
 	 * @since 4.6.5
