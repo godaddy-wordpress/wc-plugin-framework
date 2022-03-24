@@ -507,7 +507,7 @@ class SV_WC_Helper {
 			}
 
 			$item_meta = new \WC_Order_Item_Meta( $item );
-			$item_meta = $item_meta->get_formatted( $hide_prefix );
+			$item_meta = $item_meta->get_formatted( true );
 
 			if ( ! empty( $item_meta ) ) {
 				foreach ( $item_meta as $meta ) {
