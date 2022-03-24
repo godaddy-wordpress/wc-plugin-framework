@@ -506,7 +506,7 @@ class SV_WC_Helper {
 				$item_desc[] = sprintf( 'SKU: %s', $sku );
 			}
 
-			$meta_data = $item->get_formatted_meta_data( '-', false );
+			$meta_data = $item->get_formatted_meta_data( '-', true );
 			$item_meta = [];
 
 			foreach ( $meta_data as $meta ) {
