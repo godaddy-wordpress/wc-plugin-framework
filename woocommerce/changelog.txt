@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2022.nn.nn - version 5.10.13
+ * Fix - Improve Background Job Handler compatibility with newer WooCommerce versions while processing a job queue
+
 2022.01.13 - version 5.10.12
  * Fix - Remove deprecated usages of `is_ajax()` in favor of `wp_doing_ajax()`
 
