@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC Plugin Framework\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
-"POT-Creation-Date: 2022-01-11 05:09:55+00:00\n"
+"POT-Creation-Date: 2022-08-16 06:37:47+00:00\n"
 "PO-Revision-Date: 2017-03-27 11:59-0700\n"
 "Last-Translator: Illimar Tambek <illimar.tambek@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/wc-plugin-"
@@ -1925,38 +1925,38 @@ msgid ""
 "The keys should match the options defined in the base setting for validation."
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:644
+#: utilities/class-sv-wp-background-job-handler.php:659
 msgid "Job data key \"%s\" not set"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:648
+#: utilities/class-sv-wp-background-job-handler.php:663
 msgid "Job data key \"%s\" is not an array"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:884
+#: utilities/class-sv-wp-background-job-handler.php:899
 msgid "Every %d Minutes"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:1048
+#: utilities/class-sv-wp-background-job-handler.php:1063
 msgid "Background Processing Test"
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:1049
+#: utilities/class-sv-wp-background-job-handler.php:1064
 #, fuzzy
 msgid "Run Test"
 msgstr "test"
 
-#: utilities/class-sv-wp-background-job-handler.php:1050
+#: utilities/class-sv-wp-background-job-handler.php:1065
 msgid ""
 "This tool will test whether your server is capable of processing background "
 "jobs."
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:1068
+#: utilities/class-sv-wp-background-job-handler.php:1083
 msgid "Success! You should be able to process background jobs."
 msgstr ""
 
-#: utilities/class-sv-wp-background-job-handler.php:1071
+#: utilities/class-sv-wp-background-job-handler.php:1086
 msgid ""
 "Could not connect. Please ask your hosting company to ensure your server has "
 "loopback connections enabled."
