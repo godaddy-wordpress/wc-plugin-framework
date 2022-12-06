@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2022.nn.nn - version 5.10.14-dev.1
+
 2022.08.16 - version 5.10.13
  * Fix - Improve Background Job Handler compatibility with newer WooCommerce versions while processing a job queue
 
