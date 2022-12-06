@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2022.nn.nn - version 5.10.14-dev.1
+ * Fix - Allow gateway plugins to override card images by defining an override with the same name in the plugin's `assets/images` folder - props @cadic
 
 2022.08.16 - version 5.10.13
  * Fix - Improve Background Job Handler compatibility with newer WooCommerce versions while processing a job queue
