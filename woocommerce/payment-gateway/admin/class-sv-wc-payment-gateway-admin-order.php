@@ -510,14 +510,19 @@ class SV_WC_Payment_Gateway_Admin_Order {
 		return $gateway && $gateway->get_capture_handler()->is_order_ready_for_capture( $order );
 	}
 
+
 	/**
 	 * Gets the current action selected from the bulk actions dropdown.
 	 *
-	 * @since x.x.x
+	 * @see \WP_List_Table::current_action()
+	 * Instead of using _get_list_table() to call current_action() we can duplicate its logic here to grab the action context.
 	 *
-	 * @return string|false The action name. False if no action was selected.
+	 * @since 5.10.14
+	 *
+	 * @return string|false the action name or false if no action was detected from the request
 	 */
 	protected function current_action() {
+
 		if ( isset( $_REQUEST['filter_action'] ) && ! empty( $_REQUEST['filter_action'] ) ) {
 			return false;
 		}
@@ -528,6 +533,8 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 		return false;
 	}
+
+
 }
 
 
