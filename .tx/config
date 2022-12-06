@@ -1,9 +1,0 @@
-[main]
-host = https://www.transifex.com
-
-[wc-plugin-framework.wc-plugin-framework]
-file_filter = woocommerce/i18n/languages/woocommerce-plugin-framework-<lang>.po
-source_file = woocommerce/i18n/languages/woocommerce-plugin-framework.pot
-source_lang = en
-type = PO
-
