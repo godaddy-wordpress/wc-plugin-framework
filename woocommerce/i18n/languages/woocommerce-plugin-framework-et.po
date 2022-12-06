@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC Plugin Framework\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
-"POT-Creation-Date: 2022-08-16 06:37:47+00:00\n"
+"POT-Creation-Date: 2022-12-06 10:38:37+00:00\n"
 "PO-Revision-Date: 2017-03-27 11:59-0700\n"
 "Last-Translator: Illimar Tambek <illimar.tambek@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/wc-plugin-"
@@ -662,20 +662,20 @@ msgstr ""
 #. (taken) from the card. 		 Capturing the charge will take the money from the
 #. credit card and put it in the merchant's pockets.
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:167
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:242
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:305
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:239
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:302
 msgid "Capture Charge"
 msgstr "Teosta makse"
 
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:295
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:292
 msgid "This charge has been fully captured."
 msgstr ""
 
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:297
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:294
 msgid "This charge can no longer be captured."
 msgstr ""
 
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:299
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:296
 msgid "This charge cannot be captured."
 msgstr ""
 
