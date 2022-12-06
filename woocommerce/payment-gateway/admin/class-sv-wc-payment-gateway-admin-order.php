@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_13;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_14;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_13\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_14\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
 
 
 /**
@@ -183,44 +183,41 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	public function process_capture_charge_bulk_order_action() {
 		global $typenow;
 
-		if ( 'shop_order' === $typenow ) {
+		if ( 'shop_order' !== $typenow ) {
+			return;
+		}
 
-			// get the action
-			$wp_list_table = _get_list_table( 'WP_Posts_List_Table' );
-			$action        = $wp_list_table->current_action();
+		// bail if not processing a capture
+		if ( 'wc_capture_charge' !== $this->current_action() ) {
+			return;
+		}
 
-			// bail if not processing a capture
-			if ( 'wc_capture_charge' !== $action ) {
-				return;
-			}
+		if ( ! current_user_can( 'edit_shop_orders' ) ) {
+			return;
+		}
 
-			if ( ! current_user_can( 'edit_shop_orders' ) ) {
-				return;
-			}
+		// security check
+		check_admin_referer( 'bulk-posts' );
 
-			// security check
-			check_admin_referer( 'bulk-posts' );
+		// make sure order IDs are submitted
+		if ( isset( $_REQUEST['post'] ) ) {
+			$order_ids = array_map( 'absint', $_REQUEST['post'] );
+		}
 
-			// make sure order IDs are submitted
-			if ( isset( $_REQUEST['post'] ) ) {
-				$order_ids = array_map( 'absint', $_REQUEST['post'] );
-			}
+		// return if there are no orders to export
+		if ( empty( $order_ids ) ) {
+			return;
+		}
 
-			// return if there are no orders to export
-			if ( empty( $order_ids ) ) {
-				return;
-			}
+		// give ourselves an unlimited timeout if possible
+		@set_time_limit( 0 );
 
-			// give ourselves an unlimited timeout if possible
-			@set_time_limit( 0 );
+		foreach ( $order_ids as $order_id ) {
 
-			foreach ( $order_ids as $order_id ) {
+			$order = wc_get_order( $order_id );
 
-				$order = wc_get_order( $order_id );
-
-				if ( $order && ( $gateway = $this->get_order_gateway( $order ) ) ) {
-					$gateway->get_capture_handler()->maybe_perform_capture( $order );
-				}
+			if ( $order && ( $gateway = $this->get_order_gateway( $order ) ) ) {
+				$gateway->get_capture_handler()->maybe_perform_capture( $order );
 			}
 		}
 	}
@@ -511,6 +508,30 @@ class SV_WC_Payment_Gateway_Admin_Order {
 		$gateway = $this->get_order_gateway( $order );
 
 		return $gateway && $gateway->get_capture_handler()->is_order_ready_for_capture( $order );
+	}
+
+
+	/**
+	 * Gets the current action selected from the bulk actions dropdown.
+	 *
+	 * @see \WP_List_Table::current_action()
+	 * Instead of using _get_list_table() to call current_action() we can duplicate its logic here to grab the action context.
+	 *
+	 * @since 5.10.14
+	 *
+	 * @return string|false the action name or false if no action was detected from the request
+	 */
+	protected function current_action() {
+
+		if ( isset( $_REQUEST['filter_action'] ) && ! empty( $_REQUEST['filter_action'] ) ) {
+			return false;
+		}
+
+		if ( isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ) {
+			return $_REQUEST['action'];
+		}
+
+		return false;
 	}
 
 

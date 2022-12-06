@@ -59,9 +59,7 @@ module.exports = function( grunt ) {
 	// Register update_translations task
 	grunt.registerTask( 'update_translations', [
 		'makepot',
-		'shell:tx_push',
-		'shell:tx_pull',
-		'potomo'
+		'potomo',
 	] );
 
 	// Register build task
@@ -76,7 +74,6 @@ module.exports = function( grunt ) {
 		'coffee',
 		'sass',
 		'makepot',
-		'shell:tx_push',
 	] );
 
 };
