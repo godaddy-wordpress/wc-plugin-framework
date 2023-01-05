@@ -500,7 +500,7 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function is_hpos_enabled() {
 
-			return class_exists( $custom_order_controller = \Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController::class ) && get_option( $custom_order_controller::CUSTOM_ORDERS_TABLE_USAGE_ENABLED_OPTION );
+			return class_exists( $custom_order_controller = \Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController::class ) && 'yes' === get_option( $custom_order_controller::CUSTOM_ORDERS_TABLE_USAGE_ENABLED_OPTION );
 		}
 }
 
