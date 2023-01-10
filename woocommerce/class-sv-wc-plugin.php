@@ -45,6 +45,9 @@ abstract class SV_WC_Plugin {
 	/** Plugin Framework Version */
 	const VERSION = '5.10.14';
 
+	/** Default support for HPOS */
+	const SUPPORTS_HPOS = true;
+
 	/** @var object single instance of plugin */
 	protected static $instance;
 
@@ -275,6 +278,9 @@ abstract class SV_WC_Plugin {
 
 		// hook for translations separately to ensure they're loaded
 		add_action( 'init', array( $this, 'load_translations' ) );
+
+		// Add high performance order storage compatibility
+		add_action( 'before_woocommerce_init', array( $this, 'add_hpos_compatibility' ) );
 
 		// add the admin notices
 		add_action( 'admin_notices', array( $this, 'add_admin_notices' ) );
@@ -1454,6 +1460,17 @@ abstract class SV_WC_Plugin {
 		wc_deprecated_function( __METHOD__, '5.2.0' );
 	}
 
+	/**
+	 * Add the HPOS compatibility.
+	 *
+	 * @since x.y.z
+	 */
+	public function add_hpos_compatibility() {
+
+		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->get_plugin_file(), static::SUPPORTS_HPOS );
+		}
+	}
 
 }
 
