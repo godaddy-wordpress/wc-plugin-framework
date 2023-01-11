@@ -531,23 +531,17 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @param int $order_id Required. Order ID.
 	 * @param string $key Required. Meta key.
-	 * @param bool $single return first found meta with key, or all with $key.
-	 *             Defaults to true if HPOS is enabled, otherwise false.
+	 * @param bool $single return first found meta with key, or all with $key. Defaults to true.
 	 *
 	 * @return mixed
 	 */
-	public static function get_order_meta( int $order_id, string $key, $single = null) {
+	public static function get_order_meta( int $order_id, string $key, bool $single = true) {
 
 		$is_hpos_enabled = SV_WC_Plugin_Compatibility::is_hpos_enabled();
 		$value = false;
 
-		// setting $single to false by default if hpos is disabled to match it with get_post_meta method's default value
-		if( null === $single ) {
-			$single = $is_hpos_enabled;
-		}
-
 		if ( $is_hpos_enabled ) {
-			if( $order = wc_get_order( $order_id ) ){
+			if ( $order = wc_get_order( $order_id ) ) {
 				$value = $order->get_meta( $key, $single );
 			}
 		} else {
@@ -573,9 +567,9 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		$is_hpos_enabled = SV_WC_Plugin_Compatibility::is_hpos_enabled();
 
 		if ( $is_hpos_enabled ) {
-			if( $order = wc_get_order( $order_id ) ){
+			if ( $order = wc_get_order( $order_id ) ) {
 				$order->update_meta_data( $key, $value, $order_id );
-				$order->save();
+				$order->save_meta_data();
 			}
 		} else {
 			update_post_meta( $order_id, $key, $value );
@@ -600,9 +594,9 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		$is_hpos_enabled = SV_WC_Plugin_Compatibility::is_hpos_enabled();
 
 		if ( $is_hpos_enabled ) {
-			if( $order = wc_get_order( $order_id ) ){
+			if ( $order = wc_get_order( $order_id ) ) {
 				$order->add_meta_data( $key, $value, $unique );
-				$order->save();
+				$order->save_meta_data();
 			}
 		} else {
 			add_post_meta( $order_id, $key, $value, $unique );
@@ -620,14 +614,14 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @param string $key Required. Meta key.
 	 * @param mixed $meta_value Optional. Applicable only if the HPOS is inactive.
 	 */
-	public static function delete_order_meta( int $order_id, string $key ) {
+	public static function delete_order_meta( int $order_id, string $key, $meta_value = '' ) {
 
 		$is_hpos_enabled = SV_WC_Plugin_Compatibility::is_hpos_enabled();
 
 		if ( $is_hpos_enabled ) {
-			if( $order = wc_get_order( $order_id ) ){
+			if ( $order = wc_get_order( $order_id ) ) {
 				$order->delete_meta_data( $key );
-				$order->save();
+				$order->save_meta_data();
 			}
 		} else {
 			delete_post_meta( $order_id, $key, $meta_value );
