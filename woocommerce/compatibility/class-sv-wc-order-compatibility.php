@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_14;
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_14\\SV_WC_Order_Compatibility' ) ) :
@@ -519,6 +521,64 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		}
 
 		return $order_url;
+	}
+
+
+	/**
+	 * Returns the admin screen id for orders.
+	 *
+	 * This method detects the screen_id according to HPOS availability,
+	 * as cannot rely anymore on the shop_order registered post type as the screen ID.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public static function get_screen_id( ) {
+
+		return SV_WC_Plugin_Compatibility::is_hpos_enabled() ? wc_get_page_screen_id( 'shop-order' ) : 'shop_order';
+	}
+
+
+	/**
+	 * Determines whether the given $post_id is a WooCommerce order or not according to HPOS availability.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param int $post_id post ID.
+	 * @return bool
+	 */
+	public static function is_order( $post_id ) {
+
+		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+			return 'shop_order' === get_post_type( $post_id );
+		}
+
+		return 'shop_order' === OrderUtil::get_order_type( $post_id );
+	}
+
+
+	/**
+	 * Get WC orders using wc_get_orders() or get_posts() methods.
+	 *
+	 * Uses wc_get_orders() to get orders using new arguments introduced with HPOS,
+	 * also allows using get_posts() for the backward compatibility if HPOS is inactive and $use_get_posts is set to 'true'.
+	 *
+	 * @link https://github.com/woocommerce/woocommerce/wiki/HPOS:-new-order-querying-APIs
+	 *
+	 * @since x.y.z
+	 *
+	 * @param array $args Array of args.
+	 * @param bool $use_get_posts. Whether to use get_posts() method if HPOS is disabled. Defaults to false.
+	 * @return mixed
+	 */
+	public static function get_orders( $args, bool $use_get_posts = false ) {
+
+		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() && $use_get_posts ) {
+			return get_posts( $args );
+		}
+
+		return wc_get_orders( $args );
 	}
 
 
