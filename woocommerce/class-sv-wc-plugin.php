@@ -128,7 +128,7 @@ abstract class SV_WC_Plugin {
 		$args = wp_parse_args( $args, [
 			'text_domain'   => '',
 			'dependencies'  => [],
-			'hpos_support' => false
+			'hpos_support' => false,
 		] );
 
 		$this->text_domain  = $args['text_domain'];
