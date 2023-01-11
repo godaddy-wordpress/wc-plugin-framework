@@ -45,9 +45,6 @@ abstract class SV_WC_Plugin {
 	/** Plugin Framework Version */
 	const VERSION = '5.10.14';
 
-	/** Default support for HPOS */
-	const SUPPORTS_HPOS = true;
-
 	/** @var object single instance of plugin */
 	protected static $instance;
 
@@ -96,6 +93,8 @@ abstract class SV_WC_Plugin {
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
 
+	/** @var bool the plugin high performant order storage support */
+	protected $hpos_support;
 
 	/**
 	 * Initialize the plugin.
@@ -129,9 +128,11 @@ abstract class SV_WC_Plugin {
 		$args = wp_parse_args( $args, [
 			'text_domain'   => '',
 			'dependencies'  => [],
+			'hpos_support' => false
 		] );
 
-		$this->text_domain = $args['text_domain'];
+		$this->text_domain  = $args['text_domain'];
+		$this->hpos_support = $args['hpos_support'];
 
 		// includes that are required to be available at all times
 		$this->includes();
@@ -279,8 +280,8 @@ abstract class SV_WC_Plugin {
 		// hook for translations separately to ensure they're loaded
 		add_action( 'init', array( $this, 'load_translations' ) );
 
-		// Add high performance order storage compatibility
-		add_action( 'before_woocommerce_init', array( $this, 'add_hpos_compatibility' ) );
+		// Handle high performance order storage compatibility
+		add_action( 'before_woocommerce_init', array( $this, 'handle_hpos_compatibility' ) );
 
 		// add the admin notices
 		add_action( 'admin_notices', array( $this, 'add_admin_notices' ) );
@@ -1461,14 +1462,15 @@ abstract class SV_WC_Plugin {
 	}
 
 	/**
-	 * Add the HPOS compatibility.
+	 * Handle the HPOS compatibility.
 	 *
+	 * @internal
 	 * @since x.y.z
 	 */
-	public function add_hpos_compatibility() {
+	public function handle_hpos_compatibility() {
 
 		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
-			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->get_plugin_file(), static::SUPPORTS_HPOS );
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->get_plugin_file(), $this->hpos_support );
 		}
 	}
 
