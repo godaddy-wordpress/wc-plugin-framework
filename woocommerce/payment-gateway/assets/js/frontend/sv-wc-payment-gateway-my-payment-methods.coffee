@@ -58,7 +58,7 @@ jQuery ( $ ) ->
 				if row.find( "input[name=plugin-id][value=#{@slug}]" ).length is 0
 					return
 
-				if $( event.currentTarget ).hasClass( 'disabled' ) or not confirm( @i18n.delete_ays )
+				if not confirm( @i18n.delete_ays )
 					event.preventDefault()
 
 			)
