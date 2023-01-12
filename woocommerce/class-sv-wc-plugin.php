@@ -612,7 +612,7 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Adds HPOS compatibility if the plugin is compatible with HPOS.
+	 * Declares HPOS compatibility if the plugin is compatible with HPOS.
 	 *
 	 * @internal
 	 *
@@ -1286,7 +1286,7 @@ abstract class SV_WC_Plugin {
 					if ( SV_WC_Helper::str_exists( $plugin, '/' ) ) {
 
 						// normal plugin name (plugin-dir/plugin-filename.php)
-						[ , $filename ] = explode( '/', $plugin );
+						list( , $filename ) = explode( '/', $plugin );
 
 					} else {
 
@@ -1489,6 +1489,7 @@ abstract class SV_WC_Plugin {
 
 		wc_deprecated_function( __METHOD__, '5.2.0' );
 	}
+
 
 }
 
