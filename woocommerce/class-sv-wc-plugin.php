@@ -621,7 +621,7 @@ abstract class SV_WC_Plugin {
 	public function handle_hpos_compatibility() {
 
 		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
-			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->get_plugin_file(), $this->supports_hpos() );
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->get_plugin_file(), $this->is_hpos_compatible() );
 		}
 	}
 
@@ -820,7 +820,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return bool
 	 */
-	public function supports_hpos() : bool
+	public function is_hpos_compatible() : bool
 	{
 		return $this->supports_hpos;
 	}
@@ -1286,7 +1286,7 @@ abstract class SV_WC_Plugin {
 					if ( SV_WC_Helper::str_exists( $plugin, '/' ) ) {
 
 						// normal plugin name (plugin-dir/plugin-filename.php)
-						list( , $filename ) = explode( '/', $plugin );
+						[ , $filename ] = explode( '/', $plugin );
 
 					} else {
 
