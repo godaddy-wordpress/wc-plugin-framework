@@ -568,7 +568,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		if ( $is_hpos_enabled ) {
 			if ( $order = wc_get_order( $order_id ) ) {
-				$order->update_meta_data( $key, $value, $order_id );
+				$order->update_meta_data( $key, $value );
 				$order->save_meta_data();
 			}
 		} else {
