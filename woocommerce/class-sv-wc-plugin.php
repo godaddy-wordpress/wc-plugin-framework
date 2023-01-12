@@ -96,6 +96,7 @@ abstract class SV_WC_Plugin {
 	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
 	private $admin_notice_handler;
 
+
 	/**
 	 * Initialize the plugin.
 	 *
@@ -1286,7 +1287,7 @@ abstract class SV_WC_Plugin {
 					if ( SV_WC_Helper::str_exists( $plugin, '/' ) ) {
 
 						// normal plugin name (plugin-dir/plugin-filename.php)
-						[ , $filename ] = explode( '/', $plugin );
+						list( , $filename ) = explode( '/', $plugin );
 
 					} else {
 
