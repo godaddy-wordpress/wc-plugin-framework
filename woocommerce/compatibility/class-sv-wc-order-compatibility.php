@@ -534,7 +534,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @return string
 	 */
-	public static function get_screen_id( ) {
+	public static function get_screen_id( ) : string {
 
 		return SV_WC_Plugin_Compatibility::is_hpos_enabled() ? wc_get_page_screen_id( 'shop-order' ) : 'shop_order';
 	}
@@ -548,7 +548,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @param int $post_id post ID.
 	 * @return bool
 	 */
-	public static function is_order( $post_id ) {
+	public static function is_order( int $post_id ) : bool {
 
 		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 			return 'shop_order' === get_post_type( $post_id );
