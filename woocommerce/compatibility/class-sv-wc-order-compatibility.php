@@ -569,12 +569,11 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @since x.y.z
 	 *
 	 * @param array $args Array of args.
-	 * @param bool $use_get_posts. Whether to use get_posts() method if HPOS is disabled. Defaults to false.
 	 * @return mixed
 	 */
-	public static function get_orders( $args, bool $use_get_posts = false ) {
+	public static function get_orders( $args ) {
 
-		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() && $use_get_posts ) {
+		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 			return get_posts( $args );
 		}
 
