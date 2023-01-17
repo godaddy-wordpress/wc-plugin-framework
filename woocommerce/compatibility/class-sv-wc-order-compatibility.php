@@ -567,29 +567,6 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Get WC orders using wc_get_orders() or get_posts() methods.
-	 *
-	 * Uses wc_get_orders() to get orders using new arguments introduced with HPOS,
-	 * also allows using get_posts() for the backward compatibility if HPOS is inactive and $use_get_posts is set to 'true'.
-	 *
-	 * @link https://github.com/woocommerce/woocommerce/wiki/HPOS:-new-order-querying-APIs
-	 *
-	 * @since x.y.z
-	 *
-	 * @param array $args Array of args.
-	 * @return mixed
-	 */
-	public static function get_orders( $args ) {
-
-		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
-			return get_posts( $args );
-		}
-
-		return wc_get_orders( $args );
-	}
-
-
-	/**
 	 * Gets the order meta according to HPOS availability.
 	 *
 	 * Uses {@see \WC_Order::get_meta()} if HPOS is enabled, otherwise it uses the WordPress {@see get_post_meta()} function.
