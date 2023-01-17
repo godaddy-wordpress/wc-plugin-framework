@@ -1,7 +1,7 @@
 {
   "name": "godaddy-wordpress/wc-plugin-framework",
   "description": "The official SkyVerge WooCommerce plugin framework",
-  "version": "5.10.14",
+  "version": "5.11.0",
   "license": "GPL-3.0",
   "minimum-stability": "dev",
   "prefer-stable": true,
