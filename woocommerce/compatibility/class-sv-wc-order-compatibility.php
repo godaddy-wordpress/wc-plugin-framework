@@ -525,10 +525,10 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Returns the admin screen id for orders.
+	 * Gets the admin screen ID for orders.
 	 *
-	 * This method detects the screen_id according to HPOS availability,
-	 * as cannot rely anymore on the shop_order registered post type as the screen ID.
+	 * This method detects the expected orders screen ID according to HPOS availability.
+	 * `shop_order` as a registered post type as the screen ID is no longer used when HPOS is active.
 	 *
 	 * @since x.y.z
 	 *
@@ -536,12 +536,14 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_screen_id( ) : string {
 
-		return SV_WC_Plugin_Compatibility::is_hpos_enabled() ? wc_get_page_screen_id( 'shop-order' ) : 'shop_order';
+		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
+			? wc_get_page_screen_id( 'shop-order' )
+			: 'shop_order';
 	}
 
 
 	/**
-	 * Determines whether the given $post_id is a WooCommerce order or not according to HPOS availability.
+	 * Determines whether a given identifier is a WooCommerce order or not according to HPOS availability.
 	 *
 	 * @since x.y.z
 	 *
