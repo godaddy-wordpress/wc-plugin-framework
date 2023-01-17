@@ -545,16 +545,22 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @since x.y.z
 	 *
-	 * @param int $post_id post ID.
+	 * @param int|\WP_Post|\WC_Order|null $post_order_or_id identifier of a possible order
 	 * @return bool
 	 */
-	public static function is_order( int $post_id ) : bool {
+	public static function is_order( $post_order_or_id ) : bool {
 
 		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
-			return 'shop_order' === get_post_type( $post_id );
+
+			if ( $post_order_or_id instanceof \WC_Order ) {
+				$post_order_or_id = $post_order_or_id->get_id();
+			}
+
+			return is_numeric( $post_order_or_id ) || $post_order_or_id instanceof \WP_Post
+				&& 'shop_order' === get_post_type( $post_order_or_id );
 		}
 
-		return 'shop_order' === OrderUtil::get_order_type( $post_id );
+		return 'shop_order' === OrderUtil::get_order_type( $post_order_or_id );
 	}
 
 
