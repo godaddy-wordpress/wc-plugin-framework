@@ -543,14 +543,15 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Determines whether a given identifier is a WooCommerce order or not according to HPOS availability.
+	 * Determines whether a given identifier is a WooCommerce order or not, according to HPOS availability.
 	 *
 	 * @since x.y.z
 	 *
 	 * @param int|\WP_Post|\WC_Order|null $post_order_or_id identifier of a possible order
+	 * @param string|string[] $order_type the order type, defaults to shop_order, can specify multiple types
 	 * @return bool
 	 */
-	public static function is_order( $post_order_or_id ) : bool {
+	public static function is_order( $post_order_or_id, $order_type = 'shop_order' ) : bool {
 
 		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
@@ -558,11 +559,28 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 				$post_order_or_id = $post_order_or_id->get_id();
 			}
 
-			return is_numeric( $post_order_or_id ) || $post_order_or_id instanceof \WP_Post
-				&& 'shop_order' === get_post_type( $post_order_or_id );
+			$found_type = is_numeric( $post_order_or_id ) || $post_order_or_id instanceof \WP_Post ? get_post_type( $post_order_or_id ) : null;
+
+		} else {
+
+			$found_type = OrderUtil::get_order_type( $post_order_or_id );
 		}
 
-		return 'shop_order' === OrderUtil::get_order_type( $post_order_or_id );
+		return $found_type && ( is_string( $order_type ) && $found_type === $order_type ) || ( is_array( $order_type ) && in_array( $found_type, $order_type, true ) );
+	}
+
+
+	/**
+	 * Determines whether a given identifier is a WooCommerce refund or not, according to HPOS availability.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param int|\WP_Post|\WC_Order|null $order_post_or_id identifier of a possible order
+	 * @return bool
+	 */
+	public static function is_refund( $order_post_or_id ) : bool {
+
+		return static::is_order( $order_post_or_id, 'shop_order_refund' );
 	}
 
 
