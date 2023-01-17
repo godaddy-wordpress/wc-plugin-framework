@@ -498,6 +498,7 @@ class SV_WC_Plugin_Compatibility {
 	 * Determines whether HPOS is enabled.
 	 *
 	 * @link https://woocommerce.com/document/high-performance-order-storage/
+	 * @link https://github.com/woocommerce/woocommerce/wiki/High-Performance-Order-Storage-Upgrade-Recipe-Book#detecting-whether-hpos-tables-are-being-used-in-the-store
 	 *
 	 * @since x.y.z
 	 *
@@ -505,7 +506,8 @@ class SV_WC_Plugin_Compatibility {
 	 */
 	public static function is_hpos_enabled() : bool {
 
-		return OrderUtil::custom_orders_table_usage_is_enabled();
+		return is_callable( OrderUtil::class . '::' . 'custom_orders_table_usage_is_enabled' )
+			&& OrderUtil::custom_orders_table_usage_is_enabled();
 	}
 
 
