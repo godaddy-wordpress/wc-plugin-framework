@@ -2,6 +2,7 @@
 
 2023.nn.nn - version 5.11.0
  * Feature - Add compatibility methods and support for WooCommerce High Performance Order Storage (HPOS)
+ * Misc - Require PHP 7.4 or higher
 
 2022.12.06 - version 5.10.14
  * Tweak - Improve the performance of the orders admin screen in some sites by optimizing payment gateways bulk action detection - props @ravinderk
