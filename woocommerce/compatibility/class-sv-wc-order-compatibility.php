@@ -529,21 +529,28 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @since x.y.z
 	 *
-	 * @param int $order_id order ID
+	 * @param int|\WC_Order $order order ID or object
 	 * @param string $key meta key
 	 * @param bool $single return the first found meta with key (true), or all meta sharing the same key (default true)
 	 * @return mixed
 	 */
-	public static function get_order_meta( int $order_id, string $key, bool $single = true) {
+	public static function get_order_meta( $order, string $key, bool $single = true ) {
 
 		$value = false;
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
-			if ( $order = wc_get_order( $order_id ) ) {
+
+			if ( ! $order instanceof \WC_Order ) {
+				$order = wc_get_order( $order );
+			}
+
+			if ( $order ) {
 				$value = $order->get_meta( $key, $single );
 			}
+
 		} else {
-			$value = get_post_meta( $order_id, $key, $single );
+
+			$value = get_post_meta( $order instanceof \WC_Order ? $order->get_id() : $order, $key, $single );
 		}
 
 		return $value;
@@ -557,19 +564,26 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @since x.y.z
 	 *
-	 * @param int $order_id order ID
+	 * @param int|\WC_Order $order order ID or object
 	 * @param string $key meta key
 	 * @param mixed $value meta value
 	 */
-	public static function update_order_meta( int $order_id, string $key, $value ) {
+	public static function update_order_meta( $order, string $key, $value ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
-			if ( $order = wc_get_order( $order_id ) ) {
+
+			if ( ! $order instanceof \WC_Order ) {
+				$order = wc_get_order( $order );
+			}
+
+			if ( $order ) {
 				$order->update_meta_data( $key, $value );
 				$order->save_meta_data();
 			}
+
 		} else {
-			update_post_meta( $order_id, $key, $value );
+
+			update_post_meta( $order instanceof \WC_Order ? $order->get_id() : $order, $key, $value );
 		}
 	}
 
@@ -581,20 +595,27 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @since x.y.z
 	 *
-	 * @param int $order_id order ID
+	 * @param int|\WC_Order $order order ID or object
 	 * @param string $key meta key
 	 * @param mixed $value meta value
 	 * @param bool $unique optional - whether the same key should not be added (default false)
 	 */
-	public static function add_order_meta( int $order_id, string $key, $value, bool $unique = false ) {
+	public static function add_order_meta( $order, string $key, $value, bool $unique = false ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
-			if ( $order = wc_get_order( $order_id ) ) {
+
+			if ( ! $order instanceof \WC_Order ) {
+				$order = wc_get_order( $order );
+			}
+
+			if ( $order ) {
 				$order->add_meta_data( $key, $value, $unique );
 				$order->save_meta_data();
 			}
+
 		} else {
-			add_post_meta( $order_id, $key, $value, $unique );
+
+			add_post_meta( $order instanceof \WC_Order ? $order->get_id() : $order, $key, $value, $unique );
 		}
 	}
 
@@ -606,19 +627,26 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @since x.y.z
 	 *
-	 * @param int $order_id order ID
+	 * @param int|\WC_Order $order order ID or object
 	 * @param string $key meta key
 	 * @param mixed $meta_value optional (applicable if HPOS is inactive)
 	 */
-	public static function delete_order_meta( int $order_id, string $key, $meta_value = '' ) {
+	public static function delete_order_meta( $order, string $key, $meta_value = '' ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
-			if ( $order = wc_get_order( $order_id ) ) {
+
+			if ( ! $order instanceof \WC_Order ) {
+				$order = wc_get_order( $order );
+			}
+
+			if ( $order ) {
 				$order->delete_meta_data( $key );
 				$order->save_meta_data();
 			}
+
 		} else {
-			delete_post_meta( $order_id, $key, $meta_value );
+
+			delete_post_meta( $order instanceof \WC_Order ? $order->get_id() : $order, $key, $meta_value );
 		}
 	}
 
