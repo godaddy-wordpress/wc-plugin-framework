@@ -2513,8 +2513,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		if ( $response && $response->get_transaction_id() ) {
 
 			$this->update_order_meta( $order, 'trans_id', $response->get_transaction_id() );
-
-			update_post_meta( $order->get_id(), '_transaction_id', $response->get_transaction_id() );
+			$this->update_order_meta( $order, '_transaction_id', $response->get_transaction_id() );
 		}
 
 		// transaction date
@@ -2542,7 +2541,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		if ( $this->is_credit_card_gateway() ) {
 
 			// credit card gateway data
-			if ( $response && $response instanceof SV_WC_Payment_Gateway_API_Authorization_Response ) {
+			if ( $response instanceof SV_WC_Payment_Gateway_API_Authorization_Response ) {
 
 				$this->update_order_meta( $order, 'authorization_amount', $order->payment_total );
 
