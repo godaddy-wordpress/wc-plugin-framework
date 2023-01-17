@@ -525,14 +525,13 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets the order meta according to HPOS availability.
 	 *
-	 * Uses WC_Order data store object if HPOS is enabled, otherwise it uses the traditional get_post_meta() method.
+	 * Uses {@see \WC_Order::get_meta()} if HPOS is enabled, otherwise it uses the WordPress {@see get_post_meta()} function.
 	 *
 	 * @since x.y.z
 	 *
-	 * @param int $order_id Required. Order ID.
-	 * @param string $key Required. Meta key.
-	 * @param bool $single return first found meta with key, or all with $key. Defaults to true.
-	 *
+	 * @param int $order_id order ID
+	 * @param string $key meta key
+	 * @param bool $single return the first found meta with key (true), or all meta sharing the same key (default true)
 	 * @return mixed
 	 */
 	public static function get_order_meta( int $order_id, string $key, bool $single = true) {
@@ -554,13 +553,13 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Updates the order meta according to HPOS availability.
 	 *
-	 * Uses WC_Order data store object if HPOS is enabled, otherwise it uses the traditional update_post_meta() method.
+	 * Uses {@see \WC_Order::update_meta_data()} if HPOS is enabled, otherwise it uses the WordPress {@see update_meta_data()} function.
 	 *
 	 * @since x.y.z
 	 *
-	 * @param int $order_id Required. Order ID.
-	 * @param string $key Required. Meta key.
-	 * @param mixed $value Required. Meta value.
+	 * @param int $order_id order ID
+	 * @param string $key meta key
+	 * @param mixed $value meta value
 	 */
 	public static function update_order_meta( int $order_id, string $key, $value ) {
 
@@ -578,16 +577,16 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Adds the order meta according to HPOS availability.
 	 *
-	 * Uses WC_Order data store object if HPOS is enabled, otherwise it uses the traditional add_post_meta() method.
+	 * Uses {@see \WC_Order::add_meta_data()} if HPOS is enabled, otherwise it uses the WordPress {@see add_meta_data()} function.
 	 *
 	 * @since x.y.z
 	 *
-	 * @param int $order_id Required. Order ID.
-	 * @param string $key Required. Meta key.
-	 * @param mixed $value Required. meta value.
-	 * @param bool $unique Optional. Whether the same key should not be added. Defaults to false.
+	 * @param int $order_id order ID
+	 * @param string $key meta key
+	 * @param mixed $value meta value
+	 * @param bool $unique optional - whether the same key should not be added (default false)
 	 */
-	public static function add_order_meta( int $order_id, string $key, $value, $unique = false ) {
+	public static function add_order_meta( int $order_id, string $key, $value, bool $unique = false ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 			if ( $order = wc_get_order( $order_id ) ) {
@@ -603,13 +602,13 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Deletes the order meta according to HPOS availability.
 	 *
-	 * Uses WC_Order data store object if HPOS is enabled, otherwise it uses the traditional delete_post_meta() method.
+	 * Uses {@see \WC_Order::delete_meta_data()} if HPOS is enabled, otherwise it uses the WordPress {@see delete_meta_data()} function.
 	 *
 	 * @since x.y.z
 	 *
-	 * @param int $order_id Required. Order ID.
-	 * @param string $key Required. Meta key.
-	 * @param mixed $meta_value Optional. Applicable only if the HPOS is inactive.
+	 * @param int $order_id order ID
+	 * @param string $key meta key
+	 * @param mixed $meta_value optional (applicable if HPOS is inactive)
 	 */
 	public static function delete_order_meta( int $order_id, string $key, $meta_value = '' ) {
 
