@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_14;
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_14\\SV_WC_Plugin_Compatibility' ) ) :
@@ -489,6 +491,23 @@ class SV_WC_Plugin_Compatibility {
 
 		// accounts for semver cases like 2.2 being equal to 2.2.0
 		return $version === $subscriptions_version || ( $subscriptions_version && version_compare( $version, $subscriptions_version, '=' ) );
+	}
+
+
+	/**
+	 * Determines whether HPOS is enabled.
+	 *
+	 * @link https://woocommerce.com/document/high-performance-order-storage/
+	 * @link https://github.com/woocommerce/woocommerce/wiki/High-Performance-Order-Storage-Upgrade-Recipe-Book#detecting-whether-hpos-tables-are-being-used-in-the-store
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	public static function is_hpos_enabled() : bool {
+
+		return is_callable( OrderUtil::class . '::' . 'custom_orders_table_usage_is_enabled' )
+			&& OrderUtil::custom_orders_table_usage_is_enabled();
 	}
 
 
