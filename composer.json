@@ -1,12 +1,23 @@
 {
-    "name": "skyverge/wc-plugin-framework",
-    "description": "The official SkyVerge WooCommerce plugin framework",
-    "version": "5.10.14",
-    "require-dev": {
-        "lucatume/wp-browser": "3.0.5",
-        "phpcompatibility/php-compatibility": "9.3.5",
-        "codeception/module-db": "^1.0",
-        "codeception/module-phpbrowser": "^1.0",
-        "codeception/module-asserts": "^1.3"
+  "name": "godaddy-wordpress/wc-plugin-framework",
+  "description": "The official SkyVerge WooCommerce plugin framework",
+  "version": "5.10.14",
+  "license": "GPL-3.0",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=7.4 <9.0"
+  },
+  "require-dev": {
+    "lucatume/wp-browser": "3.0.5",
+    "phpcompatibility/php-compatibility": "9.3.5",
+    "codeception/module-db": "^1.0",
+    "codeception/module-phpbrowser": "^1.0",
+    "codeception/module-asserts": "^1.3"
+  },
+  "config": {
+    "platform": {
+      "php": "7.4"
     }
+  }
 }
