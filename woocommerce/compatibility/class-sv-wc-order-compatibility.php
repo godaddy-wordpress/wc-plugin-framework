@@ -530,11 +530,11 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @since x.y.z
 	 *
 	 * @param int|\WC_Order $order order ID or object
-	 * @param string $key meta key
+	 * @param string $meta_key meta key
 	 * @param bool $single return the first found meta with key (true), or all meta sharing the same key (default true)
 	 * @return mixed
 	 */
-	public static function get_order_meta( $order, string $key, bool $single = true ) {
+	public static function get_order_meta( $order, string $meta_key, bool $single = true ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
@@ -542,14 +542,14 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 			$order = ! $order instanceof \WC_Order && is_numeric( $order ) ? wc_get_order( (int) $order ) : null;
 
 			if ( $order ) {
-				$value = $order->get_meta( $key, $single );
+				$value = $order->get_meta( $meta_key, $single );
 			}
 
 		} else {
 
 			$order_id = $order instanceof \WC_Order ? $order->get_id() : $order;
 
-			$value = is_numeric( $order_id ) && $order_id > 0 ? get_post_meta( (int) $order_id, $key, $single ) : false;
+			$value = is_numeric( $order_id ) && $order_id > 0 ? get_post_meta( (int) $order_id, $meta_key, $single ) : false;
 		}
 
 		return $value;
@@ -564,17 +564,17 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @since x.y.z
 	 *
 	 * @param int|\WC_Order $order order ID or object
-	 * @param string $key meta key
-	 * @param mixed $value meta value
+	 * @param string $meta_key meta key
+	 * @param mixed $meta_value meta value
 	 */
-	public static function update_order_meta( $order, string $key, $value ) {
+	public static function update_order_meta( $order, string $meta_key, $meta_value ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
 			$order = ! $order instanceof \WC_Order && is_numeric( $order ) ? wc_get_order( (int) $order ) : null;
 
 			if ( $order ) {
-				$order->update_meta_data( $key, $value );
+				$order->update_meta_data( $meta_key, $meta_value );
 				$order->save_meta_data();
 			}
 
@@ -583,7 +583,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 			$order_id = $order instanceof \WC_Order ? $order->get_id() : $order;
 
 			if ( is_numeric( $order_id ) && $order_id > 0 ) {
-				update_post_meta( (int) $order_id, $key, $value );
+				update_post_meta( (int) $order_id, $meta_key, $meta_value );
 			}
 		}
 	}
@@ -597,18 +597,18 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @since x.y.z
 	 *
 	 * @param int|\WC_Order $order order ID or object
-	 * @param string $key meta key
-	 * @param mixed $value meta value
+	 * @param string $meta_key meta key
+	 * @param mixed $meta_value meta value
 	 * @param bool $unique optional - whether the same key should not be added (default false)
 	 */
-	public static function add_order_meta( $order, string $key, $value, bool $unique = false ) {
+	public static function add_order_meta( $order, string $meta_key, $meta_value, bool $unique = false ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
 			$order = ! $order instanceof \WC_Order && is_numeric( $order ) ? wc_get_order( (int) $order ) : null;
 
 			if ( $order ) {
-				$order->add_meta_data( $key, $value, $unique );
+				$order->add_meta_data( $meta_key, $meta_value, $unique );
 				$order->save_meta_data();
 			}
 
@@ -617,7 +617,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 			$order_id = $order instanceof \WC_Order ? $order->get_id() : $order;
 
 			if ( is_numeric( $order_id ) && $order_id > 0 ) {
-				add_post_meta( (int) $order_id, $key, $value, $unique );
+				add_post_meta( (int) $order_id, $meta_key, $meta_value, $unique );
 			}
 		}
 	}
@@ -631,17 +631,17 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @since x.y.z
 	 *
 	 * @param int|\WC_Order $order order ID or object
-	 * @param string $key meta key
+	 * @param string $meta_key meta key
 	 * @param mixed $meta_value optional (applicable if HPOS is inactive)
 	 */
-	public static function delete_order_meta( $order, string $key, $meta_value = '' ) {
+	public static function delete_order_meta( $order, string $meta_key, $meta_value = '' ) {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
 			$order = ! $order instanceof \WC_Order && is_numeric( $order ) ? wc_get_order( (int) $order ) : null;
 
 			if ( $order ) {
-				$order->delete_meta_data( $key );
+				$order->delete_meta_data( $meta_key);
 				$order->save_meta_data();
 			}
 
@@ -650,7 +650,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 			$order_id = $order instanceof \WC_Order ? $order->get_id() : $order;
 
 			if ( is_numeric( $order_id ) && $order_id > 0 ) {
-				delete_post_meta( (int) $order_id, $key, $meta_value );
+				delete_post_meta( (int) $order_id, $meta_key, $meta_value );
 			}
 		}
 	}
