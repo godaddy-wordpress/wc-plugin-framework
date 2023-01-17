@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_14;
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_14\\SV_WC_Plugin_Compatibility' ) ) :
@@ -491,6 +493,7 @@ class SV_WC_Plugin_Compatibility {
 		return $version === $subscriptions_version || ( $subscriptions_version && version_compare( $version, $subscriptions_version, '=' ) );
 	}
 
+
 	/**
 	 * Determines whether HPOS is enabled.
 	 *
@@ -500,13 +503,12 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * @return bool
 	 */
-	public static function is_hpos_enabled() {
+	public static function is_hpos_enabled() : bool {
 
-		$custom_orders_table_controller = \Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController::class;
-
-		return class_exists( $custom_orders_table_controller )
-			&& 'yes' === get_option( $custom_orders_table_controller::CUSTOM_ORDERS_TABLE_USAGE_ENABLED_OPTION );
+		return OrderUtil::custom_orders_table_usage_is_enabled();
 	}
+
+
 }
 
 
