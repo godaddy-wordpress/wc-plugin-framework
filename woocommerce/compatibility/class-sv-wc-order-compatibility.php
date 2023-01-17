@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_10_14;
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_14\\SV_WC_Order_Compatibility' ) ) :
@@ -519,6 +521,48 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		}
 
 		return $order_url;
+	}
+
+
+	/**
+	 * Gets the admin screen ID for orders.
+	 *
+	 * This method detects the expected orders screen ID according to HPOS availability.
+	 * `shop_order` as a registered post type as the screen ID is no longer used when HPOS is active.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return string
+	 */
+	public static function get_screen_id( ) : string {
+
+		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
+			? wc_get_page_screen_id( 'shop-order' )
+			: 'shop_order';
+	}
+
+
+	/**
+	 * Determines whether a given identifier is a WooCommerce order or not according to HPOS availability.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param int|\WP_Post|\WC_Order|null $post_order_or_id identifier of a possible order
+	 * @return bool
+	 */
+	public static function is_order( $post_order_or_id ) : bool {
+
+		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+
+			if ( $post_order_or_id instanceof \WC_Order ) {
+				$post_order_or_id = $post_order_or_id->get_id();
+			}
+
+			return is_numeric( $post_order_or_id ) || $post_order_or_id instanceof \WP_Post
+				&& 'shop_order' === get_post_type( $post_order_or_id );
+		}
+
+		return 'shop_order' === OrderUtil::get_order_type( $post_order_or_id );
 	}
 
 

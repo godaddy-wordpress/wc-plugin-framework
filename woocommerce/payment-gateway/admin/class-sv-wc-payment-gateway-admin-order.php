@@ -78,9 +78,10 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * @param string $hook_suffix page hook suffix
 	 */
 	public function enqueue_scripts( $hook_suffix ) {
+		global $post;
 
 		// Order screen assets
-		if ( 'shop_order' === get_post_type() ) {
+		if ( SV_WC_Order_Compatibility::is_order( $post ) ) {
 
 			// Edit Order screen assets
 			if ( 'post.php' === $hook_suffix ) {
@@ -252,9 +253,10 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * @param \WC_Order $order order object
 	 */
 	public function add_capture_button( $order ) {
+		global $post;
 
 		// only display the button for core orders
-		if ( ! $order instanceof \WC_Order || 'shop_order' !== get_post_type( $order->get_id() ) ) {
+		if ( ! $order instanceof \WC_Order || ! SV_WC_Order_Compatibility::is_order( $post ) ) {
 			return;
 		}
 
