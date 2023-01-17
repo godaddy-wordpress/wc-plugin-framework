@@ -536,9 +536,9 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_order_meta( $order, string $key, bool $single = true ) {
 
-		$value = false;
-
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+
+			$value = $single ? '' : [];
 
 			if ( ! $order instanceof \WC_Order ) {
 				$order = wc_get_order( $order );
