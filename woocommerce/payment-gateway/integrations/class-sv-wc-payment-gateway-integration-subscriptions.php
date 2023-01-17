@@ -196,6 +196,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * copied over to a renewal order prior to payment processing.
 	 *
 	 * @since 4.1.0
+	 *
 	 * @param \WC_Order $order order
 	 */
 	public function save_payment_meta( $order ) {
@@ -207,14 +208,22 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		foreach ( $subscriptions as $subscription ) {
 
+			$updated = false;
+
 			// payment token
 			if ( ! empty( $order->payment->token ) ) {
-				update_post_meta( $subscription->get_id(), $this->get_gateway()->get_order_meta_prefix() . 'payment_token', $order->payment->token );
+				$subscription->update_meta_data( $this->get_gateway()->get_order_meta_prefix() . 'payment_token', $order->payment->token );
+				$updated = true;
 			}
 
 			// customer ID
 			if ( ! empty( $order->customer_id ) ) {
-				update_post_meta( $subscription->get_id(), $this->get_gateway()->get_order_meta_prefix() . 'customer_id', $order->customer_id );
+				$subscription->update_meta_data(  $this->get_gateway()->get_order_meta_prefix() . 'customer_id', $order->customer_id );
+				$updated = true;
+			}
+
+			if ( $updated ) {
+				$subscription->save_meta_data();
 			}
 		}
 	}
