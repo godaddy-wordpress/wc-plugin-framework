@@ -539,10 +539,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
 			$value = $single ? '' : [];
-
-			if ( ! $order instanceof \WC_Order ) {
-				$order = wc_get_order( $order );
-			}
+			$order = ! $order instanceof \WC_Order && is_numeric( $order ) ? wc_get_order( (int) $order ) : null;
 
 			if ( $order ) {
 				$value = $order->get_meta( $key, $single );
@@ -550,7 +547,9 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		} else {
 
-			$value = get_post_meta( $order instanceof \WC_Order ? $order->get_id() : $order, $key, $single );
+			$order_id = $order instanceof \WC_Order ? $order->get_id() : $order;
+
+			$value = is_numeric( $order_id ) && $order_id > 0 ? get_post_meta( (int) $order_id, $key, $single ) : false;
 		}
 
 		return $value;
@@ -572,9 +571,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
-			if ( ! $order instanceof \WC_Order ) {
-				$order = wc_get_order( $order );
-			}
+			$order = ! $order instanceof \WC_Order && is_numeric( $order ) ? wc_get_order( (int) $order ) : null;
 
 			if ( $order ) {
 				$order->update_meta_data( $key, $value );
@@ -583,7 +580,11 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		} else {
 
-			update_post_meta( $order instanceof \WC_Order ? $order->get_id() : $order, $key, $value );
+			$order_id = $order instanceof \WC_Order ? $order->get_id() : $order;
+
+			if ( is_numeric( $order_id ) && $order_id > 0 ) {
+				update_post_meta( (int) $order_id, $key, $value );
+			}
 		}
 	}
 
@@ -604,9 +605,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
-			if ( ! $order instanceof \WC_Order ) {
-				$order = wc_get_order( $order );
-			}
+			$order = ! $order instanceof \WC_Order && is_numeric( $order ) ? wc_get_order( (int) $order ) : null;
 
 			if ( $order ) {
 				$order->add_meta_data( $key, $value, $unique );
@@ -615,7 +614,11 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		} else {
 
-			add_post_meta( $order instanceof \WC_Order ? $order->get_id() : $order, $key, $value, $unique );
+			$order_id = $order instanceof \WC_Order ? $order->get_id() : $order;
+
+			if ( is_numeric( $order_id ) && $order_id > 0 ) {
+				add_post_meta( (int) $order_id, $key, $value, $unique );
+			}
 		}
 	}
 
@@ -635,9 +638,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
-			if ( ! $order instanceof \WC_Order ) {
-				$order = wc_get_order( $order );
-			}
+			$order = ! $order instanceof \WC_Order && is_numeric( $order ) ? wc_get_order( (int) $order ) : null;
 
 			if ( $order ) {
 				$order->delete_meta_data( $key );
@@ -646,7 +647,11 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		} else {
 
-			delete_post_meta( $order instanceof \WC_Order ? $order->get_id() : $order, $key, $meta_value );
+			$order_id = $order instanceof \WC_Order ? $order->get_id() : $order;
+
+			if ( is_numeric( $order_id ) && $order_id > 0 ) {
+				delete_post_meta( (int) $order_id, $key, $meta_value );
+			}
 		}
 	}
 
