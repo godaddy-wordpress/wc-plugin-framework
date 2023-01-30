@@ -62,7 +62,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_capture_charge', array( $this, 'ajax_process_capture' ) );
 
 			// bulk capture order action
-			add_action( 'admin_footer-edit.php', array( $this, 'maybe_add_capture_charge_bulk_order_action' ) );
+			add_action( 'admin_footer', array( $this, 'maybe_add_capture_charge_bulk_order_action' ) );
 			add_action( 'load-edit.php',         array( $this, 'process_capture_charge_bulk_order_action' ) );
 		}
 	}
@@ -137,9 +137,11 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * @since 5.0.0
 	 */
 	public function maybe_add_capture_charge_bulk_order_action() {
-		global $post_type, $post_status;
+		
+		global $post_type, $post_status, $current_screen;
 
-		if ( ! current_user_can( 'edit_shop_orders' ) ) {
+
+		if ( ! current_user_can( 'edit_shop_orders' )  && $current_screen->id === SV_WC_Order_Compatibility::get_screen_id()) {
 			return;
 		}
 
