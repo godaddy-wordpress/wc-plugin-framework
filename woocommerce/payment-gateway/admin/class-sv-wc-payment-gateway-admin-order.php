@@ -137,15 +137,15 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * @since 5.0.0
 	 */
 	public function maybe_add_capture_charge_bulk_order_action() {
-		
-		global $post_type, $post_status, $current_screen;
+
+		global $current_screen;
 
 
 		if ( ! current_user_can( 'edit_shop_orders' )  && $current_screen->id === SV_WC_Order_Compatibility::get_screen_id()) {
 			return;
 		}
-
-		if ( $post_type === 'shop_order' && $post_status !== 'trash' ) {
+		
+		if ( 'trash' !== $this->current_action() ) {
 
 			$can_capture_charge = false;
 
@@ -258,7 +258,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 		global $post;
 
 		// only display the button for core orders
-		if ( ! $order instanceof \WC_Order || ! SV_WC_Order_Compatibility::is_order( $post ) ) {
+		if ( ! $order instanceof \WC_Order && ! SV_WC_Order_Compatibility::is_order( $post ) ) {
 			return;
 		}
 
