@@ -534,7 +534,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @return string
 	 */
-	public static function get_screen_id( ) : string {
+	public static function get_order_screen_id( ) : string {
 
 		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
 			? wc_get_page_screen_id( 'shop-order' )
