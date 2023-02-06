@@ -559,7 +559,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		}
 
 		// get a fresh subscription object after previous metadata changes
-		$subscription = wcs_get_subscription( $subscription );
+		$subscription = wcs_get_subscription( $subscription->get_id() );
 
 		$old_payment_method = $subscription->get_meta( '_old_payment_method', true, 'edit' );
 		$new_payment_method = $subscription->get_payment_method( 'edit' );
