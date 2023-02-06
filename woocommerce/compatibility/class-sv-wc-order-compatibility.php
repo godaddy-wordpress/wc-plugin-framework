@@ -516,7 +516,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function get_edit_order_url( \WC_Order $order ) {
 
-		wc_deprecated_function( __METHOD__, 'x.y.z', 'WC_Order::get_edit_order_url' );
+		wc_deprecated_function( __METHOD__, 'x.y.z', 'WC_Order::get_edit_order_url()' );
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.3' ) ) {
 			$order_url = $order->get_edit_order_url();
