@@ -18,14 +18,14 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/External_Checkout
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2022, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2023, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_14\Payment_Gateway\External_Checkout;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_15\Payment_Gateway\External_Checkout;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_14\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_14\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_15\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_15\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
