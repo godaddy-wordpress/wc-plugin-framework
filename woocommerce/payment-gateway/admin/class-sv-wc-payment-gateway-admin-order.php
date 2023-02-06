@@ -62,8 +62,13 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_capture_charge', array( $this, 'ajax_process_capture' ) );
 
 			// bulk capture order action
-			add_action( 'admin_footer', array( $this, 'maybe_add_capture_charge_bulk_order_action' ) );
-			add_action( 'load-edit.php',         array( $this, 'process_capture_charge_bulk_order_action' ) );
+			if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+				add_action( 'admin_footer', [ $this, 'maybe_add_capture_charge_bulk_order_action' ] );
+				add_action( 'load-admin.php', [ $this, 'process_capture_charge_bulk_order_action' ] );
+			} else {
+				add_action( 'admin_footer-edit.php', [ $this, 'maybe_add_capture_charge_bulk_order_action' ] );
+				add_action( 'load-edit.php', [ $this, 'process_capture_charge_bulk_order_action' ] );
+			}
 		}
 	}
 
@@ -144,7 +149,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 		if ( ! current_user_can( 'edit_shop_orders' )  && $current_screen->id === SV_WC_Order_Compatibility::get_screen_id()) {
 			return;
 		}
-		
+
 		if ( 'trash' !== $this->current_action() ) {
 
 			$can_capture_charge = false;
