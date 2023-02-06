@@ -80,7 +80,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @param string $hook_suffix page hook suffix
+	 * @param string|mixed $hook_suffix page hook suffix
 	 */
 	public function enqueue_scripts( $hook_suffix ) {
 		global $post, $theorder;
@@ -188,12 +188,18 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Processes the 'Capture Charge' custom bulk action.
 	 *
+	 * @internal
+	 *
 	 * @since 5.0.0
 	 */
 	public function process_capture_charge_bulk_order_action() {
 		global $typenow;
 
-		if ( 'shop_order' !== $typenow ) {
+		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+			if ( ! SV_WC_Order_Compatibility::is_orders_screen() ) {
+				return;
+			}
+		} elseif ( 'shop_order' !== $typenow ) {
 			return;
 		}
 

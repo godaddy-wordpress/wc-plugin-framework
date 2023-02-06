@@ -523,6 +523,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		return $order_url;
 	}
 
+
 	/**
 	 * Determines if the current admin screen is for the orders.
 	 *
@@ -568,7 +569,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		return static::get_order_screen_id() === $current_screen->id
 			&& isset( $_GET['page'], $_GET['action'] )
 			&& $_GET['page'] === 'wc-orders'
-			&& in_array( $_GET['action'], [ 'new', 'edit'], true );
+			&& in_array( $_GET['action'], [ 'new', 'edit' ], true );
 	}
 
 
