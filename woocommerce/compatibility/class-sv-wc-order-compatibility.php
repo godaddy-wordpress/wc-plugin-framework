@@ -527,6 +527,8 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Determines if the current admin screen is for the orders.
 	 *
+	 * @since x.y.z
+	 *
 	 * @return bool
 	 */
 	public static function is_orders_screen() : bool {
@@ -544,6 +546,35 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		return static::get_order_screen_id() === $current_screen->id
 			&& isset( $_GET['page'] )
 			&& $_GET['page'] === 'wc-orders';
+	}
+
+
+	/**
+	 * Determines if the current orders screen is for orders of a specific status.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string|string[] $status one or more statuses to compare
+	 * @return bool
+	 */
+	public static function is_orders_screen_for_status( $status ) : bool {
+		global $post_type, $post_status;
+
+		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+
+			if ( 'shop_order' !== $post_type ) {
+				return false;
+			}
+
+			return empty( $status ) || $post_status === $status || ( is_array( $status ) && in_array( $post_status, $status, true ) );
+		}
+
+		if ( ! static::is_orders_screen() ) {
+			return false;
+		}
+
+		return empty( $status )
+			|| ( isset( $_GET['status'] ) && ( $status === $_GET['status'] || is_array( $status ) && in_array( $_GET['status'], $status, true ) ) );
 	}
 
 

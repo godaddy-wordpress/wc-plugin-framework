@@ -143,16 +143,17 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Adds 'Capture charge' to the Orders screen bulk action select.
 	 *
+	 * @internal
+	 *
 	 * @since 5.0.0
 	 */
 	public function maybe_add_capture_charge_bulk_order_action() {
-		global $post_type, $post_status;
 
 		if ( ! current_user_can( 'edit_shop_orders' ) ) {
 			return;
 		}
 
-		if ( $post_type === 'shop_order' && $post_status !== 'trash' ) {
+		if ( SV_WC_Order_Compatibility::is_orders_screen_for_status( 'trash' ) ) {
 
 			$can_capture_charge = false;
 
