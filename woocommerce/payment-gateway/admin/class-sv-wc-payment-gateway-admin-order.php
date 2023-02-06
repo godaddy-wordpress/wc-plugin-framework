@@ -94,7 +94,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 				if ( $theorder instanceof \WC_Order ) {
 					$order = $theorder;
 				} else {
-					$order = wc_get_order( SV_WC_Helper::get_requested_value( SV_WC_Plugin_Compatibility::is_hpos_enabled() ? 'id' : 'post' ) );
+					$order = wc_get_order( SV_WC_Helper::get_requested_value( SV_WC_Plugin_Compatibility::is_hpos_enabled() ? 'id' : 'post', 0 ) );
 				}
 
 				if ( ! $order instanceof \WC_Order ) {
