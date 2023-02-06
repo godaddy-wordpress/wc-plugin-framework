@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_14\Payment_Gateway\External_Checkout;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_15\Payment_Gateway\External_Checkout;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_14\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_15\SV_WC_Helper;
 
 defined( 'ABSPATH' ) or exit;
 

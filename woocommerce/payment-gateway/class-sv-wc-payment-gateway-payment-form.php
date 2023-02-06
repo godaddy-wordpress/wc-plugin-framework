@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_14;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_15;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_14\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_15\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
 
 
 /**
@@ -1103,7 +1103,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 			if ( is_array( $card_types ) && ! empty( $card_types ) ) {
 
-				$args['enabled_card_types'] = array_map( [ 'SkyVerge\WooCommerce\PluginFramework\v5_10_14\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ], $card_types );
+				$args['enabled_card_types'] = array_map( [ 'SkyVerge\WooCommerce\PluginFramework\v5_10_15\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ], $card_types );
 			}
 		}
 

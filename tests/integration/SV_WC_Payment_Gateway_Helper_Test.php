@@ -1,11 +1,11 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_14\SV_WC_Payment_Gateway_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_15\SV_WC_Payment_Gateway_Helper;
 
 /**
  * Tests for the Payment Gateway Helper class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_10_14\SV_WC_Payment_Gateway_Helper
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_10_15\SV_WC_Payment_Gateway_Helper
  */
 class SV_WC_Payment_Gateway_Helper_Test extends \Codeception\TestCase\WPTestCase {
 
