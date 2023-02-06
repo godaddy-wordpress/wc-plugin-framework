@@ -523,6 +523,54 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		return $order_url;
 	}
 
+	/**
+	 * Determines if the current admin screen is for the orders.
+	 *
+	 * @return bool
+	 */
+	public static function is_orders_screen() : bool {
+
+		$current_screen = SV_WC_Helper::get_current_screen();
+
+		if ( ! $current_screen ) {
+			return false;
+		}
+
+		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+			return 'edit-shop_order' === $current_screen->id;
+		}
+
+		return static::get_order_screen_id() === $current_screen->id
+			&& isset( $_GET['page'] )
+			&& $_GET['page'] === 'wc-orders';
+	}
+
+
+	/**
+	 * Determines if the current admin screen is for adding or editing an order.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	public static function is_order_edit_screen() : bool {
+
+		$current_screen = SV_WC_Helper::get_current_screen();
+
+		if ( ! $current_screen ) {
+			return false;
+		}
+
+		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+			return 'shop_order' === $current_screen->id;
+		}
+
+		return static::get_order_screen_id() === $current_screen->id
+			&& isset( $_GET['page'], $_GET['action'] )
+			&& $_GET['page'] === 'wc-orders'
+			&& in_array( $_GET['action'], [ 'new', 'edit'], true );
+	}
+
 
 	/**
 	 * Gets the admin screen ID for orders.

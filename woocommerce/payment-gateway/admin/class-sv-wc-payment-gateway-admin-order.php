@@ -89,11 +89,15 @@ class SV_WC_Payment_Gateway_Admin_Order {
 		if ( SV_WC_Order_Compatibility::is_order( $post ) || SV_WC_Order_Compatibility::is_order( $theorder ) ) {
 
 			// Edit Order screen assets
-			if ( 'post.php' === $hook_suffix ) {
+			if ( 'post.php' === $hook_suffix || SV_WC_Order_Compatibility::is_order_edit_screen() ) {
 
-				$order = wc_get_order( SV_WC_Helper::get_requested_value( 'post' ) );
+				if ( $theorder instanceof \WC_Order ) {
+					$order = $theorder;
+				} else {
+					$order = wc_get_order( SV_WC_Helper::get_requested_value( SV_WC_Plugin_Compatibility::is_hpos_enabled() ? 'id' : 'post' ) );
+				}
 
-				if ( ! $order ) {
+				if ( ! $order instanceof \WC_Order ) {
 					return;
 				}
 
@@ -142,15 +146,13 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * @since 5.0.0
 	 */
 	public function maybe_add_capture_charge_bulk_order_action() {
+		global $post_type, $post_status;
 
-		global $current_screen;
-
-
-		if ( ! current_user_can( 'edit_shop_orders' )  && $current_screen->id === SV_WC_Order_Compatibility::get_screen_id()) {
+		if ( ! current_user_can( 'edit_shop_orders' ) ) {
 			return;
 		}
 
-		if ( 'trash' !== $this->current_action() ) {
+		if ( $post_type === 'shop_order' && $post_status !== 'trash' ) {
 
 			$can_capture_charge = false;
 
@@ -263,7 +265,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 		global $post;
 
 		// only display the button for core orders
-		if ( ! $order instanceof \WC_Order && ! SV_WC_Order_Compatibility::is_order( $post ) ) {
+		if ( ! $order instanceof \WC_Order || ! SV_WC_Order_Compatibility::is_order( $post ) ) {
 			return;
 		}
 
