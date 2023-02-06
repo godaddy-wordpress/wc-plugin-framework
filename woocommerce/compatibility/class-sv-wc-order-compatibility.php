@@ -722,42 +722,6 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	}
 
 
-	/**
-	 * Get global $post or $theorder order object according to HPOS availability.
-	 *
-	 * @since x.y.z
-	 * @return \WC_Order|\WP_Post  object
-	 */
-	public static function get_post_or_order() {
-
-		global $post, $theorder;
-
-		if ( ! is_null( $theorder ) && static::is_order( $theorder ) ) {
-			return $theorder;
-		} else if( ! is_null( $post ) ) {
-			return $post;
-		}
-
-	}
-
-	/**
-	 * Get global $post or $theorder order status.
-	 *
-	 * TODO: Refactor this method to get order status by order object or ID. If object order or ID does not pass in params then get global order status.
-	 * @since x.y.z
-	 * @return string order status
-	 */
-	public static function get_order_status() {
-
-	$post_or_order_object	= static::get_post_or_order();
-
-		if ( $post_or_order_object instanceof \WC_Order ) {
-			return $post_or_order_object->get_status();
-		} elseif ( $post_or_order_object instanceof \WP_Post ) {
-			return get_post_status( $post_or_order_object );
-		}
-	}
-
 }
 
 
