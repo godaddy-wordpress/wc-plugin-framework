@@ -1787,6 +1787,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @param int|\WC_Order $order the order or order ID being processed
 	 * @return \WC_Order object with payment and transaction information attached
 	 */
+	#[\AllowDynamicProperties]
 	public function get_order( $order ) {
 
 		if ( is_numeric( $order ) ) {

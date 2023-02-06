@@ -570,15 +570,14 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 				return false;
 			}
 
-			return empty( $status ) || $post_status === $status || ( is_array( $status ) && in_array( $post_status, $status, true ) );
+			return empty( $status ) || in_array( $post_status, (array) $status, true );
 		}
 
 		if ( ! static::is_orders_screen() ) {
 			return false;
 		}
 
-		return empty( $status )
-			|| ( isset( $_GET['status'] ) && ( $status === $_GET['status'] || is_array( $status ) && in_array( $_GET['status'], $status, true ) ) );
+		return empty( $status ) || ( isset( $_GET['status'] ) && in_array( $_GET['status'], (array) $status, true ) );
 	}
 
 
@@ -654,7 +653,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 			$found_type = OrderUtil::get_order_type( $post_order_or_id );
 		}
 
-		return $found_type && ( is_string( $order_type ) && $found_type === $order_type ) || ( is_array( $order_type ) && in_array( $found_type, $order_type, true ) );
+		return $found_type && in_array( $found_type, (array) $order_type, true );
 	}
 
 
