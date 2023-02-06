@@ -509,10 +509,14 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @since 5.0.1
 	 *
+	 * @deprecated since x.y.z
+	 *
 	 * @param \WC_Order $order order object
 	 * @return string
 	 */
 	public static function get_edit_order_url( \WC_Order $order ) {
+
+		wc_deprecated_function( __METHOD__, 'x.y.z', 'WC_Order::get_edit_order_url' );
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.3' ) ) {
 			$order_url = $order->get_edit_order_url();
@@ -521,6 +525,86 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		}
 
 		return $order_url;
+	}
+
+
+	/**
+	 * Determines if the current admin screen is for the orders.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	public static function is_orders_screen() : bool {
+
+		$current_screen = SV_WC_Helper::get_current_screen();
+
+		if ( ! $current_screen ) {
+			return false;
+		}
+
+		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+			return 'edit-shop_order' === $current_screen->id;
+		}
+
+		return static::get_order_screen_id() === $current_screen->id
+			&& isset( $_GET['page'] )
+			&& $_GET['page'] === 'wc-orders';
+	}
+
+
+	/**
+	 * Determines if the current orders screen is for orders of a specific status.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param string|string[] $status one or more statuses to compare
+	 * @return bool
+	 */
+	public static function is_orders_screen_for_status( $status ) : bool {
+		global $post_type, $post_status;
+
+		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+
+			if ( 'shop_order' !== $post_type ) {
+				return false;
+			}
+
+			return empty( $status ) || $post_status === $status || ( is_array( $status ) && in_array( $post_status, $status, true ) );
+		}
+
+		if ( ! static::is_orders_screen() ) {
+			return false;
+		}
+
+		return empty( $status )
+			|| ( isset( $_GET['status'] ) && ( $status === $_GET['status'] || is_array( $status ) && in_array( $_GET['status'], $status, true ) ) );
+	}
+
+
+	/**
+	 * Determines if the current admin screen is for adding or editing an order.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	public static function is_order_edit_screen() : bool {
+
+		$current_screen = SV_WC_Helper::get_current_screen();
+
+		if ( ! $current_screen ) {
+			return false;
+		}
+
+		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+			return 'shop_order' === $current_screen->id;
+		}
+
+		return static::get_order_screen_id() === $current_screen->id
+			&& isset( $_GET['page'], $_GET['action'] )
+			&& $_GET['page'] === 'wc-orders'
+			&& in_array( $_GET['action'], [ 'new', 'edit' ], true );
 	}
 
 
@@ -553,11 +637,15 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function is_order( $post_order_or_id, $order_type = 'shop_order' ) : bool {
 
-		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+		if ( ! $post_order_or_id ) {
+			return false;
+		}
 
-			if ( $post_order_or_id instanceof \WC_Order ) {
-				$post_order_or_id = $post_order_or_id->get_id();
-			}
+		if ( $post_order_or_id instanceof \WC_Abstract_Order ) {
+
+			$found_type = $post_order_or_id->get_type();
+
+		} elseif ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
 			$found_type = is_numeric( $post_order_or_id ) || $post_order_or_id instanceof \WP_Post ? get_post_type( $post_order_or_id ) : null;
 

@@ -62,8 +62,13 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_capture_charge', array( $this, 'ajax_process_capture' ) );
 
 			// bulk capture order action
-			add_action( 'admin_footer-edit.php', array( $this, 'maybe_add_capture_charge_bulk_order_action' ) );
-			add_action( 'load-edit.php',         array( $this, 'process_capture_charge_bulk_order_action' ) );
+			if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+				add_action( 'admin_footer', [ $this, 'maybe_add_capture_charge_bulk_order_action' ] );
+				add_action( 'load-admin.php', [ $this, 'process_capture_charge_bulk_order_action' ] );
+			} else {
+				add_action( 'admin_footer-edit.php', [ $this, 'maybe_add_capture_charge_bulk_order_action' ] );
+				add_action( 'load-edit.php', [ $this, 'process_capture_charge_bulk_order_action' ] );
+			}
 		}
 	}
 
@@ -75,20 +80,24 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @param string $hook_suffix page hook suffix
+	 * @param string|mixed $hook_suffix page hook suffix
 	 */
 	public function enqueue_scripts( $hook_suffix ) {
-		global $post;
+		global $post, $theorder;
 
 		// Order screen assets
-		if ( SV_WC_Order_Compatibility::is_order( $post ) ) {
+		if ( SV_WC_Order_Compatibility::is_order( $post ) || SV_WC_Order_Compatibility::is_order( $theorder ) ) {
 
 			// Edit Order screen assets
-			if ( 'post.php' === $hook_suffix ) {
+			if ( 'post.php' === $hook_suffix || SV_WC_Order_Compatibility::is_order_edit_screen() ) {
 
-				$order = wc_get_order( SV_WC_Helper::get_requested_value( 'post' ) );
+				if ( $theorder instanceof \WC_Order ) {
+					$order = $theorder;
+				} else {
+					$order = wc_get_order( SV_WC_Helper::get_requested_value( SV_WC_Plugin_Compatibility::is_hpos_enabled() ? 'id' : 'post', 0 ) );
+				}
 
-				if ( ! $order ) {
+				if ( ! $order instanceof \WC_Order ) {
 					return;
 				}
 
@@ -134,16 +143,17 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Adds 'Capture charge' to the Orders screen bulk action select.
 	 *
+	 * @internal
+	 *
 	 * @since 5.0.0
 	 */
 	public function maybe_add_capture_charge_bulk_order_action() {
-		global $post_type, $post_status;
 
 		if ( ! current_user_can( 'edit_shop_orders' ) ) {
 			return;
 		}
 
-		if ( $post_type === 'shop_order' && $post_status !== 'trash' ) {
+		if ( SV_WC_Order_Compatibility::is_orders_screen_for_status( 'trash' ) ) {
 
 			$can_capture_charge = false;
 
@@ -179,12 +189,18 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Processes the 'Capture Charge' custom bulk action.
 	 *
+	 * @internal
+	 *
 	 * @since 5.0.0
 	 */
 	public function process_capture_charge_bulk_order_action() {
 		global $typenow;
 
-		if ( 'shop_order' !== $typenow ) {
+		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+			if ( ! SV_WC_Order_Compatibility::is_orders_screen() ) {
+				return;
+			}
+		} elseif ( 'shop_order' !== $typenow ) {
 			return;
 		}
 
@@ -253,10 +269,9 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * @param \WC_Order $order order object
 	 */
 	public function add_capture_button( $order ) {
-		global $post;
 
 		// only display the button for core orders
-		if ( ! $order instanceof \WC_Order || ! SV_WC_Order_Compatibility::is_order( $post ) ) {
+		if ( ! SV_WC_Order_Compatibility::is_order( $order ) ) {
 			return;
 		}
 
@@ -421,6 +436,30 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 
 	/**
+	 * Gets the current action selected from the bulk actions dropdown.
+	 *
+	 * @see \WP_List_Table::current_action()
+	 * Instead of using _get_list_table() to call current_action() we can duplicate its logic here to grab the action context.
+	 *
+	 * @since 5.10.14
+	 *
+	 * @return string|false the action name or false if no action was detected from the request
+	 */
+	protected function current_action() {
+
+		if ( isset( $_REQUEST['filter_action'] ) && ! empty( $_REQUEST['filter_action'] ) ) {
+			return false;
+		}
+
+		if ( isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ) {
+			return $_REQUEST['action'];
+		}
+
+		return false;
+	}
+
+
+	/**
 	 * Gets the plugin instance.
 	 *
 	 * @since 5.0.0
@@ -510,30 +549,6 @@ class SV_WC_Payment_Gateway_Admin_Order {
 		$gateway = $this->get_order_gateway( $order );
 
 		return $gateway && $gateway->get_capture_handler()->is_order_ready_for_capture( $order );
-	}
-
-
-	/**
-	 * Gets the current action selected from the bulk actions dropdown.
-	 *
-	 * @see \WP_List_Table::current_action()
-	 * Instead of using _get_list_table() to call current_action() we can duplicate its logic here to grab the action context.
-	 *
-	 * @since 5.10.14
-	 *
-	 * @return string|false the action name or false if no action was detected from the request
-	 */
-	protected function current_action() {
-
-		if ( isset( $_REQUEST['filter_action'] ) && ! empty( $_REQUEST['filter_action'] ) ) {
-			return false;
-		}
-
-		if ( isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ) {
-			return $_REQUEST['action'];
-		}
-
-		return false;
 	}
 
 
