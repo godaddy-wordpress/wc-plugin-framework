@@ -641,11 +641,11 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 			return false;
 		}
 
-		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+		if ( $post_order_or_id instanceof \WC_Abstract_Order ) {
 
-			if ( $post_order_or_id instanceof \WC_Order ) {
-				$post_order_or_id = $post_order_or_id->get_id();
-			}
+			$found_type = $post_order_or_id->get_type();
+
+		} elseif ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
 			$found_type = is_numeric( $post_order_or_id ) || $post_order_or_id instanceof \WP_Post ? get_post_type( $post_order_or_id ) : null;
 
