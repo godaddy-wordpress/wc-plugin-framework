@@ -83,10 +83,10 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * @param string $hook_suffix page hook suffix
 	 */
 	public function enqueue_scripts( $hook_suffix ) {
-		global $post;
+		global $post, $theorder;
 
 		// Order screen assets
-		if ( SV_WC_Order_Compatibility::is_order( $post ) ) {
+		if ( SV_WC_Order_Compatibility::is_order( $post ) || SV_WC_Order_Compatibility::is_order( $theorder ) ) {
 
 			// Edit Order screen assets
 			if ( 'post.php' === $hook_suffix ) {

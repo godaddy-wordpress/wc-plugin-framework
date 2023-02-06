@@ -553,6 +553,10 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 */
 	public static function is_order( $post_order_or_id, $order_type = 'shop_order' ) : bool {
 
+		if ( ! $post_order_or_id ) {
+			return false;
+		}
+
 		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
 			if ( $post_order_or_id instanceof \WC_Order ) {
@@ -733,7 +737,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		} else if( ! is_null( $post ) ) {
 			return $post;
 		}
-	
+
 	}
 
 	/**
