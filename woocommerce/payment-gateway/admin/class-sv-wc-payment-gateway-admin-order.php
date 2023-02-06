@@ -436,6 +436,30 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 
 	/**
+	 * Gets the current action selected from the bulk actions dropdown.
+	 *
+	 * @see \WP_List_Table::current_action()
+	 * Instead of using _get_list_table() to call current_action() we can duplicate its logic here to grab the action context.
+	 *
+	 * @since 5.10.14
+	 *
+	 * @return string|false the action name or false if no action was detected from the request
+	 */
+	protected function current_action() {
+
+		if ( isset( $_REQUEST['filter_action'] ) && ! empty( $_REQUEST['filter_action'] ) ) {
+			return false;
+		}
+
+		if ( isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ) {
+			return $_REQUEST['action'];
+		}
+
+		return false;
+	}
+
+
+	/**
 	 * Gets the plugin instance.
 	 *
 	 * @since 5.0.0
@@ -525,30 +549,6 @@ class SV_WC_Payment_Gateway_Admin_Order {
 		$gateway = $this->get_order_gateway( $order );
 
 		return $gateway && $gateway->get_capture_handler()->is_order_ready_for_capture( $order );
-	}
-
-
-	/**
-	 * Gets the current action selected from the bulk actions dropdown.
-	 *
-	 * @see \WP_List_Table::current_action()
-	 * Instead of using _get_list_table() to call current_action() we can duplicate its logic here to grab the action context.
-	 *
-	 * @since 5.10.14
-	 *
-	 * @return string|false the action name or false if no action was detected from the request
-	 */
-	protected function current_action() {
-
-		if ( isset( $_REQUEST['filter_action'] ) && ! empty( $_REQUEST['filter_action'] ) ) {
-			return false;
-		}
-
-		if ( isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ) {
-			return $_REQUEST['action'];
-		}
-
-		return false;
 	}
 
 
