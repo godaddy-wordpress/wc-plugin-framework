@@ -18,18 +18,18 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2022, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2023, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_14\REST_API\Controllers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_10_15\REST_API\Controllers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_14\Settings_API\Abstract_Settings;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_14\Settings_API\Setting;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_15\Settings_API\Abstract_Settings;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_15\Settings_API\Setting;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_14\\REST_API\\Controllers\\Settings' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_15\\REST_API\\Controllers\\Settings' ) ) :
 
 /**
  * The settings controller class.

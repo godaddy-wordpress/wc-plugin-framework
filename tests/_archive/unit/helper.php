@@ -4,7 +4,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
 use \Patchwork as p;
-use \SkyVerge\WooCommerce\PluginFramework\v5_10_14 as PluginFramework;
+use \SkyVerge\WooCommerce\PluginFramework\v5_10_15 as PluginFramework;
 
 /**
  * Helper Class Unit Tests
@@ -31,7 +31,7 @@ class Helper extends Test_Case {
 	public function test_str_starts_with_ascii( $asserts_as_true, $haystack, $needle ) {
 
 		// force ASCII handling
-		p\redefine( '\SkyVerge\WooCommerce\PluginFramework\v5_10_14\SV_WC_Helper::multibyte_loaded', function() { return false; } );
+		p\redefine( '\SkyVerge\WooCommerce\PluginFramework\v5_10_15\SV_WC_Helper::multibyte_loaded', function() { return false; } );
 
 		if ( $asserts_as_true ) {
 			$this->assertTrue( PluginFramework\SV_WC_Helper::str_starts_with( $haystack, $needle ) );
@@ -116,7 +116,7 @@ class Helper extends Test_Case {
 	public function test_str_ends_with_ascii( $asserts_as_true, $haystack, $needle ) {
 
 		// force ASCII handling
-		p\redefine( '\SkyVerge\WooCommerce\PluginFramework\v5_10_14\SV_WC_Helper::multibyte_loaded', function() { return false; } );
+		p\redefine( '\SkyVerge\WooCommerce\PluginFramework\v5_10_15\SV_WC_Helper::multibyte_loaded', function() { return false; } );
 
 		if ( $asserts_as_true ) {
 			$this->assertTrue( PluginFramework\SV_WC_Helper::str_ends_with( $haystack, $needle ) );
@@ -265,7 +265,7 @@ class Helper extends Test_Case {
 	public function test_str_exists_ascii( $asserts_as_true, $haystack, $needle ) {
 
 		// force ASCII handling
-		p\redefine( '\SkyVerge\WooCommerce\PluginFramework\v5_10_14\SV_WC_Helper::multibyte_loaded', function() { return false; } );
+		p\redefine( '\SkyVerge\WooCommerce\PluginFramework\v5_10_15\SV_WC_Helper::multibyte_loaded', function() { return false; } );
 
 		if ( $asserts_as_true ) {
 			$this->assertTrue( PluginFramework\SV_WC_Helper::str_exists( $haystack, $needle ) );
@@ -346,7 +346,7 @@ class Helper extends Test_Case {
 	public function test_str_truncate_ascii() {
 
 		// force ASCII handling
-		p\redefine( '\SkyVerge\WooCommerce\PluginFramework\v5_10_14\SV_WC_Helper::multibyte_loaded', function() { return false; } );
+		p\redefine( '\SkyVerge\WooCommerce\PluginFramework\v5_10_15\SV_WC_Helper::multibyte_loaded', function() { return false; } );
 
 		$the_string = 'The quick brown fox jumps ಠ_ಠ';
 
