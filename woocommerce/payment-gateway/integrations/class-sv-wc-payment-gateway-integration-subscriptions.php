@@ -548,6 +548,10 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		$subscription = is_numeric( $subscription ) ? wcs_get_subscription( $subscription ) : $subscription;
 		$updated_subscription = false;
 
+		if ( ! $subscription instanceof \WC_Subscription ) {
+			return $result;
+		}
+
 		// remove order-specific meta
 		foreach ( $this->get_order_specific_meta_keys() as $meta_key ) {
 			$subscription->delete_meta_data( $meta_key );
