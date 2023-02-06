@@ -534,7 +534,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @return string
 	 */
-	public static function get_screen_id( ) : string {
+	public static function get_order_screen_id( ) : string {
 
 		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
 			? wc_get_page_screen_id( 'shop-order' )
@@ -601,9 +601,9 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
 			$value = $single ? '' : [];
-			$order = ! $order instanceof \WC_Order && is_numeric( $order ) ? wc_get_order( (int) $order ) : $order;
+			$order = is_numeric( $order ) && $order > 0 ? wc_get_order( (int) $order ) : $order;
 
-			if ( $order ) {
+			if ( $order instanceof \WC_Order ) {
 				$value = $order->get_meta( $meta_key, $single );
 			}
 
@@ -633,9 +633,9 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
-			$order = ! $order instanceof \WC_Order && is_numeric( $order ) ? wc_get_order( (int) $order ) : $order;
+			$order = is_numeric( $order ) && $order > 0 ? wc_get_order( (int) $order ) : $order;
 
-			if ( $order ) {
+			if ( $order instanceof \WC_Order ) {
 				$order->update_meta_data( $meta_key, $meta_value );
 				$order->save_meta_data();
 			}
@@ -667,9 +667,9 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
-			$order = ! $order instanceof \WC_Order && is_numeric( $order ) ? wc_get_order( (int) $order ) : $order;
+			$order = is_numeric( $order ) && $order > 0 ? wc_get_order( (int) $order ) : $order;
 
-			if ( $order ) {
+			if ( $order instanceof \WC_Order ) {
 				$order->add_meta_data( $meta_key, $meta_value, $unique );
 				$order->save_meta_data();
 			}
@@ -700,9 +700,9 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
-			$order = ! $order instanceof \WC_Order && is_numeric( $order ) ? wc_get_order( (int) $order ) : $order;
+			$order = is_numeric( $order ) && $order > 0 ? wc_get_order( (int) $order ) : $order;
 
-			if ( $order ) {
+			if ( $order instanceof \WC_Order ) {
 				$order->delete_meta_data( $meta_key);
 				$order->save_meta_data();
 			}
