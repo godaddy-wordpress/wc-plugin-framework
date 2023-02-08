@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC Plugin Framework\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
-"POT-Creation-Date: 2022-12-06 10:38:37+00:00\n"
+"POT-Creation-Date: 2023-02-08 03:47:30+00:00\n"
 "PO-Revision-Date: 2017-03-27 11:59-0700\n"
 "Last-Translator: Illimar Tambek <illimar.tambek@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/wc-plugin-"
@@ -184,7 +184,7 @@ msgstr "%1$s vajab WooCommerce'i versiooni %2$s või uuemat"
 msgid "Please %1$supdate WooCommerce%2$s"
 msgstr "Palun %1$suuenda WooCommerce'i%2$s"
 
-#: class-sv-wc-plugin-compatibility.php:349
+#: class-sv-wc-plugin-compatibility.php:351
 msgid "WooCommerce"
 msgstr ""
 
@@ -245,29 +245,29 @@ msgid ""
 msgstr ""
 
 #. translators: Placeholders: %s - plugin name
-#: class-sv-wc-plugin.php:301
+#: class-sv-wc-plugin.php:310
 msgid "You cannot clone instances of %s."
 msgstr "﻿%s eksemplari ei saa kloonida."
 
 #. translators: Placeholders: %s - plugin name
-#: class-sv-wc-plugin.php:312
+#: class-sv-wc-plugin.php:321
 msgid "You cannot unserialize instances of %s."
 msgstr "%s eksemplari ei saa deserialiseerida (unserialize)."
 
 #. translators: Docs as in Documentation
-#: class-sv-wc-plugin.php:588
+#: class-sv-wc-plugin.php:597
 msgid "Docs"
 msgstr "Dokumentatsioon"
 
-#: class-sv-wc-plugin.php:688
+#: class-sv-wc-plugin.php:712
 msgid "%1$s - A minimum of %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:697
+#: class-sv-wc-plugin.php:721
 msgid "Set as %1$s - %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:977
+#: class-sv-wc-plugin.php:1015
 #: payment-gateway/class-sv-wc-payment-gateway-plugin.php:876
 msgid "Configure"
 msgstr "Seadista"
@@ -511,7 +511,7 @@ msgstr ""
 
 #: payment-gateway/Handlers/Abstract_Hosted_Payment_Handler.php:217
 #: payment-gateway/class-sv-wc-payment-gateway.php:2889
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:512
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:521
 msgid ""
 "An error occurred, please try again or try an alternate form of payment."
 msgstr "Esines viga, palun proovi uuesti või kasuta teistsugust makseviisi."
@@ -526,7 +526,7 @@ msgstr ""
 #. translators: Placeholders: %1$s - payment request response status code, %2$s
 #. - payment request response status message
 #: payment-gateway/Handlers/Abstract_Payment_Handler.php:152
-#: payment-gateway/class-sv-wc-payment-gateway.php:2482
+#: payment-gateway/class-sv-wc-payment-gateway.php:2483
 #: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:173
 msgid "Status code %1$s: %2$s"
 msgstr "Staatuse kood %1$s: %2$s"
@@ -534,7 +534,7 @@ msgstr "Staatuse kood %1$s: %2$s"
 #. translators: Placeholders: %s - status code
 #. translators: Placeholders: %s - payment request response status code
 #: payment-gateway/Handlers/Abstract_Payment_Handler.php:155
-#: payment-gateway/class-sv-wc-payment-gateway.php:2485
+#: payment-gateway/class-sv-wc-payment-gateway.php:2486
 #: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:176
 msgid "Status code: %s"
 msgstr "Staatuse kood: %s"
@@ -542,13 +542,13 @@ msgstr "Staatuse kood: %s"
 #. translators: Placeholders; %s - status message
 #. translators: Placeholders: %s - payment request response status message
 #: payment-gateway/Handlers/Abstract_Payment_Handler.php:158
-#: payment-gateway/class-sv-wc-payment-gateway.php:2488
+#: payment-gateway/class-sv-wc-payment-gateway.php:2489
 #: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:179
 msgid "Status message: %s"
 msgstr "Staatuse teade: %s"
 
 #: payment-gateway/Handlers/Abstract_Payment_Handler.php:163
-#: payment-gateway/class-sv-wc-payment-gateway.php:2493
+#: payment-gateway/class-sv-wc-payment-gateway.php:2494
 #: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:186
 msgid "Transaction ID %s"
 msgstr "Tehingu ID %s"
@@ -577,7 +577,7 @@ msgstr ""
 #. only performed a credit card authorization and did not capture any funds.
 #: payment-gateway/Handlers/Abstract_Payment_Handler.php:274
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:864
-#: payment-gateway/class-sv-wc-payment-gateway.php:1860
+#: payment-gateway/class-sv-wc-payment-gateway.php:1861
 #: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:370
 msgid "Authorization only transaction"
 msgstr "Autoriseerimise tehing"
@@ -628,8 +628,8 @@ msgstr "%1$s: tasumine summas %2$s kinnitatud"
 #: payment-gateway/Handlers/Capture.php:198
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:683
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:768
-#: payment-gateway/class-sv-wc-payment-gateway.php:2161
-#: payment-gateway/class-sv-wc-payment-gateway.php:2394
+#: payment-gateway/class-sv-wc-payment-gateway.php:2162
+#: payment-gateway/class-sv-wc-payment-gateway.php:2395
 #: payment-gateway/class-sv-wc-payment-gateway.php:2706
 #: payment-gateway/class-sv-wc-payment-gateway.php:2751
 #: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:353
@@ -643,7 +643,7 @@ msgstr "(Tehingu ID %s)"
 msgid "%1$s Capture Failed: %2$s"
 msgstr "%1$s: makse teostamine ebaõnnestus: %2$s"
 
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:120
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:130
 #, fuzzy
 msgid ""
 "Are you sure you wish to process this capture? The action cannot be undone."
@@ -651,7 +651,7 @@ msgstr ""
 "Oled kindel, et soovid seda teha? Muudatust ei rakendata enne kui klikid "
 "\"Uuenda\""
 
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:123
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:133
 msgid ""
 "Something went wrong, and the capture could no be completed. Please try "
 "again."
@@ -661,21 +661,21 @@ msgstr ""
 #. amount has been pre-authorized before, but funds have not yet been captured
 #. (taken) from the card. 		 Capturing the charge will take the money from the
 #. credit card and put it in the merchant's pockets.
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:167
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:239
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:302
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:178
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:256
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:319
 msgid "Capture Charge"
 msgstr "Teosta makse"
 
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:292
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:309
 msgid "This charge has been fully captured."
 msgstr ""
 
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:294
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:311
 msgid "This charge can no longer be captured."
 msgstr ""
 
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:296
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:313
 msgid "This charge cannot be captured."
 msgstr ""
 
@@ -762,7 +762,7 @@ msgid "%s Payment Tokens"
 msgstr "%s maksevahendid"
 
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-handler.php:302
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:841
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:862
 msgid "Customer ID"
 msgstr "Kliendi ID"
 
@@ -1437,8 +1437,8 @@ msgstr ""
 #. Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
 #: payment-gateway/class-sv-wc-payment-gateway-plugin.php:992
 msgid ""
-"%1$s is inactive for pre-order transactions. Please %2$senable tokenization"
-"%3$s to activate %1$s for Pre-Orders."
+"%1$s is inactive for pre-order transactions. Please %2$senable "
+"tokenization%3$s to activate %1$s for Pre-Orders."
 msgstr ""
 "%1$s ei ole eeltellimuste maksete jaoks kasutatav. Palun %2$slülita "
 "maksevahendite salvestamine%3$s sisse, et aktiveerida %1$s Eeltellimuste "
@@ -1602,46 +1602,46 @@ msgid "Display the Card Security Code field when paying with a saved card"
 msgstr "Näita kassas kaardi turvakoodi (CV2) välja"
 
 #. translators: Placeholders: %1$s - site title, %2$s - order number
-#: payment-gateway/class-sv-wc-payment-gateway.php:1813
+#: payment-gateway/class-sv-wc-payment-gateway.php:1814
 msgid "%1$s - Order %2$s"
 msgstr "%1$s - Tellimus %2$s"
 
 #. translators: Placeholders: %1$s - site title, %2$s - order number.
 #. Definitions: Capture as in capture funds from a credit card.
-#: payment-gateway/class-sv-wc-payment-gateway.php:1942
+#: payment-gateway/class-sv-wc-payment-gateway.php:1943
 msgid "%1$s - Capture for Order %2$s"
 msgstr "%1$s - Tasumine tellimuse %2$s eest"
 
 #. translators: Placeholders: %1$s - site title, %2$s - order number
-#: payment-gateway/class-sv-wc-payment-gateway.php:2085
+#: payment-gateway/class-sv-wc-payment-gateway.php:2086
 msgid "%1$s - Refund for Order %2$s"
 msgstr "%1$s - Tagasimakse tellimuse %2$s eest"
 
 #. translators: Placeholders: %1$s - payment gateway title (such as
 #. Authorize.net, Braintree, etc), %2$s - a monetary amount
-#: payment-gateway/class-sv-wc-payment-gateway.php:2152
+#: payment-gateway/class-sv-wc-payment-gateway.php:2153
 msgid "%1$s Refund in the amount of %2$s approved."
 msgstr "%1$s: tagasimakse summas %2$s kinnitatud."
 
 #. translators: Placeholders: %1$s - payment gateway title (such as
 #. Authorize.net, Braintree, etc), %2$s - error code, %3$s - error message
-#: payment-gateway/class-sv-wc-payment-gateway.php:2182
+#: payment-gateway/class-sv-wc-payment-gateway.php:2183
 msgid "%1$s Refund Failed: %2$s - %3$s"
 msgstr "%1$s: tagasimakse ebaõnnestus: %2$s - %3$s"
 
 #. translators: Placeholders: %1$s - payment gateway title (such as
 #. Authorize.net, Braintree, etc), %2$s - error message
-#: payment-gateway/class-sv-wc-payment-gateway.php:2190
+#: payment-gateway/class-sv-wc-payment-gateway.php:2191
 msgid "%1$s Refund Failed: %2$s"
 msgstr "%1$s: tagasimakse ebaõnnestus: %2$s"
 
 #. translators: Placeholders: %s - payment gateway title (such as
 #. Authorize.net, Braintree, etc)
-#: payment-gateway/class-sv-wc-payment-gateway.php:2211
+#: payment-gateway/class-sv-wc-payment-gateway.php:2212
 msgid "%s Order completely refunded."
 msgstr "%s: tellimus täielikult tagasi makstud."
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:2266
+#: payment-gateway/class-sv-wc-payment-gateway.php:2267
 msgid ""
 "Oops, you cannot partially void this order. Please use the full order amount."
 msgstr ""
@@ -1650,19 +1650,19 @@ msgstr ""
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - error code,
 #. %3$s - error message. Void as in to void an order.
-#: payment-gateway/class-sv-wc-payment-gateway.php:2353
+#: payment-gateway/class-sv-wc-payment-gateway.php:2354
 msgid "%1$s Void Failed: %2$s - %3$s"
 msgstr "%1$s: tühistamine ebaõnnestus: %2$s - %3$s"
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - error
 #. message. Void as in to void an order.
-#: payment-gateway/class-sv-wc-payment-gateway.php:2361
+#: payment-gateway/class-sv-wc-payment-gateway.php:2362
 msgid "%1$s Void Failed: %2$s"
 msgstr "%1$s: tühistamine ebaõnnestus: %2$s"
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - a monetary
 #. amount. Void as in to void an order.
-#: payment-gateway/class-sv-wc-payment-gateway.php:2385
+#: payment-gateway/class-sv-wc-payment-gateway.php:2386
 msgid "%1$s Void in the amount of %2$s approved."
 msgstr "%1$s: tühistamine summas %2$s kinnitatud."
 
@@ -1808,39 +1808,39 @@ msgstr ""
 msgid "Pre-Order Release Payment Failed: %s"
 msgstr "Eeltellimuse väljastamise makse ebaõnnestus: %s"
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:349
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:358
 msgid "Subscription Renewal: payment token is missing/invalid."
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:375
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:384
 msgid "%1$s - Subscription Renewal Order %2$s"
 msgstr ""
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - error
 #. message; e.g. Order Note: [Payment method] Payment Change failed [error]
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:507
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:516
 #, fuzzy
 msgid "%1$s Payment Change Failed (%2$s)"
 msgstr "%1$s: makse ebaõnnestus (%2$s)"
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:650
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:671
 msgid "Via %s ending in %s"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:677
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:698
 msgid "Subscriptions"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:738
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:759
 msgid "N/A"
 msgstr "-"
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:837
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:858
 msgid "Payment Token"
 msgstr ""
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:866
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:871
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:887
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:892
 msgid "%s is required."
 msgstr ""
 
@@ -2017,12 +2017,12 @@ msgctxt "coordinating conjunction for a list of items: a, b, and c"
 msgid "and"
 msgstr ""
 
-#: class-sv-wc-plugin.php:593
+#: class-sv-wc-plugin.php:602
 msgctxt "noun"
 msgid "Support"
 msgstr "Kasutajatugi"
 
-#: class-sv-wc-plugin.php:598
+#: class-sv-wc-plugin.php:607
 msgctxt "verb"
 msgid "Review"
 msgstr ""
@@ -2119,12 +2119,12 @@ msgctxt "account type"
 msgid "Savings"
 msgstr "Hoiuarve"
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:2460
+#: payment-gateway/class-sv-wc-payment-gateway.php:2461
 msgctxt "hash before order number"
 msgid "#"
 msgstr "#"
 
-#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:732
+#: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:753
 msgctxt "hash before order number"
 msgid "#%s"
 msgstr ""
@@ -2210,8 +2210,8 @@ msgstr "Töö/avalik"
 #~ "(soovitatud)%2$s %3$svõi%4$s %5$slülita järgnevad välja%6$s:"
 
 #~ msgid ""
-#~ "To reactivate this plugin, please %1$supdate now (recommended)%2$s %3$sor"
-#~ "%4$s %5$sdeactivate the following%6$s:"
+#~ "To reactivate this plugin, please %1$supdate now (recommended)%2$s "
+#~ "%3$sor%4$s %5$sdeactivate the following%6$s:"
 #~ msgstr ""
 #~ "Et see plugin taas sisse lülitada, %1$suuenda palun kohe (soovitatud)%2$s "
 #~ "%3$svõi%4$s %5$slülita järgnevad välja%6$s:"
