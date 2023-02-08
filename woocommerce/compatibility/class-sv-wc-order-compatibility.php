@@ -813,8 +813,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @since x.y.z
 	 *
 	 * @param int|\WC_Order $order order ID or object
-	 * @param $order
-	 * @param string $meta_key
+	 * @param string $meta_key meta key
 	 * @return bool
 	 */
 	public static function order_meta_exists( $order, string $meta_key ) : bool {
