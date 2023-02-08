@@ -805,6 +805,41 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	}
 
 
+	/**
+	 * Determines if an order meta exists according to HPOS availability.
+	 *
+	 * Uses {@see \WC_Order::meta_exists()} if HPOS is enabled, otherwise it uses the WordPress {@see metadata_exists()} function.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param int|\WC_Order $order order ID or object
+	 * @param $order
+	 * @param string $meta_key
+	 * @return bool
+	 */
+	public static function order_meta_exists( $order, string $meta_key ) : bool {
+
+		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+
+			$order = is_numeric( $order ) && $order > 0 ? wc_get_order( (int) $order ) : $order;
+
+			if ( $order instanceof \WC_Order ) {
+				return $order->meta_exists( $meta_key );
+			}
+
+		} else {
+
+			$order_id = $order instanceof \WC_Order ? $order->get_id() : $order;
+
+			if ( is_numeric( $order_id ) && $order_id > 0 ) {
+				return metadata_exists( 'post', (int) $order_id, $meta_key );
+			}
+		}
+
+		return false;
+	}
+
+
 }
 
 
