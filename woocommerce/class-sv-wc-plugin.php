@@ -111,17 +111,13 @@ abstract class SV_WC_Plugin {
 	 *
 	 *     @type int|float $latest_wc_versions the last supported versions of WooCommerce, as a major.minor float relative to the latest available version
 	 *     @type string $text_domain the plugin textdomain, used to set up translations
+	 *     @type bool $hpos_support whether the plugin supports HPOS (default false)
 	 *     @type array  $dependencies {
 	 *         PHP extension, function, and settings dependencies
 	 *
 	 *         @type array $php_extensions PHP extension dependencies
 	 *         @type array $php_functions  PHP function dependencies
 	 *         @type array $php_settings   PHP settings dependencies
-	 *     }
-	 *     @type array<string, mixed> $supports {
-	 *         named features that this plugin supports
-	 *
-	 *         @type bool $hpos whether the plugin supports HPOS (default false)
 	 *     }
 	 * }
 	 */
@@ -133,12 +129,12 @@ abstract class SV_WC_Plugin {
 
 		$args = wp_parse_args( $args, [
 			'text_domain'   => '',
+			'supports_hpos' => false,
 			'dependencies'  => [],
-			'supports'      => [],
 		] );
 
 		$this->text_domain   = $args['text_domain'];
-		$this->supports_hpos = $args['supports']['hpos'] ?? false;
+		$this->supports_hpos = $args['supports_hpos'];
 
 		// includes that are required to be available at all times
 		$this->includes();
