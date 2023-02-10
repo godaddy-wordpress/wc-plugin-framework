@@ -1,5 +1,19 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2023.nn.nn - version 5.11.0
+ * Feature - Add compatibility methods and support for WooCommerce High Performance Order Storage (HPOS)
+ * Misc - Require PHP 7.4 or higher
+
+2023.02.06 - version 5.10.15
+ * Fix - "My Account" delete payment method compatibility with WC 7.2+
+
+2022.12.06 - version 5.10.14
+ * Tweak - Improve the performance of the orders admin screen in some sites by optimizing payment gateways bulk action detection - props @ravinderk
+ * Fix - Allow gateway plugins to override card images by defining an override with the same name in the plugin's `assets/images` folder - props @cadic
+
+2022.08.16 - version 5.10.13
+ * Fix - Improve Background Job Handler compatibility with newer WooCommerce versions while processing a job queue
+
 2022.01.13 - version 5.10.12
  * Fix - Remove deprecated usages of `is_ajax()` in favor of `wp_doing_ajax()`
 

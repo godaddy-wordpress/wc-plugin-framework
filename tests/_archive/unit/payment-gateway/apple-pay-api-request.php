@@ -3,7 +3,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\Tests\Unit;
 
 use \WP_Mock as Mock;
-use \SkyVerge\WooCommerce\PluginFramework\v5_10_12 as PluginFramework;
+use \SkyVerge\WooCommerce\PluginFramework\v5_10_15 as PluginFramework;
 
 /**
  * Unit tests for \SV_WC_Payment_Gateway_Apple_Pay_API_Request
@@ -21,7 +21,7 @@ class Payment_Gateway_Apple_Pay_API_Request extends Test_Case {
 	 */
 	public function test_set_merchant_data( $merchant_id, $domain_name, $display_name, $expected ) {
 
-		$gateway = $this->getMockBuilder( '\SkyVerge\WooCommerce\PluginFramework\v5_10_12\SV_WC_Payment_Gateway' )->getMock();
+		$gateway = $this->getMockBuilder( '\SkyVerge\WooCommerce\PluginFramework\v5_10_15\SV_WC_Payment_Gateway' )->getMock();
 
 		$request = new PluginFramework\SV_WC_Payment_Gateway_Apple_Pay_API_Request( $gateway );
 

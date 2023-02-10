@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2022, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2023, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_12;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_12\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -460,7 +460,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
-		$versioned_handle = $handle . '-v5_10_12';
+		$versioned_handle = $handle . '-v5_11_0';
 
 		// Frontend JS
 		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
@@ -1753,8 +1753,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$image_extension = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_use_svg', true ) ? '.svg' : '.png';
 
 		// first, is the card image available within the plugin?
-		if ( is_readable( $this->get_plugin()->get_payment_gateway_framework_assets_path() . '/images/card-' . $image_type . $image_extension ) ) {
-			return \WC_HTTPS::force_https_url( $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/card-' . $image_type . $image_extension );
+		if ( is_readable( $this->get_plugin()->get_plugin_path() . '/assets/images/card-' . $image_type . $image_extension ) ) {
+			return \WC_HTTPS::force_https_url( $this->get_plugin()->get_plugin_url() . '/assets/images/card-' . $image_type . $image_extension );
 		}
 
 		// default: is the card image available within the framework?
@@ -1787,6 +1787,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @param int|\WC_Order $order the order or order ID being processed
 	 * @return \WC_Order object with payment and transaction information attached
 	 */
+	#[\AllowDynamicProperties]
 	public function get_order( $order ) {
 
 		if ( is_numeric( $order ) ) {
@@ -2513,8 +2514,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		if ( $response && $response->get_transaction_id() ) {
 
 			$this->update_order_meta( $order, 'trans_id', $response->get_transaction_id() );
-
-			update_post_meta( $order->get_id(), '_transaction_id', $response->get_transaction_id() );
+			$this->update_order_meta( $order, '_transaction_id', $response->get_transaction_id() );
 		}
 
 		// transaction date
@@ -2542,7 +2542,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		if ( $this->is_credit_card_gateway() ) {
 
 			// credit card gateway data
-			if ( $response && $response instanceof SV_WC_Payment_Gateway_API_Authorization_Response ) {
+			if ( $response instanceof SV_WC_Payment_Gateway_API_Authorization_Response ) {
 
 				$this->update_order_meta( $order, 'authorization_amount', $order->payment_total );
 

@@ -18,18 +18,18 @@
  *
  * @package   SkyVerge/WooCommerce/API
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2022, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2023, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_12\API;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_0\API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_10_12\SV_WC_API_Base;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_12\API\Traits\Cacheable_Request_Trait;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_0\SV_WC_API_Base;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_0\API\Traits\Cacheable_Request_Trait;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_12\\API\\Abstract_Cacheable_API_Base' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\API\\Abstract_Cacheable_API_Base' ) ) :
 
 
 /**

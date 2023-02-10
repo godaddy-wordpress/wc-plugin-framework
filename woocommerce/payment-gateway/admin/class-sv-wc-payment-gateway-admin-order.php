@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Admin
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2022, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2023, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_12;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_12\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
 
 
 /**
@@ -62,8 +62,13 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_capture_charge', array( $this, 'ajax_process_capture' ) );
 
 			// bulk capture order action
-			add_action( 'admin_footer-edit.php', array( $this, 'maybe_add_capture_charge_bulk_order_action' ) );
-			add_action( 'load-edit.php',         array( $this, 'process_capture_charge_bulk_order_action' ) );
+			if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+				add_action( 'admin_footer', [ $this, 'maybe_add_capture_charge_bulk_order_action' ] );
+				add_action( 'load-admin.php', [ $this, 'process_capture_charge_bulk_order_action' ] );
+			} else {
+				add_action( 'admin_footer-edit.php', [ $this, 'maybe_add_capture_charge_bulk_order_action' ] );
+				add_action( 'load-edit.php', [ $this, 'process_capture_charge_bulk_order_action' ] );
+			}
 		}
 	}
 
@@ -75,19 +80,24 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @param string $hook_suffix page hook suffix
+	 * @param string|mixed $hook_suffix page hook suffix
 	 */
 	public function enqueue_scripts( $hook_suffix ) {
+		global $post, $theorder;
 
 		// Order screen assets
-		if ( 'shop_order' === get_post_type() ) {
+		if ( SV_WC_Order_Compatibility::is_order( $post ) || SV_WC_Order_Compatibility::is_order( $theorder ) ) {
 
 			// Edit Order screen assets
-			if ( 'post.php' === $hook_suffix ) {
+			if ( 'post.php' === $hook_suffix || SV_WC_Order_Compatibility::is_order_edit_screen() ) {
 
-				$order = wc_get_order( SV_WC_Helper::get_requested_value( 'post' ) );
+				if ( $theorder instanceof \WC_Order ) {
+					$order = $theorder;
+				} else {
+					$order = wc_get_order( SV_WC_Helper::get_requested_value( SV_WC_Plugin_Compatibility::is_hpos_enabled() ? 'id' : 'post', 0 ) );
+				}
 
-				if ( ! $order ) {
+				if ( ! $order instanceof \WC_Order ) {
 					return;
 				}
 
@@ -133,16 +143,17 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Adds 'Capture charge' to the Orders screen bulk action select.
 	 *
+	 * @internal
+	 *
 	 * @since 5.0.0
 	 */
 	public function maybe_add_capture_charge_bulk_order_action() {
-		global $post_type, $post_status;
 
 		if ( ! current_user_can( 'edit_shop_orders' ) ) {
 			return;
 		}
 
-		if ( $post_type === 'shop_order' && $post_status !== 'trash' ) {
+		if ( SV_WC_Order_Compatibility::is_orders_screen_for_status( 'trash' ) ) {
 
 			$can_capture_charge = false;
 
@@ -178,49 +189,52 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Processes the 'Capture Charge' custom bulk action.
 	 *
+	 * @internal
+	 *
 	 * @since 5.0.0
 	 */
 	public function process_capture_charge_bulk_order_action() {
 		global $typenow;
 
-		if ( 'shop_order' === $typenow ) {
-
-			// get the action
-			$wp_list_table = _get_list_table( 'WP_Posts_List_Table' );
-			$action        = $wp_list_table->current_action();
-
-			// bail if not processing a capture
-			if ( 'wc_capture_charge' !== $action ) {
+		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+			if ( ! SV_WC_Order_Compatibility::is_orders_screen() ) {
 				return;
 			}
+		} elseif ( 'shop_order' !== $typenow ) {
+			return;
+		}
 
-			if ( ! current_user_can( 'edit_shop_orders' ) ) {
-				return;
-			}
+		// bail if not processing a capture
+		if ( 'wc_capture_charge' !== $this->current_action() ) {
+			return;
+		}
 
-			// security check
-			check_admin_referer( 'bulk-posts' );
+		if ( ! current_user_can( 'edit_shop_orders' ) ) {
+			return;
+		}
 
-			// make sure order IDs are submitted
-			if ( isset( $_REQUEST['post'] ) ) {
-				$order_ids = array_map( 'absint', $_REQUEST['post'] );
-			}
+		// security check
+		check_admin_referer( 'bulk-posts' );
 
-			// return if there are no orders to export
-			if ( empty( $order_ids ) ) {
-				return;
-			}
+		// make sure order IDs are submitted
+		if ( isset( $_REQUEST['post'] ) ) {
+			$order_ids = array_map( 'absint', $_REQUEST['post'] );
+		}
 
-			// give ourselves an unlimited timeout if possible
-			@set_time_limit( 0 );
+		// return if there are no orders to export
+		if ( empty( $order_ids ) ) {
+			return;
+		}
 
-			foreach ( $order_ids as $order_id ) {
+		// give ourselves an unlimited timeout if possible
+		@set_time_limit( 0 );
 
-				$order = wc_get_order( $order_id );
+		foreach ( $order_ids as $order_id ) {
 
-				if ( $order && ( $gateway = $this->get_order_gateway( $order ) ) ) {
-					$gateway->get_capture_handler()->maybe_perform_capture( $order );
-				}
+			$order = wc_get_order( $order_id );
+
+			if ( $order && ( $gateway = $this->get_order_gateway( $order ) ) ) {
+				$gateway->get_capture_handler()->maybe_perform_capture( $order );
 			}
 		}
 	}
@@ -257,7 +271,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	public function add_capture_button( $order ) {
 
 		// only display the button for core orders
-		if ( ! $order instanceof \WC_Order || 'shop_order' !== get_post_type( $order->get_id() ) ) {
+		if ( ! SV_WC_Order_Compatibility::is_order( $order ) ) {
 			return;
 		}
 
@@ -418,6 +432,30 @@ class SV_WC_Payment_Gateway_Admin_Order {
 		}
 
 		return $capture_gateway;
+	}
+
+
+	/**
+	 * Gets the current action selected from the bulk actions dropdown.
+	 *
+	 * @see \WP_List_Table::current_action()
+	 * Instead of using _get_list_table() to call current_action() we can duplicate its logic here to grab the action context.
+	 *
+	 * @since 5.10.14
+	 *
+	 * @return string|false the action name or false if no action was detected from the request
+	 */
+	protected function current_action() {
+
+		if ( isset( $_REQUEST['filter_action'] ) && ! empty( $_REQUEST['filter_action'] ) ) {
+			return false;
+		}
+
+		if ( isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ) {
+			return $_REQUEST['action'];
+		}
+
+		return false;
 	}
 
 

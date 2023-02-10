@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2022, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2023, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_12;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_12\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\SV_WC_Plugin' ) ) :
 
 
 /**
@@ -43,7 +43,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.10.12';
+	const VERSION = '5.10.15';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -62,6 +62,9 @@ abstract class SV_WC_Plugin {
 
 	/** @var string template path, without trailing slash */
 	private $template_path;
+
+	/** @var bool whether the plugin supports WooCommerce HPOS */
+	private $supports_hpos;
 
 	/** @var \WC_Logger instance */
 	private $logger;
@@ -108,6 +111,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 *     @type int|float $latest_wc_versions the last supported versions of WooCommerce, as a major.minor float relative to the latest available version
 	 *     @type string $text_domain the plugin textdomain, used to set up translations
+	 *     @type bool $hpos_support whether the plugin supports HPOS (default false)
 	 *     @type array  $dependencies {
 	 *         PHP extension, function, and settings dependencies
 	 *
@@ -125,10 +129,12 @@ abstract class SV_WC_Plugin {
 
 		$args = wp_parse_args( $args, [
 			'text_domain'   => '',
+			'supports_hpos' => false,
 			'dependencies'  => [],
 		] );
 
-		$this->text_domain = $args['text_domain'];
+		$this->text_domain   = $args['text_domain'];
+		$this->supports_hpos = $args['supports_hpos'];
 
 		// includes that are required to be available at all times
 		$this->includes();
@@ -275,6 +281,9 @@ abstract class SV_WC_Plugin {
 
 		// hook for translations separately to ensure they're loaded
 		add_action( 'init', array( $this, 'load_translations' ) );
+
+		// handle HPOS compatibility
+		add_action( 'before_woocommerce_init', [ $this, 'handle_hpos_compatibility' ] );
 
 		// add the admin notices
 		add_action( 'admin_notices', array( $this, 'add_admin_notices' ) );
@@ -603,6 +612,21 @@ abstract class SV_WC_Plugin {
 	}
 
 
+	/**
+	 * Declares HPOS compatibility if the plugin is compatible with HPOS.
+	 *
+	 * @internal
+	 *
+	 * @since x.y.z
+	 */
+	public function handle_hpos_compatibility() {
+
+		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->get_plugin_file(), $this->is_hpos_compatible() );
+		}
+	}
+
+
 	/** Helper methods ******************************************************/
 
 
@@ -787,6 +811,20 @@ abstract class SV_WC_Plugin {
 		}
 
 		return $is_available;
+	}
+
+
+	/**
+	 * Determines whether the plugin supports HPOS.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	public function is_hpos_compatible() : bool
+	{
+		// TODO: we might need to add a WC version check here for when this bug has been addressed: https://github.com/woocommerce/woocommerce/issues/35703 {unfulvio 2023-02-06}
+		return $this->supports_hpos;
 	}
 
 

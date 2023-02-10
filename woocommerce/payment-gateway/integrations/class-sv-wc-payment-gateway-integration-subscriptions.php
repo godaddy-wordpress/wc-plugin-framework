@@ -18,15 +18,15 @@
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2022, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2023, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_12;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_12\\SV_WC_Payment_Gateway_Integration_Subscriptions' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\SV_WC_Payment_Gateway_Integration_Subscriptions' ) ) :
 
 
 /**
@@ -196,6 +196,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 * copied over to a renewal order prior to payment processing.
 	 *
 	 * @since 4.1.0
+	 *
 	 * @param \WC_Order $order order
 	 */
 	public function save_payment_meta( $order ) {
@@ -207,14 +208,22 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		foreach ( $subscriptions as $subscription ) {
 
+			$updated = false;
+
 			// payment token
 			if ( ! empty( $order->payment->token ) ) {
-				update_post_meta( $subscription->get_id(), $this->get_gateway()->get_order_meta_prefix() . 'payment_token', $order->payment->token );
+				$subscription->update_meta_data( $this->get_gateway()->get_order_meta_prefix() . 'payment_token', $order->payment->token );
+				$updated = true;
 			}
 
 			// customer ID
 			if ( ! empty( $order->customer_id ) ) {
-				update_post_meta( $subscription->get_id(), $this->get_gateway()->get_order_meta_prefix() . 'customer_id', $order->customer_id );
+				$subscription->update_meta_data(  $this->get_gateway()->get_order_meta_prefix() . 'customer_id', $order->customer_id );
+				$updated = true;
+			}
+
+			if ( $updated ) {
+				$subscription->save_meta_data();
 			}
 		}
 	}
@@ -536,13 +545,25 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function remove_order_meta_from_change_payment( $result, $subscription ) {
 
+		$subscription = is_numeric( $subscription ) ? wcs_get_subscription( $subscription ) : $subscription;
+		$updated_subscription = false;
+
+		if ( ! $subscription instanceof \WC_Subscription ) {
+			return $result;
+		}
+
 		// remove order-specific meta
 		foreach ( $this->get_order_specific_meta_keys() as $meta_key ) {
-			delete_post_meta( $subscription->get_id(), $meta_key );
+			$subscription->delete_meta_data( $meta_key );
+			$updated_subscription = true;
+		}
+
+		if ( $updated_subscription ) {
+			$subscription->save_meta_data();
 		}
 
 		// get a fresh subscription object after previous metadata changes
-		$subscription = is_numeric( $subscription ) ? wcs_get_subscription( $subscription ) : $subscription;
+		$subscription = wcs_get_subscription( $subscription->get_id() );
 
 		$old_payment_method = $subscription->get_meta( '_old_payment_method', true, 'edit' );
 		$new_payment_method = $subscription->get_payment_method( 'edit' );
