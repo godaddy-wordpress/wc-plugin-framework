@@ -507,6 +507,21 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
+	 * Gets the orders screen admin URL according to HPOS availability.
+	 *
+	 * @return string
+	 */
+	public static function get_orders_screen_url() : string {
+
+		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+			return admin_url( 'admin.php?page=wc-orders' );
+		}
+
+		return admin_url( 'edit.php?post_type=shop_order' );
+	}
+
+
+	/**
 	 * Gets the admin Edit screen URL for an order according to HPOS compatibility.
 	 *
 	 * @see OrderUtil::get_order_admin_edit_url()
