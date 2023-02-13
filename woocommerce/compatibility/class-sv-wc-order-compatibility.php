@@ -569,7 +569,8 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 		return static::get_order_screen_id() === $current_screen->id
 			&& isset( $_GET['page'] )
-			&& $_GET['page'] === 'wc-orders';
+			&& $_GET['page'] === 'wc-orders'
+			&& ! static::is_order_edit_screen();
 	}
 
 
