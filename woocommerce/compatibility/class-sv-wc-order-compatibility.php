@@ -668,7 +668,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Gets the filter name for handling columns in the orders screen, according to HPOS availability.
+	 * Gets the name of the filter hook for handling columns in the orders screen, according to HPOS availability.
 	 *
 	 * @return string
 	 */
@@ -681,7 +681,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Gets the action name for handling custom columns in the orders screen, according to HPOS availability.
+	 * Gets the name of the action hook for handling custom columns in the orders screen, according to HPOS availability.
 	 *
 	 * @return string
 	 */
@@ -694,7 +694,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Gets the filter name for handling custom bulk actions in the orders screen, according to HPOS compatibility.
+	 * Gets the name of the filter hook for handling custom bulk actions in the orders screen, according to HPOS compatibility.
 	 *
 	 * @return string
 	 */
@@ -703,6 +703,19 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
 			? 'bulk_actions-woocommerce_page_wc-orders'
 			: 'bulk_actions-edit-shop_order';
+	}
+
+
+	/**
+	 * Gets the name of the action hook before the 'Filter' button on the list table for orders, according to HPOS support.
+	 *
+	 * @return string
+	 */
+	public static function get_orders_screen_restrict_manage_action_name() : string {
+
+		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
+			? 'woocommerce_order_list_table_restrict_manage_orders'
+			: 'restrict_manage_posts';
 	}
 
 
