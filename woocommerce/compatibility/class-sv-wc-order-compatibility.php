@@ -507,7 +507,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Gets the admin Edit screen URL for an order.
+	 * Gets the admin Edit screen URL for an order according to HPOS compatibility.
 	 *
 	 * @see OrderUtil::get_order_admin_edit_url()
 	 * @see PageController::get_edit_url()
@@ -634,6 +634,8 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 	/**
 	 * Determines whether a given identifier is a WooCommerce order or not, according to HPOS availability.
+	 *
+	 * @see OrderUtil::get_order_type()
 	 *
 	 * @since x.y.z
 	 *
