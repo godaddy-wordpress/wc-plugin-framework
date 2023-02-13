@@ -629,6 +629,20 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
+	 * Gets the ID of the order for the current edit screen.
+	 *
+	 * @return int|null
+	 */
+	public function get_order_id_for_order_edit_screen() : ?int {
+		global $theorder;
+
+		return $theorder instanceof WC_Order && static::is_order_edit_screen()
+			? $theorder->get_id()
+			: null;
+	}
+
+
+	/**
 	 * Gets the admin screen ID for orders.
 	 *
 	 * This method detects the expected orders screen ID according to HPOS availability.
