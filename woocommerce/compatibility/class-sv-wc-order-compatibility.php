@@ -510,6 +510,8 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets the orders screen admin URL according to HPOS availability.
 	 *
+	 * @since x.y.z
+	 *
 	 * @return string
 	 */
 	public static function get_orders_screen_url() : string {
@@ -631,6 +633,8 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets the ID of the order for the current edit screen.
 	 *
+	 * @since x.y.z
+	 *
 	 * @return int|null
 	 */
 	public static function get_order_id_for_order_edit_screen() : ?int {
@@ -670,6 +674,8 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets the name of the filter hook for handling columns in the orders screen, according to HPOS availability.
 	 *
+	 * @since x.y.z
+	 *
 	 * @return string
 	 */
 	public static function get_orders_screen_columns_filter_name() : string {
@@ -682,6 +688,8 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 	/**
 	 * Gets the name of the action hook for handling custom columns in the orders screen, according to HPOS availability.
+	 *
+	 * @since x.y.z
 	 *
 	 * @return string
 	 */
@@ -696,6 +704,8 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets the name of the filter hook for handling custom bulk actions in the orders screen, according to HPOS compatibility.
 	 *
+	 * @since x.y.z
+	 *
 	 * @return string
 	 */
 	public static function get_orders_screen_bulk_actions_filter_name() : string {
@@ -708,6 +718,8 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 	/**
 	 * Gets the name of the action hook before the 'Filter' button on the list table for orders, according to HPOS support.
+	 *
+	 * @since x.y.z
 	 *
 	 * @return string
 	 */
