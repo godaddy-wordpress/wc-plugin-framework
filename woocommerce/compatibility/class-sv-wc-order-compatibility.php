@@ -636,7 +636,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	public static function get_order_id_for_order_edit_screen() : ?int {
 		global $theorder;
 
-		return $theorder instanceof WC_Order && static::is_order_edit_screen()
+		return $theorder instanceof \WC_Abstract_Order && static::is_order_edit_screen()
 			? $theorder->get_id()
 			: null;
 	}
