@@ -679,6 +679,19 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
+	 * Gets the filter name for handling custom bulk actions in the orders screen, according to HPOS compatibility.
+	 *
+	 * @return string
+	 */
+	public static function get_orders_screen_bulk_actions_filter_name() : string {
+
+		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
+			? 'bulk_actions-woocommerce_page_wc-orders'
+			: 'bulk_actions-edit-shop_order';
+	}
+
+
+	/**
 	 * Determines whether a given identifier is a WooCommerce order or not, according to HPOS availability.
 	 *
 	 * @see OrderUtil::get_order_type()
