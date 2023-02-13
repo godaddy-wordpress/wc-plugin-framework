@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_0;
 
+use Automattic\WooCommerce\Internal\Admin\Orders\PageController;
+use Automattic\WooCommerce\Internal\Utilities\COTMigrationUtil;
 use Automattic\WooCommerce\Utilities\OrderUtil;
 
 defined( 'ABSPATH' ) or exit;
@@ -507,21 +509,23 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets the admin Edit screen URL for an order.
 	 *
+	 * @see OrderUtil::get_order_admin_edit_url()
+	 * @see PageController::get_edit_url()
+	 *
 	 * @since 5.0.1
 	 *
-	 * @deprecated since x.y.z
-	 *
-	 * @param \WC_Order $order order object
+	 * @param \WC_Order|int $order order object or ID
 	 * @return string
 	 */
-	public static function get_edit_order_url( \WC_Order $order ) {
+	public static function get_edit_order_url( $order ) : string {
 
-		wc_deprecated_function( __METHOD__, 'x.y.z', 'WC_Order::get_edit_order_url()' );
+		$order_id = $order instanceof \WC_Order ? $order->get_id() : $order;
+		$order_id = max((int) $order_id, 0);
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.3' ) ) {
-			$order_url = $order->get_edit_order_url();
+			$order_url = OrderUtil::get_order_admin_edit_url( $order_id );
 		} else {
-			$order_url = apply_filters( 'woocommerce_get_edit_order_url', get_admin_url( null, 'post.php?post=' . self::get_prop( $order, 'id' ) . '&action=edit' ), $order );
+			$order_url = apply_filters( 'woocommerce_get_edit_order_url', admin_url( 'post.php?post=' . absint( $order_id ) ) . '&action=edit', $order );
 		}
 
 		return $order_url;
@@ -612,6 +616,9 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * This method detects the expected orders screen ID according to HPOS availability.
 	 * `shop_order` as a registered post type as the screen ID is no longer used when HPOS is active.
+	 *
+	 * @see OrderUtil::get_order_admin_screen()
+	 * @see COTMigrationUtil::get_order_admin_screen()
 	 *
 	 * @since x.y.z
 	 *
