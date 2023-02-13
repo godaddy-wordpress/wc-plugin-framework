@@ -24,6 +24,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_0;
 
+use Automattic\WooCommerce\Admin\Overrides\Order;
 use Automattic\WooCommerce\Internal\Admin\Orders\PageController;
 use Automattic\WooCommerce\Internal\Utilities\COTMigrationUtil;
 use Automattic\WooCommerce\Utilities\OrderUtil;
@@ -639,11 +640,15 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @return string
 	 */
-	public static function get_order_screen_id( ) : string {
+	public static function get_order_screen_id() : string {
 
-		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
-			? wc_get_page_screen_id( 'shop-order' )
-			: 'shop_order';
+		if ( is_callable( OrderUtil::class . '::get_order_admin_screen' ) ) {
+			return OrderUtil::get_order_admin_screen();
+		} elseif ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+			return function_exists( 'wc_get_page_screen_id' ) ? wc_get_page_screen_id( 'shop-order' ) : false;
+		}
+
+		return 'shop_order';
 	}
 
 
