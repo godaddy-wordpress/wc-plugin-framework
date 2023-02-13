@@ -653,6 +653,32 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
+	 * Gets the filter name for handling columns in the orders screen, according to HPOS availability.
+	 *
+	 * @return string
+	 */
+	public static function get_orders_screen_columns_filter_name() : string {
+
+		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
+			? 'woocommerce_shop_order_list_table_columns'
+			: 'manage_edit-shop_order_columns';
+	}
+
+
+	/**
+	 * Gets the action name for handling custom columns in the orders screen, according to HPOS availability.
+	 *
+	 * @return string
+	 */
+	public static function get_orders_screen_custom_column_action_name() : string {
+
+		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
+			? 'manage_woocommerce_page_wc-orders_custom_column'
+			: 'manage_shop_order_posts_custom_column';
+	}
+
+
+	/**
 	 * Determines whether a given identifier is a WooCommerce order or not, according to HPOS availability.
 	 *
 	 * @see OrderUtil::get_order_type()
