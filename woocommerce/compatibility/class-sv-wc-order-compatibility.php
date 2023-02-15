@@ -672,66 +672,6 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
-	 * Gets the name of the filter hook for handling columns in the orders screen, according to HPOS availability.
-	 *
-	 * @since x.y.z
-	 *
-	 * @return string
-	 */
-	public static function get_orders_screen_columns_filter_name() : string {
-
-		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
-			? 'woocommerce_shop_order_list_table_columns'
-			: 'manage_edit-shop_order_columns';
-	}
-
-
-	/**
-	 * Gets the name of the action hook for handling custom columns in the orders screen, according to HPOS availability.
-	 *
-	 * @since x.y.z
-	 *
-	 * @return string
-	 */
-	public static function get_orders_screen_custom_column_action_name() : string {
-
-		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
-			? 'manage_woocommerce_page_wc-orders_custom_column'
-			: 'manage_shop_order_posts_custom_column';
-	}
-
-
-	/**
-	 * Gets the name of the filter hook for handling custom bulk actions in the orders screen, according to HPOS compatibility.
-	 *
-	 * @since x.y.z
-	 *
-	 * @return string
-	 */
-	public static function get_orders_screen_bulk_actions_filter_name() : string {
-
-		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
-			? 'bulk_actions-woocommerce_page_wc-orders'
-			: 'bulk_actions-edit-shop_order';
-	}
-
-
-	/**
-	 * Gets the name of the action hook before the 'Filter' button on the list table for orders, according to HPOS support.
-	 *
-	 * @since x.y.z
-	 *
-	 * @return string
-	 */
-	public static function get_orders_screen_restrict_manage_action_name() : string {
-
-		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
-			? 'woocommerce_order_list_table_restrict_manage_orders'
-			: 'restrict_manage_posts';
-	}
-
-
-	/**
 	 * Determines whether a given identifier is a WooCommerce order or not, according to HPOS availability.
 	 *
 	 * @see OrderUtil::get_order_type()
