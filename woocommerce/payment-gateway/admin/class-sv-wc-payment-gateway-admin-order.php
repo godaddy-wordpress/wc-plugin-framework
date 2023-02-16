@@ -153,7 +153,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			return;
 		}
 
-		if ( SV_WC_Order_Compatibility::is_orders_screen_for_status( 'trash' ) ) {
+		if ( ! SV_WC_Order_Compatibility::is_orders_screen_for_status( 'trash' ) ) {
 
 			$can_capture_charge = false;
 
