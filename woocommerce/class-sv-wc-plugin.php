@@ -111,7 +111,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 *     @type int|float $latest_wc_versions the last supported versions of WooCommerce, as a major.minor float relative to the latest available version
 	 *     @type string $text_domain the plugin textdomain, used to set up translations
-	 *     @type bool $hpos_support whether the plugin supports HPOS (default false)
+	 *     @type bool $supports_hpos whether the plugin supports HPOS (default false)
 	 *     @type array  $dependencies {
 	 *         PHP extension, function, and settings dependencies
 	 *
