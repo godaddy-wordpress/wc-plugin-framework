@@ -3366,7 +3366,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		assert( $this->supports_card_types() );
 
-		return $this->card_types;
+		return (array) $this->card_types;
 	}
 
 
