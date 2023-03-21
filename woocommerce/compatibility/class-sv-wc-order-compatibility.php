@@ -26,6 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_11_0;
 
 use Automattic\WooCommerce\Admin\Overrides\Order;
 use Automattic\WooCommerce\Internal\Admin\Orders\PageController;
+use Automattic\WooCommerce\Internal\DataStores\Orders\OrdersTableDataStore;
 use Automattic\WooCommerce\Internal\Utilities\COTMigrationUtil;
 use Automattic\WooCommerce\Utilities\OrderUtil;
 
@@ -668,6 +669,36 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		}
 
 		return 'shop_order';
+	}
+
+
+	/**
+	 * Gets the orders table.
+	 *
+	 * @return string
+	 */
+	public static function get_orders_table() : string
+	{
+		global $wpdb;
+
+		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
+			? OrdersTableDataStore::get_orders_table_name()
+			: $wpdb->posts;
+	}
+
+
+	/**
+	 * Gets the orders meta table.
+	 *
+	 * @return string
+	 */
+	public static function get_orders_meta_table() : string
+	{
+		global $wpdb;
+
+		return SV_WC_Plugin_Compatibility::is_hpos_enabled()
+			? OrdersTableDataStore::get_meta_table_name()
+			: $wpdb->postmeta;
 	}
 
 
