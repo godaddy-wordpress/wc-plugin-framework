@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2023.nn.nn 0 version 5.10.16-dev.1
+ * Fix - Prevent fatal errors when no card types are selected for a payment gateway
+
 2023.02.06 - version 5.10.15
  * Fix - "My Account" delete payment method compatibility with WC 7.2+
 
