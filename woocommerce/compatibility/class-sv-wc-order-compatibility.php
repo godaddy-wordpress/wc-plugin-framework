@@ -47,7 +47,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * Gets the formatted metadata for an order item.
 	 *
 	 * @since 4.6.5
-	 * @deprecated 5.11.0
+	 * @deprecated 5.11.0 prefer using {@see \WC_Order_Item::get_formatted_meta_data()}
 	 *
 	 * @param \WC_Order_Item $item order item object
 	 * @param string $hide_prefix prefix for meta that is considered hidden
