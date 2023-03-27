@@ -30,6 +30,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\Settings_API\\Abstract_Settings' ) ) :
 
+
 /**
  * The base settings handler.
  *

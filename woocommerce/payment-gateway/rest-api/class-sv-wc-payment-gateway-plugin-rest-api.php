@@ -23,6 +23,7 @@
  */
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_0\Payment_Gateway;
+
 use SkyVerge\WooCommerce\PluginFramework\v5_11_0\REST_API as Plugin_REST_API;
 
 defined( 'ABSPATH' ) or exit;

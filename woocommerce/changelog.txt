@@ -4,6 +4,9 @@
  * Feature - Add compatibility methods and support for WooCommerce High Performance Order Storage (HPOS)
  * Misc - Require PHP 7.4 or higher
 
+2023.03.27 - version 5.10.16
+ * Fix - Prevent fatal errors when no card types are selected for a payment gateway
+
 2023.02.06 - version 5.10.15
  * Fix - "My Account" delete payment method compatibility with WC 7.2+
 

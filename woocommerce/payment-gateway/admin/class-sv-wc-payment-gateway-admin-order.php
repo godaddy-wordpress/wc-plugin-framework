@@ -64,7 +64,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			// bulk capture order action
 			if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 				add_action( 'admin_footer', [ $this, 'maybe_add_capture_charge_bulk_order_action' ] );
-				add_action( 'load-admin.php', [ $this, 'process_capture_charge_bulk_order_action' ] );
+				add_action( 'handle_bulk_actions-woocommerce_page_wc-orders', [ $this, 'process_capture_charge_bulk_order_action' ], 10, 3 );
 			} else {
 				add_action( 'admin_footer-edit.php', [ $this, 'maybe_add_capture_charge_bulk_order_action' ] );
 				add_action( 'load-edit.php', [ $this, 'process_capture_charge_bulk_order_action' ] );
@@ -97,7 +97,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 					$order = wc_get_order( SV_WC_Helper::get_requested_value( SV_WC_Plugin_Compatibility::is_hpos_enabled() ? 'id' : 'post', 0 ) );
 				}
 
-				if ( ! $order instanceof \WC_Order ) {
+				if ( ! $order instanceof \WC_Order || $order instanceof \WC_Subscription ) {
 					return;
 				}
 
@@ -153,7 +153,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			return;
 		}
 
-		if ( SV_WC_Order_Compatibility::is_orders_screen_for_status( 'trash' ) ) {
+		if ( ! SV_WC_Order_Compatibility::is_orders_screen_for_status( 'trash' ) ) {
 
 			$can_capture_charge = false;
 
@@ -192,8 +192,12 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 * @internal
 	 *
 	 * @since 5.0.0
+	 *
+	 * @param string|null|mixed $redirect_url redirect URL if HPOS is used
+	 * @param string|mixed $action current action if HPOS is used
+	 * @param int[]|mixed $order_ids applicable order IDS if HPOS is used
 	 */
-	public function process_capture_charge_bulk_order_action() {
+	public function process_capture_charge_bulk_order_action( $redirect_url = null, $action = '', $order_ids = [] ) {
 		global $typenow;
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
@@ -213,12 +217,19 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			return;
 		}
 
-		// security check
-		check_admin_referer( 'bulk-posts' );
+		// security check and grab orders according to HPOS availability
+		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
-		// make sure order IDs are submitted
-		if ( isset( $_REQUEST['post'] ) ) {
-			$order_ids = array_map( 'absint', $_REQUEST['post'] );
+			check_admin_referer( 'bulk-posts' );
+
+			// make sure order IDs are submitted
+			if ( isset( $_REQUEST['post'] ) ) {
+				$order_ids = array_map( 'absint', $_REQUEST['post'] );
+			}
+
+		} elseif ( 'wc_capture_charge' !== $action ) {
+
+			return;
 		}
 
 		// return if there are no orders to export

@@ -29,6 +29,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\Admin\\Notes_Helper' ) ) :
 
+
 /**
  * Helper class for WooCommerce enhanced admin notes.
  *

@@ -31,6 +31,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\REST_API\\Controllers\\Settings' ) ) :
 
+
 /**
  * The settings controller class.
  *
