@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) or exit;
 
 if ( ! trait_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\API\\Traits\\Cacheable_Request_Trait' ) ) :
 
+
 /**
  * This trait can be used to add response caching support to API requests.
  *

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC Plugin Framework\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
-"POT-Creation-Date: 2023-02-08 03:47:30+00:00\n"
+"POT-Creation-Date: 2023-03-27 07:41:54+00:00\n"
 "PO-Revision-Date: 2017-03-27 11:59-0700\n"
 "Last-Translator: Illimar Tambek <illimar.tambek@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/wc-plugin-"
@@ -527,7 +527,7 @@ msgstr ""
 #. - payment request response status message
 #: payment-gateway/Handlers/Abstract_Payment_Handler.php:152
 #: payment-gateway/class-sv-wc-payment-gateway.php:2483
-#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:173
+#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:172
 msgid "Status code %1$s: %2$s"
 msgstr "Staatuse kood %1$s: %2$s"
 
@@ -535,7 +535,7 @@ msgstr "Staatuse kood %1$s: %2$s"
 #. translators: Placeholders: %s - payment request response status code
 #: payment-gateway/Handlers/Abstract_Payment_Handler.php:155
 #: payment-gateway/class-sv-wc-payment-gateway.php:2486
-#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:176
+#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:175
 msgid "Status code: %s"
 msgstr "Staatuse kood: %s"
 
@@ -543,13 +543,13 @@ msgstr "Staatuse kood: %s"
 #. translators: Placeholders: %s - payment request response status message
 #: payment-gateway/Handlers/Abstract_Payment_Handler.php:158
 #: payment-gateway/class-sv-wc-payment-gateway.php:2489
-#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:179
+#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:178
 msgid "Status message: %s"
 msgstr "Staatuse teade: %s"
 
 #: payment-gateway/Handlers/Abstract_Payment_Handler.php:163
 #: payment-gateway/class-sv-wc-payment-gateway.php:2494
-#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:186
+#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:185
 msgid "Transaction ID %s"
 msgstr "Tehingu ID %s"
 
@@ -662,20 +662,20 @@ msgstr ""
 #. (taken) from the card. 		 Capturing the charge will take the money from the
 #. credit card and put it in the merchant's pockets.
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:178
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:256
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:319
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:267
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:330
 msgid "Capture Charge"
 msgstr "Teosta makse"
 
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:309
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:320
 msgid "This charge has been fully captured."
 msgstr ""
 
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:311
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:322
 msgid "This charge can no longer be captured."
 msgstr ""
 
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:313
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:324
 msgid "This charge cannot be captured."
 msgstr ""
 
@@ -1216,7 +1216,7 @@ msgstr "Tühista tellimus"
 #. account, etc), %3$s - last four digits of the card/account, %4$s -
 #. card/account expiry date
 #: payment-gateway/class-sv-wc-payment-gateway-hosted.php:601
-#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:1115
+#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:1114
 msgid "%1$s Payment Method Saved: %2$s ending in %3$s (expires %4$s)"
 msgstr ""
 "%1$s: maksevahend salvestatud: %2$s lõpeb numbritega in %3$s (aegub %4$s)"
@@ -1225,7 +1225,7 @@ msgstr ""
 #. NETbilling, etc), %2$s - account type (checking/savings - may or may not be
 #. available), %3$s - last four digits of the account
 #: payment-gateway/class-sv-wc-payment-gateway-hosted.php:612
-#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:1126
+#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:1125
 msgid "%1$s eCheck Payment Method Saved: %2$s account ending in %3$s"
 msgstr ""
 "%1$s: e-tšeki maksevahend salvestatud: %2$s konto, lõpeb numbritega %3$s"
@@ -1844,82 +1844,82 @@ msgstr ""
 msgid "%s is required."
 msgstr ""
 
-#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:181
+#: payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:180
 msgid "Unknown Error"
 msgstr "Esines tundmatu viga"
 
-#: rest-api/Controllers/Settings.php:83
+#: rest-api/Controllers/Settings.php:84
 msgid "Unique identifier for the resource."
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:118
+#: rest-api/Controllers/Settings.php:119
 msgid "Sorry, you cannot list resources."
 msgstr ""
 
 #. translators: Placeholder: %s - setting ID
-#: rest-api/Controllers/Settings.php:167
+#: rest-api/Controllers/Settings.php:168
 msgid "Setting %s does not exist"
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:190
+#: rest-api/Controllers/Settings.php:191
 msgid "Sorry, you cannot edit this resource."
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:223
+#: rest-api/Controllers/Settings.php:224
 msgid "Could not update setting: %s"
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:293
+#: rest-api/Controllers/Settings.php:294
 msgid "Unique identifier of the setting."
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:299
+#: rest-api/Controllers/Settings.php:300
 msgid "The type of the setting."
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:306
+#: rest-api/Controllers/Settings.php:307
 msgid "The name of the setting."
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:312
+#: rest-api/Controllers/Settings.php:313
 msgid "The description of the setting. It may or may not be used for display."
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:318
+#: rest-api/Controllers/Settings.php:319
 msgid "Whether the setting stores an array of values or a single value."
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:324
+#: rest-api/Controllers/Settings.php:325
 msgid "A list of valid options, used for validation before storing the value."
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:330
+#: rest-api/Controllers/Settings.php:331
 msgid "Optional default value for the setting."
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:336
+#: rest-api/Controllers/Settings.php:337
 msgid "The value of the setting."
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:341
+#: rest-api/Controllers/Settings.php:342
 msgid ""
 "Optional object that defines how the user will interact with and update the "
 "setting."
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:345
+#: rest-api/Controllers/Settings.php:346
 msgid "The type of the control."
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:352
+#: rest-api/Controllers/Settings.php:353
 msgid "The name of the control. Inherits the setting's name."
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:358
+#: rest-api/Controllers/Settings.php:359
 msgid "The description of the control. Inherits the setting's description."
 msgstr ""
 
-#: rest-api/Controllers/Settings.php:364
+#: rest-api/Controllers/Settings.php:365
 msgid ""
 "A list of key/value pairs defining the display value of each setting option. "
 "The keys should match the options defined in the base setting for validation."

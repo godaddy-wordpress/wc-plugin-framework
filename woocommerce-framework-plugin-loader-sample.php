@@ -62,6 +62,7 @@ class SV_WC_Framework_Plugin_Loader {
 	/** SkyVerge plugin framework version used by this plugin */
 	const FRAMEWORK_VERSION = '5.11.0'; // TODO: framework version
 
+
 	/** the plugin name, for displaying notices */
 	const PLUGIN_NAME = 'WooCommerce Framework Plugin'; // TODO: plugin name
 

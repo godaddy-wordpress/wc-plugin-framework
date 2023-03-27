@@ -29,7 +29,6 @@ defined( 'ABSPATH' ) or exit;
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\SV_WC_Payment_Gateway_Payment_Tokens_Handler' ) ) :
 
 
-
 /**
  * Handle the payment tokenization related functionality.
  *
