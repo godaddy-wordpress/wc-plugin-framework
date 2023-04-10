@@ -653,11 +653,15 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @return int|null
 	 */
 	public static function get_order_id_for_order_edit_screen() : ?int {
-		global $theorder;
+		global $post, $theorder;
 
-		return $theorder instanceof \WC_Abstract_Order && ! $theorder instanceof \WC_Subscription && static::is_order_edit_screen()
-			? $theorder->get_id()
-			: null;
+		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+			return $theorder instanceof \WC_Abstract_Order && ! $theorder instanceof \WC_Subscription && static::is_order_edit_screen()
+				? $theorder->get_id()
+				: null;
+		}
+
+		return $post->ID ?? null;
 	}
 
 
