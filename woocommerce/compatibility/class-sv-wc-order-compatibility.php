@@ -29,7 +29,6 @@ use Automattic\WooCommerce\Internal\Admin\Orders\PageController;
 use Automattic\WooCommerce\Internal\DataStores\Orders\OrdersTableDataStore;
 use Automattic\WooCommerce\Internal\Utilities\COTMigrationUtil;
 use Automattic\WooCommerce\Utilities\OrderUtil;
-use Codeception\Lib\Framework;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -228,15 +227,11 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @return int|null
 	 */
 	public static function get_order_id_for_order_edit_screen() : ?int {
-		global $post, $theorder;
+		global $theorder;
 
-		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
-			return $theorder instanceof \WC_Abstract_Order && ! $theorder instanceof \WC_Subscription && static::is_order_edit_screen()
-				? $theorder->get_id()
-				: null;
-		}
-
-		return $post->ID ?? null;
+		return $theorder instanceof \WC_Abstract_Order && ! $theorder instanceof \WC_Subscription && static::is_order_edit_screen()
+			? $theorder->get_id()
+			: null;
 	}
 
 
