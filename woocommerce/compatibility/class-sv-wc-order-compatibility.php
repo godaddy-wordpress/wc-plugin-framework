@@ -206,6 +206,20 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 
 	/**
+	 * Determines if the current admin page is for any kind of order screen.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	public static function is_order_screen() : bool {
+
+		return static::is_orders_screen()
+			|| static::is_order_edit_screen();
+	}
+
+
+	/**
 	 * Gets the ID of the order for the current edit screen.
 	 *
 	 * @since x.y.z
