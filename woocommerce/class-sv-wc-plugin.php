@@ -823,8 +823,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function is_hpos_compatible() : bool
 	{
-		// TODO: we might need to add a WC version check here for when this bug has been addressed: https://github.com/woocommerce/woocommerce/issues/35703 {unfulvio 2023-02-06}
-		return $this->supports_hpos;
+		return $this->supports_hpos && SV_WC_Plugin_Compatibility::is_wc_version_gte('7.6.0');
 	}
 
 
