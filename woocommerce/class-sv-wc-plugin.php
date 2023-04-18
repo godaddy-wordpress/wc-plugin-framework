@@ -823,7 +823,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function is_hpos_compatible() : bool
 	{
-		return $this->supports_hpos && SV_WC_Plugin_Compatibility::is_wc_version_gte('7.6.0');
+		return $this->supports_hpos && SV_WC_Plugin_Compatibility::is_wc_version_gte('7.6');
 	}
 
 
