@@ -3,6 +3,7 @@
 2023.nn.nn - version 5.11.0
  * Feature - Add compatibility methods and support for WooCommerce High Performance Order Storage (HPOS)
  * Misc - Require PHP 7.4 or higher
+ * Misc - Remove deprecated compatibility methods
 
 2023.03.27 - version 5.10.16
  * Fix - Prevent fatal errors when no card types are selected for a payment gateway
