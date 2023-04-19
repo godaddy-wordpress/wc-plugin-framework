@@ -506,12 +506,18 @@ class SV_WC_Helper {
 				$item_desc[] = sprintf( 'SKU: %s', $sku );
 			}
 
-			$item_meta = SV_WC_Order_Compatibility::get_item_formatted_meta_data( $item, '_', true );
+			$meta_data = $item->get_formatted_meta_data( '-', true );
+			$item_meta = [];
+
+			foreach ( $meta_data as $meta ) {
+				$item_meta[] = array(
+					'label' => $meta->display_key,
+					'value' => $meta->value,
+				);
+			}
 
 			if ( ! empty( $item_meta ) ) {
-
 				foreach ( $item_meta as $meta ) {
-
 					$item_desc[] = sprintf( '%s: %s', $meta['label'], $meta['value'] );
 				}
 			}
@@ -584,23 +590,6 @@ class SV_WC_Helper {
 
 
 	/**
-	 * Safely gets and trims data from $_POST.
-	 *
-	 * @since 3.0.0
-	 * @deprecated 5.5.0
-	 *
-	 * @param string $key array key to get from $_POST array
-	 * @return string value from $_POST or blank string if $_POST[ $key ] is not set
-	 */
-	public static function get_post( $key ) {
-
-		wc_deprecated_function( __METHOD__, '5.5.0', __CLASS__ . '::get_posted_value()' );
-
-		return self::get_posted_value( $key );
-	}
-
-
-	/**
 	 * Safely gets a value from $_POST.
 	 *
 	 * If the expected data is a string also trims it.
@@ -620,23 +609,6 @@ class SV_WC_Helper {
 		}
 
 		return $value;
-	}
-
-
-	/**
-	 * Safely gets and trims data from $_REQUEST.
-	 *
-	 * @since 3.0.0
-	 * @deprecated 5.5.0
-	 *
-	 * @param string $key array key to get from $_REQUEST array
-	 * @return string value from $_REQUEST or blank string if $_REQUEST[ $key ] is not set
-	 */
-	public static function get_request( $key ) {
-
-		wc_deprecated_function( __METHOD__, '5.5.0', __CLASS__ . '::get_requested_value()' );
-
-		return self::get_requested_value( $key );
 	}
 
 
@@ -1037,27 +1009,6 @@ class SV_WC_Helper {
 
 		/* applies WooCommerce core filter */
 		return (bool) apply_filters( 'woocommerce_is_rest_api_request', $is_rest_api_request );
-	}
-
-
-	/**
-	 * Convert a 2-character country code into its 3-character equivalent, or
-	 * vice-versa, e.g.
-	 *
-	 * 1) given USA, returns US
-	 * 2) given US, returns USA
-	 *
-	 * @since 4.2.0
-	 * @deprecated 5.4.3
-	 *
-	 * @param string $code ISO-3166-alpha-2 or ISO-3166-alpha-3 country code
-	 * @return string country code
-	 */
-	public static function convert_country_code( $code ) {
-
-		wc_deprecated_function( __METHOD__, '5.4.3', Country_Helper::class . '::convert_alpha_country_code()' );
-
-		return Country_Helper::convert_alpha_country_code( $code );
 	}
 
 
