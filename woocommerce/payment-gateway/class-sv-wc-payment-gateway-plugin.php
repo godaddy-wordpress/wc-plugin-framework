@@ -22,16 +22,16 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_16;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_0;
 
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Note;
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_16\Payment_Gateway\External_Checkout\External_Checkout;
-use SkyVerge\WooCommerce\PluginFramework\v5_10_16\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_0\Payment_Gateway\External_Checkout\External_Checkout;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_0\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_16\\SV_WC_Payment_Gateway_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\SV_WC_Payment_Gateway_Plugin' ) ) :
 
 
 /**
@@ -1232,25 +1232,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		return isset( $_GET['page'] ) && 'wc-settings' == $_GET['page'] &&
 		isset( $_GET['tab'] ) && 'checkout' == $_GET['tab'] &&
 		isset( $_GET['section'] ) && $gateway_id === $_GET['section'];
-	}
-
-
-	/**
-	 * Get a gateway's settings screen section ID.
-	 *
-	 * This was used as a helper method for WC 2.5 compatibility, but is no longer needed and now deprecated.
-	 *
-	 * @since 4.4.0
-	 * @deprecated 5.0.1
-	 *
-	 * @param string $gateway_id the gateway ID
-	 * @return string
-	 */
-	public function get_payment_gateway_configuration_section( $gateway_id ) {
-
-		wc_deprecated_function( __METHOD__, '5.0.1', 'strtolower( $gateway_id )' );
-
-		return strtolower( $gateway_id );
 	}
 
 

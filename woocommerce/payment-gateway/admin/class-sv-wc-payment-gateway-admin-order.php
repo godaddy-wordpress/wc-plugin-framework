@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_16;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_16\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
 
 
 /**
@@ -62,8 +62,13 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			add_action( 'wp_ajax_wc_' . $this->get_plugin()->get_id() . '_capture_charge', array( $this, 'ajax_process_capture' ) );
 
 			// bulk capture order action
-			add_action( 'admin_footer-edit.php', array( $this, 'maybe_add_capture_charge_bulk_order_action' ) );
-			add_action( 'load-edit.php',         array( $this, 'process_capture_charge_bulk_order_action' ) );
+			if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+				add_action( 'admin_footer', [ $this, 'maybe_add_capture_charge_bulk_order_action' ] );
+				add_action( 'handle_bulk_actions-woocommerce_page_wc-orders', [ $this, 'process_capture_charge_bulk_order_action' ], 10, 3 );
+			} else {
+				add_action( 'admin_footer-edit.php', [ $this, 'maybe_add_capture_charge_bulk_order_action' ] );
+				add_action( 'load-edit.php', [ $this, 'process_capture_charge_bulk_order_action' ] );
+			}
 		}
 	}
 
@@ -75,19 +80,24 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @param string $hook_suffix page hook suffix
+	 * @param string|mixed $hook_suffix page hook suffix
 	 */
 	public function enqueue_scripts( $hook_suffix ) {
+		global $post, $theorder;
 
 		// Order screen assets
-		if ( 'shop_order' === get_post_type() ) {
+		if ( SV_WC_Order_Compatibility::is_order( $post ) || SV_WC_Order_Compatibility::is_order( $theorder ) ) {
 
 			// Edit Order screen assets
-			if ( 'post.php' === $hook_suffix ) {
+			if ( 'post.php' === $hook_suffix || SV_WC_Order_Compatibility::is_order_edit_screen() ) {
 
-				$order = wc_get_order( SV_WC_Helper::get_requested_value( 'post' ) );
+				if ( $theorder instanceof \WC_Order ) {
+					$order = $theorder;
+				} else {
+					$order = wc_get_order( SV_WC_Helper::get_requested_value( SV_WC_Plugin_Compatibility::is_hpos_enabled() ? 'id' : 'post', 0 ) );
+				}
 
-				if ( ! $order ) {
+				if ( ! $order instanceof \WC_Order || $order instanceof \WC_Subscription ) {
 					return;
 				}
 
@@ -133,16 +143,17 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Adds 'Capture charge' to the Orders screen bulk action select.
 	 *
+	 * @internal
+	 *
 	 * @since 5.0.0
 	 */
 	public function maybe_add_capture_charge_bulk_order_action() {
-		global $post_type, $post_status;
 
 		if ( ! current_user_can( 'edit_shop_orders' ) ) {
 			return;
 		}
 
-		if ( $post_type === 'shop_order' && $post_status !== 'trash' ) {
+		if ( ! SV_WC_Order_Compatibility::is_orders_screen_for_status( 'trash' ) ) {
 
 			$can_capture_charge = false;
 
@@ -178,12 +189,22 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	/**
 	 * Processes the 'Capture Charge' custom bulk action.
 	 *
+	 * @internal
+	 *
 	 * @since 5.0.0
+	 *
+	 * @param string|null|mixed $redirect_url redirect URL if HPOS is used
+	 * @param string|mixed $action current action if HPOS is used
+	 * @param int[]|mixed $order_ids applicable order IDS if HPOS is used
 	 */
-	public function process_capture_charge_bulk_order_action() {
+	public function process_capture_charge_bulk_order_action( $redirect_url = null, $action = '', $order_ids = [] ) {
 		global $typenow;
 
-		if ( 'shop_order' !== $typenow ) {
+		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+			if ( ! SV_WC_Order_Compatibility::is_orders_screen() ) {
+				return;
+			}
+		} elseif ( 'shop_order' !== $typenow ) {
 			return;
 		}
 
@@ -196,12 +217,19 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			return;
 		}
 
-		// security check
-		check_admin_referer( 'bulk-posts' );
+		// security check and grab orders according to HPOS availability
+		if ( ! SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 
-		// make sure order IDs are submitted
-		if ( isset( $_REQUEST['post'] ) ) {
-			$order_ids = array_map( 'absint', $_REQUEST['post'] );
+			check_admin_referer( 'bulk-posts' );
+
+			// make sure order IDs are submitted
+			if ( isset( $_REQUEST['post'] ) ) {
+				$order_ids = array_map( 'absint', $_REQUEST['post'] );
+			}
+
+		} elseif ( 'wc_capture_charge' !== $action ) {
+
+			return;
 		}
 
 		// return if there are no orders to export
@@ -254,7 +282,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	public function add_capture_button( $order ) {
 
 		// only display the button for core orders
-		if ( ! $order instanceof \WC_Order || 'shop_order' !== get_post_type( $order->get_id() ) ) {
+		if ( ! SV_WC_Order_Compatibility::is_order( $order ) ) {
 			return;
 		}
 
@@ -419,99 +447,6 @@ class SV_WC_Payment_Gateway_Admin_Order {
 
 
 	/**
-	 * Gets the plugin instance.
-	 *
-	 * @since 5.0.0
-	 *
-	 * @return SV_WC_Payment_Gateway_Plugin the plugin instance
-	 */
-	protected function get_plugin() {
-
-		return $this->plugin;
-	}
-
-
-	/** Deprecated Methods ********************************************************************************************/
-
-
-	/**
-	 * Capture a credit card charge for a prior authorization if this payment
-	 * method was used for the given order, the charge hasn't already been
-	 * captured, and the gateway supports issuing a capture request
-	 *
-	 * @since 5.0.0
-	 * @deprecated 5.3.0
-	 *
-	 * @param \WC_Order|int $order the order identifier or order object
-	 * @param float|null $amount capture amount
-	 */
-	protected function maybe_capture_charge( $order, $amount = null ) {
-
-		wc_deprecated_function( __METHOD__, '5.3.0' );
-
-		if ( ! is_object( $order ) ) {
-			$order = wc_get_order( $order );
-		}
-
-		$gateway = $this->get_order_gateway( $order );
-
-		if ( ! $gateway ) {
-			return;
-		}
-
-		// don't try to capture cancelled/fully refunded transactions
-		if ( ! $gateway->get_capture_handler()->is_order_ready_for_capture( $order ) ) {
-			return;
-		}
-
-		// since a capture results in an update to the post object (by updating
-		// the paid date) we need to unhook the meta box save action, otherwise we
-		// can get boomeranged and change the status back to on-hold
-		remove_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Data::save', 40 );
-
-		// perform the capture
-		$gateway->get_capture_handler()->maybe_perform_capture( $order, $amount );
-	}
-
-
-	/**
-	 * Captures an order on status change to a "paid" status.
-	 *
-	 * @internal
-	 *
-	 * @since 5.0.1
-	 * @deprecated 5.3.0
-	 *
-	 * @param int $order_id order ID
-	 * @param string $old_status status being changed
-	 * @param string $new_status new order status
-	 */
-	public function maybe_capture_paid_order( $order_id, $old_status, $new_status ) {
-
-		wc_deprecated_function( __METHOD__, '5.3.0' );
-	}
-
-
-	/**
-	 * Determines if an order is ready for capture.
-	 *
-	 * @since 5.0.0
-	 * @deprecated 5.3.0
-	 *
-	 * @param \WC_Order $order order object
-	 * @return bool
-	 */
-	protected function is_order_ready_for_capture( \WC_Order $order ) {
-
-		wc_deprecated_function( __METHOD__, '5.3.0' );
-
-		$gateway = $this->get_order_gateway( $order );
-
-		return $gateway && $gateway->get_capture_handler()->is_order_ready_for_capture( $order );
-	}
-
-
-	/**
 	 * Gets the current action selected from the bulk actions dropdown.
 	 *
 	 * @see \WP_List_Table::current_action()
@@ -532,6 +467,19 @@ class SV_WC_Payment_Gateway_Admin_Order {
 		}
 
 		return false;
+	}
+
+
+	/**
+	 * Gets the plugin instance.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @return SV_WC_Payment_Gateway_Plugin the plugin instance
+	 */
+	protected function get_plugin() {
+
+		return $this->plugin;
 	}
 
 

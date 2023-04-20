@@ -22,11 +22,12 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_16\API\Traits;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_0\API\Traits;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! trait_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_16\\API\\Traits\\Cacheable_Request_Trait' ) ) :
+if ( ! trait_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\API\\Traits\\Cacheable_Request_Trait' ) ) :
+
 
 /**
  * This trait can be used to add response caching support to API requests.

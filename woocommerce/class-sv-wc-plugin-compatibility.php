@@ -22,11 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_16;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_0;
+
+use Automattic\WooCommerce\Utilities\OrderUtil;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_16\\SV_WC_Plugin_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\SV_WC_Plugin_Compatibility' ) ) :
 
 
 /**
@@ -49,76 +51,6 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_16\\SV_WC_
  * @since 2.0.0
  */
 class SV_WC_Plugin_Compatibility {
-
-
-	/**
-	 * Gets the statuses that are considered "paid".
-	 *
-	 * @since 5.1.0
-	 * @deprecated 5.5.0
-	 *
-	 * @return string[]
-	 */
-	public static function wc_get_is_paid_statuses() {
-
-		wc_deprecated_function( __METHOD__, '5.5.0', '(array) wc_get_is_paid_statuses()' );
-
-		return (array) wc_get_is_paid_statuses();
-	}
-
-
-	/**
-	 * Logs a doing_it_wrong message.
-	 *
-	 * @since 5.0.1
-	 * @deprecated 5.5.0
-	 *
-	 * @param string $function function used
-	 * @param string $message message to log
-	 * @param string $version version the message was added in
-	 */
-	public static function wc_doing_it_wrong( $function, $message, $version ) {
-
-		wc_deprecated_function( __METHOD__, '5.5.0', 'wc_doing_it_wrong()' );
-
-		wc_doing_it_wrong( $function, $message, $version );
-	}
-
-
-	/**
-	 * Formats a date for output.
-	 *
-	 * @since 4.6.0
-	 * @deprecated 5.5.0
-	 *
-	 * @param \WC_DateTime|SV_WC_DateTime $date date object
-	 * @param string $format date format
-	 * @return string
-	 */
-	public static function wc_format_datetime( $date, $format = '' ) {
-
-		wc_deprecated_function( __METHOD__, '5.5.0', 'wc_format_datetime()' );
-
-		return wc_format_datetime( $date, $format );
-	}
-
-
-	/**
-	 * Logs a deprecated function notice.
-	 *
-	 * @since 5.0.0
-	 * @deprecated 5.5.0
-	 *
-	 * @param string $function deprecated function name
-	 * @param string $version deprecated-since version
-	 * @param string $replacement replacement function name
-	 */
-	public static function wc_deprecated_function( $function, $version, $replacement = null ) {
-
-		wc_deprecated_function( __METHOD__, '5.5.0', 'wc_deprecated_function()' );
-
-		wc_deprecated_function( $function, $version, $replacement );
-	}
 
 
 	/**
@@ -198,70 +130,6 @@ class SV_WC_Plugin_Compatibility {
 
 		// accounts for semver cases like 3.0 being equal to 3.0.0
 		return $wc_version === $version || ( $wc_version && version_compare( $wc_version, $version, '=' ) );
-	}
-
-
-	/**
-	 * Determines if the installed version of WooCommerce is 3.0 or greater.
-	 *
-	 * @since 4.6.0
-	 * @deprecated 5.5.0
-	 *
-	 * @return bool
-	 */
-	public static function is_wc_version_gte_3_0() {
-
-		wc_deprecated_function( __METHOD__, '5.5.0', __CLASS__ . '::is_wc_version_gte()' );
-
-		return self::is_wc_version_gte( '3.0' );
-	}
-
-
-	/**
-	 * Determines if the installed version of WooCommerce is less than 3.0.
-	 *
-	 * @since 4.6.0
-	 * @deprecated 5.5.0
-	 *
-	 * @return bool
-	 */
-	public static function is_wc_version_lt_3_0() {
-
-		wc_deprecated_function( __METHOD__, '5.5.0', __CLASS__ . '::is_wc_version_lt()' );
-
-		return self::is_wc_version_lt( '3.0' );
-	}
-
-
-	/**
-	 * Determines if the installed version of WooCommerce is 3.1 or greater.
-	 *
-	 * @since 4.6.5
-	 * @deprecated 5.5.0
-	 *
-	 * @return bool
-	 */
-	public static function is_wc_version_gte_3_1() {
-
-		wc_deprecated_function( __METHOD__, '5.5.0', __CLASS__ . '::is_wc_version_gte()' );
-
-		return self::is_wc_version_gte( '3.1' );
-	}
-
-
-	/**
-	 * Determines if the installed version of WooCommerce is less than 3.1.
-	 *
-	 * @since 4.6.5
-	 * @deprecated 5.5.0
-	 *
-	 * @return bool
-	 */
-	public static function is_wc_version_lt_3_1() {
-
-		wc_deprecated_function( __METHOD__, '5.5.0', __CLASS__ . '::is_wc_version_lt()' );
-
-		return self::is_wc_version_lt( '3.1' );
 	}
 
 
@@ -400,22 +268,6 @@ class SV_WC_Plugin_Compatibility {
 
 
 	/**
-	 * Determines if the installed version of WooCommerce Subscriptions is 2.0.0 or greater.
-	 *
-	 * @since 4.1.0
-	 * @deprecated 5.5.0
-	 *
-	 * @return bool
-	 */
-	public static function is_wc_subscriptions_version_gte_2_0() {
-
-		wc_deprecated_function( __METHOD__, '5.5.0', __CLASS__ . '::is_wc_subscriptions_version_gte()' );
-
-		return self::is_wc_subscriptions_version_gte( '2.0' );
-	}
-
-
-	/**
 	 * Determines if the installed version of WooCommerce Subscriptions matches or exceeds a given version.
 	 *
 	 * @since 5.5.0
@@ -489,6 +341,23 @@ class SV_WC_Plugin_Compatibility {
 
 		// accounts for semver cases like 2.2 being equal to 2.2.0
 		return $version === $subscriptions_version || ( $subscriptions_version && version_compare( $version, $subscriptions_version, '=' ) );
+	}
+
+
+	/**
+	 * Determines whether HPOS is enabled.
+	 *
+	 * @link https://woocommerce.com/document/high-performance-order-storage/
+	 * @link https://github.com/woocommerce/woocommerce/wiki/High-Performance-Order-Storage-Upgrade-Recipe-Book#detecting-whether-hpos-tables-are-being-used-in-the-store
+	 *
+	 * @since 5.11.0
+	 *
+	 * @return bool
+	 */
+	public static function is_hpos_enabled() : bool {
+
+		return is_callable( OrderUtil::class . '::' . 'custom_orders_table_usage_is_enabled' )
+			&& OrderUtil::custom_orders_table_usage_is_enabled();
 	}
 
 

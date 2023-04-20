@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_10_16;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_10_16\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_0\\SV_WC_Plugin' ) ) :
 
 
 /**
@@ -43,7 +43,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.10.16';
+	const VERSION = '5.11.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -62,6 +62,9 @@ abstract class SV_WC_Plugin {
 
 	/** @var string template path, without trailing slash */
 	private $template_path;
+
+	/** @var bool whether the plugin supports WooCommerce HPOS */
+	private $supports_hpos;
 
 	/** @var \WC_Logger instance */
 	private $logger;
@@ -108,6 +111,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 *     @type int|float $latest_wc_versions the last supported versions of WooCommerce, as a major.minor float relative to the latest available version
 	 *     @type string $text_domain the plugin textdomain, used to set up translations
+	 *     @type bool $supports_hpos whether the plugin supports HPOS (default false)
 	 *     @type array  $dependencies {
 	 *         PHP extension, function, and settings dependencies
 	 *
@@ -125,10 +129,12 @@ abstract class SV_WC_Plugin {
 
 		$args = wp_parse_args( $args, [
 			'text_domain'   => '',
+			'supports_hpos' => false,
 			'dependencies'  => [],
 		] );
 
-		$this->text_domain = $args['text_domain'];
+		$this->text_domain   = $args['text_domain'];
+		$this->supports_hpos = $args['supports_hpos'];
 
 		// includes that are required to be available at all times
 		$this->includes();
@@ -275,6 +281,9 @@ abstract class SV_WC_Plugin {
 
 		// hook for translations separately to ensure they're loaded
 		add_action( 'init', array( $this, 'load_translations' ) );
+
+		// handle HPOS compatibility
+		add_action( 'before_woocommerce_init', [ $this, 'handle_hpos_compatibility' ] );
 
 		// add the admin notices
 		add_action( 'admin_notices', array( $this, 'add_admin_notices' ) );
@@ -603,6 +612,21 @@ abstract class SV_WC_Plugin {
 	}
 
 
+	/**
+	 * Declares HPOS compatibility if the plugin is compatible with HPOS.
+	 *
+	 * @internal
+	 *
+	 * @since 5.11.0
+	 */
+	public function handle_hpos_compatibility() {
+
+		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->get_plugin_file(), $this->is_hpos_compatible() );
+		}
+	}
+
+
 	/** Helper methods ******************************************************/
 
 
@@ -787,6 +811,19 @@ abstract class SV_WC_Plugin {
 		}
 
 		return $is_available;
+	}
+
+
+	/**
+	 * Determines whether the plugin supports HPOS.
+	 *
+	 * @since 5.11.0
+	 *
+	 * @return bool
+	 */
+	public function is_hpos_compatible() : bool
+	{
+		return $this->supports_hpos && SV_WC_Plugin_Compatibility::is_wc_version_gte('7.6');
 	}
 
 
@@ -1268,190 +1305,6 @@ abstract class SV_WC_Plugin {
 		}
 
 		return $is_active;
-	}
-
-
-	/** Deprecated methods ****************************************************/
-
-
-	/**
-	 * Handles version checking.
-	 *
-	 * @since 2.0.0
-	 * @deprecated 5.2.0
-	 */
-	public function do_install() {
-
-		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_lifecycle_handler() ) . '::init()' );
-
-		$this->get_lifecycle_handler()->init();
-	}
-
-
-	/**
-	 * Helper method to install default settings for a plugin.
-	 *
-	 * @since 4.2.0
-	 * @deprecated 5.2.0
-	 *
-	 * @param array $settings array of settings in format required by WC_Admin_Settings
-	 */
-	public function install_default_settings( array $settings ) {
-
-		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_lifecycle_handler() ) . '::install_default_settings()' );
-
-		$this->get_lifecycle_handler()->install_default_settings( $settings );
-	}
-
-
-	/**
-	 * Plugin activated method. Perform any activation tasks here.
-	 * Note that this _does not_ run during upgrades.
-	 *
-	 * @since 4.2.0
-	 * @deprecated 5.2.0
-	 */
-	public function activate() {
-
-		wc_deprecated_function( __METHOD__, '5.2.0' );
-	}
-
-
-	/**
-	 * Plugin deactivation method. Perform any deactivation tasks here.
-	 *
-	 * @since 4.2.0
-	 * @deprecated 5.2.0
-	 */
-	public function deactivate() {
-
-		wc_deprecated_function( __METHOD__, '5.2.0' );
-	}
-
-
-	/**
-	 * Gets the string name of any required PHP extensions that are not loaded.
-	 *
-	 * @since 4.5.0
-	 * @deprecated 5.2.0
-	 *
-	 * @return array
-	 */
-	public function get_missing_extension_dependencies() {
-
-		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_missing_php_extensions()' );
-
-		return $this->get_dependency_handler()->get_missing_php_extensions();
-	}
-
-
-	/**
-	 * Gets the string name of any required PHP functions that are not loaded.
-	 *
-	 * @since 2.1.0
-	 * @deprecated 5.2.0
-	 *
-	 * @return array
-	 */
-	public function get_missing_function_dependencies() {
-
-		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_missing_php_functions()' );
-
-		return $this->get_dependency_handler()->get_missing_php_functions();
-	}
-
-
-	/**
-	 * Gets the string name of any required PHP extensions that are not loaded.
-	 *
-	 * @since 4.5.0
-	 * @deprecated 5.2.0
-	 *
-	 * @return array
-	 */
-	public function get_incompatible_php_settings() {
-
-		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_incompatible_php_settings()' );
-
-		return $this->get_dependency_handler()->get_incompatible_php_settings();
-	}
-
-
-	/**
-	 * Gets the PHP dependencies.
-	 *
-	 * @since 2.0.0
-	 * @deprecated 5.2.0
-	 *
-	 * @return array
-	 */
-	protected function get_dependencies() {
-
-		wc_deprecated_function( __METHOD__, '5.2.0' );
-
-		return array();
-	}
-
-
-	/**
-	 * Gets the PHP extension dependencies.
-	 *
-	 * @since 4.5.0
-	 * @deprecated 5.2.0
-	 *
-	 * @return array
-	 */
-	protected function get_extension_dependencies() {
-
-		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_php_extensions()' );
-
-		return $this->get_dependency_handler()->get_php_extensions();
-	}
-
-
-	/**
-	 * Gets the PHP function dependencies.
-	 *
-	 * @since 2.1.0
-	 * @deprecated 5.2.0
-	 *
-	 * @return array
-	 */
-	protected function get_function_dependencies() {
-
-		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_php_functions()' );
-
-		return $this->get_dependency_handler()->get_php_functions();
-	}
-
-
-	/**
-	 * Gets the PHP settings dependencies.
-	 *
-	 * @since 4.5.0
-	 * @deprecated 5.2.0
-	 *
-	 * @return array
-	 */
-	protected function get_php_settings_dependencies() {
-
-		wc_deprecated_function( __METHOD__, '5.2.0', get_class( $this->get_dependency_handler() ) . '::get_php_settings()' );
-
-		return $this->get_dependency_handler()->get_php_settings();
-	}
-
-
-	/**
-	 * Sets the plugin dependencies.
-	 *
-	 * @since 4.5.0
-	 * @deprecated 5.2.0
-	 *
-	 * @param array $dependencies the environment dependencies
-	 */
-	protected function set_dependencies( $dependencies = [] ) {
-
-		wc_deprecated_function( __METHOD__, '5.2.0' );
 	}
 
 
