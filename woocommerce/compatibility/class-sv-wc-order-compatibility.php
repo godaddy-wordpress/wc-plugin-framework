@@ -85,7 +85,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets the orders screen admin URL according to HPOS availability.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @return string
 	 */
@@ -128,7 +128,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Determines if the current admin screen is for the orders.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @return bool
 	 */
@@ -154,7 +154,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Determines if the current orders screen is for orders of a specific status.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @param string|string[] $status one or more statuses to compare
 	 * @return bool
@@ -182,7 +182,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Determines if the current admin screen is for adding or editing an order.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @return bool
 	 */
@@ -208,7 +208,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Determines if the current admin page is for any kind of order screen.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @return bool
 	 */
@@ -222,7 +222,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Gets the ID of the order for the current edit screen.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @return int|null
 	 */
@@ -248,7 +248,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 * @see OrderUtil::get_order_admin_screen()
 	 * @see COTMigrationUtil::get_order_admin_screen()
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @return string
 	 */
@@ -299,7 +299,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @see OrderUtil::get_order_type()
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @param int|\WP_Post|\WC_Order|null $post_order_or_id identifier of a possible order
 	 * @param string|string[] $order_type the order type, defaults to shop_order, can specify multiple types
@@ -335,7 +335,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Determines whether a given identifier is a WooCommerce refund or not, according to HPOS availability.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @param int|\WP_Post|\WC_Order|null $order_post_or_id identifier of a possible order
 	 * @return bool
@@ -351,7 +351,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * Uses {@see \WC_Order::get_meta()} if HPOS is enabled, otherwise it uses the WordPress {@see get_post_meta()} function.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @param int|\WC_Order $order order ID or object
 	 * @param string $meta_key meta key
@@ -385,7 +385,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * Uses {@see \WC_Order::update_meta_data()} if HPOS is enabled, otherwise it uses the WordPress {@see update_meta_data()} function.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @param int|\WC_Order $order order ID or object
 	 * @param string $meta_key meta key
@@ -418,7 +418,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * Uses {@see \WC_Order::add_meta_data()} if HPOS is enabled, otherwise it uses the WordPress {@see add_meta_data()} function.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @param int|\WC_Order $order order ID or object
 	 * @param string $meta_key meta key
@@ -452,7 +452,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * Uses {@see \WC_Order::delete_meta_data()} if HPOS is enabled, otherwise it uses the WordPress {@see delete_meta_data()} function.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @param int|\WC_Order $order order ID or object
 	 * @param string $meta_key meta key
@@ -485,7 +485,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * Uses {@see \WC_Order::meta_exists()} if HPOS is enabled, otherwise it uses the WordPress {@see metadata_exists()} function.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @param int|\WC_Order $order order ID or object
 	 * @param string $meta_key meta key

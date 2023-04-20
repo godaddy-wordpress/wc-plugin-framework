@@ -350,7 +350,7 @@ class SV_WC_Plugin_Compatibility {
 	 * @link https://woocommerce.com/document/high-performance-order-storage/
 	 * @link https://github.com/woocommerce/woocommerce/wiki/High-Performance-Order-Storage-Upgrade-Recipe-Book#detecting-whether-hpos-tables-are-being-used-in-the-store
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @return bool
 	 */

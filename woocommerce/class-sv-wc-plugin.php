@@ -43,7 +43,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.10.16';
+	const VERSION = '5.11.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -617,7 +617,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @internal
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 */
 	public function handle_hpos_compatibility() {
 
@@ -817,7 +817,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Determines whether the plugin supports HPOS.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.0
 	 *
 	 * @return bool
 	 */
