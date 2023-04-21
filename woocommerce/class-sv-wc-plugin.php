@@ -436,10 +436,6 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/class-sv-wc-plugin-compatibility.php' );
 		require_once( $framework_path . '/compatibility/abstract-sv-wc-data-compatibility.php' );
 		require_once( $framework_path . '/compatibility/class-sv-wc-order-compatibility.php' );
-		require_once( $framework_path . '/compatibility/class-sv-wc-product-compatibility.php' );
-
-		// TODO: Remove this when WC 3.x can be required {CW 2017-03-16}
-		require_once( $framework_path . '/compatibility/class-sv-wc-datetime.php' );
 
 		// generic API base
 		require_once( $framework_path . '/api/class-sv-wc-api-exception.php' );
