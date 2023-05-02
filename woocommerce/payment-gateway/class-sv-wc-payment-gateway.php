@@ -1767,8 +1767,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Add payment and transaction information as class members of WC_Order
-	 * instance.  The standard information that can be added includes:
+	 * Adds payment and transaction information as class members of {@see WC_Order} instance.
+	 *
+	 * The standard information that can be added includes:
 	 *
 	 * $order->payment_total           - the payment total
 	 * $order->customer_id             - optional payment gateway customer id (useful for tokenized payments, etc)
@@ -1776,14 +1777,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * $order->description             - an order description based on the order
 	 * $order->unique_transaction_ref  - a combination of order number + retry count, should provide a unique value for each transaction attempt
 	 *
-	 * Note that not all gateways will necessarily pass or require all of the
-	 * above.  These represent the most common attributes used among a variety
-	 * of gateways, it's up to the specific gateway implementation to make use
-	 * of, or ignore them, or add custom ones by overridding this method.
+	 * Note that not all gateways will necessarily pass or require all of the above.
+	 * These represent the most common attributes used among a variety of gateways, it's up to the specific gateway implementation to make use of, or ignore them, or add custom ones by overriding this method.
 	 *
 	 * The returned order is expected to be used in a transaction request.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int|\WC_Order $order the order or order ID being processed
 	 * @return \WC_Order object with payment and transaction information attached
 	 */
@@ -1794,7 +1794,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			$order = wc_get_order( $order );
 		}
 
-		// set payment total here so it can be modified for later by add-ons like subscriptions which may need to charge an amount different than the get_total()
+		// set payment total here, so it can be modified for later by add-ons like subscriptions which may need to charge an amount different than the get_total()
 		$order->payment_total = number_format( $order->get_total(), 2, '.', '' );
 
 		$order->customer_id = '';
@@ -1812,6 +1812,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		/* translators: Placeholders: %1$s - site title, %2$s - order number */
 		$order->description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name(), ENT_QUOTES ), $order->get_order_number() );
+
+		// when HPOS is enabled, we need to save the order to avoid potential errors when saving a new payment method
+		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() && ( ! is_admin() || is_ajax() ) ) {
+			$order->save();
+		}
 
 		$order = $this->get_order_with_unique_transaction_ref( $order );
 
