@@ -117,6 +117,24 @@ class SV_WC_Subscription_Compatibility extends SV_WC_Data_Compatibility {
 	}
 
 
+	/**
+	 * Determines whether a given identifier is a WooCommerce subscription or not, according to HPOS availability.
+	 *
+	 * @since x.y.z
+	 *
+	 * @param int|\WP_Post|\WC_Subscription|null $post_subscription_or_id identifier of a possible subcription
+	 * @return bool
+	 */
+	public static function is_subscription( $post_subscription_or_id ) : bool {
+
+		if ( $post_subscription_or_id instanceof \WC_Subscription ) {
+			return true;
+		}
+
+		return SV_WC_Order_Compatibility::is_order( $post_subscription_or_id, 'shop_subscription' );
+	}
+
+
 }
 
 endif;
