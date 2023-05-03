@@ -2,6 +2,7 @@
 
 2023.nn.nn - version 5.11.1
  * Fix - Prevents WooCommerce throwing fatal errors when adding a payment method to an order in the frontend
+ * Fix - Address a potential return type error in `SV_WC_Order_Compatibility::get_order_screen_id()`
 
 2023.04.20 - version 5.11.0
  * Feature - Add compatibility methods and support for WooCommerce High Performance Order Storage (HPOS)
