@@ -436,6 +436,7 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/class-sv-wc-plugin-compatibility.php' );
 		require_once( $framework_path . '/compatibility/abstract-sv-wc-data-compatibility.php' );
 		require_once( $framework_path . '/compatibility/class-sv-wc-order-compatibility.php' );
+		require_once( $framework_path . '/compatibility/class-sv-wc-subscription-compatibility.php' );
 
 		// generic API base
 		require_once( $framework_path . '/api/class-sv-wc-api-exception.php' );
