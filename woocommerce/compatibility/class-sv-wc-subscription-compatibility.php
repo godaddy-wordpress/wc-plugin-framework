@@ -42,7 +42,7 @@ class SV_WC_Subscription_Compatibility extends SV_WC_Data_Compatibility {
 	 *
 	 * @return string
 	 */
-	public static function get_order_screen_id() : string {
+	public static function get_subscripton_screen_id() : string {
 
 		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 			return function_exists( 'wc_get_page_screen_id' ) ? wc_get_page_screen_id( 'shop-subscription' ) : 'woocommerce_page_wc-orders--shop_subscription';
@@ -71,7 +71,7 @@ class SV_WC_Subscription_Compatibility extends SV_WC_Data_Compatibility {
 			return 'shop_subscription' === $current_screen->id;
 		}
 
-		return static::get_order_screen_id() === $current_screen->id
+		return static::get_subscripton_screen_id() === $current_screen->id
 			&& isset( $_GET['page'], $_GET['action'] )
 			&& $_GET['page'] === 'wc-orders--shop_subscription'
 			&& in_array( $_GET['action'], [ 'new', 'edit' ], true );
@@ -96,7 +96,7 @@ class SV_WC_Subscription_Compatibility extends SV_WC_Data_Compatibility {
 			return 'edit-shop_subscription' === $current_screen->id;
 		}
 
-		return static::get_order_screen_id() === $current_screen->id
+		return static::get_subscripton_screen_id() === $current_screen->id
 			&& isset( $_GET['page'] )
 			&& $_GET['page'] === 'wc-orders--shop_subscription'
 			&& ! static::is_subscription_edit_screen();
