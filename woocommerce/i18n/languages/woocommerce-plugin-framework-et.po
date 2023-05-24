@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC Plugin Framework\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
-"POT-Creation-Date: 2023-05-02 01:58:39+00:00\n"
+"POT-Creation-Date: 2023-05-24 09:09:36+00:00\n"
 "PO-Revision-Date: 2017-03-27 11:59-0700\n"
 "Last-Translator: Illimar Tambek <illimar.tambek@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/wc-plugin-"
@@ -255,19 +255,19 @@ msgid "You cannot unserialize instances of %s."
 msgstr "%s eksemplari ei saa deserialiseerida (unserialize)."
 
 #. translators: Docs as in Documentation
-#: class-sv-wc-plugin.php:593
+#: class-sv-wc-plugin.php:594
 msgid "Docs"
 msgstr "Dokumentatsioon"
 
-#: class-sv-wc-plugin.php:708
+#: class-sv-wc-plugin.php:709
 msgid "%1$s - A minimum of %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:717
+#: class-sv-wc-plugin.php:718
 msgid "Set as %1$s - %2$s is required."
 msgstr ""
 
-#: class-sv-wc-plugin.php:1010
+#: class-sv-wc-plugin.php:1011
 #: payment-gateway/class-sv-wc-payment-gateway-plugin.php:876
 msgid "Configure"
 msgstr "Seadista"
@@ -2017,12 +2017,12 @@ msgctxt "coordinating conjunction for a list of items: a, b, and c"
 msgid "and"
 msgstr ""
 
-#: class-sv-wc-plugin.php:598
+#: class-sv-wc-plugin.php:599
 msgctxt "noun"
 msgid "Support"
 msgstr "Kasutajatugi"
 
-#: class-sv-wc-plugin.php:603
+#: class-sv-wc-plugin.php:604
 msgctxt "verb"
 msgid "Review"
 msgstr ""

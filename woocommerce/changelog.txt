@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2023.nn.nn - version 5.11.1
+2023.05.23 - version 5.11.1
+ * Tweak - Add WooCommerce Subscriptions compatibility methods for installations using HPOS
  * Fix - Prevents WooCommerce throwing fatal errors when adding a payment method to an order in the frontend
  * Fix - Address a potential return type error in `SV_WC_Order_Compatibility::get_order_screen_id()`
 

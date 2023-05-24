@@ -31,14 +31,14 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_1\\SV_WC_S
 /**
  * WooCommerce subscription compatibility class.
  *
- * @since x.y.z
+ * @since 5.11.1
  */
 class SV_WC_Subscription_Compatibility extends SV_WC_Data_Compatibility {
 
 	/**
 	 * Gets the admin screen ID for subscriptions.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.1
 	 *
 	 * @return string
 	 */
@@ -55,7 +55,7 @@ class SV_WC_Subscription_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Determines if the current admin screen is for adding or editing a subscription.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.1
 	 *
 	 * @return bool
 	 */
@@ -80,7 +80,7 @@ class SV_WC_Subscription_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Determines if the current admin screen is for the subscriptions.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.1
 	 *
 	 * @return bool
 	 */
@@ -106,7 +106,7 @@ class SV_WC_Subscription_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Determines if the current admin page is for any kind of subscription screen.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.1
 	 *
 	 * @return bool
 	 */
@@ -120,7 +120,7 @@ class SV_WC_Subscription_Compatibility extends SV_WC_Data_Compatibility {
 	/**
 	 * Determines whether a given identifier is a WooCommerce subscription or not, according to HPOS availability.
 	 *
-	 * @since x.y.z
+	 * @since 5.11.1
 	 *
 	 * @param int|\WP_Post|\WC_Subscription|null $post_subscription_or_id identifier of a possible subcription
 	 * @return bool
