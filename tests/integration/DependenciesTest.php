@@ -3,7 +3,7 @@
 /**
  * Tests for the SV_WC_Plugin_Dependencies class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_2\SV_WC_Plugin_Dependencies
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_3\SV_WC_Plugin_Dependencies
  */
 class DependenciesTest extends \Codeception\TestCase\WPTestCase {
 
@@ -31,7 +31,7 @@ class DependenciesTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
-	 * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_2\SV_WC_Plugin_Dependencies::get_active_scripts_optimization_plugins()
+	 * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_3\SV_WC_Plugin_Dependencies::get_active_scripts_optimization_plugins()
 	 */
 	public function test_get_active_scripts_optimization_plugins() {
 
@@ -40,7 +40,7 @@ class DependenciesTest extends \Codeception\TestCase\WPTestCase {
 
 
 	/**
-	 * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_2\SV_WC_Plugin_Dependencies::is_scripts_optimization_plugin_active()
+	 * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_3\SV_WC_Plugin_Dependencies::is_scripts_optimization_plugin_active()
 	 */
 	public function test_is_scripts_optimization_plugin_active() {
 

@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_2;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_3;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_2\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_3\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -460,7 +460,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
-		$versioned_handle = $handle . '-v5_11_2';
+		$versioned_handle = $handle . '-v5_11_3';
 
 		// Frontend JS
 		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
@@ -2518,7 +2518,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		if ( $response && $response->get_transaction_id() ) {
 
 			$this->update_order_meta( $order, 'trans_id', $response->get_transaction_id() );
-			$this->update_order_meta( $order, '_transaction_id', $response->get_transaction_id() );
+
+			// we can't use the update_order_meta() method here because it will have the key prefixed
+			$order->update_meta_data( '_transaction_id', $response->get_transaction_id() );
+			$order->save_meta_data();
 		}
 
 		// transaction date
