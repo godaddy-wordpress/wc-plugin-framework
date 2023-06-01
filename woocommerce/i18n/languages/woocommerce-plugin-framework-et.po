@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC Plugin Framework\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
-"POT-Creation-Date: 2023-05-29 10:06:33+00:00\n"
+"POT-Creation-Date: 2023-06-01 07:04:50+00:00\n"
 "PO-Revision-Date: 2017-03-27 11:59-0700\n"
 "Last-Translator: Illimar Tambek <illimar.tambek@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/wc-plugin-"
@@ -510,7 +510,7 @@ msgstr ""
 "meiega ühendust."
 
 #: payment-gateway/Handlers/Abstract_Hosted_Payment_Handler.php:217
-#: payment-gateway/class-sv-wc-payment-gateway.php:2893
+#: payment-gateway/class-sv-wc-payment-gateway.php:2896
 #: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:521
 msgid ""
 "An error occurred, please try again or try an alternate form of payment."
@@ -566,7 +566,7 @@ msgid "Order %s is already paid for."
 msgstr ""
 
 #: payment-gateway/Handlers/Abstract_Payment_Handler.php:267
-#: payment-gateway/class-sv-wc-payment-gateway.php:2829
+#: payment-gateway/class-sv-wc-payment-gateway.php:2832
 msgid ""
 "Your order has been received and is being reviewed. Thank you for your "
 "business."
@@ -630,8 +630,8 @@ msgstr "%1$s: tasumine summas %2$s kinnitatud"
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:768
 #: payment-gateway/class-sv-wc-payment-gateway.php:2166
 #: payment-gateway/class-sv-wc-payment-gateway.php:2399
-#: payment-gateway/class-sv-wc-payment-gateway.php:2710
-#: payment-gateway/class-sv-wc-payment-gateway.php:2755
+#: payment-gateway/class-sv-wc-payment-gateway.php:2713
+#: payment-gateway/class-sv-wc-payment-gateway.php:2758
 #: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:353
 msgid "(Transaction ID %s)"
 msgstr "(Tehingu ID %s)"
@@ -1105,13 +1105,13 @@ msgstr "Maksevahend kustutatud."
 #. account type (savings/checking) (may or may not be available), %3$s - last
 #. four digits of the account
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:673
-#: payment-gateway/class-sv-wc-payment-gateway.php:2745
+#: payment-gateway/class-sv-wc-payment-gateway.php:2748
 msgid "%1$s Check Transaction Approved: %2$s account ending in %3$s"
 msgstr "%1$s: tšeki tehing vastu võetud: %2$s konto, lõpeb numbritega %3$s"
 
 #. translators: Placeholders: %s - check number
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:678
-#: payment-gateway/class-sv-wc-payment-gateway.php:2750
+#: payment-gateway/class-sv-wc-payment-gateway.php:2753
 msgid "Check number %s"
 msgstr "Tšeki number %s"
 
@@ -1126,7 +1126,7 @@ msgstr "%1$s %2$s: %3$s kinnitatud: %4$s lõpeb numbritega %5$s (aegub %6$s)"
 #. translators: Placeholders: %s - expiry date
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:760
 #: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:718
-#: payment-gateway/class-sv-wc-payment-gateway.php:2702
+#: payment-gateway/class-sv-wc-payment-gateway.php:2705
 msgid "(expires %s)"
 msgstr "(aegub %s)"
 
@@ -1668,40 +1668,40 @@ msgstr "%1$s: tühistamine summas %2$s kinnitatud."
 
 #. translators: Placeholders: %1$s - payment method title, %2$s - environment
 #. ("Test"), %3$s - transaction type (authorization/charge)
-#: payment-gateway/class-sv-wc-payment-gateway.php:2681
+#: payment-gateway/class-sv-wc-payment-gateway.php:2684
 #, fuzzy
 msgid "%1$s %2$s %3$s Approved"
 msgstr "%1$s: %2$s tehing kinnitatud"
 
 #. translators: Placeholders: %1$s - credit card type (MasterCard, Visa,
 #. etc...), %2$s - last four digits of the card
-#: payment-gateway/class-sv-wc-payment-gateway.php:2691
+#: payment-gateway/class-sv-wc-payment-gateway.php:2694
 msgid "%1$s ending in %2$s"
 msgstr ""
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - message
 #. (probably reason for the transaction being held for review)
-#: payment-gateway/class-sv-wc-payment-gateway.php:2787
+#: payment-gateway/class-sv-wc-payment-gateway.php:2790
 msgid "%1$s Transaction Held for Review (%2$s)"
 msgstr "%1$s: tehning pandi ülevaatuseks ootele (%2$s)"
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - error
 #. message; e.g. Order Note: [Payment method] Payment failed [error]
-#: payment-gateway/class-sv-wc-payment-gateway.php:2876
+#: payment-gateway/class-sv-wc-payment-gateway.php:2879
 msgid "%1$s Payment Failed (%2$s)"
 msgstr "%1$s: makse ebaõnnestus (%2$s)"
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s -
 #. message/error
-#: payment-gateway/class-sv-wc-payment-gateway.php:2911
+#: payment-gateway/class-sv-wc-payment-gateway.php:2914
 msgid "%1$s Transaction Cancelled (%2$s)"
 msgstr "%1$s: tehing tühistatud (%2$s)"
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3159
+#: payment-gateway/class-sv-wc-payment-gateway.php:3162
 msgid "Transaction Type"
 msgstr "Tehingu tüüp"
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3161
+#: payment-gateway/class-sv-wc-payment-gateway.php:3164
 msgid ""
 "Select how transactions should be processed. Charge submits all transactions "
 "for settlement, Authorization simply authorizes the order total for capture "
@@ -1711,44 +1711,44 @@ msgstr ""
 "koheselt tasumisele, \"Autoriseerimine\" lihtsalt autoriseerib tellimuse "
 "summa hilisemaks tasumiseks."
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3172
+#: payment-gateway/class-sv-wc-payment-gateway.php:3175
 msgid "Charge Virtual-Only Orders"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3174
+#: payment-gateway/class-sv-wc-payment-gateway.php:3177
 msgid ""
 "If the order contains exclusively virtual items, enable this to immediately "
 "charge, rather than authorize, the transaction."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3182
+#: payment-gateway/class-sv-wc-payment-gateway.php:3185
 #, fuzzy
 msgid "Enable Partial Capture"
 msgstr "Lülita see makseviis sisse"
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3184
+#: payment-gateway/class-sv-wc-payment-gateway.php:3187
 msgid "Allow orders to be partially captured multiple times."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3196
+#: payment-gateway/class-sv-wc-payment-gateway.php:3199
 #, fuzzy
 msgid "Capture Paid Orders"
 msgstr "Teosta makse"
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3199
+#: payment-gateway/class-sv-wc-payment-gateway.php:3202
 msgid "Automatically capture orders when they are changed to %s."
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3200
+#: payment-gateway/class-sv-wc-payment-gateway.php:3203
 msgid "a paid status"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3390
+#: payment-gateway/class-sv-wc-payment-gateway.php:3393
 #, fuzzy
 msgid "Accepted Card Logos"
 msgstr "Vastuvõetavad kaardid"
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3392
+#: payment-gateway/class-sv-wc-payment-gateway.php:3395
 #, fuzzy
 msgid ""
 "These are the card logos that are displayed to customers as accepted during "
@@ -1756,7 +1756,7 @@ msgid ""
 msgstr "Kliendile kassas nähtav makseviisi nimetus."
 
 #. translators: Placeholders: %1$s - <strong> tag, %2$s - </strong> tag
-#: payment-gateway/class-sv-wc-payment-gateway.php:3395
+#: payment-gateway/class-sv-wc-payment-gateway.php:3398
 msgid ""
 "This setting %1$sdoes not%2$s change which card types the gateway will "
 "accept. Accepted cards are configured from your payment processor account."
@@ -1765,11 +1765,11 @@ msgstr ""
 #. translators:
 #. http:www.cybersource.com/products/payment_security/payment_tokenization/ and
 #. https:en.wikipedia.org/wiki/Tokenization_(data_security)
-#: payment-gateway/class-sv-wc-payment-gateway.php:3486
+#: payment-gateway/class-sv-wc-payment-gateway.php:3489
 msgid "Tokenization"
 msgstr "Maksevahendite salvestamine"
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3487
+#: payment-gateway/class-sv-wc-payment-gateway.php:3490
 msgid ""
 "Allow customers to securely save their payment details for future checkout."
 msgstr ""
@@ -1778,7 +1778,7 @@ msgstr ""
 
 #. translators: %1$s - gateway name, %2$s - <a> tag, %3$s - </a> tag, %4$s -
 #. <a> tag, %5$s - </a> tag
-#: payment-gateway/class-sv-wc-payment-gateway.php:4272
+#: payment-gateway/class-sv-wc-payment-gateway.php:4275
 msgid ""
 "Heads up! %1$s is not fully configured and cannot accept payments. Please "
 "%2$sreview the documentation%3$s and configure the %4$sgateway settings%5$s."
@@ -2028,21 +2028,21 @@ msgid "Review"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:749
-#: payment-gateway/class-sv-wc-payment-gateway.php:2683
+#: payment-gateway/class-sv-wc-payment-gateway.php:2686
 msgctxt "noun, software environment"
 msgid "Test"
 msgstr "test"
 
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:750
-#: payment-gateway/class-sv-wc-payment-gateway.php:2684
-#: payment-gateway/class-sv-wc-payment-gateway.php:3165
+#: payment-gateway/class-sv-wc-payment-gateway.php:2687
+#: payment-gateway/class-sv-wc-payment-gateway.php:3168
 msgctxt "credit card transaction type"
 msgid "Authorization"
 msgstr "Autoriseerimine"
 
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:750
-#: payment-gateway/class-sv-wc-payment-gateway.php:2684
-#: payment-gateway/class-sv-wc-payment-gateway.php:3164
+#: payment-gateway/class-sv-wc-payment-gateway.php:2687
+#: payment-gateway/class-sv-wc-payment-gateway.php:3167
 msgctxt "noun, credit card transaction type"
 msgid "Charge"
 msgstr "Makse"
@@ -2053,19 +2053,19 @@ msgid "Account"
 msgstr "Konto"
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:229
-#: payment-gateway/class-sv-wc-payment-gateway.php:3423
+#: payment-gateway/class-sv-wc-payment-gateway.php:3426
 msgctxt "credit card type"
 msgid "Visa"
 msgstr "Visa"
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:233
-#: payment-gateway/class-sv-wc-payment-gateway.php:3424
+#: payment-gateway/class-sv-wc-payment-gateway.php:3427
 msgctxt "credit card type"
 msgid "MasterCard"
 msgstr "MasterCard"
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:237
-#: payment-gateway/class-sv-wc-payment-gateway.php:3425
+#: payment-gateway/class-sv-wc-payment-gateway.php:3428
 msgctxt "credit card type"
 msgid "American Express"
 msgstr "American Express"
@@ -2076,13 +2076,13 @@ msgid "Diners Club"
 msgstr ""
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:245
-#: payment-gateway/class-sv-wc-payment-gateway.php:3426
+#: payment-gateway/class-sv-wc-payment-gateway.php:3429
 msgctxt "credit card type"
 msgid "Discover"
 msgstr "Discover"
 
 #: payment-gateway/class-sv-wc-payment-gateway-helper.php:249
-#: payment-gateway/class-sv-wc-payment-gateway.php:3428
+#: payment-gateway/class-sv-wc-payment-gateway.php:3431
 msgctxt "credit card type"
 msgid "JCB"
 msgstr "JCB"
@@ -2102,7 +2102,7 @@ msgctxt "credit card type"
 msgid "Laser"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3427
+#: payment-gateway/class-sv-wc-payment-gateway.php:3430
 msgctxt "credit card type"
 msgid "Diners"
 msgstr "Diners"
@@ -2129,7 +2129,7 @@ msgctxt "hash before order number"
 msgid "#%s"
 msgstr ""
 
-#: payment-gateway/class-sv-wc-payment-gateway.php:3193
+#: payment-gateway/class-sv-wc-payment-gateway.php:3196
 msgctxt ""
 "coordinating conjunction for a list of order statuses: on-hold, processing, "
 "or completed"
@@ -2137,7 +2137,7 @@ msgid "or"
 msgstr ""
 
 #. translators: https:www.skyverge.com/for-translators-environments/
-#: payment-gateway/class-sv-wc-payment-gateway.php:3998
+#: payment-gateway/class-sv-wc-payment-gateway.php:4001
 msgctxt "software environment"
 msgid "Production"
 msgstr "Töö/avalik"
