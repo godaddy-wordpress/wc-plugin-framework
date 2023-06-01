@@ -1,15 +1,15 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v5_11_2 as Framework;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_2\Settings_API\Abstract_Settings;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_2\Settings_API\Setting;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_2\Settings_API\Control;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_2\SV_WC_Plugin_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_3 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_3\Settings_API\Abstract_Settings;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_3\Settings_API\Setting;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_3\Settings_API\Control;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_3\SV_WC_Plugin_Exception;
 
 /**
  * Tests for the Abstract_Settings class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_2\Settings_API\Abstract_Settings
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_3\Settings_API\Abstract_Settings
  */
 class AbstractSettingsTest extends \Codeception\TestCase\WPTestCase {
 
