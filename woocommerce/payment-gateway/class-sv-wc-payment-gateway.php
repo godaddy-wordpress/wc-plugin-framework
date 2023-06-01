@@ -2518,7 +2518,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		if ( $response && $response->get_transaction_id() ) {
 
 			$this->update_order_meta( $order, 'trans_id', $response->get_transaction_id() );
-			$this->update_order_meta( $order, '_transaction_id', $response->get_transaction_id() );
+
+			// we can't use the update_order_meta() method here because it will have the key prefixed
+			$order->update_meta_data( '_transaction_id', $response->get_transaction_id() );
+			$order->save_meta_data();
 		}
 
 		// transaction date
