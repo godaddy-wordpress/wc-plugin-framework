@@ -1,7 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2023.nn.nn - version 5.11.3-dev.1
- * Fix - Persist correctly the `_transaction_id` meta key on orders while saving transaction data
+ * Fix - Ensure that the `_transaction_id` meta key is correctly persisted on orders while saving transaction data
 
 2023.05.30 - version 5.11.2
  * Fix - Remove AllowDynamicProperties attribute at method level causing a fatal error in PHP 8.2
