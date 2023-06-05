@@ -2517,11 +2517,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		// transaction id if available
 		if ( $response && $response->get_transaction_id() ) {
 
+			// legacy value for backwards compatibility
 			$this->update_order_meta( $order, 'trans_id', $response->get_transaction_id() );
 
 			// we can't use the update_order_meta() method here because it will have the key prefixed
-			$order->update_meta_data( '_transaction_id', $response->get_transaction_id() );
-			$order->save_meta_data();
+			// also, in recent WC versions updating the order meta directly may trigger an `is_internal_meta_key was called incorrectly` error
+			$order->set_transaction_id( $response->get_transaction_id() );
+			$order->save();
 		}
 
 		// transaction date
