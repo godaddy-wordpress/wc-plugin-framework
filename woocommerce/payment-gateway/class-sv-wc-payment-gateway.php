@@ -2523,7 +2523,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			// we can't use the update_order_meta() method here because it will have the key prefixed
 			// also, in recent WC versions updating the order meta directly may trigger an `is_internal_meta_key was called incorrectly` error
 			$order->set_transaction_id( $response->get_transaction_id() );
-			$order->save();
+			// @NOTE order is saved at the end of this method
 		}
 
 		// transaction date
@@ -2594,6 +2594,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				$this->update_order_meta( $order, 'check_number', $order->payment->check_number );
 			}
 		}
+
+		// this is necessary to persist the transaction ID
+		$order->save();
 
 		/**
 		 * Payment Gateway Add Transaction Data Action.
