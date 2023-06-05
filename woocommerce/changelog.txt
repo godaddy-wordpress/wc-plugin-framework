@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2023.06.02 - version 5.11.4
+ * Fix - Use `set_transaction_id()` while setting the transaction ID in payment gateways instead of setting the order meta data directly
+
 2023.06.01 - version 5.11.3
  * Fix - Ensure that the `_transaction_id` meta is correctly persisted on orders while saving transaction data
 
