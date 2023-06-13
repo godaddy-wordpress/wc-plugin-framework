@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_3\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_4\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -460,7 +460,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
-		$versioned_handle = $handle . '-v5_11_3';
+		$versioned_handle = $handle . '-v5_11_4';
 
 		// Frontend JS
 		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
@@ -2517,11 +2517,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		// transaction id if available
 		if ( $response && $response->get_transaction_id() ) {
 
+			// legacy value for backwards compatibility
 			$this->update_order_meta( $order, 'trans_id', $response->get_transaction_id() );
 
 			// we can't use the update_order_meta() method here because it will have the key prefixed
-			$order->update_meta_data( '_transaction_id', $response->get_transaction_id() );
-			$order->save_meta_data();
+			// also, in recent WC versions updating the order meta directly may trigger an `is_internal_meta_key was called incorrectly` error
+			$order->set_transaction_id( $response->get_transaction_id() );
+			// @NOTE order is saved at the end of this method
 		}
 
 		// transaction date
@@ -2592,6 +2594,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				$this->update_order_meta( $order, 'check_number', $order->payment->check_number );
 			}
 		}
+
+		// this is necessary to persist the transaction ID
+		$order->save();
 
 		/**
 		 * Payment Gateway Add Transaction Data Action.
