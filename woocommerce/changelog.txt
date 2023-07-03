@@ -1,5 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2023.nn.nn - version 5.11.5
+ * Fix - Replaced deprecated usages of `FILTER_SANITIZE_STRING` with `FILTER_SANITIZE_FULL_SPECIAL_CHARS`
+ * Fix - Do not pass `null` to `substr()` to avoid triggering deprecation notices
+
 2023.06.13 - version 5.11.4
  * Fix - Use `set_transaction_id()` while setting the transaction ID in payment gateways instead of setting the order meta data directly
 
