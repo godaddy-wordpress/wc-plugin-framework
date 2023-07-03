@@ -170,8 +170,6 @@ class SV_WC_Payment_Gateway_Helper {
 	 */
 	public static function payment_type_to_name( $payment_type ) {
 
-		$name = '';
-
 		// normalize for backwards compatibility with gateways that pass the card type directly from \SV_WC_Payment_Gateway::get_card_types()
 		$type = self::normalize_card_type( $payment_type );
 
