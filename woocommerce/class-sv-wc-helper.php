@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_4;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_5;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_4\\SV_WC_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_5\\SV_WC_Helper' ) ) :
 
 
 /**
@@ -183,22 +183,23 @@ class SV_WC_Helper {
 
 
 	/**
-	 * Returns a string with all non-ASCII characters removed. This is useful
-	 * for any string functions that expect only ASCII chars and can't
-	 * safely handle UTF-8. Note this only allows ASCII chars in the range
-	 * 33-126 (newlines/carriage returns are stripped)
+	 * Returns a string with all non-ASCII characters removed.
+	 *
+	 * This is useful for any string functions that expect only ASCII chars and can't safely handle UTF-8.
+	 * Note this only allows ASCII chars in the range 33-126 (newlines/carriage returns are stripped).
 	 *
 	 * @since 2.2.0
-	 * @param string $string string to make ASCII
-	 * @return string
+	 *
+	 * @param string|mixed $string string to make ASCII
+	 * @return string|false
 	 */
 	public static function str_to_ascii( $string ) {
 
 		// strip ASCII chars 32 and under
-		$string = filter_var( $string, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW );
+		$string = filter_var( $string, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW );
 
 		// strip ASCII chars 127 and higher
-		return filter_var( $string, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH );
+		return filter_var( $string, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_HIGH );
 	}
 
 

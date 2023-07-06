@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_4;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_5;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_4\\SV_WC_Payment_Gateway_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_5\\SV_WC_Payment_Gateway_Helper' ) ) :
 
 
 /**
@@ -169,8 +169,6 @@ class SV_WC_Payment_Gateway_Helper {
 	 * @return string the credit card or bank account name, ie 'MasterCard', 'American Express', 'Checking Account'
 	 */
 	public static function payment_type_to_name( $payment_type ) {
-
-		$name = '';
 
 		// normalize for backwards compatibility with gateways that pass the card type directly from \SV_WC_Payment_Gateway::get_card_types()
 		$type = self::normalize_card_type( $payment_type );

@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_4;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_5;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_4\\SV_WC_Payment_Gateway_Direct' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_5\\SV_WC_Payment_Gateway_Direct' ) ) :
 
 
 /**
@@ -730,27 +730,39 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// success! update order record
 		if ( $response->transaction_approved() ) {
 
-			$last_four = substr( $order->payment->account_number, -4 );
+			$account_number = ! empty( $order->payment->account_number ) ? $order->payment->account_number : null;
+			$last_four = $account_number ? substr( $account_number, -4 ) : '';
 
 			// use direct card type if set, or try to guess it from card number
 			if ( ! empty( $order->payment->card_type ) ) {
 				$card_type = $order->payment->card_type;
-			} elseif ( $first_four = substr( $order->payment->account_number, 0, 4 ) ) {
+			} elseif ( $first_four = $account_number ? substr( $account_number, 0, 4 ) : '' ) {
 				$card_type = SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $first_four );
 			} else {
 				$card_type = 'card';
 			}
 
 			// credit card order note
-			$message = sprintf(
-				/* translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...), %5$s - last four digits of the card */
-				esc_html__( '%1$s %2$s %3$s Approved: %4$s ending in %5$s', 'woocommerce-plugin-framework' ),
-				$this->get_method_title(),
-				$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
-				$this->perform_credit_card_authorization( $order ) ? esc_html_x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' ) : esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' ),
-				SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ),
-				$last_four
-			);
+			if ( $account_number ) {
+				$message = sprintf(
+					/* translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...), %5$s - last four digits of the card */
+					esc_html__( '%1$s %2$s %3$s Approved: %4$s ending in %5$s', 'woocommerce-plugin-framework' ),
+					$this->get_method_title(),
+					$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
+					$this->perform_credit_card_authorization( $order ) ? esc_html_x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' ) : esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' ),
+					SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ),
+					$last_four
+				);
+			} else {
+				$message = sprintf(
+					/* translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...) */
+					esc_html__( '%1$s %2$s %3$s Approved: %4$s', 'woocommerce-plugin-framework' ),
+					$this->get_method_title(),
+					$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
+					$this->perform_credit_card_authorization( $order ) ? esc_html_x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' ) : esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' ),
+					SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type )
+				);
+			}
 
 			// add the expiry date if it is available
 			if ( ! empty( $order->payment->exp_month ) && ! empty( $order->payment->exp_year ) ) {
@@ -788,7 +800,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		return $response;
-
 	}
 
 
