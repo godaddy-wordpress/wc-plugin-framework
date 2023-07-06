@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2023.nn.nn - version 5.11.5
+2023.06.07 - version 5.11.5
  * Fix - Replace deprecated usages of `FILTER_SANITIZE_STRING` with `FILTER_SANITIZE_FULL_SPECIAL_CHARS`
  * Fix - Do not pass `null` to `substr()` to avoid triggering deprecation notices if the payment method's last 4 numbers could not be determined in a direct payment gateway
 
