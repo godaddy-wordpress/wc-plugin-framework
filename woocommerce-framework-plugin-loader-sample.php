@@ -9,7 +9,7 @@
  * Text Domain: TODO: plugin textdomain
  * Domain Path: /i18n/languages/
  *
- * Copyright: (c) 2011-2022, SkyVerge, Inc. (info@skyverge.com)
+ * Copyright: (c) 2011-2023, SkyVerge, Inc. (info@skyverge.com)
  *
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
