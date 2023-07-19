@@ -528,7 +528,7 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		$order_post_types = ['shop_order'];
 
 		/** @see \Automattic\WooCommerce\Internal\DataStores\Orders\DataSynchronizer */
-		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() && OrderUtil::custom_orders_table_usage_is_enabled() ) {
+		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
 			$order_post_types[] = 'shop_order_placehold';
 		}
 
