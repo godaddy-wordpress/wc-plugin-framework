@@ -516,6 +516,25 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 	}
 
 
+	/**
+	 * Gets the list of order post types.
+	 *
+	 * @since 5.11.6
+	 *
+	 * @return string[]
+	 */
+	public static function get_order_post_types(): array {
+
+		$order_post_types = ['shop_order'];
+
+		/** @see \Automattic\WooCommerce\Internal\DataStores\Orders\DataSynchronizer */
+		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() && OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			$order_post_types[] = 'shop_order_placehold';
+		}
+
+		return $order_post_types;
+	}
+
 }
 
 
