@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_5;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_6;
 
 use Automattic\WooCommerce\Admin\Overrides\Order;
 use Automattic\WooCommerce\Internal\Admin\Orders\PageController;
@@ -32,7 +32,7 @@ use Automattic\WooCommerce\Utilities\OrderUtil;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_5\\SV_WC_Order_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_6\\SV_WC_Order_Compatibility' ) ) :
 
 
 /**
@@ -515,6 +515,25 @@ class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 		return false;
 	}
 
+
+	/**
+	 * Gets the list of order post types.
+	 *
+	 * @since 5.11.6
+	 *
+	 * @return string[]
+	 */
+	public static function get_order_post_types(): array {
+
+		$order_post_types = ['shop_order'];
+
+		/** @see \Automattic\WooCommerce\Internal\DataStores\Orders\DataSynchronizer */
+		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() ) {
+			$order_post_types[] = 'shop_order_placehold';
+		}
+
+		return $order_post_types;
+	}
 
 }
 
