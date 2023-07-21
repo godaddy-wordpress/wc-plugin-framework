@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2023.nn.nn - version 5.11.7-dev.1
+ * Fix - Pass environment parameter to Google Pay client
+
 2023.07.19 - version 5.11.6
  * Misc - Add `SV_WC_Order_Compatibility::get_order_post_types()` compatibility method
 
