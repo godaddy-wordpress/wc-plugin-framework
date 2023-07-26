@@ -436,7 +436,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		// payment form assets
-		if ( $this->supports_payment_form() ) {
+		if ( $this->supports_payment_form() || $this->supports_add_payment_method() ) {
 
 			$this->enqueue_payment_form_assets();
 		}
