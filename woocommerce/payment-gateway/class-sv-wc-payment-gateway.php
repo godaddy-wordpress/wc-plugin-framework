@@ -785,6 +785,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 			parent::payment_fields();
 		}
+
+		?><style type="text/css">#payment ul.payment_methods li label[for='payment_method_<?php echo $this->get_id(); ?>'] { display: flex; flex-wrap: wrap; row-gap: 10px; }</style><?php
 	}
 
 
