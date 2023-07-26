@@ -796,13 +796,19 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Uses flexbox for any Framework-powered payment method selector, to ensure
 	 * credit card icons are aligned properly.
 	 *
+	 * Note that we cannot apply the styles in the CSS file because there is no generic selector that would only
+	 * affect FW gateways. Instead, each FW gateway prints these styles with the label selector for its own gateway.
+	 *
 	 * TODO: this method can be removed if/when WooCommerce updates their frontend to use flexbox {@itambek 2023-07-26}
 	 *
 	 * @return void
 	 */
 	protected function payment_method_selector_styles(): void
 	{
-		?><style>#payment ul.payment_methods li label[for='payment_method_<?php echo $this->get_id(); ?>'] { display: flex; flex-wrap: wrap; row-gap: 10px; }</style><?php
+		?><style>
+			#payment ul.payment_methods li label[for='payment_method_<?php echo $this->get_id(); ?>'] { display: flex; flex-wrap: wrap; row-gap: 10px; }
+			#payment ul.payment_methods li label[for='payment_method_<?php echo $this->get_id(); ?>'] > img { margin-left: auto; }
+		</style><?php
 	}
 
 
