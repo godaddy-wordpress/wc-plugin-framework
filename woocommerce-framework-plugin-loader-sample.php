@@ -51,16 +51,16 @@ class SV_WC_Framework_Plugin_Loader {
 
 
 	/** minimum PHP version required by this plugin */
-	const MINIMUM_PHP_VERSION = '7.0';
+	const MINIMUM_PHP_VERSION = '7.4';
 
 	/** minimum WordPress version required by this plugin */
-	const MINIMUM_WP_VERSION = '5.2';
+	const MINIMUM_WP_VERSION = '5.6';
 
 	/** minimum WooCommerce version required by this plugin */
-	const MINIMUM_WC_VERSION = '3.5';
+	const MINIMUM_WC_VERSION = '3.9';
 
 	/** SkyVerge plugin framework version used by this plugin */
-	const FRAMEWORK_VERSION = '5.11.7'; // TODO: framework version
+	const FRAMEWORK_VERSION = '5.11.8'; // TODO: framework version
 
 
 	/** the plugin name, for displaying notices */
