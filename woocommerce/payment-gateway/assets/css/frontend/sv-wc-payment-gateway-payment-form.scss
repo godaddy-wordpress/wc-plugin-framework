@@ -126,12 +126,13 @@ ul.payment_methods li {
 
 	div.sv-wc-payment-gateway-card-icons {
 		vertical-align: middle;
-		display: inline-block;
-		margin-left: 22px;
+		display: flex;
+		flex-wrap: wrap;
+		margin-left: auto;
+		gap: 5px;
 
 		img {
-			float: left !important;
-			margin: 5px;
+			float: none !important;
 		}
 	}
 }
