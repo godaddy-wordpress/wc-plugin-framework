@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2023.nn.nn - version 5.11.8
+
 2023.07.28 - version 5.11.7
  * Tweak - Enqueue and improve form styles for hosted payment forms
 
