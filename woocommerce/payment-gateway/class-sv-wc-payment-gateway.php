@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_6;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_7;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_6\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_7\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -436,7 +436,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		// payment form assets
-		if ( $this->supports_payment_form() ) {
+		if ( $this->supports_payment_form() || $this->supports_add_payment_method() ) {
 
 			$this->enqueue_payment_form_assets();
 		}
@@ -460,7 +460,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
-		$versioned_handle = $handle . '-v5_11_6';
+		$versioned_handle = $handle . '-v5_11_7';
 
 		// Frontend JS
 		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
@@ -785,6 +785,31 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 			parent::payment_fields();
 		}
+
+		$this->payment_method_selector_styles();
+	}
+
+
+	/**
+	 * Renders the payment method selector styles.
+	 *
+	 * Uses flexbox for any Framework-powered payment method selector, to ensure credit card icons are aligned properly.
+	 *
+	 * Note that we cannot apply the styles in the CSS file because there is no generic selector that would only affect FW gateways.
+	 * Instead, each FW gateway prints these styles with the label selector for its own gateway.
+	 *
+	 * @since 5.11.7
+	 *
+	 * @TODO: this method can be removed if/when WooCommerce updates their frontend to use flexbox {@itambek 2023-07-26}
+	 *
+	 * @return void
+	 */
+	protected function payment_method_selector_styles(): void
+	{
+		?><style>
+			#payment ul.payment_methods li label[for='payment_method_<?php echo $this->get_id(); ?>'] { display: flex; flex-wrap: wrap; row-gap: 10px; }
+			#payment ul.payment_methods li label[for='payment_method_<?php echo $this->get_id(); ?>'] > img { margin-left: auto; }
+		</style><?php
 	}
 
 
