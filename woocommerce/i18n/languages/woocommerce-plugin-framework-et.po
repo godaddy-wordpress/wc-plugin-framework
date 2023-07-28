@@ -6,11 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC Plugin Framework\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2023-07-28 03:56:52+00:00\n"
-=======
 "POT-Creation-Date: 2023-07-28 09:06:33+00:00\n"
->>>>>>> master
 "PO-Revision-Date: 2017-03-27 11:59-0700\n"
 "Last-Translator: Illimar Tambek <illimar.tambek@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/wc-plugin-"
