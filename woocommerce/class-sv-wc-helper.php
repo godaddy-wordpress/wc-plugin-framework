@@ -446,6 +446,47 @@ class SV_WC_Helper {
 	}
 
 
+	/**
+	 * Joins the array elements into a string using natural language.
+	 *
+	 * For example, the array `['US', 'Canada', 'Mexico']` would become `'US, Canada, and Mexico'`.
+	 *
+	 * When using this method to create user-facing text, it is recommended to supply a localized conjunction.
+	 *
+	 * @since 5.11.8
+	 *
+	 * @param array<scalar> $array
+	 * @param string|null $conjunction one of 'and' or 'or'
+	 * @param string|null $pattern a custom sprintf pattern, with placeholders %1$s and %2$s
+	 * @return string
+	 */
+	public static function array_join_natural( array $array, ?string $conjunction = 'and', ?string $pattern = '' ) : string
+	{
+		$last = array_pop( $array );
+
+		if ( $array ) {
+			if ( ! $pattern ) {
+				switch ( $conjunction ) {
+					case 'or':
+						/* translators: A list of items, for example: "US or Canada", or "US, Canada, or Mexico". English uses Oxford comma before the conjunction ("or") if there are at least 2 items preceding it - hence the use of plural forms. If your locale does not use Oxford comma, you can just provide the same translation to all plural forms. Placeholders: %1$s - a comma-separated list of item, %2$s - the final item in the list */
+						$pattern = _n( '%1$s or %2$s', '%1$s, or %2$s', count( $array ), 'woocommerce-plugin-framework' );
+						break;
+
+					case 'and':
+					default:
+						/* translators: A list of items, for example: "US and Canada", or "US, Canada, and Mexico". English uses Oxford comma before the conjunction ("and") if there are at least 2 items preceding it - hence the use of plural forms. If your locale does not use Oxford comma, you can just provide the same translation to all plural forms. Placeholders: %1$s - a comma-separated list of items, %2$s - the final item in the list */
+						$pattern = _n( '%1$s and %2$s', '%1$s, and %2$s', count( $array ), 'woocommerce-plugin-framework' );
+						break;
+				}
+			}
+
+			return sprintf( $pattern, implode( ', ', $array ), $last );
+		}
+
+		return (string) $last;
+	}
+
+
 	/** Number helper functions *******************************************/
 
 
