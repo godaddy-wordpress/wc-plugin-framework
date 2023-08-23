@@ -7,9 +7,9 @@ jQuery( function( $ ) {
 	 *
 	 * @since 5.10.0
 	 *
-	 * @type {SV_WC_Google_Pay_Handler_v5_11_7} object
+	 * @type {SV_WC_Google_Pay_Handler_v5_11_8} object
 	 */
-	window.SV_WC_Google_Pay_Handler_v5_11_7 = class SV_WC_Google_Pay_Handler_v5_11_7 {
+	window.SV_WC_Google_Pay_Handler_v5_11_8 = class SV_WC_Google_Pay_Handler_v5_11_8 {
 
 		/**
 		 * Handler constructor.
@@ -22,6 +22,7 @@ jQuery( function( $ ) {
 		 * @param {string} params.merchant_name The site name
 		 * @param {string} params.gateway_id The gateway ID
 		 * @param {string} params.gateway_id_dasherized The gateway ID dasherized
+		 * @param {string} params.environment The gateway environment (PRODUCTION or TEST)
 		 * @param {string} params.ajax_url The AJAX URL
 		 * @param {string} params.recalculate_totals_nonce Nonce for the recalculate_totals AJAX action
 		 * @param {string} params.process_nonce Nonce for the process AJAX action
@@ -41,6 +42,7 @@ jQuery( function( $ ) {
 				merchant_name,
 				gateway_id,
 				gateway_id_dasherized,
+				environment,
 				ajax_url,
 				recalculate_totals_nonce,
 				process_nonce,
@@ -55,6 +57,7 @@ jQuery( function( $ ) {
 			this.gatewayID              = gateway_id;
 			this.merchantID             = merchant_id;
 			this.merchantName           = merchant_name;
+			this.environment            = environment;
 			this.ajaxURL                = ajax_url;
 			this.recalculateTotalsNonce = recalculate_totals_nonce;
 			this.processNonce           = process_nonce;
@@ -213,6 +216,7 @@ jQuery( function( $ ) {
 		getGooglePaymentsClient() {
 			if ( this.paymentsClient === null ) {
 				let args = {
+					environment: this.environment,
 					merchantInfo: {
 						merchantName: this.merchantName,
 						merchantId: this.merchantID
@@ -605,6 +609,6 @@ jQuery( function( $ ) {
 		}
 	}
 
-	$( document.body ).trigger( 'sv_wc_google_pay_handler_v5_11_7_loaded' );
+	$( document.body ).trigger( 'sv_wc_google_pay_handler_v5_11_8_loaded' );
 
 } );
