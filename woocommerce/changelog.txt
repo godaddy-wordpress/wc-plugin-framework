@@ -2,6 +2,7 @@
 
 2023.nn.nn - version 5.11.8
  * Misc - Add `SV_WC_Helper::array_join_natural()` helper method
+ * Fix - Pass environment parameter to Google Pay client
 
 2023.07.28 - version 5.11.7
  * Tweak - Enqueue and improve form styles for hosted payment forms
