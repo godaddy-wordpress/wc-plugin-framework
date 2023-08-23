@@ -387,7 +387,7 @@ msgid ""
 "processing real payments."
 msgstr ""
 
-#: payment-gateway/External_Checkout/Google_Pay/Frontend.php:130
+#: payment-gateway/External_Checkout/Google_Pay/Frontend.php:131
 #: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:141
 #: payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:99
 msgid "An error occurred, please try again or try an alternate form of payment"
