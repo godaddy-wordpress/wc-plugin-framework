@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC Plugin Framework\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
-"POT-Creation-Date: 2023-07-28 09:06:33+00:00\n"
+"POT-Creation-Date: 2023-08-23 05:53:16+00:00\n"
 "PO-Revision-Date: 2017-03-27 11:59-0700\n"
 "Last-Translator: Illimar Tambek <illimar.tambek@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/wc-plugin-"
@@ -183,6 +183,32 @@ msgstr "%1$s vajab WooCommerce'i versiooni %2$s või uuemat"
 #: class-sv-wc-framework-bootstrap.php:312
 msgid "Please %1$supdate WooCommerce%2$s"
 msgstr "Palun %1$suuenda WooCommerce'i%2$s"
+
+#. translators: A list of items, for example: "US or Canada", or "US, Canada,
+#. or Mexico". English uses Oxford comma before the conjunction ("or") if there
+#. are at least 2 items preceding it - hence the use of plural forms. If your
+#. locale does not use Oxford comma, you can just provide the same translation
+#. to all plural forms. Placeholders: %1$s - a comma-separated list of item,
+#. %2$s - the final item in the list
+#: class-sv-wc-helper.php:472
+#, fuzzy
+msgid "%1$s or %2$s"
+msgid_plural "%1$s, or %2$s"
+msgstr[0] "%1$s - Tellimus %2$s"
+msgstr[1] "%1$s - Tellimus %2$s"
+
+#. translators: A list of items, for example: "US and Canada", or "US, Canada,
+#. and Mexico". English uses Oxford comma before the conjunction ("and") if
+#. there are at least 2 items preceding it - hence the use of plural forms. If
+#. your locale does not use Oxford comma, you can just provide the same
+#. translation to all plural forms. Placeholders: %1$s - a comma-separated list
+#. of items, %2$s - the final item in the list
+#: class-sv-wc-helper.php:478
+#, fuzzy
+msgid "%1$s and %2$s"
+msgid_plural "%1$s, and %2$s"
+msgstr[0] "%1$s - Tellimus %2$s"
+msgstr[1] "%1$s - Tellimus %2$s"
 
 #: class-sv-wc-plugin-compatibility.php:217
 msgid "WooCommerce"
