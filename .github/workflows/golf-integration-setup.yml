@@ -1,0 +1,29 @@
+name: GoLF Integration Setup Requirements
+
+on:
+  workflow_dispatch:
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current repository
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout action-golf-integration repository
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        with:
+          repository: gdcorp-partners/action-golf-integration
+          ref: 'main'
+          token: ${{ secrets.MWC_GD_ACTIONS_REPO_PAT }}
+          path: action-golf-integration
+          persist-credentials: false
+
+      - name: GoLF Integration
+        id: golf_integration
+        uses: ./action-golf-integration/src/setup-requirements
+        with:
+          gh_token: ${{ secrets.MWC_GD_ACTIONS_REPO_PAT }}
+          translation_paths: woocommerce/i18n/languages
+          cultures: fr_FR, fr_CA
