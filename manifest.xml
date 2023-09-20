@@ -1,0 +1,7 @@
+<Translation>
+    <File
+        HoPath="woocommerce/i18n/languages/woocommerce-plugin-framework.pot"
+        HbPath="woocommerce/i18n/languages/{Culture}.pot"
+        Cultures="fr_FR, fr_CA, qa-PS"
+    />
+</Translation>
