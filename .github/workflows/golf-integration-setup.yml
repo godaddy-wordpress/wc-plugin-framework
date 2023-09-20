@@ -25,5 +25,6 @@ jobs:
         uses: ./action-golf-integration/src/setup-requirements
         with:
           gh_token: ${{ secrets.MWC_GD_ACTIONS_REPO_PAT }}
+          main_branch: master
           translation_paths: woocommerce/i18n/languages
           cultures: fr_FR, fr_CA
