@@ -472,6 +472,12 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/class-sv-wc-admin-notice-handler.php' );
 		require_once( $framework_path . '/Lifecycle.php' );
 		require_once( $framework_path . '/rest-api/class-sv-wc-plugin-rest-api.php' );
+
+		// WooCommerce Blocks
+		if ( ! empty( $this->supported_features['blocks'] ) ) {
+			require_once( $framework_path . '/Blocks/Traits/Block_Integration_Trait.php' );
+			require_once( $framework_path . '/Blocks/Block_Integration.php' );
+		}
 	}
 
 

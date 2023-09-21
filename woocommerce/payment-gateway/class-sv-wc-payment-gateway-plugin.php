@@ -352,6 +352,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			require_once( "{$payment_gateway_framework_path}/class-sv-wc-payment-gateway-privacy.php" );
 			$this->privacy_handler = new SV_WC_Payment_Gateway_Privacy( $this );
 		}
+
+		// blocks
+		if ( $this->is_checkout_block_compatible() ) {
+			require_once( $payment_gateway_framework_path . '/Blocks/Gateway_Checkout_Block_Integration.php' );
+		}
 	}
 
 
