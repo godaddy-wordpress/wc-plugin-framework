@@ -25,6 +25,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_8\Blocks\Blocks_Handler;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -91,6 +92,9 @@ abstract class SV_WC_Plugin {
 
 	/** @var REST_API REST API handler instance */
 	protected $rest_api_handler;
+
+	/** @var Blocks_Handler blocks handler instance */
+	protected $blocks_handler;
 
 	/** @var Admin\Setup_Wizard handler instance */
 	protected $setup_wizard_handler;
@@ -161,6 +165,9 @@ abstract class SV_WC_Plugin {
 
 		// build the REST API handler instance
 		$this->init_rest_api_handler();
+
+		// build the blocks handler instance
+		$this->init_blocks_handler();
 
 		// build the setup handler instance
 		$this->init_setup_wizard_handler();
@@ -255,6 +262,19 @@ abstract class SV_WC_Plugin {
 	protected function init_rest_api_handler() {
 
 		$this->rest_api_handler = new REST_API( $this );
+	}
+
+
+	/**
+	 * Builds the blocks handler instance.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return void
+	 */
+	protected function init_blocks_handler() {
+
+		$this->blocks_handler = new Blocks_Handler( $this );
 	}
 
 
@@ -471,13 +491,8 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/class-sv-wp-admin-message-handler.php' );
 		require_once( $framework_path . '/class-sv-wc-admin-notice-handler.php' );
 		require_once( $framework_path . '/Lifecycle.php' );
+		require_once( $framework_path . '/Blocks/Blocks_Handler.php' );
 		require_once( $framework_path . '/rest-api/class-sv-wc-plugin-rest-api.php' );
-
-		// WooCommerce Blocks
-		if ( ! empty( $this->supported_features['blocks'] ) ) {
-			require_once( $framework_path . '/Blocks/Traits/Block_Integration_Trait.php' );
-			require_once( $framework_path . '/Blocks/Block_Integration.php' );
-		}
 	}
 
 
@@ -651,7 +666,7 @@ abstract class SV_WC_Plugin {
 		}
 
 		FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->get_plugin_file(), $this->is_hpos_compatible() );
-		FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', $this->get_plugin_file(), $this->is_cart_block_compatible() || $this->is_checkout_block_compatible() );
+		FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', $this->get_plugin_file(), $this->blocks_handler->is_cart_block_compatible() || $this->blocks_handler->is_checkout_block_compatible() );
 	}
 
 
@@ -843,6 +858,19 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Gets a list of plugin's supported WooCommerce features.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function get_supported_features() : array {
+
+		return $this->supported_features;
+	}
+
+
+	/**
 	 * Determines if the plugin supports HPOS.
 	 *
 	 * @since 5.11.0
@@ -854,32 +882,6 @@ abstract class SV_WC_Plugin {
 		return isset( $this->supported_features['hpos'] )
 			&& true === $this->supported_features['hpos']
 			&& SV_WC_Plugin_Compatibility::is_wc_version_gte('7.6');
-	}
-
-
-	/**
-	 * Determines if the plugin supports the WooCommerce Cart Block.
-	 *
-	 * @since 5.12.0
-	 *
-	 * @return bool
-	 */
-	public function is_cart_block_compatible() : bool
-	{
-		return isset( $this->supported_features['blocks']['cart'] ) && true === $this->supported_features['blocks']['cart'];
-	}
-
-
-	/**
-	 * Determines if the plugin supports the WooCommerce Cart Block.
-	 *
-	 * @since 5.12.0
-	 *
-	 * @return bool
-	 */
-	public function is_checkout_block_compatible() : bool
-	{
-		return isset( $this->supported_features['blocks']['checkout'] ) && true === $this->supported_features['blocks']['checkout'];
 	}
 
 

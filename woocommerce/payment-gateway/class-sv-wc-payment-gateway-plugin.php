@@ -26,7 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8;
 
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Note;
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_8\Payment_Gateway\External_Checkout\External_Checkout;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_8\Payment_Gateway\Blocks\Gateway_Blocks_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_8\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay;
 
 defined( 'ABSPATH' ) or exit;
@@ -168,6 +168,19 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		require_once( $this->get_payment_gateway_framework_path() . '/rest-api/class-sv-wc-payment-gateway-plugin-rest-api.php' );
 
 		$this->rest_api_handler = new Payment_Gateway\REST_API( $this );
+	}
+
+
+	/**
+	 * Builds the gateway blocks handler instance.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return void
+	 */
+	protected function init_blocks_handler() {
+
+		$this->blocks_handler = new Gateway_Blocks_Handler( $this );
 	}
 
 
@@ -354,7 +367,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		}
 
 		// blocks
-		if ( $this->is_checkout_block_compatible() ) {
+		require_once( $payment_gateway_framework_path . '/Blocks/Gateway_Blocks_Handler.php' );
+
+		if ( $this->blocks_handler->is_checkout_block_compatible() ) {
 			require_once( $payment_gateway_framework_path . '/Blocks/Gateway_Checkout_Block_Integration.php' );
 		}
 	}
