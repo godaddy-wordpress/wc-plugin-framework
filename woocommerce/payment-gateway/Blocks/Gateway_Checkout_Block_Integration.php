@@ -64,22 +64,20 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, SV_WC_Payment_Gateway $gateway ) {
 
-		$this->plugin  = $plugin;
-		$this->gateway = $gateway;
+		$this->plugin   = $plugin;
+		$this->gateway  = $gateway;
 		$this->settings = $gateway->settings;
 	}
 
 
 	/**
-	 * Gets the main script handle.
-	 *
-	 * @since 5.12.0
+	 * Gets the integration name.
 	 *
 	 * @return string
 	 */
-	public function get_main_script_handle() {
+	public function get_name() {
 
-		return sprintf( '%s-%s-%s-block', $this->plugin->get_id(), $this->gateway->get_id(), $this->block_name );
+		return $this->gateway->get_id_dasherized();
 	}
 
 

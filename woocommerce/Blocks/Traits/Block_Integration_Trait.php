@@ -62,7 +62,7 @@ trait Block_Integration_Trait
 	 */
 	protected function get_main_script_handle() {
 
-		return sprintf( '%s-%s-block', $this->plugin->get_id(), $this->block_name );
+		return sprintf( '%s-%s-block', $this->get_name(), $this->block_name );
 	}
 
 
