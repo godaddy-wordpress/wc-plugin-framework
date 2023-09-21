@@ -63,9 +63,6 @@ abstract class SV_WC_Plugin {
 	/** @var string template path, without trailing slash */
 	private $template_path;
 
-	/** @var bool whether the plugin supports WooCommerce HPOS */
-	private $supports_hpos;
-
 	/** @var \WC_Logger instance */
 	private $logger;
 
@@ -74,6 +71,9 @@ abstract class SV_WC_Plugin {
 
 	/** @var string the plugin text domain */
 	private $text_domain;
+
+	/** @var array<string, mixed> supported WooCommerce features */
+	protected $supported_features = [];
 
 	/** @var array memoized list of active plugins */
 	private $active_plugins = [];
@@ -111,7 +111,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 *     @type int|float $latest_wc_versions the last supported versions of WooCommerce, as a major.minor float relative to the latest available version
 	 *     @type string $text_domain the plugin textdomain, used to set up translations
-	 *     @type bool $supports_hpos whether the plugin supports HPOS (default false)
+	 *     @type array<string, mixed> $supported_features supported WooCommerce features (HPOS, Blocks, etc.)
 	 *     @type array  $dependencies {
 	 *         PHP extension, function, and settings dependencies
 	 *
@@ -128,13 +128,16 @@ abstract class SV_WC_Plugin {
 		$this->version = $version;
 
 		$args = wp_parse_args( $args, [
-			'text_domain'   => '',
-			'supports_hpos' => false,
-			'dependencies'  => [],
+			'text_domain'        => '',
+			'dependencies'       => [],
+			'supported_features' => [
+				'blocks' => [],
+				'hpos'   => false,
+			],
 		] );
 
-		$this->text_domain   = $args['text_domain'];
-		$this->supports_hpos = $args['supports_hpos'];
+		$this->text_domain        = $args['text_domain'];
+		$this->supported_features = $args['supported_features'];
 
 		// includes that are required to be available at all times
 		$this->includes();
@@ -812,7 +815,7 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Determines whether the plugin supports HPOS.
+	 * Determines if the plugin supports HPOS.
 	 *
 	 * @since 5.11.0
 	 *
@@ -820,7 +823,9 @@ abstract class SV_WC_Plugin {
 	 */
 	public function is_hpos_compatible() : bool
 	{
-		return $this->supports_hpos && SV_WC_Plugin_Compatibility::is_wc_version_gte('7.6');
+		return isset( $this->supported_features['hpos'] )
+			&& true === $this->supported_features['hpos']
+			&& SV_WC_Plugin_Compatibility::is_wc_version_gte('7.6');
 	}
 
 
