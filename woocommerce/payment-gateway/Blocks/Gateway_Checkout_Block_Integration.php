@@ -29,6 +29,8 @@ use SkyVerge\WooCommerce\PluginFramework\v5_11_8\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_8\SV_WC_Payment_Gateway_Plugin;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_8\Blocks\Traits\Block_Integration_Trait;
 
+if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_8\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration' ) ) :
+
 /**
  * Base class for handling support for the WooCommerce Checkout block in gateways.
  *
@@ -112,3 +114,5 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 
 }
+
+endif;

@@ -6,6 +6,8 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_8\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_8\SV_WC_Plugin;
 
+if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_8\Blocks\Blocks_Handler' ) ) :
+
 /**
  * WooCommerce Blocks handler.
  *
@@ -119,3 +121,5 @@ class Blocks_Handler
 
 
 }
+
+endif;

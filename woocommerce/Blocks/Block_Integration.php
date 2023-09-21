@@ -31,7 +31,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_11_8\SV_WC_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\Handlers\\Script_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\Blocks\\Block_Integration' ) ) :
 
 /**
  * Base class for handling support for WooCommerce blocks, like Cart or Checkout blocks.

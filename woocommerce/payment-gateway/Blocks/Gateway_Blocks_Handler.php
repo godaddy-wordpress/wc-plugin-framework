@@ -6,6 +6,8 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_8\Blocks\Blocks_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_8\SV_WC_Payment_Gateway_Plugin;
 
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\Payment_Gateway\Blocks\\Gateway_Blocks_Handler' ) ) :
+
 /**
  * Extends the base {@see Blocks_Handler} for support o WooCommerce Blocks in payment gateways.
  *
@@ -61,3 +63,5 @@ class Gateway_Blocks_Handler extends Blocks_Handler
 
 
 }
+
+endif;
