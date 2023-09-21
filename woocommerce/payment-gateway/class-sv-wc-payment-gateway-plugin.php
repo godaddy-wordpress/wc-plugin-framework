@@ -368,10 +368,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 		// blocks
 		require_once( $payment_gateway_framework_path . '/Blocks/Gateway_Blocks_Handler.php' );
-
-		if ( $this->blocks_handler->is_checkout_block_compatible() ) {
-			require_once( $payment_gateway_framework_path . '/Blocks/Gateway_Checkout_Block_Integration.php' );
-		}
 	}
 
 
