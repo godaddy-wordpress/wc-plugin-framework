@@ -180,6 +180,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	protected function init_blocks_handler() {
 
+		require_once( $this->get_framework_path() . '/Blocks/Blocks_Handler.php' );
+		require_once( $this->get_framework_path() . '/payment-gateway/Blocks/Gateway_Blocks_Handler.php' );
+
 		// individual gateway plugins should initialize their block integrations handler by overriding this method
 		$this->blocks_handler = new Gateway_Blocks_Handler( $this );
 	}
@@ -366,9 +369,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			require_once( "{$payment_gateway_framework_path}/class-sv-wc-payment-gateway-privacy.php" );
 			$this->privacy_handler = new SV_WC_Payment_Gateway_Privacy( $this );
 		}
-
-		// WooCommerce Blocks integration handler
-		require_once( $payment_gateway_framework_path . '/Blocks/Gateway_Blocks_Handler.php' );
 	}
 
 
