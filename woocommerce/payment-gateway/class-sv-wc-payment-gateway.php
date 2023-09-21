@@ -24,6 +24,9 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8;
 
+use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_8\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\SV_WC_Payment_Gateway' ) ) :
@@ -201,9 +204,6 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 	/** @var array of SV_WC_Payment_Gateway_Integration objects for Subscriptions, Pre-Orders, etc. */
 	protected $integrations;
-
-	/** @var array<string, bool> an array of WooCommerce Blocks supported by the gateway */
-	protected array $supported_blocks = [];
 
 	/** @var SV_WC_Payment_Gateway_Payment_Form|null payment form instance */
 	protected $payment_form;
@@ -753,6 +753,30 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function payment_page( $order_id ) {
 		echo '<p>' . esc_html__( 'Thank you for your order.', 'woocommerce-plugin-framework' ) . '</p>';
+	}
+
+
+	/**
+	 * Gets the WooCommerce Checkout Block integration.
+	 *
+	 * @return Gateway_Checkout_Block_Integration|null
+	 */
+	public function get_checkout_block_integration_instance() : ?Gateway_Checkout_Block_Integration {
+
+		// individual gateways may override this method to provide their own integration
+		return null;
+	}
+
+
+	/**
+	 * Gets the WooCommerce Cart Block integration.
+	 *
+	 * @return IntegrationInterface|null
+	 */
+	public function get_cart_block_integration_instance() : ?IntegrationInterface {
+
+		// individual gateways may override this method to provide their own integration
+		return null;
 	}
 
 
@@ -2000,18 +2024,6 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	public function supports_refunds() {
 
 		return $this->supports( self::FEATURE_REFUNDS );
-	}
-
-
-	/**
-	 * Determines if a block type is supported by the gateway.
-	 *
-	 * @param string $block e.g. 'cart', 'checkout'
-	 * @return bool
-	 */
-	public function supports_block( string $block ) : bool {
-
-		return isset( $this->supported_blocks[ $block ] )  && $this->supported_blocks[ $block ] === true;
 	}
 
 
