@@ -42,8 +42,10 @@ class Blocks_Handler
 
 		$this->plugin = $plugin;
 
-		require_once( $this->plugin->get_framework_path() . '/Blocks/Traits/Block_Integration_Trait.php' );
-		require_once( $this->plugin->get_framework_path() . '/Blocks/Block_Integration.php' );
+		$framework_path = $this->plugin->get_framework_path();
+
+		require_once( $framework_path . '/Blocks/Traits/Block_Integration_Trait.php' );
+		require_once( $framework_path . '/Blocks/Block_Integration.php' );
 
 		// handle WooCommerce Blocks integrations in compatible plugins
 		add_action( 'woocommerce_blocks_loaded', [ $this, 'handle_blocks_integration' ] );

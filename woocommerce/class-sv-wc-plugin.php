@@ -274,6 +274,7 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function init_blocks_handler() {
 
+		// individual plugins should initialize their block integrations handler by overriding this method
 		$this->blocks_handler = new Blocks_Handler( $this );
 	}
 
