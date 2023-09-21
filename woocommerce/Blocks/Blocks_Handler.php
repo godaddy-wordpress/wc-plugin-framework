@@ -2,6 +2,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8\Blocks;
 
+use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_8\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_8\SV_WC_Plugin;
@@ -24,11 +25,11 @@ class Blocks_Handler
 	/** @var SV_WC_Plugin|SV_WC_Payment_Gateway current plugin instance */
 	protected SV_WC_Plugin $plugin;
 
-	/** @var Block_Integration|null */
-	protected ?Block_Integration $cart_block_integration;
+	/** @var IntegrationInterface|null */
+	protected ?IntegrationInterface $cart_block_integration;
 
-	/** @var Block_Integration|null */
-	protected ?Block_Integration $checkout_block_integration;
+	/** @var IntegrationInterface|null */
+	protected ?IntegrationInterface $checkout_block_integration;
 
 
 	/**

@@ -16,6 +16,8 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\Payment
  * Individual gateway plugins should override this class to load their own block integrations classes.
  *
  * @since 5.12.0
+ *
+ * @property Gateway_Checkout_Block_Integration $checkout_Block_Integration
  */
 class Gateway_Blocks_Handler extends Blocks_Handler
 {
