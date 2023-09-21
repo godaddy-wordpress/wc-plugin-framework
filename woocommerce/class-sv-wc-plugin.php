@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8;
 
+use Automattic\WooCommerce\Utilities\FeaturesUtil;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\SV_WC_Plugin' ) ) :
@@ -285,8 +287,8 @@ abstract class SV_WC_Plugin {
 		// hook for translations separately to ensure they're loaded
 		add_action( 'init', array( $this, 'load_translations' ) );
 
-		// handle HPOS compatibility
-		add_action( 'before_woocommerce_init', [ $this, 'handle_hpos_compatibility' ] );
+		// handle WooCommerce features compatibility (such as HPOS, WC Cart & Checkout Blocks support...)
+		add_action( 'before_woocommerce_init', [ $this, 'handle_features_compatibility' ] );
 
 		// add the admin notices
 		add_action( 'admin_notices', array( $this, 'add_admin_notices' ) );
@@ -615,15 +617,35 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Declares HPOS compatibility if the plugin is compatible with HPOS.
 	 *
-	 * @internal
-	 *
 	 * @since 5.11.0
+	 * @deprecated since 5.12.0
+	 * @see SV_WC_Plugin::handle_features_compatibility()
+	 *
+	 * @return void
 	 */
 	public function handle_hpos_compatibility() {
 
-		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
-			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->get_plugin_file(), $this->is_hpos_compatible() );
+		wc_deprecated_function( 'SV_WC_Plugin::handle_hpos_compatibility', '5.12.0', 'SV_WC_Plugin::handle_features_compatibility');
+
+		$this->handle_features_compatibility();
+	}
+
+
+	/**
+	 * Declares compatibility with specific WooCommerce features.
+	 *
+	 * @internal
+	 *
+	 * @since 5.12.0
+	 */
+	public function handle_features_compatibility() {
+
+		if ( ! class_exists( FeaturesUtil::class ) ) {
+			return;
 		}
+
+		FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->get_plugin_file(), $this->is_hpos_compatible() );
+		FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', $this->get_plugin_file(), $this->is_cart_block_compatible() || $this->is_checkout_block_compatible() );
 	}
 
 
@@ -826,6 +848,32 @@ abstract class SV_WC_Plugin {
 		return isset( $this->supported_features['hpos'] )
 			&& true === $this->supported_features['hpos']
 			&& SV_WC_Plugin_Compatibility::is_wc_version_gte('7.6');
+	}
+
+
+	/**
+	 * Determines if the plugin supports the WooCommerce Cart Block.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool
+	 */
+	public function is_cart_block_compatible() : bool
+	{
+		return isset( $this->supported_features['blocks']['cart'] ) && true === $this->supported_features['blocks']['cart'];
+	}
+
+
+	/**
+	 * Determines if the plugin supports the WooCommerce Cart Block.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool
+	 */
+	public function is_checkout_block_compatible() : bool
+	{
+		return isset( $this->supported_features['blocks']['checkout'] ) && true === $this->supported_features['blocks']['checkout'];
 	}
 
 
@@ -1289,7 +1337,7 @@ abstract class SV_WC_Plugin {
 					if ( SV_WC_Helper::str_exists( $plugin, '/' ) ) {
 
 						// normal plugin name (plugin-dir/plugin-filename.php)
-						list( , $filename ) = explode( '/', $plugin );
+						[ , $filename ] = explode( '/', $plugin );
 
 					} else {
 
