@@ -95,6 +95,19 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 
 	/**
+	 * Gets the payment method script handles.
+	 *
+	 * Defaults to {@see get_script_handles()} but concrete implementations may override this.
+	 *
+	 * @return string[]
+	 */
+	public function get_payment_method_script_handles() {
+
+		return $this->get_script_handles();
+	}
+
+
+	/**
 	 * Gets the payment method data.
 	 *
 	 * @since 5.12.0

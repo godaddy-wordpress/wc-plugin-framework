@@ -74,7 +74,6 @@ class Gateway_Blocks_Handler extends Blocks_Handler
 		}
 	}
 
-
 }
 
 endif;
