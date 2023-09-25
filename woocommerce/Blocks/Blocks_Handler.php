@@ -4,6 +4,8 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8\Blocks;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
+use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_8\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_8\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_8\SV_WC_Plugin;
 
@@ -92,7 +94,7 @@ class Blocks_Handler
 	 *
 	 * @return Block_Integration|null
 	 */
-	public function get_cart_block_integration_instance() : ?Block_Integration {
+	public function get_cart_block_integration_instance() : ?IntegrationInterface {
 
 		return $this->cart_block_integration;
 	}
@@ -103,9 +105,9 @@ class Blocks_Handler
 	 *
 	 * @since 5.12.0
 	 *
-	 * @return Block_Integration|null
+	 * @return Block_Integration|Gateway_Checkout_Block_Integration|null
 	 */
-	public function get_checkout_block_integration_instance() : ?Block_Integration {
+	public function get_checkout_block_integration_instance() : ?IntegrationInterface {
 
 		return $this->checkout_block_integration;
 	}
@@ -123,6 +125,40 @@ class Blocks_Handler
 	public function handle_blocks_integration() {
 
 		// @TODO investigate how to register integrations for non-gateways
+	}
+
+
+	/**
+	 * Determines if the checkout page is using the checkout block.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool false when using the legacy checkout shortcode
+	 */
+	public static function is_checkout_block_in_use() : bool
+	{
+		if ( ! class_exists( CartCheckoutUtils::class ) ) {
+			return false;
+		}
+
+		return CartCheckoutUtils::is_checkout_block_default();
+	}
+
+
+	/**
+	 * Determines if the cart page is using the cart block.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool false if using the legacy cart shortcode
+	 */
+	public function is_cart_block_in_use() : bool
+	{
+		if ( ! class_exists( CartCheckoutUtils::class ) ) {
+			return false;
+		}
+
+		return CartCheckoutUtils::is_cart_block_default();
 	}
 
 
