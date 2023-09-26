@@ -224,7 +224,7 @@ class SV_WC_Plugin_Dependencies {
 						if ( ! empty( $values['type'] ) && 'min' === $values['type'] ) {
 
 							$setting_message = sprintf(
-								/** translators: Placeholders: %s - a PHP setting value */
+								/* translators: Placeholder: %s - a PHP setting value */
 								__( '%s or higher', 'woocommerce-plugin-framework' ),
 								$setting_message
 							);

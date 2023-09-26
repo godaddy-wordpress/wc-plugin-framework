@@ -58,7 +58,7 @@ module.exports = function( grunt ) {
 
 	// Register update_translations task
 	grunt.registerTask( 'update_translations', [
-		'makepot',
+		'shell:makepot',
 		'potomo',
 	] );
 

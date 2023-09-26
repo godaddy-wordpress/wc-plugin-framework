@@ -173,7 +173,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends \SkyVerge\WooCommerce\Plu
 		// if on the single product page, add some text
 		if ( is_product() ) {
 			$classes[]   = 'apple-pay-button-buy-now';
-			$button_text = __( 'Buy with', 'woocommerce-plugin-framework' );
+			$button_text = _x( 'Buy with', 'Apple Pay', 'woocommerce-plugin-framework' );
 		}
 
 		if ( $button_text ) {

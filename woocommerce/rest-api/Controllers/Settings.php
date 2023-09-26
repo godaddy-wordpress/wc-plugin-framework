@@ -220,7 +220,7 @@ class Settings extends \WP_REST_Controller {
 			return new \WP_Error(
 				'wc_rest_setting_could_not_update',
 				sprintf(
-					/* Placeholders: %s - error message */
+					/* translators: Placeholder: %s - Error message */
 					__( 'Could not update setting: %s', 'woocommerce-plugin-framework' ),
 					$e->getMessage()
 				),

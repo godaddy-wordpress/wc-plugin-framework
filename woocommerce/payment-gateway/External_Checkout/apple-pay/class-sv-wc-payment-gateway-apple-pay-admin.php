@@ -91,13 +91,14 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin extends Admin {
 			[
 				'id'      => 'sv_wc_apple_pay_enabled',
 				'title'   => __( 'Enable / Disable', 'woocommerce-plugin-framework' ),
-				'desc'    => __( 'Accept Apple Pay', 'woocommerce-plugin-framework' ),
+				'desc'    => _x( 'Accept Apple Pay', 'For the merchant to accept Apple Pay payments', 'woocommerce-plugin-framework' ),
 				'type'    => 'checkbox',
 				'default' => 'no',
 			],
 
 			[
 				'id'      => 'sv_wc_apple_pay_display_locations',
+				/* translators: Allow Apple Pay button on selected display locations (e.g. cart, checkout, product page...) */
 				'title'   => __( 'Allow Apple Pay on', 'woocommerce-plugin-framework' ),
 				'type'    => 'multiselect',
 				'class'   => 'wc-enhanced-select',
@@ -111,9 +112,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin extends Admin {
 				'title'   => __( 'Button Style', 'woocommerce-plugin-framework' ),
 				'type'    => 'select',
 				'options' => [
-					'black'           => __( 'Black', 'woocommerce-plugin-framework' ),
-					'white'           => __( 'White', 'woocommerce-plugin-framework' ),
-					'white-with-line' => __( 'White with outline', 'woocommerce-plugin-framework' ),
+					'black'           => _x( 'Black', 'Button style', 'woocommerce-plugin-framework' ),
+					'white'           => _x( 'White', 'Button style', 'woocommerce-plugin-framework' ),
+					'white-with-line' => _x( 'White with outline', 'Button style', 'woocommerce-plugin-framework' ),
 				],
 				'default' => 'black',
 			],
@@ -159,7 +160,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin extends Admin {
 				'title'   => __( 'Apple Merchant ID', 'woocommerce-plugin-framework' ),
 				'type'    => 'text',
 				'desc'  => sprintf(
-					/** translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag */
+					/* translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag */
 					__( 'This is found in your %1$sApple developer account%2$s', 'woocommerce-plugin-framework' ),
 					'<a href="https://developer.apple.com" target="_blank">', '</a>'
 				),
@@ -172,7 +173,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin extends Admin {
 				'id'       => 'sv_wc_apple_pay_cert_path',
 				'title'    => __( 'Certificate Path', 'woocommerce-plugin-framework' ),
 				'type'     => 'text',
-				'desc_tip' => 'The full system path to your certificate file from Apple. For security reasons you should store this outside of your web root.',
+				'desc_tip' => __( 'The full system path to your certificate file from Apple. For security reasons you should store this outside of your web root.', 'woocommerce-plugin-framework' ),
 				'desc'     => sprintf(
 					/* translators: Placeholders: %s - the server's web root path */
 					__( 'For reference, your current web root path is: %s', 'woocommerce-plugin-framework' ),
