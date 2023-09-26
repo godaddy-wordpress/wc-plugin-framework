@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC Plugin Framework\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
-"POT-Creation-Date: 2023-09-26 06:23:03+00:00\n"
+"POT-Creation-Date: 2023-09-26 06:26:25+00:00\n"
 "PO-Revision-Date: 2017-03-27 11:59-0700\n"
 "Last-Translator: Illimar Tambek <illimar.tambek@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/wc-plugin-"
@@ -731,13 +731,6 @@ msgstr ""
 #: payment-gateway/class-sv-wc-payment-gateway-privacy.php:300
 msgid "Card Type"
 msgstr "Kaardi tüüp"
-
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:567
-#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:603
-#: payment-gateway/class-sv-wc-payment-gateway-privacy.php:192
-#: payment-gateway/class-sv-wc-payment-gateway-privacy.php:298
-msgid "Last Four"
-msgstr "Viimased 4 numbrit"
 
 #: payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:574
 #: payment-gateway/class-sv-wc-payment-gateway-payment-form.php:362
@@ -2114,6 +2107,15 @@ msgstr ""
 msgctxt "Apple Pay"
 msgid "Buy with"
 msgstr "Maksa"
+
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:567
+#: payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:603
+#: payment-gateway/class-sv-wc-payment-gateway-privacy.php:192
+#: payment-gateway/class-sv-wc-payment-gateway-privacy.php:298
+#, fuzzy
+msgctxt "Last four digits of a payment method"
+msgid "Last Four"
+msgstr "Viimased 4 numbrit"
 
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:752
 #: payment-gateway/class-sv-wc-payment-gateway-direct.php:762
