@@ -98,6 +98,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin extends Admin {
 
 			[
 				'id'      => 'sv_wc_apple_pay_display_locations',
+				/* translators: Allow Apple Pay button on display locations (e.g. cart, checkout, product page...) */
 				'title'   => __( 'Allow Apple Pay on', 'woocommerce-plugin-framework' ),
 				'type'    => 'multiselect',
 				'class'   => 'wc-enhanced-select',
@@ -111,9 +112,9 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin extends Admin {
 				'title'   => __( 'Button Style', 'woocommerce-plugin-framework' ),
 				'type'    => 'select',
 				'options' => [
-					'black'           => __( 'Black', 'woocommerce-plugin-framework' ),
-					'white'           => __( 'White', 'woocommerce-plugin-framework' ),
-					'white-with-line' => __( 'White with outline', 'woocommerce-plugin-framework' ),
+					'black'           => _x( 'Black', 'Button style', 'woocommerce-plugin-framework' ),
+					'white'           => _x( 'White', 'Button style', 'woocommerce-plugin-framework' ),
+					'white-with-line' => _x( 'White with outline', 'Button style', 'woocommerce-plugin-framework' ),
 				],
 				'default' => 'black',
 			],

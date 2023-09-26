@@ -500,6 +500,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				} catch ( SV_WC_Plugin_Exception $exception ) {
 
 					$message = sprintf(
+						/* translators: Placeholder: %s - Error message */
 						__( 'Payment method address could not be updated. %s', 'woocommerce-plugin-framework' ),
 						$exception->getMessage()
 					);

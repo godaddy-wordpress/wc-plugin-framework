@@ -605,7 +605,17 @@ abstract class Setup_Wizard {
 	protected function render_finished() {
 
 		?>
-		<h1><?php printf( esc_html__( '%s is ready!', 'woocommerce-plugin-framework' ), esc_html( $this->get_plugin()->get_plugin_name() ) ); ?></h1>
+		<h1>
+			<?php
+
+			printf(
+				/* translators: Placeholder: %s - the plugin name */
+				esc_html__( '%s is ready!', 'woocommerce-plugin-framework' ),
+				esc_html( $this->get_plugin()->get_plugin_name()
+			) );
+
+			?>
+		</h1>
 		<?php $this->render_before_next_steps(); ?>
 		<?php $this->render_next_steps(); ?>
 		<?php $this->render_after_next_steps(); ?>

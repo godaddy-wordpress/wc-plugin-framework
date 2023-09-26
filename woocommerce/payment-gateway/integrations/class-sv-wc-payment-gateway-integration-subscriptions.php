@@ -381,7 +381,12 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function get_order( $order ) {
 
-		$order->description = sprintf( esc_html__( '%1$s - Subscription Renewal Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name(), ENT_QUOTES ), $order->get_order_number() );
+		$order->description = sprintf(
+			/* translators: Placeholders: %1$s - Site name, %2$s - Order number */
+			esc_html__( '%1$s - Subscription Renewal Order %2$s', 'woocommerce-plugin-framework' ),
+			wp_specialchars_decode( SV_WC_Helper::get_site_name(), ENT_QUOTES ),
+			$order->get_order_number()
+		);
 
 		// override the payment total with the amount to charge given by Subscriptions
 		$order->payment_total = $this->renewal_payment_total;
@@ -668,7 +673,14 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( $subscription->get_user_id(), $this->get_gateway()->get_order_meta( $subscription, 'payment_token' ) );
 
 		if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
-			$payment_method_to_display = sprintf( __( 'Via %s ending in %s', 'woocommerce-plugin-framework' ), $token->get_type_full(), $token->get_last_four() );
+
+			$payment_method_to_display = sprintf(
+				/* Translators: Context: Payment made for order. Placeholders: %1$s - Payment method name (e.g. "Credit Card", "PayPal", etc.), %2$s - Last four digits of the card/account used */
+				__( 'Via %1$s ending in %2$s', 'woocommerce-plugin-framework' ),
+				$token->get_type_full(),
+				$token->get_last_four()
+			);
+
 		}
 
 		return $payment_method_to_display;
@@ -884,11 +896,13 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		// payment token
 		if ( empty( $meta['post_meta'][ $prefix . 'payment_token' ]['value'] ) ) {
+			/* translators: Context: Error message. Placeholder: %s - Required value not found or not as expected */
 			throw new \Exception( sprintf( __( '%s is required.', 'woocommerce-plugin-framework' ), $meta['post_meta'][ $prefix . 'payment_token' ]['label'] ) );
 		}
 
 		// customer ID - optional for some gateways so check if it's set first
 		if ( isset( $meta['post_meta'][ $prefix . 'customer_id'] ) && empty( $meta['post_meta'][ $prefix . 'customer_id' ]['value'] ) ) {
+			/* translators: Context: Error message. Placeholder: %s - Required value not found or not as expected */
 			throw new \Exception( sprintf( __( '%s is required.', 'woocommerce-plugin-framework' ), $meta['post_meta'][ $prefix . 'customer_id' ]['label'] ) );
 		}
 	}

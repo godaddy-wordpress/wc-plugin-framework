@@ -221,6 +221,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 
 		$plugin_title = trim( str_replace( 'WooCommerce', '', $this->get_plugin()->get_plugin_name() ) );
 
+		/* translators: Placeholder: %s - Plugin name */
 		$title = sprintf( __( '%s Payment Tokens', 'woocommerce-plugin-framework' ), $plugin_title );
 
 		/**
