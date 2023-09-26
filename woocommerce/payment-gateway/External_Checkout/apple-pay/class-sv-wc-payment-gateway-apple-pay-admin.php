@@ -160,7 +160,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin extends Admin {
 				'title'   => __( 'Apple Merchant ID', 'woocommerce-plugin-framework' ),
 				'type'    => 'text',
 				'desc'  => sprintf(
-					/** translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag */
+					/* translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag */
 					__( 'This is found in your %1$sApple developer account%2$s', 'woocommerce-plugin-framework' ),
 					'<a href="https://developer.apple.com" target="_blank">', '</a>'
 				),
