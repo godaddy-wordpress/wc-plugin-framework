@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Plugin Framework 5.11.8\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
-"POT-Creation-Date: 2023-09-26 02:10:24+00:00\n"
+"POT-Creation-Date: 2023-09-26 06:19:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -367,39 +367,29 @@ msgstr ""
 msgid "Enable / Disable"
 msgstr ""
 
-#: payment-gateway/External_Checkout/Google_Pay/Admin.php:94
-msgid "Accept Google Pay"
-msgstr ""
-
-#: payment-gateway/External_Checkout/Google_Pay/Admin.php:101
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:102
+#. translators: Allow Google Pay button on selected display locations (e.g.
+#. cart, checkout, product page...)
 msgid "Allow Google Pay on"
 msgstr ""
 
-#: payment-gateway/External_Checkout/Google_Pay/Admin.php:111
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:112
 #: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:112
 msgid "Button Style"
 msgstr ""
 
-#: payment-gateway/External_Checkout/Google_Pay/Admin.php:114
-msgid "Black"
-msgstr ""
-
-#: payment-gateway/External_Checkout/Google_Pay/Admin.php:115
-msgid "White"
-msgstr ""
-
-#: payment-gateway/External_Checkout/Google_Pay/Admin.php:148
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:149
 #: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:151
 #: payment-gateway/class-sv-wc-payment-gateway.php:1465
 msgid "Connection Settings"
 msgstr ""
 
-#: payment-gateway/External_Checkout/Google_Pay/Admin.php:157
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:158
 #: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:189
 msgid "Test Mode"
 msgstr ""
 
-#: payment-gateway/External_Checkout/Google_Pay/Admin.php:158
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:159
 msgid ""
 "Enable to test Google Pay functionality throughout your sites without "
 "processing real payments."
@@ -457,13 +447,9 @@ msgstr ""
 msgid "Apple Pay"
 msgstr ""
 
-#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:94
-msgid "Accept Apple Pay"
-msgstr ""
-
 #: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:102
-#. translators: Allow Apple Pay button on display locations (e.g. cart,
-#. checkout, product page...)
+#. translators: Allow Apple Pay button on selected display locations (e.g.
+#. cart, checkout, product page...)
 msgid "Allow Apple Pay on"
 msgstr ""
 
@@ -477,6 +463,12 @@ msgstr ""
 
 #: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:174
 msgid "Certificate Path"
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:176
+msgid ""
+"The full system path to your certificate file from Apple. For security "
+"reasons you should store this outside of your web root."
 msgstr ""
 
 #: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:179
@@ -1973,11 +1965,18 @@ msgctxt "verb"
 msgid "Review"
 msgstr ""
 
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:94
+msgctxt "For the merchant to accept Google Pay payments"
+msgid "Accept Google Pay"
+msgstr ""
+
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:115
 #: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:115
 msgctxt "Button style"
 msgid "Black"
 msgstr ""
 
+#: payment-gateway/External_Checkout/Google_Pay/Admin.php:116
 #: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:116
 msgctxt "Button style"
 msgid "White"
@@ -1986,6 +1985,11 @@ msgstr ""
 #: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:117
 msgctxt "Button style"
 msgid "White with outline"
+msgstr ""
+
+#: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:94
+msgctxt "For the merchant to accept Apple Pay payments"
+msgid "Accept Apple Pay"
 msgstr ""
 
 #: payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:176
