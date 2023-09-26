@@ -706,7 +706,7 @@ abstract class SV_WC_Plugin {
 					continue;
 				}
 
-				/* translators: Placeholders: %1$s - PHP setting value, %2$s - version or value currently set */
+				/* translators: Placeholders: %1$s - PHP setting value, %2$s - version or value required */
 				$note = __( '%1$s - A minimum of %2$s is required.', 'woocommerce-plugin-framework' );
 
 			} else {
@@ -716,7 +716,7 @@ abstract class SV_WC_Plugin {
 					continue;
 				}
 
-				/* translators: Placeholders: %1$s - PHP setting current value, %2$s - required value */
+				/* translators: As in "Value has been set as [foo], but [bar] is required". Placeholders: %1$s - current value for a PHP setting, %2$s - required value for teh PHP setting */
 				$note = __( 'Set as %1$s - %2$s is required.', 'woocommerce-plugin-framework' );
 			}
 

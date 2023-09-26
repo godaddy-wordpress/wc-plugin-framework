@@ -896,13 +896,13 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		// payment token
 		if ( empty( $meta['post_meta'][ $prefix . 'payment_token' ]['value'] ) ) {
-			/* translators: Context: Error message. Placeholder: %s - Required value not found or not as expected */
+			/* translators: Context: Error message. Placeholder: %s - Label of the related value */
 			throw new \Exception( sprintf( __( '%s is required.', 'woocommerce-plugin-framework' ), $meta['post_meta'][ $prefix . 'payment_token' ]['label'] ) );
 		}
 
 		// customer ID - optional for some gateways so check if it's set first
 		if ( isset( $meta['post_meta'][ $prefix . 'customer_id'] ) && empty( $meta['post_meta'][ $prefix . 'customer_id' ]['value'] ) ) {
-			/* translators: Context: Error message. Placeholder: %s - Required value not found or not as expected */
+			/* translators: Context: Error message. Placeholder: %s - Label of the related value */
 			throw new \Exception( sprintf( __( '%s is required.', 'woocommerce-plugin-framework' ), $meta['post_meta'][ $prefix . 'customer_id' ]['label'] ) );
 		}
 	}
