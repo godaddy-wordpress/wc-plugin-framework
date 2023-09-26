@@ -716,7 +716,7 @@ abstract class SV_WC_Plugin {
 					continue;
 				}
 
-				/* translators: As in "Value has been set as [foo], but [bar] is required". Placeholders: %1$s - current value for a PHP setting, %2$s - required value for teh PHP setting */
+				/* translators: As in "Value has been set as [foo], but [bar] is required". Placeholders: %1$s - current value for a PHP setting, %2$s - required value for the PHP setting */
 				$note = __( 'Set as %1$s - %2$s is required.', 'woocommerce-plugin-framework' );
 			}
 
