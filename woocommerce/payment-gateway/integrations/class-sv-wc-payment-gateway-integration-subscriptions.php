@@ -675,7 +675,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		if ( $token instanceof SV_WC_Payment_Gateway_Payment_Token ) {
 
 			$payment_method_to_display = sprintf(
-				/* Translators: Context: Payment made for order. Placeholders: %1$s - Payment method name (e.g. "Credit Card", "PayPal", etc.), %2$s - Last four digits of the card/account used */
+				/* translators: Context: Payment made for order. Placeholders: %1$s - Payment method name (e.g. "Credit Card", "PayPal", etc.), %2$s - Last four digits of the card/account used */
 				__( 'Via %1$s ending in %2$s', 'woocommerce-plugin-framework' ),
 				$token->get_type_full(),
 				$token->get_last_four()

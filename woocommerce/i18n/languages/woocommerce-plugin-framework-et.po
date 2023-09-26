@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC Plugin Framework\n"
 "Report-Msgid-Bugs-To: https://support.woocommerce.com/hc/\n"
-"POT-Creation-Date: 2023-09-26 06:21:28+00:00\n"
+"POT-Creation-Date: 2023-09-26 06:23:03+00:00\n"
 "PO-Revision-Date: 2017-03-27 11:59-0700\n"
 "Last-Translator: Illimar Tambek <illimar.tambek@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/wc-plugin-"
@@ -1872,7 +1872,7 @@ msgstr ""
 msgid "%1$s Payment Change Failed (%2$s)"
 msgstr "%1$s: makse ebaõnnestus (%2$s)"
 
-#. Translators: Context: Payment made for order. Placeholders: %1$s - Payment
+#. translators: Context: Payment made for order. Placeholders: %1$s - Payment
 #. method name (e.g. "Credit Card", "PayPal", etc.), %2$s - Last four digits of
 #. the card/account used
 #: payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:679
