@@ -706,7 +706,7 @@ abstract class SV_WC_Plugin {
 					continue;
 				}
 
-				/* translators: Placeholders: %1$s - PHP setting value, %2$s - version or value currently set */
+				/* translators: Placeholders: %1$s - PHP setting value, %2$s - version or value required */
 				$note = __( '%1$s - A minimum of %2$s is required.', 'woocommerce-plugin-framework' );
 
 			} else {
