@@ -91,14 +91,14 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin extends Admin {
 			[
 				'id'      => 'sv_wc_apple_pay_enabled',
 				'title'   => __( 'Enable / Disable', 'woocommerce-plugin-framework' ),
-				'desc'    => __( 'Accept Apple Pay', 'woocommerce-plugin-framework' ),
+				'desc'    => _x( 'Accept Apple Pay', 'For the merchant to accept Apple Pay payments', 'woocommerce-plugin-framework' ),
 				'type'    => 'checkbox',
 				'default' => 'no',
 			],
 
 			[
 				'id'      => 'sv_wc_apple_pay_display_locations',
-				/* translators: Allow Apple Pay button on display locations (e.g. cart, checkout, product page...) */
+				/* translators: Allow Apple Pay button on selected display locations (e.g. cart, checkout, product page...) */
 				'title'   => __( 'Allow Apple Pay on', 'woocommerce-plugin-framework' ),
 				'type'    => 'multiselect',
 				'class'   => 'wc-enhanced-select',
@@ -173,7 +173,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Admin extends Admin {
 				'id'       => 'sv_wc_apple_pay_cert_path',
 				'title'    => __( 'Certificate Path', 'woocommerce-plugin-framework' ),
 				'type'     => 'text',
-				'desc_tip' => 'The full system path to your certificate file from Apple. For security reasons you should store this outside of your web root.',
+				'desc_tip' => __( 'The full system path to your certificate file from Apple. For security reasons you should store this outside of your web root.', 'woocommerce-plugin-framework' ),
 				'desc'     => sprintf(
 					/* translators: Placeholders: %s - the server's web root path */
 					__( 'For reference, your current web root path is: %s', 'woocommerce-plugin-framework' ),
