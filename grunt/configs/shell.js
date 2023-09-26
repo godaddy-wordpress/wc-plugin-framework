@@ -11,7 +11,7 @@ module.exports = function( grunt ) {
 			},
 		},
 		makepot: {
-			command: 'wp i18n make-pot . ./woocommerce/i18n/languages/woocommerce-plugin-framework.pot --include=woocommerce --domain=woocommerce-plugin-framework'
+			command: 'wp i18n make-pot ./woocommerce ./woocommerce/i18n/languages/woocommerce-plugin-framework.pot --domain=woocommerce-plugin-framework --package-name=\'SkyVerge WooCommerce Plugin Framework\''
 		}
 	};
 
