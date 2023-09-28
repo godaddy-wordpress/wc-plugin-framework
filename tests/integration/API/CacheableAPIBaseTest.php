@@ -1,10 +1,10 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v5_11_8 as Framework;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_8\API\Abstract_Cacheable_API_Base;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_8\API\Traits\Cacheable_Request_Trait;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_8\SV_WC_API_JSON_Request;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_8\SV_WC_API_Request;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_9 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_9\API\Abstract_Cacheable_API_Base;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_9\API\Traits\Cacheable_Request_Trait;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_9\SV_WC_API_JSON_Request;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_9\SV_WC_API_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', true );
