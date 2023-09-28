@@ -25,7 +25,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_8\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_9\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 
 defined( 'ABSPATH' ) or exit;
 

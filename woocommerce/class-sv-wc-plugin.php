@@ -25,7 +25,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_8\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_9\Blocks\Blocks_Handler;
 
 defined( 'ABSPATH' ) or exit;
 
