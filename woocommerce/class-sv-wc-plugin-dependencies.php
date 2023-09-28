@@ -250,7 +250,7 @@ class SV_WC_Plugin_Dependencies {
 	 */
 	protected function add_deprecated_notices() {
 
-		// add a notice for PHP < 5.6
+		// add a notice for PHP < 7.4
 		if ( version_compare( PHP_VERSION, '7.4.0', '<' ) ) {
 
 			$message = '<p>';
