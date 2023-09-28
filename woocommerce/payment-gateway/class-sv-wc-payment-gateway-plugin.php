@@ -27,7 +27,6 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9;
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Note;
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_9\Payment_Gateway\Blocks\Gateway_Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_9\Payment_Gateway\External_Checkout\External_Checkout;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_9\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay;
 
 defined('ABSPATH') or exit;
