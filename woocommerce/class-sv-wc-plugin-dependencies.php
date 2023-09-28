@@ -262,12 +262,12 @@ class SV_WC_Plugin_Dependencies {
 				/* translators: Placeholders: %1$s - <strong> HTML tag, %2$s - </strong> HTML tag */
 				sprintf( __( 'The PHP version that is currently used for your site is no longer maintained, nor %1$sreceives security updates%2$s; newer versions are faster and more secure.', 'woocommerce-plugin-framework' ), '<strong>', '</strong>' ),
 				/* translators: Context: User is running an outdated PHP Version a plugin is not compatible with. Placeholders: %$s - the plugin name */
-				sprintf( __( 'As a result, %s no longer supports this version and you should upgrade PHP as soon as possible.', 'woocommerce-plugin-framework' ), esc_html( $this->get_plugin()->get_plugin_name() ),
+				sprintf( __( 'As a result, %s no longer supports this version and you should upgrade PHP as soon as possible.', 'woocommerce-plugin-framework' ), esc_html( $this->get_plugin()->get_plugin_name() ) ),
 				/* translators: Context: The host can update PHP version for the user. Placeholders: %1$s - <a> HTML tag, %2$s - </a> HTML tag */
-				sprintf( __( 'Your hosting provider can do this for you. %1$sHere are some resources to help you upgrade%2$s and to explain PHP versions further.', 'woocommerce-plugin-framework' ), '<a href="https://wordpress.org/support/update-php/">', '</a>' ) ),
+				sprintf( __( 'Your hosting provider can do this for you. %1$sHere are some resources to help you upgrade%2$s and to explain PHP versions further.', 'woocommerce-plugin-framework' ), '<a href="https://wordpress.org/support/update-php/">', '</a>' ),
 			];
 
-			$message .= implode( "<br>", $lines);
+			$message .= implode( '<br>', $lines);
 			$message .= '</p>';
 
 			$this->add_admin_notice( 'sv-wc-deprecated-php-version', $message, 'error' );
