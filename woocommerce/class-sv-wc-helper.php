@@ -529,7 +529,7 @@ class SV_WC_Helper {
 	 * @param \WC_Order $order
 	 * @return \stdClass[] array of line item objects
 	 */
-	public static function get_order_line_items( $order ) {
+	public static function get_order_line_items( $order ): array {
 
 		$line_items = [];
 
@@ -548,7 +548,7 @@ class SV_WC_Helper {
 				$item_desc[] = sprintf( 'SKU: %s', $sku );
 			}
 
-			$meta_data = $item->get_formatted_meta_data( '-', true );
+			$meta_data = $item->get_formatted_meta_data( '_', true );
 			$item_meta = [];
 
 			foreach ( $meta_data as $meta ) {
@@ -570,7 +570,7 @@ class SV_WC_Helper {
 			$line_item->name        = htmlentities( $name, ENT_QUOTES, 'UTF-8', false );
 			$line_item->description = htmlentities( $item_desc, ENT_QUOTES, 'UTF-8', false );
 			$line_item->quantity    = $quantity;
-			$line_item->item_total  = isset( $item['recurring_line_total'] ) ? $item['recurring_line_total'] : $order->get_item_total( $item );
+			$line_item->item_total  = $item['recurring_line_total'] ?? $order->get_item_total( $item );
 			$line_item->line_total  = $order->get_line_total( $item );
 			$line_item->meta        = $item_meta;
 			$line_item->product     = is_object( $product ) ? $product : null;
