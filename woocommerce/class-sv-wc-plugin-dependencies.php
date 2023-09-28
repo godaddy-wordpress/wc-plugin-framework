@@ -267,7 +267,7 @@ class SV_WC_Plugin_Dependencies {
 				sprintf( __( 'Your hosting provider can do this for you. %1$sHere are some resources to help you upgrade%2$s and to explain PHP versions further.', 'woocommerce-plugin-framework' ), '<a href="https://wordpress.org/support/update-php/">', '</a>' ) ),
 			];
 
-			$message .= implode( "\n", $lines);
+			$message .= implode( "<br>", $lines);
 			$message .= '</p>';
 
 			$this->add_admin_notice( 'sv-wc-deprecated-php-version', $message, 'error' );
