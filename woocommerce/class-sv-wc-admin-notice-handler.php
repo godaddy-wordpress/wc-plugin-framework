@@ -271,7 +271,7 @@ class SV_WC_Admin_Notice_Handler {
 			} );
 
 			// Log and hide legacy notices
-			$( 'a.js-wc-plugin-framework-notice-dismiss' ).click( function( e ) {
+			$( 'a.js-wc-plugin-framework-notice-dismiss' ).on( 'click', function( e ) {
 
 				e.preventDefault();
 

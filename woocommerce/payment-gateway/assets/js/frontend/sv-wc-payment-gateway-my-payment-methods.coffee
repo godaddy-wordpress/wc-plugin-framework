@@ -64,7 +64,7 @@ jQuery ( $ ) ->
 			)
 
 			# don't follow the Add Payment Method button URL if it's disabled
-			$( '.button[href*="add-payment-method"]' ).click ( event ) ->
+			$( '.button[href*="add-payment-method"]' ).on 'click', event ->
 				event.preventDefault() if $( this ).hasClass( 'disabled' )
 
 
