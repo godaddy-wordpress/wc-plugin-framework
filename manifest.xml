@@ -1,0 +1,7 @@
+<Translation>
+    <File
+        HoPath="woocommerce/i18n/languages/woocommerce-plugin-framework.pot"
+        HbPath="woocommerce/i18n/languages/woocommerce-plugin-framework-{Culture}.po"
+        Cultures="da_DK, de_DE, el_GR, es_ES, es_MX, fi_FI, fr_FR, fr_CA, it_IT, nb_NO, nl_NL, pl_PL, pt_BR, pt_PT, sv_SE, tr_TR, uk_UA, id_ID, ja_JP, ko_KR, th_TH, vi_VN, zh_CN, zh_TW, hi_IN, ar_AE, qa_PS, qa_AR"
+    />
+</Translation>

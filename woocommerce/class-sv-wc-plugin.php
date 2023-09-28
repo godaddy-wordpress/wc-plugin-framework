@@ -22,14 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_8\Blocks\Blocks_Handler;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_9\\SV_WC_Plugin' ) ) :
 
 
 /**
@@ -46,7 +46,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.11.8';
+	const VERSION = '5.11.9';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -754,6 +754,7 @@ abstract class SV_WC_Plugin {
 					continue;
 				}
 
+				/* translators: Placeholders: %1$s - PHP setting value, %2$s - version or value required */
 				$note = __( '%1$s - A minimum of %2$s is required.', 'woocommerce-plugin-framework' );
 
 			} else {
@@ -763,6 +764,7 @@ abstract class SV_WC_Plugin {
 					continue;
 				}
 
+				/* translators: As in "Value has been set as [foo], but [bar] is required". Placeholders: %1$s - current value for a PHP setting, %2$s - required value for the PHP setting */
 				$note = __( 'Set as %1$s - %2$s is required.', 'woocommerce-plugin-framework' );
 			}
 

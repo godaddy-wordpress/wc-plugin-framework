@@ -22,14 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8\REST_API\Controllers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9\REST_API\Controllers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_11_8\Settings_API\Abstract_Settings;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_8\Settings_API\Setting;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_9\Settings_API\Abstract_Settings;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_9\Settings_API\Setting;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\REST_API\\Controllers\\Settings' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_9\\REST_API\\Controllers\\Settings' ) ) :
 
 
 /**
@@ -220,7 +220,7 @@ class Settings extends \WP_REST_Controller {
 			return new \WP_Error(
 				'wc_rest_setting_could_not_update',
 				sprintf(
-					/* Placeholders: %s - error message */
+					/* translators: Placeholder: %s - Error message */
 					__( 'Could not update setting: %s', 'woocommerce-plugin-framework' ),
 					$e->getMessage()
 				),

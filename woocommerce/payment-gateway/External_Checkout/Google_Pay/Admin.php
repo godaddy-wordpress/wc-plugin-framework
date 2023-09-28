@@ -22,13 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8\Payment_Gateway\External_Checkout\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9\Payment_Gateway\External_Checkout\Google_Pay;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_11_8\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_9\SV_WC_Helper;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\Payment_Gateway\\External_Checkout\\Google_Pay\\Admin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_9\\Payment_Gateway\\External_Checkout\\Google_Pay\\Admin' ) ) :
 
 
 /**
@@ -36,7 +36,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\Payment
  *
  * @since 5.10.0
  */
-class Admin extends \SkyVerge\WooCommerce\PluginFramework\v5_11_8\Payment_Gateway\External_Checkout\Admin {
+class Admin extends \SkyVerge\WooCommerce\PluginFramework\v5_11_9\Payment_Gateway\External_Checkout\Admin {
 
 
 	/** @var Google_Pay the Google Pay handler instance */
@@ -91,13 +91,14 @@ class Admin extends \SkyVerge\WooCommerce\PluginFramework\v5_11_8\Payment_Gatewa
 			[
 				'id'              => 'sv_wc_google_pay_enabled',
 				'title'           => __( 'Enable / Disable', 'woocommerce-plugin-framework' ),
-				'desc'            => __( 'Accept Google Pay', 'woocommerce-plugin-framework' ),
+				'desc'            => _x( 'Accept Google Pay', 'For the merchant to accept Google Pay payments', 'woocommerce-plugin-framework' ),
 				'type'            => 'checkbox',
 				'default'         => 'no',
 			],
 
 			[
 				'id'      => 'sv_wc_google_pay_display_locations',
+				/* translators: Allow Google Pay button on selected display locations (e.g. cart, checkout, product page...) */
 				'title'   => __( 'Allow Google Pay on', 'woocommerce-plugin-framework' ),
 				'type'    => 'multiselect',
 				'class'   => 'wc-enhanced-select',
@@ -111,8 +112,8 @@ class Admin extends \SkyVerge\WooCommerce\PluginFramework\v5_11_8\Payment_Gatewa
 				'title'   => __( 'Button Style', 'woocommerce-plugin-framework' ),
 				'type'    => 'select',
 				'options' => [
-					'black'           => __( 'Black', 'woocommerce-plugin-framework' ),
-					'white'           => __( 'White', 'woocommerce-plugin-framework' ),
+					'black'           => _x( 'Black', 'Button style', 'woocommerce-plugin-framework' ),
+					'white'           => _x( 'White', 'Button style', 'woocommerce-plugin-framework' ),
 				],
 				'default' => 'black',
 			],

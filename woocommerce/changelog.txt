@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2023.09.28 - version 5.11.9
+ * Fix - Prevent prefixed metadata from being included in order item descriptions
+
 2023.08.23 - version 5.11.8
  * Misc - Add `SV_WC_Helper::array_join_natural()` helper method
  * Fix - Pass environment parameter to Google Pay client

@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\SV_WC_Payment_Gateway_Admin_Payment_Token_Editor' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_9\\SV_WC_Payment_Gateway_Admin_Payment_Token_Editor' ) ) :
 
 
 /**
@@ -564,7 +564,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 						'options' => $this->get_card_type_options(),
 					),
 					'last_four' => array(
-						'label'   => __( 'Last Four', 'woocommerce-plugin-framework' ),
+						'label'   => _x( 'Last Four', 'Last four digits of a payment method', 'woocommerce-plugin-framework' ),
 						'attributes' => array(
 							'pattern'   => '[0-9]{4}',
 							'maxlength' => 4,
@@ -600,7 +600,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 						),
 					),
 					'last_four' => array(
-						'label'   => __( 'Last Four', 'woocommerce-plugin-framework' ),
+						'label'   => _x( 'Last Four', 'Last four digits of a payment method', 'woocommerce-plugin-framework' ),
 						'attributes' => array(
 							'pattern'   => '[0-9]{4}',
 							'maxlength' => 4,

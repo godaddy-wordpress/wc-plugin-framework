@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\SV_WC_Payment_Gateway_Privacy' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_9\\SV_WC_Payment_Gateway_Privacy' ) ) :
 
 
 /**
@@ -189,7 +189,7 @@ class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 					if ( $token->get_last_four() ) {
 
 						$token_data[] = array(
-							'name'  => __( 'Last Four', 'woocommerce-plugin-framework' ),
+							'name'  => _x( 'Last Four', 'Last four digits of a payment method', 'woocommerce-plugin-framework' ),
 							'value' => $token->get_last_four(),
 						);
 					}
@@ -295,7 +295,7 @@ class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 			$gateway = $this->get_plugin()->get_gateway( $order->get_payment_method() );
 
 			$meta_to_export = array(
-				'account_four'     => __( 'Last Four', 'woocommerce-plugin-framework' ),
+				'account_four'     => _x( 'Last Four', 'Last four digits of a payment method', 'woocommerce-plugin-framework' ),
 				'account_type'     => __( 'Account Type', 'woocommerce-plugin-framework' ),
 				'card_type'        => __( 'Card Type', 'woocommerce-plugin-framework' ),
 				'card_expiry_date' => __( 'Expiry Date', 'woocommerce-plugin-framework' ),
