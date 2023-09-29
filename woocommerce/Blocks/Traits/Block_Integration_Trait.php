@@ -36,7 +36,7 @@ trait Block_Integration_Trait
 	 */
 	public function get_name() : string {
 
-		return $this->plugin->get_id_dasherized();
+		return $this->plugin->get_id();
 	}
 
 
@@ -73,7 +73,7 @@ trait Block_Integration_Trait
 	 *
 	 * @return string[]
 	 */
-	public function get_script_handles(): array {
+	public function get_script_handles() {
 
 		return [ $this->get_main_script_handle() ];
 	}

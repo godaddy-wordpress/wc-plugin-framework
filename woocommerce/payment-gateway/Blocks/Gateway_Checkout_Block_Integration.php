@@ -76,7 +76,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	public function get_name() : string {
 
-		return $this->gateway->get_id_dasherized();
+		return $this->gateway->get_id();
 	}
 
 
