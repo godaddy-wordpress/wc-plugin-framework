@@ -122,7 +122,7 @@ class Blocks_Handler
 	 *
 	 * @return void
 	 */
-	public function handle_blocks_integration() {
+	public function handle_blocks_integration() : void {
 
 		// @TODO investigate how to register integrations for non-gateways
 	}

@@ -38,8 +38,7 @@ if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_9\Payment_Gate
  *
  * @since 5.12.0
  */
-abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodType
-{
+abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodType {
 
 	use Block_Integration_Trait;
 
@@ -51,7 +50,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	protected SV_WC_Payment_Gateway $gateway;
 
 	/** @var string supported block name */
-	protected $block_name = 'checkout';
+	protected string $block_name = 'checkout';
 
 
 	/**
@@ -75,7 +74,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 *
 	 * @return string
 	 */
-	public function get_name() {
+	public function get_name() : string {
 
 		return $this->gateway->get_id();
 	}
@@ -88,7 +87,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 *
 	 * @return bool
 	 */
-	public function is_active() {
+	public function is_active() : bool {
 
 		return $this->get_setting( 'enabled' ) === 'yes';
 	}
@@ -101,7 +100,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 *
 	 * @return string[]
 	 */
-	public function get_payment_method_script_handles() {
+	public function get_payment_method_script_handles() : array {
 
 		return $this->get_script_handles();
 	}

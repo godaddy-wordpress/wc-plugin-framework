@@ -34,7 +34,7 @@ trait Block_Integration_Trait
 	 *
 	 * @return string
 	 */
-	public function get_name() {
+	public function get_name() : string {
 
 		return $this->plugin->get_id();
 	}
@@ -47,7 +47,7 @@ trait Block_Integration_Trait
 	 *
 	 * @return void
 	 */
-	public function initialize() {
+	public function initialize() : void {
 
 		// @TODO: perhaps we can provide here a framework initialization of basic scripts or dynamically load the expected plugin assets
 	}
@@ -60,7 +60,7 @@ trait Block_Integration_Trait
 	 *
 	 * @return string
 	 */
-	protected function get_main_script_handle() {
+	protected function get_main_script_handle() : string {
 
 		return sprintf( '%s-%s-block', $this->get_name(), $this->block_name );
 	}
@@ -86,7 +86,7 @@ trait Block_Integration_Trait
 	 *
 	 * @return string[]
 	 */
-	public function get_editor_script_handles() {
+	public function get_editor_script_handles() : array {
 
 		return [ $this->get_main_script_handle() ];
 	}
@@ -99,7 +99,7 @@ trait Block_Integration_Trait
 	 *
 	 * @return array<string, mixed> (default empty)
 	 */
-	public function get_script_data() {
+	public function get_script_data() : array {
 
 		return [];
 	}

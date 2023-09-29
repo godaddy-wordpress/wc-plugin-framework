@@ -51,7 +51,7 @@ abstract class Block_Integration implements IntegrationInterface
 	protected SV_WC_Plugin $plugin;
 
 	/** @var string implementations should specify the block supported (e.g. 'cart' or 'checkout') */
-	protected $block_name;
+	protected string $block_name;
 
 
 	/**

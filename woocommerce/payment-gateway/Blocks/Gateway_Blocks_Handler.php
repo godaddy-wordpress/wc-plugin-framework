@@ -48,7 +48,7 @@ class Gateway_Blocks_Handler extends Blocks_Handler
 	 *
 	 * @return void
 	 */
-	public function handle_blocks_integration() {
+	public function handle_blocks_integration() : void {
 
 		if ( ! class_exists( PaymentMethodRegistry::class ) ) {
 			return;
