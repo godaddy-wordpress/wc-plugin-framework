@@ -114,8 +114,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function get_script_data()
-	{
+	public function get_payment_method_data() : array {
 		return [
 			'title'       => $this->gateway->method_title,
 			'description' => $this->gateway->method_description,
