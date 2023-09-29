@@ -36,7 +36,7 @@ trait Block_Integration_Trait
 	 */
 	public function get_name() {
 
-		return $this->plugin->get_id_dasherized();
+		return $this->plugin->get_id();
 	}
 
 
