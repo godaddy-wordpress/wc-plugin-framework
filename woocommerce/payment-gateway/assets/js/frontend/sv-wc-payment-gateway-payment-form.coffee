@@ -322,7 +322,7 @@ jQuery ( $ ) ->
 			$csc_field = $new_payment_method_selection.find( '.js-sv-wc-payment-gateway-credit-card-form-csc' ).closest( '.form-row' )
 
 			# show/hide the saved payment methods when a saved payment method is de-selected/selected
-			$( "input.js-wc-#{ @id_dasherized }-payment-token" ).change ->
+			$( "input.js-wc-#{ @id_dasherized }-payment-token" ).on 'change', ->
 
 				tokenized_payment_method_selected = $( "input.js-wc-#{ id_dasherized }-payment-token:checked" ).val()
 
@@ -348,7 +348,7 @@ jQuery ( $ ) ->
 
 			# display the 'save payment method' option for guest checkouts if the 'create account' option is checked
 			#  but only hide the input if there is a 'create account' checkbox (some themes just display the password)
-			$( 'input#createaccount' ).change ->
+			$( 'input#createaccount' ).on 'change', ->
 				$parent_row = $( "input.js-wc-#{ id_dasherized }-tokenize-payment-method" ).closest( 'p.form-row' )
 
 				if $( this ).is( ':checked' )
