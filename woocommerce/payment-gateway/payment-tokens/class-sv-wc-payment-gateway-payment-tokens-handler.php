@@ -278,6 +278,37 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 
 	/**
+	 * Returns the payment token object identified by the core token ID from the user.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @param int $user_id WordPress user identifier, or 0 for guest
+	 * @param int $core_token_id core token ID
+	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
+	 * @return SV_WC_Payment_Gateway_Payment_Token payment token object or null
+	 */
+	public function get_token_by_core_id( int $user_id, int $core_token_id, string $environment_id = null ): ?SV_WC_Payment_Gateway_Payment_Token
+	{
+		// default to current environment
+		if ( is_null( $environment_id ) ) {
+			$environment_id = $this->get_environment_id();
+		}
+
+		$tokens = $this->get_tokens( $user_id, array( 'environment_id' => $environment_id ) );
+
+		foreach ( $tokens as $token ) {
+			$core_token = $token->get_woocommerce_payment_token();
+
+			if ( $core_token && $core_token->get_id() === $core_token_id ) {
+				return $token;
+			}
+		}
+
+		return null;
+	}
+
+
+	/**
 	 * Updates a single token by persisting its data as a core token.
 	 *
 	 * @since since 4.0.0
