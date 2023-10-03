@@ -25,6 +25,8 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9\Payment_Gateway\Blocks;
 
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
+use Automattic\WooCommerce\StoreApi\Payments\PaymentContext;
+use Automattic\WooCommerce\StoreApi\Payments\PaymentResult;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_9\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_9\SV_WC_Payment_Gateway_Plugin;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_9\Blocks\Traits\Block_Integration_Trait;
@@ -66,6 +68,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		$this->plugin   = $plugin;
 		$this->gateway  = $gateway;
 		$this->settings = $gateway->settings;
+
+		add_action( 'woocommerce_rest_checkout_process_payment_with_context', [ $this, 'prepare_payment_token' ], 10, 2 );
 	}
 
 
@@ -129,6 +133,44 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	}
 
 
+	/**
+	 * Prepare payment token for processing by the gateway.
+	 *
+	 * This method does not actually process the payment - it simply prepares the payment token for processing.
+	 * The checkout block has built-in support for payment tokens, but it sends the internal (core) token ID instead of
+	 * the gateway-specific token ID. This method fetches the token based on core ID and injects the gateway-specific
+	 * token ID into the `PaymentContext::$payment_data` array so that the gateway can process the payment.
+	 *
+	 * `PaymentContext::$payment_data` is converted to `$_POST` by WC core when handling legacy payments.
+	 *
+	 * @see \Automattic\WooCommerce\StoreApi\Legacy::process_legacy_payment()
+	 *
+	 * @since 5.12.0
+	 *
+	 * @param PaymentContext $payment_context
+	 * @param PaymentResult $payment_result
+	 * @return PaymentResult
+	 */
+	public function prepare_payment_token( PaymentContext $payment_context, PaymentResult $payment_result ) : PaymentResult {
+
+		if (
+			( $core_token_id = $payment_context->payment_data['token'] ) &&
+			$payment_context->payment_method === $this->gateway->get_id() &&
+			( $token = $this->gateway->get_payment_tokens_handler()->get_token_by_core_id( get_current_user_id(), $core_token_id ) )
+		) {
+			// taking advantage of the fact that objects are passed "by reference" (actually handles) in PHP
+			// https://dev.to/nicolus/are-php-objects-passed-by-reference--2gp3
+			$payment_context->set_payment_data(
+				array_merge(
+					$payment_context->payment_data,
+					[ 'wc-' . $this->gateway->get_id_dasherized() . '-payment-token' => $token->get_id() ]
+				)
+			);
+		}
+
+		// return the original payment result
+		return $payment_result;
+	}
 }
 
 endif;
