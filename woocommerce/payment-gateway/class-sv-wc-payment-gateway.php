@@ -898,23 +898,27 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines if tokenization takes place prior to transaction processing.
 	 *
+	 * Gateways that tokenize the payment method before the sale transaction (in a separate request), should set this to true.
+	 *
 	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
-	public function tokenize_before_sale() {
+	public function tokenize_before_sale(): bool {
 		return false;
 	}
 
 
 	/**
-	 * Determines tokenization takes place during a transaction request.
+	 * Determines if tokenization takes place during a transaction request.
+	 *
+	 * Gateways that tokenize the payment method in the same request as the sale transaction should set this to true.
 	 *
 	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
-	public function tokenize_with_sale() {
+	public function tokenize_with_sale(): bool {
 		return false;
 	}
 
@@ -922,11 +926,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines tokenization takes place after a transaction request.
 	 *
+	 * Gateways that tokenize the payment method after the sale transaction (in a separate request), should set this to true.
+	 *
 	 * @since 5.0.0
 	 *
 	 * @return bool
 	 */
-	public function tokenize_after_sale() {
+	public function tokenize_after_sale(): bool {
 		return false;
 	}
 
