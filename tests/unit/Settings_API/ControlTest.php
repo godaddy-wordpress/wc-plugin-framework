@@ -2,8 +2,8 @@
 
 namespace Settings_API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_11_9\Settings_API\Control;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_9\SV_WC_Plugin_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Settings_API\Control;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Plugin_Exception;
 use TypeError;
 
 if ( ! defined( 'ABSPATH' ) ) {
