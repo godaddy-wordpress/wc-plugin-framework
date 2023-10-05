@@ -1229,7 +1229,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * return false, even if order total is 0.00. Note that when doing, so the gateway should also override
 	 * `can_tokenize_with_or_after_sale()` to return true.
 	 *
-	 * Finally, gateways that only tokenize with sale, should also override `should_skip_transaction()` to return false.
+	 * Finally, gateways that only tokenize with sale (Moneris), may need to override `should_skip_transaction()` to return false.
 	 *
 	 * @see SV_WC_Payment_Gateway_Direct::should_tokenize_with_or_after_sale()
 	 * @see SV_WC_Payment_Gateway_Direct::can_tokenize_with_or_after_sale()
