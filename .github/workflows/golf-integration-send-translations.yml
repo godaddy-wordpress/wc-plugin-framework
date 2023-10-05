@@ -3,7 +3,11 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - translation
+  workflow_run:
+    workflows: [ "Update translations files" ]
+    types:
+      - completed
 jobs:
   update:
     runs-on: ubuntu-latest
