@@ -103,6 +103,11 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * Tokenizes the current payment method and adds the standard transaction
 	 * data to the order post record.
 	 *
+	 * Can be used to tokenize a payment method either before, with, or after the sale:
+	 * - before sale: will try to perform a tokenization request
+	 * - with sale: expects to find a payment token in the given response object
+	 * - after sale: will try to perform a tokenization request, regardless if a response object is given
+	 *
 	 * @since 1.0.0
 	 *
 	 * @param \WC_Order $order order object
@@ -120,7 +125,8 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$environment_id = $this->get_environment_id();
 		}
 
-		// perform the API request to tokenize the payment method if needed
+		// perform the API request to tokenize the payment method if needed (tokenization before or after sale)
+		// gateways that tokenize with sale should already have a response object with the payment token
 		if ( ! $response || $this->get_gateway()->tokenize_after_sale() ) {
 			$response = $gateway->get_api()->tokenize_payment_method( $order );
 		}
