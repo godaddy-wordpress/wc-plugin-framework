@@ -373,16 +373,15 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					$this->update_transaction_payment_method( $order );
 
 				// otherwise, create a new token if desired
-				} elseif ( $this->get_payment_tokens_handler()->should_tokenize() && ( '0.00' === $order->payment_total || $this->tokenize_before_sale() ) ) {
+				} elseif ( $this->should_tokenize_before_sale( $order ) ) {
 
 					$order = $this->get_payment_tokens_handler()->create_token( $order );
 				}
 			}
 
 			// payment failures are handled internally by do_transaction()
-			// the order amount will be $0 if a WooCommerce Subscriptions free trial product is being processed
 			// note that customer id & payment token are saved to order when create_token() is called
-			if ( ( '0.00' === $order->payment_total && ! $this->transaction_forced() ) || $this->do_transaction( $order ) ) {
+			if ( $this->should_skip_transaction( $order ) || $this->do_transaction( $order ) ) {
 
 				// add transaction data for zero-dollar "orders"
 				if ( '0.00' === $order->payment_total ) {
@@ -828,8 +827,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// handle the response
 		if ( $response->transaction_approved() || $response->transaction_held() ) {
 
-			if ( $this->supports_tokenization() && 0 != $order->get_user_id() && $this->get_payment_tokens_handler()->should_tokenize() &&
-				( $order->payment_total > 0 && ( $this->tokenize_with_sale() || $this->tokenize_after_sale() ) ) ) {
+			if ( $this->should_tokenize_with_or_after_sale( $order ) ) {
 
 				try {
 					$order = $this->get_payment_tokens_handler()->create_token( $order, $response );
@@ -1215,8 +1213,95 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 2.2.0
 	 * @return boolean true if the transaction request should be forced
 	 */
-	public function transaction_forced() {
+	public function transaction_forced(): bool {
+
 		return false;
+	}
+
+
+	/**
+	 * Determines whether tokenization should be performed before the sale.
+	 *
+	 * Most gateways should always tokenize before the sale if the order total is 0.00 (such as a free trial), because
+	 * they don't allow 0.00 transactions (but do allow tokenizing without a transaction).
+	 *
+	 * Gateways that don't support tokenization before the sale (without a transaction) should override this method to
+	 * return false, even if order total is 0.00. Note that when doing, so the gateway should also override
+	 * `can_tokenize_with_or_after_sale()` to return true.
+	 *
+	 * Finally, gateways that only tokenize with sale, should also override `should_skip_transaction()` to return true.
+	 *
+	 * @see SV_WC_Payment_Gateway_Direct::should_tokenize_with_or_after_sale()
+	 * @see SV_WC_Payment_Gateway_Direct::can_tokenize_with_or_after_sale()
+	 * @see SV_WC_Payment_Gateway_Direct::should_skip_transaction()
+	 *
+	 * @since 5.11.10
+	 *
+	 * @param \WC_Order $order the order being paid for.
+	 * @return bool
+	 */
+	protected function should_tokenize_before_sale( \WC_Order $order ): bool {
+
+		return $this->get_payment_tokens_handler()->should_tokenize() && ( '0.00' === $order->payment_total || $this->tokenize_before_sale() );
+	}
+
+	/**
+	 * Determines whether tokenization should be performed after the sale.
+	 *
+	 * Performs checks to ensure that the gateway supports tokenization, that the order is not a guest order,
+	 * that the gateway supports tokenization after the sale, and that the gateway is configured to tokenize after the sale.
+	 *
+	 * @see SV_WC_Payment_Gateway_Direct::should_tokenize_before_sale()
+	 *
+	 * @since 5.11.10
+	 *
+	 * @param \WC_Order $order the order that was paid for.
+	 * @return bool
+	 */
+	protected function should_tokenize_with_or_after_sale( \WC_Order $order ): bool {
+
+		return $this->supports_tokenization() &&
+		       0 !== (int) $order->get_user_id() &&
+		       $this->get_payment_tokens_handler()->should_tokenize() &&
+		       ( $this->tokenize_with_sale() || $this->tokenize_after_sale() ) &&
+		       $this->can_tokenize_with_or_after_sale( $order );
+	}
+
+	/**
+	 * Determines whether the gateway can tokenize after the sale of a concrete order.
+	 *
+	 * Most gateways can tokenize after the sale only if the payment total is greater than 0. If the payment total is 0.00,
+	 * then most gateways should tokenize before the sale. However, if a gateway only supports tokenization with or after sale,
+	 * then this method should return true.
+	 *
+	 * @since 5.11.10
+	 *
+	 * @param \WC_Order $order the order that was paid for.
+	 * @return bool
+	 */
+	protected function can_tokenize_with_or_after_sale( \WC_Order $order ): bool {
+
+		return $order->payment_total > 0;
+	}
+
+	/**
+	 * Determines whether the transaction should be skipped when processing payment for an order.
+	 *
+	 * Most gateways should skip the transaction if the order total is 0.00 (such as a free trial), because they don't
+	 * support 0.00 transactions. If a new payment method was used, and tokenization was enabled, then the gateway
+	 * most likely tokenized the method before the sale.
+	 *
+	 * Gateways that only support tokenization with sale (in the same request), should override this method to return true.
+	 *
+	 * @since 5.11.10
+	 *
+	 * @param \WC_Order $order the order being paid for.
+	 * @return bool
+	 */
+	protected function should_skip_transaction( \WC_Order $order ): bool {
+
+		// the order amount will be $0 if a WooCommerce Subscriptions free trial product is being processed
+		return ( '0.00' === $order->payment_total && ! $this->transaction_forced() );
 	}
 
 
