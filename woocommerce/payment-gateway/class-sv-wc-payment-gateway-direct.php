@@ -1213,7 +1213,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 2.2.0
 	 * @return boolean true if the transaction request should be forced
 	 */
-	public function transaction_forced(): bool {
+	public function transaction_forced() {
 
 		return false;
 	}

@@ -904,7 +904,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @return bool
 	 */
-	public function tokenize_before_sale(): bool {
+	public function tokenize_before_sale() {
 		return false;
 	}
 
@@ -918,7 +918,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @return bool
 	 */
-	public function tokenize_with_sale(): bool {
+	public function tokenize_with_sale() {
 		return false;
 	}
 
@@ -932,7 +932,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @return bool
 	 */
-	public function tokenize_after_sale(): bool {
+	public function tokenize_after_sale() {
 		return false;
 	}
 
