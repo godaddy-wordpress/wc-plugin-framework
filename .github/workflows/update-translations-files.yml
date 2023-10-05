@@ -34,6 +34,7 @@ jobs:
           pot_destination: ./woocommerce/i18n/languages/woocommerce-plugin-framework.pot
           text_domain: woocommerce-plugin-framework
           package_name: SkyVerge WooCommerce Plugin Framework
+          file_comment: Copyright (c) GoDaddy Operating Company, LLC. All Rights Reserved.
           main_file: ""
           main_branch: master
           gh_token: ${{ secrets.MWC_GD_ACTIONS_REPO_PAT }}
