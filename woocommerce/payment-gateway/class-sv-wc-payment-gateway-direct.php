@@ -1242,7 +1242,26 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function should_tokenize_before_sale( \WC_Order $order ): bool {
 
-		return $this->get_payment_tokens_handler()->should_tokenize() && ( '0.00' === $order->payment_total || $this->tokenize_before_sale() );
+		$result = $this->get_payment_tokens_handler()->should_tokenize() && ( '0.00' === $order->payment_total || $this->tokenize_before_sale() );
+
+		/**
+		 * Filters whether tokenization should be performed before the sale, for a given order.
+		 *
+		 * @see SV_WC_Payment_Gateway_Direct::should_tokenize_before_sale()
+		 *
+		 * @since 5.11.10
+		 *
+		 * @param bool $result
+		 * @param \WC_Order $order the order being paid for
+		 * @param SV_WC_Payment_Gateway_Direct $gateway the gateway instance
+		 * @return bool
+		 */
+		return apply_filters(
+			"wc_payment_gateway_{$this->get_id()}_should_tokenize_before_sale",
+			$result,
+			$order,
+			$this
+		);
 	}
 
 	/**
@@ -1260,11 +1279,30 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function should_tokenize_with_or_after_sale( \WC_Order $order ): bool {
 
-		return $this->supports_tokenization() &&
+		$result = $this->supports_tokenization() &&
 		       0 !== (int) $order->get_user_id() &&
 		       $this->get_payment_tokens_handler()->should_tokenize() &&
 		       ( $this->tokenize_with_sale() || $this->tokenize_after_sale() ) &&
 		       $this->can_tokenize_with_or_after_sale( $order );
+
+		/**
+		 * Filters whether tokenization should be performed with or after the sale, for a given order.
+		 *
+		 * @see SV_WC_Payment_Gateway_Direct::should_tokenize_with_or_after_sale()
+		 *
+		 * @since 5.11.10
+		 *
+		 * @param bool $result
+		 * @param \WC_Order $order the order being paid for
+		 * @param SV_WC_Payment_Gateway_Direct $gateway the gateway instance
+		 * @return bool
+		 */
+		return apply_filters(
+			"wc_payment_gateway_{$this->get_id()}_should_tokenize_with_or_after_sale",
+			$result,
+			$order,
+			$this
+		);
 	}
 
 	/**
@@ -1281,7 +1319,24 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function can_tokenize_with_or_after_sale( \WC_Order $order ): bool {
 
-		return $order->payment_total > 0;
+		/**
+		 * Filters whether the gateway can tokenize a payment method after the sale of a concrete order.
+		 *
+		 * @see SV_WC_Payment_Gateway_Direct::should_tokenize_with_or_after_sale()
+		 *
+		 * @since 5.11.10
+		 *
+		 * @param bool $result
+		 * @param \WC_Order $order the order being paid for
+		 * @param SV_WC_Payment_Gateway_Direct $gateway the gateway instance
+		 * @return bool
+		 */
+		return apply_filters(
+			"wc_payment_gateway_{$this->get_id()}_can_tokenize_with_or_after_sale",
+			$order->payment_total > 0,
+			$order,
+			$this
+		);
 	}
 
 	/**
@@ -1300,8 +1355,25 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function should_skip_transaction( \WC_Order $order ): bool {
 
-		// the order amount will be $0 if a WooCommerce Subscriptions free trial product is being processed
-		return ( '0.00' === $order->payment_total && ! $this->transaction_forced() );
+		/**
+		 * Filters whether the transaction should be skipped when processing payment for an order.
+		 *
+		 * @see SV_WC_Payment_Gateway_Direct::should_tokenize_before_sale()
+		 *
+		 * @since 5.11.10
+		 *
+		 * @param bool $result
+		 * @param \WC_Order $order the order being paid for
+		 * @param SV_WC_Payment_Gateway_Direct $gateway the gateway instance
+		 * @return bool
+		 */
+		return apply_filters(
+			"wc_payment_gateway_{$this->get_id()}_should_skip_transaction",
+			// the order amount will be $0 if a WooCommerce Subscriptions free trial product is being processed
+			( '0.00' === $order->payment_total && ! $this->transaction_forced() ),
+			$order,
+			$this
+		);
 	}
 
 
