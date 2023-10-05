@@ -14,12 +14,12 @@ jobs:
 
     steps:
       - name: Checkout current repository
-        uses: actions/checkout@v2 # v2.x.x
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Checkout localization-actions repository
-        uses: actions/checkout@v2 # v2.x.x
+        uses: actions/checkout@v4
         with:
           repository: gdcorp-partners/localization-actions
           ref: 'main'
