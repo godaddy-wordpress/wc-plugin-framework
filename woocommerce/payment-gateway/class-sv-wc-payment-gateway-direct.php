@@ -670,17 +670,18 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			$last_four = substr( $order->payment->account_number, -4 );
 
 			// check order note. there may not be an account_type available, but that's fine
-			/* translators: Placeholders: %1$s - payment method title, %2$s - payment account type (savings/checking) (may or may not be available), %3$s - last four digits of the account */
+			/* translators: Placeholders: %1$s - Payment method title, %2$s - Payment account type (savings/checking) (may or may not be available), %3$s - Last four digits of the account */
 			$message = sprintf( esc_html__( '%1$s Check Transaction Approved: %2$s account ending in %3$s', 'woocommerce-plugin-framework' ), $this->get_method_title(), $order->payment->account_type, $last_four );
 
 			// optional check number
 			if ( ! empty( $order->payment->check_number ) ) {
-				/* translators: Placeholders: %s - check number */
+				/* translators: Placeholder: %s - Bank check number */
 				$message .= '. ' . sprintf( esc_html__( 'Check number %s', 'woocommerce-plugin-framework' ), $order->payment->check_number );
 			}
 
 			// adds the transaction id (if any) to the order note
 			if ( $response->get_transaction_id() ) {
+				/* translators: Placeholder: %s - Payment transaction ID */
 				$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 			}
 
@@ -746,21 +747,21 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// credit card order note
 			if ( $account_number ) {
 				$message = sprintf(
-					/* translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...), %5$s - last four digits of the card */
+					/* translators: Example: "Braintree Test Authorization Approved: Mastercard ending in 1234". Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...), %5$s - last four digits of the card */
 					esc_html__( '%1$s %2$s %3$s Approved: %4$s ending in %5$s', 'woocommerce-plugin-framework' ),
 					$this->get_method_title(),
-					$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
-					$this->perform_credit_card_authorization( $order ) ? esc_html_x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' ) : esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' ),
+					$this->is_test_environment() ? esc_html_x( 'Test', 'Noun, software environment', 'woocommerce-plugin-framework' ) : '',
+					$this->perform_credit_card_authorization( $order ) ? esc_html_x( 'Authorization', 'Credit card transaction type', 'woocommerce-plugin-framework' ) : esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' ),
 					SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type ),
 					$last_four
 				);
 			} else {
 				$message = sprintf(
-					/* translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...) */
+					/* translators: Example: "Authorize.Net Test Charge Approved: Mastercard" - Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...) */
 					esc_html__( '%1$s %2$s %3$s Approved: %4$s', 'woocommerce-plugin-framework' ),
 					$this->get_method_title(),
-					$this->is_test_environment() ? esc_html_x( 'Test', 'noun, software environment', 'woocommerce-plugin-framework' ) : '',
-					$this->perform_credit_card_authorization( $order ) ? esc_html_x( 'Authorization', 'credit card transaction type', 'woocommerce-plugin-framework' ) : esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' ),
+					$this->is_test_environment() ? esc_html_x( 'Test', 'Noun, software environment', 'woocommerce-plugin-framework' ) : '',
+					$this->perform_credit_card_authorization( $order ) ? esc_html_x( 'Authorization', 'Credit card transaction type', 'woocommerce-plugin-framework' ) : esc_html_x( 'Charge', 'noun, credit card transaction type', 'woocommerce-plugin-framework' ),
 					SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type )
 				);
 			}
@@ -769,7 +770,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( ! empty( $order->payment->exp_month ) && ! empty( $order->payment->exp_year ) ) {
 
 				$message .= ' ' . sprintf(
-					/** translators: Placeholders: %s - credit card expiry date */
+					/* translators: Placeholder: %s - Credit card expiry date */
 					__( '(expires %s)', 'woocommerce-plugin-framework' ),
 					$order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 )
 				);
@@ -777,7 +778,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// adds the transaction id (if any) to the order note
 			if ( $response->get_transaction_id() ) {
-				/* translators: Placeholders: %s - transaction ID */
+				/* translators: Placeholder: %s - Payment transaction ID */
 				$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 			}
 

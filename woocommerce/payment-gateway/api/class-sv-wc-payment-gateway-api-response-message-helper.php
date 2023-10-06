@@ -103,38 +103,38 @@ class SV_WC_Payment_Gateway_API_Response_Message_Helper {
 			/* missing/invalid info */
 
 			// csc
-			case 'held_for_incorrect_csc':    $message = esc_html__( 'This order is being placed on hold for review due to an incorrect card verification number.  You may contact the store to complete the transaction.', 'woocommerce-plugin-framework' ); break;
-			case 'csc_invalid':               $message = esc_html__( 'The card verification number is invalid, please try again.', 'woocommerce-plugin-framework' ); break;
-			case 'csc_missing':               $message = esc_html__( 'Please enter your card verification number and try again.', 'woocommerce-plugin-framework' ); break;
+			case 'held_for_incorrect_csc':    $message = esc_html_x( 'This order is being placed on hold for review due to an incorrect card verification number. You may contact the store to complete the transaction.', 'Credit or debit card CSC/CVC/CVV','woocommerce-plugin-framework' ); break;
+			case 'csc_invalid':               $message = esc_html_x( 'The card verification number is invalid, please try again.', 'Credit or debit card CSC/CVC/CVV', 'woocommerce-plugin-framework' ); break;
+			case 'csc_missing':               $message = esc_html_x( 'Please enter your card verification number and try again.', 'Credit or debit card CSC/CVC/CVV', 'woocommerce-plugin-framework' ); break;
 
 			// card type
-			case 'card_type_not_accepted':    $message = esc_html__( 'That card type is not accepted, please use an alternate card or other form of payment.', 'woocommerce-plugin-framework' ); break;
-			case 'card_type_invalid':         $message = esc_html__( 'The card type is invalid or does not correlate with the credit card number.  Please try again or use an alternate card or other form of payment.', 'woocommerce-plugin-framework' ); break;
-			case 'card_type_missing':         $message = esc_html__( 'Please select the card type and try again.', 'woocommerce-plugin-framework' ); break;
+			case 'card_type_not_accepted':    $message = esc_html_x( 'That card type is not accepted, please use an alternate card or other form of payment.', 'Credit or debit card', 'woocommerce-plugin-framework' ); break;
+			case 'card_type_invalid':         $message = esc_html_x( 'The card type is invalid or does not correlate with the credit card number. Please try again or use an alternate card or other form of payment.', 'Credit or debit card', 'woocommerce-plugin-framework' ); break;
+			case 'card_type_missing':         $message = esc_html_x( 'Please select the card type and try again.', 'Credit or debit card', 'woocommerce-plugin-framework' ); break;
 
 			// card number
-			case 'card_number_type_invalid': $message = esc_html__( 'The card type is invalid or does not correlate with the credit card number.  Please try again or use an alternate card or other form of payment.', 'woocommerce-plugin-framework' ); break;
-			case 'card_number_invalid':      $message = esc_html__( 'The card number is invalid, please re-enter and try again.', 'woocommerce-plugin-framework' ); break;
-			case 'card_number_missing':      $message = esc_html__( 'Please enter your card number and try again.', 'woocommerce-plugin-framework' ); break;
+			case 'card_number_type_invalid': $message = esc_html_x( 'The card type is invalid or does not correlate with the credit card number. Please try again or use an alternate card or other form of payment.', 'Credit or debit card', 'woocommerce-plugin-framework' ); break;
+			case 'card_number_invalid':      $message = esc_html_x( 'The card number is invalid, please re-enter and try again.', 'Credit or debit card', 'woocommerce-plugin-framework' ); break;
+			case 'card_number_missing':      $message = esc_html_x( 'Please enter your card number and try again.', 'Credit or debit card','woocommerce-plugin-framework' ); break;
 
 			// card expiry
-			case 'card_expiry_invalid':       $message = esc_html__( 'The card expiration date is invalid, please re-enter and try again.', 'woocommerce-plugin-framework' ); break;
-			case 'card_expiry_month_invalid': $message = esc_html__( 'The card expiration month is invalid, please re-enter and try again.', 'woocommerce-plugin-framework' ); break;
-			case 'card_expiry_year_invalid':  $message = esc_html__( 'The card expiration year is invalid, please re-enter and try again.', 'woocommerce-plugin-framework' ); break;
-			case 'card_expiry_missing':       $message = esc_html__( 'Please enter your card expiration date and try again.', 'woocommerce-plugin-framework' ); break;
+			case 'card_expiry_invalid':       $message = esc_html_x( 'The card expiration date is invalid, please re-enter and try again.', 'Credit or debit card (whole date issue)', 'woocommerce-plugin-framework' ); break;
+			case 'card_expiry_month_invalid': $message = esc_html_x( 'The card expiration month is invalid, please re-enter and try again.', 'Credit or debit card', 'woocommerce-plugin-framework' ); break;
+			case 'card_expiry_year_invalid':  $message = esc_html_x( 'The card expiration year is invalid, please re-enter and try again.', 'Credit or debit card', 'woocommerce-plugin-framework' ); break;
+			case 'card_expiry_missing':       $message = esc_html_x( 'Please enter your card expiration date and try again.', 'Credit or debit card','woocommerce-plugin-framework' ); break;
 
 			// bank
 			case 'bank_aba_invalid':            $message_id = esc_html__( 'The bank routing number is invalid, please re-enter and try again.', 'woocommerce-plugin-framework' ); break;
 			case 'bank_account_number_invalid': $message_id = esc_html__( 'The bank account number is invalid, please re-enter and try again.', 'woocommerce-plugin-framework' ); break;
 
 			/* decline reasons */
-			case 'card_expired':         $message = esc_html__( 'The provided card is expired, please use an alternate card or other form of payment.', 'woocommerce-plugin-framework' ); break;
-			case 'card_declined':        $message = esc_html__( 'The provided card was declined, please use an alternate card or other form of payment.', 'woocommerce-plugin-framework' ); break;
-			case 'insufficient_funds':   $message = esc_html__( 'Insufficient funds in account, please use an alternate card or other form of payment.', 'woocommerce-plugin-framework' ); break;
-			case 'card_inactive':        $message = esc_html__( 'The card is inactivate or not authorized for card-not-present transactions, please use an alternate card or other form of payment.', 'woocommerce-plugin-framework' ); break;
-			case 'credit_limit_reached': $message = esc_html__( 'The credit limit for the card has been reached, please use an alternate card or other form of payment.', 'woocommerce-plugin-framework' ); break;
-			case 'csc_mismatch':         $message = esc_html__( 'The card verification number does not match. Please re-enter and try again.', 'woocommerce-plugin-framework' ); break;
-			case 'avs_mismatch':         $message = esc_html__( 'The provided address does not match the billing address for cardholder. Please verify the address and try again.', 'woocommerce-plugin-framework' ); break;
+			case 'card_expired':         $message = esc_html_x( 'The provided card is expired, please use an alternate card or other form of payment.', 'Credit or debit card', 'woocommerce-plugin-framework' ); break;
+			case 'card_declined':        $message = esc_html_x( 'The provided card was declined, please use an alternate card or other form of payment.', 'Credit or debit card', 'woocommerce-plugin-framework' ); break;
+			case 'insufficient_funds':   $message = esc_html_x( 'Insufficient funds in account, please use an alternate card or other form of payment.', 'Credit or debit card', 'woocommerce-plugin-framework' ); break;
+			case 'card_inactive':        $message = esc_html_x( 'The card is inactivate or not authorized for card-not-present transactions, please use an alternate card or other form of payment.', 'Credit or debit card', 'woocommerce-plugin-framework' ); break;
+			case 'credit_limit_reached': $message = esc_html_x( 'The credit limit for the card has been reached, please use an alternate card or other form of payment.', 'Credit or debit card', 'woocommerce-plugin-framework' ); break;
+			case 'csc_mismatch':         $message = esc_html_x( 'The card verification number does not match. Please re-enter and try again.', 'Credit or debit card CSC/CVC/CVV', 'woocommerce-plugin-framework' ); break;
+			case 'avs_mismatch':         $message = esc_html_x( 'The provided address does not match the billing address for cardholder. Please verify the address and try again.', 'Credit or debit card', 'woocommerce-plugin-framework' ); break;
 		}
 
 		/**

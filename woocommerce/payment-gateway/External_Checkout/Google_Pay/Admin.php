@@ -99,7 +99,7 @@ class Admin extends \SkyVerge\WooCommerce\PluginFramework\v5_11_9\Payment_Gatewa
 			[
 				'id'      => 'sv_wc_google_pay_display_locations',
 				/* translators: Allow Google Pay button on selected display locations (e.g. cart, checkout, product page...) */
-				'title'   => __( 'Allow Google Pay on', 'woocommerce-plugin-framework' ),
+				'title'   => _x( 'Allow Google Pay on', 'Setting title for a multi-select list dropdown of display locations', 'woocommerce-plugin-framework' ),
 				'type'    => 'multiselect',
 				'class'   => 'wc-enhanced-select',
 				'css'     => 'width: 350px;',
