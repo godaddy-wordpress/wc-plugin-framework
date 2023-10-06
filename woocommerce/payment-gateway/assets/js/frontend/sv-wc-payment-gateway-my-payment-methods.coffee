@@ -12,7 +12,7 @@ jQuery ( $ ) ->
 	# The My Payment Methods handler.
 	#
 	# @since 5.1.0
-	class window.SV_WC_Payment_Methods_Handler_v5_11_8
+	class window.SV_WC_Payment_Methods_Handler_v5_11_9
 
 
 		# Constructs the class.
@@ -64,7 +64,7 @@ jQuery ( $ ) ->
 			)
 
 			# don't follow the Add Payment Method button URL if it's disabled
-			$( '.button[href*="add-payment-method"]' ).click ( event ) ->
+			$( '.button[href*="add-payment-method"]' ).on 'click', event ->
 				event.preventDefault() if $( this ).hasClass( 'disabled' )
 
 
@@ -268,4 +268,4 @@ jQuery ( $ ) ->
 
 
 	# dispatch loaded event
-	$( document.body ).trigger( 'sv_wc_payment_methods_handler_v5_11_8_loaded' )
+	$( document.body ).trigger( 'sv_wc_payment_methods_handler_v5_11_9_loaded' )

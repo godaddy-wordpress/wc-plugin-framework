@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\SV_WC_Plugin_Dependencies' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_9\\SV_WC_Plugin_Dependencies' ) ) :
 
 
 /**
@@ -224,7 +224,7 @@ class SV_WC_Plugin_Dependencies {
 						if ( ! empty( $values['type'] ) && 'min' === $values['type'] ) {
 
 							$setting_message = sprintf(
-								/** translators: Placeholders: %s - a PHP setting value */
+								/* translators: Placeholder: %s - a PHP setting value */
 								__( '%s or higher', 'woocommerce-plugin-framework' ),
 								$setting_message
 							);
@@ -250,22 +250,24 @@ class SV_WC_Plugin_Dependencies {
 	 */
 	protected function add_deprecated_notices() {
 
-		// add a notice for PHP < 5.6
-		if ( version_compare( PHP_VERSION, '5.6.0', '<' ) ) {
+		// add a notice for PHP < 7.4
+		if ( version_compare( PHP_VERSION, '7.4.0', '<' ) ) {
 
 			$message = '<p>';
 
-			$message .= sprintf(
-				/* translators: Placeholders: %1$s - <strong>, %2$s - </strong> */
-				__( 'Hey there! We\'ve noticed that your server is running %1$san outdated version of PHP%2$s, which is the programming language that WooCommerce and its extensions are built on.
-					The PHP version that is currently used for your site is no longer maintained, nor %1$sreceives security updates%2$s; newer versions are faster and more secure.
-					As a result, %3$s no longer supports this version and you should upgrade PHP as soon as possible.
-					Your hosting provider can do this for you. %4$sHere are some resources to help you upgrade%5$s and to explain PHP versions further.', 'woocommerce-plugin-framework' ),
-				'<strong>', '</strong>',
-				esc_html( $this->get_plugin()->get_plugin_name() ),
-				'<a href="http://skyver.ge/upgradephp">', '</a>'
-			);
+			// for translation purposes, it's easier to keep these strings separate to avoid many tabs and newlines in the compiled pot file
+			$lines = [
+				/* translators: Placeholders: %1$s - <strong> HTML tag, %2$s - </strong> HTML tag */
+				sprintf( __( 'Hey there! We\'ve noticed that your server is running %1$san outdated version of PHP%2$s, which is the programming language that WooCommerce and its extensions are built on.', 'woocommerce-plugin-framework' ), '<strong>', '</strong>' ),
+				/* translators: Placeholders: %1$s - <strong> HTML tag, %2$s - </strong> HTML tag */
+				sprintf( __( 'The PHP version that is currently used for your site is no longer maintained, nor %1$sreceives security updates%2$s; newer versions are faster and more secure.', 'woocommerce-plugin-framework' ), '<strong>', '</strong>' ),
+				/* translators: Context: User is running an outdated PHP Version a plugin is not compatible with. Placeholders: %s - the plugin name */
+				sprintf( __( 'As a result, %s no longer supports this version and you should upgrade PHP as soon as possible.', 'woocommerce-plugin-framework' ), esc_html( $this->get_plugin()->get_plugin_name() ) ),
+				/* translators: Context: The host can update PHP version for the user. Placeholders: %1$s - <a> HTML tag, %2$s - </a> HTML tag */
+				sprintf( __( 'Your hosting provider can do this for you. %1$sHere are some resources to help you upgrade%2$s and to explain PHP versions further.', 'woocommerce-plugin-framework' ), '<a href="https://wordpress.org/support/update-php/">', '</a>' ),
+			];
 
+			$message .= implode( '<br>', $lines);
 			$message .= '</p>';
 
 			$this->add_admin_notice( 'sv-wc-deprecated-php-version', $message, 'error' );

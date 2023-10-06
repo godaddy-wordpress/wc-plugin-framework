@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_9\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -460,7 +460,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
-		$versioned_handle = $handle . '-v5_11_8';
+		$versioned_handle = $handle . '-v5_11_9';
 
 		// Frontend JS
 		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
@@ -1530,7 +1530,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			// add inline javascript to show/hide any shared settings fields as needed
 			ob_start();
 			?>
-				$( '#woocommerce_<?php echo $this->get_id(); ?>_enable_csc' ).change( function() {
+				$( '#woocommerce_<?php echo $this->get_id(); ?>_enable_csc' ).on( 'change', function() {
 
 					var enabled = $( this ).is( ':checked' );
 
@@ -1553,7 +1553,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			// add inline javascript
 			ob_start();
 			?>
-				$( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_transaction_type' ).change( function() {
+				$( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_transaction_type' ).on( 'change', function() {
 
 					var transaction_type = $( this ).val();
 					var hidden_settings   = $( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_charge_virtual_orders, #woocommerce_<?php echo esc_js( $this->get_id() ); ?>_enable_partial_capture, #woocommerce_<?php echo esc_js( $this->get_id() ); ?>_enable_paid_capture' ).closest( 'tr' );
@@ -1576,7 +1576,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			// add inline javascript
 			ob_start();
 			?>
-				$( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_environment' ).change( function() {
+				$( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_environment' ).on( 'change', function() {
 
 					// inherit settings from other gateway?
 					var inheritSettings = $( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).is( ':checked' );
@@ -1606,7 +1606,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			// add inline javascript to show/hide any shared settings fields as needed
 			ob_start();
 			?>
-				$( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).change( function() {
+				$( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).on( 'change', function() {
 
 					var enabled = $( this ).is( ':checked' );
 

@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\SV_WC_Payment_Gateway_Admin_User_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_9\\SV_WC_Payment_Gateway_Admin_User_Handler' ) ) :
 
 
 /**
@@ -221,6 +221,7 @@ class SV_WC_Payment_Gateway_Admin_User_Handler {
 
 		$plugin_title = trim( str_replace( 'WooCommerce', '', $this->get_plugin()->get_plugin_name() ) );
 
+		/* translators: Placeholder: %s - Plugin name */
 		$title = sprintf( __( '%s Payment Tokens', 'woocommerce-plugin-framework' ), $plugin_title );
 
 		/**

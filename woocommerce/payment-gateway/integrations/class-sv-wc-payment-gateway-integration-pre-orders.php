@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_8;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_8\\SV_WC_Payment_Gateway_Integration_Pre_Orders' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_9\\SV_WC_Payment_Gateway_Integration_Pre_Orders' ) ) :
 
 
 /**
@@ -304,7 +304,12 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 			$order = $this->get_gateway()->get_order( $order );
 
 			// order description
-			$order->description = sprintf( __( '%s - Pre-Order Release Payment for Order %s', 'woocommerce-plugin-framework' ), esc_html( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
+			$order->description = sprintf(
+				/* translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Site name, %2$s - Order number */
+				__( '%1$s - Pre-Order Release Payment for Order %2$s', 'woocommerce-plugin-framework' ),
+				esc_html( SV_WC_Helper::get_site_name() ),
+				$order->get_order_number()
+			);
 
 			// token is required
 			if ( ! $order->payment->token ) {
@@ -333,10 +338,11 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 				if ( $this->get_gateway()->is_credit_card_gateway() ) {
 
 					$message = sprintf(
-							__( '%s %s Pre-Order Release Payment Approved: %s ending in %s (expires %s)', 'woocommerce-plugin-framework' ),
+							/* translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Payment gateway name, %2$s - Either 'Authorization' or 'Charge' (untranslated), %3$s - Payment method type (e.g. 'PayPal', 'Credit Card', etc.), %4$s - Last four digits of the card or account, %5$s - Expiration date of the payment method */
+							__( '%1$s %2$s Pre-Order Release Payment Approved: %3$s ending in %4$s (expires %5$s)', 'woocommerce-plugin-framework' ),
 							$this->get_gateway()->get_method_title(),
 							$this->get_gateway()->perform_credit_card_authorization( $order ) ? 'Authorization' : 'Charge',
-							SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( ! empty( $order->payment->card_type ) ? $order->payment->card_type : 'card' ) ),
+							SV_WC_Payment_Gateway_Helper::payment_type_to_name( ! empty( $order->payment->card_type ) ? $order->payment->card_type : 'card' ),
 							$last_four,
 							( ! empty( $order->payment->exp_month) && ! empty( $order->payment->exp_year ) ? $order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 ) : 'n/a' )
 					);
@@ -344,7 +350,13 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 				} elseif ( $this->get_gateway()->is_echeck_gateway() ) {
 
 					// account type (checking/savings) may or may not be available, which is fine
-					$message = sprintf( __( '%s eCheck Pre-Order Release Payment Approved: %s ending in %s', 'woocommerce-plugin-framework' ), $this->get_gateway()->get_method_title(), SV_WC_Payment_Gateway_Helper::payment_type_to_name( ( ! empty( $order->payment->account_type ) ? $order->payment->account_type : 'bank' ) ), $last_four );
+					$message = sprintf(
+						/* translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Payment gateway name, %2$s - Payment method type (e.g. 'Bank Account'), %3$s - Last four digits of the account */
+						__( '%1$s eCheck Pre-Order Release Payment Approved: %2$s ending in %3$s', 'woocommerce-plugin-framework' ),
+						$this->get_gateway()->get_method_title(),
+						SV_WC_Payment_Gateway_Helper::payment_type_to_name( ! empty( $order->payment->account_type ) ? $order->payment->account_type : 'bank'),
+						$last_four
+					);
 
 				}
 
@@ -388,7 +400,14 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 		} catch ( SV_WC_Plugin_Exception $e ) {
 
 			// Mark order as failed
-			$this->get_gateway()->mark_order_as_failed( $order, sprintf( __( 'Pre-Order Release Payment Failed: %s', 'woocommerce-plugin-framework' ), $e->getMessage() ) );
+			$this->get_gateway()->mark_order_as_failed(
+				$order,
+				sprintf(
+					/* translators: Context: Release of payment for pre-order failed. Placeholder: %s - Error message */
+					__( 'Pre-Order Release Payment Failed: %s', 'woocommerce-plugin-framework' ),
+					$e->getMessage()
+				)
+			);
 
 		}
 	}

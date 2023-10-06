@@ -278,7 +278,7 @@ class SV_WC_Framework_Bootstrap {
 				// describe the way to fix it
 				echo '<p>';
 					printf(
-						/** translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag, %3$s - <em> tag, %4$s - </em> tag, %5$s - <a> tag, %6$s - </a> tag, %7$s - <a> tag, %8$s - </a> tag */
+						/* translators: Context is for plugins to activate or deactivate. HTML Placeholders: %1$s - <a> tag, %2$s - </a> tag, %3$s - <em> tag, %4$s - </em> tag, %5$s - <a> tag, %6$s - </a> tag, %7$s - <a> tag, %8$s - </a> tag */
 						esc_html( _n( 'To resolve this, please %1$supdate%2$s (recommended) %3$sor%4$s %5$sdeactivate%6$s the above plugin, or %7$sdeactivate the following%8$s:', 'To resolve this, please %1$supdate%2$s (recommended) %3$sor%4$s %5$sdeactivate%6$s the above plugins, or %7$sdeactivate the following%8$s:', $plugin_count, 'woocommerce-plugin-framework' ) ),
 						'<a href="' . esc_url( admin_url( 'update-core.php' ) ) . '">', '</a>',
 						'<em>', '</em>',
