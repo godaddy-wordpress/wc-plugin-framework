@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout current repository
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1
         with:
           fetch-depth: 0
 
       - name: Checkout action-golf-integration repository
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1
         with:
           repository: gdcorp-partners/action-golf-integration
           ref: 'main'
