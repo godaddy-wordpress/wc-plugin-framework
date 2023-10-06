@@ -27,11 +27,11 @@
 	<table class="wc-order-totals">
 
 		<tr>
-			<td class="label"><?php esc_html_e( 'Authorization total', 'woocommerce-plugin-framework' ); ?>:</td>
+			<td class="label"><?php echo esc_html_x( 'Authorization total', 'Authorized transaction for order payment', 'woocommerce-plugin-framework' ); ?>:</td>
 			<td class="total"><?php echo wc_price( $authorization_total, array( 'currency' => $order->get_currency() ) ); ?></td>
 		</tr>
 		<tr>
-			<td class="label"><?php esc_html_e( 'Amount already captured', 'woocommerce-plugin-framework' ); ?>:</td>
+			<td class="label"><?php echo esc_html_x( 'Amount already captured', 'Captured transaction (without charge) for order payment', 'woocommerce-plugin-framework' ); ?>:</td>
 			<td class="total"><?php echo wc_price( $total_captured, array( 'currency' => $order->get_currency() ) ); ?></td>
 		</tr>
 
@@ -43,7 +43,7 @@
 		<?php endif; ?>
 
 		<tr>
-			<td class="label"><label for="capture_amount"><?php esc_html_e( 'Capture amount', 'woocommerce-plugin-framework' ); ?>:</label></td>
+			<td class="label"><label for="capture_amount"><?php echo esc_html_x( 'Capture amount', 'Capture (without charge) amount for order payment', 'woocommerce-plugin-framework' ); ?>:</label></td>
 			<td class="total">
 				<input type="text" class="text" id="capture_amount" name="capture_amount" class="wc_input_price" />
 				<div class="clear"></div>
@@ -62,8 +62,12 @@
 
 		<?php $amount = '<span class="capture-amount">' . wc_price( 0, array( 'currency' => $order->get_currency() ) ) . '</span>'; ?>
 
-		<button type="button" class="button button-primary capture-action" disabled="disabled"><?php printf( esc_html__( 'Capture %s', 'woocommerce-plugin-framework' ), $amount ); ?></button>
-		<button type="button" class="button cancel-action"><?php _e( 'Cancel', 'woocommerce-plugin-framework' ); ?></button>
+		<button type="button" class="button button-primary capture-action" disabled="disabled"><?php printf(
+			/* translators: Context: Capture payment without charge. Placeholder: %s - transaction amount to be captured. */
+			esc_html__( 'Capture %s','woocommerce-plugin-framework' ),
+			$amount
+		); ?></button>
+		<button type="button" class="button cancel-action"><?php esc_html_e( 'Cancel', 'woocommerce-plugin-framework' ); ?></button>
 
 		<div class="clear"></div>
 	</div>

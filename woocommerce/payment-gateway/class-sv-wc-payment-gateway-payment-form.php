@@ -542,7 +542,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 		$image_url = \WC_HTTPS::force_https_url( $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/sample-check.png' );
 
-		$html = sprintf( '<div class="js-sv-wc-payment-gateway-echeck-form-sample-check" style="display: none;"><img width="541" height="270" src="%s" alt="%s" /></div>', esc_url( $image_url ), esc_attr__( 'Sample Check', 'woocommerce-plugin-framework' ) );
+		$html = sprintf( '<div class="js-sv-wc-payment-gateway-echeck-form-sample-check" style="display: none;"><img width="541" height="270" src="%s" alt="%s" /></div>', esc_url( $image_url ), esc_attr_x( 'Sample Check', 'Bank check (noun)', 'woocommerce-plugin-framework' ) );
 
 		/**
 		 * Payment Gateway Payment Form Sample eCheck HTML.

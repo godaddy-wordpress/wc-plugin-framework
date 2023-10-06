@@ -390,18 +390,18 @@ class Lifecycle {
 		if ( $this->get_plugin()->get_reviews_url() ) {
 
 			// to be prepended at random to each milestone notice
-			$exclamations = array(
-				__( 'Awesome', 'woocommerce-plugin-framework' ),
-				__( 'Fantastic', 'woocommerce-plugin-framework' ),
-				__( 'Cowabunga', 'woocommerce-plugin-framework' ),
-				__( 'Congratulations', 'woocommerce-plugin-framework' ),
-				__( 'Hot dog', 'woocommerce-plugin-framework' ),
-			);
+			$exclamations = [
+				_x( 'Awesome!', 'Generic congratulatory exclamation at the start of a milestone message', 'woocommerce-plugin-framework' ),
+				_x( 'Fantastic!', 'Generic congratulatory exclamation at the start of a milestone message', 'woocommerce-plugin-framework' ),
+				_x( 'Cowabunga!', 'Generic congratulatory exclamation at the start of a milestone message', 'woocommerce-plugin-framework' ),
+				_x( 'Congratulations!', 'Generic congratulatory exclamation at the start of a milestone message', 'woocommerce-plugin-framework' ),
+				_x( 'Hot dog!', 'Generic congratulatory exclamation at the start of a milestone message', 'woocommerce-plugin-framework' ),
+			];
 
-			$message = $exclamations[ array_rand( $exclamations ) ] . ', ' . esc_html( $custom_message ) . ' ';
+			$message = $exclamations[ array_rand( $exclamations ) ] . ' ' . esc_html( $custom_message ) . ' ';
 
 			$message .= sprintf(
-				/* translators: Placeholders: %1$s - plugin name, %2$s - <a> tag, %3$s - </a> tag, %4$s - <a> tag, %5$s - </a> tag */
+				/* translators: Placeholders: %1$s - Plugin name, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <a> tag, %5$s - Closing HTML </a> tag */
 				__( 'Are you having a great experience with %1$s so far? Please consider %2$sleaving a review%3$s! If things aren\'t going quite as expected, we\'re happy to help -- please %4$sreach out to our support team%5$s.', 'woocommerce-plugin-framework' ),
 				'<strong>' . esc_html( $this->get_plugin()->get_plugin_name() ) . '</strong>',
 				'<a href="' . esc_url( $this->get_plugin()->get_reviews_url() ) . '">', '</a>',

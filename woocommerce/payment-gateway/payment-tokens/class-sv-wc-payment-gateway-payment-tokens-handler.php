@@ -168,13 +168,13 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		} else {
 
 			if ( $response->get_status_code() && $response->get_status_message() ) {
-				/* translators: Placeholders: %1$s - payment request response status code, %2$s - payment request response status message */
+				/* translators: Placeholders: %1$s - Payment request response status code, %2$s - Payment request response status message */
 				$message = sprintf( esc_html__( 'Status code %1$s: %2$s', 'woocommerce-plugin-framework' ), $response->get_status_code(), $response->get_status_message() );
 			} elseif ( $response->get_status_code() ) {
-				/* translators: Placeholders: %s - payment request response status code */
+				/* translators: Placeholder: %s - Payment request response status code */
 				$message = sprintf( esc_html__( 'Status code: %s', 'woocommerce-plugin-framework' ), $response->get_status_code() );
 			} elseif ( $response->get_status_message() ) {
-				/* translators: Placeholders: %s - payment request response status message */
+				/* translators: Placeholder: %s - Payment request response status message */
 				$message = sprintf( esc_html__( 'Status message: %s', 'woocommerce-plugin-framework' ), $response->get_status_message() );
 			} else {
 				$message = esc_html__( 'Unknown Error', 'woocommerce-plugin-framework' );
@@ -182,6 +182,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 			// add transaction id if there is one
 			if ( $response->get_transaction_id() ) {
+				/* translators: Placeholder: %s - Payment transaction ID */
 				$message .= ' ' . sprintf( esc_html__( 'Transaction ID %s', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 			}
 
