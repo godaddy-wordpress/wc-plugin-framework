@@ -299,20 +299,20 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			// account number length validation
 			if ( strlen( $account_number ) < 5 || strlen( $account_number ) > 17 ) {
-				SV_WC_Helper::wc_add_notice( esc_html__( 'Account number is invalid (must be between 5 and 17 digits)', 'woocommerce-plugin-framework' ), 'error' );
+				SV_WC_Helper::wc_add_notice( esc_html_x( 'Account number is invalid (must be between 5 and 17 digits)', 'Bank account','woocommerce-plugin-framework' ), 'error' );
 				$is_valid = false;
 			}
 		}
 
 		// optional drivers license number validation
 		if ( ! empty( $drivers_license_number ) &&  preg_match( '/^[a-zA-Z0-9 -]+$/', $drivers_license_number ) ) {
-			SV_WC_Helper::wc_add_notice( esc_html__( 'Drivers license number is invalid', 'woocommerce-plugin-framework' ), 'error' );
+			SV_WC_Helper::wc_add_notice( esc_html__( "Driver's license number is invalid", 'woocommerce-plugin-framework' ), 'error' );
 			$is_valid = false;
 		}
 
 		// optional check number validation
 		if ( ! empty( $check_number ) && ! ctype_digit( $check_number ) ) {
-			SV_WC_Helper::wc_add_notice( esc_html__( 'Check Number is invalid (only digits are allowed)', 'woocommerce-plugin-framework' ), 'error' );
+			SV_WC_Helper::wc_add_notice( esc_html_x( 'Check Number is invalid (only digits are allowed)', 'Bank check (noun)', 'woocommerce-plugin-framework' ), 'error' );
 			$is_valid = false;
 		}
 
