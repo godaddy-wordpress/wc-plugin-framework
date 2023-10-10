@@ -391,7 +391,7 @@ abstract class Admin {
 
 			$errors[] = sprintf(
 				/* translators: Context: Error message displayed to merchants if their store currency is not in one of the accepted currencies by the payment gateway they intend to enable. Placeholders: %1$s - a currency or comma-separated list of currencies, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - payment method title/label */
-				_n('Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s.', 'Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s.', count( $accepted_currencies ), 'woocommerce-plugin-framework' ),
+				_n('Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s.', 'Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s.', count( $accepted_currencies ), 'woocommerce-plugin-framework' ),
 				'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
 				'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=general' ) ) . '">',
 				'</a>',
