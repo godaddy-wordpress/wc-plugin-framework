@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-10-06T06:46:57+00:00\n"
+"POT-Creation-Date: 2023-10-10T06:17:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -717,15 +717,18 @@ msgid "Account Number is invalid (only digits are allowed)"
 msgstr "⌠3314930⌡Åccòünt Nümbér îs învålîd (ònly dîgîts åré ållòwéd)⌠3314930⌡"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:302
+msgctxt "Bank account"
 msgid "Account number is invalid (must be between 5 and 17 digits)"
 msgstr "⌠3314931⌡Åccòünt nümbér îs învålîd (müst bé bétwéén 5 ånd 17 dîgîts)⌠3314931⌡"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:309
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:507
-msgid "Drivers license number is invalid"
-msgstr "⌠3314932⌡Drîvérs lîcénsé nümbér îs învålîd⌠3314932⌡"
+msgid "Driver's license number is invalid"
+msgstr "⌠3321247⌡Drîvér's lîcénsé nümbér îs învålîd⌠3321247⌡"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:315
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:503
+msgctxt "Bank check (noun)"
 msgid "Check Number is invalid (only digits are allowed)"
 msgstr "⌠3314933⌡Chéck Nümbér îs învålîd (ònly dîgîts åré ållòwéd)⌠3314933⌡"
 
@@ -1219,11 +1222,6 @@ msgctxt "Credit or debit card"
 msgid "Card expiration date is invalid"
 msgstr "⌠3320210⌡Cård éxpîråtîòn dåté îs învålîd⌠3320210⌡"
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:503
-msgctxt "Bank check (noun)"
-msgid "Check Number is invalid (only digits are allowed)"
-msgstr "⌠3320211⌡Chéck Nümbér îs învålîd (ònly dîgîts åré ållòwéd)⌠3320211⌡"
-
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:504
 msgctxt "Bank check (noun)"
 msgid "Check Number is missing"
@@ -1231,12 +1229,12 @@ msgstr "⌠3315004⌡Chéck Nümbér îs mîssîng⌠3315004⌡"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:505
 msgctxt "For countries without states, \"state\" can be replaced with \"place of issue\"."
-msgid "Drivers license state is missing"
-msgstr "⌠3315005⌡Drîvérs lîcénsé ståté îs mîssîng⌠3315005⌡"
+msgid "Driver's license state is missing"
+msgstr "⌠3321248⌡Drîvér's lîcénsé ståté îs mîssîng⌠3321248⌡"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:506
-msgid "Drivers license number is missing"
-msgstr "⌠3315006⌡Drîvérs lîcénsé nümbér îs mîssîng⌠3315006⌡"
+msgid "Driver's license number is missing"
+msgstr "⌠3321249⌡Drîvér's lîcénsé nümbér îs mîssîng⌠3321249⌡"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:508
 msgctxt "Bank account"
@@ -1621,9 +1619,9 @@ msgstr "⌠3314788⌡%s îs dîsåbléd.⌠3314788⌡"
 #. translators: Context: Error message displayed to merchants if their store currency is not in one of the accepted currencies by the payment gateway they intend to enable. Placeholders: %1$s - a currency or comma-separated list of currencies, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - payment method title/label
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:394
 msgid "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
-msgid_plural "Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
+msgid_plural "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 msgstr[0] "⌠3314789⌡Åccépts påymént în %1$s ònly. %2$sCònfîgüré%3$s WòòCòmmércé tò åccépt %1$s tò énåblé %4$s.⌠3314789⌡"
-msgstr[1] "⌠3320223⌡Åccépts påymént în òné òf %1$s ònly. %2$sCònfîgüré%3$s WòòCòmmércé tò åccépt %1$s tò énåblé %4$s.⌠3320223⌡"
+msgstr[1] "⌠3321250⌡Åccépts påymént în %1$s ònly. %2$sCònfîgüré%3$s WòòCòmmércé tò åccépt %1$s tò énåblé %4$s.⌠3321250⌡"
 
 #. translators: Placeholders: %1$s - Checkout method label, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <strong> tag, %5$s - closing HTML </strong> tag
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:431
