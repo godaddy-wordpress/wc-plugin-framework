@@ -1,0 +1,35 @@
+name: GoLF Integration - Send Translations to GoLF
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - translation
+  workflow_run:
+    workflows: [ "Update translations files" ]
+    types:
+      - completed
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current repository
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1
+        with:
+          fetch-depth: 0
+
+      - name: Checkout action-golf-integration repository
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1
+        with:
+          repository: gdcorp-partners/action-golf-integration
+          ref: 'main'
+          token: ${{ secrets.MWC_GD_ACTIONS_REPO_PAT }}
+          path: action-golf-integration
+          persist-credentials: false
+
+      - name: Branch syncing
+        id: branch_syncing
+        uses: ./action-golf-integration/src/translation-updates/send
+        with:
+          gh_token: ${{ secrets.MWC_GD_ACTIONS_REPO_PAT }}
+          main_branch: master
+          translation_branch: translation

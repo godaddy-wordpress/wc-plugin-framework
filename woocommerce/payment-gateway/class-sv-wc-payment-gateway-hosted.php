@@ -513,6 +513,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			$order->add_order_note( sprintf( esc_html__( '%s duplicate transaction received', 'woocommerce-plugin-framework' ), $this->get_method_title() ) );
 
 			throw new SV_WC_Payment_Gateway_Exception( sprintf(
+				/* translators: Placeholder: %s - Order number */
 				__( 'Order %s is already paid for.', 'woocommerce-plugin-framework' ),
 				$order->get_order_number()
 			) );

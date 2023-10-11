@@ -2,7 +2,8 @@
 
 2023.nn.nn - version 5.11.10
  * Tweak - Improve tokenization support for gateways that tokenize payment methods with sale
- * Fix - Updated deprecated JS event handlers that would have triggered deprecation notices in console
+ * Fix - Update deprecated JS event handlers that would have triggered deprecation notices in console
+ * Localization - The Framework has been localized in several languages!
 
 2023.09.28 - version 5.11.9
  * Fix - Prevent prefixed metadata from being included in order item descriptions

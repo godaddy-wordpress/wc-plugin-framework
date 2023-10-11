@@ -112,6 +112,7 @@ class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 				if ( $customer_id = $gateway->get_customer_id( $customer->get_id(), array( 'autocreate' => false ) ) ) {
 
 					$data[] = array(
+						/* translators: Placeholder: %s - Payment gateway title (e.g. Authorize.Net, Braintree...) */
 						'name'  => sprintf( __( '%s Customer ID', 'woocommerce-plugin-framework' ), $gateway->get_method_title() ),
 						'value' => $customer_id,
 					);
@@ -206,6 +207,7 @@ class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 
 						$data[] = array(
 							'group_id'    => 'wc_' . $gateway->get_id() . '_tokens',
+							/* translators: Placeholder: %s - Payment gateway title (e.g. Authorize.Net, Braintree, etc.) */
 							'group_label' => sprintf( __( '%s Payment Tokens', 'woocommerce-plugin-framework' ), $gateway->get_method_title() ),
 							'item_id'     => 'token-' . $token->get_id(),
 							'data'        => $token_data,

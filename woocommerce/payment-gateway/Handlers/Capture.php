@@ -195,6 +195,7 @@ class Capture {
 
 			// adds the transaction id (if any) to the order note
 			if ( $response->get_transaction_id() ) {
+				/* translators: Placeholder: %s - Payment transaction ID */
 				$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 			}
 
@@ -225,7 +226,7 @@ class Capture {
 			if ( 500 !== $exception->getCode() ) {
 
 				$note_message = sprintf(
-				/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - failure message. Definitions: "capture" as in capturing funds from a credit card. */
+					/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - failure message. Definitions: "capture" as in capturing funds from a credit card. */
 					__( '%1$s Capture Failed: %2$s', 'woocommerce-plugin-framework' ),
 					$this->get_gateway()->get_method_title(),
 					$exception->getMessage()
