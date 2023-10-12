@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-10-06T06:46:57+00:00\n"
+"POT-Creation-Date: 2023-10-10T06:17:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -243,22 +243,22 @@ msgstr "해당 설정을 구성하려면 호스팅 공급업체 또는 서버 �
 #. translators: Placeholders: %1$s - <strong> HTML tag, %2$s - </strong> HTML tag
 #: woocommerce/class-sv-wc-plugin-dependencies.php:261
 msgid "Hey there! We've noticed that your server is running %1$san outdated version of PHP%2$s, which is the programming language that WooCommerce and its extensions are built on."
-msgstr "Hey there! We've noticed that your server is running %1$san outdated version of PHP%2$s, which is the programming language that WooCommerce and its extensions are built on."
+msgstr "안녕하세요! 귀하의 서버에서 WooCommerce 및 해당 확장 프로그램의 기반이 되는 프로그래밍 언어인 %1$s오래된 PHP 버전%2$s을 실행하고 있는 것으로 나타났습니다."
 
 #. translators: Placeholders: %1$s - <strong> HTML tag, %2$s - </strong> HTML tag
 #: woocommerce/class-sv-wc-plugin-dependencies.php:263
 msgid "The PHP version that is currently used for your site is no longer maintained, nor %1$sreceives security updates%2$s; newer versions are faster and more secure."
-msgstr "The PHP version that is currently used for your site is no longer maintained, nor %1$sreceives security updates%2$s; newer versions are faster and more secure."
+msgstr "현재 귀하의 사이트에 사용되는 PHP 버전은 더 이상 유지 관리되지 않으며 %1$s보안 업데이트도 받지 않습니다%2$s. 최신 버전은 더 빠르고 안전합니다."
 
 #. translators: Context: User is running an outdated PHP Version a plugin is not compatible with. Placeholders: %s - the plugin name
 #: woocommerce/class-sv-wc-plugin-dependencies.php:265
 msgid "As a result, %s no longer supports this version and you should upgrade PHP as soon as possible."
-msgstr "As a result, %s no longer supports this version and you should upgrade PHP as soon as possible."
+msgstr "결과적으로 %s은(는) 이 버전을 더 이상 지원하지 않으며 최대한 빨리 PHP를 업그레이드해야 합니다."
 
 #. translators: Context: The host can update PHP version for the user. Placeholders: %1$s - <a> HTML tag, %2$s - </a> HTML tag
 #: woocommerce/class-sv-wc-plugin-dependencies.php:267
 msgid "Your hosting provider can do this for you. %1$sHere are some resources to help you upgrade%2$s and to explain PHP versions further."
-msgstr "Your hosting provider can do this for you. %1$sHere are some resources to help you upgrade%2$s and to explain PHP versions further."
+msgstr "귀하의 호스팅 공급업체에서 대신 해드릴 수 있습니다. %1$s다음은 업그레이드하는 데 도움이 되고%2$s PHP 버전에 대해 더 자세히 설명하는 데 도움이 되는 몇 가지 리소스입니다."
 
 #. translators: Placeholders: %s - plugin name
 #: woocommerce/class-sv-wc-plugin.php:310
@@ -303,27 +303,27 @@ msgstr "구성"
 #: woocommerce/Lifecycle.php:394
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Awesome!"
-msgstr "Awesome!"
+msgstr "멋집니다!"
 
 #: woocommerce/Lifecycle.php:395
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Fantastic!"
-msgstr "Fantastic!"
+msgstr "환상적이에요!"
 
 #: woocommerce/Lifecycle.php:396
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Cowabunga!"
-msgstr "Cowabunga!"
+msgstr "해냈어요!"
 
 #: woocommerce/Lifecycle.php:397
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Congratulations!"
-msgstr "Congratulations!"
+msgstr "축하합니다!"
 
 #: woocommerce/Lifecycle.php:398
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Hot dog!"
-msgstr "Hot dog!"
+msgstr "최고예요!"
 
 #. translators: Placeholders: %1$s - Plugin name, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <a> tag, %5$s - Closing HTML </a> tag
 #: woocommerce/Lifecycle.php:405
@@ -338,7 +338,7 @@ msgstr "이 캡처 과정을 완료하시겠습니까? 해당 작업은 실행 �
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:133
 msgctxt "Payment transaction capture failed error message"
 msgid "Something went wrong, and the capture could not be completed. Please try again."
-msgstr "Something went wrong, and the capture could not be completed. Please try again."
+msgstr "문제가 발생했으며 이 캡처 과정을 완료할 수 없습니다. 다시 시도하세요."
 
 #. translators: verb, as in "Capture credit card charge". Used when an amount has been pre-authorized before, but funds have not yet been captured (taken) from the card. Capturing the charge will take the money from the credit card and put it in the merchant's pockets.
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:178
@@ -559,7 +559,7 @@ msgstr "이 주문은 검토를 위해 보류 중입니다. 거래를 완료하�
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:106
 msgctxt "Credit or debit card CSC/CVC/CVV"
 msgid "This order is being placed on hold for review due to an incorrect card verification number. You may contact the store to complete the transaction."
-msgstr "This order is being placed on hold for review due to an incorrect card verification number. You may contact the store to complete the transaction."
+msgstr "카드 승인 번호가 정확하지 않기 때문에 이 주문은 검토를 위해 보류 중입니다. 거래를 완료하려면 스토어에 문의하실 수 있습니다."
 
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:107
 msgctxt "Credit or debit card CSC/CVC/CVV"
@@ -580,7 +580,7 @@ msgstr "해당 카드 유형은 사용할 수 없습니다. 다른 카드 또는
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:116
 msgctxt "Credit or debit card"
 msgid "The card type is invalid or does not correlate with the credit card number. Please try again or use an alternate card or other form of payment."
-msgstr "The card type is invalid or does not correlate with the credit card number. Please try again or use an alternate card or other form of payment."
+msgstr "카드 유형이 유효하지 않거나 신용카드 번호와 관련이 없습니다. 다시 시도하거나 다른 카드 또는 다른 결제 양식을 사용하세요."
 
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:113
 msgctxt "Credit or debit card"
@@ -717,15 +717,18 @@ msgid "Account Number is invalid (only digits are allowed)"
 msgstr "계좌 번호가 유효하지 않습니다(숫자만 허용됨)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:302
+msgctxt "Bank account"
 msgid "Account number is invalid (must be between 5 and 17 digits)"
 msgstr "계좌 번호가 유효하지 않습니다(5-17자리여야 합니다)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:309
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:507
-msgid "Drivers license number is invalid"
-msgstr "운전 면허 번호가 유효하지 않습니다"
+msgid "Driver's license number is invalid"
+msgstr "Driver's license number is invalid"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:315
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:503
+msgctxt "Bank check (noun)"
 msgid "Check Number is invalid (only digits are allowed)"
 msgstr "수표 번호가 유효하지 않습니다(숫자만 허용됨)"
 
@@ -1172,57 +1175,52 @@ msgstr "만료 날짜"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:350
 msgctxt "Congratulatory message displayed to the merchant when they process their first payment"
 msgid "You successfully processed a payment!"
-msgstr "You successfully processed a payment!"
+msgstr "결제가 처리되었습니다!"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:355
 msgctxt "Congratulatory message displayed to the merchant when they process their first refund"
 msgid "You successfully processed a refund!"
-msgstr "You successfully processed a refund!"
+msgstr "환불이 처리되었습니다!"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:495
 msgctxt "Credit or debit card"
 msgid "Card number is missing"
-msgstr "Card number is missing"
+msgstr "카드 번호가 누락되었습니다"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:496
 msgctxt "Credit or debit card"
 msgid "Card number is invalid"
-msgstr "Card number is invalid"
+msgstr "카드 번호가 유효하지 않습니다"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:497
 msgctxt "Credit or debit card"
 msgid "Card number is invalid (only digits allowed)"
-msgstr "Card number is invalid (only digits allowed)"
+msgstr "카드 번호가 유효하지 않습니다(숫자만 허용됨)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:498
 msgctxt "Credit or debit card"
 msgid "Card number is invalid (wrong length)"
-msgstr "Card number is invalid (wrong length)"
+msgstr "카드 번호가 유효하지 않습니다(길이가 다름)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:499
 msgctxt "Credit or debit card"
 msgid "Card security code is missing"
-msgstr "Card security code is missing"
+msgstr "카드 보안 코드가 누락되었습니다"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:500
 msgctxt "Credit or debit card"
 msgid "Card security code is invalid (only digits are allowed)"
-msgstr "Card security code is invalid (only digits are allowed)"
+msgstr "카드 보안 코드가 유효하지 않습니다(숫자만 허용됨)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:501
 msgctxt "Credit or debit card"
 msgid "Card security code is invalid (must be 3 or 4 digits)"
-msgstr "Card security code is invalid (must be 3 or 4 digits)"
+msgstr "카드 보안 코드가 유효하지 않습니다(3 또는 4자리여야 함)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:502
 msgctxt "Credit or debit card"
 msgid "Card expiration date is invalid"
-msgstr "Card expiration date is invalid"
-
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:503
-msgctxt "Bank check (noun)"
-msgid "Check Number is invalid (only digits are allowed)"
-msgstr "Check Number is invalid (only digits are allowed)"
+msgstr "카드 만료 날짜가 유효하지 않습니다"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:504
 msgctxt "Bank check (noun)"
@@ -1231,42 +1229,42 @@ msgstr "수표 번호가 누락되었습니다"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:505
 msgctxt "For countries without states, \"state\" can be replaced with \"place of issue\"."
-msgid "Drivers license state is missing"
-msgstr "운전 면허 상태가 누락되었습니다"
+msgid "Driver's license state is missing"
+msgstr "Driver's license state is missing"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:506
-msgid "Drivers license number is missing"
-msgstr "운전 면허 번호가 누락되었습니다"
+msgid "Driver's license number is missing"
+msgstr "Driver's license number is missing"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:508
 msgctxt "Bank account"
 msgid "Account Number is missing"
-msgstr "Account Number is missing"
+msgstr "계좌 번호가 누락되었습니다"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:509
 msgctxt "Bank account"
 msgid "Account Number is invalid (only digits are allowed)"
-msgstr "Account Number is invalid (only digits are allowed)"
+msgstr "계좌 번호가 유효하지 않습니다(숫자만 허용됨)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:510
 msgctxt "Bank account"
 msgid "Account Number is invalid (must be between 5 and 17 digits)"
-msgstr "Account Number is invalid (must be between 5 and 17 digits)"
+msgstr "계좌 번호가 유효하지 않습니다(5-17자리여야 합니다)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:511
 msgctxt "Bank account"
 msgid "Routing Number is missing"
-msgstr "Routing Number is missing"
+msgstr "라우팅 번호가 누락되었습니다"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:512
 msgctxt "Bank account"
 msgid "Routing Number is invalid (only digits are allowed)"
-msgstr "Routing Number is invalid (only digits are allowed)"
+msgstr "라우팅 번호가 유효하지 않습니다(숫자만 허용됨)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:513
 msgctxt "Bank account"
 msgid "Routing Number is invalid (must be 9 digits)"
-msgstr "Routing Number is invalid (must be 9 digits)"
+msgstr "라우팅 번호가 유효하지 않습니다(9자리여야 함)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:719
 msgid "Continue to Payment"
@@ -1364,15 +1362,15 @@ msgstr "다른 게이트웨이에서 해당 설정을 사용하고 있기 때문
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1492
 msgid "Card Security Code (CSC)"
-msgstr "Card Security Code (CSC)"
+msgstr "카드 보안 코드(CSC)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1493
 msgid "Display the Card Security Code (CSC) field on checkout"
-msgstr "Display the Card Security Code (CSC) field on checkout"
+msgstr "결제 시 카드 보안 코드(CSC) 입력란 표시"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1501
 msgid "Saved Card Security Code"
-msgstr "Saved Card Security Code"
+msgstr "저장된 카드 보안 코드"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1502
 msgid "Display the Card Security Code field when paying with a saved card"
@@ -1477,13 +1475,13 @@ msgstr "%1$s %2$s %3$s 승인됨"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2715
 msgctxt "noun, software environment"
 msgid "Test"
-msgstr "Test"
+msgstr "테스트"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2716
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3198
 msgctxt "credit card transaction type"
 msgid "Authorization"
-msgstr "Authorization"
+msgstr "승인"
 
 #. translators: Placeholders: %1$s - credit card type (MasterCard, Visa, etc...), %2$s - last four digits of the card
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2723
@@ -1621,14 +1619,14 @@ msgstr "%s이(가) 비활성화되었습니다."
 #. translators: Context: Error message displayed to merchants if their store currency is not in one of the accepted currencies by the payment gateway they intend to enable. Placeholders: %1$s - a currency or comma-separated list of currencies, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - payment method title/label
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:394
 msgid "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
-msgid_plural "Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
+msgid_plural "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 msgstr[0] "%1$s 결제만 가능합니다. %4$s을(를) 활성화하는 %1$s을(를) 허용하도록 WooCommerce를 %2$s구성%3$s하세요."
-msgstr[1] "Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
+msgstr[1] "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 
 #. translators: Placeholders: %1$s - Checkout method label, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <strong> tag, %5$s - closing HTML </strong> tag
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:431
 msgid "Your store %1$scalculates taxes%2$s based on the shipping address, but %1$s %4$sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead."
-msgstr "Your store %1$scalculates taxes%2$s based on the shipping address, but %1$s %4$sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead."
+msgstr "귀하의 스토어는 배송 주소를 기준으로 %1$s세금을 계산%2$s하지만 가상 제품만 주문한 경우 %1$s은(는) 고객 배송 정보를 매장과 공유하지 %4$s않습니다%5$s. 이러한 주문에는 매장 주소를 기준으로 세금이 계산됩니다."
 
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:464
 msgid "%4$s%1$s Notice!%5$s Your store %2$scalculates taxes%3$s based on the billing address, but %1$s %4$sdoes not%5$s share the customer billing address with your store before payment. These orders will have their taxes calculated based on the shipping address (or shop address, for orders with only virtual products)."
@@ -1687,7 +1685,7 @@ msgstr "인증서 경로"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:176
 msgid "The full system path to your certificate file from Apple. For security reasons you should store this outside of your web root."
-msgstr "The full system path to your certificate file from Apple. For security reasons you should store this outside of your web root."
+msgstr "Apple의 인증서 파일에 대한 전체 시스템 경로입니다. 보안상의 이유로 이를 웹 루트 외부에 저장해야 합니다."
 
 #. translators: Placeholders: %s - the server's web root path
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:179
@@ -1845,7 +1843,7 @@ msgstr "사전 주문 토큰화 시도 실패(%s)"
 #. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Site name, %2$s - Order number
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:309
 msgid "%1$s - Pre-Order Release Payment for Order %2$s"
-msgstr "%1$s - Pre-Order Release Payment for Order %2$s"
+msgstr "%1$s - %2$s 주문의 사주문 릴리스 결제"
 
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:316
 msgid "Payment token missing/invalid."
@@ -1854,12 +1852,12 @@ msgstr "결제 토큰이 누락되었습니다/유효하지 않습니다."
 #. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Payment gateway name, %2$s - Either 'Authorization' or 'Charge' (untranslated), %3$s - Payment method type (e.g. 'PayPal', 'Credit Card', etc.), %4$s - Last four digits of the card or account, %5$s - Expiration date of the payment method
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:342
 msgid "%1$s %2$s Pre-Order Release Payment Approved: %3$s ending in %4$s (expires %5$s)"
-msgstr "%1$s %2$s Pre-Order Release Payment Approved: %3$s ending in %4$s (expires %5$s)"
+msgstr "%1$s %2$s 사전 주문 릴리스 결제 승인됨: 끝 번호가 %4$s인 %3$s(%5$s 만료)"
 
 #. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Payment gateway name, %2$s - Payment method type (e.g. 'Bank Account'), %3$s - Last four digits of the account
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:355
 msgid "%1$s eCheck Pre-Order Release Payment Approved: %2$s ending in %3$s"
-msgstr "%1$s eCheck Pre-Order Release Payment Approved: %2$s ending in %3$s"
+msgstr "%1$s eCheck 사전 주문 릴리스 결제 승인됨: 끝 번호가 %3$s인 %2$s"
 
 #. translators: Context: Release of payment for pre-order failed. Placeholder: %s - Error message
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:407
@@ -1883,7 +1881,7 @@ msgstr "%1$s 결제 변경 실패(%2$s)"
 #. translators: Context: Payment made for order. Placeholders: %1$s - Payment method name (e.g. "Credit Card", "PayPal", etc.), %2$s - Last four digits of the card/account used
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:679
 msgid "Via %1$s ending in %2$s"
-msgstr "Via %1$s ending in %2$s"
+msgstr "끝 번호가 %2$s인 %1$s 사용"
 
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:710
 msgid "Subscriptions"
