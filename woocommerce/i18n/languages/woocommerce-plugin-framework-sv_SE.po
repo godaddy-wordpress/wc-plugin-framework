@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-10-06T06:46:57+00:00\n"
+"POT-Creation-Date: 2023-10-10T06:17:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -243,22 +243,22 @@ msgstr "Kontakta din värdtjänstleverantör eller serveradministratör för att
 #. translators: Placeholders: %1$s - <strong> HTML tag, %2$s - </strong> HTML tag
 #: woocommerce/class-sv-wc-plugin-dependencies.php:261
 msgid "Hey there! We've noticed that your server is running %1$san outdated version of PHP%2$s, which is the programming language that WooCommerce and its extensions are built on."
-msgstr "Hey there! We've noticed that your server is running %1$san outdated version of PHP%2$s, which is the programming language that WooCommerce and its extensions are built on."
+msgstr "Hej! Vi har sett att din server kör %1$sen föråldrad version av PHP%2$s, som är det programmeringsspråk som WooCommerce och dess utökningar är byggda på."
 
 #. translators: Placeholders: %1$s - <strong> HTML tag, %2$s - </strong> HTML tag
 #: woocommerce/class-sv-wc-plugin-dependencies.php:263
 msgid "The PHP version that is currently used for your site is no longer maintained, nor %1$sreceives security updates%2$s; newer versions are faster and more secure."
-msgstr "The PHP version that is currently used for your site is no longer maintained, nor %1$sreceives security updates%2$s; newer versions are faster and more secure."
+msgstr "Den PHP-version som används till din webbplats underhålls inte längre, och får inte heller längre %1$ssäkerhetsuppdateringar%2$s. Det finns senare versioner som är snabbare och säkrare."
 
 #. translators: Context: User is running an outdated PHP Version a plugin is not compatible with. Placeholders: %s - the plugin name
 #: woocommerce/class-sv-wc-plugin-dependencies.php:265
 msgid "As a result, %s no longer supports this version and you should upgrade PHP as soon as possible."
-msgstr "As a result, %s no longer supports this version and you should upgrade PHP as soon as possible."
+msgstr "Detta innebär att %s inte längre stöder den här versionen och att du bör uppgradera PHP så snart som möjligt."
 
 #. translators: Context: The host can update PHP version for the user. Placeholders: %1$s - <a> HTML tag, %2$s - </a> HTML tag
 #: woocommerce/class-sv-wc-plugin-dependencies.php:267
 msgid "Your hosting provider can do this for you. %1$sHere are some resources to help you upgrade%2$s and to explain PHP versions further."
-msgstr "Your hosting provider can do this for you. %1$sHere are some resources to help you upgrade%2$s and to explain PHP versions further."
+msgstr "Ditt webbhotell kan göra det åt dig. %1$sHär är några resurser som kan hjälpa dig att uppgradera%2$s och som förklarar PHP-versionerna närmare."
 
 #. translators: Placeholders: %s - plugin name
 #: woocommerce/class-sv-wc-plugin.php:310
@@ -303,27 +303,27 @@ msgstr "Konfigurera"
 #: woocommerce/Lifecycle.php:394
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Awesome!"
-msgstr "Awesome!"
+msgstr "Superduper!"
 
 #: woocommerce/Lifecycle.php:395
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Fantastic!"
-msgstr "Fantastic!"
+msgstr "Fantastiskt"
 
 #: woocommerce/Lifecycle.php:396
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Cowabunga!"
-msgstr "Cowabunga!"
+msgstr "Cowabunga"
 
 #: woocommerce/Lifecycle.php:397
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Congratulations!"
-msgstr "Congratulations!"
+msgstr "Grattis!"
 
 #: woocommerce/Lifecycle.php:398
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Hot dog!"
-msgstr "Hot dog!"
+msgstr "Bra jobbat!"
 
 #. translators: Placeholders: %1$s - Plugin name, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <a> tag, %5$s - Closing HTML </a> tag
 #: woocommerce/Lifecycle.php:405
@@ -338,7 +338,7 @@ msgstr "Vill du behandla den här inläsningen? Det går inte att ångra den hä
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:133
 msgctxt "Payment transaction capture failed error message"
 msgid "Something went wrong, and the capture could not be completed. Please try again."
-msgstr "Something went wrong, and the capture could not be completed. Please try again."
+msgstr "Något gick fel och det gick inte att slutföra inläsningen. Försök igen."
 
 #. translators: verb, as in "Capture credit card charge". Used when an amount has been pre-authorized before, but funds have not yet been captured (taken) from the card. Capturing the charge will take the money from the credit card and put it in the merchant's pockets.
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:178
@@ -559,7 +559,7 @@ msgstr "Den här beställningen pausas för granskning. Kontakta oss för att sl
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:106
 msgctxt "Credit or debit card CSC/CVC/CVV"
 msgid "This order is being placed on hold for review due to an incorrect card verification number. You may contact the store to complete the transaction."
-msgstr "This order is being placed on hold for review due to an incorrect card verification number. You may contact the store to complete the transaction."
+msgstr "Den här beställningen är pausad för granskning på grund av felaktigt kortverifieringsnummer. Du kan kontakta butiken för att slutföra transaktionen."
 
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:107
 msgctxt "Credit or debit card CSC/CVC/CVV"
@@ -580,7 +580,7 @@ msgstr "Den typen av kort godkänns inte, använd ett annat kort eller annat bet
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:116
 msgctxt "Credit or debit card"
 msgid "The card type is invalid or does not correlate with the credit card number. Please try again or use an alternate card or other form of payment."
-msgstr "The card type is invalid or does not correlate with the credit card number. Please try again or use an alternate card or other form of payment."
+msgstr "Typen av kort är ogiltigt eller stämmer inte med kreditkortsnumret. Försök igen eller använd ett annat kort eller annat betalsätt."
 
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:113
 msgctxt "Credit or debit card"
@@ -717,15 +717,18 @@ msgid "Account Number is invalid (only digits are allowed)"
 msgstr "Kontonumret är ogiltigt (endast siffror tillåts)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:302
+msgctxt "Bank account"
 msgid "Account number is invalid (must be between 5 and 17 digits)"
 msgstr "Kontonumret är ogiltigt (måste bestå av mellan 5 och 17 siffror)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:309
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:507
-msgid "Drivers license number is invalid"
-msgstr "Körkortsnumret är ogiltigt"
+msgid "Driver's license number is invalid"
+msgstr "Driver's license number is invalid"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:315
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:503
+msgctxt "Bank check (noun)"
 msgid "Check Number is invalid (only digits are allowed)"
 msgstr "Checknumret är ogiltigt (endast siffror tillåts)"
 
@@ -1172,57 +1175,52 @@ msgstr "Utgångsdatum"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:350
 msgctxt "Congratulatory message displayed to the merchant when they process their first payment"
 msgid "You successfully processed a payment!"
-msgstr "You successfully processed a payment!"
+msgstr "Du har hanterat en betalning."
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:355
 msgctxt "Congratulatory message displayed to the merchant when they process their first refund"
 msgid "You successfully processed a refund!"
-msgstr "You successfully processed a refund!"
+msgstr "Du har hanterat en återbetalning."
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:495
 msgctxt "Credit or debit card"
 msgid "Card number is missing"
-msgstr "Card number is missing"
+msgstr "Kortnumret saknas"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:496
 msgctxt "Credit or debit card"
 msgid "Card number is invalid"
-msgstr "Card number is invalid"
+msgstr "Kortnumret är ogiltigt"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:497
 msgctxt "Credit or debit card"
 msgid "Card number is invalid (only digits allowed)"
-msgstr "Card number is invalid (only digits allowed)"
+msgstr "Kortnumret är ogiltigt (endast siffror tillåts)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:498
 msgctxt "Credit or debit card"
 msgid "Card number is invalid (wrong length)"
-msgstr "Card number is invalid (wrong length)"
+msgstr "Kortnumret är ogiltigt (fel längd)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:499
 msgctxt "Credit or debit card"
 msgid "Card security code is missing"
-msgstr "Card security code is missing"
+msgstr "Kortsäkerhetskoden saknas"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:500
 msgctxt "Credit or debit card"
 msgid "Card security code is invalid (only digits are allowed)"
-msgstr "Card security code is invalid (only digits are allowed)"
+msgstr "Kortsäkerhetskoden är ogiltig (endast siffror tillåts)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:501
 msgctxt "Credit or debit card"
 msgid "Card security code is invalid (must be 3 or 4 digits)"
-msgstr "Card security code is invalid (must be 3 or 4 digits)"
+msgstr "Kortsäkerhetskoden är ogiltig (måste bestå av 3 eller 4 siffror)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:502
 msgctxt "Credit or debit card"
 msgid "Card expiration date is invalid"
-msgstr "Card expiration date is invalid"
-
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:503
-msgctxt "Bank check (noun)"
-msgid "Check Number is invalid (only digits are allowed)"
-msgstr "Check Number is invalid (only digits are allowed)"
+msgstr "Kortets utgångsdatum är ogiltigt"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:504
 msgctxt "Bank check (noun)"
@@ -1231,42 +1229,42 @@ msgstr "Checknummer saknas"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:505
 msgctxt "For countries without states, \"state\" can be replaced with \"place of issue\"."
-msgid "Drivers license state is missing"
-msgstr "Delstat för körkort saknas"
+msgid "Driver's license state is missing"
+msgstr "Driver's license state is missing"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:506
-msgid "Drivers license number is missing"
-msgstr "Körkortsnumret saknas"
+msgid "Driver's license number is missing"
+msgstr "Driver's license number is missing"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:508
 msgctxt "Bank account"
 msgid "Account Number is missing"
-msgstr "Account Number is missing"
+msgstr "Kontonumret saknas"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:509
 msgctxt "Bank account"
 msgid "Account Number is invalid (only digits are allowed)"
-msgstr "Account Number is invalid (only digits are allowed)"
+msgstr "Kontonumret är ogiltigt (endast siffror tillåts)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:510
 msgctxt "Bank account"
 msgid "Account Number is invalid (must be between 5 and 17 digits)"
-msgstr "Account Number is invalid (must be between 5 and 17 digits)"
+msgstr "Kontonumret är ogiltigt (måste bestå av mellan 5 och 17 siffror)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:511
 msgctxt "Bank account"
 msgid "Routing Number is missing"
-msgstr "Routing Number is missing"
+msgstr "Routingnumret saknas"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:512
 msgctxt "Bank account"
 msgid "Routing Number is invalid (only digits are allowed)"
-msgstr "Routing Number is invalid (only digits are allowed)"
+msgstr "Routingnumret är ogiltigt (endast siffror tillåts)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:513
 msgctxt "Bank account"
 msgid "Routing Number is invalid (must be 9 digits)"
-msgstr "Routing Number is invalid (must be 9 digits)"
+msgstr "Routingnumret är ogiltigt (måste bestå av 9 siffror)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:719
 msgid "Continue to Payment"
@@ -1364,15 +1362,15 @@ msgstr "Inaktiverad på grund av att den andra gatewayen använder dessa instäl
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1492
 msgid "Card Security Code (CSC)"
-msgstr "Card Security Code (CSC)"
+msgstr "Kortsäkerhetskod (CSC)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1493
 msgid "Display the Card Security Code (CSC) field on checkout"
-msgstr "Display the Card Security Code (CSC) field on checkout"
+msgstr "Visa fältet för kortsäkerhetskod (CSC) i kassan"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1501
 msgid "Saved Card Security Code"
-msgstr "Saved Card Security Code"
+msgstr "Sparad kortsäkerhetskod"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1502
 msgid "Display the Card Security Code field when paying with a saved card"
@@ -1483,7 +1481,7 @@ msgstr "Test"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3198
 msgctxt "credit card transaction type"
 msgid "Authorization"
-msgstr "Authorization"
+msgstr "Auktorisering"
 
 #. translators: Placeholders: %1$s - credit card type (MasterCard, Visa, etc...), %2$s - last four digits of the card
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2723
@@ -1621,14 +1619,14 @@ msgstr "%s är inaktiverad."
 #. translators: Context: Error message displayed to merchants if their store currency is not in one of the accepted currencies by the payment gateway they intend to enable. Placeholders: %1$s - a currency or comma-separated list of currencies, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - payment method title/label
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:394
 msgid "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
-msgid_plural "Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
+msgid_plural "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 msgstr[0] "Tar endast emot betalningar i %1$s. %2$sKonfigurera%3$s WooCommerce till att ta emot %1$s för att aktivera %4$s."
-msgstr[1] "Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
+msgstr[1] "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 
 #. translators: Placeholders: %1$s - Checkout method label, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <strong> tag, %5$s - closing HTML </strong> tag
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:431
 msgid "Your store %1$scalculates taxes%2$s based on the shipping address, but %1$s %4$sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead."
-msgstr "Your store %1$scalculates taxes%2$s based on the shipping address, but %1$s %4$sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead."
+msgstr "Din butik %1$sberäknar moms%2$s baserat på leveransadressen, men delar %1$s %4$sinte%5$s kundens leveransinformation med din butik för beställningar med enbart virtuella produkter. De beställningarna får istället sin moms beräknad på butiksadressen."
 
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:464
 msgid "%4$s%1$s Notice!%5$s Your store %2$scalculates taxes%3$s based on the billing address, but %1$s %4$sdoes not%5$s share the customer billing address with your store before payment. These orders will have their taxes calculated based on the shipping address (or shop address, for orders with only virtual products)."
@@ -1687,7 +1685,7 @@ msgstr "Certifikatsökväg"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:176
 msgid "The full system path to your certificate file from Apple. For security reasons you should store this outside of your web root."
-msgstr "The full system path to your certificate file from Apple. For security reasons you should store this outside of your web root."
+msgstr "Hela systemvägen till din certifikatfil från Apple. Av säkerhetsskäl bör du förvara den här utanför din webbrot."
 
 #. translators: Placeholders: %s - the server's web root path
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:179
@@ -1845,7 +1843,7 @@ msgstr "Tokeniseringsförsök av förbeställning misslyckades (%s)"
 #. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Site name, %2$s - Order number
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:309
 msgid "%1$s - Pre-Order Release Payment for Order %2$s"
-msgstr "%1$s - Pre-Order Release Payment for Order %2$s"
+msgstr "%1$s – betalning för förbeställning av beställning %2$s"
 
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:316
 msgid "Payment token missing/invalid."
@@ -1854,12 +1852,12 @@ msgstr "Betalningstoken saknas/är ogiltig."
 #. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Payment gateway name, %2$s - Either 'Authorization' or 'Charge' (untranslated), %3$s - Payment method type (e.g. 'PayPal', 'Credit Card', etc.), %4$s - Last four digits of the card or account, %5$s - Expiration date of the payment method
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:342
 msgid "%1$s %2$s Pre-Order Release Payment Approved: %3$s ending in %4$s (expires %5$s)"
-msgstr "%1$s %2$s Pre-Order Release Payment Approved: %3$s ending in %4$s (expires %5$s)"
+msgstr "%1$s %2$s-betalning för förbeställning godkänd: %3$s slutar med %4$s (löper ut%5$s)"
 
 #. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Payment gateway name, %2$s - Payment method type (e.g. 'Bank Account'), %3$s - Last four digits of the account
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:355
 msgid "%1$s eCheck Pre-Order Release Payment Approved: %2$s ending in %3$s"
-msgstr "%1$s eCheck Pre-Order Release Payment Approved: %2$s ending in %3$s"
+msgstr "%1$s e-check-betalning för förbeställning godkänd: %2$s slutar med %3$s"
 
 #. translators: Context: Release of payment for pre-order failed. Placeholder: %s - Error message
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:407
@@ -1883,7 +1881,7 @@ msgstr "%1$s-betalningsändring misslyckades (%2$s)"
 #. translators: Context: Payment made for order. Placeholders: %1$s - Payment method name (e.g. "Credit Card", "PayPal", etc.), %2$s - Last four digits of the card/account used
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:679
 msgid "Via %1$s ending in %2$s"
-msgstr "Via %1$s ending in %2$s"
+msgstr "Via %1$s som slutar på %2$s"
 
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:710
 msgid "Subscriptions"

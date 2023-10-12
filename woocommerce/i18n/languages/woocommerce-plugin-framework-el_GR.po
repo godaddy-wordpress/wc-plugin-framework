@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-10-06T06:46:57+00:00\n"
+"POT-Creation-Date: 2023-10-10T06:17:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -243,22 +243,22 @@ msgstr "Επικοινωνήστε με τον πάροχο φιλοξενίας
 #. translators: Placeholders: %1$s - <strong> HTML tag, %2$s - </strong> HTML tag
 #: woocommerce/class-sv-wc-plugin-dependencies.php:261
 msgid "Hey there! We've noticed that your server is running %1$san outdated version of PHP%2$s, which is the programming language that WooCommerce and its extensions are built on."
-msgstr "Hey there! We've noticed that your server is running %1$san outdated version of PHP%2$s, which is the programming language that WooCommerce and its extensions are built on."
+msgstr "Γεια σας! Παρατηρήσαμε ότι ο server σας εκτελεί %1$sμια ξεπερασμένη έκδοση της PHP%2$s, η οποία είναι η γλώσσα προγραμματισμού στην οποία βασίζονται το WooCommerce και οι επεκτάσεις του."
 
 #. translators: Placeholders: %1$s - <strong> HTML tag, %2$s - </strong> HTML tag
 #: woocommerce/class-sv-wc-plugin-dependencies.php:263
 msgid "The PHP version that is currently used for your site is no longer maintained, nor %1$sreceives security updates%2$s; newer versions are faster and more secure."
-msgstr "The PHP version that is currently used for your site is no longer maintained, nor %1$sreceives security updates%2$s; newer versions are faster and more secure."
+msgstr "Η έκδοση PHP που χρησιμοποιείται επί του παρόντος για τον ιστότοπό σας δεν συντηρείται πλέον, ούτε %1$sλαμβάνει ενημερώσεις ασφαλείας%2$s. Οι νεότερες εκδόσεις είναι ταχύτερες και ασφαλέστερες."
 
 #. translators: Context: User is running an outdated PHP Version a plugin is not compatible with. Placeholders: %s - the plugin name
 #: woocommerce/class-sv-wc-plugin-dependencies.php:265
 msgid "As a result, %s no longer supports this version and you should upgrade PHP as soon as possible."
-msgstr "As a result, %s no longer supports this version and you should upgrade PHP as soon as possible."
+msgstr "Ως αποτέλεσμα, %s δεν υποστηρίζεται πλέον αυτή η έκδοση και θα πρέπει να αναβαθμίσετε την PHP το συντομότερο δυνατό."
 
 #. translators: Context: The host can update PHP version for the user. Placeholders: %1$s - <a> HTML tag, %2$s - </a> HTML tag
 #: woocommerce/class-sv-wc-plugin-dependencies.php:267
 msgid "Your hosting provider can do this for you. %1$sHere are some resources to help you upgrade%2$s and to explain PHP versions further."
-msgstr "Your hosting provider can do this for you. %1$sHere are some resources to help you upgrade%2$s and to explain PHP versions further."
+msgstr "Ο πάροχος φιλοξενίας σας μπορεί να το κάνει αυτό για εσάς. %1$sΑκολουθούν ορισμένοι πόροι που θα σας βοηθήσουν να αναβαθμίσετε%2$s και να καταλάβετε περαιτέρω τις εκδόσεις PHP."
 
 #. translators: Placeholders: %s - plugin name
 #: woocommerce/class-sv-wc-plugin.php:310
@@ -303,27 +303,27 @@ msgstr "Διαμόρφωση"
 #: woocommerce/Lifecycle.php:394
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Awesome!"
-msgstr "Awesome!"
+msgstr "Εκπληκτικό!"
 
 #: woocommerce/Lifecycle.php:395
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Fantastic!"
-msgstr "Fantastic!"
+msgstr "Φανταστικό!"
 
 #: woocommerce/Lifecycle.php:396
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Cowabunga!"
-msgstr "Cowabunga!"
+msgstr "Τρομερό!"
 
 #: woocommerce/Lifecycle.php:397
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Congratulations!"
-msgstr "Congratulations!"
+msgstr "Συγχαρητήρια!"
 
 #: woocommerce/Lifecycle.php:398
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Hot dog!"
-msgstr "Hot dog!"
+msgstr "Χοτ ντογκ!"
 
 #. translators: Placeholders: %1$s - Plugin name, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <a> tag, %5$s - Closing HTML </a> tag
 #: woocommerce/Lifecycle.php:405
@@ -338,7 +338,7 @@ msgstr "Είστε βέβαιοι ότι θέλετε να επεξεργαστ�
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:133
 msgctxt "Payment transaction capture failed error message"
 msgid "Something went wrong, and the capture could not be completed. Please try again."
-msgstr "Something went wrong, and the capture could not be completed. Please try again."
+msgstr "Κάτι πήγε στραβά και η πραγματοποίηση της χρέωσης δεν μπόρεσε να ολοκληρωθεί. Προσπαθήστε ξανά."
 
 #. translators: verb, as in "Capture credit card charge". Used when an amount has been pre-authorized before, but funds have not yet been captured (taken) from the card. Capturing the charge will take the money from the credit card and put it in the merchant's pockets.
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:178
@@ -559,7 +559,7 @@ msgstr "Αυτή η παραγγελία έχει τεθεί σε αναμονή
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:106
 msgctxt "Credit or debit card CSC/CVC/CVV"
 msgid "This order is being placed on hold for review due to an incorrect card verification number. You may contact the store to complete the transaction."
-msgstr "This order is being placed on hold for review due to an incorrect card verification number. You may contact the store to complete the transaction."
+msgstr "Αυτή η παραγγελία έχει τεθεί σε αναμονή για έλεγχο λόγω εσφαλμένου αριθμού επαλήθευσης κάρτας. Μπορείτε να επικοινωνήσετε με το κατάστημα για να ολοκληρώσετε τη συναλλαγή."
 
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:107
 msgctxt "Credit or debit card CSC/CVC/CVV"
@@ -580,7 +580,7 @@ msgstr "Αυτός ο τύπος κάρτας δεν γίνεται αποδεκ
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:116
 msgctxt "Credit or debit card"
 msgid "The card type is invalid or does not correlate with the credit card number. Please try again or use an alternate card or other form of payment."
-msgstr "The card type is invalid or does not correlate with the credit card number. Please try again or use an alternate card or other form of payment."
+msgstr "Ο τύπος κάρτας δεν είναι έγκυρος ή δεν σχετίζεται με τον αριθμό της πιστωτικής κάρτας. Προσπαθήστε ξανά ή χρησιμοποιήστε άλλη κάρτα ή άλλη μέθοδο πληρωμής."
 
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:113
 msgctxt "Credit or debit card"
@@ -717,15 +717,18 @@ msgid "Account Number is invalid (only digits are allowed)"
 msgstr "Ο αριθμός λογαριασμού δεν είναι έγκυρος (επιτρέπονται μόνο ψηφία)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:302
+msgctxt "Bank account"
 msgid "Account number is invalid (must be between 5 and 17 digits)"
 msgstr "Ο αριθμός λογαριασμού δεν είναι έγκυρος (πρέπει να αποτελείται από 5 έως 17 ψηφία)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:309
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:507
-msgid "Drivers license number is invalid"
-msgstr "Ο αριθμός άδειας οδήγησης δεν είναι έγκυρος"
+msgid "Driver's license number is invalid"
+msgstr "Driver's license number is invalid"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:315
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:503
+msgctxt "Bank check (noun)"
 msgid "Check Number is invalid (only digits are allowed)"
 msgstr "Ο αριθμός επιταγής δεν είναι έγκυρος (επιτρέπονται μόνο ψηφία)"
 
@@ -1172,57 +1175,52 @@ msgstr "Hμερομηνία λήξης"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:350
 msgctxt "Congratulatory message displayed to the merchant when they process their first payment"
 msgid "You successfully processed a payment!"
-msgstr "You successfully processed a payment!"
+msgstr "Επεξεργαστήκατε με επιτυχία μια πληρωμή!"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:355
 msgctxt "Congratulatory message displayed to the merchant when they process their first refund"
 msgid "You successfully processed a refund!"
-msgstr "You successfully processed a refund!"
+msgstr "Επεξεργαστήκατε με επιτυχία μια επιστροφή χρημάτων!"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:495
 msgctxt "Credit or debit card"
 msgid "Card number is missing"
-msgstr "Card number is missing"
+msgstr "Λείπει ο αριθμός κάρτας"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:496
 msgctxt "Credit or debit card"
 msgid "Card number is invalid"
-msgstr "Card number is invalid"
+msgstr "Ο αριθμός της κάρτας δεν είναι έγκυρος"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:497
 msgctxt "Credit or debit card"
 msgid "Card number is invalid (only digits allowed)"
-msgstr "Card number is invalid (only digits allowed)"
+msgstr "Ο αριθμός της κάρτας δεν είναι έγκυρος (επιτρέπονται μόνο ψηφία)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:498
 msgctxt "Credit or debit card"
 msgid "Card number is invalid (wrong length)"
-msgstr "Card number is invalid (wrong length)"
+msgstr "Ο αριθμός της κάρτας δεν είναι έγκυρος (λάθος μήκος)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:499
 msgctxt "Credit or debit card"
 msgid "Card security code is missing"
-msgstr "Card security code is missing"
+msgstr "Ο κωδικός ασφαλείας της κάρτας λείπει"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:500
 msgctxt "Credit or debit card"
 msgid "Card security code is invalid (only digits are allowed)"
-msgstr "Card security code is invalid (only digits are allowed)"
+msgstr "Ο κωδικός ασφαλείας της κάρτας δεν είναι έγκυρος (επιτρέπονται μόνο ψηφία)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:501
 msgctxt "Credit or debit card"
 msgid "Card security code is invalid (must be 3 or 4 digits)"
-msgstr "Card security code is invalid (must be 3 or 4 digits)"
+msgstr "Ο κωδικός ασφαλείας της κάρτας δεν είναι έγκυρος (πρέπει να αποτελείται από 3 ή 4 ψηφία)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:502
 msgctxt "Credit or debit card"
 msgid "Card expiration date is invalid"
-msgstr "Card expiration date is invalid"
-
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:503
-msgctxt "Bank check (noun)"
-msgid "Check Number is invalid (only digits are allowed)"
-msgstr "Check Number is invalid (only digits are allowed)"
+msgstr "Η ημερομηνία λήξης της κάρτας δεν είναι έγκυρη"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:504
 msgctxt "Bank check (noun)"
@@ -1231,42 +1229,42 @@ msgstr "Ο αριθμός επιταγής λείπει"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:505
 msgctxt "For countries without states, \"state\" can be replaced with \"place of issue\"."
-msgid "Drivers license state is missing"
-msgstr "Η πολιτεία της άδειας οδήγησης λείπει"
+msgid "Driver's license state is missing"
+msgstr "Driver's license state is missing"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:506
-msgid "Drivers license number is missing"
-msgstr "Ο αριθμός της άδειας οδήγησης λείπει"
+msgid "Driver's license number is missing"
+msgstr "Driver's license number is missing"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:508
 msgctxt "Bank account"
 msgid "Account Number is missing"
-msgstr "Account Number is missing"
+msgstr "Ο αριθμός λογαριασμού λείπει"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:509
 msgctxt "Bank account"
 msgid "Account Number is invalid (only digits are allowed)"
-msgstr "Account Number is invalid (only digits are allowed)"
+msgstr "Ο αριθμός λογαριασμού δεν είναι έγκυρος (επιτρέπονται μόνο ψηφία)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:510
 msgctxt "Bank account"
 msgid "Account Number is invalid (must be between 5 and 17 digits)"
-msgstr "Account Number is invalid (must be between 5 and 17 digits)"
+msgstr "Ο αριθμός λογαριασμού δεν είναι έγκυρος (πρέπει να αποτελείται από 5 έως 17 ψηφία)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:511
 msgctxt "Bank account"
 msgid "Routing Number is missing"
-msgstr "Routing Number is missing"
+msgstr "Ο αριθμός δρομολόγησης λείπει"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:512
 msgctxt "Bank account"
 msgid "Routing Number is invalid (only digits are allowed)"
-msgstr "Routing Number is invalid (only digits are allowed)"
+msgstr "Ο αριθμός δρομολόγησης δεν είναι έγκυρος (επιτρέπονται μόνο ψηφία)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:513
 msgctxt "Bank account"
 msgid "Routing Number is invalid (must be 9 digits)"
-msgstr "Routing Number is invalid (must be 9 digits)"
+msgstr "Ο αριθμός δρομολόγησης δεν είναι έγκυρος (πρέπει να αποτελείται από 9 ψηφία)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:719
 msgid "Continue to Payment"
@@ -1364,15 +1362,15 @@ msgstr "Απενεργοποιήθηκε επειδή η άλλη πύλη χρ�
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1492
 msgid "Card Security Code (CSC)"
-msgstr "Card Security Code (CSC)"
+msgstr "Κωδικός ασφαλείας κάρτας (CSC)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1493
 msgid "Display the Card Security Code (CSC) field on checkout"
-msgstr "Display the Card Security Code (CSC) field on checkout"
+msgstr "Εμφάνιση του πεδίου Κωδικός ασφαλείας κάρτας (CSC) κατά την ολοκλήρωση αγοράς"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1501
 msgid "Saved Card Security Code"
-msgstr "Saved Card Security Code"
+msgstr "Κωδικός ασφαλείας αποθηκευμένης κάρτας"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1502
 msgid "Display the Card Security Code field when paying with a saved card"
@@ -1483,7 +1481,7 @@ msgstr "Test"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3198
 msgctxt "credit card transaction type"
 msgid "Authorization"
-msgstr "Authorization"
+msgstr "Εξουσιοδότηση"
 
 #. translators: Placeholders: %1$s - credit card type (MasterCard, Visa, etc...), %2$s - last four digits of the card
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2723
@@ -1621,14 +1619,14 @@ msgstr "Το %s είναι απενεργοποιημένο."
 #. translators: Context: Error message displayed to merchants if their store currency is not in one of the accepted currencies by the payment gateway they intend to enable. Placeholders: %1$s - a currency or comma-separated list of currencies, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - payment method title/label
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:394
 msgid "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
-msgid_plural "Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
+msgid_plural "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 msgstr[0] "Δέχεται πληρωμή μόνο σε %1$s. %2$sΔιαμορφώστε%3$s το WooCommerce ώστε να δέχεται %1$s για ενεργοποίηση του %4$s."
-msgstr[1] "Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
+msgstr[1] "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 
 #. translators: Placeholders: %1$s - Checkout method label, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <strong> tag, %5$s - closing HTML </strong> tag
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:431
 msgid "Your store %1$scalculates taxes%2$s based on the shipping address, but %1$s %4$sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead."
-msgstr "Your store %1$scalculates taxes%2$s based on the shipping address, but %1$s %4$sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead."
+msgstr "Το κατάστημά σας %1$sυπολογίζει τους φόρους%2$s με βάση τη διεύθυνση αποστολής, αλλά %1$s %4$sδεν%5$s μοιράζεται τις πληροφορίες αποστολής των πελατών με το κατάστημά σας για παραγγελίες με μόνο εικονικά προϊόντα. Οι φόροι αυτών των παραγγελιών θα υπολογίζονται με βάση τη διεύθυνση του καταστήματος."
 
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:464
 msgid "%4$s%1$s Notice!%5$s Your store %2$scalculates taxes%3$s based on the billing address, but %1$s %4$sdoes not%5$s share the customer billing address with your store before payment. These orders will have their taxes calculated based on the shipping address (or shop address, for orders with only virtual products)."
@@ -1687,7 +1685,7 @@ msgstr "Διαδρομή πιστοποιητικού"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:176
 msgid "The full system path to your certificate file from Apple. For security reasons you should store this outside of your web root."
-msgstr "The full system path to your certificate file from Apple. For security reasons you should store this outside of your web root."
+msgstr "Η πλήρης διαδρομή συστήματος για το αρχείο πιστοποιητικού σας από την Apple. Για λόγους ασφαλείας, θα πρέπει να το αποθηκεύσετε εκτός του ριζικού σας καταλόγου web."
 
 #. translators: Placeholders: %s - the server's web root path
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:179
@@ -1845,7 +1843,7 @@ msgstr "Η προσπάθεια χρήσης διακριτικών για πρ�
 #. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Site name, %2$s - Order number
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:309
 msgid "%1$s - Pre-Order Release Payment for Order %2$s"
-msgstr "%1$s - Pre-Order Release Payment for Order %2$s"
+msgstr "%1$s - Πληρωμή αποδέσμευσης προπαραγγελίας για την παραγγελία %2$s"
 
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:316
 msgid "Payment token missing/invalid."
@@ -1854,12 +1852,12 @@ msgstr "Το διακριτικό πληρωμής λείπει/δεν είνα�
 #. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Payment gateway name, %2$s - Either 'Authorization' or 'Charge' (untranslated), %3$s - Payment method type (e.g. 'PayPal', 'Credit Card', etc.), %4$s - Last four digits of the card or account, %5$s - Expiration date of the payment method
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:342
 msgid "%1$s %2$s Pre-Order Release Payment Approved: %3$s ending in %4$s (expires %5$s)"
-msgstr "%1$s %2$s Pre-Order Release Payment Approved: %3$s ending in %4$s (expires %5$s)"
+msgstr "%1$s %2$s Η πληρωμή αποδέσμευσης προπαραγγελίας εγκρίθηκε: %3$s που λήγει σε %4$s (λήγει %5$s)"
 
 #. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Payment gateway name, %2$s - Payment method type (e.g. 'Bank Account'), %3$s - Last four digits of the account
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:355
 msgid "%1$s eCheck Pre-Order Release Payment Approved: %2$s ending in %3$s"
-msgstr "%1$s eCheck Pre-Order Release Payment Approved: %2$s ending in %3$s"
+msgstr "%1$s Η πληρωμή αποδέσμευσης προπαραγγελίας eCheck εγκρίθηκε: %2$s που λήγει σε %3$s"
 
 #. translators: Context: Release of payment for pre-order failed. Placeholder: %s - Error message
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:407
@@ -1883,7 +1881,7 @@ msgstr "%1$s Η αλλαγή πληρωμής απέτυχε (%2$s)"
 #. translators: Context: Payment made for order. Placeholders: %1$s - Payment method name (e.g. "Credit Card", "PayPal", etc.), %2$s - Last four digits of the card/account used
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:679
 msgid "Via %1$s ending in %2$s"
-msgstr "Via %1$s ending in %2$s"
+msgstr "Μέσω %1$s που λήγει σε %2$s"
 
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:710
 msgid "Subscriptions"
