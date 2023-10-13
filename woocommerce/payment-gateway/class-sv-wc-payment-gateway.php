@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_9\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_10\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -460,7 +460,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
-		$versioned_handle = $handle . '-v5_11_9';
+		$versioned_handle = $handle . '-v5_11_10';
 
 		// Frontend JS
 		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
@@ -897,6 +897,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines if tokenization takes place prior to transaction processing.
 	 *
+	 * Gateways that tokenize the payment method before the sale transaction (in a separate request), should set this to true.
+	 *
 	 * @since 5.0.0
 	 *
 	 * @return bool
@@ -907,7 +909,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Determines tokenization takes place during a transaction request.
+	 * Determines if tokenization takes place during a transaction request.
+	 *
+	 * Gateways that tokenize the payment method in the same request as the sale transaction should set this to true.
 	 *
 	 * @since 5.0.0
 	 *
@@ -920,6 +924,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 	/**
 	 * Determines tokenization takes place after a transaction request.
+	 *
+	 * Gateways that tokenize the payment method after the sale transaction (in a separate request), should set this to true.
 	 *
 	 * @since 5.0.0
 	 *
