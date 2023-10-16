@@ -124,13 +124,13 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'title'       => $this->gateway->method_title,
 			'description' => $this->gateway->method_description,
 			'supports'    => $this->gateway->supports,
-			'test_mode'   => $this->gateway->is_test_environment(),
 			'flags' => [
 				'is_credit_card_gateway' => $this->gateway->is_credit_card_gateway(),
 				'is_echeck_gateway'      => $this->gateway->is_echeck_gateway(),
 				'csc_enabled'            => $this->gateway->csc_enabled(),
 				'csc_enabled_for_tokens' => $this->gateway->csc_enabled_for_tokens(),
 				'tokenization_enabled'   => $this->gateway->tokenization_enabled(),
+				'is_test_mode'           => $this->gateway->is_test_environment(),
 			]
 		];
 	}
