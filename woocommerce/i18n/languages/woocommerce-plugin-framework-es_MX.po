@@ -1,0 +1,2005 @@
+# Copyright (c) GoDaddy Operating Company, LLC. All Rights Reserved.
+msgid ""
+msgstr ""
+"Project-Id-Version: SkyVerge WooCommerce Plugin Framework 1.0.0 TODO: plugin version\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wc-plugin-framework\n"
+"Last-Translator: plugins@godaddy.com\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2023-10-10T06:17:00+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.8.1\n"
+"X-Domain: woocommerce-plugin-framework\n"
+
+#. Plugin Name of the plugin
+msgid "WooCommerce Framework Plugin TODO: plugin name"
+msgstr "WooCommerce Framework Plugin TODO: plugin name"
+
+#. Plugin URI of the plugin
+msgid "http://www.woocommerce.com/products/ TODO: product URL"
+msgstr "http://www.woocommerce.com/products/ TODO: product URL"
+
+#. Description of the plugin
+msgid "TODO: plugin description"
+msgstr "TODO: plugin description"
+
+#. Author of the plugin
+msgid "SkyVerge"
+msgstr "SkyVerge"
+
+#. Author URI of the plugin
+msgid "http://www.woocommerce.com"
+msgstr "http://www.woocommerce.com"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:182
+msgid "Thanks for installing %1$s! To get started, take a minute to %2$sread the documentation%3$s :)"
+msgstr "¡Gracias por instalar %1$s! Para comenzar, tómate un minuto para %2$sleer la documentación%3$s :)"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:210
+msgid "Thanks for installing %1$s! To get started, take a minute to complete these %2$squick and easy setup steps%3$s :)"
+msgstr "¡Gracias por instalar %1$s! Para comenzar, tómate un minuto para completar estos %2$spasos rápidos y fáciles%3$s :)"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:235
+msgid "Setup"
+msgstr "Configurar"
+
+#. translators: Placeholders: %s - plugin name
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:303
+msgid "%s &rsaquo; Setup"
+msgstr "%s &rsaquo; Configurar"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:350
+msgid "Oops! An error occurred, please try again."
+msgstr "¡Vaya! Ocurrió un error; inténtalo de nuevo más tarde."
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:395
+msgctxt "enhanced select"
+msgid "No matches found"
+msgstr "No se encontraron resultados"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:396
+msgctxt "enhanced select"
+msgid "Loading failed"
+msgstr "La carga falló"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:397
+msgctxt "enhanced select"
+msgid "Please enter 1 or more characters"
+msgstr "Ingresa 1 o más caracteres"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:398
+msgctxt "enhanced select"
+msgid "Please enter %qty% or more characters"
+msgstr "Ingresa %qty% o más caracteres"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:399
+msgctxt "enhanced select"
+msgid "Please delete 1 character"
+msgstr "Elimina 1 carácter"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:400
+msgctxt "enhanced select"
+msgid "Please delete %qty% characters"
+msgstr "Elimina %qty% caracteres"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:401
+msgctxt "enhanced select"
+msgid "You can only select 1 item"
+msgstr "Solo puedes seleccionar 1 artículo"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:402
+msgctxt "enhanced select"
+msgid "You can only select %qty% items"
+msgstr "Solo puedes seleccionar %qty% artículos"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:403
+msgctxt "enhanced select"
+msgid "Loading more results&hellip;"
+msgstr "Cargando más resultados&hellip;"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:404
+msgctxt "enhanced select"
+msgid "Searching&hellip;"
+msgstr "Buscando&hellip;"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:488
+msgid "Ready!"
+msgstr "¡Listo!"
+
+#. translators: Placeholder: %s - plugin name
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:581
+msgid "Welcome to %s!"
+msgstr "¡Bienvenido a %s!"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:594
+msgid "This quick setup wizard will help you configure the basic settings and get you started."
+msgstr "Este asistente de configuración rápido te ayudará a configurar los ajustes básicos y a comenzar."
+
+#. translators: Placeholder: %s - the plugin name
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:613
+msgid "%s is ready!"
+msgstr "¡%s está listo!"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:670
+msgid "Next step"
+msgstr "Siguiente paso"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:696
+msgid "You can also:"
+msgstr "También puedes:"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:740
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:770
+msgid "View the Docs"
+msgstr "Ver los documentos"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:741
+msgid "See more setup options"
+msgstr "Ver más opciones de configuración"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:742
+msgid "Learn more about customizing the plugin"
+msgstr "Obtener más información para personalizar el complemento"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:766
+msgid "Review Your Settings"
+msgstr "Revisar tu configuración"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:774
+msgid "Leave a Review"
+msgstr "Escribe una reseña"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:798
+msgid "Continue"
+msgstr "Continuar"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:958
+msgid "Return to the WordPress Dashboard"
+msgstr "Regresar al panel de control de WordPress"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:960
+msgid "Not right now"
+msgstr "Ahora no"
+
+#: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:962
+msgid "Skip this step"
+msgstr "Omitir este paso"
+
+#: woocommerce/class-sv-wc-framework-bootstrap.php:268
+msgid "The following plugin is disabled because it is out of date and incompatible with newer plugins on your site:"
+msgid_plural "The following plugins are disabled because they are out of date and incompatible with newer plugins on your site:"
+msgstr[0] "El siguiente complemento está deshabilitado porque está desactualizado y no es compatible con los complementos más nuevos en tu sitio:"
+msgstr[1] "Los siguientes complementos están deshabilitados porque están desactualizados y no son compatibles con los complementos más nuevos en tu sitio:"
+
+#. translators: Context is for plugins to activate or deactivate. HTML Placeholders: %1$s - <a> tag, %2$s - </a> tag, %3$s - <em> tag, %4$s - </em> tag, %5$s - <a> tag, %6$s - </a> tag, %7$s - <a> tag, %8$s - </a> tag
+#: woocommerce/class-sv-wc-framework-bootstrap.php:282
+msgid "To resolve this, please %1$supdate%2$s (recommended) %3$sor%4$s %5$sdeactivate%6$s the above plugin, or %7$sdeactivate the following%8$s:"
+msgid_plural "To resolve this, please %1$supdate%2$s (recommended) %3$sor%4$s %5$sdeactivate%6$s the above plugins, or %7$sdeactivate the following%8$s:"
+msgstr[0] "Para resolver esto, %1$sactualiza%2$s (recomendado) %3$so%4$s %5$sdesactiva%6$s el complemento anterior, o %7$sdesactiva lo siguiente%8$s:"
+msgstr[1] "Para resolver esto, %1$sactualiza%2$s (recomendado) %3$so%4$s %5$sdesactiva%6$s los complementos anteriores, o %7$sdesactiva lo siguiente%8$s:"
+
+#: woocommerce/class-sv-wc-framework-bootstrap.php:303
+msgid "The following plugins are inactive because they require a newer version of WooCommerce:"
+msgstr "Los siguientes complementos están inactivos porque requieren una versión más nueva de WooCommerce:"
+
+#: woocommerce/class-sv-wc-framework-bootstrap.php:303
+msgid "The following plugin is inactive because it requires a newer version of WooCommerce:"
+msgstr "El siguiente complemento está inactivo porque requiere una versión más nueva de WooCommerce:"
+
+#. translators: Placeholders: %1$s - plugin name, %2$s - WooCommerce version number
+#: woocommerce/class-sv-wc-framework-bootstrap.php:308
+msgid "%1$s requires WooCommerce %2$s or newer"
+msgstr "%1$s requiere WooCommerce %2$s o más nuevo"
+
+#. translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag
+#: woocommerce/class-sv-wc-framework-bootstrap.php:312
+msgid "Please %1$supdate WooCommerce%2$s"
+msgstr "%1$sActualiza WooCommerce%2$s"
+
+#: woocommerce/class-sv-wc-helper.php:427
+msgctxt "coordinating conjunction for a list of items: a, b, and c"
+msgid "and"
+msgstr "y"
+
+#. translators: A list of items, for example: "US or Canada", or "US, Canada, or Mexico". English uses Oxford comma before the conjunction ("or") if there are at least 2 items preceding it - hence the use of plural forms. If your locale does not use Oxford comma, you can just provide the same translation to all plural forms. Placeholders: %1$s - a comma-separated list of item, %2$s - the final item in the list
+#: woocommerce/class-sv-wc-helper.php:472
+msgid "%1$s or %2$s"
+msgid_plural "%1$s, or %2$s"
+msgstr[0] "%1$s o %2$s"
+msgstr[1] "%1$s, o %2$s"
+
+#. translators: A list of items, for example: "US and Canada", or "US, Canada, and Mexico". English uses Oxford comma before the conjunction ("and") if there are at least 2 items preceding it - hence the use of plural forms. If your locale does not use Oxford comma, you can just provide the same translation to all plural forms. Placeholders: %1$s - a comma-separated list of items, %2$s - the final item in the list
+#: woocommerce/class-sv-wc-helper.php:478
+msgid "%1$s and %2$s"
+msgid_plural "%1$s, and %2$s"
+msgstr[0] "%1$s y %2$s"
+msgstr[1] "%1$s, y %2$s"
+
+#. translators: Placeholders: %1$s - plugin name, %2$s - a PHP extension/comma-separated list of PHP extensions
+#: woocommerce/class-sv-wc-plugin-dependencies.php:156
+msgid "%1$s requires the %2$s PHP extension to function. Contact your host or server administrator to install and configure the missing extension."
+msgid_plural "%1$s requires the following PHP extensions to function: %2$s. Contact your host or server administrator to install and configure the missing extensions."
+msgstr[0] "%1$s requiere la extensión del PHP %2$s para funcionar. Comunícate con tu host o administrador del servidor para instalar y configurar la extensión que te falta."
+msgstr[1] "%1$s requiere las siguientes extensiones de PHP para funcionar: %2$s Comunícate con tu host o administrador del servidor para instalar y configurar las extensiones que te faltan."
+
+#. translators: Placeholders: %1$s - plugin name, %2$s - a PHP function/comma-separated list of PHP functions
+#: woocommerce/class-sv-wc-plugin-dependencies.php:184
+msgid "%1$s requires the %2$s PHP function to exist.  Contact your host or server administrator to install and configure the missing function."
+msgid_plural "%1$s requires the following PHP functions to exist: %2$s.  Contact your host or server administrator to install and configure the missing functions."
+msgstr[0] "%1$s requiere la función del PHP %2$s para existir.  Comunícate con tu host o administrador del servidor para instalar y configurar la función que te falta."
+msgstr[1] "%1$s requiere las siguientes funciones de PHP para existir: %2$s  Comunícate con tu host o administrador del servidor para instalar y configurar las funciones que te faltan."
+
+#. translators: Placeholder: %s - a PHP setting value
+#: woocommerce/class-sv-wc-plugin-dependencies.php:228
+msgid "%s or higher"
+msgstr "%s o superior"
+
+#: woocommerce/class-sv-wc-plugin-dependencies.php:238
+msgid "Please contact your hosting provider or server administrator to configure these settings."
+msgstr "Comunícate con tu proveedor de hosting o administrador del servidor para configurar estas configuraciones."
+
+#. translators: Placeholders: %1$s - <strong> HTML tag, %2$s - </strong> HTML tag
+#: woocommerce/class-sv-wc-plugin-dependencies.php:261
+msgid "Hey there! We've noticed that your server is running %1$san outdated version of PHP%2$s, which is the programming language that WooCommerce and its extensions are built on."
+msgstr "¡Hola! Advertimos que tu servidor tiene %1$suna versión desactualizada de PHP%2$s, que es el lenguaje de programación en el que se ejecutan WooCommerce y sus extensiones."
+
+#. translators: Placeholders: %1$s - <strong> HTML tag, %2$s - </strong> HTML tag
+#: woocommerce/class-sv-wc-plugin-dependencies.php:263
+msgid "The PHP version that is currently used for your site is no longer maintained, nor %1$sreceives security updates%2$s; newer versions are faster and more secure."
+msgstr "La versión de PHP que se usa actualmente para tu sitio ya no recibe mantenimiento, ni %1$srecibe actualizaciones de seguridad%2$s, hay versiones nuevas más rápidas y más seguras."
+
+#. translators: Context: User is running an outdated PHP Version a plugin is not compatible with. Placeholders: %s - the plugin name
+#: woocommerce/class-sv-wc-plugin-dependencies.php:265
+msgid "As a result, %s no longer supports this version and you should upgrade PHP as soon as possible."
+msgstr "Es por eso que %s ya no es compatible con esta versión y debes actualizar PHP lo antes posible."
+
+#. translators: Context: The host can update PHP version for the user. Placeholders: %1$s - <a> HTML tag, %2$s - </a> HTML tag
+#: woocommerce/class-sv-wc-plugin-dependencies.php:267
+msgid "Your hosting provider can do this for you. %1$sHere are some resources to help you upgrade%2$s and to explain PHP versions further."
+msgstr "Tu proveedor de hosting puede hacerlo por ti. %1$sAquí tienes algunos recursos para ayudarte a actualizar%2$s y que explican mejor las versiones de PHP."
+
+#. translators: Placeholders: %s - plugin name
+#: woocommerce/class-sv-wc-plugin.php:310
+msgid "You cannot clone instances of %s."
+msgstr "No puedes clonar instancias de %s."
+
+#. translators: Placeholders: %s - plugin name
+#: woocommerce/class-sv-wc-plugin.php:321
+msgid "You cannot unserialize instances of %s."
+msgstr "No puedes deserializar instancias de %s."
+
+#. translators: Docs as in Documentation
+#: woocommerce/class-sv-wc-plugin.php:594
+msgid "Docs"
+msgstr "Documentación"
+
+#: woocommerce/class-sv-wc-plugin.php:599
+msgctxt "noun"
+msgid "Support"
+msgstr "Asistencia técnica"
+
+#: woocommerce/class-sv-wc-plugin.php:604
+msgctxt "verb"
+msgid "Review"
+msgstr "Revisión"
+
+#. translators: Placeholders: %1$s - PHP setting value, %2$s - version or value required
+#: woocommerce/class-sv-wc-plugin.php:710
+msgid "%1$s - A minimum of %2$s is required."
+msgstr "%1$s - Se requiere un mínimo de %2$s."
+
+#. translators: Context: As in "Value has been set as [foo], but [bar] is required". Placeholders: %1$s - current value for a PHP setting, %2$s - required value for the PHP setting
+#: woocommerce/class-sv-wc-plugin.php:720
+msgid "Set as %1$s - %2$s is required."
+msgstr "Establecer como %1$s - Se requiere %2$s."
+
+#: woocommerce/class-sv-wc-plugin.php:1013
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:870
+msgid "Configure"
+msgstr "Configurar"
+
+#: woocommerce/Lifecycle.php:394
+msgctxt "Generic congratulatory exclamation at the start of a milestone message"
+msgid "Awesome!"
+msgstr "¡Estupendo!"
+
+#: woocommerce/Lifecycle.php:395
+msgctxt "Generic congratulatory exclamation at the start of a milestone message"
+msgid "Fantastic!"
+msgstr "¡Fantástico!"
+
+#: woocommerce/Lifecycle.php:396
+msgctxt "Generic congratulatory exclamation at the start of a milestone message"
+msgid "Cowabunga!"
+msgstr "¡Cowabunga!"
+
+#: woocommerce/Lifecycle.php:397
+msgctxt "Generic congratulatory exclamation at the start of a milestone message"
+msgid "Congratulations!"
+msgstr "¡Felicitaciones!"
+
+#: woocommerce/Lifecycle.php:398
+msgctxt "Generic congratulatory exclamation at the start of a milestone message"
+msgid "Hot dog!"
+msgstr "¡Perro caliente!"
+
+#. translators: Placeholders: %1$s - Plugin name, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <a> tag, %5$s - Closing HTML </a> tag
+#: woocommerce/Lifecycle.php:405
+msgid "Are you having a great experience with %1$s so far? Please consider %2$sleaving a review%3$s! If things aren't going quite as expected, we're happy to help -- please %4$sreach out to our support team%5$s."
+msgstr "¿Estás teniendo una buena experiencia con %1$s hasta ahora? Considera %2$sdejar una reseña%3$s. Si las cosas no están yendo como lo esperabas, con gusto te ayudaremos, %4$scomunícate con nuestro equipo de asistencia técnica%5$s"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:130
+msgctxt "Payment transaction capture"
+msgid "Are you sure you wish to process this capture? The action cannot be undone."
+msgstr "¿Estás seguro que deseas proceder con esta captura? Esta acción no se puede deshacer."
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:133
+msgctxt "Payment transaction capture failed error message"
+msgid "Something went wrong, and the capture could not be completed. Please try again."
+msgstr "Ocurrió un error, y la captura no se pudo completar. Inténtalo de nuevo."
+
+#. translators: verb, as in "Capture credit card charge". Used when an amount has been pre-authorized before, but funds have not yet been captured (taken) from the card. Capturing the charge will take the money from the credit card and put it in the merchant's pockets.
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:178
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:267
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:330
+msgid "Capture Charge"
+msgstr "Capturar cargo"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:320
+msgid "This charge has been fully captured."
+msgstr "Este cargo se ha capturado completamente."
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:322
+msgid "This charge can no longer be captured."
+msgstr "Este cargo ya no se puede capturar."
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:324
+msgid "This charge cannot be captured."
+msgstr "Este cargo no se puede capturar."
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:91
+msgid "Are you sure you want to remove this token?"
+msgstr "¿Realmente quieres eliminar este token?"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:101
+msgid "Invalid token data"
+msgstr "Datos de token inválidos"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:105
+msgid "An error occurred. Please try again."
+msgstr "Se produjo un error. Inténtalo de nuevo."
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:491
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-handler.php:306
+msgid "(%s)"
+msgstr "(%s)"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:521
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:900
+msgid "Default"
+msgstr "Predeterminado"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:557
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:590
+msgid "Token ID"
+msgstr "ID de token"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:562
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:302
+msgid "Card Type"
+msgstr "Tipo de tarjeta"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:567
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:603
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:193
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:300
+msgctxt "Last four digits of a payment method"
+msgid "Last Four"
+msgstr "Últimos cuatro"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:574
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:362
+msgid "Expiration (MM/YY)"
+msgstr "Vencimiento (MM/AA)"
+
+#. translators: e-check account type, HTML form field label
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:595
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:470
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:301
+msgid "Account Type"
+msgstr "Tipo de cuenta"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:598
+msgid "Checking"
+msgstr "Cheques"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:599
+msgid "Savings"
+msgstr "de Ahorros"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:700
+msgid "Refresh"
+msgstr "Actualizar"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:702
+msgid "Add New"
+msgstr "Agregar nuevo"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:705
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:297
+msgid "Save"
+msgstr "Guardar"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:728
+msgid "Remove"
+msgstr "Quitar"
+
+#. translators: Placeholder: %s - Plugin name
+#. translators: Placeholder: %s - Payment gateway title (e.g. Authorize.Net, Braintree, etc.)
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-handler.php:225
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:211
+msgid "%s Payment Tokens"
+msgstr "Tokens de pago de %s"
+
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-handler.php:303
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:874
+msgid "Customer ID"
+msgstr "ID de cliente"
+
+#: woocommerce/payment-gateway/admin/views/html-admin-gateway-status.php:32
+msgid "This section contains configuration settings for this gateway."
+msgstr "Esta sección contiene los ajustes para esta puerta de enlace."
+
+#. translators: environment as in a software environment (test/production)
+#: woocommerce/payment-gateway/admin/views/html-admin-gateway-status.php:53
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1413
+msgid "Environment"
+msgstr "Ambiente"
+
+#: woocommerce/payment-gateway/admin/views/html-admin-gateway-status.php:54
+msgid "The transaction environment for this gateway."
+msgstr "El entorno de transacción para esta puerta de enlace."
+
+#: woocommerce/payment-gateway/admin/views/html-admin-gateway-status.php:61
+msgid "Tokenization Enabled"
+msgstr "Tokenización habilitada"
+
+#: woocommerce/payment-gateway/admin/views/html-admin-gateway-status.php:62
+msgid "Displays whether or not tokenization is enabled for this gateway."
+msgstr "Muestra si la tokenización está habilitada o no para esta puerta de enlace."
+
+#: woocommerce/payment-gateway/admin/views/html-admin-gateway-status.php:75
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1340
+msgid "Debug Mode"
+msgstr "Modo de depuración"
+
+#: woocommerce/payment-gateway/admin/views/html-admin-gateway-status.php:76
+msgid "Displays whether or not debug logging is enabled for this gateway."
+msgstr "Muestra si el registro de depuración está habilitado o no para esta puerta de enlace."
+
+#: woocommerce/payment-gateway/admin/views/html-admin-gateway-status.php:79
+msgid "Display at Checkout & Log"
+msgstr "Se muestra al finalizar la compra y en el registro"
+
+#: woocommerce/payment-gateway/admin/views/html-admin-gateway-status.php:81
+msgid "Display at Checkout"
+msgstr "Se muestra al finalizar la compra"
+
+#: woocommerce/payment-gateway/admin/views/html-admin-gateway-status.php:83
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1348
+msgid "Save to Log"
+msgstr "Guardar en el registro"
+
+#: woocommerce/payment-gateway/admin/views/html-admin-gateway-status.php:85
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1346
+msgid "Off"
+msgstr "Apagado"
+
+#: woocommerce/payment-gateway/admin/views/html-order-partial-capture.php:30
+msgctxt "Authorized transaction for order payment"
+msgid "Authorization total"
+msgstr "Autorización total"
+
+#: woocommerce/payment-gateway/admin/views/html-order-partial-capture.php:34
+msgctxt "Captured transaction (without charge) for order payment"
+msgid "Amount already captured"
+msgstr "Monto ya capturado"
+
+#: woocommerce/payment-gateway/admin/views/html-order-partial-capture.php:40
+msgid "Remaining order total"
+msgstr "Total del pedido restante"
+
+#: woocommerce/payment-gateway/admin/views/html-order-partial-capture.php:46
+msgctxt "Capture (without charge) amount for order payment"
+msgid "Capture amount"
+msgstr "Capturar monto"
+
+#: woocommerce/payment-gateway/admin/views/html-order-partial-capture.php:53
+msgid "Comment (optional):"
+msgstr "Comentario (opcional):"
+
+#. translators: Context: Capture payment without charge. Placeholder: %s - transaction amount to be captured.
+#: woocommerce/payment-gateway/admin/views/html-order-partial-capture.php:67
+msgid "Capture %s"
+msgstr "Capturar %s"
+
+#: woocommerce/payment-gateway/admin/views/html-order-partial-capture.php:70
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:608
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: woocommerce/payment-gateway/admin/views/html-user-payment-token-editor-token.php:57
+msgid "-- Select an option --"
+msgstr "-- Selecciona una opción --"
+
+#: woocommerce/payment-gateway/admin/views/html-user-payment-token-editor.php:59
+msgid "No saved payment tokens"
+msgstr "No hay tokens de pago guardados"
+
+#: woocommerce/payment-gateway/admin/views/html-user-profile-field-customer-id.php:30
+msgid "The gateway customer ID for the user. Only edit this if necessary."
+msgstr "La ID del cliente de la puerta de enlace para el usuario. Edita solo si es necesario."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:99
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:141
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Frontend.php:131
+msgid "An error occurred, please try again or try an alternate form of payment"
+msgstr "Ocurrió un error, inténtalo nuevamente o prueba una forma de pago alternativa"
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:100
+msgid "We cannot process your order with the payment information that you provided. Please use a different payment account or an alternate payment method."
+msgstr "No podemos procesar tu pedido con la información de pago que proporcionaste. Usa una cuenta de pago diferente o un método de pago alternativo."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:101
+msgid "This order is being placed on hold for review. Please contact us to complete the transaction."
+msgstr "Este pedido se puso en espera para su revisión. Comunícate con nosotros para completar la transacción."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:106
+msgctxt "Credit or debit card CSC/CVC/CVV"
+msgid "This order is being placed on hold for review due to an incorrect card verification number. You may contact the store to complete the transaction."
+msgstr "Este pedido se puso en espera para su revisión porque hay un número de verificación de la tarjeta incorrecto. Puedes comunicarte con la tienda para completar la transacción."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:107
+msgctxt "Credit or debit card CSC/CVC/CVV"
+msgid "The card verification number is invalid, please try again."
+msgstr "El número de verificación de la tarjeta es inválido, inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:108
+msgctxt "Credit or debit card CSC/CVC/CVV"
+msgid "Please enter your card verification number and try again."
+msgstr "Ingresa el número de verificación de la tarjeta e inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:111
+msgctxt "Credit or debit card"
+msgid "That card type is not accepted, please use an alternate card or other form of payment."
+msgstr "No se acepta ese tipo de tarjeta, usa una tarjeta diferente u otra forma de pago."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:112
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:116
+msgctxt "Credit or debit card"
+msgid "The card type is invalid or does not correlate with the credit card number. Please try again or use an alternate card or other form of payment."
+msgstr "El tipo de tarjeta es inválido o no se correlaciona con el número de tarjeta de crédito. Inténtalo nuevamente o usa una tarjeta diferente u otra forma de pago."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:113
+msgctxt "Credit or debit card"
+msgid "Please select the card type and try again."
+msgstr "Selecciona el tipo de tarjeta e inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:117
+msgctxt "Credit or debit card"
+msgid "The card number is invalid, please re-enter and try again."
+msgstr "El número de la tarjeta es inválido, vuelve a ingresarlo e inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:118
+msgctxt "Credit or debit card"
+msgid "Please enter your card number and try again."
+msgstr "Ingresa el número de la tarjeta e inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:121
+msgctxt "Credit or debit card (whole date issue)"
+msgid "The card expiration date is invalid, please re-enter and try again."
+msgstr "La fecha de vencimiento de la tarjeta es inválida, vuelve a ingresarla e inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:122
+msgctxt "Credit or debit card"
+msgid "The card expiration month is invalid, please re-enter and try again."
+msgstr "El mes de vencimiento de la tarjeta es inválido, vuelve a ingresarlo e inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:123
+msgctxt "Credit or debit card"
+msgid "The card expiration year is invalid, please re-enter and try again."
+msgstr "El año de vencimiento de la tarjeta es inválido, vuelve a ingresarlo e inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:124
+msgctxt "Credit or debit card"
+msgid "Please enter your card expiration date and try again."
+msgstr "Ingresa la fecha de vencimiento de la tarjeta e inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:127
+msgid "The bank routing number is invalid, please re-enter and try again."
+msgstr "El número de ruta bancaria es inválido, vuelve a ingresarlo e inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:128
+msgid "The bank account number is invalid, please re-enter and try again."
+msgstr "El número de cuenta bancaria es inválido, vuelve a ingresarlo e inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:131
+msgctxt "Credit or debit card"
+msgid "The provided card is expired, please use an alternate card or other form of payment."
+msgstr "La tarjeta proporcionada está vencida, usa una tarjeta diferente u otra forma de pago."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:132
+msgctxt "Credit or debit card"
+msgid "The provided card was declined, please use an alternate card or other form of payment."
+msgstr "Se rechazó la tarjeta proporcionada, usa una tarjeta diferente u otra forma de pago."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:133
+msgctxt "Credit or debit card"
+msgid "Insufficient funds in account, please use an alternate card or other form of payment."
+msgstr "No hay fondos suficientes en la cuenta, usa una tarjeta diferente u otra forma de pago."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:134
+msgctxt "Credit or debit card"
+msgid "The card is inactivate or not authorized for card-not-present transactions, please use an alternate card or other form of payment."
+msgstr "La tarjeta está inactiva o no tiene autorización para realizar transacciones si la tarjeta no está presente, usa una tarjeta diferente u otra forma de pago."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:135
+msgctxt "Credit or debit card"
+msgid "The credit limit for the card has been reached, please use an alternate card or other form of payment."
+msgstr "Alcanzaste el límite de crédito para la tarjeta, usa una tarjeta diferente u otra forma de pago."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:136
+msgctxt "Credit or debit card CSC/CVC/CVV"
+msgid "The card verification number does not match. Please re-enter and try again."
+msgstr "El número de verificación de la tarjeta no coincide. Vuelve a ingresarlo e inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:137
+msgctxt "Credit or debit card"
+msgid "The provided address does not match the billing address for cardholder. Please verify the address and try again."
+msgstr "La dirección proporcionada no coincide con la dirección de facturación del titular de la tarjeta. Verifica la dirección e inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:61
+msgid "Payment error, please try another payment method or contact us to complete your transaction."
+msgstr "Error en el pago, prueba otro método de pago o comunícate con nosotros para completar tu transacción."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:161
+msgid "Card expiration date is invalid"
+msgstr "La fecha de vencimiento de la tarjeta es inválida."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:185
+msgid "Card number is missing"
+msgstr "Falta el número de tarjeta"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:191
+msgid "Card number is invalid (wrong length)"
+msgstr "El número de tarjeta es inválido (longitud incorrecta)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:196
+msgid "Card number is invalid (only digits allowed)"
+msgstr "El número de tarjeta es inválido (solo se permiten números)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:201
+msgid "Card number is invalid"
+msgstr "El número de tarjeta es inválido"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:228
+msgid "Card security code is invalid (only digits are allowed)"
+msgstr "El código de seguridad de la tarjeta es inválido (solo se permiten números)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:234
+msgid "Card security code is invalid (must be 3 or 4 digits)"
+msgstr "El código de seguridad de la tarjeta es inválido (debe tener 3 o 4 dígitos)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:240
+msgid "Card security code is missing"
+msgstr "Falta el código de seguridad de la tarjeta"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:267
+msgid "Routing Number is missing"
+msgstr "Falta el número de ruta"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:274
+msgid "Routing Number is invalid (only digits are allowed)"
+msgstr "El número de ruta es inválido (solo se permiten números)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:280
+msgid "Routing number is invalid (must be 9 digits)"
+msgstr "El número de ruta es inválido (debe tener 9 dígitos)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:289
+msgid "Account Number is missing"
+msgstr "Falta el número de cuenta"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:296
+msgid "Account Number is invalid (only digits are allowed)"
+msgstr "El número de cuenta es inválido (solo se permiten números)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:302
+msgctxt "Bank account"
+msgid "Account number is invalid (must be between 5 and 17 digits)"
+msgstr "El número de cuenta es inválido (debe tener entre 5 y 17 dígitos)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:309
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:507
+msgid "Driver's license number is invalid"
+msgstr "Driver's license number is invalid"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:315
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:503
+msgctxt "Bank check (noun)"
+msgid "Check Number is invalid (only digits are allowed)"
+msgstr "El número de cheque es inválido (solo se permiten números)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:494
+msgid "Unknown error"
+msgstr "Error desconocido"
+
+#. translators: Placeholder: %s - Error message
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:504
+msgid "Payment method address could not be updated. %s"
+msgstr "No se pudo actualizar la dirección del método de pago. %s"
+
+#. translators: Placeholders: %1$s - Payment method title, %2$s - Payment account type (savings/checking) (may or may not be available), %3$s - Last four digits of the account
+#. translators: Context: "Check" as in "bank check" (noun, not verb). Placeholders: %1$s - payment method title, %2$s - payment account type (savings/checking) (may or may not be available), %3$s - last four digits of the account
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:674
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2777
+msgid "%1$s Check Transaction Approved: %2$s account ending in %3$s"
+msgstr "Transacción con cheque de %1$s aprobada: cuenta de %2$s que termina en %3$s"
+
+#. translators: Placeholder: %s - Bank check number
+#. translators: Context: "Check" as in "bank check" (noun, not verb). Placeholder: %s - check number
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:679
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2782
+msgid "Check number %s"
+msgstr "Número de cheque %s"
+
+#. translators: Placeholder: %s - Payment transaction ID
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:685
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:782
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2190
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2423
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2742
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2788
+#: woocommerce/payment-gateway/Handlers/Capture.php:199
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:365
+msgid "(Transaction ID %s)"
+msgstr "(ID de transacción %s)"
+
+#. translators: Example: "Braintree Test Authorization Approved: Mastercard ending in 1234". Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...), %5$s - last four digits of the card
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:751
+msgid "%1$s %2$s %3$s Approved: %4$s ending in %5$s"
+msgstr "%3$s de %2$s de %1$s aprobado: %4$s que termina en %5$s"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:753
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:763
+msgctxt "Noun, software environment"
+msgid "Test"
+msgstr "Prueba"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:754
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:764
+msgctxt "Credit card transaction type"
+msgid "Authorization"
+msgstr "Autorización"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:754
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:764
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2716
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3197
+msgctxt "noun, credit card transaction type"
+msgid "Charge"
+msgstr "Cargo"
+
+#. translators: Example: "Authorize.Net Test Charge Approved: Mastercard" - Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...)
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:761
+msgid "%1$s %2$s %3$s Approved: %4$s"
+msgstr "%3$s de %2$s de %1$s aprobado: %4$s"
+
+#. translators: Placeholder: %s - Credit card expiry date
+#. translators: Placeholders: %s - expiry date
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:774
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:718
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2734
+msgid "(expires %s)"
+msgstr "(caduca %s)"
+
+#. translators: Placeholders: %s - failure message
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:845
+msgid "Tokenization Request Failed: %s"
+msgstr "Falló la solicitud de tokenización: %s"
+
+#. translators: Placeholders: %1$s - payment method title, %2$s - failure message
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:856
+msgid "%1$s Tokenization Request Failed: %2$s"
+msgstr "Falló la solicitud de tokenización de %1$s: %2$s"
+
+#. translators: This is a message describing that the transaction in question only performed a credit card authorization and did not capture any funds.
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:877
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1889
+#: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:275
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:382
+msgid "Authorization only transaction"
+msgstr "Transacción solo con autorización"
+
+#. translators: Placeholders: %s - failure message. Payment method as in a specific credit card, e-check or bank account
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:914
+msgid "Oops, adding your new payment method failed: %s"
+msgstr "Lo sentimos, no se pudo agregar tu nuevo método de pago: %s"
+
+#. translators: Payment method as in a specific credit card. Placeholders: %1$s - card type (visa, mastercard, ...), %2$s - last four digits of the card, %3$s - card expiry date
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:959
+msgid "Nice! New payment method added: %1$s ending in %2$s (expires %3$s)"
+msgstr "¡Bien! Se agregó un método de pago nuevo: %1$s que termina en %2$s (vence el %3$s)"
+
+#. translators: Payment method as in a specific e-check account. Placeholders: %1$s - account type (checking/savings), %2$s - last four digits of the account
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:969
+msgid "Nice! New payment method added: %1$s account ending in %2$s"
+msgstr "¡Bien! Se agregó un método de pago nuevo: %1$s cuenta que termina en %2$s"
+
+#. translators: Payment method as in a specific credit card, e-check or bank account
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:976
+msgid "Nice! New payment method added."
+msgstr "¡Bien! Se agregó un método de pago nuevo."
+
+#. translators: Placeholders: %1$s - site title, %2$s - customer email. Payment method as in a specific credit card, e-check or bank account
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:1099
+msgid "%1$s - Add Payment Method for %2$s"
+msgstr "%1$s - Agrega un método de pago para %2$s"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:178
+msgid "PayPal"
+msgstr "PayPal"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:179
+msgid "Checking Account"
+msgstr "Cuenta corriente"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:180
+msgid "Savings Account"
+msgstr "Cuenta de ahorros"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:181
+msgid "Credit / Debit Card"
+msgstr "Tarjeta de crédito / débito"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:182
+msgid "Bank Account"
+msgstr "Cuenta bancaria"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:191
+msgctxt "payment method type"
+msgid "Account"
+msgstr "Cuenta"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:227
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3456
+msgctxt "credit card type"
+msgid "Visa"
+msgstr "Visa"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:231
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3457
+msgctxt "credit card type"
+msgid "MasterCard"
+msgstr "MasterCard"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:235
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3458
+msgctxt "credit card type"
+msgid "American Express"
+msgstr "American Express"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:239
+msgctxt "credit card type"
+msgid "Diners Club"
+msgstr "Diners Club"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:243
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3459
+msgctxt "credit card type"
+msgid "Discover"
+msgstr "Descubre"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:247
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3461
+msgctxt "credit card type"
+msgid "JCB"
+msgstr "JCB"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:251
+msgctxt "credit card type"
+msgid "CarteBleue"
+msgstr "CarteBleue"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:255
+msgctxt "credit card type"
+msgid "Maestro"
+msgstr "Maestro"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:259
+msgctxt "credit card type"
+msgid "Laser"
+msgstr "Laser"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:301
+msgid "Thank you for your order, please click the button below to pay."
+msgstr "Gracias por tu pedido, haz clic en el botón a continuación para pagar."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:302
+msgid "Thank you for your order. We are now redirecting you to complete payment."
+msgstr "Gracias por tu pedido. Te estamos redirigiendo para completar el pago."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:303
+msgid "Pay Now"
+msgstr "Pagar ahora"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:304
+msgid "Cancel Order"
+msgstr "Cancelar pedido"
+
+#. translators: Placeholders: %s - a WooCommerce order ID
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:449
+#: woocommerce/payment-gateway/Handlers/Abstract_Hosted_Payment_Handler.php:320
+msgid "Could not find order %s"
+msgstr "No pudimos encontrar el pedido %s"
+
+#. translators: Placeholders: %s - payment gateway title (such as Authorize.net, Braintree, etc)
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:513
+#: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:205
+msgid "%s duplicate transaction received"
+msgstr "Se recibió la transacción duplicada de %s"
+
+#. translators: Placeholder: %s - Order number
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:517
+#: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:208
+msgid "Order %s is already paid for."
+msgstr "El pedido %s está listo para pagar."
+
+#. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - payment method name (mastercard, bank account, etc), %3$s - last four digits of the card/account, %4$s - card/account expiry date
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:602
+#: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:1115
+msgid "%1$s Payment Method Saved: %2$s ending in %3$s (expires %4$s)"
+msgstr "Se guardó el método de pago de %1$s: %2$s que termina en %3$s (vence el %4$s)"
+
+#. translators: Placeholders: %1$s - payment gateway title (such as CyberSouce, NETbilling, etc), %2$s - account type (checking/savings - may or may not be available), %3$s - last four digits of the account
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:613
+#: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:1126
+msgid "%1$s eCheck Payment Method Saved: %2$s account ending in %3$s"
+msgstr "Se guardó un método de pago de eCheck de %1$s: cuenta de %2$s que termina en %3$s"
+
+#. translators: Placeholders: %s - payment gateway title (such as CyberSouce, NETbilling, etc)
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:622
+msgid "%s Payment Method Saved"
+msgstr "Se guardó el método de pago %s"
+
+#. translators: Placeholders: %s - a failed tokenization API error
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:631
+msgid "Tokenization failed. %s"
+msgstr "Falló la tokenización. %s"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:293
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:607
+msgid "Edit"
+msgstr "Editar"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:337
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1293
+msgid "Title"
+msgstr "Título"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:340
+msgid "Details"
+msgstr "Detalles"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:343
+msgid "Default?"
+msgstr "¿Predeterminado?"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:609
+msgid "Oops, there was an error updating your payment method. Please try again."
+msgstr "Lo sentimos, hubo un error al actualizar tu método de pago. Inténtalo de nuevo."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:610
+msgid "Are you sure you want to delete this payment method?"
+msgstr "¿Estás seguro de que deseas eliminar este método de pago?"
+
+#. translators: Payment method as in a specific credit card, eCheck or bank account
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:697
+msgid "You do not have any saved payment methods."
+msgstr "No tienes ningún método de pago guardado."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:872
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:201
+msgid "Nickname"
+msgstr "Apodo"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:1118
+msgid "Oops, you took too long, please try again."
+msgstr "Lo sentimos, tardaste demasiado, inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:1129
+msgid "There was an error with your request, please try again."
+msgstr "Hubo un error con tu solicitud, inténtalo nuevamente."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:344
+msgid "Card Number"
+msgstr "Número de tarjeta"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:365
+msgid "MM / YY"
+msgstr "MM / AA"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:384
+msgid "Card Security Code"
+msgstr "Código de seguridad de la tarjeta"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:387
+msgid "CSC"
+msgstr "CSC"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:427
+msgid "Where do I find this?"
+msgstr "¿Dónde lo encuentro?"
+
+#. translators: e-check routing number, HTML form field label, https://en.wikipedia.org/wiki/Routing_transit_number
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:433
+msgid "Routing Number"
+msgstr "Número de enrutamiento"
+
+#. translators: e-check account number, HTML form field label
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:452
+msgid "Account Number"
+msgstr "Número de cuenta"
+
+#. translators: http://www.investopedia.com/terms/c/checkingaccount.asp
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:478
+msgctxt "account type"
+msgid "Checking"
+msgstr "Cheques"
+
+#. translators: http://www.investopedia.com/terms/s/savingsaccount.asp
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:480
+msgctxt "account type"
+msgid "Savings"
+msgstr "de Ahorros"
+
+#. translators: Test mode refers to the current software environment
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:518
+msgid "TEST MODE ENABLED"
+msgstr "MODO DE PRUEBA HABILITADO"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:545
+msgctxt "Bank check (noun)"
+msgid "Sample Check"
+msgstr "Cheque de muestra"
+
+#. translators: Payment method as in a specific credit card, eCheck or bank account
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:620
+msgid "Manage Payment Methods"
+msgstr "Administrar los Métodos de pago"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:757
+msgid "Use a new card"
+msgstr "Usar una nueva tarjeta"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:757
+msgid "Use a new bank account"
+msgstr "Usa una cuenta bancaria nueva"
+
+#. translators: account as in customer's account on the eCommerce site
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:820
+msgid "Securely Save to Account"
+msgstr "Guardar en la cuenta de manera segura"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:954
+msgid "Payment Info"
+msgstr "Información de pago"
+
+#. translators: Placeholders: %1$s - plugin name, %2$s - <a> tag, %3$s - </a> tag
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:706
+msgid "%1$s: WooCommerce is not being forced over SSL; your customers' payment data may be at risk. %2$sVerify your site URLs here%3$s"
+msgstr "%1$s: WooCommerce no puede ejecutar el SSL; los datos de pago de tus clientes pueden estar en riesgo. %2$sVerifica la URL de tu sitio aquí%3$s"
+
+#. translators: Placeholders: %s - payment gateway name
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:723
+msgid "%s will soon require TLS 1.2 support to process transactions and your server environment may need to be updated. Please contact your hosting provider to confirm that your site can send and receive TLS 1.2 connections and request they make any necessary updates."
+msgstr "%s pronto requerirá de la asistencia de TLS 1.2 para procesar las transacciones y es posible que debas actualizar el entorno de tu servidor. Comunícate con tu proveedor de hosting para confirmar que tu sitio puede enviar y recibir conexiones de TLS 1.2 y solicita que realice las actualizaciones necesarias."
+
+#. translators: Placeholders: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:778
+msgid "%1$s accepts payment in %2$s only. %3$sConfigure%4$s WooCommerce to accept %2$s to enable this gateway for checkout."
+msgid_plural "%1$s accepts payment in one of %2$s only. %3$sConfigure%4$s WooCommerce to accept one of %2$s to enable this gateway for checkout."
+msgstr[0] "%1$s solo acepta pagos en %2$s. %3$sConfigura%4$s WooCommerce para aceptar %2$s para habilitar esta puerta de enlace para el pago."
+msgstr[1] "%1$s solo acepta pagos en uno de %2$s. %3$sConfigura%4$s WooCommerce para aceptar uno de %2$s para habilitar esta puerta de enlace para el pago."
+
+#. translators: Placeholders: %1$s - payment gateway name, %2$s - opening <a> tag, %3$s - closing </a> tag
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:808
+msgid "Heads up! %1$s is currently configured to log transaction data for debugging purposes. If you are not experiencing any problems with payment processing, we recommend %2$sturning off Debug Mode%3$s"
+msgstr "¡Aviso! Actualmente %1$s está configurado para registrar los datos de las transacciones con fines de depuración. Si no tienes problemas con el proceso de pago, te recomendamos %2$sapagar el Modo de depuración%3$s"
+
+#. translators: Placeholders: %s - gateway name
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:859
+msgid "%s is not configured"
+msgstr "%s no está configurado"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:871
+msgid "Dismiss"
+msgstr "Descartar"
+
+#. translators: Placeholders: %1$s - plugin name, %2$s - opening <a> HTML link tag, %3$s - closing </a> HTML link tag
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:908
+msgid "Heads up! Apple Pay for %1$s requires WooCommerce version 3.2 or greater. Please %2$supdate WooCommerce%3$s."
+msgstr "Aviso Apple Pay para %1$s requiere de la versión de WooCommerce 3.2 o superior. %2$sActualiza WooCommerce%3$s."
+
+#. translators: Placeholders: %1$s - plugin name, %2$s - opening <a> HTML link tag, %3$s - closing </a> HTML link tag
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:932
+msgid "Heads up! Google Pay for %1$s requires WooCommerce version 3.2 or greater. Please %2$supdate WooCommerce%3$s."
+msgstr "Aviso Google Pay para %1$s requiere de la versión de WooCommerce 3.2 o superior. %2$sActualiza WooCommerce%3$s."
+
+#. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:968
+msgid "%1$s is inactive for subscription transactions. Please %2$senable tokenization%3$s to activate %1$s for Subscriptions."
+msgstr "%1$s está inactivo para las transacciones de suscripciones. %2$sHabilita la tokenización%3$s para activar %1$s para Suscripciones."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:986
+msgid "%1$s is inactive for pre-order transactions. Please %2$senable tokenization%3$s to activate %1$s for Pre-Orders."
+msgstr "%1$s está inactivo para las transacciones de preventa. %2$sHabilita la tokenización%3$s para activar %1$s para las Preventas."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:1023
+msgid "You must enable tokenization for this gateway in order to support automatic renewal payments with the WooCommerce Subscriptions extension."
+msgstr "Debes habilitar la tokenización para esta puerta de enlace para permitir los pagos de renovaciones automáticas con la extensión WooCommerce Subscriptions."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:1024
+msgid "Inactive"
+msgstr "Inactivo"
+
+#. translators: Placeholder: %s - Payment gateway title (e.g. Authorize.Net, Braintree...)
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:116
+msgid "%s Customer ID"
+msgstr "ID de cliente %s"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:185
+msgid "Type"
+msgstr "Tipo"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:256
+msgid "Removed payment token \"%d\""
+msgstr "Se eliminó el token de pago \"%d\""
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:303
+msgid "Expiry Date"
+msgstr "Fecha de vencimiento"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:350
+msgctxt "Congratulatory message displayed to the merchant when they process their first payment"
+msgid "You successfully processed a payment!"
+msgstr "Procesaste un pago con éxito."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:355
+msgctxt "Congratulatory message displayed to the merchant when they process their first refund"
+msgid "You successfully processed a refund!"
+msgstr "Procesaste una devolución con éxito."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:495
+msgctxt "Credit or debit card"
+msgid "Card number is missing"
+msgstr "Falta el número de tarjeta"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:496
+msgctxt "Credit or debit card"
+msgid "Card number is invalid"
+msgstr "El número de tarjeta es inválido"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:497
+msgctxt "Credit or debit card"
+msgid "Card number is invalid (only digits allowed)"
+msgstr "El número de tarjeta es inválido (solo se permiten números)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:498
+msgctxt "Credit or debit card"
+msgid "Card number is invalid (wrong length)"
+msgstr "El número de tarjeta es inválido (longitud incorrecta)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:499
+msgctxt "Credit or debit card"
+msgid "Card security code is missing"
+msgstr "Falta el código de seguridad de la tarjeta"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:500
+msgctxt "Credit or debit card"
+msgid "Card security code is invalid (only digits are allowed)"
+msgstr "El código de seguridad de la tarjeta es inválido (solo se permiten números)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:501
+msgctxt "Credit or debit card"
+msgid "Card security code is invalid (must be 3 or 4 digits)"
+msgstr "El código de seguridad de la tarjeta es inválido (debe tener 3 o 4 dígitos)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:502
+msgctxt "Credit or debit card"
+msgid "Card expiration date is invalid"
+msgstr "La fecha de vencimiento de la tarjeta es inválida."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:504
+msgctxt "Bank check (noun)"
+msgid "Check Number is missing"
+msgstr "Falta el número de cheque"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:505
+msgctxt "For countries without states, \"state\" can be replaced with \"place of issue\"."
+msgid "Driver's license state is missing"
+msgstr "Driver's license state is missing"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:506
+msgid "Driver's license number is missing"
+msgstr "Driver's license number is missing"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:508
+msgctxt "Bank account"
+msgid "Account Number is missing"
+msgstr "Falta el número de cuenta"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:509
+msgctxt "Bank account"
+msgid "Account Number is invalid (only digits are allowed)"
+msgstr "El número de cuenta es inválido (solo se permiten números)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:510
+msgctxt "Bank account"
+msgid "Account Number is invalid (must be between 5 and 17 digits)"
+msgstr "El número de cuenta es inválido (debe tener entre 5 y 17 dígitos)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:511
+msgctxt "Bank account"
+msgid "Routing Number is missing"
+msgstr "Falta el número de ruta"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:512
+msgctxt "Bank account"
+msgid "Routing Number is invalid (only digits are allowed)"
+msgstr "El número de ruta es inválido (solo se permiten números)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:513
+msgctxt "Bank account"
+msgid "Routing Number is invalid (must be 9 digits)"
+msgstr "El número de ruta es inválido (debe tener 9 dígitos)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:719
+msgid "Continue to Payment"
+msgstr "Continuar con el pago"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:719
+msgid "Place order"
+msgstr "Hacer pedido"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:751
+msgid "Thank you for your order."
+msgstr "Gracias por tu pedido."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1245
+msgid "Credit Card"
+msgstr "Tarjeta de crédito"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1247
+msgid "eCheck"
+msgstr "eCheck"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1265
+msgid "Pay securely using your credit card."
+msgstr "Pagar de manera segura usando tu tarjeta de crédito."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1267
+msgid "Pay securely using your checking account."
+msgstr "Pagar de manera segura usando tu cuenta corriente."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1286
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:93
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:93
+msgid "Enable / Disable"
+msgstr "Habilitar / Deshabilitar"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1287
+msgid "Enable this gateway"
+msgstr "Habilitar esta puerta de enlace"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1295
+msgid "Payment method title that the customer will see during checkout."
+msgstr "El título del método de pago que el cliente verá durante el proceso de pago."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1300
+msgid "Description"
+msgstr "Descripción"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1302
+msgid "Payment method description that the customer will see during checkout."
+msgstr "La descripción del método de pago que el cliente verá durante el proceso de pago."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1331
+msgid "Detailed Decline Messages"
+msgstr "Mensajes de rechazo detallados"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1333
+msgid "Check to enable detailed decline messages to the customer during checkout when possible, rather than a generic decline message."
+msgstr "Marca para permitir que el cliente reciba mensajes de rechazo detallados durante el proceso de pago, cuando sea posible, en lugar de un mensaje de rechazo genérico."
+
+#. translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1343
+msgid "Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the %1$sdebug log%2$s"
+msgstr "Muestra los mensajes de error detallados y las solicitudes/respuestas de API en la página de pago o guárdalos en el %1$sregistro de depuración%2$s"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1347
+msgid "Show on Checkout Page"
+msgstr "Mostrar en la Página de Pago"
+
+#. translators: show debugging information on both checkout page and in the log
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1350
+msgid "Both"
+msgstr "Ambos"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1416
+msgid "Select the gateway environment to use for transactions."
+msgstr "Selecciona el entorno de puerta de enlace para usar para las transacciones."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1464
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:151
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:149
+msgid "Connection Settings"
+msgstr "Configuración de conexión"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1470
+msgid "Share connection settings"
+msgstr "Compartir configuración de conexión"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1472
+msgid "Use connection/authentication settings from other gateway"
+msgstr "Usar configuración de conexión/autenticación de otra puerta de enlace"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1475
+msgid "Disabled because the other gateway is using these settings"
+msgstr "Está deshabilitada porque la otra puerta de enlace está usando estas configuraciones"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1492
+msgid "Card Security Code (CSC)"
+msgstr "Código de seguridad de la tarjeta (CSC)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1493
+msgid "Display the Card Security Code (CSC) field on checkout"
+msgstr "Mostrar el campo del código de seguridad de la tarjeta (CSC) durante el proceso de pago"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1501
+msgid "Saved Card Security Code"
+msgstr "Código de seguridad de la tarjeta guardado"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1502
+msgid "Display the Card Security Code field when paying with a saved card"
+msgstr "Mostrar el campo del código de seguridad de la tarjeta cuando el pago sea con una tarjeta guardada"
+
+#. translators: Placeholders: %1$s - site title, %2$s - order number
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1837
+msgid "%1$s - Order %2$s"
+msgstr "%1$s - Pedido %2$s"
+
+#. translators: Placeholders: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card.
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1971
+msgid "%1$s - Capture for Order %2$s"
+msgstr "%1$s - Captura para el pedido %2$s"
+
+#. translators: Placeholders: %1$s - site title, %2$s - order number
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2114
+msgid "%1$s - Refund for Order %2$s"
+msgstr "%1$s - Devolución para el pedido %2$s"
+
+#. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - a monetary amount
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2181
+msgid "%1$s Refund in the amount of %2$s approved."
+msgstr "Se aprobó la devolución de %1$s por el monto de %2$s."
+
+#. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error code, %3$s - error message
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2211
+msgid "%1$s Refund Failed: %2$s - %3$s"
+msgstr "Falló la devolución de %1$s: %2$s - %3$s"
+
+#. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error message
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2219
+msgid "%1$s Refund Failed: %2$s"
+msgstr "Falló la devolución de %1$s: %2$s"
+
+#. translators: Placeholders: %s - payment gateway title (such as Authorize.net, Braintree, etc)
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2240
+msgid "%s Order completely refunded."
+msgstr "%s Pedido completamente devuelto."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2295
+msgid "Oops, you cannot partially void this order. Please use the full order amount."
+msgstr "Lo sentimos, no se puede anular parcialmente este pedido. Usa el monto del pedido total."
+
+#. translators: Placeholders: %1$s - payment gateway title, %2$s - error code, %3$s - error message. Void as in to void an order.
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2382
+msgid "%1$s Void Failed: %2$s - %3$s"
+msgstr "Falló la anulación de %1$s: %2$s - %3$s"
+
+#. translators: Placeholders: %1$s - payment gateway title, %2$s - error message. Void as in to void an order.
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2390
+msgid "%1$s Void Failed: %2$s"
+msgstr "Falló la anulación de %1$s: %2$s"
+
+#. translators: Placeholders: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order.
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2414
+msgid "%1$s Void in the amount of %2$s approved."
+msgstr "%1$s Inválido en el monto de %2$s aprobado."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2489
+msgctxt "hash before order number"
+msgid "#"
+msgstr "#"
+
+#. translators: Placeholders: %1$s - status code, %2$s - status message
+#. translators: Placeholders: %1$s - Payment request response status code, %2$s - Payment request response status message
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2511
+#: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:152
+#: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:172
+msgid "Status code %1$s: %2$s"
+msgstr "Código del estado %1$s: %2$s"
+
+#. translators: Placeholders: %s - status code
+#. translators: Placeholder: %s - Payment request response status code
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2514
+#: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:155
+#: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:175
+msgid "Status code: %s"
+msgstr "Código del estado: %s"
+
+#. translators: Placeholders; %s - status message
+#. translators: Placeholder: %s - Status message
+#. translators: Placeholder: %s - Payment request response status message
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2517
+#: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:158
+#: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:178
+msgid "Status message: %s"
+msgstr "Mensaje de estado: %s"
+
+#. translators: Placeholder: %s - Payment transaction ID
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2522
+#: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:164
+#: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:186
+msgid "Transaction ID %s"
+msgstr "ID de transacción %s"
+
+#. translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge)
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2713
+msgid "%1$s %2$s %3$s Approved"
+msgstr "%3$s de %2$s de %1$s aprobado"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2715
+msgctxt "noun, software environment"
+msgid "Test"
+msgstr "Prueba"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2716
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3198
+msgctxt "credit card transaction type"
+msgid "Authorization"
+msgstr "Autorización"
+
+#. translators: Placeholders: %1$s - credit card type (MasterCard, Visa, etc...), %2$s - last four digits of the card
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2723
+msgid "%1$s ending in %2$s"
+msgstr "%1$s que termina en %2$s"
+
+#. translators: Placeholders: %1$s - payment gateway title, %2$s - message (probably reason for the transaction being held for review)
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2820
+msgid "%1$s Transaction Held for Review (%2$s)"
+msgstr "Transacción de %1$s en pausa para su revisión (%2$s)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2862
+#: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:268
+msgid "Your order has been received and is being reviewed. Thank you for your business."
+msgstr "Tu pedido ha sido recibido y se está revisando. Gracias por preferirnos."
+
+#. translators: Placeholders: %1$s - payment gateway title, %2$s - error message; e.g. Order Note: [Payment method] Payment failed [error]
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2909
+msgid "%1$s Payment Failed (%2$s)"
+msgstr "Falló el pago de %1$s (%2$s)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2926
+#: woocommerce/payment-gateway/Handlers/Abstract_Hosted_Payment_Handler.php:217
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:526
+msgid "An error occurred, please try again or try an alternate form of payment."
+msgstr "Ocurrió un error, inténtalo nuevamente o prueba una forma de pago alternativa."
+
+#. translators: Placeholders: %1$s - payment gateway title, %2$s - message/error
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2944
+msgid "%1$s Transaction Cancelled (%2$s)"
+msgstr "La transacción de %1$s se canceló (%2$s)"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3192
+msgid "Transaction Type"
+msgstr "Tipo de transacción"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3194
+msgid "Select how transactions should be processed. Charge submits all transactions for settlement, Authorization simply authorizes the order total for capture later."
+msgstr "Selecciona cómo se deben procesar las transacciones. Cobrar envía todas las transacciones para liquidar, Autorización simplemente autoriza el total del pedido para capturarlo más tarde."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3205
+msgid "Charge Virtual-Only Orders"
+msgstr "Cobrar pedidos únicamente virtuales"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3207
+msgid "If the order contains exclusively virtual items, enable this to immediately charge, rather than authorize, the transaction."
+msgstr "Si el pedido contiene exclusivamente artículos virtuales, habilita que se cobren inmediatamente, en lugar de autorizar la transacción."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3215
+msgid "Enable Partial Capture"
+msgstr "Habilitar captura parcial"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3217
+msgid "Allow orders to be partially captured multiple times."
+msgstr "Permite que los pedidos se capturen múltiples veces."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3226
+msgctxt "coordinating conjunction for a list of order statuses: on-hold, processing, or completed"
+msgid "or"
+msgstr "o"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3229
+msgid "Capture Paid Orders"
+msgstr "Capturar los Pedidos pagados"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3232
+msgid "Automatically capture orders when they are changed to %s."
+msgstr "Captura automáticamente los pedidos pagados cuando cambien a %s."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3233
+msgid "a paid status"
+msgstr "un estado pagado."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3423
+msgid "Accepted Card Logos"
+msgstr "Logos de las tarjetas que se aceptan"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3425
+msgid "These are the card logos that are displayed to customers as accepted during checkout."
+msgstr "Estos son los logos de las tarjetas que se aceptan que se muestran a los clientes durante el proceso de pago."
+
+#. translators: Placeholders: %1$s - <strong> tag, %2$s - </strong> tag
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3428
+msgid "This setting %1$sdoes not%2$s change which card types the gateway will accept. Accepted cards are configured from your payment processor account."
+msgstr "Esta configuración %1$sno%2$s cambia los tipos de tarjetas que aceptará la puerta de enlace. Las tarjetas aceptadas están configuradas en tu cuenta para procesar pagos."
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3460
+msgctxt "credit card type"
+msgid "Diners"
+msgstr "Diners"
+
+#. translators: http://www.cybersource.com/products/payment_security/payment_tokenization/ and https://en.wikipedia.org/wiki/Tokenization_(data_security)
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3519
+msgid "Tokenization"
+msgstr "Tokenización"
+
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3520
+msgid "Allow customers to securely save their payment details for future checkout."
+msgstr "Permite que los clientes guarden de manera segura los detalles del pago para los próximos pagos."
+
+#. translators: https://www.skyverge.com/for-translators-environments
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:4031
+msgctxt "software environment"
+msgid "Production"
+msgstr "Producción"
+
+#. translators: %1$s - gateway name, %2$s - <a> tag, %3$s - </a> tag, %4$s - <a> tag, %5$s - </a> tag
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:4305
+msgid "Heads up! %1$s is not fully configured and cannot accept payments. Please %2$sreview the documentation%3$s and configure the %4$sgateway settings%5$s."
+msgstr "Aviso %1$s no está completamente configurada y no puede aceptar pagos. %2$sRevisa la configuración%3$s y configura la %4$sconfiguración de la puerta de enlace%5$s."
+
+#: woocommerce/payment-gateway/External_Checkout/Admin.php:137
+#: woocommerce/payment-gateway/External_Checkout/Admin.php:147
+msgctxt "Noun: payment gateway used to process a transaction"
+msgid "Processing Gateway"
+msgstr "Procesando puerta de enlace"
+
+#: woocommerce/payment-gateway/External_Checkout/Admin.php:287
+msgid "Single products"
+msgstr "Productos únicos"
+
+#: woocommerce/payment-gateway/External_Checkout/Admin.php:288
+msgid "Cart"
+msgstr "Carrito"
+
+#: woocommerce/payment-gateway/External_Checkout/Admin.php:289
+msgid "Checkout"
+msgstr "Pagar"
+
+#. translators: Placeholder: %s - external checkout label
+#: woocommerce/payment-gateway/External_Checkout/Admin.php:330
+msgid "%s is disabled."
+msgstr "%s está deshabilitada."
+
+#. translators: Context: Error message displayed to merchants if their store currency is not in one of the accepted currencies by the payment gateway they intend to enable. Placeholders: %1$s - a currency or comma-separated list of currencies, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - payment method title/label
+#: woocommerce/payment-gateway/External_Checkout/Admin.php:394
+msgid "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
+msgid_plural "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
+msgstr[0] "Solo acepta pagos en %1$s. %2$sConfigura%3$s WooCommerce para aceptar %1$s para habilitar %4$s."
+msgstr[1] "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
+
+#. translators: Placeholders: %1$s - Checkout method label, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <strong> tag, %5$s - closing HTML </strong> tag
+#: woocommerce/payment-gateway/External_Checkout/Admin.php:431
+msgid "Your store %1$scalculates taxes%2$s based on the shipping address, but %1$s %4$sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead."
+msgstr "Tu tienda %1$scalcula los impuestos%2$s basándose en la dirección de envío, pero %1$s %4$sno%5$s comparte la información de envío del cliente con tu tienda para pedidos que solo tengan productos virtuales. En cambio, los impuestos de estos pedidos se calcularán basándose en la dirección de la tienda."
+
+#: woocommerce/payment-gateway/External_Checkout/Admin.php:464
+msgid "%4$s%1$s Notice!%5$s Your store %2$scalculates taxes%3$s based on the billing address, but %1$s %4$sdoes not%5$s share the customer billing address with your store before payment. These orders will have their taxes calculated based on the shipping address (or shop address, for orders with only virtual products)."
+msgstr "%4$s%1$s Aviso%5$s Tu tienda %2$scalcula los impuestos%3$s basándose en la dirección de facturación, pero %1$s %4$sno%5$s comparte la dirección de facturación del cliente con tu tienda antes del pago. Los impuestos de estos pedidos se calcularán basándose en la dirección de envío (o dirección de la tienda, para pedidos que solo tengan productos virtuales)."
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:71
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:87
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:65
+msgid "Apple Pay"
+msgstr "Apple Pay"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:94
+msgctxt "For the merchant to accept Apple Pay payments"
+msgid "Accept Apple Pay"
+msgstr "Aceptar Apple Pay"
+
+#. translators: Allow Apple Pay button on selected display locations (e.g. cart, checkout, product page...)
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:102
+msgid "Allow Apple Pay on"
+msgstr "Permitir Apple Pay en"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:112
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:112
+msgid "Button Style"
+msgstr "Estilo del botón"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:115
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:115
+msgctxt "Button style"
+msgid "Black"
+msgstr "Black"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:116
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:116
+msgctxt "Button style"
+msgid "White"
+msgstr "Blanco"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:117
+msgctxt "Button style"
+msgid "White with outline"
+msgstr "Blanco con contorno"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:160
+msgid "Apple Merchant ID"
+msgstr "ID de comerciante en Apple"
+
+#. translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:164
+msgid "This is found in your %1$sApple developer account%2$s"
+msgstr "Esto lo encuentras en tu %1$scuenta de desarrollador de Apple%2$s"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:174
+msgid "Certificate Path"
+msgstr "Ruta del certificado"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:176
+msgid "The full system path to your certificate file from Apple. For security reasons you should store this outside of your web root."
+msgstr "La ruta del sistema completa a tu archivo de certificado de Apple. Por motivos de seguridad, deberías guardarla fuera de la raíz de tu web."
+
+#. translators: Placeholders: %s - the server's web root path
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:179
+msgid "For reference, your current web root path is: %s"
+msgstr "Para tu referencia, la ruta raíz de tu web actual es: %s"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:189
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:158
+msgid "Test Mode"
+msgstr "Modo de prueba"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:190
+msgid "Enable to test Apple Pay functionality throughout your sites without processing real payments."
+msgstr "Habilitar para probar la funcionalidad de Apple Pay a través de tus sitios sin procesar pagos reales."
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:229
+msgid "Your site must be served over HTTPS with a valid SSL certificate."
+msgstr "Tu sitio debe tener HTTPS con un certificado SSL válido."
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:239
+msgid "Your %1$sMerchant Identity Certificate%2$s cannot be found. Please check your path configuration."
+msgstr "No se puede encontrar %1$sel Certificado de identidad de comerciante%2$s. Verifica la configuración de tu ruta."
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:176
+msgctxt "Apple Pay"
+msgid "Buy with"
+msgstr "Comprar con"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:152
+msgid "Apple Pay payment authorized."
+msgstr "Pago de Apple Pay autorizado."
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:186
+msgid "Apple Pay payment failed. %s"
+msgstr "Falló el pago de Apple Pay. %s"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:539
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:255
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:380
+msgid "Subtotal"
+msgstr "Subtotal"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:549
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:390
+msgid "Discount"
+msgstr "Descuento"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:559
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:400
+msgid "Shipping"
+msgstr "Envío"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:569
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:410
+msgid "Fees"
+msgstr "Tarifas"
+
+#: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:579
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:420
+msgid "Taxes"
+msgstr "Impuestos"
+
+#: woocommerce/payment-gateway/External_Checkout/Frontend.php:259
+msgid "or"
+msgstr "o"
+
+#: woocommerce/payment-gateway/External_Checkout/Frontend.php:293
+msgid "By submitting your payment, you agree to our %1$sterms and conditions%2$s."
+msgstr "Si envías tu pago, aceptas nuestros %1$stérminos y condiciones%2$s."
+
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:71
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:87
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:66
+msgid "Google Pay"
+msgstr "Google Pay"
+
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:94
+msgctxt "For the merchant to accept Google Pay payments"
+msgid "Accept Google Pay"
+msgstr "Aceptar Google Pay"
+
+#. translators: Allow Google Pay button on selected display locations (e.g. cart, checkout, product page...)
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:102
+msgctxt "Setting title for a multi-select list dropdown of display locations"
+msgid "Allow Google Pay on"
+msgstr "Permitir Google Pay en"
+
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:159
+msgid "Enable to test Google Pay functionality throughout your sites without processing real payments."
+msgstr "Habilitar para probar la funcionalidad de Google Pay a través de tus sitios sin procesar pagos reales."
+
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:463
+msgid "Google Pay payment authorized."
+msgstr "Pago de Google Pay autorizado."
+
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:538
+msgid "Google Pay payment failed. %s"
+msgstr "Falló el pago de Google Pay. %s"
+
+#: woocommerce/payment-gateway/External_Checkout/Orders.php:140
+#: woocommerce/payment-gateway/External_Checkout/Orders.php:153
+#: woocommerce/payment-gateway/External_Checkout/Orders.php:157
+msgid "Error %d: Unable to create order. Please try again."
+msgstr "Error %d: no se pudo crear el pedido. Inténtalo de nuevo."
+
+#: woocommerce/payment-gateway/Handlers/Abstract_Hosted_Payment_Handler.php:179
+msgid "There was a problem processing your order and it is being placed on hold for review. Please contact us to complete the transaction."
+msgstr "Ocurrió un error al procesar tu pedido y quedará en pausa para revisarlo. Comunícate con nosotros para completar la transacción."
+
+#. translators: Example: "Authorize.Net Transaction Held for Review". Placeholder: %s - Payment gateway title
+#: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:365
+msgid "%s Transaction Held for Review"
+msgstr "Transacción de %s en pausa para su revisión"
+
+#. translators: Placeholders: %s - payment gateway title
+#: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:436
+msgid "%s Payment Failed"
+msgstr "Falló el pago de %s"
+
+#. translators: Placeholders: %s - payment gateway title
+#: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:463
+msgid "%s Transaction Cancelled"
+msgstr "La transacción de %s se canceló"
+
+#: woocommerce/payment-gateway/Handlers/Capture.php:158
+msgid "Order cannot be captured"
+msgstr "El pedido no se puede capturar"
+
+#: woocommerce/payment-gateway/Handlers/Capture.php:163
+msgid "Transaction authorization has expired"
+msgstr "Expiró la autorización de la transacción"
+
+#: woocommerce/payment-gateway/Handlers/Capture.php:168
+msgid "Transaction has already been fully captured"
+msgstr "La transacción ya se ha capturado en su totalidad"
+
+#: woocommerce/payment-gateway/Handlers/Capture.php:173
+msgid "Transaction cannot be captured"
+msgstr "La transacción no se puede capturar"
+
+#. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount. Definitions: Capture, as in capture funds from a credit card.
+#: woocommerce/payment-gateway/Handlers/Capture.php:189
+msgid "%1$s Capture of %2$s Approved"
+msgstr "Se aprobó la captura de %1$s de %2$s"
+
+#. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - failure message. Definitions: "capture" as in capturing funds from a credit card.
+#: woocommerce/payment-gateway/Handlers/Capture.php:230
+msgid "%1$s Capture Failed: %2$s"
+msgstr "Falló la captura de %1$s: %2$s"
+
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:261
+msgid "Pre-Order Tokenization attempt failed (%s)"
+msgstr "Falló el intento de tokenización de la preventa (%s)"
+
+#. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Site name, %2$s - Order number
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:309
+msgid "%1$s - Pre-Order Release Payment for Order %2$s"
+msgstr "%1$s - Pago del lanzamiento de preventa para el pedido %2$s"
+
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:316
+msgid "Payment token missing/invalid."
+msgstr "El token de pago falta/es inválido."
+
+#. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Payment gateway name, %2$s - Either 'Authorization' or 'Charge' (untranslated), %3$s - Payment method type (e.g. 'PayPal', 'Credit Card', etc.), %4$s - Last four digits of the card or account, %5$s - Expiration date of the payment method
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:342
+msgid "%1$s %2$s Pre-Order Release Payment Approved: %3$s ending in %4$s (expires %5$s)"
+msgstr "Se aprobó el pago del lanzamiento de preventa de %1$s %2$s: %3$s que termina en %4$s (caduca %5$s)"
+
+#. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Payment gateway name, %2$s - Payment method type (e.g. 'Bank Account'), %3$s - Last four digits of the account
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:355
+msgid "%1$s eCheck Pre-Order Release Payment Approved: %2$s ending in %3$s"
+msgstr "Se aprobó el pago del lanzamiento de preventa de %1$s: %2$s que termina en %3$s"
+
+#. translators: Context: Release of payment for pre-order failed. Placeholder: %s - Error message
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:407
+msgid "Pre-Order Release Payment Failed: %s"
+msgstr "Falló el pago del lanzamiento de preventa: %s"
+
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:358
+msgid "Subscription Renewal: payment token is missing/invalid."
+msgstr "Renovación de suscripción: el token de pago falta/es inválido."
+
+#. translators: Placeholders: %1$s - Site name, %2$s - Order number
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:386
+msgid "%1$s - Subscription Renewal Order %2$s"
+msgstr "%1$s - Pedido de renovación de suscripción %2$s"
+
+#. translators: Placeholders: %1$s - payment gateway title, %2$s - error message; e.g. Order Note: [Payment method] Payment Change failed [error]
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:521
+msgid "%1$s Payment Change Failed (%2$s)"
+msgstr "Falló el cambio de pago de %1$s (%2$s)"
+
+#. translators: Context: Payment made for order. Placeholders: %1$s - Payment method name (e.g. "Credit Card", "PayPal", etc.), %2$s - Last four digits of the card/account used
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:679
+msgid "Via %1$s ending in %2$s"
+msgstr "A través de %1$s que termina en %2$s"
+
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:710
+msgid "Subscriptions"
+msgstr "Suscripciones"
+
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:765
+msgctxt "hash before order number"
+msgid "#%s"
+msgstr "#%s"
+
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:771
+msgid "N/A"
+msgstr "N/D"
+
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:870
+msgid "Payment Token"
+msgstr "Token de pago"
+
+#. translators: Context: Error message. Placeholder: %s - Label of the related value
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:900
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:906
+msgid "%s is required."
+msgstr "%s es obligatorio."
+
+#: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:180
+msgid "Unknown Error"
+msgstr "Error desconocido"
+
+#: woocommerce/rest-api/Controllers/Settings.php:119
+msgid "Sorry, you cannot list resources."
+msgstr "Lo sentimos, no puedes incluir recursos en la lista."
+
+#. translators: Placeholder: %s - setting ID
+#: woocommerce/rest-api/Controllers/Settings.php:168
+msgid "Setting %s does not exist"
+msgstr "La configuración de %s no existe"
+
+#: woocommerce/rest-api/Controllers/Settings.php:191
+msgid "Sorry, you cannot edit this resource."
+msgstr "Lo sentimos, no puedes editar este recurso."
+
+#. translators: Placeholder: %s - Error message
+#: woocommerce/rest-api/Controllers/Settings.php:224
+msgid "Could not update setting: %s"
+msgstr "No se pudo actualizar la configuración: %s"
+
+#: woocommerce/rest-api/Controllers/Settings.php:294
+msgid "Unique identifier of the setting."
+msgstr "Identificador único de la configuración."
+
+#: woocommerce/rest-api/Controllers/Settings.php:300
+msgid "The type of the setting."
+msgstr "El tipo de configuración."
+
+#: woocommerce/rest-api/Controllers/Settings.php:307
+msgid "The name of the setting."
+msgstr "El nombre de la configuración."
+
+#: woocommerce/rest-api/Controllers/Settings.php:313
+msgid "The description of the setting. It may or may not be used for display."
+msgstr "La descripción de la configuración. Puede o no usarse para mostrar."
+
+#: woocommerce/rest-api/Controllers/Settings.php:319
+msgid "Whether the setting stores an array of values or a single value."
+msgstr "Ya sea si la configuración almacena una matriz de valores o un solo valor."
+
+#: woocommerce/rest-api/Controllers/Settings.php:325
+msgid "A list of valid options, used for validation before storing the value."
+msgstr "Una lista de opciones válidas, usadas para la validación antes de almacenar el valor."
+
+#: woocommerce/rest-api/Controllers/Settings.php:331
+msgid "Optional default value for the setting."
+msgstr "Valor predeterminado opcional para la configuración."
+
+#: woocommerce/rest-api/Controllers/Settings.php:337
+msgid "The value of the setting."
+msgstr "El valor de la configuración."
+
+#: woocommerce/rest-api/Controllers/Settings.php:346
+msgid "The type of the control."
+msgstr "El tipo de control."
+
+#: woocommerce/rest-api/Controllers/Settings.php:353
+msgid "The name of the control. Inherits the setting's name."
+msgstr "El nombre del control. Hereda el nombre de la configuración."
+
+#: woocommerce/rest-api/Controllers/Settings.php:359
+msgid "The description of the control. Inherits the setting's description."
+msgstr "La descripción del control. Hereda la descripción de la configuración."
+
+#: woocommerce/rest-api/Controllers/Settings.php:365
+msgid "A list of key/value pairs defining the display value of each setting option. The keys should match the options defined in the base setting for validation."
+msgstr "Una lista de pares de claves/valores define el valor de visualización de cada opción de configuración. Las claves deberían coincidir con las opciones definidas en la configuración base para la validación."
+
+#: woocommerce/utilities/class-sv-wp-background-job-handler.php:659
+msgid "Job data key \"%s\" not set"
+msgstr "Clave de datos de la tarea \"%s\" no establecida"
+
+#: woocommerce/utilities/class-sv-wp-background-job-handler.php:663
+msgid "Job data key \"%s\" is not an array"
+msgstr "La clave de datos de la tarea \"%s\" no es una matriz"
+
+#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1063
+msgid "Background Processing Test"
+msgstr "Prueba de procesamiento de fondo"
+
+#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1064
+msgid "Run Test"
+msgstr "Prueba de ejecución"
+
+#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1065
+msgid "This tool will test whether your server is capable of processing background jobs."
+msgstr "Esta herramienta analizará si tu servidor es capaz de procesar tareas de fondo."
+
+#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1083
+msgid "Success! You should be able to process background jobs."
+msgstr "¡Éxito! Deberías poder procesar tareas de fondo."
+
+#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1086
+msgid "Could not connect. Please ask your hosting company to ensure your server has loopback connections enabled."
+msgstr "No se pudo conectar. Pregunta a tu compañía de hosting si tu servidor tiene las conexiones de bucle invertido habilitadas."

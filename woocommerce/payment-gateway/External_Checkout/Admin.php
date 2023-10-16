@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9\Payment_Gateway\External_Checkout;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\External_Checkout;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_11_9\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Helper;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -134,7 +134,7 @@ abstract class Admin {
 
 			$settings[] = [
 				'id'    => $this->get_processing_gateway_setting_id(),
-				'title' => __( 'Processing Gateway', 'woocommerce-plugin-framework' ),
+				'title' => _x( 'Processing Gateway', 'Noun: payment gateway used to process a transaction', 'woocommerce-plugin-framework' ),
 				'type'  => 'static',
 				'value' => key( $gateway_options ),
 				'label' => current( $gateway_options ),
@@ -144,7 +144,7 @@ abstract class Admin {
 
 			$settings[] = [
 				'id'    => $this->get_processing_gateway_setting_id(),
-				'title'   => __( 'Processing Gateway', 'woocommerce-plugin-framework' ),
+				'title'   => _x( 'Processing Gateway', 'Noun: payment gateway used to process a transaction','woocommerce-plugin-framework' ),
 				'type'    => 'select',
 				'options' => $gateway_options
 			];
@@ -390,13 +390,8 @@ abstract class Admin {
 		if ( ! empty( $accepted_currencies ) && ! in_array( get_woocommerce_currency(), $accepted_currencies, true ) ) {
 
 			$errors[] = sprintf(
-				/* translators: Placeholders: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag, %5$s - external checkout label */
-				_n(
-					'Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s.',
-					'Accepts payment in one of %1$s only. %2$sConfigure%3$s WooCommerce to accept one of %1$s to enable %4$s.',
-					count( $accepted_currencies ),
-					'woocommerce-plugin-framework'
-				),
+				/* translators: Context: Error message displayed to merchants if their store currency is not in one of the accepted currencies by the payment gateway they intend to enable. Placeholders: %1$s - a currency or comma-separated list of currencies, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - payment method title/label */
+				_n('Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s.', 'Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s.', count( $accepted_currencies ), 'woocommerce-plugin-framework' ),
 				'<strong>' . implode( ', ', $accepted_currencies ) . '</strong>',
 				'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=general' ) ) . '">',
 				'</a>',
@@ -429,14 +424,13 @@ abstract class Admin {
 	 *
 	 * @return string
 	 */
-	protected function get_shipping_based_tax_notice() {
+	protected function get_shipping_based_tax_notice() : string {
 
 		return sprintf(
-			/** translators: Placeholders: %1$s - external checkout label, %2$s - <a> tag, %3$s - </a> tag, %4$s - <strong> tag, %5$s - </strong> tag */
-			__( '%4$s%1$s Notice!%5$s Your store %2$scalculates taxes%3$s based on the shipping address, but %1$s %4$sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead.', 'woocommerce-plugin-framework' ),
+			/* translators: Placeholders: %1$s - Checkout method label, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <strong> tag, %5$s - closing HTML </strong> tag */
+			__( 'Your store %1$scalculates taxes%2$s based on the shipping address, but %1$s %4$sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead.', 'woocommerce-plugin-framework' ),
+			'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=tax' ) ) . '">', '</a>',
 			$this->handler->get_label(),
-			'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=tax' ) ) . '">',
-			'</a>',
 			'<strong>', '</strong>'
 		);
 	}

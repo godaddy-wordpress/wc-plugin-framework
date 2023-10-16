@@ -10,7 +10,7 @@ jQuery ( $ ) ->
 	"use strict"
 
 
-	class window.SV_WC_Payment_Form_Handler_v5_11_9
+	class window.SV_WC_Payment_Form_Handler_v5_11_10
 
 
 		# Public: Instantiate Payment Form Handler
@@ -22,7 +22,7 @@ jQuery ( $ ) ->
 		#   type - gateway type, either `credit-card` or `echeck`
 		#   csc_required - true if the gateway requires the CSC field to be displayed
 		#
-		# Returns SV_WC_Payment_Form_Handler_v5_11_9 instance
+		# Returns SV_WC_Payment_Form_Handler_v5_11_10 instance
 		constructor: (args) ->
 
 			@id                      = args.id
@@ -322,7 +322,7 @@ jQuery ( $ ) ->
 			$csc_field = $new_payment_method_selection.find( '.js-sv-wc-payment-gateway-credit-card-form-csc' ).closest( '.form-row' )
 
 			# show/hide the saved payment methods when a saved payment method is de-selected/selected
-			$( "input.js-wc-#{ @id_dasherized }-payment-token" ).change ->
+			$( "input.js-wc-#{ @id_dasherized }-payment-token" ).on 'change', ->
 
 				tokenized_payment_method_selected = $( "input.js-wc-#{ id_dasherized }-payment-token:checked" ).val()
 
@@ -348,7 +348,7 @@ jQuery ( $ ) ->
 
 			# display the 'save payment method' option for guest checkouts if the 'create account' option is checked
 			#  but only hide the input if there is a 'create account' checkbox (some themes just display the password)
-			$( 'input#createaccount' ).change ->
+			$( 'input#createaccount' ).on 'change', ->
 				$parent_row = $( "input.js-wc-#{ id_dasherized }-tokenize-payment-method" ).closest( 'p.form-row' )
 
 				if $( this ).is( ':checked' )
@@ -385,4 +385,4 @@ jQuery ( $ ) ->
 
 
 	# dispatch loaded event
-	$( document.body ).trigger( "sv_wc_payment_form_handler_v5_11_9_loaded" )
+	$( document.body ).trigger( "sv_wc_payment_form_handler_v5_11_10_loaded" )

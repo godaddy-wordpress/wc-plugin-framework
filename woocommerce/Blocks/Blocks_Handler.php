@@ -1,15 +1,15 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9\Blocks;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_9\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_9\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_9\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Plugin;
 
-if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_9\Blocks\Blocks_Handler' ) ) :
+if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Blocks_Handler' ) ) :
 
 /**
  * WooCommerce Blocks handler.

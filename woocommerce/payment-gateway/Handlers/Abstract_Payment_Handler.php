@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9\Payment_Gateway\Handlers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_11_9 as FrameworkBase;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10 as FrameworkBase;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_9\\Payment_Gateway\\Handlers\\Abstract_Payment_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_10\\Payment_Gateway\\Handlers\\Abstract_Payment_Handler' ) ) :
 
 
 /**
@@ -154,12 +154,13 @@ abstract class Abstract_Payment_Handler {
 					/* translators: Placeholders: %s - status code */
 					$message = sprintf( esc_html__( 'Status code: %s', 'woocommerce-plugin-framework' ), $response->get_status_code() );
 				} elseif ( $response->get_status_message() ) {
-					/* translators: Placeholders; %s - status message */
+					/* translators: Placeholder: %s - Status message */
 					$message = sprintf( esc_html__( 'Status message: %s', 'woocommerce-plugin-framework' ), $response->get_status_message() );
 				}
 
 				// add transaction id if there is one
 				if ( $response->get_transaction_id() ) {
+					/* translators: Placeholder: %s - Payment transaction ID */
 					$message .= ' ' . sprintf( esc_html__( 'Transaction ID %s', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 				}
 
@@ -360,7 +361,7 @@ abstract class Abstract_Payment_Handler {
 	 */
 	public function mark_order_as_held( \WC_Order $order, $message = '', FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
 
-		/* translators: Placeholders: %s - payment gateway title */
+		/* translators: Example: "Authorize.Net Transaction Held for Review". Placeholder: %s - Payment gateway title */
 		$order_note = sprintf( __( '%s Transaction Held for Review', 'woocommerce-plugin-framework' ), $this->get_gateway()->get_method_title() );
 
 		if ( $message ) {

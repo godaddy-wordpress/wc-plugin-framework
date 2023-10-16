@@ -1,0 +1,48 @@
+name: Update translations files
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - woocommerce/i18n/**
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout current repository
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1
+        with:
+          fetch-depth: 0
+
+      - name: Checkout localization-actions repository
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1
+        with:
+          repository: gdcorp-partners/localization-actions
+          ref: 'main'
+          token: ${{ secrets.MWC_GD_ACTIONS_REPO_PAT }}
+          path: localization-actions
+          persist-credentials: false
+
+      - name: Generate POT file
+        id: generate_pot
+        uses: ./localization-actions/src/generate-pot
+        with:
+          pot_destination: ./woocommerce/i18n/languages/woocommerce-plugin-framework.pot
+          text_domain: woocommerce-plugin-framework
+          package_name: SkyVerge WooCommerce Plugin Framework
+          file_comment: Copyright (c) GoDaddy Operating Company, LLC. All Rights Reserved.
+          main_file: ""
+          main_branch: master
+          gh_token: ${{ secrets.MWC_GD_ACTIONS_REPO_PAT }}
+
+      - name: Convert PO to MO
+        id: convert_po_mo
+        uses: ./localization-actions/src/convert-po-mo
+        with:
+          gh_token: ${{ secrets.MWC_GD_ACTIONS_REPO_PAT }}
+          languages_path: ./woocommerce/i18n/languages
+          main_branch: master

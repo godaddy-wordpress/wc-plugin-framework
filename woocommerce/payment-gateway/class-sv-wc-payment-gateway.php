@@ -22,14 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_9\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_9\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_10\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -350,12 +350,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		// first successful payment
 		add_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_processed', function( $order ) use ( &$plugin ) {
-			$plugin->get_lifecycle_handler()->trigger_milestone( 'payment-processed', __( 'you successfully processed a payment!', 'woocommerce-plugin-framework' ) );
+			$plugin->get_lifecycle_handler()->trigger_milestone( 'payment-processed', lcfirst( _x( 'You successfully processed a payment!', 'Congratulatory message displayed to the merchant when they process their first payment', 'woocommerce-plugin-framework' ) ) );
 		} );
 
 		// first successful refund
 		add_action( 'wc_payment_gateway_' . $this->get_id() . '_refund_processed', function( $order ) use ( &$plugin ) {
-			$plugin->get_lifecycle_handler()->trigger_milestone( 'refund-processed', __( 'you successfully processed a refund!', 'woocommerce-plugin-framework' ) );
+			$plugin->get_lifecycle_handler()->trigger_milestone( 'refund-processed', lcfirst( _x( 'You successfully processed a refund!', 'Congratulatory message displayed to the merchant when they process their first refund','woocommerce-plugin-framework' ) ) );
 		} );
 	}
 
@@ -463,7 +463,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
-		$versioned_handle = $handle . '-v5_11_9';
+		$versioned_handle = $handle . '-v5_11_10';
 
 		// Frontend JS
 		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
@@ -477,45 +477,44 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Returns an array of JS script params to localize for the
-	 * payment form JS. Generally used for i18n purposes.
+	 * Returns an array of JS script params to localize for the payment form JS. Generally used for i18n purposes.
 	 *
 	 * @since 4.3.0
-	 * @return array associative array of param name to value
+	 *
+	 * @return array<string, string> associative array of param name to value
 	 */
-	protected function get_payment_form_js_localized_script_params() {
+	protected function get_payment_form_js_localized_script_params() : array {
 
 		/**
-		 * Payment Form JS Localized Script Params Filter.
+		 * Payment Form JS Localized Script Params filter.
 		 *
-		 * Allow actors to modify the JS localized script params for the
-		 * payment form.
+		 * Allow actors to modify the JS localized script params for the payment form.
 		 *
 		 * @since 4.3.0
-		 * @param array $params
-		 * @return array
+		 *
+		 * @param array<string, string> $params
 		 */
-		return apply_filters( 'sv_wc_payment_gateway_payment_form_js_localized_script_params', array(
-			'card_number_missing'            => esc_html__( 'Card number is missing', 'woocommerce-plugin-framework' ),
-			'card_number_invalid'            => esc_html__( 'Card number is invalid', 'woocommerce-plugin-framework' ),
-			'card_number_digits_invalid'     => esc_html__( 'Card number is invalid (only digits allowed)', 'woocommerce-plugin-framework' ),
-			'card_number_length_invalid'     => esc_html__( 'Card number is invalid (wrong length)', 'woocommerce-plugin-framework' ),
-			'cvv_missing'                    => esc_html__( 'Card security code is missing', 'woocommerce-plugin-framework' ),
-			'cvv_digits_invalid'             => esc_html__( 'Card security code is invalid (only digits are allowed)', 'woocommerce-plugin-framework' ),
-			'cvv_length_invalid'             => esc_html__( 'Card security code is invalid (must be 3 or 4 digits)', 'woocommerce-plugin-framework' ),
-			'card_exp_date_invalid'          => esc_html__( 'Card expiration date is invalid', 'woocommerce-plugin-framework' ),
-			'check_number_digits_invalid'    => esc_html__( 'Check Number is invalid (only digits are allowed)', 'woocommerce-plugin-framework' ),
-			'check_number_missing'           => esc_html__( 'Check Number is missing', 'woocommerce-plugin-framework' ),
-			'drivers_license_state_missing'  => esc_html__( 'Drivers license state is missing', 'woocommerce-plugin-framework' ),
-			'drivers_license_number_missing' => esc_html__( 'Drivers license number is missing', 'woocommerce-plugin-framework' ),
-			'drivers_license_number_invalid' => esc_html__( 'Drivers license number is invalid', 'woocommerce-plugin-framework' ),
-			'account_number_missing'         => esc_html__( 'Account Number is missing', 'woocommerce-plugin-framework' ),
-			'account_number_invalid'         => esc_html__( 'Account Number is invalid (only digits are allowed)', 'woocommerce-plugin-framework' ),
-			'account_number_length_invalid'  => esc_html__( 'Account number is invalid (must be between 5 and 17 digits)', 'woocommerce-plugin-framework' ),
-			'routing_number_missing'         => esc_html__( 'Routing Number is missing', 'woocommerce-plugin-framework' ),
-			'routing_number_digits_invalid'  => esc_html__( 'Routing Number is invalid (only digits are allowed)', 'woocommerce-plugin-framework' ),
-			'routing_number_length_invalid'  => esc_html__( 'Routing number is invalid (must be 9 digits)', 'woocommerce-plugin-framework' ),
-		) );
+		return apply_filters( 'sv_wc_payment_gateway_payment_form_js_localized_script_params', [
+			'card_number_missing'            => esc_html_x( 'Card number is missing', 'Credit or debit card','woocommerce-plugin-framework' ),
+			'card_number_invalid'            => esc_html_x( 'Card number is invalid', 'Credit or debit card', 'woocommerce-plugin-framework' ),
+			'card_number_digits_invalid'     => esc_html_x( 'Card number is invalid (only digits allowed)', 'Credit or debit card', 'woocommerce-plugin-framework' ),
+			'card_number_length_invalid'     => esc_html_x( 'Card number is invalid (wrong length)', 'Credit or debit card', 'woocommerce-plugin-framework' ),
+			'cvv_missing'                    => esc_html_x( 'Card security code is missing', 'Credit or debit card', 'woocommerce-plugin-framework' ),
+			'cvv_digits_invalid'             => esc_html_x( 'Card security code is invalid (only digits are allowed)', 'Credit or debit card','woocommerce-plugin-framework' ),
+			'cvv_length_invalid'             => esc_html_x( 'Card security code is invalid (must be 3 or 4 digits)', 'Credit or debit card', 'woocommerce-plugin-framework' ),
+			'card_exp_date_invalid'          => esc_html_x( 'Card expiration date is invalid', 'Credit or debit card', 'woocommerce-plugin-framework' ),
+			'check_number_digits_invalid'    => esc_html_x( 'Check Number is invalid (only digits are allowed)', 'Bank check (noun)', 'woocommerce-plugin-framework' ),
+			'check_number_missing'           => esc_html_x( 'Check Number is missing', 'Bank check (noun)', 'woocommerce-plugin-framework' ),
+			'drivers_license_state_missing'  => esc_html_x( "Driver's license state is missing", 'For countries without states, "state" can be replaced with "place of issue".', 'woocommerce-plugin-framework' ),
+			'drivers_license_number_missing' => esc_html__( "Driver's license number is missing", 'woocommerce-plugin-framework' ),
+			'drivers_license_number_invalid' => esc_html__( "Driver's license number is invalid", 'woocommerce-plugin-framework' ),
+			'account_number_missing'         => esc_html_x( 'Account Number is missing', 'Bank account', 'woocommerce-plugin-framework' ),
+			'account_number_invalid'         => esc_html_x( 'Account Number is invalid (only digits are allowed)', 'Bank account', 'woocommerce-plugin-framework' ),
+			'account_number_length_invalid'  => esc_html_x( 'Account Number is invalid (must be between 5 and 17 digits)', 'Bank account', 'woocommerce-plugin-framework' ),
+			'routing_number_missing'         => esc_html_x( 'Routing Number is missing', 'Bank account', 'woocommerce-plugin-framework' ),
+			'routing_number_digits_invalid'  => esc_html_x( 'Routing Number is invalid (only digits are allowed)', 'Bank account', 'woocommerce-plugin-framework' ),
+			'routing_number_length_invalid'  => esc_html_x( 'Routing Number is invalid (must be 9 digits)', 'Bank account', 'woocommerce-plugin-framework' ),
+		] );
 	}
 
 
@@ -925,6 +924,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Determines if tokenization takes place prior to transaction processing.
 	 *
+	 * Gateways that tokenize the payment method before the sale transaction (in a separate request), should set this to true.
+	 *
 	 * @since 5.0.0
 	 *
 	 * @return bool
@@ -935,7 +936,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Determines tokenization takes place during a transaction request.
+	 * Determines if tokenization takes place during a transaction request.
+	 *
+	 * Gateways that tokenize the payment method in the same request as the sale transaction should set this to true.
 	 *
 	 * @since 5.0.0
 	 *
@@ -948,6 +951,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 	/**
 	 * Determines tokenization takes place after a transaction request.
+	 *
+	 * Gateways that tokenize the payment method after the sale transaction (in a separate request), should set this to true.
 	 *
 	 * @since 5.0.0
 	 *
@@ -1517,8 +1522,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	protected function add_csc_form_fields( $form_fields ) {
 
 		$form_fields['enable_csc'] = array(
-			'title'   => esc_html__( 'Card Verification (CSC)', 'woocommerce-plugin-framework' ),
-			'label'   => esc_html__( 'Display the Card Security Code (CV2) field on checkout', 'woocommerce-plugin-framework' ),
+			'title'   => esc_html__( 'Card Security Code (CSC)', 'woocommerce-plugin-framework' ),
+			'label'   => esc_html__( 'Display the Card Security Code (CSC) field on checkout', 'woocommerce-plugin-framework' ),
 			'type'    => 'checkbox',
 			'default' => 'yes',
 		);
@@ -1526,7 +1531,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		if ( $this->supports_tokenization() ) {
 
 			$form_fields['enable_token_csc'] = array(
-				'title'   => esc_html__( 'Saved Card Verification', 'woocommerce-plugin-framework' ),
+				'title'   => esc_html__( 'Saved Card Security Code', 'woocommerce-plugin-framework' ),
 				'label'   => esc_html__( 'Display the Card Security Code field when paying with a saved card', 'woocommerce-plugin-framework' ),
 				'type'    => 'checkbox',
 				'default' => 'yes',
@@ -1557,7 +1562,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			// add inline javascript to show/hide any shared settings fields as needed
 			ob_start();
 			?>
-				$( '#woocommerce_<?php echo $this->get_id(); ?>_enable_csc' ).change( function() {
+				$( '#woocommerce_<?php echo $this->get_id(); ?>_enable_csc' ).on( 'change', function() {
 
 					var enabled = $( this ).is( ':checked' );
 
@@ -1580,7 +1585,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			// add inline javascript
 			ob_start();
 			?>
-				$( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_transaction_type' ).change( function() {
+				$( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_transaction_type' ).on( 'change', function() {
 
 					var transaction_type = $( this ).val();
 					var hidden_settings   = $( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_charge_virtual_orders, #woocommerce_<?php echo esc_js( $this->get_id() ); ?>_enable_partial_capture, #woocommerce_<?php echo esc_js( $this->get_id() ); ?>_enable_paid_capture' ).closest( 'tr' );
@@ -1603,7 +1608,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			// add inline javascript
 			ob_start();
 			?>
-				$( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_environment' ).change( function() {
+				$( '#woocommerce_<?php echo esc_js( $this->get_id() ); ?>_environment' ).on( 'change', function() {
 
 					// inherit settings from other gateway?
 					var inheritSettings = $( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).is( ':checked' );
@@ -1633,7 +1638,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			// add inline javascript to show/hide any shared settings fields as needed
 			ob_start();
 			?>
-				$( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).change( function() {
+				$( '#woocommerce_<?php echo $this->get_id(); ?>_inherit_settings' ).on( 'change', function() {
 
 					var enabled = $( this ).is( ':checked' );
 
@@ -2758,7 +2763,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		if ( ! empty( $order->payment->exp_month ) && ! empty( $order->payment->exp_year ) ) {
 
 			$message .= ' ' . sprintf(
-				/** translators: Placeholders: %s - credit card expiry date */
+				/* translators: Placeholder: %s - Credit card expiry date */
 				__( '(expires %s)', 'woocommerce-plugin-framework' ),
 				$order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 )
 			);
@@ -2766,7 +2771,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		// adds the transaction id (if any) to the order note
 		if ( $response->get_transaction_id() ) {
-			/* translators: Placeholders: %s - transaction ID */
+			/* translators: Placeholder: %s - Payment transaction ID */
 			$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 		}
 
@@ -2801,17 +2806,18 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$last_four = ! empty( $order->payment->last_four ) ? $order->payment->last_four : substr( $order->payment->account_number, -4 );
 
 		// check order note. there may not be an account_type available, but that's fine
-		/* translators: Placeholders: %1$s - payment method title, %2$s - payment account type (savings/checking) (may or may not be available), %3$s - last four digits of the account */
+		/* translators: Context: "Check" as in "bank check" (noun, not verb). Placeholders: %1$s - payment method title, %2$s - payment account type (savings/checking) (may or may not be available), %3$s - last four digits of the account */
 		$message = sprintf( __( '%1$s Check Transaction Approved: %2$s account ending in %3$s', 'woocommerce-plugin-framework' ), $this->get_method_title(), $order->payment->account_type, $last_four );
 
 		// optional check number
 		if ( ! empty( $order->payment->check_number ) ) {
-			/* translators: Placeholders: %s - check number */
+			/* translators: Context: "Check" as in "bank check" (noun, not verb). Placeholder: %s - check number */
 			$message .= '. ' . sprintf( esc_html__( 'Check number %s', 'woocommerce-plugin-framework' ), $order->payment->check_number );
 		}
 
 		// adds the transaction id (if any) to the order note
 		if ( $response->get_transaction_id() ) {
+			/* translators: Placeholder: %s - Payment transaction ID */
 			$message .= ' ' . sprintf( esc_html__( '(Transaction ID %s)', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 		}
 

@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_9;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_9\\SV_WC_Payment_Gateway_Payment_Tokens_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_10\\SV_WC_Payment_Gateway_Payment_Tokens_Handler' ) ) :
 
 
 /**
@@ -103,6 +103,11 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * Tokenizes the current payment method and adds the standard transaction
 	 * data to the order post record.
 	 *
+	 * Can be used to tokenize a payment method either before, with, or after the sale:
+	 * - before sale: will try to perform a tokenization request
+	 * - with sale: expects to find a payment token in the given response object
+	 * - after sale: will try to perform a tokenization request, regardless if a response object is given
+	 *
 	 * @since 1.0.0
 	 *
 	 * @param \WC_Order $order order object
@@ -120,7 +125,8 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			$environment_id = $this->get_environment_id();
 		}
 
-		// perform the API request to tokenize the payment method if needed
+		// perform the API request to tokenize the payment method if needed (tokenization before or after sale)
+		// gateways that tokenize with sale should already have a response object with the payment token
 		if ( ! $response || $this->get_gateway()->tokenize_after_sale() ) {
 			$response = $gateway->get_api()->tokenize_payment_method( $order );
 		}
@@ -168,13 +174,13 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 		} else {
 
 			if ( $response->get_status_code() && $response->get_status_message() ) {
-				/* translators: Placeholders: %1$s - payment request response status code, %2$s - payment request response status message */
+				/* translators: Placeholders: %1$s - Payment request response status code, %2$s - Payment request response status message */
 				$message = sprintf( esc_html__( 'Status code %1$s: %2$s', 'woocommerce-plugin-framework' ), $response->get_status_code(), $response->get_status_message() );
 			} elseif ( $response->get_status_code() ) {
-				/* translators: Placeholders: %s - payment request response status code */
+				/* translators: Placeholder: %s - Payment request response status code */
 				$message = sprintf( esc_html__( 'Status code: %s', 'woocommerce-plugin-framework' ), $response->get_status_code() );
 			} elseif ( $response->get_status_message() ) {
-				/* translators: Placeholders: %s - payment request response status message */
+				/* translators: Placeholder: %s - Payment request response status message */
 				$message = sprintf( esc_html__( 'Status message: %s', 'woocommerce-plugin-framework' ), $response->get_status_message() );
 			} else {
 				$message = esc_html__( 'Unknown Error', 'woocommerce-plugin-framework' );
@@ -182,6 +188,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 			// add transaction id if there is one
 			if ( $response->get_transaction_id() ) {
+				/* translators: Placeholder: %s - Payment transaction ID */
 				$message .= ' ' . sprintf( esc_html__( 'Transaction ID %s', 'woocommerce-plugin-framework' ), $response->get_transaction_id() );
 			}
 
