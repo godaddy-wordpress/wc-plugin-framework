@@ -130,7 +130,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				'csc_enabled'            => $this->gateway->csc_enabled(),
 				'csc_enabled_for_tokens' => $this->gateway->csc_enabled_for_tokens(),
 				'tokenization_enabled'   => $this->gateway->tokenization_enabled(),
-				'is_test_mode'           => $this->gateway->is_test_environment(),
+				'is_test_environment'    => $this->gateway->is_test_environment(),
 			]
 		];
 	}
