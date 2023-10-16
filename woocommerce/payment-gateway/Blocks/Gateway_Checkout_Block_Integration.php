@@ -162,7 +162,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 		$icons = [];
 
-		foreach ($this->gateway->get_card_types() as $card_type) {
+		foreach ( $this->gateway->get_card_types() as $card_type ) {
 			$card_type = SV_WC_Payment_Gateway_Helper::normalize_card_type( $card_type );
 			$card_name = SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type );
 
