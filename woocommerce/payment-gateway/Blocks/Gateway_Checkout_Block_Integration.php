@@ -123,6 +123,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 		return [
 			'id'          => $this->gateway->get_id_dasherized(),
+			'type'        => $this->gateway->get_payment_type(),
 			'title'       => $this->gateway->get_title(),
 			'description' => $this->gateway->get_description(),
 			'supports'    => $this->gateway->supports,
