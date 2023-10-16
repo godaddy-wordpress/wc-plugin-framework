@@ -28,6 +28,7 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodTyp
 use Automattic\WooCommerce\StoreApi\Payments\PaymentContext;
 use Automattic\WooCommerce\StoreApi\Payments\PaymentResult;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Payment_Token;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Plugin;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Traits\Block_Integration_Trait;
@@ -126,7 +127,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'type'        => $this->gateway->get_payment_type(),
 			'title'       => $this->gateway->get_title(),
 			'description' => $this->gateway->get_description(),
-			'icon'        => $this->gateway->get_icon(),
+			'icons'       => $this->get_gateway_icons(),
 			'supports'    => $this->gateway->supports,
 			'flags' => [
 				'supported_cards'        => $this->gateway->get_available_card_types(),
@@ -138,6 +139,39 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				'tokenization_enabled'   => $this->gateway->tokenization_enabled(),
 			]
 		];
+	}
+
+
+	/**
+	 * Gets a list of gateway icons as image URLs.
+	 *
+	 * If the gateway has a specific icon, it will return that item only.
+	 * Otherwise, it will return a list of icon URLs for each card type supported by the gateway.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return array<string, string>
+	 */
+	protected function get_gateway_icons() : array {
+
+		$icon = $this->gateway->get_icon();
+
+		if ($icon) {
+			return [ $this->gateway->get_title() => $icon ];
+		}
+
+		$icons = [];
+
+		foreach ($this->gateway->get_card_types() as $card_type) {
+			$card_type = SV_WC_Payment_Gateway_Helper::normalize_card_type( $card_type );
+			$card_name = SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type );
+
+			if ( $url = $this->gateway->get_payment_method_image_url( $card_type ) ) {
+				$icons[ $card_name ] = $url;
+			}
+		}
+
+		return $icons;
 	}
 
 
