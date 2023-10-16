@@ -126,6 +126,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'type'        => $this->gateway->get_payment_type(),
 			'title'       => $this->gateway->get_title(),
 			'description' => $this->gateway->get_description(),
+			'icon'        => $this->gateway->get_icon(),
 			'supports'    => $this->gateway->supports,
 			'flags' => [
 				'supported_cards'        => $this->gateway->get_available_card_types(),
