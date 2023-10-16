@@ -28,6 +28,7 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodTyp
 use Automattic\WooCommerce\StoreApi\Payments\PaymentContext;
 use Automattic\WooCommerce\StoreApi\Payments\PaymentResult;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Payment_Token;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Plugin;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Traits\Block_Integration_Trait;
 
@@ -156,13 +157,11 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	public function prepare_payment_token( PaymentContext $payment_context, PaymentResult $payment_result ) : PaymentResult {
 
-		if (
-			( $core_token_id = $payment_context->payment_data['token'] ) &&
-			$payment_context->payment_method === $this->gateway->get_id() &&
-			( $token = $this->gateway->get_payment_tokens_handler()->get_token_by_core_id( get_current_user_id(), $core_token_id ) )
-		) {
-			// taking advantage of the fact that objects are passed "by reference" (actually handles) in PHP
-			// https://dev.to/nicolus/are-php-objects-passed-by-reference--2gp3
+		if ( $token = $this->get_payment_token_for_context( $payment_context ) ) {
+			/**
+			 * Taking advantage of the fact that objects are passed 'by reference' (actually handles) in PHP:
+			 * @link https://dev.to/nicolus/are-php-objects-passed-by-reference--2gp3
+			 */
 			$payment_context->set_payment_data(
 				array_merge(
 					$payment_context->payment_data,
@@ -173,6 +172,24 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 		// return the original payment result
 		return $payment_result;
+	}
+
+
+	/**
+	 * Gets a payment token for a given payment context.
+	 *
+	 * @param PaymentContext $payment_context
+	 * @return SV_WC_Payment_Gateway_Payment_Token|null
+	 */
+	protected function get_payment_token_for_context( PaymentContext $payment_context ) {
+
+		$core_token_id = $payment_context->payment_data['token'] ?: null;
+
+		if ( ! $core_token_id || $payment_context->payment_method !== $this->gateway->get_id() ) {
+			return null;
+		}
+
+		return $this->gateway->get_payment_tokens_handler()->get_token_by_core_id( get_current_user_id(), $core_token_id );
 	}
 
 
