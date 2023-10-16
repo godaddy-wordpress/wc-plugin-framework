@@ -42,6 +42,7 @@ if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gat
  */
 abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodType {
 
+
 	use Block_Integration_Trait;
 
 
@@ -118,10 +119,12 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 * @return array<string, mixed>
 	 */
 	public function get_payment_method_data() : array {
+
 		return [
 			'title'       => $this->gateway->method_title,
 			'description' => $this->gateway->method_description,
 			'supports'    => $this->gateway->supports,
+			'test_mode'   => $this->gateway->is_test_environment(),
 			'flags' => [
 				'is_credit_card_gateway' => $this->gateway->is_credit_card_gateway(),
 				'is_echeck_gateway'      => $this->gateway->is_echeck_gateway(),
@@ -171,6 +174,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		// return the original payment result
 		return $payment_result;
 	}
+
+
 }
 
 endif;

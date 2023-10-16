@@ -22,8 +22,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_10\\Paymen
  *
  * @property Gateway_Checkout_Block_Integration $checkout_Block_Integration
  */
-class Gateway_Blocks_Handler extends Blocks_Handler
-{
+class Gateway_Blocks_Handler extends Blocks_Handler {
 
 
 	/**
@@ -33,9 +32,9 @@ class Gateway_Blocks_Handler extends Blocks_Handler
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin
 	 */
-	public function __construct(SV_WC_Payment_Gateway_Plugin $plugin) {
+	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin ) {
 
-		parent::__construct($plugin);
+		parent::__construct( $plugin );
 	}
 
 
@@ -63,9 +62,7 @@ class Gateway_Blocks_Handler extends Blocks_Handler
 
 				if ( $checkout_integration = $gateway->get_checkout_block_integration_instance() ) {
 
-					add_action(
-						'woocommerce_blocks_payment_method_type_registration',
-						function ( PaymentMethodRegistry $payment_method_registry ) use ( $checkout_integration ) {
+					add_action('woocommerce_blocks_payment_method_type_registration', function ( PaymentMethodRegistry $payment_method_registry ) use ( $checkout_integration ) {
 							$payment_method_registry->register($checkout_integration);
 						}
 					);
@@ -73,6 +70,7 @@ class Gateway_Blocks_Handler extends Blocks_Handler
 			}
 		}
 	}
+
 
 }
 

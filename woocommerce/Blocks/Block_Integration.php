@@ -41,8 +41,8 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_10\\Blocks
  *
  * @since 5.12.0
  */
-abstract class Block_Integration implements IntegrationInterface
-{
+abstract class Block_Integration implements IntegrationInterface {
+
 
 	use Block_Integration_Trait;
 

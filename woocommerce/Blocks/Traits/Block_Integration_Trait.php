@@ -23,8 +23,7 @@ if ( ! class_exists( '\\SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Tra
  * @property SV_WC_Payment_Gateway $gateway only in payment gateway integrations
  * @property string $block_name the name of the block the integration is for, e.g. 'cart' or 'checkout
  */
-trait Block_Integration_Trait
-{
+trait Block_Integration_Trait {
 
 
 	/**

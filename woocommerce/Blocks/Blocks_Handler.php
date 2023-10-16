@@ -20,8 +20,7 @@ if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Bloc
  *
  * @since 5.12.0
  */
-class Blocks_Handler
-{
+class Blocks_Handler {
 
 
 	/** @var SV_WC_Plugin|SV_WC_Payment_Gateway current plugin instance */
