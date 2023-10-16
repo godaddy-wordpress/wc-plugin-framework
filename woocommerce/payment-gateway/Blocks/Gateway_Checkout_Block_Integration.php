@@ -145,8 +145,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 * the gateway-specific token ID. This method fetches the token based on core ID and injects the gateway-specific
 	 * token ID into the `PaymentContext::$payment_data` array so that the gateway can process the payment.
 	 *
-	 * `PaymentContext::$payment_data` is converted to `$_POST` by WC core when handling legacy payments.
-	 *
+	 * @see PaymentContext::$payment_data is converted to `$_POST` by WC core when handling legacy payments.
 	 * @see \Automattic\WooCommerce\StoreApi\Legacy::process_legacy_payment()
 	 *
 	 * @since 5.12.0
