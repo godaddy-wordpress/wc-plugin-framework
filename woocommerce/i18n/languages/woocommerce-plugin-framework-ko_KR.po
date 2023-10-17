@@ -1621,7 +1621,7 @@ msgstr "%s이(가) 비활성화되었습니다."
 msgid "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 msgid_plural "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 msgstr[0] "%1$s 결제만 가능합니다. %4$s을(를) 활성화하는 %1$s을(를) 허용하도록 WooCommerce를 %2$s구성%3$s하세요."
-msgstr[1] "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
+msgstr[1] "%1$s 결제만 가능합니다. %4$s을(를) 활성화하는 %1$s을(를) 허용하도록 WooCommerce를 %2$s구성%3$s하세요."
 
 #. translators: Placeholders: %1$s - Checkout method label, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <strong> tag, %5$s - closing HTML </strong> tag
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:431

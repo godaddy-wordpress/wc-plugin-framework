@@ -278,7 +278,7 @@ msgstr "Documents"
 #: woocommerce/class-sv-wc-plugin.php:599
 msgctxt "noun"
 msgid "Support"
-msgstr "Support technique"
+msgstr "Soutien technique"
 
 #: woocommerce/class-sv-wc-plugin.php:604
 msgctxt "verb"
@@ -318,7 +318,7 @@ msgstr "Cowabunga !"
 #: woocommerce/Lifecycle.php:397
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Congratulations!"
-msgstr "Félicitations !"
+msgstr "Félicitations !"
 
 #: woocommerce/Lifecycle.php:398
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
@@ -421,7 +421,7 @@ msgstr "Économies"
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:700
 msgid "Refresh"
-msgstr "Actualiser"
+msgstr "Réactualiser"
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:702
 msgid "Add New"
@@ -434,7 +434,7 @@ msgstr "Enregistrer"
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:728
 msgid "Remove"
-msgstr "Supprimer"
+msgstr "Retirer"
 
 #. translators: Placeholder: %s - Plugin name
 #. translators: Placeholder: %s - Payment gateway title (e.g. Authorize.Net, Braintree, etc.)
@@ -1003,7 +1003,7 @@ msgstr "Une erreur s’est produite lors de la mise à jour de votre moyen de pa
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:610
 msgid "Are you sure you want to delete this payment method?"
-msgstr "Voulez-vous vraiment supprimer ce mode de paiement ?"
+msgstr "Êtes-vous certain de vouloir supprimer ce mode de paiement?"
 
 #. translators: Payment method as in a specific credit card, eCheck or bank account
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:697
@@ -1486,7 +1486,7 @@ msgstr "Autorisation"
 #. translators: Placeholders: %1$s - credit card type (MasterCard, Visa, etc...), %2$s - last four digits of the card
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2729
 msgid "%1$s ending in %2$s"
-msgstr "%1$s finissant par %2$s"
+msgstr "%1$s se terminant par %2$s"
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - message (probably reason for the transaction being held for review)
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2826
@@ -1621,7 +1621,7 @@ msgstr "%s est désactivé."
 msgid "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 msgid_plural "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 msgstr[0] "Accepte les paiements en %1$s uniquement. %2$sConfigurez%3$s WooCommerce pour accepter %1$s afin d’activer %4$s."
-msgstr[1] "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
+msgstr[1] "Accepte les paiements en %1$s uniquement. %2$sConfigurez%3$s WooCommerce pour accepter %1$s afin d’activer %4$s."
 
 #. translators: Placeholders: %1$s - Checkout method label, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <strong> tag, %5$s - closing HTML </strong> tag
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:431
@@ -1731,7 +1731,7 @@ msgstr "Sous-total"
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:549
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:390
 msgid "Discount"
-msgstr "Remise"
+msgstr "Rabais"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:559
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:400
@@ -1741,7 +1741,7 @@ msgstr "Expédition"
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:569
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:410
 msgid "Fees"
-msgstr "Honoraires"
+msgstr "Frais"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:579
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:420
@@ -1894,7 +1894,7 @@ msgstr "N° %s"
 
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:771
 msgid "N/A"
-msgstr "N/A"
+msgstr "S.O."
 
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:870
 msgid "Payment Token"
