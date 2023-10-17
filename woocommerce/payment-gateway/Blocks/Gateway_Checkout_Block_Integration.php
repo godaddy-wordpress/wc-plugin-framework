@@ -143,7 +143,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 
 	/**
-	 * Gets a list of gateway icons as image URLs.
+	 * Gets a list of gateway logos as icon image URLs.
 	 *
 	 * If the gateway has a specific icon, it will return that item only.
 	 * Otherwise, it will return a list of icon URLs for each card type supported by the gateway.
@@ -156,13 +156,14 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 		$icon = $this->gateway->icon;
 
-		if ($icon) {
+		if ( $icon ) {
 			return [ $this->gateway->get_title() => $icon ];
 		}
 
 		$icons = [];
 
 		foreach ( $this->gateway->get_card_types() as $card_type ) {
+
 			$card_type = SV_WC_Payment_Gateway_Helper::normalize_card_type( $card_type );
 			$card_name = SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type );
 
