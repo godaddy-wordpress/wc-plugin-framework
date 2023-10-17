@@ -25,6 +25,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\External_Checkout;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Blocks_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Handlers\Script_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway;
@@ -101,14 +102,13 @@ abstract class Frontend extends Script_Handler {
 			return;
 		}
 
-		$locations    = $this->get_handler()->get_display_locations();
-		$is_cart_ajax = wp_doing_ajax() && 'update_shipping_method' === SV_WC_Helper::get_requested_value( 'wc-ajax' );
+		$locations = $this->get_handler()->get_display_locations();
 
-		if ( is_product() && in_array( 'product', $locations, true ) ) {
+		if ( in_array( 'product', $locations, true ) && is_product() ) {
 			$this->init_product();
-		} else if ( ( is_cart() || $is_cart_ajax ) && in_array( 'cart', $locations, true ) ) {
+		} elseif ( in_array( 'cart', $locations, true ) && $this->should_init_on_cart_page() ) {
 			$this->init_cart();
-		} else if ( is_checkout() && in_array( 'checkout', $locations, true ) ) {
+		} elseif ( in_array( 'checkout', $locations, true ) && $this->should_init_on_checkout_page() ) {
 			$this->init_checkout();
 		} else {
 			return;
@@ -125,6 +125,47 @@ abstract class Frontend extends Script_Handler {
 		if ( ! has_action( 'sv_wc_external_checkout_terms_notice' ) ) {
 			add_action( 'sv_wc_external_checkout_terms_notice', [ $this, 'render_terms_notice' ] );
 		}
+	}
+
+
+	/**
+	 * Determines if the external checkout frontend should be initialized on the product page.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool
+	 */
+	protected function should_init_on_cart_page() : bool {
+
+		$is_cart_ajax = wp_doing_ajax() && 'update_shipping_method' === SV_WC_Helper::get_requested_value( 'wc-ajax' );
+		$should_init  = $is_cart_ajax || is_cart();
+
+		if ( $should_init && Blocks_Handler::is_cart_block_in_use() && $this->gateway->get_plugin()->get_blocks_handler()->is_cart_block_compatible() ) {
+			return false;
+		}
+
+		return $should_init;
+	}
+
+
+	/**
+	 * Determines if the external checkout frontend should be initialized on the checkout page.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool
+	 */
+	protected function should_init_on_checkout_page() : bool {
+
+		if ( ! is_checkout() ) {
+			return false;
+		}
+
+		if ( Blocks_Handler::is_checkout_block_in_use() && $this->gateway->get_plugin()->get_blocks_handler()->is_checkout_block_compatible() ) {
+			return false;
+		}
+
+		return true;
 	}
 
 

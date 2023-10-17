@@ -153,7 +153,7 @@ class Blocks_Handler {
 	 *
 	 * @return bool false if using the legacy cart shortcode
 	 */
-	public function is_cart_block_in_use() : bool
+	public static function is_cart_block_in_use() : bool
 	{
 		if ( ! class_exists( CartCheckoutUtils::class ) ) {
 			return false;

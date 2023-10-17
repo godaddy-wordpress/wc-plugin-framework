@@ -668,7 +668,7 @@ abstract class SV_WC_Plugin {
 		}
 
 		FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->get_plugin_file(), $this->is_hpos_compatible() );
-		FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', $this->get_plugin_file(), $this->blocks_handler->is_cart_block_compatible() || $this->blocks_handler->is_checkout_block_compatible() );
+		FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', $this->get_plugin_file(), $this->get_blocks_handler()->is_cart_block_compatible() || $this->get_blocks_handler()->is_checkout_block_compatible() );
 	}
 
 
@@ -1031,6 +1031,19 @@ abstract class SV_WC_Plugin {
 	public function get_settings_handler() {
 
 		return;
+	}
+
+
+	/**
+	 * Gets the blocks handler instance.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return Blocks_Handler
+	 */
+	public function get_blocks_handler() : Blocks_Handler {
+
+		return $this->blocks_handler;
 	}
 
 

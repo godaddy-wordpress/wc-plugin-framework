@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Blocks_Handler;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_10\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
@@ -1017,9 +1019,30 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	 */
 	public function maybe_render_js() {
 
-		if ( ! is_order_received_page() && ( is_checkout() || is_checkout_pay_page() || is_add_payment_method_page() ) ) {
+		if ( ! is_order_received_page() && ( is_checkout_pay_page() || is_add_payment_method_page() || $this->should_render_js_on_checkout_page() ) ) {
 			$this->render_js();
 		}
+	}
+
+
+	/**
+	 * Determines if it should render the payment form JavaScript in the checkout page.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool
+	 */
+	protected function should_render_js_on_checkout_page() : bool {
+
+		if ( ! is_checkout() ) {
+			return false;
+		}
+
+		if ( Blocks_Handler::is_checkout_block_in_use() && $this->gateway->get_plugin()->get_blocks_handler()->is_checkout_block_compatible() ) {
+			return false;
+		}
+
+		return true;
 	}
 
 
