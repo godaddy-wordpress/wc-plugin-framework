@@ -1621,7 +1621,7 @@ msgstr "%s 已禁用。"
 msgid "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 msgid_plural "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 msgstr[0] "仅接受 %1$s 付款。%2$s配置%3$s WooCommerce 接受 %1$s 才能启用 %4$s。"
-msgstr[1] "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
+msgstr[1] "仅接受 %1$s 付款。%2$s配置%3$s WooCommerce 接受 %1$s 才能启用 %4$s。"
 
 #. translators: Placeholders: %1$s - Checkout method label, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <strong> tag, %5$s - closing HTML </strong> tag
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:431

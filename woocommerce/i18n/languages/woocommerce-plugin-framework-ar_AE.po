@@ -43,7 +43,7 @@ msgstr "Thanks for installing %1$s! To get started, take a minute to complete th
 
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:235
 msgid "Setup"
-msgstr "Setup"
+msgstr "الإعداد"
 
 #. translators: Placeholders: %s - plugin name
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:303
@@ -52,7 +52,7 @@ msgstr "%s &rsaquo; Setup"
 
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:350
 msgid "Oops! An error occurred, please try again."
-msgstr "Oops! An error occurred, please try again."
+msgstr "عذرًا! حدث خطأ ما، يُرجى المحاولة مرة أخرى."
 
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:395
 msgctxt "enhanced select"
@@ -120,7 +120,7 @@ msgstr "This quick setup wizard will help you configure the basic settings and g
 #. translators: Placeholder: %s - the plugin name
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:613
 msgid "%s is ready!"
-msgstr "%s is ready!"
+msgstr "%s جاهز!"
 
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:670
 msgid "Next step"
@@ -149,11 +149,11 @@ msgstr "Review Your Settings"
 
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:774
 msgid "Leave a Review"
-msgstr "Leave a Review"
+msgstr "اترك مراجعة"
 
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:798
 msgid "Continue"
-msgstr "Continue"
+msgstr "مواصلة"
 
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:958
 msgid "Return to the WordPress Dashboard"
@@ -161,7 +161,7 @@ msgstr "Return to the WordPress Dashboard"
 
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:960
 msgid "Not right now"
-msgstr "Not right now"
+msgstr "ليس الآن"
 
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:962
 msgid "Skip this step"
@@ -201,7 +201,7 @@ msgstr "Please %1$supdate WooCommerce%2$s"
 #: woocommerce/class-sv-wc-helper.php:427
 msgctxt "coordinating conjunction for a list of items: a, b, and c"
 msgid "and"
-msgstr "and"
+msgstr "و"
 
 #. translators: A list of items, for example: "US or Canada", or "US, Canada, or Mexico". English uses Oxford comma before the conjunction ("or") if there are at least 2 items preceding it - hence the use of plural forms. If your locale does not use Oxford comma, you can just provide the same translation to all plural forms. Placeholders: %1$s - a comma-separated list of item, %2$s - the final item in the list
 #: woocommerce/class-sv-wc-helper.php:472
@@ -278,12 +278,12 @@ msgstr "Docs"
 #: woocommerce/class-sv-wc-plugin.php:599
 msgctxt "noun"
 msgid "Support"
-msgstr "Support"
+msgstr "الدعم"
 
 #: woocommerce/class-sv-wc-plugin.php:604
 msgctxt "verb"
 msgid "Review"
-msgstr "Review"
+msgstr "مراجعة"
 
 #. translators: Placeholders: %1$s - PHP setting value, %2$s - version or value required
 #: woocommerce/class-sv-wc-plugin.php:710
@@ -318,7 +318,7 @@ msgstr "Cowabunga!"
 #: woocommerce/Lifecycle.php:397
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Congratulations!"
-msgstr "Congratulations!"
+msgstr "تهانينا!"
 
 #: woocommerce/Lifecycle.php:398
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
@@ -369,7 +369,7 @@ msgstr "Invalid token data"
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:105
 msgid "An error occurred. Please try again."
-msgstr "An error occurred. Please try again."
+msgstr "حدث خطأ. يُرجى المحاولة مرة أخرى."
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:491
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-handler.php:306
@@ -379,7 +379,7 @@ msgstr "(%s)"
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:521
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:900
 msgid "Default"
-msgstr "Default"
+msgstr "تلقائية"
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:557
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:590
@@ -409,23 +409,23 @@ msgstr "Expiration (MM/YY)"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:470
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:301
 msgid "Account Type"
-msgstr "Account Type"
+msgstr "نوع الحساب"
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:598
 msgid "Checking"
-msgstr "Checking"
+msgstr "الدفع بشيكات"
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:599
 msgid "Savings"
-msgstr "Savings"
+msgstr "التوفير"
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:700
 msgid "Refresh"
-msgstr "Refresh"
+msgstr "تحديث"
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:702
 msgid "Add New"
-msgstr "Add New"
+msgstr "إضافة جديد"
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:705
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:297
@@ -434,7 +434,7 @@ msgstr "Save"
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:728
 msgid "Remove"
-msgstr "Remove"
+msgstr "إزالة"
 
 #. translators: Placeholder: %s - Plugin name
 #. translators: Placeholder: %s - Payment gateway title (e.g. Authorize.Net, Braintree, etc.)
@@ -456,7 +456,7 @@ msgstr "This section contains configuration settings for this gateway."
 #: woocommerce/payment-gateway/admin/views/html-admin-gateway-status.php:53
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1419
 msgid "Environment"
-msgstr "Environment"
+msgstr "البيئة"
 
 #: woocommerce/payment-gateway/admin/views/html-admin-gateway-status.php:54
 msgid "The transaction environment for this gateway."
@@ -528,7 +528,7 @@ msgstr "Capture %s"
 #: woocommerce/payment-gateway/admin/views/html-order-partial-capture.php:70
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:608
 msgid "Cancel"
-msgstr "Cancel"
+msgstr "إلغاء"
 
 #: woocommerce/payment-gateway/admin/views/html-user-payment-token-editor-token.php:57
 msgid "-- Select an option --"
@@ -776,7 +776,7 @@ msgstr "%1$s %2$s %3$s Approved: %4$s ending in %5$s"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:762
 msgctxt "Noun, software environment"
 msgid "Test"
-msgstr "Test"
+msgstr "TEST"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:753
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:763
@@ -854,7 +854,7 @@ msgstr "PayPal"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:179
 msgid "Checking Account"
-msgstr "Checking Account"
+msgstr "حساب جار"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:180
 msgid "Savings Account"
@@ -871,7 +871,7 @@ msgstr "Bank Account"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:191
 msgctxt "payment method type"
 msgid "Account"
-msgstr "Account"
+msgstr "الحساب"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:227
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3462
@@ -900,7 +900,7 @@ msgstr "Diners Club"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3465
 msgctxt "credit card type"
 msgid "Discover"
-msgstr "Discover"
+msgstr "استكشاف"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:247
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3467
@@ -933,11 +933,11 @@ msgstr "Thank you for your order. We are now redirecting you to complete payment
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:303
 msgid "Pay Now"
-msgstr "Pay Now"
+msgstr "الدفع الآن"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:304
 msgid "Cancel Order"
-msgstr "Cancel Order"
+msgstr "إلغاء الطلب"
 
 #. translators: Placeholders: %s - a WooCommerce order ID
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:449
@@ -982,16 +982,16 @@ msgstr "Tokenization failed. %s"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:293
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:607
 msgid "Edit"
-msgstr "Edit"
+msgstr "تحرير"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:337
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1299
 msgid "Title"
-msgstr "Title"
+msgstr "العنوان"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:340
 msgid "Details"
-msgstr "Details"
+msgstr "تفاصيل"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:343
 msgid "Default?"
@@ -1003,7 +1003,7 @@ msgstr "Oops, there was an error updating your payment method. Please try again.
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:610
 msgid "Are you sure you want to delete this payment method?"
-msgstr "Are you sure you want to delete this payment method?"
+msgstr "هل أنت متأكد أنك تريد حذف طريقة الدفع هذه؟"
 
 #. translators: Payment method as in a specific credit card, eCheck or bank account
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:697
@@ -1025,7 +1025,7 @@ msgstr "There was an error with your request, please try again."
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:344
 msgid "Card Number"
-msgstr "Card Number"
+msgstr "رقم البطاقة"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:365
 msgid "MM / YY"
@@ -1046,24 +1046,24 @@ msgstr "Where do I find this?"
 #. translators: e-check routing number, HTML form field label, https://en.wikipedia.org/wiki/Routing_transit_number
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:433
 msgid "Routing Number"
-msgstr "Routing Number"
+msgstr "رقم التوجيه"
 
 #. translators: e-check account number, HTML form field label
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:452
 msgid "Account Number"
-msgstr "Account Number"
+msgstr "رقم الحساب"
 
 #. translators: http://www.investopedia.com/terms/c/checkingaccount.asp
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:478
 msgctxt "account type"
 msgid "Checking"
-msgstr "Checking"
+msgstr "الدفع بشيكات"
 
 #. translators: http://www.investopedia.com/terms/s/savingsaccount.asp
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:480
 msgctxt "account type"
 msgid "Savings"
-msgstr "Savings"
+msgstr "التوفير"
 
 #. translators: Test mode refers to the current software environment
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:518
@@ -1126,7 +1126,7 @@ msgstr "%s is not configured"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:871
 msgid "Dismiss"
-msgstr "Dismiss"
+msgstr "تجاهل"
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - opening <a> HTML link tag, %3$s - closing </a> HTML link tag
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:908
@@ -1153,7 +1153,7 @@ msgstr "You must enable tokenization for this gateway in order to support automa
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:1024
 msgid "Inactive"
-msgstr "Inactive"
+msgstr "غير نشط"
 
 #. translators: Placeholder: %s - Payment gateway title (e.g. Authorize.Net, Braintree...)
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:116
@@ -1162,7 +1162,7 @@ msgstr "%s Customer ID"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:185
 msgid "Type"
-msgstr "Type"
+msgstr "نوع"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:256
 msgid "Removed payment token \"%d\""
@@ -1272,11 +1272,11 @@ msgstr "Continue to Payment"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:719
 msgid "Place order"
-msgstr "Place order"
+msgstr "إجراء طلب"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:751
 msgid "Thank you for your order."
-msgstr "Thank you for your order."
+msgstr "شكرا لطلبك."
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1251
 msgid "Credit Card"
@@ -1310,7 +1310,7 @@ msgstr "Payment method title that the customer will see during checkout."
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1306
 msgid "Description"
-msgstr "Description"
+msgstr "الوصف"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1308
 msgid "Payment method description that the customer will see during checkout."
@@ -1475,7 +1475,7 @@ msgstr "%1$s %2$s %3$s Approved"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2721
 msgctxt "noun, software environment"
 msgid "Test"
-msgstr "Test"
+msgstr "TEST"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2722
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3204
@@ -1486,7 +1486,7 @@ msgstr "Authorization"
 #. translators: Placeholders: %1$s - credit card type (MasterCard, Visa, etc...), %2$s - last four digits of the card
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2729
 msgid "%1$s ending in %2$s"
-msgstr "%1$s ending in %2$s"
+msgstr "%1$s ينتهي في %2$s"
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - message (probably reason for the transaction being held for review)
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2826
@@ -1516,7 +1516,7 @@ msgstr "%1$s Transaction Cancelled (%2$s)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3198
 msgid "Transaction Type"
-msgstr "Transaction Type"
+msgstr "نوع المعاملة"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3200
 msgid "Select how transactions should be processed. Charge submits all transactions for settlement, Authorization simply authorizes the order total for capture later."
@@ -1541,7 +1541,7 @@ msgstr "Allow orders to be partially captured multiple times."
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3232
 msgctxt "coordinating conjunction for a list of order statuses: on-hold, processing, or completed"
 msgid "or"
-msgstr "or"
+msgstr "أو"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3235
 msgid "Capture Paid Orders"
@@ -1605,11 +1605,11 @@ msgstr "Single products"
 
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:288
 msgid "Cart"
-msgstr "Cart"
+msgstr "عربة التسوق"
 
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:289
 msgid "Checkout"
-msgstr "Checkout"
+msgstr "الدفع"
 
 #. translators: Placeholder: %s - external checkout label
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:330
@@ -1657,13 +1657,13 @@ msgstr "Button Style"
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:115
 msgctxt "Button style"
 msgid "Black"
-msgstr "Black"
+msgstr "أسود"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:116
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:116
 msgctxt "Button style"
 msgid "White"
-msgstr "White"
+msgstr "أبيض"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:117
 msgctxt "Button style"
@@ -1726,31 +1726,31 @@ msgstr "Apple Pay payment failed. %s"
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:255
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:380
 msgid "Subtotal"
-msgstr "Subtotal"
+msgstr "الإجمالي الفرعي"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:549
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:390
 msgid "Discount"
-msgstr "Discount"
+msgstr "الخصم"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:559
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:400
 msgid "Shipping"
-msgstr "Shipping"
+msgstr "الشحن"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:569
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:410
 msgid "Fees"
-msgstr "Fees"
+msgstr "الرسوم"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:579
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:420
 msgid "Taxes"
-msgstr "Taxes"
+msgstr "الضرائب"
 
 #: woocommerce/payment-gateway/External_Checkout/Frontend.php:259
 msgid "or"
-msgstr "or"
+msgstr "أو"
 
 #: woocommerce/payment-gateway/External_Checkout/Frontend.php:293
 msgid "By submitting your payment, you agree to our %1$sterms and conditions%2$s."
@@ -1885,7 +1885,7 @@ msgstr "Via %1$s ending in %2$s"
 
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:710
 msgid "Subscriptions"
-msgstr "Subscriptions"
+msgstr "الاشتراكات"
 
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:765
 msgctxt "hash before order number"
@@ -1894,7 +1894,7 @@ msgstr "#%s"
 
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:771
 msgid "N/A"
-msgstr "N/A"
+msgstr "غير متاح"
 
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:870
 msgid "Payment Token"
@@ -1904,7 +1904,7 @@ msgstr "Payment Token"
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:900
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:906
 msgid "%s is required."
-msgstr "%s is required."
+msgstr "%s مطلوب."
 
 #: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:186
 msgid "Unknown Error"
