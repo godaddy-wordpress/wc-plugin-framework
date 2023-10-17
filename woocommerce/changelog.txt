@@ -1,5 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2023.nn.nn - version 5.12.0
+ * Feature - Add support for WooCommerce Cart and Checkout blocks
+ * Tweak - Do not load legacy gateway payment form JS when Cart or Checkout blocks are in use
+
 2023.10.13 - version 5.11.10
  * Tweak - Improve tokenization support for gateways that tokenize payment methods with sale
  * Fix - Update deprecated JS event handlers that would have triggered deprecation notices in console
