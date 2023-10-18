@@ -54,7 +54,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( $this->supports_tokenization() ) {
 
 			// tokenized transaction?
-			if ( $token = $this->get_posted_payment_token() ) {
+			if ( $token = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 				// unknown token?
 				if ( ! $this->get_payment_tokens_handler()->user_has_token( get_current_user_id(), $token ) ) {
@@ -64,7 +64,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				// Check the CSC if enabled
 				if ( $this->is_credit_card_gateway() && $this->csc_enabled_for_tokens() ) {
-					$is_valid = $this->validate_csc( $this->get_posted_csc_value() ) && $is_valid;
+					$is_valid = $this->validate_csc( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-csc' ) ) && $is_valid;
 				}
 
 				// no more validation to perform
@@ -102,7 +102,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$expiration_month = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
 		$expiration_year  = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
 		$expiry           = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-expiry' );
-		$csc              = $this->get_posted_csc_value();
+		$csc              = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-csc' );
 
 		// handle single expiry field formatted like "MM / YY" or "MM / YYYY"
 		if ( ! $expiration_month & ! $expiration_year && $expiry ) {
@@ -560,7 +560,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$order = parent::get_order( $order_id );
 
 		// payment info
-		if ( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-number' ) && ! $this->get_posted_payment_token() ) {
+		if ( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-number' ) && ! SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 			// common attributes
 			$order->payment->account_number = str_replace( array( ' ', '-' ), '', SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-number' ) );
@@ -585,7 +585,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				// add CSC if enabled
 				if ( $this->csc_enabled() ) {
-					$order->payment->csc = $this->get_posted_csc_value();
+					$order->payment->csc = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
 			} elseif ( $this->is_echeck_gateway() ) {
@@ -599,7 +599,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			}
 
-		} elseif ( $token_value = $this->get_posted_payment_token() ) {
+		} elseif ( $token_value = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 			// paying with tokenized payment method (we've already verified that this token exists in the validate_fields method)
 			$token = $this->get_payment_tokens_handler()->get_token( $order->get_user_id(), $token_value );
@@ -616,7 +616,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$order->payment->exp_year  = $token->get_exp_year();
 
 				if ( $this->csc_enabled_for_tokens() ) {
-					$order->payment->csc = $this->get_posted_csc_value();
+					$order->payment->csc = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
 			} elseif ( $this->is_echeck_gateway() ) {
@@ -1217,38 +1217,6 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	public function transaction_forced() {
 
 		return false;
-	}
-
-
-	/**
-	 * Returns the posted payment token, if any.
-	 *
-	 * Checks both a dashed and non-dashed version of the gateway ID.
-	 *
-	 * @since 5.12.0
-	 *
-	 * @return string|null
-	 */
-	protected function get_posted_payment_token() :?string {
-
-		return SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' )
-			?: SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id() . '-payment-token' );
-	}
-
-
-	/**
-	 * Returns the posted CSC value, if any.
-	 *
-	 * Checks both a dashed and non-dashed version of the gateway ID.
-	 *
-	 * @since 5.12.0
-	 *
-	 * @return string|null
-	 */
-	protected function get_posted_csc_value() :?string {
-
-		return SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-csc' )
-			?: SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id() . '-csc' );
 	}
 
 
