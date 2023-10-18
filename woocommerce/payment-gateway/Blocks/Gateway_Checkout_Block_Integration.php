@@ -170,7 +170,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		$icon = $this->gateway->icon;
 
 		if ( $icon ) {
-			return [ $this->gateway->get_title() => $icon ];
+			return [ $this->gateway->get_method_title() => $icon ];
 		}
 
 		$icons = [];
