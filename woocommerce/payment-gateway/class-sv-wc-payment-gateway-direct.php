@@ -1231,7 +1231,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function get_posted_payment_token() :?string {
 
-		return SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ?: SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id() . '-payment-token' );
+		return SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' )
+			?: SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id() . '-payment-token' );
 	}
 
 
