@@ -145,21 +145,6 @@ class Blocks_Handler {
 
 
 	/**
-	 * Determines if the plugin is incompatible with the WooCommerce Checkout block.
-	 *
-	 * Child implementations should return false if the plugin does not interact with the checkout page.
-	 *
-	 * @since 5.12.0
-	 *
-	 * @return bool
-	 */
-	public function is_incompatible_with_checkout_block() : bool {
-
-		return ! $this->is_checkout_block_compatible();
-	}
-
-
-	/**
 	 * Determines if the cart page is using the cart block.
 	 *
 	 * @since 5.12.0
@@ -173,21 +158,6 @@ class Blocks_Handler {
 		}
 
 		return CartCheckoutUtils::is_cart_block_default();
-	}
-
-
-	/**
-	 * Determines if the plugin is incompatible with the WooCommerce Cart block.
-	 *
-	 * Child implementations should return false if the plugin does not interact with the cart page.
-	 *
-	 * @since 5.12.0
-	 *
-	 * @return bool
-	 */
-	public function is_incompatible_with_cart_block() : bool{
-
-		return ! $this->is_cart_block_compatible();
 	}
 
 

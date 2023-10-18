@@ -590,7 +590,7 @@ abstract class SV_WC_Plugin {
 
 		if ( Blocks_Handler::is_checkout_block_in_use() ) {
 
-			if ( $blocks_handler->is_incompatible_with_checkout_block() ) {
+			if ( ! $blocks_handler->is_checkout_block_compatible() ) {
 
 				$admin_notice_handler->add_admin_notice(
 					'', // @TODO add message
@@ -609,7 +609,7 @@ abstract class SV_WC_Plugin {
 
 		if ( Blocks_Handler::is_cart_block_in_use() ) {
 
-			if ( $blocks_handler->is_incompatible_with_cart_block() ) {
+			if ( ! $blocks_handler->is_cart_block_compatible() ) {
 
 				$admin_notice_handler->add_admin_notice(
 					'', // @TODO add message
