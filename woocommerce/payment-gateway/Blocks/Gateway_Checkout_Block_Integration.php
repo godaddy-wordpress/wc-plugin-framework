@@ -135,6 +135,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'icons'       => $this->get_gateway_icons(),
 			'supports'    => $this->gateway->supports,
 			'flags' => [
+				// TODO: this seems to be misplaced (not a flag), and I'm not sure if this is helpful, as it lists
+				//  all cards, regardless if they're available at checkout or not
 				'supported_cards'        => $this->gateway->get_available_card_types(),
 				'is_test_environment'    => $this->gateway->is_test_environment(),
 				'is_credit_card_gateway' => $this->gateway->is_credit_card_gateway(),
@@ -142,7 +144,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				'csc_enabled'            => $this->gateway->csc_enabled(),
 				'csc_enabled_for_tokens' => $this->gateway->csc_enabled_for_tokens(),
 				'tokenization_enabled'   => $this->gateway->tokenization_enabled(),
-			]
+			],
+			'card_types' => $this->gateway->get_card_types(), // configured card types
 		];
 
 		if ( $this->gateway->supports_apple_pay() ) {
