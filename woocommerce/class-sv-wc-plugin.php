@@ -596,7 +596,7 @@ abstract class SV_WC_Plugin {
 					sprintf(
 						/* translators: Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - [woocommerce_checkout] shortcode tag, %6$s - closing HTML </a< tag */
 						__( 'The Checkout block is not compatible with %1$s. Please %2$sedit the Checkout page%3$s to use the %4$s%5$s shortcode%6$s instead.'),
-						$this->get_plugin_name(),
+						'<strong>' . $this->get_plugin_name() . '</strong>',
 						'<a href="' . esc_url( get_edit_post_link( wc_get_page_id( 'checkout' ) ) ) . '">',
 						'</a>',
 						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#checkout">',
