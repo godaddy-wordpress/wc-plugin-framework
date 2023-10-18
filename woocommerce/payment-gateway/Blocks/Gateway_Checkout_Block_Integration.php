@@ -150,10 +150,21 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 		if ( $this->gateway->supports_apple_pay() ) {
 
-			$payment_method_data['apple_pay'] = [
-				'currencies'   => $this->gateway->get_apple_pay_currencies(),
-				'capabilities' => $this->gateway->get_apple_pay_capabilities(),
-			];
+			$apple_pay = $this->plugin->get_apple_pay_instance();
+
+			if ( $apple_pay && $this->gateway->id === $apple_pay->get_processing_gateway()->id ) {
+
+				$payment_method_data['apple_pay'] = [
+					'currencies'               => $this->gateway->get_apple_pay_currencies(),
+					'capabilities'             => $this->gateway->get_apple_pay_capabilities(),
+					'merchant_id'              => $apple_pay->get_merchant_id(),
+					'ajax_url'                 => admin_url( 'admin-ajax.php' ),
+					'validate_nonce'           => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_validate_merchant' ),
+					'recalculate_totals_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_recalculate_totals' ),
+					'process_nonce'            => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_process_payment' ),
+					'generic_error'            => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
+				];
+			}
 		}
 
 		/**
