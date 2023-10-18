@@ -593,7 +593,16 @@ abstract class SV_WC_Plugin {
 			if ( ! $blocks_handler->is_checkout_block_compatible() ) {
 
 				$admin_notice_handler->add_admin_notice(
-					'', // @TODO add message
+					sprintf(
+						/* translators: Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - [woocommerce_checkout] shortcode tag, %6$s - closing HTML </a< tag */
+						__( 'The Checkout block is not compatible with %1$s. Please edit the %2$sCheckout page%3$s to use the $4$s%5$s shortcode%6$s instead.'),
+						$this->get_plugin_name(),
+						'<a href="' . esc_url( get_edit_post_link( wc_get_page_id( 'checkout' ) ) ) . '">',
+						'</a>',
+						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#checkout">',
+						'<code>[woocommerce_checkout]</code>',
+						'</a>'
+					),
 					'wc-checkout-block-not-compatible',
 					[
 						'notice_class' => 'notice-warning',
@@ -612,7 +621,16 @@ abstract class SV_WC_Plugin {
 			if ( ! $blocks_handler->is_cart_block_compatible() ) {
 
 				$admin_notice_handler->add_admin_notice(
-					'', // @TODO add message
+					sprintf(
+						/* translators: Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - [woocommerce_checkout] shortcode tag, %6$s - closing HTML </a< tag */
+						__( 'The Cart block is not compatible with %1$s. Please edit the %2$sCart page%3$s to use the $4$s%5$s shortcode%6$s instead.'),
+						$this->get_plugin_name(),
+						'<a href="' . esc_url( get_edit_post_link( wc_get_page_id( 'cart' ) ) ) . '">',
+						'</a>',
+						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#cart">',
+						'<code>[woocommerce_cart]</code>',
+						'</a>'
+					),
 					'wc-cart-block-not-compatible',
 					[
 						'notice_class' => 'notice-warning',
