@@ -584,7 +584,47 @@ abstract class SV_WC_Plugin {
 	 * @since 3.0.0
 	 */
 	public function add_admin_notices() {
-		// stub method
+
+		$admin_notice_handler = $this->get_admin_notice_handler();
+		$blocks_handler       = $this->get_blocks_handler();
+
+		if ( Blocks_Handler::is_checkout_block_in_use() ) {
+
+			if ( $blocks_handler->is_incompatible_with_checkout_block() ) {
+
+				$admin_notice_handler->add_admin_notice(
+					'', // @TODO add message
+					'wc-checkout-block-not-compatible',
+					[
+						'notice_class' => 'notice-warning',
+						'always_show_on_settings' => false,
+					]
+				);
+
+			} else {
+
+				$admin_notice_handler->dismiss_notice( 'wc-checkout-block-not-compatible' );
+			}
+		}
+
+		if ( Blocks_Handler::is_cart_block_in_use() ) {
+
+			if ( $blocks_handler->is_incompatible_with_cart_block() ) {
+
+				$admin_notice_handler->add_admin_notice(
+					'', // @TODO add message
+					'wc-cart-block-not-compatible',
+					[
+						'notice_class' => 'notice-warning',
+						'always_show_on_settings' => false,
+					]
+				);
+
+			} else {
+
+				$admin_notice_handler->dismiss_notice( 'wc-cart-block-not-compatible' );
+			}
+		}
 	}
 
 
