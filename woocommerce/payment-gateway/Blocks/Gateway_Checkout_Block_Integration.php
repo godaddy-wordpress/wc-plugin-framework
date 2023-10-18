@@ -79,6 +79,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	/**
 	 * Gets the integration name.
 	 *
+	 * @since 5.12.0
+	 *
 	 * @return string
 	 */
 	public function get_name() : string {
@@ -104,6 +106,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 * Gets the payment method script handles.
 	 *
 	 * Defaults to {@see get_script_handles()} but concrete implementations may override this.
+	 *
+	 * @since 5.12.0
 	 *
 	 * @return string[]
 	 */
@@ -224,6 +228,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 	/**
 	 * Gets a payment token for a given payment context.
+	 *
+	 * @since 5.12.0
 	 *
 	 * @param PaymentContext $payment_context
 	 * @return SV_WC_Payment_Gateway_Payment_Token|null

@@ -53,7 +53,7 @@ class Gateway_Blocks_Handler extends Blocks_Handler {
 			return;
 		}
 
-		if ( $this->is_checkout_block_compatible() ) {
+		if ( $this->is_checkout_block_compatible() && method_exists( $this->plugin, 'get_gateways' ) ) {
 
 			require_once( $this->plugin->get_framework_path() . '/payment-gateway/Blocks/Gateway_Checkout_Block_Integration.php' );
 
