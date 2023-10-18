@@ -21,6 +21,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_10\\Paymen
  * @since 5.12.0
  *
  * @property Gateway_Checkout_Block_Integration $checkout_Block_Integration
+ * @property SV_WC_Payment_Gateway_Plugin $plugin
  */
 class Gateway_Blocks_Handler extends Blocks_Handler {
 
@@ -53,7 +54,7 @@ class Gateway_Blocks_Handler extends Blocks_Handler {
 			return;
 		}
 
-		if ( $this->is_checkout_block_compatible() && method_exists( $this->plugin, 'get_gateways' ) ) {
+		if ( $this->is_checkout_block_compatible() ) {
 
 			require_once( $this->plugin->get_framework_path() . '/payment-gateway/Blocks/Gateway_Checkout_Block_Integration.php' );
 
