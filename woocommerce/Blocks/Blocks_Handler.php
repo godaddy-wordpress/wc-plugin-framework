@@ -67,7 +67,6 @@ class Blocks_Handler {
 
 		$supports = $this->plugin->get_supported_features();
 
-		// @TODO might want to add an additional check for the min WC version we want to support for this feature
 		return isset( $supports['blocks']['cart'] ) && true === $supports['blocks']['cart'];
 	}
 
@@ -83,7 +82,6 @@ class Blocks_Handler {
 
 		$supports = $this->plugin->get_supported_features();
 
-		// @TODO might want to add an additional check for the min WC version we want to support for this feature
 		return isset( $supports['blocks']['checkout'] ) && true === $supports['blocks']['checkout'];
 	}
 
