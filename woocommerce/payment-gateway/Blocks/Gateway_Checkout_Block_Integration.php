@@ -122,7 +122,15 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	public function get_payment_method_data() : array {
 
-		return [
+		/**
+		 * Filters gateway-specific payment method data for the Checkout Block
+		 *
+		 * @since 5.12.0
+		 *
+		 * @param $params array<string, mixed>
+		 * @param $gateway SV_WC_Payment_Gateway
+		 */
+		return apply_filters( "wc_{$this->gateway->get_id()}_checkout_block_payment_method_data", [
 			'id'          => $this->gateway->get_id_dasherized(), // dashes
 			'name'        => $this->gateway->get_id(), // underscores
 			'type'        => $this->gateway->get_payment_type(),
@@ -139,7 +147,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				'csc_enabled_for_tokens' => $this->gateway->csc_enabled_for_tokens(),
 				'tokenization_enabled'   => $this->gateway->tokenization_enabled(),
 			]
-		];
+		], $this->gateway );
 	}
 
 
