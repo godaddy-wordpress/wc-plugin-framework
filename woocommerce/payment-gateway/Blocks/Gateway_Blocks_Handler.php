@@ -56,15 +56,17 @@ class Gateway_Blocks_Handler extends Blocks_Handler {
 
 		if ( $this->is_checkout_block_compatible() ) {
 
-			require_once( $this->plugin->get_framework_path() . '/payment-gateway/Blocks/Gateway_Checkout_Block_Integration.php' );
+			/** @var SV_WC_Payment_Gateway_Plugin $plugin */
+			$plugin = $this->plugin;
 
-			/** @var SV_WC_Payment_Gateway $gateway */
-			foreach ( $this->plugin->get_gateways() as $gateway ) {
+			require_once( $plugin->get_framework_path() . '/payment-gateway/Blocks/Gateway_Checkout_Block_Integration.php' );
+
+			foreach ( $plugin->get_gateways() as $gateway ) {
 
 				if ( $checkout_integration = $gateway->get_checkout_block_integration_instance() ) {
 
 					add_action('woocommerce_blocks_payment_method_type_registration', function ( PaymentMethodRegistry $payment_method_registry ) use ( $checkout_integration ) {
-							$payment_method_registry->register($checkout_integration);
+							$payment_method_registry->register( $checkout_integration );
 						}
 					);
 				}

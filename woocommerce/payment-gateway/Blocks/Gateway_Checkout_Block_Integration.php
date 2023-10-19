@@ -148,6 +148,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'ajax_url'   => admin_url( 'admin-ajax.php' ),
 		];
 
+		// Apple Pay
 		if ( $this->gateway->supports_apple_pay() ) {
 
 			$apple_pay = $this->plugin->get_apple_pay_instance();
@@ -170,6 +171,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			}
 		}
 
+		// Google Pay
 		if ( $this->gateway->supports_google_pay() ) {
 
 			$google_pay = $this->plugin->get_google_pay_instance();
