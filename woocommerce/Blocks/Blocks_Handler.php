@@ -53,7 +53,7 @@ class Blocks_Handler {
 
 		// blocks-related notices and call-to-actions
 		add_action( 'admin_notices', [ $this, 'add_admin_notices' ] );
-		add_action( 'wp_ajax_' . $this->plugin->get_id() . '_restore_cart_checkout_shortcode', [ $this, 'restore_cart_or_checkout_shortcode'] );
+		add_action( 'wp_ajax_' . $this->plugin->get_id() . '_restore_cart_checkout_shortcode', [ $this, 'restore_cart_or_checkout_shortcode' ] );
 
 		// handle WooCommerce Blocks integrations in compatible plugins
 		add_action( 'woocommerce_blocks_loaded', [ $this, 'handle_blocks_integration' ] );
@@ -295,9 +295,9 @@ class Blocks_Handler {
 	 */
 	public function restore_cart_or_checkout_shortcode() : void {
 
-		wp_verify_nonce( $_POST['nonce'] ?? '', sprintf( '%s_restore_cart_checkout_shortcode', $this->plugin->get_id() ) );
+		wp_verify_nonce( $_POST['nonce'] ?: '', sprintf( '%s_restore_cart_checkout_shortcode', $this->plugin->get_id() ) );
 
-		wp_send_json( [ 'success' => $this->restore_page_shortcode( $_POST['page'] ?? '' ) ] );
+		wp_send_json( [ 'success' => $this->restore_page_shortcode( $_POST['page'] ?: '' ) ] );
 	}
 
 
@@ -322,7 +322,7 @@ class Blocks_Handler {
 			return false;
 		}
 
-		$success = wp_update_post( $page_id, [ 'post_content' => '[woocommerce_cart]' ] );
+		$success = wp_update_post( [ 'ID' => $page_id, 'post_content' => '[woocommerce_cart]' ] );
 
 		if ( ! $success || $success instanceof WP_Error ) {
 			return false;
