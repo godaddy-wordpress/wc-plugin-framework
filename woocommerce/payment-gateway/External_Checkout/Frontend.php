@@ -104,11 +104,11 @@ abstract class Frontend extends Script_Handler {
 
 		$locations = $this->get_handler()->get_display_locations();
 
-		if ( in_array( 'product', $locations, true ) && is_product() ) {
+		if ( $this->should_init_on_product_page( $locations ) ) {
 			$this->init_product();
-		} elseif ( in_array( 'cart', $locations, true ) && $this->should_init_on_cart_page() ) {
+		} elseif ( $this->should_init_on_cart_page( $locations ) ) {
 			$this->init_cart();
-		} elseif ( in_array( 'checkout', $locations, true ) && $this->should_init_on_checkout_page() ) {
+		} elseif ( $this->should_init_on_checkout_page( $locations ) ) {
 			$this->init_checkout();
 		} else {
 			return;
@@ -129,22 +129,37 @@ abstract class Frontend extends Script_Handler {
 
 
 	/**
-	 * Determines if the external checkout frontend should be initialized on the product page.
+	 * Determines if the external checkout frontend should be initialized on a product page.
 	 *
 	 * @since 5.12.0
 	 *
+	 * @param array $locations configured display locations
 	 * @return bool
 	 */
-	protected function should_init_on_cart_page() : bool {
+	protected function should_init_on_product_page( array $locations ) : bool {
+
+		return in_array( 'product', $locations, true ) && is_product();
+	}
+
+
+	/**
+	 * Determines if the external checkout frontend should be initialized on the cart page.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @param string[] $locations configured display locations
+	 * @return bool
+	 */
+	protected function should_init_on_cart_page( array $locations ) : bool {
+
+		if ( ! in_array( 'cart', $locations, true ) ) {
+			return false;
+		}
 
 		$is_cart_ajax = wp_doing_ajax() && 'update_shipping_method' === SV_WC_Helper::get_requested_value( 'wc-ajax' );
 		$should_init  = $is_cart_ajax || is_cart();
 
-		if ( $should_init && Blocks_Handler::is_cart_block_in_use() && $this->gateway->get_plugin()->get_blocks_handler()->is_cart_block_compatible() ) {
-			return false;
-		}
-
-		return $should_init;
+		return $should_init && ! Blocks_Handler::is_cart_block_in_use();
 	}
 
 
@@ -153,19 +168,14 @@ abstract class Frontend extends Script_Handler {
 	 *
 	 * @since 5.12.0
 	 *
+	 * @param string[] $locations configured display locations
 	 * @return bool
 	 */
-	protected function should_init_on_checkout_page() : bool {
+	protected function should_init_on_checkout_page( array $locations ) : bool {
 
-		if ( ! is_checkout() ) {
-			return false;
-		}
+		$should_init = in_array( 'checkout', $locations, true ) && is_checkout();
 
-		if ( Blocks_Handler::is_checkout_block_in_use() && $this->gateway->get_plugin()->get_blocks_handler()->is_checkout_block_compatible() ) {
-			return false;
-		}
-
-		return true;
+		return $should_init && ! Blocks_Handler::is_checkout_block_in_use();
 	}
 
 
