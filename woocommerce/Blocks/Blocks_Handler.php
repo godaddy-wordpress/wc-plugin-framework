@@ -180,7 +180,7 @@ class Blocks_Handler {
 
 			if ( ! $this->is_checkout_block_compatible() ) {
 
-				$cta = '<button id="' . esc_attr( sprintf( '%s-restore-cart-shortcode', $this->plugin->get_id() ) ) . '">' . _x( 'Restore Checkout Page Shortcode', 'Button label', 'woocommerce-plugin-framework' ) . '</button>';
+				$cta = '<button id="' . esc_attr( sprintf( '%s-restore-cart-shortcode', $this->plugin->get_id() ) ) . '" class="button button-primary">' . _x( 'Restore Checkout Page Shortcode', 'Button label', 'woocommerce-plugin-framework' ) . '</button>';
 
 				$admin_notice_handler->add_admin_notice(
 					sprintf(
@@ -192,7 +192,7 @@ class Blocks_Handler {
 						'<code>[woocommerce_checkout]</code>',
 						'</a>',
 						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes">', '</a>'
-					) . $cta,
+					) . '<br><br>' . $cta,
 					sprintf( '%s-checkout-block-not-compatible', $this->plugin->get_id_dasherized() ),
 					[
 						'notice_class'            => 'notice-error',
@@ -224,7 +224,7 @@ class Blocks_Handler {
 						'<code>[woocommerce_cart]</code>',
 						'</a>',
 						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes">', '</a>'
-					) . $cta,
+					) . '<br><br>' . $cta,
 					sprintf( '%s-cart-block-not-compatible', $this->plugin->get_id_dasherized() ),
 					[
 						'notice_class'            => 'notice-error',
