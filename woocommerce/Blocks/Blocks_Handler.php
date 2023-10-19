@@ -322,7 +322,7 @@ class Blocks_Handler {
 			return false;
 		}
 
-		$success = wp_update_post( [ 'ID' => $page_id, 'post_content' => '[woocommerce_cart]' ] );
+		$success = wp_update_post( [ 'ID' => $page_id, 'post_content' => sprintf( '[woocommerce_%s]', $page ) ] );
 
 		if ( ! $success || $success instanceof WP_Error ) {
 			return false;
