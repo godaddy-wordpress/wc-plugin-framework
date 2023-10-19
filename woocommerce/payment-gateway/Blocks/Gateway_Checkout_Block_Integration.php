@@ -186,7 +186,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		}
 
 		/**
-		 * Filters gateway-specific payment method data for the Checkout Block
+		 * Filters gateway-specific payment method data for the Checkout Block.
 		 *
 		 * @since 5.12.0
 		 *

@@ -14,7 +14,7 @@ use function Patchwork\Redefinitions\LanguageConstructs\_require_once;
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_10\\Payment_Gateway\Blocks\\Gateway_Blocks_Handler' ) ) :
 
 /**
- * Extends the base {@see Blocks_Handler} for support o WooCommerce Blocks in payment gateways.
+ * Extends the base {@see Blocks_Handler} for supporting WooCommerce Blocks in payment gateways.
  *
  * Individual gateway plugins should override this class to load their own block integrations classes.
  *
