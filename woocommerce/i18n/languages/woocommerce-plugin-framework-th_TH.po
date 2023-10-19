@@ -724,7 +724,7 @@ msgstr "หมายเลขบัญชีไม่ถูกต้อง (ต�
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:309
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:507
 msgid "Driver's license number is invalid"
-msgstr "Driver's license number is invalid"
+msgstr "หมายเลขใบอนุญาตขับขี่ไม่ถูกต้อง"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:315
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:503
@@ -1230,11 +1230,11 @@ msgstr "ไม่ได้ระบุหมายเลขเช็ค"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:505
 msgctxt "For countries without states, \"state\" can be replaced with \"place of issue\"."
 msgid "Driver's license state is missing"
-msgstr "Driver's license state is missing"
+msgstr "ไม่ได้ระบุสถานที่ออกใบอนุญาตขับขี่"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:506
 msgid "Driver's license number is missing"
-msgstr "Driver's license number is missing"
+msgstr "ไม่ได้ระบุหมายเลขใบอนุญาตขับขี่"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:508
 msgctxt "Bank account"

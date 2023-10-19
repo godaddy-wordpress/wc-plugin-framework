@@ -724,7 +724,7 @@ msgstr "口座番号が無効です（5桁から17桁の数字で入力してく
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:309
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:507
 msgid "Driver's license number is invalid"
-msgstr "Driver's license number is invalid"
+msgstr "運転免許証番号が無効です"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:315
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:503
@@ -1230,11 +1230,11 @@ msgstr "小切手番号が未入力です"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:505
 msgctxt "For countries without states, \"state\" can be replaced with \"place of issue\"."
 msgid "Driver's license state is missing"
-msgstr "Driver's license state is missing"
+msgstr "運転免許証の発行地が未入力です"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:506
 msgid "Driver's license number is missing"
-msgstr "Driver's license number is missing"
+msgstr "運転免許証番号が未入力です"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:508
 msgctxt "Bank account"

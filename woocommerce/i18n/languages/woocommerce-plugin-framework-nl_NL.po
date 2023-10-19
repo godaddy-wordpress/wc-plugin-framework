@@ -724,7 +724,7 @@ msgstr "Rekeningnummer is ongeldig (moet tussen 5 en 17 cijfers zijn)"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:309
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:507
 msgid "Driver's license number is invalid"
-msgstr "Driver's license number is invalid"
+msgstr "Rijbewijsnummer is ongeldig"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:315
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:503
@@ -1230,11 +1230,11 @@ msgstr "Chequenummer ontbreekt"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:505
 msgctxt "For countries without states, \"state\" can be replaced with \"place of issue\"."
 msgid "Driver's license state is missing"
-msgstr "Driver's license state is missing"
+msgstr "Plek van afgifte rijbewijs ontbreekt"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:506
 msgid "Driver's license number is missing"
-msgstr "Driver's license number is missing"
+msgstr "Rijbewijsnummer ontbreekt"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:508
 msgctxt "Bank account"

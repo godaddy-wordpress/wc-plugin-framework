@@ -724,7 +724,7 @@ msgstr "खाता नंबर अमान्य है (5 और 17 अं�
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:309
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:507
 msgid "Driver's license number is invalid"
-msgstr "Driver's license number is invalid"
+msgstr "ड्राइवर का लाइसेंस नंबर अमान्य है"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:315
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:503
@@ -1230,11 +1230,11 @@ msgstr "चेक नंबर गुम है"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:505
 msgctxt "For countries without states, \"state\" can be replaced with \"place of issue\"."
 msgid "Driver's license state is missing"
-msgstr "Driver's license state is missing"
+msgstr "ड्राइवर का लाइसेंस स्टेट गुम है"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:506
 msgid "Driver's license number is missing"
-msgstr "Driver's license number is missing"
+msgstr "ड्राइवर का लाइसेंस नंबर गुम है"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:508
 msgctxt "Bank account"
