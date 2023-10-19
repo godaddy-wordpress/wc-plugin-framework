@@ -3,11 +3,11 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
-use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Plugin;
+use WP_Error;
 
 if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Blocks_Handler' ) ) :
 
@@ -158,6 +158,78 @@ class Blocks_Handler {
 		}
 
 		return CartCheckoutUtils::is_cart_block_default();
+	}
+
+
+	/**
+	 * This utility method will create a new shortcode-based Cart page if the checkout block is in use, and set it as default.
+	 *
+	 * This should be used when the plugin is not compatible with the Cart block and the merchant wants to revert to shortcode.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool success
+	 */
+	public function restore_cart_shortcode() : bool {
+
+		if ( ! static::is_cart_block_in_use() ) {
+			return false;
+		}
+
+		/** @var array<mixed> $cart_page */
+		$cart_page = get_post( wc_get_page_id('cart'), ARRAY_A );
+
+		if ( ! $cart_page || ! wp_delete_post( $cart_page['ID'] ?? 0 ) ) {
+			return false;
+		}
+
+		$new_cart_page_id = wp_insert_post( array_merge( $cart_page, [
+			'post_content' => '[woocommerce_cart]',
+		] ) );
+
+		if ( ! $new_cart_page_id || $new_cart_page_id instanceof WP_Error ) {
+			return false;
+		}
+
+		update_option( 'woocommerce_cart_page_id', $new_cart_page_id );
+
+		return true;
+	}
+
+
+	/**
+	 * This utility method will create a new shortcode-based Checkout page if the checkout block is in use, and set it as default.
+	 *
+	 * This should be used when the plugin is not compatible with the Checkout block and the merchant wants to revert to shortcode.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool success
+	 */
+	public function restore_checkout_shortcode() : bool {
+
+		if ( ! static::is_checkout_block_in_use() ) {
+			return false;
+		}
+
+		/** @var array<mixed> $checkout_page */
+		$checkout_page = get_post( wc_get_page_id('cart'), ARRAY_A );
+
+		if ( ! $checkout_page || ! wp_delete_post( $checkout_page['ID'] ?? 0 ) ) {
+			return false;
+		}
+
+		$new_checkout_page_id = wp_insert_post( array_merge( $checkout_page, [
+			'post_content' => '[woocommerce_checkout]',
+		] ) );
+
+		if ( ! $new_checkout_page_id || $new_checkout_page_id instanceof WP_Error ) {
+			return false;
+		}
+
+		update_option( 'woocommerce_checkout_page_id', $new_checkout_page_id );
+
+		return true;
 	}
 
 
