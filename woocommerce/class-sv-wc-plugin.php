@@ -594,13 +594,15 @@ abstract class SV_WC_Plugin {
 
 				$admin_notice_handler->add_admin_notice(
 					sprintf(
-						/* translators: Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - [woocommerce_checkout] shortcode tag, %6$s - closing HTML </a< tag */
-						__( 'The Checkout block is not compatible with %1$s. Please %2$sedit the Checkout page%3$s to use the %4$s%5$s shortcode%6$s instead.'),
+						/* translators: Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - [woocommerce_checkout] shortcode tag, %6$s - closing HTML </a> tag, %7$s opening HTML <a> tag, %8$s - closing HTML </a> tag */
+						__( 'The Checkout block is not compatible with %1$s. Please %2$sedit the Checkout page%3$s to use the %4$s%5$s shortcode%6$s instead. %7$sLearn more about using shortcodes here%8$s.', 'woocommerce-plugin-framework' ),
 						'<strong>' . $this->get_plugin_name() . '</strong>',
 						'<a href="' . esc_url( get_edit_post_link( wc_get_page_id( 'checkout' ) ) ) . '">',
 						'</a>',
 						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#checkout">',
 						'<code>[woocommerce_checkout]</code>',
+						'</a>',
+						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes">',
 						'</a>'
 					),
 					'wc-checkout-block-not-compatible',
@@ -622,13 +624,15 @@ abstract class SV_WC_Plugin {
 
 				$admin_notice_handler->add_admin_notice(
 					sprintf(
-						/* translators: Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - [woocommerce_cart] shortcode tag, %6$s - closing HTML </a< tag */
-						__( 'The Cart block is not compatible with %1$s. Please %2$sedit the Cart page%3$s to use the %4$s%5$s shortcode%6$s instead.'),
+						/* translators: Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - [woocommerce_cart] shortcode tag, %6$s - closing HTML </a> tag, %7$s opening HTML <a> tag, %8$s - closing HTML </a> tag */
+						__( 'The Cart block is not compatible with %1$s. Please %2$sedit the Cart page%3$s to use the %4$s%5$s shortcode%6$s instead. %7$sLearn more about using shortcodes here%8$s.', 'woocommerce-plugin-framework' ),
 						'<strong>' . $this->get_plugin_name() . '</strong>',
 						'<a href="' . esc_url( get_edit_post_link( wc_get_page_id( 'cart' ) ) ) . '">',
 						'</a>',
 						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#cart">',
 						'<code>[woocommerce_cart]</code>',
+						'</a>',
+						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes">',
 						'</a>'
 					),
 					'wc-cart-block-not-compatible',
