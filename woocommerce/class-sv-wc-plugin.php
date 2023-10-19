@@ -605,7 +605,7 @@ abstract class SV_WC_Plugin {
 						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes">',
 						'</a>'
 					),
-					'wc-checkout-block-not-compatible',
+					sprintf( '%s-checkout-block-not-compatible', $this->get_id_dasherized() ),
 					[
 						'notice_class'            => 'notice-error',
 						'always_show_on_settings' => false,
@@ -614,7 +614,7 @@ abstract class SV_WC_Plugin {
 
 			} else {
 
-				$admin_notice_handler->dismiss_notice( 'wc-checkout-block-not-compatible' );
+				$admin_notice_handler->dismiss_notice( sprintf( '%s-checkout-block-not-compatible', $this->get_id_dasherized() ), );
 			}
 		}
 
@@ -635,7 +635,7 @@ abstract class SV_WC_Plugin {
 						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes">',
 						'</a>'
 					),
-					'wc-cart-block-not-compatible',
+					sprintf( '%s-cart-block-not-compatible', $this->get_id_dasherized() ),
 					[
 						'notice_class'            => 'notice-error',
 						'always_show_on_settings' => false,
@@ -644,7 +644,7 @@ abstract class SV_WC_Plugin {
 
 			} else {
 
-				$admin_notice_handler->dismiss_notice( 'wc-cart-block-not-compatible' );
+				$admin_notice_handler->dismiss_notice( sprintf( '%s-cart-block-not-compatible', $this->get_id_dasherized() ) );
 			}
 		}
 	}
