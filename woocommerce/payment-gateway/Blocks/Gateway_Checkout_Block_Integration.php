@@ -27,6 +27,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\Blocks;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 use Automattic\WooCommerce\StoreApi\Payments\PaymentContext;
 use Automattic\WooCommerce\StoreApi\Payments\PaymentResult;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\External_Checkout\Google_Pay\Frontend;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Payment_Token;
@@ -143,6 +144,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				'csc_enabled_for_tokens' => $this->gateway->csc_enabled_for_tokens(),
 				'tokenization_enabled'   => $this->gateway->tokenization_enabled(),
 			],
+			'ajax_url'   => admin_url( 'admin-ajax.php' ),
 		];
 
 		if ( $this->gateway->supports_apple_pay() ) {
@@ -155,10 +157,29 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 					'currencies'               => $this->gateway->get_apple_pay_currencies(),
 					'capabilities'             => $this->gateway->get_apple_pay_capabilities(),
 					'merchant_id'              => $apple_pay->get_merchant_id(),
-					'ajax_url'                 => admin_url( 'admin-ajax.php' ),
 					'validate_nonce'           => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_validate_merchant' ),
 					'recalculate_totals_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_recalculate_totals' ),
 					'process_nonce'            => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_process_payment' ),
+					'generic_error'            => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
+				];
+			}
+		}
+
+		if ( $this->gateway->supports_google_pay() ) {
+
+			$google_pay = $this->plugin->get_google_pay_instance();
+
+			if ( $google_pay && $this->gateway->id === $google_pay->get_processing_gateway()->id ) {
+
+				$payment_method_data['google_pay'] = [
+					'merchant_id'              => $google_pay->get_merchant_id(),
+					'merchant_name'            => get_bloginfo( 'name' ),
+					'recalculate_totals_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_google_pay_recalculate_totals' ),
+					'process_nonce'            => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_google_pay_process_payment' ),
+					'button_style'             => $google_pay->get_button_style(),
+					'card_types'               => $google_pay->get_supported_networks(),
+					'available_countries'	   => $google_pay->get_available_countries(),
+					'currency_code'            => get_woocommerce_currency(),
 					'generic_error'            => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
 				];
 			}
