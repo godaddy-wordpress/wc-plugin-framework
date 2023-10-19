@@ -154,13 +154,17 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			if ( $apple_pay && $this->gateway->id === $apple_pay->get_processing_gateway()->id ) {
 
 				$payment_method_data['apple_pay'] = [
-					'currencies'               => $this->gateway->get_apple_pay_currencies(),
-					'capabilities'             => $this->gateway->get_apple_pay_capabilities(),
 					'merchant_id'              => $apple_pay->get_merchant_id(),
 					'validate_nonce'           => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_validate_merchant' ),
 					'recalculate_totals_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_recalculate_totals' ),
 					'process_nonce'            => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_process_payment' ),
-					'generic_error'            => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
+					'currencies'               => $this->gateway->get_apple_pay_currencies(),
+					'capabilities'             => $this->gateway->get_apple_pay_capabilities(),
+					'flags'                    => [
+						'is_available' => $apple_pay->is_available(),
+						'is_enabled'   => $apple_pay->is_enabled(),
+						'is_test_mode' => $apple_pay->is_test_mode(),
+					],
 				];
 			}
 		}
@@ -178,9 +182,13 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 					'process_nonce'            => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_google_pay_process_payment' ),
 					'button_style'             => $google_pay->get_button_style(),
 					'card_types'               => $google_pay->get_supported_networks(),
-					'available_countries'	   => $google_pay->get_available_countries(),
+					'available_countries'      => $google_pay->get_available_countries(),
 					'currency_code'            => get_woocommerce_currency(),
-					'generic_error'            => __( 'An error occurred, please try again or try an alternate form of payment', 'woocommerce-plugin-framework' ),
+					'flags'                    => [
+						'is_enabled'   => $google_pay->is_enabled(),
+						'is_available' => $google_pay->is_available(),
+						'is_test_mode' => $google_pay->is_test_mode(),
+					],
 				];
 			}
 		}
