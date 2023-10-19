@@ -36,6 +36,8 @@ class Blocks_Handler {
 	/**
 	 * Blocks handler constructor.
 	 *
+	 * Individual plugins should initialize their block integrations classes by overriding this constructor and calling the parent.
+	 *
 	 * @since 5.12.0
 	 *
 	 * @param SV_WC_Plugin $plugin
@@ -49,10 +51,12 @@ class Blocks_Handler {
 		require_once( $framework_path . '/Blocks/Traits/Block_Integration_Trait.php' );
 		require_once( $framework_path . '/Blocks/Block_Integration.php' );
 
+		// blocks-related notices and call-to-actions
+		add_action( 'admin_notices', [ $this, 'add_admin_notices' ] );
+		add_action( 'wp_ajax_' . $this->plugin->get_id() . '_restore_cart_checkout_shortcode', [ $this, 'restore_cart_or_checkout_shortcode'] );
+
 		// handle WooCommerce Blocks integrations in compatible plugins
 		add_action( 'woocommerce_blocks_loaded', [ $this, 'handle_blocks_integration' ] );
-
-		// individual plugins should initialize their block integrations classes by overriding this constructor
 	}
 
 
@@ -162,72 +166,167 @@ class Blocks_Handler {
 
 
 	/**
-	 * This utility method will create a new shortcode-based Cart page if the checkout block is in use, and set it as default.
+	 * Adds admin notices pertaining the blocks integration.
 	 *
-	 * This should be used when the plugin is not compatible with the Cart block and the merchant wants to revert to shortcode.
+	 * @internal
 	 *
-	 * @since 5.12.0
-	 *
-	 * @return bool success
+	 * @return void
 	 */
-	public function restore_cart_shortcode() : bool {
+	public function add_admin_notices() : void {
 
-		if ( ! static::is_cart_block_in_use() ) {
-			return false;
+		$admin_notice_handler = $this->plugin->get_admin_notice_handler();
+
+		if ( static::is_checkout_block_in_use() ) {
+
+			if ( ! $this->is_checkout_block_compatible() ) {
+
+				$cta = '<button id="' . esc_attr( sprintf( '%s-restore-cart-shortcode', $this->plugin->get_id() ) ) . '">' . _x( 'Restore Checkout Page Shortcode', 'Button label', 'woocommerce-plugin-framework' ) . '</button>';
+
+				$admin_notice_handler->add_admin_notice(
+					sprintf(
+						/* translators: Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_checkout]` shortcode tag, %6$s - closing HTML </a> tag, %7$s opening HTML <a> tag, %8$s - closing HTML </a> tag */
+						__( 'The Checkout block is not compatible with %1$s. Please %2$sedit the Checkout page%3$s to use the %4$s%5$s shortcode%6$s instead. %7$sLearn more about using shortcodes here%8$s.', 'woocommerce-plugin-framework' ),
+						'<strong>' . $this->plugin->get_plugin_name() . '</strong>',
+						'<a href="' . esc_url( get_edit_post_link( wc_get_page_id( 'checkout' ) ) ) . '">', '</a>',
+						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#checkout">',
+						'<code>[woocommerce_checkout]</code>',
+						'</a>',
+						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes">', '</a>'
+					) . $cta,
+					sprintf( '%s-checkout-block-not-compatible', $this->plugin->get_id_dasherized() ),
+					[
+						'notice_class'            => 'notice-error',
+						'always_show_on_settings' => false,
+					]
+				);
+
+				$this->enqueue_restore_shortcode_script( 'checkout', __( 'The Checkout page contents will be replaced with a checkout shortcode.', 'woocommerce-plugin-framework' ) );
+
+			} else {
+
+				$admin_notice_handler->dismiss_notice( sprintf( '%s-checkout-block-not-compatible', $this->plugin->get_id_dasherized() ), );
+			}
 		}
 
-		/** @var array<mixed> $cart_page */
-		$cart_page = get_post( wc_get_page_id( 'cart' ), ARRAY_A );
+		if ( static::is_cart_block_in_use() ) {
 
-		if ( ! $cart_page || ! wp_delete_post( $cart_page['ID'] ?? 0 ) ) {
-			return false;
+			if ( ! $this->is_cart_block_compatible() ) {
+
+				$cta = '<button id="' . esc_attr( sprintf( '%s-restore-cart-shortcode', $this->plugin->get_id() ) ) . '" class="button button-primary">' . _x( 'Restore Cart Page Shortcode', 'Button label', 'woocommerce-plugin-framework' ) . '</button>';
+
+				$admin_notice_handler->add_admin_notice(
+					sprintf(
+						/* translators: Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_cart]` shortcode tag, %6$s - closing HTML </a> tag, %7$s opening HTML <a> tag, %8$s - closing HTML </a> tag */
+						__( 'The Cart block is not compatible with %1$s. Please %2$sedit the Cart page%3$s to use the %4$s%5$s shortcode%6$s instead. %7$sLearn more about using shortcodes here%8$s.', 'woocommerce-plugin-framework' ),
+						'<strong>' . $this->plugin->get_plugin_name() . '</strong>',
+						'<a href="' . esc_url( get_edit_post_link( wc_get_page_id( 'cart' ) ) ) . '">', '</a>',
+						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#cart">',
+						'<code>[woocommerce_cart]</code>',
+						'</a>',
+						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes">', '</a>'
+					) . $cta,
+					sprintf( '%s-cart-block-not-compatible', $this->plugin->get_id_dasherized() ),
+					[
+						'notice_class'            => 'notice-error',
+						'always_show_on_settings' => false,
+					]
+				);
+
+				$this->enqueue_restore_shortcode_script( 'cart', __( 'The Cart page contents will be replaced with a cart shortcode.', 'woocommerce-plugin-framework' ) );
+
+			} else {
+
+				$admin_notice_handler->dismiss_notice( sprintf( '%s-cart-block-not-compatible', $this->plugin->get_id_dasherized() ) );
+			}
 		}
-
-		$new_cart_page_id = wp_insert_post( array_merge( $cart_page, [
-			'post_content' => '[woocommerce_cart]',
-		] ) );
-
-		if ( ! $new_cart_page_id || $new_cart_page_id instanceof WP_Error ) {
-			return false;
-		}
-
-		update_option( 'woocommerce_cart_page_id', $new_cart_page_id );
-
-		return true;
 	}
 
 
 	/**
-	 * This utility method will create a new shortcode-based Checkout page if the checkout block is in use, and set it as default.
-	 *
-	 * This should be used when the plugin is not compatible with the Checkout block and the merchant wants to revert to shortcode.
+	 * Enqueues a script used in {@see Blocks_Handler::add_admin_notices()} to restore the Cart or Checkout page shortcodes.
 	 *
 	 * @since 5.12.0
 	 *
-	 * @return bool success
+	 * @param string $page either 'cart' or 'checkout
+	 * @param string $confirmation_message
+	 * @return void
 	 */
-	public function restore_checkout_shortcode() : bool {
+	protected function enqueue_restore_shortcode_script( string $page, string $confirmation_message ) : void {
 
-		if ( ! static::is_checkout_block_in_use() ) {
+		if ( ! in_array( $page, [ 'cart', 'checkout' ], true ) ) {
+			return;
+		}
+
+		wc_enqueue_js( "
+			jQuery( document ).on( 'click', '#" . esc_js( sprintf( '%s-restore-%s-shortcode', $this->plugin->get_id(), $page ) ) . "', function( e ) {
+				e.preventDefault();
+
+				if ( ! confirm( '" . esc_js( $confirmation_message  ) . "' ) ) {
+					return;
+				}
+
+				jQuery.ajax( {
+					url:  '" . esc_js( admin_url( 'admin-ajax.php' ) ) . "',
+					type: 'POST',
+					data: {
+						action: '" . esc_js( sprintf( '%s_restore_cart_checkout_shortcode', $this->plugin->get_id() ) ) . "',
+						page:   '" . esc_js( $page ) . "',
+						nonce:  '" . esc_js( wp_create_nonce( sprintf( '%s_restore_cart_checkout_shortcode', $this->plugin->get_id() ) ) ) . "',
+					},
+					success: function( response ) {
+						window.location.reload();
+					}
+				} );
+			} );"
+		);
+	}
+
+
+	/**
+	 * Restores the contents of the Cart or Checkout page, replacing any block with a corresponding shortcode.
+	 *
+	 * This is only used as an AJAX callback for a CTA button in {@see Blocks_Handler::add_admin_notices()}.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @internal
+	 *
+	 * @return void
+	 */
+	public function restore_cart_or_checkout_shortcode() : void {
+
+		wp_verify_nonce( $_POST['nonce'] ?? '', sprintf( '%s_restore_cart_checkout_shortcode', $this->plugin->get_id() ) );
+
+		wp_send_json( [ 'success' => $this->restore_page_shortcode( $_POST['page'] ?? '' ) ] );
+	}
+
+
+	/**
+	 * Replaces the contents of the Cart or Checkout page with a corresponding shortcode.
+	 *
+	 * This should only be used when the plugin is not compatible with either block type and the merchant wants to revert it to shortcode-based.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @param string $page either 'cart' or 'checkout'
+	 */
+	protected function restore_page_shortcode( string $page ) : bool {
+
+		if ( ! in_array( $page, [ 'cart', 'checkout' ], true ) || ( 'cart' === $page && ! static::is_cart_block_in_use() ) || ( 'checkout' === $page && ! static::is_checkout_block_in_use() ) ) {
 			return false;
 		}
 
-		/** @var array<mixed> $checkout_page */
-		$checkout_page = get_post( wc_get_page_id( 'checkout' ), ARRAY_A );
+		$page_id = wc_get_page_id( $page );
 
-		if ( ! $checkout_page || ! wp_delete_post( $checkout_page['ID'] ?? 0 ) ) {
+		if ( ! $page_id ) {
 			return false;
 		}
 
-		$new_checkout_page_id = wp_insert_post( array_merge( $checkout_page, [
-			'post_content' => '[woocommerce_checkout]',
-		] ) );
+		$success = wp_update_post( $page_id, [ 'post_content' => '[woocommerce_cart]' ] );
 
-		if ( ! $new_checkout_page_id || $new_checkout_page_id instanceof WP_Error ) {
+		if ( ! $success || $success instanceof WP_Error ) {
 			return false;
 		}
-
-		update_option( 'woocommerce_checkout_page_id', $new_checkout_page_id );
 
 		return true;
 	}
