@@ -99,6 +99,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	public function is_active() : bool {
 
+		// @TODO perhaps we should update this to $this->gateway->is_available() so that we don't display a misconfigured gateway?
 		return $this->get_setting( 'enabled' ) === 'yes';
 	}
 
