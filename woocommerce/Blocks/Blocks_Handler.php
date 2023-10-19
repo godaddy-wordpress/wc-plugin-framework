@@ -177,7 +177,7 @@ class Blocks_Handler {
 		}
 
 		/** @var array<mixed> $cart_page */
-		$cart_page = get_post( wc_get_page_id('cart'), ARRAY_A );
+		$cart_page = get_post( wc_get_page_id( 'cart' ), ARRAY_A );
 
 		if ( ! $cart_page || ! wp_delete_post( $cart_page['ID'] ?? 0 ) ) {
 			return false;
@@ -213,7 +213,7 @@ class Blocks_Handler {
 		}
 
 		/** @var array<mixed> $checkout_page */
-		$checkout_page = get_post( wc_get_page_id('cart'), ARRAY_A );
+		$checkout_page = get_post( wc_get_page_id( 'checkout' ), ARRAY_A );
 
 		if ( ! $checkout_page || ! wp_delete_post( $checkout_page['ID'] ?? 0 ) ) {
 			return false;
