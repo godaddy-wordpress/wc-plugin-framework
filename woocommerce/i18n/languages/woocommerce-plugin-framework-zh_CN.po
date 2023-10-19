@@ -724,7 +724,7 @@ msgstr "账号无效（必须是 5 至 17 位数）"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:309
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:507
 msgid "Driver's license number is invalid"
-msgstr "Driver's license number is invalid"
+msgstr "驾照号码无效"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:315
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:503
@@ -1230,11 +1230,11 @@ msgstr "支票号码缺失"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:505
 msgctxt "For countries without states, \"state\" can be replaced with \"place of issue\"."
 msgid "Driver's license state is missing"
-msgstr "Driver's license state is missing"
+msgstr "驾照所属签发地缺失"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:506
 msgid "Driver's license number is missing"
-msgstr "Driver's license number is missing"
+msgstr "驾照号码缺失"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:508
 msgctxt "Bank account"
