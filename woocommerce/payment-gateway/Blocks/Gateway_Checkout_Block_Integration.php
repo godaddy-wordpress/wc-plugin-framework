@@ -221,29 +221,38 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	protected function get_gateway_icons() : array {
 
-		$icon = $this->gateway->icon;
+		$icon  = $this->gateway->icon;
+		$icons = [];
 
 		if ( $icon ) {
 			return [ $this->gateway->get_method_title() => $icon ];
 		} elseif ( $this->gateway->is_echeck_gateway() ) {
 			return [ __( 'eCheck', 'woocommerce' ) => $this->gateway->get_payment_method_image_url( 'echeck' ) ];
-		} elseif ( ! $this->gateway->supports_card_types() ) {
-			return [];
-		}
+		} elseif ( $this->gateway->supports_card_types() ) {
 
-		$icons = [];
+			foreach ( $this->gateway->get_card_types() as $card_type ) {
 
-		foreach ( $this->gateway->get_card_types() as $card_type ) {
+				$card_type = SV_WC_Payment_Gateway_Helper::normalize_card_type( $card_type );
+				$card_name = SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type );
 
-			$card_type = SV_WC_Payment_Gateway_Helper::normalize_card_type( $card_type );
-			$card_name = SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type );
-
-			if ( $url = $this->gateway->get_payment_method_image_url( $card_type ) ) {
-				$icons[ $card_name ] = WC_HTTPS::force_https_url( $url );
+				if ( $url = $this->gateway->get_payment_method_image_url( $card_type ) ) {
+					$icons[ $card_name ] = WC_HTTPS::force_https_url( $url );
+				}
 			}
 		}
 
-		return $icons;
+		/**
+		 * Filters the payment gateway icons for the Checkout block.
+		 *
+		 * If the gateway specifies an icon or is an eCheck type, it will return that item only.
+		 * If the gateway doesn't, but supports card types, it will return a list of icon URLs for each card type supported by the gateway.
+		 *
+		 * @since 5.12.0
+		 *
+		 * @param array<string, string> $icons list of icon URLs keyed by payment method or card name
+		 * @param SV_WC_Payment_Gateway $gateway
+		 */
+		return apply_filters( "wc_{$this->gateway->get_id()}_checkout_block_payment_method_icons", $icons, $this->gateway );
 	}
 
 
