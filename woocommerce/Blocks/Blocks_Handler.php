@@ -4,6 +4,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
+use Exception;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Plugin;
@@ -277,7 +278,8 @@ class Blocks_Handler {
 					},
 					success: function( response ) {
 
-						if ( ! response.success ) {
+						if ( ! response || ! response.success ) {
+							console.log( response );
 							alert( '" . esc_js( _x( 'An error occurred while restoring the shortcode. Please try again or edit the page manually.', 'WordPress shortcode', 'woocommerce-plugin-framework' ) ) . "' );
 							return;
 						}
@@ -303,9 +305,20 @@ class Blocks_Handler {
 	 */
 	public function restore_cart_or_checkout_shortcode() : void {
 
-		wp_verify_nonce( $_POST['nonce'] ?: '', sprintf( '%s_restore_cart_checkout_shortcode', $this->plugin->get_id() ) );
+		if ( ! wp_verify_nonce( $_POST['nonce'] ?: '', sprintf( '%s_restore_cart_checkout_shortcode', $this->plugin->get_id() ) ) ) {
+			wp_send_json_error( 'Invalid nonce' );
+		}
 
-		wp_send_json( [ 'success' => $this->restore_page_shortcode( $_POST['page'] ?: '' ) ] );
+		try {
+
+			$this->restore_page_shortcode( $_POST['page'] ?: '' );
+
+			wp_send_json_success();
+
+		} catch ( Exception $exception ) {
+
+			wp_send_json_error( $exception->getMessage() );
+		}
 	}
 
 
@@ -317,26 +330,28 @@ class Blocks_Handler {
 	 * @since 5.12.0
 	 *
 	 * @param string $page either 'cart' or 'checkout'
+	 * @return void
+	 * @throws Exception
 	 */
-	protected function restore_page_shortcode( string $page ) : bool {
+	protected function restore_page_shortcode( string $page ) : void {
 
 		if ( ! in_array( $page, [ 'cart', 'checkout' ], true ) || ( 'cart' === $page && ! static::is_cart_block_in_use() ) || ( 'checkout' === $page && ! static::is_checkout_block_in_use() ) ) {
-			return false;
+			throw new Exception( sprintf( 'Invalid page type or page is not using the %s block.', ucfirst( $page ) ) );
 		}
 
 		$page_id = wc_get_page_id( $page );
 
 		if ( ! $page_id ) {
-			return false;
+			throw new Exception( sprintf( '%s page not found.', ucfirst( $page ) ) );
 		}
 
 		$success = wp_update_post( [ 'ID' => $page_id, 'post_content' => sprintf( '[woocommerce_%s]', $page ) ] );
 
-		if ( ! $success || $success instanceof WP_Error ) {
-			return false;
+		if ( ! $success ) {
+			throw new Exception( sprintf( 'Failed to update the %s page.', ucfirst( $page ) ) );
+		} elseif ( $success instanceof WP_Error ) {
+			throw new Exception( $success->get_error_message() ?: sprintf( 'Failed to update the %s page.', ucfirst( $page ) ) );
 		}
-
-		return true;
 	}
 
 
