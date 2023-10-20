@@ -186,7 +186,7 @@ class Blocks_Handler {
 
 				$admin_notice_handler->add_admin_notice(
 					sprintf(
-						/* translators: Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_checkout]` shortcode tag, %6$s - closing HTML </a> tag, %7$s opening HTML <a> tag, %8$s - closing HTML </a> tag */
+						/* translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_checkout]` shortcode tag, %6$s - closing HTML </a> tag, %7$s opening HTML <a> tag, %8$s - closing HTML </a> tag */
 						__( 'The Checkout block is not compatible with %1$s. Please %2$sedit the Checkout page%3$s to use the %4$s%5$s shortcode%6$s instead. %7$sLearn more about using shortcodes here%8$s.', 'woocommerce-plugin-framework' ),
 						'<strong>' . $this->plugin->get_plugin_name() . '</strong>',
 						'<a href="' . esc_url( get_edit_post_link( wc_get_page_id( 'checkout' ) ) ) . '">', '</a>',
@@ -202,7 +202,7 @@ class Blocks_Handler {
 					]
 				);
 
-				$this->enqueue_restore_shortcode_script( 'checkout', __( 'The entire content of the Checkout page will be replaced with a checkout shortcode. If you have additional content in the Checkout page that you wish to keep, do not continue and edit the Checkout page manually instead.', 'woocommerce-plugin-framework' ) );
+				$this->enqueue_restore_shortcode_script( 'checkout', _x( 'The entire content of the Checkout page will be replaced with a checkout shortcode. If you have additional content in the Checkout page that you wish to keep, do not continue and edit the Checkout page manually instead.', 'WordPress shortcode', 'woocommerce-plugin-framework' ) );
 
 			} else {
 
@@ -218,7 +218,7 @@ class Blocks_Handler {
 
 				$admin_notice_handler->add_admin_notice(
 					sprintf(
-						/* translators: Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_cart]` shortcode tag, %6$s - closing HTML </a> tag, %7$s opening HTML <a> tag, %8$s - closing HTML </a> tag */
+						/* translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_cart]` shortcode tag, %6$s - closing HTML </a> tag, %7$s opening HTML <a> tag, %8$s - closing HTML </a> tag */
 						__( 'The Cart block is not compatible with %1$s. Please %2$sedit the Cart page%3$s to use the %4$s%5$s shortcode%6$s instead. %7$sLearn more about using shortcodes here%8$s.', 'woocommerce-plugin-framework' ),
 						'<strong>' . $this->plugin->get_plugin_name() . '</strong>',
 						'<a href="' . esc_url( get_edit_post_link( wc_get_page_id( 'cart' ) ) ) . '">', '</a>',
@@ -234,7 +234,7 @@ class Blocks_Handler {
 					]
 				);
 
-				$this->enqueue_restore_shortcode_script( 'cart', __( 'The entire content of the Cart page will be replaced with a cart shortcode. If you have additional content in the Cart page that you wish to keep, do not continue and edit the Cart page manually instead.', 'woocommerce-plugin-framework' ) );
+				$this->enqueue_restore_shortcode_script( 'cart', _x( 'The entire content of the Cart page will be replaced with a cart shortcode. If you have additional content in the Cart page that you wish to keep, do not continue and edit the Cart page manually instead.', 'WordPress shortcode', 'woocommerce-plugin-framework' ) );
 
 			} else {
 
@@ -278,7 +278,7 @@ class Blocks_Handler {
 					success: function( response ) {
 
 						if ( ! response.success ) {
-							alert( '" . esc_js( __( 'An error occurred while restoring the shortcode. Please try again or edit the page manually.', 'woocommerce-plugin-framework' ) ) . "' );
+							alert( '" . esc_js( _x( 'An error occurred while restoring the shortcode. Please try again or edit the page manually.', 'WordPress shortcode', 'woocommerce-plugin-framework' ) ) . "' );
 							return;
 						}
 
