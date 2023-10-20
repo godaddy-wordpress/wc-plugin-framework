@@ -224,6 +224,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 		if ( $icon ) {
 			return [ $this->gateway->get_method_title() => $icon ];
+		} elseif ( $this->gateway->is_echeck_gateway() ) {
+			return [ __( 'eCheck', 'woocommerce' ) => $this->gateway->get_payment_method_image_url( 'echeck' ) ];
 		} elseif ( ! $this->gateway->supports_card_types() ) {
 			return [];
 		}
