@@ -202,7 +202,7 @@ class Blocks_Handler {
 					]
 				);
 
-				$this->enqueue_restore_shortcode_script( 'checkout', __( 'The Checkout page contents will be replaced with a checkout shortcode.', 'woocommerce-plugin-framework' ) );
+				$this->enqueue_restore_shortcode_script( 'checkout', __( 'The entire content of the Checkout page will be replaced with a checkout shortcode. If you have additional content in the Checkout page that you wish to keep, do not continue and edit the Checkout page manually instead.', 'woocommerce-plugin-framework' ) );
 
 			} else {
 
@@ -234,7 +234,7 @@ class Blocks_Handler {
 					]
 				);
 
-				$this->enqueue_restore_shortcode_script( 'cart', __( 'The Cart page contents will be replaced with a cart shortcode.', 'woocommerce-plugin-framework' ) );
+				$this->enqueue_restore_shortcode_script( 'cart', __( 'The entire content of the Cart page will be replaced with a cart shortcode. If you have additional content in the Cart page that you wish to keep, do not continue and edit the Cart page manually instead.', 'woocommerce-plugin-framework' ) );
 
 			} else {
 
