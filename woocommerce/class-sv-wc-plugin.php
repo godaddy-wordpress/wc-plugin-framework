@@ -274,7 +274,7 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function init_blocks_handler() {
 
-		require_once( $this->get_framework_assets_path() . '/Blocks/Blocks_Handler.php' );
+		require_once( $this->get_framework_path() . '/Blocks/Blocks_Handler.php' );
 
 		// individual plugins should initialize their block integrations handler by overriding this method
 		$this->blocks_handler = new Blocks_Handler( $this );
