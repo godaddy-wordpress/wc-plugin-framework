@@ -27,12 +27,12 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\Blocks;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 use Automattic\WooCommerce\StoreApi\Payments\PaymentContext;
 use Automattic\WooCommerce\StoreApi\Payments\PaymentResult;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\External_Checkout\Google_Pay\Frontend;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Payment_Token;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Plugin;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Traits\Block_Integration_Trait;
+use WC_HTTPS;
 
 if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration' ) ) :
 
@@ -129,15 +129,15 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	public function get_payment_method_data() : array {
 
 		$payment_method_data = [
-			'id'          => $this->gateway->get_id_dasherized(), // dashes
-			'name'        => $this->gateway->get_id(), // underscores
-			'type'        => $this->gateway->get_payment_type(),
-			'title'       => $this->gateway->get_title(), // user-facing display title
-			'description' => $this->gateway->get_description(), // user-facing description
-			'icons'       => $this->get_gateway_icons(), // icon or card icons displayed next to title
-			'card_types'  => $this->gateway->supports_card_types() ? $this->gateway->get_card_types() : [], // configured card types
-			'supports'    => $this->gateway->supports,
-			'flags' => [
+			'id'            => $this->gateway->get_id_dasherized(), // dashes
+			'name'          => $this->gateway->get_id(), // underscores
+			'type'          => $this->gateway->get_payment_type(),
+			'title'         => $this->gateway->get_title(), // user-facing display title
+			'description'   => $this->gateway->get_description(), // user-facing description
+			'icons'         => $this->get_gateway_icons(), // icon or card icons displayed next to title
+			'card_types'    => $this->gateway->supports_card_types() ? $this->gateway->get_card_types() : [], // configured card types
+			'supports'      => $this->gateway->supports,
+			'flags'         => [
 				'is_test_environment'    => $this->gateway->is_test_environment(),
 				'is_credit_card_gateway' => $this->gateway->is_credit_card_gateway(),
 				'is_echeck_gateway'      => $this->gateway->is_echeck_gateway(),
@@ -145,7 +145,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				'csc_enabled_for_tokens' => $this->gateway->csc_enabled_for_tokens(),
 				'tokenization_enabled'   => $this->gateway->supports_tokenization() && $this->gateway->tokenization_enabled(),
 			],
-			'ajax_url'   => admin_url( 'admin-ajax.php' ),
+			'sample_echeck' => WC_HTTPS::force_https_url( $this->gateway->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/sample-check.png' ),
+			'ajax_url'      => WC_HTTPS::force_https_url( admin_url( 'admin-ajax.php' ) ),
 		];
 
 		// Apple Pay
@@ -238,7 +239,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			$card_name = SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type );
 
 			if ( $url = $this->gateway->get_payment_method_image_url( $card_type ) ) {
-				$icons[ $card_name ] = $url;
+				$icons[ $card_name ] = WC_HTTPS::force_https_url( $url );
 			}
 		}
 
