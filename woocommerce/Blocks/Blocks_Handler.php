@@ -276,6 +276,12 @@ class Blocks_Handler {
 						nonce:  '" . esc_js( wp_create_nonce( sprintf( '%s_restore_cart_checkout_shortcode', $this->plugin->get_id() ) ) ) . "',
 					},
 					success: function( response ) {
+
+						if ( ! response.success ) {
+							alert( '" . esc_js( __( 'An error occurred while restoring the shortcode. Please try again or edit the page manually.', 'woocommerce-plugin-framework' ) ) . "' );
+							return;
+						}
+
 						window.location.reload();
 					}
 				} );
