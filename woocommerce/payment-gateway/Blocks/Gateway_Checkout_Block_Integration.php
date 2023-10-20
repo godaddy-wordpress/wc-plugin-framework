@@ -143,7 +143,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				'is_echeck_gateway'      => $this->gateway->is_echeck_gateway(),
 				'csc_enabled'            => $this->gateway->csc_enabled(),
 				'csc_enabled_for_tokens' => $this->gateway->csc_enabled_for_tokens(),
-				'tokenization_enabled'   => $this->gateway->tokenization_enabled(),
+				'tokenization_enabled'   => $this->gateway->supports_tokenization() && $this->gateway->tokenization_enabled(),
 			],
 			'ajax_url'   => admin_url( 'admin-ajax.php' ),
 		];
@@ -224,6 +224,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 		if ( $icon ) {
 			return [ $this->gateway->get_method_title() => $icon ];
+		} elseif ( ! $this->gateway->supports_card_types() ) {
+			return [];
 		}
 
 		$icons = [];
