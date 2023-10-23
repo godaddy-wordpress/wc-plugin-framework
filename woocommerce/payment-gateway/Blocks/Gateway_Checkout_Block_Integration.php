@@ -160,6 +160,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 				$payment_method_data['apple_pay'] = [
 					'merchant_id'              => $apple_pay->get_merchant_id(),
+					'merchant_name'            => get_bloginfo( 'name' ),
 					'validate_nonce'           => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_validate_merchant' ),
 					'recalculate_totals_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_recalculate_totals' ),
 					'process_nonce'            => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_process_payment' ),
