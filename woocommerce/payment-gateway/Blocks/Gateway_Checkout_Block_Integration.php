@@ -279,6 +279,14 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'bank_routing_number' => '•••••••••',
 		];
 
+		/**
+		 * Filters the payment gateway placeholders for the Checkout block.
+		 *
+		 * @since 5.12.0
+		 *
+		 * @param array<string, mixed> $placeholders
+		 * @param SV_WC_Payment_Gateway $gateway
+		 */
 		return apply_filters( "wc_{$this->gateway->get_id()}_checkout_block_payment_method_placeholders", $placeholders, $this->gateway );
 	}
 
