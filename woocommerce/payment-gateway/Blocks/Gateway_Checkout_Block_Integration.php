@@ -163,12 +163,15 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 					'validate_nonce'           => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_validate_merchant' ),
 					'recalculate_totals_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_recalculate_totals' ),
 					'process_nonce'            => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_process_payment' ),
+					'button_style'             => $apple_pay->get_button_style(),
+					'card_types'               => $apple_pay->get_supported_networks(),
+					'countries'                => $this->gateway->get_available_countries(),
 					'currencies'               => $this->gateway->get_apple_pay_currencies(),
 					'capabilities'             => $this->gateway->get_apple_pay_capabilities(),
 					'flags'                    => [
-						'is_available' => $apple_pay->is_available(),
-						'is_enabled'   => $apple_pay->is_enabled(),
-						'is_test_mode' => $apple_pay->is_test_mode(),
+						'is_available'        => $apple_pay->is_available(),
+						'is_enabled'          => $apple_pay->is_enabled(),
+						'is_test_environment' => $apple_pay->is_test_mode(),
 					],
 				];
 			}
@@ -188,12 +191,12 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 					'process_nonce'            => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_google_pay_process_payment' ),
 					'button_style'             => $google_pay->get_button_style(),
 					'card_types'               => $google_pay->get_supported_networks(),
-					'available_countries'      => $google_pay->get_available_countries(),
-					'currency_code'            => get_woocommerce_currency(),
+					'countries'                => $google_pay->get_available_countries(),
+					'currencies'               => [ get_woocommerce_currency() ],
 					'flags'                    => [
-						'is_enabled'   => $google_pay->is_enabled(),
-						'is_available' => $google_pay->is_available(),
-						'is_test_mode' => $google_pay->is_test_mode(),
+						'is_enabled'          => $google_pay->is_enabled(),
+						'is_available'        => $google_pay->is_available(),
+						'is_test_environment' => $google_pay->is_test_mode(),
 					],
 				];
 			}
