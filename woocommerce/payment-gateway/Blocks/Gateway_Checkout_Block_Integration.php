@@ -147,6 +147,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				'tokenization_enabled'   => $this->gateway->supports_tokenization() && $this->gateway->tokenization_enabled(),
 			],
 			'sample_echeck' => WC_HTTPS::force_https_url( $this->gateway->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/sample-check.png' ),
+			'help_tip'      => WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/help.png' ),
 			'ajax_url'      => WC_HTTPS::force_https_url( admin_url( 'admin-ajax.php' ) ),
 		];
 
