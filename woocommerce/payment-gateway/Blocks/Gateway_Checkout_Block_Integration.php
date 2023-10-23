@@ -137,6 +137,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'icons'         => $this->get_gateway_icons(), // icon or card icons displayed next to title
 			'card_types'    => $this->gateway->supports_card_types() ? $this->gateway->get_card_types() : [], // configured card types
 			'defaults'      => $this->gateway->supports_payment_form() ? $this->gateway->get_payment_method_defaults() : [],
+			'placeholders'  => $this->get_placeholders(),
 			'supports'      => $this->gateway->supports,
 			'flags'         => [
 				'is_test_environment'    => $this->gateway->is_test_environment(),
@@ -259,6 +260,26 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		 * @param SV_WC_Payment_Gateway $gateway
 		 */
 		return apply_filters( "wc_{$this->gateway->get_id()}_checkout_block_payment_method_icons", $icons, $this->gateway );
+	}
+
+
+	/**
+	 * Gets the payment method fields placeholder.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function get_placeholders() : array {
+
+		$placeholders = [
+			'credit_card_number'  => '•••• •••• •••• ••••',
+			'credit_card_expiry'  => 'MM/YY',
+			'credit_card_csc'     => '•••',
+			'bank_routing_number' => '•••••••••',
+		];
+
+		return apply_filters( "wc_{$this->gateway->get_id()}_checkout_block_payment_method_placeholders", $placeholders, $this->gateway );
 	}
 
 
