@@ -136,7 +136,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'description'   => $this->gateway->get_description(), // user-facing description
 			'icons'         => $this->get_gateway_icons(), // icon or card icons displayed next to title
 			'card_types'    => $this->gateway->supports_card_types() ? $this->gateway->get_card_types() : [], // configured card types
-			'defaults'      => $this->gateway->supports_payment_form() ? $this->gateway->get_payment_method_defaults() : [],
+			'defaults'      => $this->get_gateway_defaults(),
 			'placeholders'  => $this->get_placeholders(),
 			'supports'      => $this->gateway->supports,
 			'flags'         => [
@@ -288,6 +288,30 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		 * @param SV_WC_Payment_Gateway $gateway
 		 */
 		return apply_filters( "wc_{$this->gateway->get_id()}_checkout_block_payment_method_placeholders", $placeholders, $this->gateway );
+	}
+
+
+	/**
+	 * Gets the gateway defaults.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function get_gateway_defaults() : array
+	{
+		if ( ! $this->gateway->supports_payment_form() ) {
+			return [];
+		}
+
+		$defaults = [];
+
+		// this is needed because some keys may use dashes instead of underscores, which could cause trouble when parsed as JS objects
+		foreach ( $this->gateway->get_payment_method_defaults() as $default_key => $default_value ) {
+			$defaults[ str_replace( '-', '_', $default_key ) ] = $default_value;
+		}
+
+		return $defaults;
 	}
 
 
