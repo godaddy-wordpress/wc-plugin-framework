@@ -73,7 +73,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		$this->gateway  = $gateway;
 		$this->settings = $gateway->settings;
 
-		add_action( 'woocommerce_rest_checkout_process_payment_with_context', [ $this, 'prepare_payment_token' ], 10, 2 );
+		add_action( 'woocommerce_rest_checkout_process_payment_with_context', [ $this, 'prepare_payment_data' ], 10, 2 );
 	}
 
 
@@ -316,12 +316,16 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 
 	/**
-	 * Prepare payment token for processing by the gateway.
+	 * Prepare payment data for processing by the gateway.
 	 *
-	 * This method does not actually process the payment - it simply prepares the payment token for processing.
-	 * The checkout block has built-in support for payment tokens, but it sends the internal (core) token ID instead of
-	 * the gateway-specific token ID. This method fetches the token based on core ID and injects the gateway-specific
-	 * token ID into the `PaymentContext::$payment_data` array so that the gateway can process the payment.
+	 * This method does not actually process the payment - it simply adjusts the payment data to support legacy processing.
+	 *
+	 * The checkout block has built-in support for tokenization & payment tokens, but it sends the data from the frontend
+	 * with field names and values that our existing payment processing does not expect.
+	 *
+	 * For example, it sends the internal (core) token ID instead of the gateway-specific token ID. This method fetches
+	 * the token based on core ID and injects the gateway-specific token ID into the `PaymentContext::$payment_data`
+	 * array so that the gateway can process the payment.
 	 *
 	 * @see PaymentContext::$payment_data is converted to `$_POST` by WC core when handling legacy payments.
 	 * @see \Automattic\WooCommerce\StoreApi\Legacy::process_legacy_payment()
@@ -332,9 +336,30 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 * @param PaymentResult $payment_result
 	 * @return PaymentResult
 	 */
-	public function prepare_payment_token( PaymentContext $payment_context, PaymentResult $payment_result ) : PaymentResult {
+	public function prepare_payment_data( PaymentContext $payment_context, PaymentResult $payment_result ) : PaymentResult {
 
+		$additional_payment_data = [];
+
+		/**
+		 * Fetch the provider-based token ID for the core token ID
+		 *
+		 * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Direct::get_order()
+		 */
 		if ( $token = $this->get_payment_token_for_context( $payment_context ) ) {
+			$additional_payment_data[ 'wc-' . $this->gateway->get_id_dasherized() . '-payment-token' ] = $token->get_id();
+		}
+
+		/**
+		 * Convert the tokenization flag to the expected key-value pair
+		 *
+		 * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Payment_Tokens_Handler::should_tokenize()
+		 */
+		if ( $should_tokenize = $payment_context->payment_data['wc-' . $this->gateway->get_id() . '-new-payment-method'] ) {
+			$additional_payment_data[ 'wc-' . $this->gateway->get_id_dasherized() . '-tokenize-payment-method' ] = $should_tokenize;
+		}
+
+		if ( ! empty( $additional_payment_data ) ) {
+
 			/**
 			 * Taking advantage of the fact that objects are passed 'by reference' (actually handles) in PHP:
 			 * @link https://dev.to/nicolus/are-php-objects-passed-by-reference--2gp3
@@ -342,7 +367,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			$payment_context->set_payment_data(
 				array_merge(
 					$payment_context->payment_data,
-					[ 'wc-' . $this->gateway->get_id_dasherized() . '-payment-token' => $token->get_id() ]
+					$additional_payment_data
 				)
 			);
 		}
@@ -360,7 +385,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 * @param PaymentContext $payment_context
 	 * @return SV_WC_Payment_Gateway_Payment_Token|null
 	 */
-	protected function get_payment_token_for_context( PaymentContext $payment_context ) {
+	protected function get_payment_token_for_context( PaymentContext $payment_context ): ?SV_WC_Payment_Gateway_Payment_Token {
 
 		$core_token_id = $payment_context->payment_data['token'] ?: null;
 
