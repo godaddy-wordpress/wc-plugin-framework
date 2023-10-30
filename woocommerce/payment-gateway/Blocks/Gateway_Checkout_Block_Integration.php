@@ -171,8 +171,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 					'currencies'               => $this->gateway->get_apple_pay_currencies(),
 					'capabilities'             => $this->gateway->get_apple_pay_capabilities(),
 					'flags'                    => [
-						'is_available'        => $apple_pay->is_available(),
 						'is_enabled'          => $apple_pay->is_enabled(),
+						'is_available'        => $apple_pay->is_available() && $apple_pay->supports_checkout_block(),
 						'is_test_environment' => $apple_pay->is_test_mode(),
 					],
 				];
@@ -197,7 +197,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 					'currencies'               => [ get_woocommerce_currency() ],
 					'flags'                    => [
 						'is_enabled'          => $google_pay->is_enabled(),
-						'is_available'        => $google_pay->is_available(),
+						'is_available'        => $google_pay->is_available() && $google_pay->supports_checkout_block(),
 						'is_test_environment' => $google_pay->is_test_mode(),
 					],
 				];
