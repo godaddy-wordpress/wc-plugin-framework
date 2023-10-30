@@ -45,6 +45,9 @@ abstract class External_Checkout {
 	/** @var string external checkout human-readable label (used in notices and log entries) */
 	protected $label;
 
+	/** @var array<string, mixed> used to define supported features */
+	protected array $supported_features = [];
+
 	/** @var SV_WC_Payment_Gateway_Plugin the plugin instance */
 	protected $plugin;
 
@@ -322,6 +325,30 @@ abstract class External_Checkout {
 	public function get_label() {
 
 		return $this->label;
+	}
+
+
+	/**
+	 * Determines whether the external checkout supports the WooCommerce Cart Block.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool
+	 */
+	public function supports_cart_block() : bool {
+
+		return isset( $this->supported_features['blocks']['cart'] ) && 'yes' === $this->supported_features['blocks']['cart'];
+	}
+
+
+	/**
+	 * Determines whether the external checkout supports the WooCommerce Checkout Block.
+	 *
+	 * @return bool
+	 */
+	public function supports_checkout_block() : bool {
+
+		return isset( $this->supported_features['blocks']['checkout'] ) && 'yes' === $this->supported_features['blocks']['checkout'];
 	}
 
 
