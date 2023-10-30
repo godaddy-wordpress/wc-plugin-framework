@@ -183,7 +183,7 @@ class Blocks_Handler {
 			if ( ! $this->is_checkout_block_compatible() ) {
 
 				$url = get_edit_post_link( wc_get_page_id( 'checkout' ) );
-				$cta = '<a href="' . esc_url( $url ) .'" id="' . esc_attr( sprintf( '%s-restore-cart-shortcode', $this->plugin->get_id() ) ) . '" class="button button-primary">' . _x( 'Restore Checkout Page Shortcode', 'Button label', 'woocommerce-plugin-framework' ) . '</a>';
+				$cta = '<a href="' . esc_url( $url ) .'" id="' . esc_attr( sprintf( '%s-restore-cart-shortcode', $this->plugin->get_id() ) ) . '" class="button button-primary">' . _x( 'Edit the Checkout Page', 'Button label', 'woocommerce-plugin-framework' ) . '</a>';
 
 				$admin_notice_handler->add_admin_notice(
 					sprintf(
@@ -214,7 +214,7 @@ class Blocks_Handler {
 			if ( ! $this->is_cart_block_compatible() ) {
 
 				$url = get_edit_post_link( wc_get_page_id( 'cart' ) );
-				$cta = '<a href="' . esc_url( $url ) . '" id="' . esc_attr( sprintf( '%s-restore-cart-shortcode', $this->plugin->get_id() ) ) . '" class="button button-primary">' . _x( 'Edit Cart Page', 'Button label', 'woocommerce-plugin-framework' ) . '</a>';
+				$cta = '<a href="' . esc_url( $url ) . '" id="' . esc_attr( sprintf( '%s-restore-cart-shortcode', $this->plugin->get_id() ) ) . '" class="button button-primary">' . _x( 'Edit the Cart Page', 'Button label', 'woocommerce-plugin-framework' ) . '</a>';
 
 				$admin_notice_handler->add_admin_notice(
 					sprintf(
