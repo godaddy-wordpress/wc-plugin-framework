@@ -159,7 +159,7 @@ abstract class Frontend extends Script_Handler {
 		$is_cart_ajax = wp_doing_ajax() && 'update_shipping_method' === SV_WC_Helper::get_requested_value( 'wc-ajax' );
 		$should_init  = $is_cart_ajax || is_cart();
 
-		return $should_init && ! Blocks_Handler::is_cart_block_in_use();
+		return $should_init && ( ! $this->get_handler()->supports_cart_block() || ! Blocks_Handler::is_cart_block_in_use() );
 	}
 
 
@@ -175,7 +175,7 @@ abstract class Frontend extends Script_Handler {
 
 		$should_init = in_array( 'checkout', $locations, true ) && is_checkout();
 
-		return $should_init && ! Blocks_Handler::is_checkout_block_in_use();
+		return $should_init && ( ! $this->get_handler()->supports_checkout_block() || ! Blocks_Handler::is_checkout_block_in_use() );
 	}
 
 
