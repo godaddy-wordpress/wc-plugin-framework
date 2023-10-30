@@ -64,7 +64,12 @@ abstract class External_Checkout {
 
 		$this->plugin = $plugin;
 
-		$this->supported_features = $args['supported_features'] ?? [];
+		$this->supported_features = $args['supported_features'] ?? [
+			'blocks' => [
+				'cart'     => $plugin->get_blocks_handler()->is_cart_block_compatible(),
+				'checkout' => $plugin->get_blocks_handler()->is_checkout_block_compatible(),
+			],
+		];
 
 		$this->init();
 	}
