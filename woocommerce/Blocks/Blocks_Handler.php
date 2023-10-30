@@ -54,7 +54,6 @@ class Blocks_Handler {
 
 		// blocks-related notices and call-to-actions
 		add_action( 'admin_notices', [ $this, 'add_admin_notices' ] );
-		add_action( 'wp_ajax_' . $this->plugin->get_id() . '_restore_cart_checkout_shortcode', [ $this, 'restore_cart_or_checkout_shortcode' ] );
 
 		// handle WooCommerce Blocks integrations in compatible plugins
 		add_action( 'woocommerce_blocks_loaded', [ $this, 'handle_blocks_integration' ] );
@@ -183,7 +182,8 @@ class Blocks_Handler {
 
 			if ( ! $this->is_checkout_block_compatible() ) {
 
-				$cta = '<button id="' . esc_attr( sprintf( '%s-restore-cart-shortcode', $this->plugin->get_id() ) ) . '" class="button button-primary">' . _x( 'Restore Checkout Page Shortcode', 'Button label', 'woocommerce-plugin-framework' ) . '</button>';
+				$url = get_edit_post_link( wc_get_page_id( 'checkout' ) );
+				$cta = '<a href="' . esc_url( $url ) .'" id="' . esc_attr( sprintf( '%s-restore-cart-shortcode', $this->plugin->get_id() ) ) . '" class="button button-primary">' . _x( 'Restore Checkout Page Shortcode', 'Button label', 'woocommerce-plugin-framework' ) . '</a>';
 
 				$admin_notice_handler->add_admin_notice(
 					sprintf(
@@ -203,8 +203,6 @@ class Blocks_Handler {
 					]
 				);
 
-				$this->enqueue_restore_shortcode_script( 'checkout', _x( 'The entire content of the Checkout page will be replaced with a checkout shortcode. If you have additional content in the Checkout page that you wish to keep, do not continue and edit the Checkout page manually instead.', 'WordPress shortcode', 'woocommerce-plugin-framework' ) );
-
 			} else {
 
 				$admin_notice_handler->dismiss_notice( sprintf( '%s-checkout-block-not-compatible', $this->plugin->get_id_dasherized() ), );
@@ -215,7 +213,8 @@ class Blocks_Handler {
 
 			if ( ! $this->is_cart_block_compatible() ) {
 
-				$cta = '<button id="' . esc_attr( sprintf( '%s-restore-cart-shortcode', $this->plugin->get_id() ) ) . '" class="button button-primary">' . _x( 'Restore Cart Page Shortcode', 'Button label', 'woocommerce-plugin-framework' ) . '</button>';
+				$url = get_edit_post_link( wc_get_page_id( 'cart' ) );
+				$cta = '<a href="' . esc_url( $url ) . '" id="' . esc_attr( sprintf( '%s-restore-cart-shortcode', $this->plugin->get_id() ) ) . '" class="button button-primary">' . _x( 'Edit Cart Page', 'Button label', 'woocommerce-plugin-framework' ) . '</a>';
 
 				$admin_notice_handler->add_admin_notice(
 					sprintf(
@@ -235,122 +234,10 @@ class Blocks_Handler {
 					]
 				);
 
-				$this->enqueue_restore_shortcode_script( 'cart', _x( 'The entire content of the Cart page will be replaced with a cart shortcode. If you have additional content in the Cart page that you wish to keep, do not continue and edit the Cart page manually instead.', 'WordPress shortcode', 'woocommerce-plugin-framework' ) );
-
 			} else {
 
 				$admin_notice_handler->dismiss_notice( sprintf( '%s-cart-block-not-compatible', $this->plugin->get_id_dasherized() ) );
 			}
-		}
-	}
-
-
-	/**
-	 * Enqueues a script used in {@see Blocks_Handler::add_admin_notices()} to restore the Cart or Checkout page shortcodes.
-	 *
-	 * @since 5.12.0
-	 *
-	 * @param string $page either 'cart' or 'checkout
-	 * @param string $confirmation_message
-	 * @return void
-	 */
-	protected function enqueue_restore_shortcode_script( string $page, string $confirmation_message ) : void {
-
-		if ( ! in_array( $page, [ 'cart', 'checkout' ], true ) ) {
-			return;
-		}
-
-		wc_enqueue_js( "
-			jQuery( document ).on( 'click', '#" . esc_js( sprintf( '%s-restore-%s-shortcode', $this->plugin->get_id(), $page ) ) . "', function( e ) {
-				e.preventDefault();
-
-				if ( ! confirm( '" . esc_js( $confirmation_message  ) . "' ) ) {
-					return;
-				}
-
-				jQuery.ajax( {
-					url:  '" . esc_js( admin_url( 'admin-ajax.php' ) ) . "',
-					type: 'POST',
-					data: {
-						action: '" . esc_js( sprintf( '%s_restore_cart_checkout_shortcode', $this->plugin->get_id() ) ) . "',
-						page:   '" . esc_js( $page ) . "',
-						nonce:  '" . esc_js( wp_create_nonce( sprintf( '%s_restore_cart_checkout_shortcode', $this->plugin->get_id() ) ) ) . "',
-					},
-					success: function( response ) {
-
-						if ( ! response || ! response.success ) {
-							console.log( response );
-							alert( '" . esc_js( _x( 'An error occurred while restoring the shortcode. Please try again or edit the page manually.', 'WordPress shortcode', 'woocommerce-plugin-framework' ) ) . "' );
-							return;
-						}
-
-						window.location.reload();
-					}
-				} );
-			} );"
-		);
-	}
-
-
-	/**
-	 * Restores the contents of the Cart or Checkout page, replacing any block with a corresponding shortcode.
-	 *
-	 * This is only used as an AJAX callback for a CTA button in {@see Blocks_Handler::add_admin_notices()}.
-	 *
-	 * @since 5.12.0
-	 *
-	 * @internal
-	 *
-	 * @return void
-	 */
-	public function restore_cart_or_checkout_shortcode() : void {
-
-		if ( ! wp_verify_nonce( $_POST['nonce'] ?: '', sprintf( '%s_restore_cart_checkout_shortcode', $this->plugin->get_id() ) ) ) {
-			wp_send_json_error( 'Invalid nonce' );
-		}
-
-		try {
-
-			$this->restore_page_shortcode( $_POST['page'] ?: '' );
-
-			wp_send_json_success();
-
-		} catch ( Exception $exception ) {
-
-			wp_send_json_error( $exception->getMessage() );
-		}
-	}
-
-
-	/**
-	 * Replaces the contents of the Cart or Checkout page with a corresponding shortcode.
-	 *
-	 * This should only be used when the plugin is not compatible with either block type and the merchant wants to revert it to shortcode-based.
-	 *
-	 * @since 5.12.0
-	 *
-	 * @param string $page either 'cart' or 'checkout'
-	 * @return void
-	 * @throws Exception
-	 */
-	protected function restore_page_shortcode( string $page ) : void {
-
-		if ( ! in_array( $page, [ 'cart', 'checkout' ], true ) || ( 'cart' === $page && ! static::is_cart_block_in_use() ) || ( 'checkout' === $page && ! static::is_checkout_block_in_use() ) ) {
-			throw new Exception( sprintf( 'Invalid page type or page is not using the %s block.', ucfirst( $page ) ) );
-		}
-
-		$page_id = wc_get_page_id( $page );
-
-		if ( ! $page_id ) {
-			throw new Exception( sprintf( '%s page not found.', ucfirst( $page ) ) );
-		}
-
-		$success = wp_update_post( [ 'ID' => $page_id, 'post_content' => sprintf( '[woocommerce_%s]', $page ) ] );
-
-		if ( ! $success ) {
-			throw new Exception( sprintf( 'Failed to update the %s page.', ucfirst( $page ) ) );
-		} elseif ( $success instanceof WP_Error ) {
-			throw new Exception( $success->get_error_message() ?: sprintf( 'Failed to update the %s page.', ucfirst( $page ) ) );
 		}
 	}
 
