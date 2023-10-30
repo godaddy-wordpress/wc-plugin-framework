@@ -58,13 +58,14 @@ class SV_WC_Payment_Gateway_Apple_Pay extends Payment_Gateway\External_Checkout\
 	 * @since 4.7.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the plugin instance
+	 * @param array<string, mixed> $args optional arguments
 	 */
-	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin ) {
+	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, array $args = [] ) {
 
 		$this->id    = 'apple_pay';
 		$this->label = __( 'Apple Pay', 'woocommerce-plugin-framework' );
 
-		parent::__construct( $plugin );
+		parent::__construct( $plugin, $args );
 
 		if ( $this->is_available() ) {
 			add_filter( 'woocommerce_customer_taxable_address', array( $this, 'set_customer_taxable_address' ) );

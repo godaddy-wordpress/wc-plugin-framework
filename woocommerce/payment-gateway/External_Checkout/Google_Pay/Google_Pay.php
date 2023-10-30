@@ -59,13 +59,14 @@ class Google_Pay extends External_Checkout {
 	 * @since 5.10.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the plugin instance
+	 * @param array<string, mixed> $args optional arguments
 	 */
-	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin ) {
+	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, array $args = [] ) {
 
 		$this->id    = 'google_pay';
 		$this->label = __( 'Google Pay', 'woocommerce-plugin-framework' );
 
-		parent::__construct( $plugin );
+		parent::__construct( $plugin, $args );
 
 		if ( $this->is_available() ) {
 			add_filter( 'woocommerce_customer_taxable_address', [ $this, 'set_customer_taxable_address' ] );

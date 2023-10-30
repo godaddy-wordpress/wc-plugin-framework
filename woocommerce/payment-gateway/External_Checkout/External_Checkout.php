@@ -58,10 +58,13 @@ abstract class External_Checkout {
 	 * @since 5.10.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the plugin instance
+	 * @param array<string, mixed> $args optional arguments
 	 */
-	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin ) {
+	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, array $args = [] ) {
 
 		$this->plugin = $plugin;
+
+		$this->supported_features = $args['supported_features'] ?? [];
 
 		$this->init();
 	}
@@ -248,6 +251,32 @@ abstract class External_Checkout {
 
 
 	/**
+	 * Determines whether the external checkout supports the WooCommerce Cart Block.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool
+	 */
+	public function supports_cart_block() : bool {
+
+		return isset( $this->supported_features['blocks']['cart'] ) && 'yes' === $this->supported_features['blocks']['cart'];
+	}
+
+
+	/**
+	 * Determines whether the external checkout supports the WooCommerce Checkout Block.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool
+	 */
+	public function supports_checkout_block() : bool {
+
+		return isset( $this->supported_features['blocks']['checkout'] ) && 'yes' === $this->supported_features['blocks']['checkout'];
+	}
+
+
+	/**
 	 * Gets the gateways that declare support for this external checkout flow.
 	 *
 	 * @since 5.10.0
@@ -325,30 +354,6 @@ abstract class External_Checkout {
 	public function get_label() {
 
 		return $this->label;
-	}
-
-
-	/**
-	 * Determines whether the external checkout supports the WooCommerce Cart Block.
-	 *
-	 * @since 5.12.0
-	 *
-	 * @return bool
-	 */
-	public function supports_cart_block() : bool {
-
-		return isset( $this->supported_features['blocks']['cart'] ) && 'yes' === $this->supported_features['blocks']['cart'];
-	}
-
-
-	/**
-	 * Determines whether the external checkout supports the WooCommerce Checkout Block.
-	 *
-	 * @return bool
-	 */
-	public function supports_checkout_block() : bool {
-
-		return isset( $this->supported_features['blocks']['checkout'] ) && 'yes' === $this->supported_features['blocks']['checkout'];
 	}
 
 
