@@ -61,7 +61,39 @@ trait Block_Integration_Trait {
 	 */
 	protected function get_main_script_handle() : string {
 
-		return sprintf( '%s-%s-block', $this->get_name(), $this->block_name );
+		/**
+		 * Filters the block main script handle.
+		 *
+		 * @since 5.12.0
+		 */
+		return apply_filters( 'wc_' . $this->plugin->get_id() . '_'. $this->block_name . '_block_handle', sprintf(
+			'%s-%s-block',
+			$this->plugin->get_id_dasherized(),
+			$this->block_name
+		) );
+	}
+
+
+	/**
+	 * Gets the main script URL.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return string
+	 */
+	protected function get_main_script_url() : string {
+
+		/**
+		 * Filters the block main script URL.
+		 *
+		 * @since 5.12.0
+		 */
+		return apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_url', sprintf(
+			'%s-%s-%s-block',
+			$this->plugin->get_framework_assets_url() . '/blocks/',
+			$this->plugin->get_id_dasherized(),
+			$this->block_name
+		) );
 	}
 
 
