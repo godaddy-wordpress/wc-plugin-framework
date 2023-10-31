@@ -69,7 +69,7 @@ trait Block_Integration_Trait {
 		 * @param string $handle
 		 * @param Block_Integration $integration
 		 */
-		return apply_filters( 'wc_' . $this->plugin->get_id() . '_'. $this->block_name . '_block_handle', sprintf(
+		return (string) apply_filters( 'wc_' . $this->plugin->get_id() . '_'. $this->block_name . '_block_handle', sprintf(
 			'%s-%s-block',
 			$this->plugin->get_id_dasherized(),
 			$this->block_name
@@ -94,7 +94,7 @@ trait Block_Integration_Trait {
 		 * @param string $url
 		 * @param Block_Integration $integration
 		 */
-		return apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_script_url', sprintf(
+		return (string) apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_script_url', sprintf(
 			'%s-%s-%s-block',
 			$this->plugin->get_plugin_url() . '/assets/js/blocks/',
 			$this->plugin->get_id_dasherized(),
@@ -120,7 +120,7 @@ trait Block_Integration_Trait {
 		 * @param string $url
 		 * @param Block_Integration $integration
 		 */
-		return apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_stylesheet_url', sprintf(
+		return (string) apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_stylesheet_url', sprintf(
 			'%s-%s-%s-block',
 			$this->plugin->get_plugin_url() . '/assets/css/blocks/',
 			$this->plugin->get_id_dasherized(),
@@ -146,7 +146,7 @@ trait Block_Integration_Trait {
 		 * @param string[] $dependencies
 		 * @param Block_Integration $integration
 		 */
-		return apply_filters( 'wc_' . $this->plugin->get_id(), '_' . $this->block_name . '_dependencies', [
+		return (array) apply_filters( 'wc_' . $this->plugin->get_id(), '_' . $this->block_name . '_dependencies', [
 			'wc-blocks-registry',
 			'wc-settings',
 			'wp-element',
@@ -174,7 +174,7 @@ trait Block_Integration_Trait {
 		 * @param string[] $dependencies
 		 * @param Block_Integration $integration
 		 */
-		return apply_filters( 'wc_' . $this->plugin->get_id(), '_' . $this->block_name . '_stylesheet_dependencies', [], $this );
+		return (array) apply_filters( 'wc_' . $this->plugin->get_id(), '_' . $this->block_name . '_stylesheet_dependencies', [], $this );
 	}
 
 
