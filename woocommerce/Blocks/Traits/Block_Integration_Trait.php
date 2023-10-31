@@ -69,9 +69,9 @@ trait Block_Integration_Trait {
 		 * @param string $handle
 		 * @param Block_Integration $integration
 		 */
-		return (string) apply_filters( 'wc_' . $this->plugin->get_id() . '_'. $this->block_name . '_block_handle', sprintf(
+		return (string) apply_filters( 'wc_' . $this->gateway->get_id() . '_'. $this->block_name . '_block_handle', sprintf(
 			'%s-%s-block',
-			$this->plugin->get_id_dasherized(),
+			$this->gateway->get_id_dasherized(),
 			$this->block_name
 		), $this );
 	}
@@ -94,10 +94,10 @@ trait Block_Integration_Trait {
 		 * @param string $url
 		 * @param Block_Integration $integration
 		 */
-		return (string) apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_block_script_url', sprintf(
+		return (string) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_script_url', sprintf(
 			'%s-%s-%s-block',
 			$this->plugin->get_plugin_url() . '/assets/js/blocks/',
-			$this->plugin->get_id_dasherized(),
+			$this->gateway->get_id_dasherized(),
 			$this->block_name
 		), $this );
 	}
@@ -120,10 +120,10 @@ trait Block_Integration_Trait {
 		 * @param string $url
 		 * @param Block_Integration $integration
 		 */
-		return (string) apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_block_stylesheet_url', sprintf(
+		return (string) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_stylesheet_url', sprintf(
 			'%s-%s-%s-block',
 			$this->plugin->get_plugin_url() . '/assets/css/blocks/',
-			$this->plugin->get_id_dasherized(),
+			$this->gateway->get_id_dasherized(),
 			$this->block_name
 		), $this );
 	}
@@ -146,7 +146,7 @@ trait Block_Integration_Trait {
 		 * @param string[] $dependencies
 		 * @param Block_Integration $integration
 		 */
-		return (array) apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_block_script_dependencies', [
+		return (array) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_script_dependencies', [
 			'wc-blocks-registry',
 			'wc-settings',
 			'wp-element',
@@ -174,7 +174,7 @@ trait Block_Integration_Trait {
 		 * @param string[] $dependencies
 		 * @param Block_Integration $integration
 		 */
-		return (array) apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_block_stylesheet_dependencies', [], $this );
+		return (array) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_stylesheet_dependencies', [], $this );
 	}
 
 
