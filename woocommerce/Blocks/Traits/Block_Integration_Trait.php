@@ -65,12 +65,15 @@ trait Block_Integration_Trait {
 		 * Filters the block main script handle.
 		 *
 		 * @since 5.12.0
+		 *
+		 * @param string $handle
+		 * @param Block_Integration $integration
 		 */
 		return apply_filters( 'wc_' . $this->plugin->get_id() . '_'. $this->block_name . '_block_handle', sprintf(
 			'%s-%s-block',
 			$this->plugin->get_id_dasherized(),
 			$this->block_name
-		) );
+		), $this );
 	}
 
 
@@ -87,13 +90,16 @@ trait Block_Integration_Trait {
 		 * Filters the block main script URL.
 		 *
 		 * @since 5.12.0
+		 *
+		 * @param string $url
+		 * @param Block_Integration $integration
 		 */
 		return apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_url', sprintf(
 			'%s-%s-%s-block',
 			$this->plugin->get_framework_assets_url() . '/blocks/',
 			$this->plugin->get_id_dasherized(),
 			$this->block_name
-		) );
+		), $this );
 	}
 
 
