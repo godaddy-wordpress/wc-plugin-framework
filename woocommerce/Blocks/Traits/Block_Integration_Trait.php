@@ -130,6 +130,55 @@ trait Block_Integration_Trait {
 
 
 	/**
+	 * Gets the main script dependencies.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return string[]
+	 */
+	protected function get_main_script_dependencies() : array {
+
+		/**
+		 * Filters the block main script dependencies.
+		 *
+		 * @since 5.12.0
+		 *
+		 * @param string[] $dependencies
+		 * @param Block_Integration $integration
+		 */
+		return apply_filters( 'wc_' . $this->plugin->get_id(), '_' . $this->block_name . '_dependencies', [
+			'wc-blocks-registry',
+			'wc-settings',
+			'wp-element',
+			'wp-components',
+			'wp-html-entities',
+			'wp-i18n',
+		], $this );
+	}
+
+
+	/**
+	 * Gets the main script stylesheet dependencies.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return string[]
+	 */
+	protected function get_main_script_stylesheet_dependencies() : array {
+
+		/**
+		 * Filters the block main script stylesheet dependencies.
+		 *
+		 * @since 5.12.0
+		 *
+		 * @param string[] $dependencies
+		 * @param Block_Integration $integration
+		 */
+		return apply_filters( 'wc_' . $this->plugin->get_id(), '_' . $this->block_name . '_stylesheet_dependencies', [], $this );
+	}
+
+
+	/**
 	 * Gets an array of script handles to enqueue in the frontend context.
 	 *
 	 * @since 5.12.0
