@@ -146,7 +146,7 @@ trait Block_Integration_Trait {
 		 * @param string[] $dependencies
 		 * @param Block_Integration $integration
 		 */
-		return (array) apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_block_dependencies', [
+		return (array) apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_block_script_dependencies', [
 			'wc-blocks-registry',
 			'wc-settings',
 			'wp-element',
