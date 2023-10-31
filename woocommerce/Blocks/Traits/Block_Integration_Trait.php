@@ -94,9 +94,35 @@ trait Block_Integration_Trait {
 		 * @param string $url
 		 * @param Block_Integration $integration
 		 */
-		return apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_url', sprintf(
+		return apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_script_url', sprintf(
 			'%s-%s-%s-block',
-			$this->plugin->get_framework_assets_url() . '/blocks/',
+			$this->plugin->get_plugin_url() . '/assets/js/blocks/',
+			$this->plugin->get_id_dasherized(),
+			$this->block_name
+		), $this );
+	}
+
+
+	/**
+	 * Gets the main script stylesheet URL.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return string
+	 */
+	protected function get_main_script_stylesheet_url() : string {
+
+		/**
+		 * Filters the block main script stylesheet URL.
+		 *
+		 * @since 5.12.0
+		 *
+		 * @param string $url
+		 * @param Block_Integration $integration
+		 */
+		return apply_filters( 'wc_' . $this->plugin->get_id() . '_' . $this->block_name . '_stylesheet_url', sprintf(
+			'%s-%s-%s-block',
+			$this->plugin->get_plugin_url() . '/assets/css/blocks/',
 			$this->plugin->get_id_dasherized(),
 			$this->block_name
 		), $this );
