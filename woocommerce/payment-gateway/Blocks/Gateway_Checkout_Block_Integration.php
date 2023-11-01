@@ -125,10 +125,10 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 *
 	 * @since 5.12.0
 	 *
-	 * @param array<string, mixed> $additional_data optionally pass additional data to be appended to the payment method data, so it's filterable
+	 * @param array<string, mixed>|null $additional_data optionally pass additional data to be appended to the payment method data, so it's filterable
 	 * @return array<string, mixed>
 	 */
-	public function get_payment_method_data( array $additional_data = [] ) : array {
+	public function get_payment_method_data( ?array $additional_data = [] ) : array {
 
 		$payment_method_data = [
 			'id'            => $this->gateway->get_id_dasherized(), // dashes
