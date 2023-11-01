@@ -144,6 +144,18 @@ trait Block_Integration_Trait {
 
 
 	/**
+	 * Adds a main script dependency.
+	 *
+	 * @param string|string[] $dependency one or more dependencies defined by their identifiers
+	 * @return void
+	 */
+	protected function add_main_script_dependency( $dependency ) : void {
+
+		$this->script_dependencies = array_merge( $this->script_dependencies, (array) $dependency );
+	}
+
+
+	/**
 	 * Gets the main script dependencies.
 	 *
 	 * @since 5.12.0
@@ -161,6 +173,18 @@ trait Block_Integration_Trait {
 		 * @param Block_Integration $integration
 		 */
 		return (array) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_script_dependencies', $this->script_dependencies, $this );
+	}
+
+
+	/**
+	 * Adds a main stylesheet dependency.
+	 *
+	 * @param string|string[] $dependency one or more dependencies defined by their identifiers
+	 * @return void
+	 */
+	protected function add_main_script_stylesheet_dependency( $dependency ) : void {
+
+		$this->stylesheet_dependencies = array_merge( $this->stylesheet_dependencies, (array) $dependency );
 	}
 
 
