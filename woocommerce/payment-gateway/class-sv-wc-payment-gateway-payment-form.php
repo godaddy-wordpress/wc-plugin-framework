@@ -309,6 +309,16 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 			break;
 		}
 
+		// overrideable hidden field to post a flag that the payment originated from the legacy checkout form
+		$fields = wp_parse_args( $fields, [
+			'context' => [
+				'type'  => 'hidden',
+				'id'    => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-context',
+				'name'  => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-context',
+				'value' => 'shortcode',
+			],
+		] );
+
 		/**
 		 * Payment Gateway Payment Form Default Payment Fields.
 		 *
