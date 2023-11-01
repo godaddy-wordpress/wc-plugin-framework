@@ -145,6 +145,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				'csc_enabled'            => $this->gateway->csc_enabled(),
 				'csc_enabled_for_tokens' => $this->gateway->csc_enabled_for_tokens(),
 				'tokenization_enabled'   => $this->gateway->supports_tokenization() && $this->gateway->tokenization_enabled(),
+				'logging_enabled'        => $this->gateway->debug_log(),
 			],
 			'sample_echeck' => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url() . '/images/sample-check.png' ),
 			'help_tip'      => WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/help.png' ),
