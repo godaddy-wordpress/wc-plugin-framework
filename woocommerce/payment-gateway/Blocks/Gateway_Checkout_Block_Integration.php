@@ -73,6 +73,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		$this->gateway  = $gateway;
 		$this->settings = $gateway->settings;
 
+		add_filter( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_data", [ $this, 'add_payment_method_data' ], 10, 2 );
+
 		add_action( 'woocommerce_rest_checkout_process_payment_with_context', [ $this, 'prepare_payment_data' ], 10, 2 );
 	}
 
@@ -218,6 +220,24 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		 * @param SV_WC_Payment_Gateway $gateway
 		 */
 		return (array) apply_filters( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_data", array_merge( $payment_method_data, $additional_data ), $this->gateway );
+	}
+
+
+	/**
+	 * Adds payment method data.
+	 *
+	 * Plugins that extend this class may override this method to add additional payment method data.
+	 * @see Gateway_Checkout_Block_Integration::get_payment_method_data()
+	 *
+	 * @since 5.12.0
+	 *
+	 * @param array $payment_method_data
+	 * @param SV_WC_Payment_Gateway $gateway
+	 * @return array
+	 */
+	public function add_payment_method_data( array $payment_method_data, SV_WC_Payment_Gateway $gateway ) : array {
+
+		return $payment_method_data;
 	}
 
 
