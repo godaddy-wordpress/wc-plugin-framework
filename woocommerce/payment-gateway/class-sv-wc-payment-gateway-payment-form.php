@@ -287,12 +287,13 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 
 	/**
-	 * Get the payment form fields
+	 * Gets the payment form fields.
 	 *
 	 * @since 4.0.0
-	 * @return array payment fields in format suitable for woocommerce_form_field()
+	 *
+	 * @return array<string, mixed> payment fields in format suitable for {@see woocommerce_form_field()}
 	 */
-	protected function get_payment_fields() {
+	protected function get_payment_fields() : array {
 
 		switch ( $this->get_gateway()->get_payment_type() ) {
 
@@ -305,7 +306,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 			break;
 
 			default:
-				$fields = array();
+				$fields = [];
 			break;
 		}
 
@@ -320,19 +321,20 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 		] );
 
 		/**
-		 * Payment Gateway Payment Form Default Payment Fields.
+		 * Payment Gateway Payment Form Default Payment Fields filter.
 		 *
-		 * Filters the default field data for a gateway, for credit cards/eCheck
-		 * gateways the get_credit_card_fields()/get_echeck_fields() methods
-		 * will be used. This filter can be used to return payment fields
-		 * for a non-standard payment type (like PayPal Express)
+		 * Filters the default field data for a gateway:
+		 * @see SV_WC_Payment_Gateway_Payment_Form::get_credit_card_fields()
+		 * @see SV_WC_Payment_Gateway_Payment_Form::get_echeck_fields()
+		 *
+		 * This filter can be used to return payment fields for a non-standard payment type (like PayPal Express).
 		 *
 		 * @since 4.0.0
 		 *
-		 * @param array $fields in the format supported by woocommerce_form_fields()
-		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param array<string, mixed> $fields in the format supported by {@see woocommerce_form_field()}
+		 * @param SV_WC_Payment_Gateway_Payment_Form $payment_form payment form instance
 		 */
-		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_default_payment_form_fields', $fields, $this );
+		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_default_payment_form_fields', $fields, $this );
 	}
 
 
