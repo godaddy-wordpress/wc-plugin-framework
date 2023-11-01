@@ -219,7 +219,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		 * @param array<string, mixed> $payment_method_data
 		 * @param SV_WC_Payment_Gateway $gateway
 		 */
-		return (array) apply_filters( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_data", array_merge( $payment_method_data, $additional_data ), $this->gateway );
+		return (array) apply_filters( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_data", array_merge( $payment_method_data, (array) $additional_data ), $this->gateway );
 	}
 
 
