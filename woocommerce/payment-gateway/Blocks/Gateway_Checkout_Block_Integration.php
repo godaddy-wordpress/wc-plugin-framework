@@ -212,7 +212,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		 * @param $params array<string, mixed>
 		 * @param $gateway SV_WC_Payment_Gateway
 		 */
-		return apply_filters( "wc_{$this->gateway->get_id()}_checkout_block_payment_method_data", $payment_method_data, $this->gateway );
+		return apply_filters( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_data", $payment_method_data, $this->gateway );
 	}
 
 
@@ -259,7 +259,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		 * @param array<string, string> $icons list of icon URLs keyed by payment method or card name
 		 * @param SV_WC_Payment_Gateway $gateway
 		 */
-		return apply_filters( "wc_{$this->gateway->get_id()}_checkout_block_payment_method_icons", $icons, $this->gateway );
+		return apply_filters( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_icons", $icons, $this->gateway );
 	}
 
 
@@ -287,7 +287,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		 * @param array<string, mixed> $placeholders
 		 * @param SV_WC_Payment_Gateway $gateway
 		 */
-		return apply_filters( "wc_{$this->gateway->get_id()}_checkout_block_payment_method_placeholders", $placeholders, $this->gateway );
+		return apply_filters( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_placeholders", $placeholders, $this->gateway );
 	}
 
 
