@@ -147,6 +147,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				'tokenization_enabled'   => $this->gateway->supports_tokenization() && $this->gateway->tokenization_enabled(),
 				'logging_enabled'        => $this->gateway->debug_log(),
 			],
+			'date_format'   => wc_date_format(),
+			'time_format'   => wc_time_format(),
 			'sample_echeck' => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url() . '/images/sample-check.png' ),
 			'help_tip'      => WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/help.png' ),
 			'ajax_url'      => WC_HTTPS::force_https_url( admin_url( 'admin-ajax.php' ) ),
@@ -171,8 +173,6 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 					'countries'                => $this->gateway->get_available_countries(),
 					'currencies'               => $this->gateway->get_apple_pay_currencies(),
 					'capabilities'             => $this->gateway->get_apple_pay_capabilities(),
-					'date_format'              => wc_date_format(),
-					'time_format'              => wc_time_format(),
 					'flags'                    => [
 						'is_enabled'          => $apple_pay->is_enabled(),
 						'is_available'        => $apple_pay->is_available() && $apple_pay->supports_checkout_block(),
