@@ -91,7 +91,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 
 	/**
-	 * Determines if the payment method is active in the checkout block context.
+	 * Determines if the payment method is available in the checkout block context.
 	 *
 	 * @since 5.12.0
 	 *
@@ -99,8 +99,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	public function is_active() : bool {
 
-		// @TODO perhaps we should update this to $this->gateway->is_available() so that we don't display a misconfigured gateway?
-		return $this->get_setting( 'enabled' ) === 'yes';
+		return $this->get_setting( 'enabled' ) === 'yes'
+			&& $this->gateway->is_available();
 	}
 
 
@@ -147,7 +147,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				'csc_enabled_for_tokens' => $this->gateway->csc_enabled_for_tokens(),
 				'tokenization_enabled'   => $this->gateway->supports_tokenization() && $this->gateway->tokenization_enabled(),
 			],
-			'sample_echeck' => WC_HTTPS::force_https_url( $this->gateway->get_plugin()->get_payment_gateway_framework_assets_url() . '/images/sample-check.png' ),
+			'sample_echeck' => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url() . '/images/sample-check.png' ),
 			'help_tip'      => WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/help.png' ),
 			'ajax_url'      => WC_HTTPS::force_https_url( admin_url( 'admin-ajax.php' ) ),
 		];
@@ -155,9 +155,10 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		// Apple Pay
 		if ( $this->gateway->supports_apple_pay() ) {
 
-			$apple_pay = $this->plugin->get_apple_pay_instance();
+			$apple_pay          = $this->plugin->get_apple_pay_instance();
+			$processing_gateway = $apple_pay ? $apple_pay->get_processing_gateway() : null;
 
-			if ( $apple_pay && $this->gateway->id === $apple_pay->get_processing_gateway()->id ) {
+			if ( $processing_gateway && $this->gateway->get_id() === $processing_gateway->get_id() ) {
 
 				$payment_method_data['apple_pay'] = [
 					'merchant_id'              => $apple_pay->get_merchant_id(),
@@ -182,9 +183,10 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		// Google Pay
 		if ( $this->gateway->supports_google_pay() ) {
 
-			$google_pay = $this->plugin->get_google_pay_instance();
+			$google_pay         = $this->plugin->get_google_pay_instance();
+			$processing_gateway = $google_pay ? $google_pay->get_processing_gateway() : null;
 
-			if ( $google_pay && $this->gateway->id === $google_pay->get_processing_gateway()->id ) {
+			if ( $processing_gateway && $this->gateway->get_id() === $processing_gateway->get_id() ) {
 
 				$payment_method_data['google_pay'] = [
 					'merchant_id'              => $google_pay->get_merchant_id(),
@@ -352,7 +354,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		/**
 		 * Convert the tokenization flag to the expected key-value pair
 		 *
-		 * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Payment_Tokens_Handler::should_tokenize()
+		 * @see SV_WC_Payment_Gateway_Payment_Tokens_Handler::should_tokenize()
 		 */
 		if ( $should_tokenize = $payment_context->payment_data['wc-' . $this->gateway->get_id() . '-new-payment-method'] ) {
 			$additional_payment_data[ 'wc-' . $this->gateway->get_id_dasherized() . '-tokenize-payment-method' ] = $should_tokenize;
