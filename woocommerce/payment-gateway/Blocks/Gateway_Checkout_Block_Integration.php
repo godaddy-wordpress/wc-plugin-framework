@@ -123,9 +123,10 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 *
 	 * @since 5.12.0
 	 *
+	 * @param array<string, mixed> $additional_data optionally pass additional data to be appended to the payment method data, so it's filterable
 	 * @return array<string, mixed>
 	 */
-	public function get_payment_method_data() : array {
+	public function get_payment_method_data( array $additional_data = [] ) : array {
 
 		$payment_method_data = [
 			'id'            => $this->gateway->get_id_dasherized(), // dashes
@@ -213,10 +214,10 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		 *
 		 * @since 5.12.0
 		 *
-		 * @param $params array<string, mixed>
-		 * @param $gateway SV_WC_Payment_Gateway
+		 * @param array<string, mixed> $payment_method_data
+		 * @param SV_WC_Payment_Gateway $gateway
 		 */
-		return apply_filters( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_data", $payment_method_data, $this->gateway );
+		return (array) apply_filters( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_data", array_merge( $payment_method_data, $additional_data ), $this->gateway );
 	}
 
 
@@ -333,7 +334,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 *
 	 * @see PaymentContext::$payment_data is converted to `$_POST` by WC core when handling legacy payments.
 	 * @see \Automattic\WooCommerce\StoreApi\Legacy::process_legacy_payment()
-	 * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway::is_block_checkout()
+	 * @see SV_WC_Payment_Gateway::is_block_checkout()
 	 *
 	 * @internal
 	 *
