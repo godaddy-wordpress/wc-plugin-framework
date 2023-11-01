@@ -170,6 +170,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 					'countries'                => $this->gateway->get_available_countries(),
 					'currencies'               => $this->gateway->get_apple_pay_currencies(),
 					'capabilities'             => $this->gateway->get_apple_pay_capabilities(),
+					'date_format'              => wc_date_format(),
+					'time_format'              => wc_time_format(),
 					'flags'                    => [
 						'is_enabled'          => $apple_pay->is_enabled(),
 						'is_available'        => $apple_pay->is_available() && $apple_pay->supports_checkout_block(),
