@@ -4280,6 +4280,19 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
+	 * Returns true if currently processing payment from block-based checkout.
+	 *
+	 * @since 5.12.0
+	 * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration::prepare_payment_data()
+	 *
+	 * @return bool
+	 */
+	protected function is_block_checkout(): bool {
+		return !empty( $_POST[ 'sv_wc_is_block_checkout' ] );
+	}
+
+
+	/**
 	 * Returns the API instance for this gateway if it uses direct communication
 	 *
 	 * This is a stub method which must be overridden if this gateway performs
