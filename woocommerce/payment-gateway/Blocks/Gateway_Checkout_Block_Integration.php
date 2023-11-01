@@ -288,7 +288,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		 * @param array<string, mixed> $placeholders
 		 * @param SV_WC_Payment_Gateway $gateway
 		 */
-		return apply_filters( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_placeholders", $placeholders, $this->gateway );
+		return (array) apply_filters( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_placeholders", $placeholders, $this->gateway );
 	}
 
 
@@ -331,6 +331,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 * @see PaymentContext::$payment_data is converted to `$_POST` by WC core when handling legacy payments.
 	 * @see \Automattic\WooCommerce\StoreApi\Legacy::process_legacy_payment()
 	 *
+	 * @internal
+	 *
 	 * @since 5.12.0
 	 *
 	 * @param PaymentContext $payment_context
@@ -342,17 +344,15 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		$additional_payment_data = [];
 
 		/**
-		 * Fetch the provider-based token ID for the core token ID
-		 *
-		 * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Direct::get_order()
+		 * Fetch the provider-based token ID for the core token ID:
+		 * @see SV_WC_Payment_Gateway_Direct::get_order()
 		 */
 		if ( $token = $this->get_payment_token_for_context( $payment_context ) ) {
 			$additional_payment_data[ 'wc-' . $this->gateway->get_id_dasherized() . '-payment-token' ] = $token->get_id();
 		}
 
 		/**
-		 * Convert the tokenization flag to the expected key-value pair
-		 *
+		 * Convert the tokenization flag to the expected key-value pair:
 		 * @see SV_WC_Payment_Gateway_Payment_Tokens_Handler::should_tokenize()
 		 */
 		if ( $should_tokenize = $payment_context->payment_data['wc-' . $this->gateway->get_id() . '-new-payment-method'] ) {
