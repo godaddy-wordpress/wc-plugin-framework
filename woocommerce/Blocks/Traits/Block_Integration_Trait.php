@@ -26,6 +26,20 @@ if ( ! class_exists( '\\SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Tra
 trait Block_Integration_Trait {
 
 
+	/** @var string[] main script dependencies */
+	protected array $script_dependencies = [
+		'wc-blocks-registry',
+		'wc-settings',
+		'wp-element',
+		'wp-components',
+		'wp-html-entities',
+		'wp-i18n',
+	];
+
+	/** @var string[] main stylesheet dependencies */
+	protected array $stylesheet_dependencies = [];
+
+
 	/**
 	 * Gets the integration name.
 	 *
@@ -146,14 +160,7 @@ trait Block_Integration_Trait {
 		 * @param string[] $dependencies
 		 * @param Block_Integration $integration
 		 */
-		return (array) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_script_dependencies', [
-			'wc-blocks-registry',
-			'wc-settings',
-			'wp-element',
-			'wp-components',
-			'wp-html-entities',
-			'wp-i18n',
-		], $this );
+		return (array) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_script_dependencies', $this->script_dependencies, $this );
 	}
 
 
@@ -174,7 +181,7 @@ trait Block_Integration_Trait {
 		 * @param string[] $dependencies
 		 * @param Block_Integration $integration
 		 */
-		return (array) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_stylesheet_dependencies', [], $this );
+		return (array) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_stylesheet_dependencies', $this->stylesheet_dependencies, $this );
 	}
 
 
