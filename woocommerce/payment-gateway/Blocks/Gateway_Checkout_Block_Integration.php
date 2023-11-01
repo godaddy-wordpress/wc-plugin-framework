@@ -99,8 +99,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	public function is_active() : bool {
 
-		return $this->get_setting( 'enabled' ) === 'yes'
-			&& $this->gateway->is_available();
+		return $this->gateway->is_available();
 	}
 
 
