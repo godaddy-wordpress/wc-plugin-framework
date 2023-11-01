@@ -330,6 +330,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 *
 	 * @see PaymentContext::$payment_data is converted to `$_POST` by WC core when handling legacy payments.
 	 * @see \Automattic\WooCommerce\StoreApi\Legacy::process_legacy_payment()
+	 * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway::is_block_checkout()
 	 *
 	 * @internal
 	 *
@@ -341,7 +342,11 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	public function prepare_payment_data( PaymentContext $payment_context, PaymentResult $payment_result ) : PaymentResult {
 
-		$additional_payment_data = [];
+		$additional_payment_data = [
+			// flag to indicate we are processing a block-based checkout, helpful for gateways that need to handle
+			// processing differently for blocks vs. legacy - can be accessed as $_POST['is_block_checkout']
+			'sv_wc_is_block_checkout' => true,
+		];
 
 		/**
 		 * Fetch the provider-based token ID for the core token ID:
@@ -359,19 +364,16 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			$additional_payment_data[ 'wc-' . $this->gateway->get_id_dasherized() . '-tokenize-payment-method' ] = $should_tokenize;
 		}
 
-		if ( ! empty( $additional_payment_data ) ) {
-
-			/**
-			 * Taking advantage of the fact that objects are passed 'by reference' (actually handles) in PHP:
-			 * @link https://dev.to/nicolus/are-php-objects-passed-by-reference--2gp3
-			 */
-			$payment_context->set_payment_data(
-				array_merge(
-					$payment_context->payment_data,
-					$additional_payment_data
-				)
-			);
-		}
+		/**
+		 * Taking advantage of the fact that objects are passed 'by reference' (actually handles) in PHP:
+		 * @link https://dev.to/nicolus/are-php-objects-passed-by-reference--2gp3
+		 */
+		$payment_context->set_payment_data(
+			array_merge(
+				$payment_context->payment_data,
+				$additional_payment_data
+			)
+		);
 
 		// return the original payment result
 		return $payment_result;
