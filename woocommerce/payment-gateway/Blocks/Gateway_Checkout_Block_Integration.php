@@ -136,7 +136,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'title'         => $this->gateway->get_title(), // user-facing display title
 			'description'   => $this->gateway->get_description(), // user-facing description
 			'icons'         => $this->get_gateway_icons(), // icon or card icons displayed next to title
-			'card_types'    => $this->gateway->supports_card_types() ? $this->gateway->get_card_types() : [], // configured card types
+			'card_types'    => $this->get_enabled_card_types(), // configured card types
 			'defaults'      => $this->get_gateway_defaults(), // used to pre-populate payment method fields (typically in test mode)
 			'placeholders'  => $this->get_placeholders(), // used in some payment method fields
 			'supports'      => $this->gateway->supports, // list of supported features
@@ -241,6 +241,23 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 
 	/**
+	 * Gets all the enabled card types for this gateway given it supports card types.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return string[]
+	 */
+	protected function get_enabled_card_types() : array
+	{
+		if ( ! $this->gateway->supports_card_types() ) {
+			return [];
+		}
+
+		return array_map([ SV_WC_Payment_Gateway_Helper::class, 'normalize_card_type' ], $this->gateway->get_card_types() );
+	}
+
+
+	/**
 	 * Gets a list of gateway logos as icon image URLs.
 	 *
 	 * If the gateway has a specific icon, it will return that item only.
@@ -257,9 +274,13 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 		if ( $icon ) {
 			return [ $this->gateway->get_method_title() => $icon ];
-		} elseif ( $this->gateway->is_echeck_gateway() ) {
+		}
+
+		if ( $this->gateway->is_echeck_gateway() ) {
 			return [ __( 'eCheck', 'woocommerce' ) => $this->gateway->get_payment_method_image_url( 'echeck' ) ];
-		} elseif ( $this->gateway->supports_card_types() ) {
+		}
+
+		if ( $this->gateway->supports_card_types() ) {
 
 			foreach ( $this->gateway->get_card_types() as $card_type ) {
 
