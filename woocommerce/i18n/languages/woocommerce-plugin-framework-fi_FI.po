@@ -1370,7 +1370,7 @@ msgstr "Näytä kortin turvakoodin kenttä kassatoiminnon yhteydessä"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1507
 msgid "Saved Card Security Code"
-msgstr "Tallennettu kortin turvakoodi"
+msgstr "Tallennetun kortin turvakoodi"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1508
 msgid "Display the Card Security Code field when paying with a saved card"
