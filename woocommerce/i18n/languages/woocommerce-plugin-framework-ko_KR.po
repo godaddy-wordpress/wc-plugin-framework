@@ -1370,7 +1370,7 @@ msgstr "결제 시 카드 보안 코드(CSC) 입력란 표시"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1507
 msgid "Saved Card Security Code"
-msgstr "저장된 카드 보안 코드"
+msgstr "저장되어 있는 카드 보안 코드"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1508
 msgid "Display the Card Security Code field when paying with a saved card"

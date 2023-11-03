@@ -323,7 +323,7 @@ msgstr "Gratulerer!"
 #: woocommerce/Lifecycle.php:398
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Hot dog!"
-msgstr "Pølse!"
+msgstr "Hot dog!"
 
 #. translators: Placeholders: %1$s - Plugin name, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <a> tag, %5$s - Closing HTML </a> tag
 #: woocommerce/Lifecycle.php:405

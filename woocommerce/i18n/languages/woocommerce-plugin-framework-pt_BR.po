@@ -1685,7 +1685,7 @@ msgstr "Caminho do certificado"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:176
 msgid "The full system path to your certificate file from Apple. For security reasons you should store this outside of your web root."
-msgstr "O caminho completo do sistema para o arquivo do certificado da Apple. Por motivos de segurança, ele deve ser salvo fora da raiz da web."
+msgstr "O caminho completo do sistema para o arquivo do certificado da Apple. Por motivos de segurança, ele deve ser salvo fora do caminho raiz."
 
 #. translators: Placeholders: %s - the server's web root path
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:179
