@@ -223,6 +223,19 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 
 	/**
+	 * Gets the payment data as a JSON string.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return string JSON
+	 */
+	public function get_payment_data_json() : string {
+
+		return wp_json_encode( $this->get_payment_method_data() );
+	}
+
+
+	/**
 	 * Adds payment method data.
 	 *
 	 * Plugins that extend this class may override this method to add additional payment method data.
@@ -253,7 +266,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			return [];
 		}
 
-		return array_map([ SV_WC_Payment_Gateway_Helper::class, 'normalize_card_type' ], $this->gateway->get_card_types() );
+		return array_map( [ SV_WC_Payment_Gateway_Helper::class, 'normalize_card_type' ], $this->gateway->get_card_types() );
 	}
 
 
