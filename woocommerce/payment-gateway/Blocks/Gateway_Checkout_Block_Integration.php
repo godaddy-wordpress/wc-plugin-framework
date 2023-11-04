@@ -229,7 +229,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 *
 	 * @return string JSON
 	 */
-	public function get_payment_data_json() : string {
+	public function get_payment_method_data_json() : string {
 
 		return wp_json_encode( $this->get_payment_method_data() );
 	}
