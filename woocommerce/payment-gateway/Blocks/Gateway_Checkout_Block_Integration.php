@@ -29,6 +29,7 @@ use Automattic\WooCommerce\StoreApi\Payments\PaymentContext;
 use Automattic\WooCommerce\StoreApi\Payments\PaymentResult;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Payment_Form;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Payment_Token;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Plugin;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Traits\Block_Integration_Trait;
@@ -433,11 +434,12 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	public function prepare_payment_data( PaymentContext $payment_context, PaymentResult $payment_result ) : PaymentResult {
 
-		$additional_payment_data = [
-			// flag to indicate we are processing a block-based checkout, helpful for gateways that need to handle
-			// processing differently for blocks vs. legacy - can be accessed as $_POST['is_block_checkout']
-			'sv_wc_is_block_checkout' => true,
-		];
+		/**
+		 * This is a flag to indicate we are processing a block-based checkout, helpful in some gateways that need different handling
+		 * between blocks checkout and legacy shortcode checkout - this will be accessed in $_POST data along with the other field data.
+		 * @see SV_WC_Payment_Gateway_Payment_Form::get_payment_fields()
+		 */
+		$additional_payment_data[ 'wc-' . $this->gateway->get_id_dasherized() . '-context' ] = 'block';
 
 		/**
 		 * Fetch the provider-based token ID for the core token ID:

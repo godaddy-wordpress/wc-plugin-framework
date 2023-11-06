@@ -25,6 +25,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -310,7 +311,11 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 			break;
 		}
 
-		// overrideable hidden field to post a flag that the payment originated from the legacy checkout form
+		/**
+		 * Overrideable hidden field to post a flag that the payment originated from the legacy shortcode checkout form.
+		 * This is helpful in some gateways that need different handling between blocks checkout and legacy shortcode checkout.
+		 * @see Gateway_Checkout_Block_Integration::prepare_payment_data()
+		 */
 		$fields = wp_parse_args( $fields, [
 			'context' => [
 				'type'  => 'hidden',
