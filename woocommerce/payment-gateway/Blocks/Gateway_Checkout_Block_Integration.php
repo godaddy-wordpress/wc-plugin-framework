@@ -383,7 +383,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	protected function get_sample_echeck_images() : array {
 
 		$filenames = [
-			'sprite'         => 'sample-echeck.png',
+			'sprite'         => 'sample-check.png',
 			'default'        => 'sample-echeck-default.png',
 			'account_number' => 'sample-echeck-account-number.png',
 			'routing_number' => 'sample-echeck-routing-number.png',
