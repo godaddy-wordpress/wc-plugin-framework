@@ -151,7 +151,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			],
 			'date_format'   => wc_date_format(),
 			'time_format'   => wc_time_format(),
-			'sample_echeck' => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url() . '/images/sample-check.png' ),
+			'sample_echeck' => $this->get_sample_echeck_images(),
 			'help_tip'      => WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/help.png' ),
 			'ajax_url'      => WC_HTTPS::force_https_url( admin_url( 'admin-ajax.php' ) ),
 		];
@@ -370,6 +370,39 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		}
 
 		return $defaults;
+	}
+
+
+	/**
+	 * Gets the sample echeck image URLs.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return array<string, string>
+	 */
+	protected function get_sample_echeck_images() : array {
+
+		$filenames = [
+			'default'        => 'sample-echeck-default.png',
+			'account_number' => 'sample-echeck-account-number.png',
+			'routing_number' => 'sample-echeck-routing-number.png',
+		];
+
+		$urls = [];
+
+		foreach ( $filenames as $id => $filename ) {
+			$urls[ $id ] = WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url() . '/images/'  . $filename );
+		}
+
+		/**
+		 * Filters the sample echeck image URLs.
+		 *
+		 * @since 5.12.0
+		 *
+		 * @param array<string, string> $urls list of image URLs keyed by image ID
+		 * @param SV_WC_Payment_Gateway $gateway
+		 */
+		return (array) apply_filters( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_echeck_images", $urls, $this->gateway );
 	}
 
 
