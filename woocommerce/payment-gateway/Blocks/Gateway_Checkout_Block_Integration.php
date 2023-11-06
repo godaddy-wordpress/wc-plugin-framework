@@ -403,7 +403,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		 * @param array<string, string> $urls list of image URLs keyed by image ID
 		 * @param SV_WC_Payment_Gateway $gateway
 		 */
-		return (array) apply_filters( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_echeck_images", $urls, $this->gateway );
+		return (array) apply_filters( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_sample_echeck_images", $urls, $this->gateway );
 	}
 
 
