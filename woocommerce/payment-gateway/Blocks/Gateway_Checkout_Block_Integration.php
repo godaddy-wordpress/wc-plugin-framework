@@ -384,9 +384,9 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 		$filenames = [
 			'sprite'         => 'sample-check.png',
-			'default'        => 'sample-echeck-default.png',
-			'account_number' => 'sample-echeck-account-number.png',
-			'routing_number' => 'sample-echeck-routing-number.png',
+			'default'        => 'sample-check-default.png',
+			'account_number' => 'sample-check-account-number.png',
+			'routing_number' => 'sample-check-routing-number.png',
 		];
 
 		$urls = [];
