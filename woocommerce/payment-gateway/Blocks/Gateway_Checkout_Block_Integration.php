@@ -148,8 +148,9 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				'csc_enabled'            => $this->gateway->csc_enabled(),
 				'csc_enabled_for_tokens' => $this->gateway->csc_enabled_for_tokens(),
 				'tokenization_enabled'   => $this->gateway->supports_tokenization() && $this->gateway->tokenization_enabled(),
-				'logging_enabled'        => $this->gateway->debug_log(),
+				'logging_enabled'        => 'off' !== $this->get_debug_mode(),
 			],
+			'debug_mode'    => $this->get_debug_mode(),
 			'date_format'   => wc_date_format(),
 			'time_format'   => wc_time_format(),
 			'sample_check'  => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url(). '/images/sample-check-sprite.png' ),
@@ -371,6 +372,31 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		}
 
 		return $defaults;
+	}
+
+
+	/**
+	 * Gets the debug mode configured for the gateway.
+	 *
+	 * - `off`: no logging
+	 * - `log`: save to log file
+	 * - `checkout`: save to log file and display in checkout
+	 *
+	 * @since 5.12.0-dev.1
+	 *
+	 * @return string one of off, log or checkout
+	 */
+	protected function get_debug_mode() : string {
+
+		if ( $this->gateway->debug_off() ) {
+			return 'off';
+		} elseif ( $this->gateway->debug_log() ) {
+			return 'log';
+		} elseif ( $this->gateway->debug_checkout() ) {
+			return 'checkout';
+		}
+
+		return 'off';
 	}
 
 
