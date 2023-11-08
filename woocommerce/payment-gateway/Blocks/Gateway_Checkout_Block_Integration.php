@@ -131,17 +131,17 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	public function get_payment_method_data() : array {
 
 		$payment_method_data = [
-			'id'            => $this->gateway->get_id_dasherized(), // dashes
-			'name'          => $this->gateway->get_id(), // underscores
-			'type'          => $this->gateway->get_payment_type(),
-			'title'         => $this->gateway->get_title(), // user-facing display title
-			'description'   => $this->gateway->get_description(), // user-facing description
-			'icons'         => $this->get_gateway_icons(), // icon or card icons displayed next to title
-			'card_types'    => $this->get_enabled_card_types(), // configured card types
-			'defaults'      => $this->get_gateway_defaults(), // used to pre-populate payment method fields (typically in test mode)
-			'placeholders'  => $this->get_placeholders(), // used in some payment method fields
-			'supports'      => $this->gateway->supports, // list of supported features
-			'flags'         => [
+			'id'             => $this->gateway->get_id_dasherized(), // dashes
+			'name'           => $this->gateway->get_id(), // underscores
+			'type'           => $this->gateway->get_payment_type(),
+			'title'          => $this->gateway->get_title(), // user-facing display title
+			'description'    => $this->gateway->get_description(), // user-facing description
+			'icons'          => $this->get_gateway_icons(), // icon or card icons displayed next to title
+			'card_types'     => $this->get_enabled_card_types(), // configured card types
+			'defaults'       => $this->get_gateway_defaults(), // used to pre-populate payment method fields (typically in test mode)
+			'placeholders'   => $this->get_placeholders(), // used in some payment method fields
+			'supports'       => $this->gateway->supports, // list of supported features
+			'flags'          => [
 				'is_test_environment'    => $this->gateway->is_test_environment(),
 				'is_credit_card_gateway' => $this->gateway->is_credit_card_gateway(),
 				'is_echeck_gateway'      => $this->gateway->is_echeck_gateway(),
@@ -150,12 +150,13 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				'tokenization_enabled'   => $this->gateway->supports_tokenization() && $this->gateway->tokenization_enabled(),
 				'logging_enabled'        => 'off' !== $this->get_debug_mode(),
 			],
-			'debug_mode'    => $this->get_debug_mode(),
-			'date_format'   => wc_date_format(),
-			'time_format'   => wc_time_format(),
-			'sample_check'  => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url(). '/images/sample-check-sprite.png' ),
-			'help_tip'      => WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/help.png' ),
-			'ajax_url'      => WC_HTTPS::force_https_url( admin_url( 'admin-ajax.php' ) ),
+			'debug_mode'     => $this->get_debug_mode(),
+			'date_format'    => wc_date_format(),
+			'time_format'    => wc_time_format(),
+			'sample_check'   => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url(). '/images/sample-check-sprite.png' ),
+			'help_tip'       => WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/help.png' ),
+			'ajax_url'       => WC_HTTPS::force_https_url( admin_url( 'admin-ajax.php' ) ),
+			'ajax_log_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_log_js_data' ),
 		];
 
 		// Apple Pay
