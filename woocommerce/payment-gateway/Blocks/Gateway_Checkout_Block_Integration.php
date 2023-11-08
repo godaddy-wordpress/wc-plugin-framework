@@ -152,7 +152,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			],
 			'date_format'   => wc_date_format(),
 			'time_format'   => wc_time_format(),
-			'sample_echeck' => WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/sample-check-sprite.png' ),
+			'sample_check'  => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url(). '/images/sample-check-sprite.png' ),
 			'help_tip'      => WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/help.png' ),
 			'ajax_url'      => WC_HTTPS::force_https_url( admin_url( 'admin-ajax.php' ) ),
 		];
