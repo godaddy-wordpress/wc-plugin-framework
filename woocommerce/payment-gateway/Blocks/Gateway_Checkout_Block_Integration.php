@@ -147,16 +147,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'defaults'       => $this->get_gateway_defaults(), // used to pre-populate payment method fields (typically in test mode)
 			'placeholders'   => $this->get_placeholders(), // used in some payment method fields
 			'supports'       => $this->gateway->supports, // list of supported features
-			'flags'          => [
-				'is_test_environment'    => $this->gateway->is_test_environment(),
-				'is_credit_card_gateway' => $this->gateway->is_credit_card_gateway(),
-				'is_echeck_gateway'      => $this->gateway->is_echeck_gateway(),
-				'csc_enabled'            => $this->gateway->csc_enabled(),
-				'csc_enabled_for_tokens' => $this->gateway->csc_enabled_for_tokens(),
-				'tokenization_enabled'   => $this->gateway->supports_tokenization() && $this->gateway->tokenization_enabled(),
-				'logging_enabled'        => 'off' !== $this->get_debug_mode(),
-			],
-			'gateway'        => [], // gateways should override this property with gateway configuration data
+			'flags'          => $this->get_gateway_flags(),
+			'gateway'        => $this->get_gateway_configuration(),
 			'debug_mode'     => $this->get_debug_mode(),
 			'date_format'    => wc_date_format(),
 			'time_format'    => wc_time_format(),
@@ -380,6 +372,45 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		}
 
 		return $defaults;
+	}
+
+
+	/**
+	 * Returns any gateway flags from configuration (boolean values only).
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return array<string, bool>
+	 */
+	protected function get_gateway_flags() : array {
+
+		return [
+			'is_test_environment'    => $this->gateway->is_test_environment(),
+			'is_credit_card_gateway' => $this->gateway->is_credit_card_gateway(),
+			'is_echeck_gateway'      => $this->gateway->is_echeck_gateway(),
+			'csc_enabled'            => $this->gateway->csc_enabled(),
+			'csc_enabled_for_tokens' => $this->gateway->csc_enabled_for_tokens(),
+			'tokenization_enabled'   => $this->gateway->supports_tokenization() && $this->gateway->tokenization_enabled(),
+			'logging_enabled'        => 'off' !== $this->get_debug_mode(),
+		];
+	}
+
+
+	/**
+	 * Gets any gateway configuration values.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function get_gateway_configuration() : array {
+
+		return [
+			'transaction_type'       => $this->gateway->supports_credit_card_authorization() & $this->gateway->supports_credit_card_charge() ? $this->gateway->get_option( 'transaction_type', 'charge' ) : null,
+			'charge_virtual_orders'  => $this->gateway->supports_credit_card_charge_virtual() ? 'yes' === $this->gateway->get_option( 'charge_virtual', 'no' ) : null,
+			'enable_partial_capture' => $this->gateway->supports_credit_card_partial_capture() ? 'yes' === $this->gateway->get_option( 'enable_partial_capture', 'no' ) : null,
+			'enable_paid_capture'    => $this->gateway->supports_credit_card_capture() ? 'yes' === $this->gateway->get_option( 'enable_paid_capture', 'no' ) : null,
+		];
 	}
 
 
