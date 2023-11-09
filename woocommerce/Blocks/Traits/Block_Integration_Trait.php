@@ -109,8 +109,8 @@ trait Block_Integration_Trait {
 		 * @param Block_Integration $integration
 		 */
 		return (string) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_script_url', sprintf(
-			'%s-wc-%s-%s-block.js',
-			$this->plugin->get_plugin_url() . '/assets/js/blocks/',
+			'%s%s-%s-block.js',
+			$this->plugin->get_plugin_url() . '/assets/js/blocks/wc-',
 			$this->gateway->get_id_dasherized(),
 			$this->block_name
 		), $this );
@@ -135,8 +135,8 @@ trait Block_Integration_Trait {
 		 * @param Block_Integration $integration
 		 */
 		return (string) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_stylesheet_url', sprintf(
-			'%s-wc-%s-%s-block.css',
-			$this->plugin->get_plugin_url() . '/assets/css/blocks/',
+			'%s%s-%s-block.css',
+			$this->plugin->get_plugin_url() . '/assets/css/blocks/wc-',
 			$this->gateway->get_id_dasherized(),
 			$this->block_name
 		), $this );
