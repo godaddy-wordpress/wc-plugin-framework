@@ -78,8 +78,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		add_filter( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_data", [ $this, 'add_payment_method_data' ], 10, 2 );
 
 		// AJAX endpoint for logging
-		add_action( 'wp_ajax_wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_checkout_log', [ $this, 'ajax_log' ] );
-		add_action( 'wp_ajax_nopriv_wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_checkout_log', [ $this, 'ajax_log' ] );
+		add_action( 'wp_ajax_wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log', [ $this, 'ajax_log' ] );
+		add_action( 'wp_ajax_nopriv_wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log', [ $this, 'ajax_log' ] );
 
 		// prepares payment data for processing in the backend
 		add_action( 'woocommerce_rest_checkout_process_payment_with_context', [ $this, 'prepare_payment_data' ], 10, 2 );
@@ -163,7 +163,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'sample_check'   => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url(). '/images/sample-check-sprite.png' ),
 			'help_tip'       => WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/help.png' ),
 			'ajax_url'       => WC_HTTPS::force_https_url( admin_url( 'admin-ajax.php' ) ),
-			'ajax_log_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_log' ),
+			'ajax_log_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log' ),
 		];
 
 		// Apple Pay
@@ -518,7 +518,11 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			$this->gateway->log_api_request( $request, $response );
 		} elseif ( is_string( $message ) && is_string( $type ) && ! empty( $message ) ) {
 			$this->gateway->add_debug_message( $message, $type );
+		} else {
+			wp_send_json_error();
 		}
+
+		wp_send_json_success();
 	}
 
 
