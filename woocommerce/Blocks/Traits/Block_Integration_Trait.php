@@ -248,6 +248,19 @@ trait Block_Integration_Trait {
 	}
 
 
+	/**
+	 * Logs a message to the plugin or gateway log via AJAX.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return void
+	 */
+	public function ajax_log() : void {
+
+		// classes implementing this trait should override this method to provide AJAX logging
+	}
+
+
 }
 
 endif;

@@ -74,8 +74,14 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		$this->gateway  = $gateway;
 		$this->settings = $gateway->settings;
 
+		// extends the block payment data for the current gateway
 		add_filter( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_data", [ $this, 'add_payment_method_data' ], 10, 2 );
 
+		// AJAX endpoint for logging
+		add_action( 'wp_ajax_wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_checkout_log', [ $this, 'ajax_log' ] );
+		add_action( 'wp_ajax_nopriv_wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_checkout_log', [ $this, 'ajax_log' ] );
+
+		// prepares payment data for processing in the backend
 		add_action( 'woocommerce_rest_checkout_process_payment_with_context', [ $this, 'prepare_payment_data' ], 10, 2 );
 	}
 
@@ -150,13 +156,14 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				'tokenization_enabled'   => $this->gateway->supports_tokenization() && $this->gateway->tokenization_enabled(),
 				'logging_enabled'        => 'off' !== $this->get_debug_mode(),
 			],
+			'gateway'        => [], // gateways should override this property with gateway configuration data
 			'debug_mode'     => $this->get_debug_mode(),
 			'date_format'    => wc_date_format(),
 			'time_format'    => wc_time_format(),
 			'sample_check'   => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url(). '/images/sample-check-sprite.png' ),
 			'help_tip'       => WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/help.png' ),
 			'ajax_url'       => WC_HTTPS::force_https_url( admin_url( 'admin-ajax.php' ) ),
-			'ajax_log_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_log_js_data' ),
+			'ajax_log_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_log' ),
 		];
 
 		// Apple Pay
@@ -381,7 +388,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 *
 	 * - `off`: no logging
 	 * - `log`: save to log file
-	 * - `checkout`: save to log file and display in checkout
+	 * - `checkout`: save to log file and display in checkout page
 	 *
 	 * @since 5.12.0-dev.1
 	 *
@@ -483,6 +490,35 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		}
 
 		return $this->gateway->get_payment_tokens_handler()->get_token_by_core_id( get_current_user_id(), $core_token_id );
+	}
+
+
+	/**
+	 * Logs a message via AJAX callback.
+	 *
+	 * If logging is disabled this method will have no effect.
+	 * If logging to checkout is enabled, a notice may be produced in the frontend.
+	 *
+	 * @internal
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return void
+	 */
+	public function ajax_log() : void {
+
+		wp_verify_nonce( $_REQUEST['nonce'], 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log' );
+
+		$message  = $_REQUEST['message']  ?? null;
+		$type     = $_REQUEST['type']     ?? 'message';
+		$request  = $_REQUEST['request']  ?? [];
+		$response = $_REQUEST['response'] ?? [];
+
+		if ( $request || $response ) {
+			$this->gateway->log_api_request( $request, $response );
+		} elseif ( is_string( $message ) && is_string( $type ) && ! empty( $message ) ) {
+			$this->gateway->add_debug_message( $message, $type );
+		}
 	}
 
 
