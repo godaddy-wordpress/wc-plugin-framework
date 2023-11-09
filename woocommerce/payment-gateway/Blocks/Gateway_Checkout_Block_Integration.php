@@ -147,9 +147,9 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'defaults'       => $this->get_gateway_defaults(), // used to pre-populate payment method fields (typically in test mode)
 			'placeholders'   => $this->get_placeholders(), // used in some payment method fields
 			'supports'       => $this->gateway->supports, // list of supported features
-			'flags'          => $this->get_gateway_flags(),
-			'gateway'        => $this->get_gateway_configuration(),
-			'debug_mode'     => $this->get_debug_mode(),
+			'flags'          => $this->get_gateway_flags(), // list of gateway configuration flags
+			'gateway'        => $this->get_gateway_configuration(), // other gateway configuration values
+			'debug_mode'     => $this->get_debug_mode(), // the current debug mode (log, checkout, off)
 			'date_format'    => wc_date_format(),
 			'time_format'    => wc_time_format(),
 			'sample_check'   => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url(). '/images/sample-check-sprite.png' ),
