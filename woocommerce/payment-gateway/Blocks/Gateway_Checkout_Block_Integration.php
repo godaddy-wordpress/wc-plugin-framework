@@ -515,7 +515,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		$response = $_REQUEST['response'] ?? [];
 
 		if ( $request || $response ) {
-			$this->gateway->log_api_request( $request, $response );
+			$this->gateway->log_api_request( (array) $request, (array) $response );
 		} elseif ( is_string( $message ) && is_string( $type ) && ! empty( $message ) ) {
 			$this->gateway->add_debug_message( $message, $type );
 		} else {
