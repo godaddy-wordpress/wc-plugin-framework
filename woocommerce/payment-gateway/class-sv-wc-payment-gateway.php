@@ -479,26 +479,45 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Returns an array of JS script params to localize for the payment form JS. Generally used for i18n purposes.
 	 *
+	 * @note This method exists for backwards compatibility with the shortcode-based checkout.
+	 *
 	 * @since 4.3.0
 	 *
 	 * @return array<string, string> associative array of param name to value
 	 */
-	public function get_payment_form_js_localized_script_params() : array {
+	protected function get_payment_form_js_localized_script_params() : array {
+
+		return $this->get_gateway_payment_form_localized_params();
+	}
+
+
+	/**
+	 * Gets a list of messages that could be displayed in the front end payment form or checkout block.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return array<string, string>
+	 */
+	public function get_gateway_payment_form_localized_params() : array {
 
 		/**
-		 * Payment Form JS Localized Script Params filter.
+		 * Filters localized params that may be used at checkout.
 		 *
-		 * Allow actors to modify the JS localized script params for the payment form.
+		 * Typically, these include a list of customer-facing messages that may be displayed at checkout when there's a gateway error.
+		 * These messages shouldn't disclose any sensitive information, or include excessive details about the error, to avoid helping bad actors.
 		 *
-		 * @since 4.3.0
+		 * @since 5.12.0
 		 *
 		 * @param array<string, string> $params
+		 * @param SV_WC_Payment_Gateway $gateway
 		 */
-		return apply_filters( 'sv_wc_payment_gateway_payment_form_js_localized_script_params', [
+		$params = (array) apply_filters( 'sv_wc_payment_gateway_payment_form_localized_script_params',  [
 			'card_number_missing'            => esc_html_x( 'Card number is missing', 'Credit or debit card','woocommerce-plugin-framework' ),
 			'card_number_invalid'            => esc_html_x( 'Card number is invalid', 'Credit or debit card', 'woocommerce-plugin-framework' ),
 			'card_number_digits_invalid'     => esc_html_x( 'Card number is invalid (only digits allowed)', 'Credit or debit card', 'woocommerce-plugin-framework' ),
 			'card_number_length_invalid'     => esc_html_x( 'Card number is invalid (wrong length)', 'Credit or debit card', 'woocommerce-plugin-framework' ),
+			/* translators: {card_type} will be replaced by a corresponding card type name, e.g. American Express */
+			'card_type_invalid'              => esc_html__( '{card_type} card is invalid', 'woocommerce-plugin-framework' ),
 			'cvv_missing'                    => esc_html_x( 'Card security code is missing', 'Credit or debit card', 'woocommerce-plugin-framework' ),
 			'cvv_digits_invalid'             => esc_html_x( 'Card security code is invalid (only digits are allowed)', 'Credit or debit card','woocommerce-plugin-framework' ),
 			'cvv_length_invalid'             => esc_html_x( 'Card security code is invalid (must be 3 or 4 digits)', 'Credit or debit card', 'woocommerce-plugin-framework' ),
@@ -514,7 +533,20 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			'routing_number_missing'         => esc_html_x( 'Routing Number is missing', 'Bank account', 'woocommerce-plugin-framework' ),
 			'routing_number_digits_invalid'  => esc_html_x( 'Routing Number is invalid (only digits are allowed)', 'Bank account', 'woocommerce-plugin-framework' ),
 			'routing_number_length_invalid'  => esc_html_x( 'Routing Number is invalid (must be 9 digits)', 'Bank account', 'woocommerce-plugin-framework' ),
-		] );
+		], $this );
+
+		/**
+		 * Payment Form JS Localized Script Params filter.
+		 *
+		 * Allow actors to modify the JS localized script params for the payment form.
+		 *
+		 * @note This is a legacy filter that is kept here for backwards compatibility.
+		 *
+		 * @since 4.3.0
+		 *
+		 * @param array<string, string> $params
+		 */
+		return (array) apply_filters( 'sv_wc_payment_gateway_payment_form_js_localized_script_params', $params );
 	}
 
 
