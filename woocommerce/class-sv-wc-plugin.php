@@ -24,6 +24,9 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_11;
 
+use Automattic\WooCommerce\Utilities\FeaturesUtil;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_11\Blocks\Blocks_Handler;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_11\\SV_WC_Plugin' ) ) :
@@ -63,9 +66,6 @@ abstract class SV_WC_Plugin {
 	/** @var string template path, without trailing slash */
 	private $template_path;
 
-	/** @var bool whether the plugin supports WooCommerce HPOS */
-	private $supports_hpos;
-
 	/** @var \WC_Logger instance */
 	private $logger;
 
@@ -74,6 +74,9 @@ abstract class SV_WC_Plugin {
 
 	/** @var string the plugin text domain */
 	private $text_domain;
+
+	/** @var array<string, mixed> supported WooCommerce features */
+	protected $supported_features = [];
 
 	/** @var array memoized list of active plugins */
 	private $active_plugins = [];
@@ -89,6 +92,9 @@ abstract class SV_WC_Plugin {
 
 	/** @var REST_API REST API handler instance */
 	protected $rest_api_handler;
+
+	/** @var Blocks_Handler blocks handler instance */
+	protected $blocks_handler;
 
 	/** @var Admin\Setup_Wizard handler instance */
 	protected $setup_wizard_handler;
@@ -106,13 +112,13 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
-	 * @param array $args {
+	 * @param array<string, mixed> $args {
 	 *     optional plugin arguments
 	 *
 	 *     @type int|float $latest_wc_versions the last supported versions of WooCommerce, as a major.minor float relative to the latest available version
 	 *     @type string $text_domain the plugin textdomain, used to set up translations
-	 *     @type bool $supports_hpos whether the plugin supports HPOS (default false)
-	 *     @type array  $dependencies {
+	 *     @type array<string, mixed> $supported_features supported WooCommerce features (HPOS, Blocks, etc.)
+	 *     @type array<string, array<string, mixed>>  $dependencies {
 	 *         PHP extension, function, and settings dependencies
 	 *
 	 *         @type array $php_extensions PHP extension dependencies
@@ -128,13 +134,16 @@ abstract class SV_WC_Plugin {
 		$this->version = $version;
 
 		$args = wp_parse_args( $args, [
-			'text_domain'   => '',
-			'supports_hpos' => false,
-			'dependencies'  => [],
+			'text_domain'        => '',
+			'dependencies'       => [],
+			'supported_features' => [
+				'blocks' => [],
+				'hpos'   => false,
+			],
 		] );
 
-		$this->text_domain   = $args['text_domain'];
-		$this->supports_hpos = $args['supports_hpos'];
+		$this->text_domain        = $args['text_domain'];
+		$this->supported_features = $args['supported_features'];
 
 		// includes that are required to be available at all times
 		$this->includes();
@@ -156,6 +165,9 @@ abstract class SV_WC_Plugin {
 
 		// build the REST API handler instance
 		$this->init_rest_api_handler();
+
+		// build the blocks handler instance
+		$this->init_blocks_handler();
 
 		// build the setup handler instance
 		$this->init_setup_wizard_handler();
@@ -254,6 +266,22 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Builds the blocks handler instance.
+	 *
+	 * @since 5.11.11
+	 *
+	 * @return void
+	 */
+	protected function init_blocks_handler() : void {
+
+		require_once( $this->get_framework_path() . '/Blocks/Blocks_Handler.php' );
+
+		// individual plugins should initialize their block integrations handler by overriding this method
+		$this->blocks_handler = new Blocks_Handler( $this );
+	}
+
+
+	/**
 	 * Builds the Setup Wizard handler instance.
 	 *
 	 * Plugins can override and extend this method to add their own setup wizard.
@@ -282,8 +310,8 @@ abstract class SV_WC_Plugin {
 		// hook for translations separately to ensure they're loaded
 		add_action( 'init', array( $this, 'load_translations' ) );
 
-		// handle HPOS compatibility
-		add_action( 'before_woocommerce_init', [ $this, 'handle_hpos_compatibility' ] );
+		// handle WooCommerce features compatibility (such as HPOS, WC Cart & Checkout Blocks support...)
+		add_action( 'before_woocommerce_init', [ $this, 'handle_features_compatibility' ] );
 
 		// add the admin notices
 		add_action( 'admin_notices', array( $this, 'add_admin_notices' ) );
@@ -613,14 +641,34 @@ abstract class SV_WC_Plugin {
 	 * Declares HPOS compatibility if the plugin is compatible with HPOS.
 	 *
 	 * @internal
+	 * @deprecated since 5.12.0
+	 * @see SV_WC_Plugin::handle_features_compatibility()
 	 *
 	 * @since 5.11.0
 	 */
 	public function handle_hpos_compatibility() {
 
-		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
-			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->get_plugin_file(), $this->is_hpos_compatible() );
+		wc_deprecated_function( 'SV_WC_Plugin::handle_hpos_compatibility', '5.11.11', 'SV_WC_Plugin::handle_features_compatibility' );
+
+		$this->handle_features_compatibility();
+	}
+
+
+	/**
+	 * Declares compatibility with specific WooCommerce features.
+	 *
+	 * @internal
+	 *
+	 * @since 5.11.11
+	 */
+	public function handle_features_compatibility() : void {
+
+		if ( ! class_exists( FeaturesUtil::class ) ) {
+			return;
 		}
+
+		FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->get_plugin_file(), $this->is_hpos_compatible() );
+		FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', $this->get_plugin_file(), $this->get_blocks_handler()->is_cart_block_compatible() && $this->get_blocks_handler()->is_checkout_block_compatible() );
 	}
 
 
@@ -814,15 +862,30 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Gets a list of plugin's supported WooCommerce features.
+	 *
+	 * @since 5.11.11
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function get_supported_features() : array {
+
+		return $this->supported_features ?? [];
+	}
+
+
+	/**
 	 * Determines whether the plugin supports HPOS.
 	 *
 	 * @since 5.11.0
 	 *
 	 * @return bool
 	 */
-	public function is_hpos_compatible() : bool
-	{
-		return $this->supports_hpos && SV_WC_Plugin_Compatibility::is_wc_version_gte('7.6');
+	public function is_hpos_compatible() : bool {
+
+		return isset( $this->supported_features['hpos'] )
+			&& true === $this->supported_features['hpos']
+			&& SV_WC_Plugin_Compatibility::is_wc_version_gte('7.6');
 	}
 
 
@@ -914,6 +977,19 @@ abstract class SV_WC_Plugin {
 	public function get_lifecycle_handler() {
 
 		return $this->lifecycle_handler;
+	}
+
+
+	/**
+	 * Gets the blocks handler instance.
+	 *
+	 * @since 5.11.11
+	 *
+	 * @return Blocks_Handler
+	 */
+	public function get_blocks_handler() : Blocks_Handler {
+
+		return $this->blocks_handler;
 	}
 
 
@@ -1286,7 +1362,7 @@ abstract class SV_WC_Plugin {
 					if ( SV_WC_Helper::str_exists( $plugin, '/' ) ) {
 
 						// normal plugin name (plugin-dir/plugin-filename.php)
-						list( , $filename ) = explode( '/', $plugin );
+						[ , $filename ] = explode( '/', $plugin );
 
 					} else {
 
