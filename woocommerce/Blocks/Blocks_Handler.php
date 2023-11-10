@@ -190,9 +190,9 @@ class Blocks_Handler {
 						/* translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_checkout]` shortcode tag, %6$s - closing HTML </a> tag */
 						__( '%1$s is not yet compatible with the Checkout block. We recommend %2$sfollowing this guide%3$s to revert to the %4$s%5$s shortcode%6$s.', 'woocommerce-plugin-framework' ),
 						'<strong>' . $this->plugin->get_plugin_name() . '</strong>',
-						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes">',
+						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes" target="_blank">',
 						'</a>',
-						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#checkout">',
+						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#checkout" target="_blank">',
 						'<code>[woocommerce_checkout]</code>',
 						'</a>',
 					) . '<br><br>' . $cta,
@@ -221,9 +221,9 @@ class Blocks_Handler {
 						/* translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_cart]` shortcode tag, %6$s - closing HTML </a> tag */
 						__( '%1$s is not yet compatible with the Cart block. We recommend %2$sfollowing this guide%3$s to revert to the %4$s%5$s shortcode%6$s.', 'woocommerce-plugin-framework' ),
 						'<strong>' . $this->plugin->get_plugin_name() . '</strong>',
-						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes">',
+						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes" target="_blank">',
 						'</a>',
-						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#cart">',
+						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#cart" target="_blank">',
 						'<code>[woocommerce_cart]</code>',
 						'</a>',
 					) . '<br><br>' . $cta,
