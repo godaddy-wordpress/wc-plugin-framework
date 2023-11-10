@@ -3,8 +3,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_11\Blocks;
 
 use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_11\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_11\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_11 as Framework;
 
 if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_11\Blocks\Blocks_Handler' ) ) :
 
@@ -20,8 +19,8 @@ if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_11\Blocks\Bloc
 class Blocks_Handler {
 
 
-	/** @var SV_WC_Plugin|SV_WC_Payment_Gateway current plugin instance */
-	protected SV_WC_Plugin $plugin;
+	/** @var Framework\SV_WC_Plugin|Framework\SV_WC_Payment_Gateway current plugin instance */
+	protected Framework\SV_WC_Plugin $plugin;
 
 
 	/**
@@ -31,9 +30,9 @@ class Blocks_Handler {
 	 *
 	 * @since 5.11.11
 	 *
-	 * @param SV_WC_Plugin $plugin
+	 * @param Framework\SV_WC_Plugin $plugin
 	 */
-	public function __construct( SV_WC_Plugin $plugin ) {
+	public function __construct( Framework\SV_WC_Plugin $plugin ) {
 
 		$this->plugin = $plugin;
 
