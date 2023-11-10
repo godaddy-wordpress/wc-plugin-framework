@@ -284,16 +284,19 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	protected function get_gateway_icons() : array {
 
-		$icon  = $this->gateway->icon;
 		$icons = [];
 
-		if ( $icon ) {
-			$icons = [ $this->gateway->get_method_title() => $icon ];
-		} elseif ( $this->gateway->is_echeck_gateway() ) {
-			$icons = [ __( 'eCheck', 'woocommerce' ) => $this->gateway->get_payment_method_image_url( 'echeck' ) ];
-		} elseif ( $this->gateway->supports_card_types() ) {
+		if ( $this->gateway->icon ) {
 
-			foreach ( $this->gateway->get_card_types() as $card_type ) {
+			$icons = [ $this->gateway->get_method_title() => $this->gateway->icon ];
+
+		} elseif ( $this->gateway->is_echeck_gateway() ) {
+
+			$icons = [ __( 'eCheck', 'woocommerce' ) => $this->gateway->get_payment_method_image_url( 'echeck' ) ];
+
+		} elseif ( $cart_types = $this->get_enabled_card_types() ) {
+
+			foreach ( $cart_types as $card_type ) {
 
 				$card_type = SV_WC_Payment_Gateway_Helper::normalize_card_type( $card_type );
 				$card_name = SV_WC_Payment_Gateway_Helper::payment_type_to_name( $card_type );
