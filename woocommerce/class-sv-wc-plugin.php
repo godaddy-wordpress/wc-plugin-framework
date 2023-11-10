@@ -25,7 +25,6 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_11;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_11\Blocks\Blocks_Handler;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -93,8 +92,8 @@ abstract class SV_WC_Plugin {
 	/** @var REST_API REST API handler instance */
 	protected $rest_api_handler;
 
-	/** @var Blocks_Handler blocks handler instance */
-	protected $blocks_handler;
+	/** @var Blocks\Blocks_Handler blocks handler instance */
+	protected Blocks\Blocks_Handler $blocks_handler;
 
 	/** @var Admin\Setup_Wizard handler instance */
 	protected $setup_wizard_handler;
@@ -277,7 +276,7 @@ abstract class SV_WC_Plugin {
 		require_once( $this->get_framework_path() . '/Blocks/Blocks_Handler.php' );
 
 		// individual plugins should initialize their block integrations handler by overriding this method
-		$this->blocks_handler = new Blocks_Handler( $this );
+		$this->blocks_handler = new Blocks\Blocks_Handler( $this );
 	}
 
 
@@ -985,9 +984,9 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.11.11
 	 *
-	 * @return Blocks_Handler
+	 * @return Blocks\Blocks_Handler
 	 */
-	public function get_blocks_handler() : Blocks_Handler {
+	public function get_blocks_handler() : Blocks\Blocks_Handler {
 
 		return $this->blocks_handler;
 	}
