@@ -224,7 +224,7 @@ class Blocks_Handler {
 						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes">',
 						'</a>',
 						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#cart">',
-						'<code>[woocommerce_checkout]</code>',
+						'<code>[woocommerce_cart]</code>',
 						'</a>',
 					) . '<br><br>' . $cta,
 					sprintf( '%s-cart-block-not-compatible', $this->plugin->get_id_dasherized() ),
