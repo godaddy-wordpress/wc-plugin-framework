@@ -2,8 +2,9 @@
 
 2023.nn.nn - version 5.12.0
  * Feature - Add support for WooCommerce Cart and Checkout blocks
- * Tweak - Do not load legacy gateway payment form JS when Cart or Checkout blocks are in use
+ * Tweak - Do not load the legacy gateway payment form assets when the Checkout block is in use
  * Dev - Replace `supports_hpos` with a `supported_features` key in the main plugin file constructor arguments
+ * Dev - `SV_WC_Payment_Gateway::get_payment_form_js_localized_script_params()` has now public access for internal reasons
  * Misc - Warn merchants when a plugin is not compatible with Cart or Checkout blocks to prompt switching to legacy shortcodes
 
 2023.10.13 - version 5.11.10
