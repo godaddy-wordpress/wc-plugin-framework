@@ -516,7 +516,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			'card_number_invalid'             => esc_html_x( 'Card number is invalid', 'Credit or debit card', 'woocommerce-plugin-framework' ),
 			'card_number_digits_invalid'      => esc_html_x( 'Card number is invalid (only digits allowed)', 'Credit or debit card', 'woocommerce-plugin-framework' ),
 			'card_number_length_invalid'      => esc_html_x( 'Card number is invalid (wrong length)', 'Credit or debit card', 'woocommerce-plugin-framework' ),
-			'card_type_invalid'               => esc_html_x( 'Card type is invalid', 'Credit or debit card', 'woocommerce-plugin-framework' ),
+			'card_type_invalid'               => esc_html_x( 'Card is invalid', 'Credit or debit card', 'woocommerce-plugin-framework' ),
 			/* translators: {card_type} will be replaced by a corresponding card type name, e.g. American Express */
 			'card_type_invalid_specific_type' => esc_html__( '{card_type} card is invalid', 'woocommerce-plugin-framework' ),
 			'cvv_missing'                     => esc_html_x( 'Card security code is missing', 'Credit or debit card', 'woocommerce-plugin-framework' ),
