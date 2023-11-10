@@ -3582,17 +3582,20 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Log gateway API requests/responses
 	 *
 	 * @since 2.2.0
-	 * @param array $request request data, see SV_WC_API_Base::broadcast_request() for format
-	 * @param array $response response data
+	 *
+	 * @param array<string, mixed>|string $request request data, {@see SV_WC_API_Base::broadcast_request()} for format
+	 * @param array<string, mixed>|string $response response data, same as above
+	 * @param string $type for available types {@see SV_WC_Plugin::get_api_log_message()}
+	 * @return void
 	 */
-	public function log_api_request( $request, $response ) {
+	public function log_api_request( $request, $response = [], string $type = 'message' ) : void {
 
 		// request
-		$this->add_debug_message( $this->get_plugin()->get_api_log_message( $request ), 'message' );
+		$this->add_debug_message( $this->get_plugin()->get_api_log_message( $request ), $type );
 
 		// response
 		if ( ! empty( $response ) ) {
-			$this->add_debug_message( $this->get_plugin()->get_api_log_message( $response ), 'message' );
+			$this->add_debug_message( $this->get_plugin()->get_api_log_message( $response ), $type );
 		}
 	}
 
