@@ -139,7 +139,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		$payment_method_data = [
 			'id'             => $this->gateway->get_id_dasherized(), // dashes
 			'name'           => $this->gateway->get_id(), // underscores
-			'type'           => $this->gateway->get_payment_type(),
+			'type'           => $this->gateway->get_payment_type(), // typically 'credit-card' or 'echeck', for internal use
 			'title'          => $this->gateway->get_title(), // user-facing display title
 			'description'    => $this->gateway->get_description(), // user-facing description
 			'icons'          => $this->get_gateway_icons(), // icon or card icons displayed next to title
@@ -149,6 +149,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'supports'       => $this->gateway->supports, // list of supported features
 			'flags'          => $this->get_gateway_flags(), // list of gateway configuration flags
 			'gateway'        => $this->get_gateway_configuration(), // other gateway configuration values
+			'apple_pay'      => $this->get_apple_pay_configuration(), // Apple Pay configuration values
+			'google_pay'     => $this->get_google_pay_configuration(), // Google Pay configuration values
 			'debug_mode'     => $this->get_debug_mode(), // the current debug mode (log, checkout, off)
 			'date_format'    => wc_date_format(),
 			'time_format'    => wc_time_format(),
@@ -157,60 +159,6 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'ajax_url'       => WC_HTTPS::force_https_url( admin_url( 'admin-ajax.php' ) ),
 			'ajax_log_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log' ),
 		];
-
-		// Apple Pay
-		if ( $this->gateway->supports_apple_pay() ) {
-
-			$apple_pay          = $this->plugin->get_apple_pay_instance();
-			$processing_gateway = $apple_pay ? $apple_pay->get_processing_gateway() : null;
-
-			if ( $processing_gateway && $this->gateway->get_id() === $processing_gateway->get_id() ) {
-
-				$payment_method_data['apple_pay'] = [
-					'merchant_id'              => $apple_pay->get_merchant_id(),
-					'merchant_name'            => get_bloginfo( 'name' ),
-					'validate_nonce'           => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_validate_merchant' ),
-					'recalculate_totals_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_recalculate_totals' ),
-					'process_nonce'            => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_process_payment' ),
-					'button_style'             => $apple_pay->get_button_style(),
-					'card_types'               => $apple_pay->get_supported_networks(),
-					'countries'                => $this->gateway->get_available_countries(),
-					'currencies'               => $this->gateway->get_apple_pay_currencies(),
-					'capabilities'             => $this->gateway->get_apple_pay_capabilities(),
-					'flags'                    => [
-						'is_enabled'          => $apple_pay->is_enabled(),
-						'is_available'        => $apple_pay->is_available() && $apple_pay->supports_checkout_block(),
-						'is_test_environment' => $apple_pay->is_test_mode(),
-					],
-				];
-			}
-		}
-
-		// Google Pay
-		if ( $this->gateway->supports_google_pay() ) {
-
-			$google_pay         = $this->plugin->get_google_pay_instance();
-			$processing_gateway = $google_pay ? $google_pay->get_processing_gateway() : null;
-
-			if ( $processing_gateway && $this->gateway->get_id() === $processing_gateway->get_id() ) {
-
-				$payment_method_data['google_pay'] = [
-					'merchant_id'              => $google_pay->get_merchant_id(),
-					'merchant_name'            => get_bloginfo( 'name' ),
-					'recalculate_totals_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_google_pay_recalculate_totals' ),
-					'process_nonce'            => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_google_pay_process_payment' ),
-					'button_style'             => $google_pay->get_button_style(),
-					'card_types'               => $google_pay->get_supported_networks(),
-					'countries'                => $google_pay->get_available_countries(),
-					'currencies'               => [ get_woocommerce_currency() ],
-					'flags'                    => [
-						'is_enabled'          => $google_pay->is_enabled(),
-						'is_available'        => $google_pay->is_available() && $google_pay->supports_checkout_block(),
-						'is_test_environment' => $google_pay->is_test_mode(),
-					],
-				];
-			}
-		}
 
 		/**
 		 * Filters gateway-specific payment method data for the Checkout Block.
@@ -262,8 +210,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 *
 	 * @return string[]
 	 */
-	protected function get_enabled_card_types() : array
-	{
+	protected function get_enabled_card_types() : array {
+
 		if ( ! $this->gateway->supports_card_types() ) {
 			return [];
 		}
@@ -357,8 +305,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function get_gateway_defaults() : array
-	{
+	protected function get_gateway_defaults() : array {
+
 		if ( ! $this->gateway->supports_payment_form() ) {
 			return [];
 		}
@@ -410,6 +358,88 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'enable_partial_capture' => $this->gateway->supports_credit_card_partial_capture() ? 'yes' === $this->gateway->get_option( 'enable_partial_capture', 'no' ) : null,
 			'enable_paid_capture'    => $this->gateway->supports_credit_card_capture() ? 'yes' === $this->gateway->get_option( 'enable_paid_capture', 'no' ) : null,
 		];
+	}
+
+
+	/**
+	 * Gets the Apple Pay configuration for the current gateway, if available.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return array<string, mixed>|null returns null if Apple Pay is unsupported by the gateway
+	 */
+	protected function get_apple_pay_configuration() : ?array {
+
+		$apple_pay_configuration = null;
+
+		if ( $this->gateway->supports_apple_pay() ) {
+
+			$apple_pay          = $this->plugin->get_apple_pay_instance();
+			$processing_gateway = $apple_pay ? $apple_pay->get_processing_gateway() : null;
+
+			if ( $processing_gateway && $this->gateway->get_id() === $processing_gateway->get_id() ) {
+
+				$apple_pay_configuration = [
+					'merchant_id'              => $apple_pay->get_merchant_id(),
+					'merchant_name'            => get_bloginfo( 'name' ),
+					'validate_nonce'           => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_validate_merchant' ),
+					'recalculate_totals_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_recalculate_totals' ),
+					'process_nonce'            => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_apple_pay_process_payment' ),
+					'button_style'             => $apple_pay->get_button_style(),
+					'card_types'               => $apple_pay->get_supported_networks(),
+					'countries'                => $this->gateway->get_available_countries(),
+					'currencies'               => $this->gateway->get_apple_pay_currencies(),
+					'capabilities'             => $this->gateway->get_apple_pay_capabilities(),
+					'flags'                    => [
+						'is_enabled'          => $apple_pay->is_enabled(),
+						'is_available'        => $apple_pay->is_available() && $apple_pay->supports_checkout_block(),
+						'is_test_environment' => $apple_pay->is_test_mode(),
+					],
+				];
+			}
+		}
+
+		return $apple_pay_configuration;
+	}
+
+
+	/**
+	 * Gets the Google Pay configuration for the current gateway, if available.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return array<string, mixed>|null returns null if Google Pay is unsupported by the gateway
+	 */
+	protected function get_google_pay_configuration() : ?array {
+
+		$google_pay_configuration = null;
+
+		if ( $this->gateway->supports_google_pay() ) {
+
+			$google_pay         = $this->plugin->get_google_pay_instance();
+			$processing_gateway = $google_pay ? $google_pay->get_processing_gateway() : null;
+
+			if ( $processing_gateway && $this->gateway->get_id() === $processing_gateway->get_id() ) {
+
+				$google_pay_configuration = [
+					'merchant_id'              => $google_pay->get_merchant_id(),
+					'merchant_name'            => get_bloginfo( 'name' ),
+					'recalculate_totals_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_google_pay_recalculate_totals' ),
+					'process_nonce'            => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_google_pay_process_payment' ),
+					'button_style'             => $google_pay->get_button_style(),
+					'card_types'               => $google_pay->get_supported_networks(),
+					'countries'                => $google_pay->get_available_countries(),
+					'currencies'               => [ get_woocommerce_currency() ],
+					'flags'                    => [
+						'is_enabled'          => $google_pay->is_enabled(),
+						'is_available'        => $google_pay->is_available() && $google_pay->supports_checkout_block(),
+						'is_test_environment' => $google_pay->is_test_mode(),
+					],
+				];
+			}
+		}
+
+		return $google_pay_configuration;
 	}
 
 
