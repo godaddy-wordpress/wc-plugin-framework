@@ -6,7 +6,7 @@ use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_11\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_11\SV_WC_Plugin;
 
-if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Blocks_Handler' ) ) :
+if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_11\Blocks\Blocks_Handler' ) ) :
 
 /**
  * WooCommerce Blocks handler.
@@ -79,8 +79,8 @@ class Blocks_Handler {
 	 *
 	 * @return bool false when using the legacy checkout shortcode
 	 */
-	public static function is_checkout_block_in_use() : bool
-	{
+	public static function is_checkout_block_in_use() : bool {
+
 		if ( ! class_exists( CartCheckoutUtils::class ) ) {
 			return false;
 		}
