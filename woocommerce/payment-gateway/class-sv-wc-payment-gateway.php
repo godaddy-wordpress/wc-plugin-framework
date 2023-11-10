@@ -483,7 +483,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @return array<string, string> associative array of param name to value
 	 */
-	protected function get_payment_form_js_localized_script_params() : array {
+	public function get_payment_form_js_localized_script_params() : array {
 
 		/**
 		 * Payment Form JS Localized Script Params filter.

@@ -152,6 +152,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'apple_pay'      => $this->get_apple_pay_configuration(), // Apple Pay configuration values
 			'google_pay'     => $this->get_google_pay_configuration(), // Google Pay configuration values
 			'debug_mode'     => $this->get_debug_mode(), // the current debug mode (log, checkout, off)
+			'i18n'           => $this->gateway->get_payment_form_js_localized_script_params(),
 			'date_format'    => wc_date_format(),
 			'time_format'    => wc_time_format(),
 			'sample_check'   => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url(). '/images/sample-check-sprite.png' ),
