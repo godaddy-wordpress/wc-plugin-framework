@@ -98,7 +98,11 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		add_filter( 'woocommerce_my_subscriptions_payment_method', array( $this, 'maybe_render_payment_method' ), 10, 3 );
 
 		// don't copy over order-specific meta to the WC_Subscription object during renewal processing
-		add_filter( 'wcs_renewal_order_meta', array( $this, 'do_not_copy_order_meta' ) );
+		if ( SV_WC_Plugin_Compatibility::is_wc_subscriptions_version_gte( '2.5' ) ) {
+			add_filter( 'wc_subscriptions_renewal_order_data', [ $this, 'do_not_copy_order_meta' ] );
+		} else {
+			add_filter( 'wcs_renewal_order_meta', [ $this, 'do_not_copy_order_meta' ] );
+		}
 
 		// process the Change Payment "transaction"
 		add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_process_payment', array( $this, 'process_change_payment' ), 10, 3 );
