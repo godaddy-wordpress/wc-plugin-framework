@@ -333,13 +333,14 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	protected function get_gateway_flags() : array {
 
 		return [
-			'is_test_environment'    => $this->gateway->is_test_environment(),
-			'is_credit_card_gateway' => $this->gateway->is_credit_card_gateway(),
-			'is_echeck_gateway'      => $this->gateway->is_echeck_gateway(),
-			'csc_enabled'            => $this->gateway->csc_enabled(),
-			'csc_enabled_for_tokens' => $this->gateway->csc_enabled_for_tokens(),
-			'tokenization_enabled'   => $this->gateway->supports_tokenization() && $this->gateway->tokenization_enabled(),
-			'logging_enabled'        => 'off' !== $this->get_debug_mode(),
+			'is_test_environment'               => $this->gateway->is_test_environment(),
+			'is_credit_card_gateway'            => $this->gateway->is_credit_card_gateway(),
+			'is_echeck_gateway'                 => $this->gateway->is_echeck_gateway(),
+			'csc_enabled'                       => $this->gateway->csc_enabled(),
+			'csc_enabled_for_tokens'            => $this->gateway->csc_enabled_for_tokens(),
+			'tokenization_enabled'              => $this->gateway->supports_tokenization() && $this->gateway->tokenization_enabled(),
+			'detailed_decline_messages_enabled' => $this->gateway->is_detailed_customer_decline_messages_enabled(),
+			'logging_enabled'                   => 'off' !== $this->get_debug_mode(),
 		];
 	}
 
