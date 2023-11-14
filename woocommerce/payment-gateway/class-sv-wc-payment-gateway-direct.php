@@ -430,9 +430,18 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			} else {
 
+				// @TODO perhaps we need to move the following code into a helper or a higher level method for other gateway types to grab any notice added by wc_add_notice()
+				$messages = [];
+
+				if ( function_exists( 'wc_get_notices' ) && ( $notices = wc_get_notices( 'error' ) ) ) {
+					foreach ( $notices as $notice ) {
+						$messages[] = $notice['notice'] ?? $notice;
+					}
+				}
+
 				return [
 					'result'  => 'failure',
-					'message' => 'The transaction failed.',
+					'message' => ! empty( $messages ) ? implode( '. ', $messages ) : __( 'The transaction failed.', 'woocommerce-plugin-framework' ),
 				];
 			}
 
