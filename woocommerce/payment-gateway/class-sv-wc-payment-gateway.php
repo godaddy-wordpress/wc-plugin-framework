@@ -727,11 +727,6 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			return;
 		}
 
-		// do not load the shortcode-based payment form when the checkout block is in use
-		if ( is_checkout() && ! is_checkout_pay_page() && Blocks_Handler::is_checkout_block_in_use() ) {
-			return;
-		}
-
 		$this->payment_form = $this->init_payment_form_instance();
 	}
 
