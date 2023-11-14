@@ -430,8 +430,8 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 					'redirect' => $this->get_return_url( $order ),
 				];
 
-				if ( $this->debug_checkout() && ( $messages = $this->get_notices_as_user_messages( ) ) ) {
-					$result['message'] = implode( '. ', $messages );
+				if ( $this->debug_checkout() && ( $messages = $this->get_notices_as_user_messages() ) ) {
+					$result['message'] = ! empty( $messages ) ? implode( ".\n\n", $messages ) : '';
 				}
 
 				return $result;
@@ -442,7 +442,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				return [
 					'result'  => 'failure',
-					'message' => ! empty( $messages ) ? implode( '. ', $messages ) : __( 'The transaction failed.', 'woocommerce-plugin-framework' ),
+					'message' => ! empty( $messages ) ? implode( ".\n\n", $messages ) : __( 'The transaction failed.', 'woocommerce-plugin-framework' ),
 				];
 			}
 
@@ -476,7 +476,9 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		if ( function_exists( 'wc_get_notices' ) && ( $notices = wc_get_notices( $type ) ) ) {
 			foreach ( $notices as $notice ) {
-				$messages[] = $notice['notice'] ?? $notice;
+				$message = $notice['notice'] ?? $notice;
+
+				$messages[] = is_array( $message ) ? print_r( $message, true ) : $message;
 			}
 		}
 
