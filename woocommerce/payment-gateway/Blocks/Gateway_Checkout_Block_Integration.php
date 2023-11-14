@@ -143,7 +143,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'title'                => $this->gateway->get_title(),// user-facing display title
 			'description'          => $this->gateway->get_description(),// user-facing description
 			'icons'                => $this->get_gateway_icons(),// icon or card icons displayed next to title
-			'supported_card_types' => $this->gateway->get_available_card_types(), // card types that the gateway supports, regardless if enabled in settings or not
+			'supported_card_types' => $this->get_supported_card_types(), // card types that the gateway supports, regardless if enabled in settings or not
 			'enabled_card_types'   => $this->get_enabled_card_types(), // card types that are enabled in settings
 			'defaults'             => $this->get_gateway_defaults(),// used to pre-populate payment method fields (typically in test mode)
 			'placeholders'         => $this->get_placeholders(),// used in some payment method fields
@@ -206,7 +206,28 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 
 	/**
-	 * Gets all the enabled card types for this gateway given it supports card types.
+	 * Gets all the supported card types for this gateway.
+	 *
+	 * Some gateways don't support all card types.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return string[]
+	 */
+	protected function get_supported_card_types() : array {
+
+		if ( ! $this->gateway->supports_card_types() ) {
+			return [];
+		}
+
+		return array_map( [ SV_WC_Payment_Gateway_Helper::class, 'normalize_card_type' ], $this->gateway->get_available_card_types() );
+	}
+
+
+	/**
+	 * Gets all the enabled card types for this gateway.
+	 *
+	 * A gateway could support more card types, but the merchant may have disabled some.
 	 *
 	 * @since 5.12.0
 	 *
