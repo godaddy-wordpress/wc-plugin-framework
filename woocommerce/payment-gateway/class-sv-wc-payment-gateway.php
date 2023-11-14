@@ -555,8 +555,6 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Enqueue the gateway-specific assets if present, including JS, CSS, and localized script params.
 	 *
-	 * @internal
-	 *
 	 * @since 4.3.0
 	 *
 	 * @return void
