@@ -431,7 +431,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				];
 
 				if ( $this->debug_checkout() && ( $messages = $this->get_notices_as_user_messages() ) ) {
-					$result['message'] = ! empty( $messages ) ? implode( ".\n\n", $messages ) : '';
+					$result['message'] = ! empty( $messages ) ? implode( '. ', $messages ) : '';
 				}
 
 				return $result;
@@ -442,7 +442,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				return [
 					'result'  => 'failure',
-					'message' => ! empty( $messages ) ? implode( ".\n\n", $messages ) : __( 'The transaction failed.', 'woocommerce-plugin-framework' ),
+					'message' => ! empty( $messages ) ? implode( '. ', $messages ) : __( 'The transaction failed.', 'woocommerce-plugin-framework' ),
 				];
 			}
 
@@ -478,6 +478,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			foreach ( $notices as $notice ) {
 				$message = $notice['notice'] ?? $notice;
 
+				// this will handle some log data eventually
 				$messages[] = is_array( $message ) ? print_r( $message, true ) : $message;
 			}
 		}
