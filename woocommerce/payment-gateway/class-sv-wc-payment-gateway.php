@@ -2992,14 +2992,14 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @param \WC_Order $order the order
 	 * @param string $error_message a message to display inside the "Payment Failed" order note
-	 * @param SV_WC_Payment_Gateway_API_Response optional $response the transaction response object
+	 * @param SV_WC_Payment_Gateway_API_Response|null $response optional transaction response object
 	 */
 	public function mark_order_as_failed( $order, $error_message, $response = null ) {
 
 		/* translators: Placeholders: %1$s - payment gateway title, %2$s - error message; e.g. Order Note: [Payment method] Payment failed [error] */
 		$order_note = sprintf( esc_html__( '%1$s Payment Failed (%2$s)', 'woocommerce-plugin-framework' ), $this->get_method_title(), $error_message );
 
-		// Mark order as failed if not already set, otherwise, make sure we add the order note so we can detect when someone fails to check out multiple times
+		// mark order as failed if not already set, otherwise, make sure we add the order note, so we can detect when someone fails to check out multiple times
 		if ( ! $order->has_status( 'failed' ) ) {
 			$order->update_status( 'failed', $order_note );
 		} else {
@@ -3008,14 +3008,16 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		$this->add_debug_message( $error_message, 'error' );
 
-		// user message
 		$user_message = '';
+
 		if ( $response && $this->is_detailed_customer_decline_messages_enabled() ) {
 			$user_message = $response->get_user_message();
 		}
+
 		if ( ! $user_message ) {
 			$user_message = esc_html__( 'An error occurred, please try again or try an alternate form of payment.', 'woocommerce-plugin-framework' );
 		}
+
 		SV_WC_Helper::wc_add_notice( $user_message, 'error' );
 	}
 
@@ -3027,7 +3029,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @param \WC_Order $order the order
 	 * @param string $message a message to display inside the "Payment Cancelled" order note
-	 * @param SV_WC_Payment_Gateway_API_Response optional $response the transaction response object
+	 * @param SV_WC_Payment_Gateway_API_Response|null $response optional transaction response object
 	 */
 	public function mark_order_as_cancelled( $order, $message, $response = null ) {
 
