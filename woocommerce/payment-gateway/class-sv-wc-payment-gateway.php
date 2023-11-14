@@ -3536,7 +3536,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Returns available card types, ie 'VISA' => 'Visa', 'MC' => 'MasterCard', etc
 	 *
 	 * @since 1.0.0
-	 * @return array associative array of card type to display name
+	 * @return array<string, string> associative array of card type to display name
 	 */
 	public function get_available_card_types() {
 
@@ -3562,7 +3562,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 * Allow actors to modify the available card types.
 		 *
 		 * @since 1.0.0
-		 * @param array $available_card_types
+		 * @param array<string, string> $available_card_types
 		 */
 		return apply_filters( 'wc_' . $this->get_id() . '_available_card_types', $this->available_card_types );
 	}

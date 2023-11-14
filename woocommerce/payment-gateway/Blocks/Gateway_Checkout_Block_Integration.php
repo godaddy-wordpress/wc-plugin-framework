@@ -137,28 +137,29 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	public function get_payment_method_data() : array {
 
 		$payment_method_data = [
-			'id'             => $this->gateway->get_id_dasherized(),// dashes
-			'name'           => $this->gateway->get_id(),// underscores
-			'type'           => $this->gateway->get_payment_type(),// typically 'credit-card' or 'echeck', for internal use
-			'title'          => $this->gateway->get_title(),// user-facing display title
-			'description'    => $this->gateway->get_description(),// user-facing description
-			'icons'          => $this->get_gateway_icons(),// icon or card icons displayed next to title
-			'card_types'     => $this->get_enabled_card_types(),// configured card types
-			'defaults'       => $this->get_gateway_defaults(),// used to pre-populate payment method fields (typically in test mode)
-			'placeholders'   => $this->get_placeholders(),// used in some payment method fields
-			'supports'       => $this->gateway->supports,// list of supported features
-			'flags'          => $this->get_gateway_flags(),// list of gateway configuration flags
-			'gateway'        => $this->get_gateway_configuration(),// other gateway configuration values
-			'apple_pay'      => $this->get_apple_pay_configuration(),// Apple Pay configuration values
-			'google_pay'     => $this->get_google_pay_configuration(),// Google Pay configuration values
-			'debug_mode'     => $this->get_debug_mode(),// the current debug mode (log, checkout, off)
-			'i18n'           => $this->gateway->get_gateway_payment_form_localized_params(),
-			'date_format'    => wc_date_format(),
-			'time_format'    => wc_time_format(),
-			'sample_check'   => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url(). '/images/sample-check-sprite.png' ),
-			'help_tip'       => WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/help.png' ),
-			'ajax_url'       => WC_HTTPS::force_https_url( admin_url( 'admin-ajax.php' ) ),
-			'ajax_log_nonce' => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log' ),
+			'id'                   => $this->gateway->get_id_dasherized(),// dashes
+			'name'                 => $this->gateway->get_id(),// underscores
+			'type'                 => $this->gateway->get_payment_type(),// typically 'credit-card' or 'echeck', for internal use
+			'title'                => $this->gateway->get_title(),// user-facing display title
+			'description'          => $this->gateway->get_description(),// user-facing description
+			'icons'                => $this->get_gateway_icons(),// icon or card icons displayed next to title
+			'supported_card_types' => $this->gateway->get_available_card_types(), // card types that the gateway supports, regardless if enabled in settings or not
+			'enabled_card_types'   => $this->get_enabled_card_types(), // card types that are enabled in settings
+			'defaults'             => $this->get_gateway_defaults(),// used to pre-populate payment method fields (typically in test mode)
+			'placeholders'         => $this->get_placeholders(),// used in some payment method fields
+			'supports'             => $this->gateway->supports,// list of supported features
+			'flags'                => $this->get_gateway_flags(),// list of gateway configuration flags
+			'gateway'              => $this->get_gateway_configuration(),// other gateway configuration values
+			'apple_pay'            => $this->get_apple_pay_configuration(),// Apple Pay configuration values
+			'google_pay'           => $this->get_google_pay_configuration(),// Google Pay configuration values
+			'debug_mode'           => $this->get_debug_mode(),// the current debug mode (log, checkout, off)
+			'i18n'                 => $this->gateway->get_gateway_payment_form_localized_params(),
+			'date_format'          => wc_date_format(),
+			'time_format'          => wc_time_format(),
+			'sample_check'         => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url(). '/images/sample-check-sprite.png' ),
+			'help_tip'             => WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/help.png' ),
+			'ajax_url'             => WC_HTTPS::force_https_url( admin_url( 'admin-ajax.php' ) ),
+			'ajax_log_nonce'       => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log' ),
 		];
 
 		/**
