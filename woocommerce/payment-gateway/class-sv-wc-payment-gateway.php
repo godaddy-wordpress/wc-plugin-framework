@@ -25,6 +25,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Blocks_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 
 defined( 'ABSPATH' ) or exit;
@@ -552,14 +553,21 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Enqueue the gateway-specific assets if present, including JS, CSS, and
-	 * localized script params
+	 * Enqueue the gateway-specific assets if present, including JS, CSS, and localized script params.
+	 *
+	 * @internal
 	 *
 	 * @since 4.3.0
+	 *
+	 * @return void
 	 */
 	protected function enqueue_gateway_assets() {
 
-		$handle = $this->get_gateway_js_handle();
+		if ( ! $this->should_enqueue_gateway_assets() ) {
+			return;
+		}
+
+		$handle    = $this->get_gateway_js_handle();
 		$js_path   = $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/' . $handle . '.min.js';
 		$css_path  = $this->get_plugin()->get_plugin_path() . '/assets/css/frontend/' . $handle . '.min.css';
 
@@ -620,6 +628,29 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 			$this->localize_script( $handle, $params );
 		}
+	}
+
+
+	/**
+	 * Determines whether the front end gateway assets should load.
+	 *
+	 * By default, we don't load the legacy frontend when the checkout block is in use.
+	 *
+	 * @since 5.12.0-dev.1
+	 *
+	 * @return bool
+	 */
+	protected function should_enqueue_gateway_assets() : bool {
+
+		if ( ! Blocks_Handler::is_checkout_block_in_use() ) {
+			return true;
+		}
+
+		if ( is_add_payment_method_page() || is_checkout_pay_page() ) {
+			return true;
+		}
+
+		return false;
 	}
 
 
@@ -4319,12 +4350,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Returns true if currently processing payment from block-based checkout.
 	 *
 	 * @since 5.12.0
-	 * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration::prepare_payment_data()
+	 * @see Gateway_Checkout_Block_Integration::prepare_payment_data()
 	 *
 	 * @return bool
 	 */
 	protected function is_block_checkout(): bool {
-		return !empty( $_POST[ 'sv_wc_is_block_checkout' ] );
+
+		return ! empty( $_POST[ 'sv_wc_is_block_checkout' ] ) && Blocks_Handler::is_checkout_block_in_use();
 	}
 
 
