@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Blocks_Handler;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_10\\SV_WC_Payment_Gateway_Direct' ) ) :
@@ -479,7 +481,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$message = $notice['notice'] ?? $notice;
 
 				// this will handle some log data eventually
-				$messages[] = is_array( $message ) ? print_r( $message, true ) : $message;
+				$messages[] = htmlspecialchars( is_array( $message ) ? print_r( $message, true ) : $message );
 			}
 		}
 
