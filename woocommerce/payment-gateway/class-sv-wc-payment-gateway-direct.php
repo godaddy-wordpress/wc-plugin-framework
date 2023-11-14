@@ -106,7 +106,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// handle single expiry field formatted like "MM / YY" or "MM / YYYY"
 		if ( ! $expiration_month & ! $expiration_year && $expiry ) {
-			list( $expiration_month, $expiration_year ) = array_map( 'trim', explode( '/', $expiry ) );
+			[ $expiration_month, $expiration_year ] = array_map( 'trim', explode( '/', $expiry ) );
 		}
 
 		$is_valid = $this->validate_credit_card_account_number( $account_number ) && $is_valid;
@@ -341,7 +341,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function process_payment( $order_id ) {
 
-		$default = parent::process_payment( $order_id );
+		parent::process_payment( $order_id );
 
 		/**
 		 * Direct Gateway Process Payment Filter.
@@ -351,6 +351,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 * directly to the checkout processing code and skip this method entirely.
 		 *
 		 * @since 1.0.0
+		 *
 		 * @param bool $result default true
 		 * @param int|string $order_id order ID for the payment
 		 * @param SV_WC_Payment_Gateway_Direct $this instance
@@ -418,26 +419,26 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				 * Fired when a payment is processed for an order.
 				 *
 				 * @since 4.1.0
+				 *
 				 * @param \WC_Order $order order object
 				 * @param SV_WC_Payment_Gateway_Direct $this instance
 				 */
 				do_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_processed', $order, $this );
 
-				return [
+				$result = [
 					'result'   => 'success',
 					'redirect' => $this->get_return_url( $order ),
 				];
 
+				if ( $this->debug_checkout() && ( $messages = $this->get_notices_as_user_messages( ) ) ) {
+					$result['message'] = implode( '. ', $messages );
+				}
+
+				return $result;
+
 			} else {
 
-				// @TODO perhaps we need to move the following code into a helper or a higher level method for other gateway types to grab any notice added by wc_add_notice()
-				$messages = [];
-
-				if ( function_exists( 'wc_get_notices' ) && ( $notices = wc_get_notices( 'error' ) ) ) {
-					foreach ( $notices as $notice ) {
-						$messages[] = $notice['notice'] ?? $notice;
-					}
-				}
+				$messages = $this->get_notices_as_user_messages();
 
 				return [
 					'result'  => 'failure',
@@ -445,17 +446,41 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				];
 			}
 
-		} catch ( SV_WC_Plugin_Exception $e ) {
+		} catch ( SV_WC_Plugin_Exception $exception ) {
 
-			$this->mark_order_as_failed( $order, $e->getMessage() );
+			$this->mark_order_as_failed( $order, $exception->getMessage() );
 
 			return [
 				'result'  => 'failure',
-				'message' => $e->getMessage(),
+				'message' => $exception->getMessage(),
 			];
 		}
+	}
 
-		return $default;
+
+	/**
+	 * Gets any added front end notices as user messages.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @param string|null $type
+	 * @return string[]
+	 */
+	protected function get_notices_as_user_messages( ?string $type = null ) : array  {
+
+		if ( null == $type ) {
+			$type = $this->debug_checkout() ? '' : 'error';
+		}
+
+		$messages = [];
+
+		if ( function_exists( 'wc_get_notices' ) && ( $notices = wc_get_notices( $type ) ) ) {
+			foreach ( $notices as $notice ) {
+				$messages[] = $notice['notice'] ?? $notice;
+			}
+		}
+
+		return $messages;
 	}
 
 
@@ -589,7 +614,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				// handle single expiry field formatted like "MM / YY" or "MM / YYYY"
 				if ( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) {
-					list( $order->payment->exp_month, $order->payment->exp_year ) = array_map( 'trim', explode( '/', SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) );
+					[ $order->payment->exp_month, $order->payment->exp_year ] = array_map( 'trim', explode( '/', SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) );
 				}
 
 				// add CSC if enabled
