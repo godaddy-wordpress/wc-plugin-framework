@@ -460,10 +460,10 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 		if ( $this->gateway->debug_off() ) {
 			return 'off';
-		} elseif ( $this->gateway->debug_log() ) {
-			return 'log';
 		} elseif ( $this->gateway->debug_checkout() ) {
 			return 'checkout';
+		} elseif ( $this->gateway->debug_log() ) {
+			return 'log';
 		}
 
 		return 'off';
