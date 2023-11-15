@@ -74,8 +74,8 @@ abstract class SV_WC_Plugin {
 	/** @var string the plugin text domain */
 	private $text_domain;
 
-	/** @var array<string, mixed> plugin compatibility flags */
-	private $compatibility;
+	/** @var array{ hpos?: bool, blocks?: array{ cart?: bool, checkout?: bool }} plugin compatibility flags */
+	private $supported_features;
 
 	/** @var array memoized list of active plugins */
 	private $active_plugins = [];
@@ -114,7 +114,7 @@ abstract class SV_WC_Plugin {
 	 * @param array{
 	 *     latest_wc_versions?: int|float,
 	 *     text_domain?: string,
-	 *     compatibility?: array{
+	 *     supported_features?: array{
 	 *          hpos?: bool,
 	 *          blocks?: array{
 	 *               cart?: bool,
@@ -135,9 +135,9 @@ abstract class SV_WC_Plugin {
 		$this->version = $version;
 
 		$args = wp_parse_args( $args, [
-			'text_domain'   => '',
-			'dependencies'  => [],
-			'compatibility' => [
+			'text_domain'        => '',
+			'dependencies'       => [],
+			'supported_features' => [
 				'hpos'   => false,
 				'blocks' => [
 					'cart'     => false,
@@ -146,8 +146,8 @@ abstract class SV_WC_Plugin {
 			],
 		] );
 
-		$this->text_domain   = $args['text_domain'];
-		$this->compatibility = $args['compatibility'];
+		$this->text_domain        = $args['text_domain'];
+		$this->supported_features = $args['supported_features'];
 
 		// includes that are required to be available at all times
 		$this->includes();
@@ -870,11 +870,11 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.11.11
 	 *
-	 * @return array<string, mixed>
+	 * @return array{ hpos?: bool, blocks?: array{ cart?: bool, checkout?: bool }}
 	 */
-	public function get_compatibility() : array {
+	public function get_supported_features() : array {
 
-		return $this->compatibility ?? [];
+		return $this->supported_features ?? [];
 	}
 
 
@@ -887,8 +887,8 @@ abstract class SV_WC_Plugin {
 	 */
 	public function is_hpos_compatible() : bool {
 
-		return isset( $this->compatibility['hpos'] )
-			&& true === $this->compatibility['hpos']
+		return isset($this->supported_features['hpos'] )
+			&& true === $this->supported_features['hpos']
 			&& SV_WC_Plugin_Compatibility::is_wc_version_gte( '7.6' );
 	}
 

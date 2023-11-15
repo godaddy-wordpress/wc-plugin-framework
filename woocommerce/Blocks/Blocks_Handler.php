@@ -50,7 +50,7 @@ class Blocks_Handler {
 	 */
 	public function is_cart_block_compatible() : bool {
 
-		$supports = $this->plugin->get_compatibility();
+		$supports = $this->plugin->get_supported_features();
 
 		return isset( $supports['blocks']['cart'] ) && true === $supports['blocks']['cart'];
 	}
@@ -65,7 +65,7 @@ class Blocks_Handler {
 	 */
 	public function is_checkout_block_compatible() : bool {
 
-		$supports = $this->plugin->get_compatibility();
+		$supports = $this->plugin->get_supported_features();
 
 		return isset( $supports['blocks']['checkout'] ) && true === $supports['blocks']['checkout'];
 	}
