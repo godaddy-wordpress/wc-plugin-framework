@@ -473,17 +473,17 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 * - `off`: no logging
 	 * - `log`: save to log file
 	 * - `checkout`: save to log file and display in checkout page
-	 * - `all`: save to log file and display in checkout page
+	 * - `full`: save to log file and display in checkout page
 	 *
 	 * @since 5.12.0
 	 *
-	 * @return string one of off, all, log or checkout
+	 * @return string one of off, log, checkout or full
 	 */
 	protected function get_debug_mode() : string {
 
 		$debug_mode = $this->gateway->get_debug_mode();
 
-		return 'both' === $debug_mode ? 'all' : $debug_mode;
+		return 'both' === $debug_mode ? 'full' : $debug_mode;
 	}
 
 
