@@ -149,10 +149,10 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'placeholders'         => $this->get_placeholders(), // used in some payment method fields
 			'supports'             => $this->gateway->supports, // list of supported features
 			'flags'                => $this->get_gateway_flags(), // list of gateway configuration flags
-			'gateway'              => $this->get_gateway_configuration(),// other gateway configuration values
+			'gateway'              => $this->get_gateway_configuration(), // other gateway configuration values
 			'apple_pay'            => $this->get_apple_pay_configuration(), // Apple Pay configuration values
 			'google_pay'           => $this->get_google_pay_configuration(), // Google Pay configuration values
-			'debug_mode'           => $this->get_debug_mode(), // the current debug mode (log, checkout, off)
+			'debug_mode'           => $this->get_debug_mode(), // the current debug mode (log, checkout, full, off)
 			'i18n'                 => $this->gateway->get_gateway_payment_form_localized_params(),
 			'date_format'          => wc_date_format(),
 			'time_format'          => wc_time_format(),
