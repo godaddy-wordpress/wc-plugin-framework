@@ -481,17 +481,9 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	protected function get_debug_mode() : string {
 
-		if ( $this->gateway->debug_off() ) {
-			return 'off';
-		} elseif ( $this->gateway->debug_all() ) {
-			return 'all';
-		} elseif ( $this->gateway->debug_checkout() ) {
-			return 'checkout';
-		} elseif ( $this->gateway->debug_log() ) {
-			return 'log';
-		}
+		$debug_mode = $this->gateway->get_debug_mode();
 
-		return 'off';
+		return 'both' === $debug_mode ? 'all' : $debug_mode;
 	}
 
 

@@ -4254,6 +4254,18 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
+	 * Gets the debug mode value.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return string
+	 */
+	public function get_debug_mode() : string {
+		return $this->debug_mode ?? 'off';
+	}
+
+
+	/**
 	 * Returns true if all debugging is disabled
 	 *
 	 * @since 1.0.0
