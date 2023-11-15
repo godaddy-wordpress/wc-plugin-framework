@@ -447,7 +447,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		foreach ( (array) $order_meta as $index => $meta ) {
 
 			// this accounts for different versions of the Subscriptions filter running before and after WooCommerce Subscriptions 2.5
-			if ( in_array( $index, $meta_keys ) || ( isset( $meta['meta_key'] ) && in_array( $meta['meta_key'], $meta_keys ) ) || ( isset( $meta['_meta_key'] ) && in_array( $meta['_meta_key'], $meta_keys ) ) ) {
+			if ( in_array( $index, $meta_keys ) || ( isset( $meta['meta_key'] ) && in_array( $meta['meta_key'], $meta_keys ) ) ) {
 				unset( $order_meta[ $index ] );
 			}
 		}
