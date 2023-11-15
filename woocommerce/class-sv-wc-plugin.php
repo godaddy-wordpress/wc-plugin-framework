@@ -74,8 +74,8 @@ abstract class SV_WC_Plugin {
 	/** @var string the plugin text domain */
 	private $text_domain;
 
-	/** @var array<string, mixed> supported WooCommerce features */
-	protected $supported_features = [];
+	/** @var array<string, mixed> plugin compatibility flags */
+	private $compatibility;
 
 	/** @var array memoized list of active plugins */
 	private $active_plugins = [];
@@ -111,38 +111,43 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
-	 * @param array<string, mixed> $args {
-	 *     optional plugin arguments
-	 *
-	 *     @type int|float $latest_wc_versions the last supported versions of WooCommerce, as a major.minor float relative to the latest available version
-	 *     @type string $text_domain the plugin textdomain, used to set up translations
-	 *     @type array<string, mixed> $supported_features supported WooCommerce features (HPOS, Blocks, etc.)
-	 *     @type array<string, array<string, mixed>>  $dependencies {
-	 *         PHP extension, function, and settings dependencies
-	 *
-	 *         @type array $php_extensions PHP extension dependencies
-	 *         @type array $php_functions  PHP function dependencies
-	 *         @type array $php_settings   PHP settings dependencies
+	 * @param array{
+	 *     latest_wc_versions?: int|float,
+	 *     text_domain?: string,
+	 *     supported_features?: array{
+	 *          hpos?: bool,
+	 *          blocks?: array{
+	 *               cart?: bool,
+	 *               checkout?: bool
+	 *          }
+	 *     },
+	 *     dependencies?: array{
+	 *          php_extensions?: array<string, mixed>,
+	 *          php_functions?: array<string, mixed>,
+	 *          php_settings?: array<string, mixed>
 	 *     }
-	 * }
+	 *  } $args
 	 */
-	public function __construct( $id, $version, $args = [] ) {
+	public function __construct( string $id, string $version, array $args = [] ) {
 
 		// required params
 		$this->id      = $id;
 		$this->version = $version;
 
 		$args = wp_parse_args( $args, [
-			'text_domain'        => '',
-			'dependencies'       => [],
-			'supported_features' => [
-				'blocks' => [],
+			'text_domain'   => '',
+			'dependencies'  => [],
+			'compatibility' => [
 				'hpos'   => false,
+				'blocks' => [
+					'cart'     => false,
+					'checkout' => false,
+				],
 			],
 		] );
 
-		$this->text_domain        = $args['text_domain'];
-		$this->supported_features = $args['supported_features'];
+		$this->text_domain   = $args['text_domain'];
+		$this->compatibility = $args['supported_features'];
 
 		// includes that are required to be available at all times
 		$this->includes();
@@ -861,15 +866,15 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Gets a list of plugin's supported WooCommerce features.
+	 * Gets a list of the plugin's compatibility flags.
 	 *
 	 * @since 5.11.11
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function get_supported_features() : array {
+	public function get_compatibility() : array {
 
-		return $this->supported_features ?? [];
+		return $this->compatibility ?? [];
 	}
 
 
@@ -882,8 +887,8 @@ abstract class SV_WC_Plugin {
 	 */
 	public function is_hpos_compatible() : bool {
 
-		return isset( $this->supported_features['hpos'] )
-			&& true === $this->supported_features['hpos']
+		return isset( $this->compatibility['hpos'] )
+			&& true === $this->compatibility['hpos']
 			&& SV_WC_Plugin_Compatibility::is_wc_version_gte( '7.6' );
 	}
 
