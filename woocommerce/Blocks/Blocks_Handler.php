@@ -108,7 +108,7 @@ class Blocks_Handler {
 	/**
 	 * Adds admin notices pertaining the blocks integration.
 	 *
-	 * @since 5.12.0
+	 * @since 5.11.11
 	 *
 	 * @internal
 	 *
