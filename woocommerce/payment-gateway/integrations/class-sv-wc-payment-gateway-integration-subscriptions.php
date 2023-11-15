@@ -98,7 +98,11 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		add_filter( 'woocommerce_my_subscriptions_payment_method', array( $this, 'maybe_render_payment_method' ), 10, 3 );
 
 		// don't copy over order-specific meta to the WC_Subscription object during renewal processing
-		add_filter( 'wcs_renewal_order_meta', array( $this, 'do_not_copy_order_meta' ) );
+		if ( SV_WC_Plugin_Compatibility::is_wc_subscriptions_version_gte( '2.5' ) ) {
+			add_filter( 'wc_subscriptions_renewal_order_data', [ $this, 'do_not_copy_order_meta' ] );
+		} else {
+			add_filter( 'wcs_renewal_order_meta', [ $this, 'do_not_copy_order_meta' ] );
+		}
 
 		// process the Change Payment "transaction"
 		add_filter( 'wc_payment_gateway_' . $this->get_gateway()->get_id() . '_process_payment', array( $this, 'process_change_payment' ), 10, 3 );
@@ -425,23 +429,25 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 
 	/**
-	 * Don't copy order-specific meta to renewal orders from the WC_Subscription
-	 * object. Generally the subscription object should not have any order-specific
-	 * meta (aside from `payment_token` and `customer_id`) as they are not
-	 * copied during the upgrade (see do_not_copy_order_meta_during_upgrade()), so
-	 * this method is more of a fallback in case meta accidentally is copied.
+	 * Don't copy order-specific meta to renewal orders from the {@see WC_Subscription} object.
+	 *
+	 * Generally the subscription object should not have any order-specific meta (aside from `payment_token` and `customer_id`)
+	 * as they are not copied during the upgrade (see do_not_copy_order_meta_during_upgrade()),
+	 * so this method is more of a fallback in case meta accidentally is copied.
 	 *
 	 * @since 4.1.0
-	 * @param array $order_meta order meta to copy
-	 * @return array
+	 *
+	 * @param array<mixed>|scalar $order_meta order meta to copy
+	 * @return array<mixed>|scalar
 	 */
 	public function do_not_copy_order_meta( $order_meta ) {
 
 		$meta_keys = $this->get_order_specific_meta_keys();
 
-		foreach ( $order_meta as $index => $meta ) {
+		foreach ( (array) $order_meta as $index => $meta ) {
 
-			if ( in_array( $meta['meta_key'], $meta_keys ) ) {
+			// this accounts for different versions of the Subscriptions filter running before and after WooCommerce Subscriptions 2.5
+			if ( in_array( $index, $meta_keys ) || ( isset( $meta['meta_key'] ) && in_array( $meta['meta_key'], $meta_keys ) ) ) {
 				unset( $order_meta[ $index ] );
 			}
 		}
