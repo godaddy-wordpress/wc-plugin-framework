@@ -114,7 +114,7 @@ abstract class SV_WC_Plugin {
 	 * @param array{
 	 *     latest_wc_versions?: int|float,
 	 *     text_domain?: string,
-	 *     supported_features?: array{
+	 *     compatibility?: array{
 	 *          hpos?: bool,
 	 *          blocks?: array{
 	 *               cart?: bool,
@@ -147,7 +147,7 @@ abstract class SV_WC_Plugin {
 		] );
 
 		$this->text_domain   = $args['text_domain'];
-		$this->compatibility = $args['supported_features'];
+		$this->compatibility = $args['compatibility'];
 
 		// includes that are required to be available at all times
 		$this->includes();
