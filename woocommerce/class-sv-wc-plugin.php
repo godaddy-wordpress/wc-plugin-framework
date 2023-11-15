@@ -640,7 +640,7 @@ abstract class SV_WC_Plugin {
 	 * Declares HPOS compatibility if the plugin is compatible with HPOS.
 	 *
 	 * @internal
-	 * @deprecated since 5.12.0
+	 * @deprecated since 5.11.11
 	 * @see SV_WC_Plugin::handle_features_compatibility()
 	 *
 	 * @since 5.11.0
