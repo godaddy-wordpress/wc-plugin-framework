@@ -19,7 +19,7 @@ class CountryHelperTest extends \Codeception\Test\Unit {
 	}
 
 	/**
-	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_10\Country_Helper::convert_alpha_country_code()
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_11\Country_Helper::convert_alpha_country_code()
 	 *
 	 * @param string $code input country code
 	 * @param string $expected expected return value
@@ -28,7 +28,7 @@ class CountryHelperTest extends \Codeception\Test\Unit {
 	 */
 	public function test_convert_alpha_country_code( $code, $expected ) {
 
-		$result = \SkyVerge\WooCommerce\PluginFramework\v5_11_10\Country_Helper::convert_alpha_country_code( $code );
+		$result = \SkyVerge\WooCommerce\PluginFramework\v5_11_11\Country_Helper::convert_alpha_country_code( $code );
 
 		$this->assertEquals( $expected, $result );
 	}
