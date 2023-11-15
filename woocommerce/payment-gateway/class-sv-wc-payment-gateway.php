@@ -4257,10 +4257,27 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Returns true if all debugging is disabled
 	 *
 	 * @since 1.0.0
-	 * @return boolean if all debuging is disabled
+	 *
+	 * @return boolean if all debugging is disabled
 	 */
-	public function debug_off() {
+	public function debug_off() : bool {
 		return self::DEBUG_MODE_OFF === $this->debug_mode;
+	}
+
+
+	/**
+	 * Returns true if all debugging is enabled (on both checkout page and log files).
+	 *
+	 * This means the following apply:
+	 * @see SV_WC_Payment_Gateway::debug_checkout()
+	 * @see SV_WC_Payment_Gateway::debug_log()
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool
+	 */
+	public function debug_all() : bool {
+		return self::DEBUG_MODE_BOTH === $this->debug_mode;
 	}
 
 
@@ -4268,21 +4285,24 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Returns true if debug logging is enabled
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return boolean if debug logging is enabled
 	 */
-	public function debug_log() {
+	public function debug_log() : bool {
 		return self::DEBUG_MODE_LOG === $this->debug_mode || self::DEBUG_MODE_BOTH === $this->debug_mode;
 	}
 
 
 	/**
-	 * Returns true if checkout debugging is enabled.  This will cause debugging
-	 * statements to be displayed on the checkout/pay pages
+	 * Returns true if checkout debugging is enabled.
+	 *
+	 * This will cause debugging statements to be displayed on the checkout/pay pages.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return boolean if checkout debugging is enabled
 	 */
-	public function debug_checkout() {
+	public function debug_checkout() : bool {
 		return self::DEBUG_MODE_CHECKOUT === $this->debug_mode || self::DEBUG_MODE_BOTH === $this->debug_mode;
 	}
 
