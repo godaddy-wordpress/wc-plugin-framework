@@ -2,7 +2,7 @@
 
 2023.nn.nn - version 5.11.11-dev
  * Fix - Replace deprecated `wcs_renewal_order_meta` filter usage with `wc_subscriptions_renewal_order_data`
- * Dev - Replace `supports_hpos` with a `compatibility` key in the main plugin file constructor arguments
+ * Dev - Replace `supports_hpos` with a `supported_features` key in the main plugin file constructor arguments
  * Dev - Introduce a `Blocks_Handler` class which will be expanded in a future release for adding WooCommerce Cart & Checkout Blocks compatibility
  * Misc - Warn merchants when a plugin is not compatible with Cart or Checkout blocks to prompt switching to legacy shortcodes
 
