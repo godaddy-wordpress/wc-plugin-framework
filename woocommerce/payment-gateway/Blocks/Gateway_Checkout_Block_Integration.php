@@ -33,6 +33,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Payment_
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Payment_Token;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway_Plugin;
 use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Traits\Block_Integration_Trait;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Plugin_Exception;
 use WC_HTTPS;
 
 if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration' ) ) :
@@ -586,25 +587,32 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	public function ajax_log() : void {
 
-		if ( ! $this->gateway->debug_log() ) {
-			wp_send_json_error( 'Logging is disabled.' );
-		}
+		try {
 
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log' ) ) {
-			wp_send_json_error( 'Invalid nonce.' );
-		}
+			if ( ! $this->gateway->debug_log() ) {
+				throw new SV_WC_Plugin_Exception('Logging is disabled.' );
+			}
 
-		$message  = $_REQUEST['message']  ?? null;
-		$type     = $_REQUEST['type']     ?? 'message';
-		$request  = $_REQUEST['request']  ?? [];
-		$response = $_REQUEST['response'] ?? [];
+			if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log' ) ) {
+				throw new SV_WC_Plugin_Exception( 'Invalid nonce.' );
+			}
 
-		if ( ! empty( $request ) || ! empty( $response ) ) {
-			$this->gateway->log_api_request( (array) $request, (array) $response, $type );
-		} elseif ( is_string( $message ) && is_string( $type ) && ! empty( $message ) ) {
-			$this->gateway->add_debug_message( $message, $type );
-		} else {
-			wp_send_json_error( 'Invalid request.' );
+			$message  = $_REQUEST['message']  ?? null;
+			$type     = $_REQUEST['type']     ?? 'message';
+			$request  = $_REQUEST['request']  ?? [];
+			$response = $_REQUEST['response'] ?? [];
+
+			if ( ! empty( $request ) || ! empty( $response ) ) {
+				$this->gateway->log_api_request( (array) $request, (array) $response, $type );
+			} elseif ( is_string( $message ) && is_string( $type ) && ! empty( $message ) ) {
+				$this->gateway->add_debug_message( $message, $type );
+			} else {
+				throw new SV_WC_Plugin_Exception( 'Invalid request.' );
+			}
+
+		} catch ( SV_WC_Plugin_Exception $exception ) {
+
+			wp_send_json_error( $exception->getMessage() );
 		}
 
 		wp_send_json_success( 'Log successful.' );
