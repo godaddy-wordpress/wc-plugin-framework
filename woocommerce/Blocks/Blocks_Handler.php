@@ -1,11 +1,11 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_11\Blocks;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_12\Blocks;
 
 use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_11 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_12 as Framework;
 
-if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_11\Blocks\Blocks_Handler' ) ) :
+if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_12\Blocks\Blocks_Handler' ) ) :
 
 /**
  * WooCommerce Blocks handler.
@@ -130,9 +130,9 @@ class Blocks_Handler {
 						/* translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_checkout]` shortcode tag, %6$s - closing HTML </a> tag */
 						__( '%1$s is not yet compatible with the Checkout block. We recommend %2$sfollowing this guide%3$s to revert to the %4$s%5$s shortcode%6$s.', 'woocommerce-plugin-framework' ),
 						'<strong>' . $this->plugin->get_plugin_name() . '</strong>',
-						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes" target="_blank">',
+						'<a href="https://woo.com/document/cart-checkout-blocks-status/#section-6" target="_blank">',
 						'</a>',
-						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#checkout" target="_blank">',
+						'<a href="https://woo.com/document/woocommerce-shortcodes/#checkout" target="_blank">',
 						'<code>[woocommerce_checkout]</code>',
 						'</a>',
 					) . '<br><br>' . $cta,
@@ -161,9 +161,9 @@ class Blocks_Handler {
 						/* translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_cart]` shortcode tag, %6$s - closing HTML </a> tag */
 						__( '%1$s is not yet compatible with the Cart block. We recommend %2$sfollowing this guide%3$s to revert to the %4$s%5$s shortcode%6$s.', 'woocommerce-plugin-framework' ),
 						'<strong>' . $this->plugin->get_plugin_name() . '</strong>',
-						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes" target="_blank">',
+						'<a href="https://woo.com/document/cart-checkout-blocks-status/#section-6" target="_blank">',
 						'</a>',
-						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#cart" target="_blank">',
+						'<a href="https://woo.com/document/woocommerce-shortcodes/#cart" target="_blank">',
 						'<code>[woocommerce_cart]</code>',
 						'</a>',
 					) . '<br><br>' . $cta,
