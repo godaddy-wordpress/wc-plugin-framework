@@ -589,7 +589,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 		try {
 
-			if ( ! $this->gateway->debug_log() ) {
+			if ( $this->gateway->debug_off() ) {
 				throw new SV_WC_Plugin_Exception('Logging is disabled.' );
 			}
 
