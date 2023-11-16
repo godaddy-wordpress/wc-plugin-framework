@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2023.11.16 - version 5.11.12
+ * Misc - Update documentation links after changes in Woo.com
+
 2023.11.15 - version 5.11.11
  * Fix - Replace deprecated `wcs_renewal_order_meta` filter usage with `wc_subscriptions_renewal_order_data`
  * Dev - Replace `supports_hpos` with a `supported_features` key in the main plugin file constructor arguments
