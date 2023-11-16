@@ -73,7 +73,7 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'default', [
 		'coffee',
 		'sass',
-		'makepot',
+		'shell:makepot',
 	] );
 
 };
