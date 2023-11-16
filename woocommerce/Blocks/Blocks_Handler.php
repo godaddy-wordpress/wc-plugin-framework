@@ -1,11 +1,11 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_11\Blocks;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_11_12\Blocks;
 
 use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_11 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_12 as Framework;
 
-if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_11\Blocks\Blocks_Handler' ) ) :
+if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_12\Blocks\Blocks_Handler' ) ) :
 
 /**
  * WooCommerce Blocks handler.

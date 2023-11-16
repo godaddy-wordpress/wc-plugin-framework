@@ -2,9 +2,9 @@
 
 namespace Settings_API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_11_11\Settings_API\Control;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_11\Settings_API\Setting;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_11\SV_WC_Plugin_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_12\Settings_API\Control;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_12\Settings_API\Setting;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_12\SV_WC_Plugin_Exception;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', true );
@@ -36,7 +36,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 
 	/**
-	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_11\Settings_API\Setting::set_id()
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_12\Settings_API\Setting::set_id()
 	 *
 	 * @param string $input input ID
 	 * @param string $expected expected return ID
@@ -53,7 +53,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 
 	/**
-	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_11\Settings_API\Setting::set_type()
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_12\Settings_API\Setting::set_type()
 	 *
 	 * @param string $input input type
 	 * @param string $expected expected return type
@@ -70,7 +70,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 
 	/**
-	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_11\Settings_API\Setting::set_name()
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_12\Settings_API\Setting::set_name()
 	 *
 	 * @param string $input input name
 	 * @param string $expected expected return name
@@ -87,7 +87,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 
 	/**
-	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_11\Settings_API\Setting::set_description()
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_12\Settings_API\Setting::set_description()
 	 *
 	 * @param string $input input description
 	 * @param string $expected expected return description
@@ -104,7 +104,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 
 	/**
-	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_11\Settings_API\Setting::set_is_multi()
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_12\Settings_API\Setting::set_is_multi()
 	 *
 	 * @param bool $input input value
 	 * @param bool $expected expected return value
@@ -121,7 +121,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 
 	/**
-	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_11\Settings_API\Setting::set_options()
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_12\Settings_API\Setting::set_options()
 	 *
 	 * @param array $input input options
 	 * @param array $expected expected return options
@@ -138,7 +138,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 
 	/**
-	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_11\Settings_API\Setting::set_default()
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_12\Settings_API\Setting::set_default()
 	 *
 	 * @param int|float|string|bool|array $input input default value
 	 * @param int|float|string|bool|array $expected expected return default value
@@ -155,7 +155,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 
 	/**
-	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_11\Settings_API\Setting::set_value()
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_12\Settings_API\Setting::set_value()
 	 *
 	 * @param int|float|string|bool|array $input input value
 	 * @param int|float|string|bool|array $expected expected return value
@@ -172,7 +172,7 @@ class SettingTest extends \Codeception\Test\Unit {
 
 
 	/**
-	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_11\Settings_API\Setting::set_control()
+	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_11_12\Settings_API\Setting::set_control()
 	 *
 	 * @param Control $input input control
 	 * @param Control $expected expected return control
