@@ -587,10 +587,12 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	public function ajax_log() : void {
 
 		if ( ! $this->gateway->debug_log() ) {
-			wp_send_json_error('Logging is disabled.');
+			wp_send_json_error( 'Logging is disabled.' );
 		}
 
-		wp_verify_nonce( $_REQUEST['nonce'], 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log' );
+		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log' ) ) {
+			wp_send_json_error( 'Invalid nonce.' );
+		}
 
 		$message  = $_REQUEST['message']  ?? null;
 		$type     = $_REQUEST['type']     ?? 'message';
@@ -602,10 +604,10 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		} elseif ( is_string( $message ) && is_string( $type ) && ! empty( $message ) ) {
 			$this->gateway->add_debug_message( $message, $type );
 		} else {
-			wp_send_json_error('Invalid request.');
+			wp_send_json_error( 'Invalid request.' );
 		}
 
-		wp_send_json_success('Log successful.');
+		wp_send_json_success( 'Log successful.' );
 	}
 
 
