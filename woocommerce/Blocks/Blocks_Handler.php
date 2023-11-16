@@ -1,16 +1,14 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
-use Exception;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Plugin;
-use WP_Error;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Plugin;
 
-if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Blocks_Handler' ) ) :
+if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Blocks_Handler' ) ) :
 
 /**
  * WooCommerce Blocks handler.
@@ -19,7 +17,7 @@ if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Bloc
  *
  * Individual plugins should override this class to load their own block integrations classes.
  *
- * @since 5.12.0
+ * @since 5.11.11
  */
 class Blocks_Handler {
 
@@ -39,7 +37,7 @@ class Blocks_Handler {
 	 *
 	 * Individual plugins should initialize their block integrations classes by overriding this constructor and calling the parent.
 	 *
-	 * @since 5.12.0
+	 * @since 5.11.11
 	 *
 	 * @param SV_WC_Plugin $plugin
 	 */
@@ -63,7 +61,7 @@ class Blocks_Handler {
 	/**
 	 * Determines if the plugin is compatible with the WooCommerce Cart block.
 	 *
-	 * @since 5.12.0
+	 * @since 5.11.11
 	 *
 	 * @return bool
 	 */
@@ -78,7 +76,7 @@ class Blocks_Handler {
 	/**
 	 * Determines if the plugin is compatible with the WooCommerce Checkout block.
 	 *
-	 * @since 5.12.0
+	 * @since 5.11.11
 	 *
 	 * @return bool
 	 */
@@ -134,12 +132,12 @@ class Blocks_Handler {
 	/**
 	 * Determines if the checkout page is using the checkout block.
 	 *
-	 * @since 5.12.0
+	 * @since 5.11.11
 	 *
 	 * @return bool false when using the legacy checkout shortcode
 	 */
-	public static function is_checkout_block_in_use() : bool
-	{
+	public static function is_checkout_block_in_use() : bool {
+
 		if ( ! class_exists( CartCheckoutUtils::class ) ) {
 			return false;
 		}
@@ -151,12 +149,12 @@ class Blocks_Handler {
 	/**
 	 * Determines if the cart page is using the cart block.
 	 *
-	 * @since 5.12.0
+	 * @since 5.11.11
 	 *
 	 * @return bool false if using the legacy cart shortcode
 	 */
-	public static function is_cart_block_in_use() : bool
-	{
+	public static function is_cart_block_in_use() : bool {
+
 		if ( ! class_exists( CartCheckoutUtils::class ) ) {
 			return false;
 		}
@@ -168,9 +166,7 @@ class Blocks_Handler {
 	/**
 	 * Adds admin notices pertaining the blocks integration.
 	 *
-	 * @since 5.12.0
-	 *
-	 * @internal
+	 * @since 5.11.11
 	 *
 	 * @return void
 	 */
@@ -190,9 +186,9 @@ class Blocks_Handler {
 						/* translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_checkout]` shortcode tag, %6$s - closing HTML </a> tag */
 						__( '%1$s is not yet compatible with the Checkout block. We recommend %2$sfollowing this guide%3$s to revert to the %4$s%5$s shortcode%6$s.', 'woocommerce-plugin-framework' ),
 						'<strong>' . $this->plugin->get_plugin_name() . '</strong>',
-						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes" target="_blank">',
+						'<a href="https://woo.com/document/cart-checkout-blocks-status/#section-6" target="_blank">',
 						'</a>',
-						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#checkout" target="_blank">',
+						'<a href="https://woo.com/document/woocommerce-shortcodes/#checkout" target="_blank">',
 						'<code>[woocommerce_checkout]</code>',
 						'</a>',
 					) . '<br><br>' . $cta,
@@ -221,9 +217,9 @@ class Blocks_Handler {
 						/* translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_cart]` shortcode tag, %6$s - closing HTML </a> tag */
 						__( '%1$s is not yet compatible with the Cart block. We recommend %2$sfollowing this guide%3$s to revert to the %4$s%5$s shortcode%6$s.', 'woocommerce-plugin-framework' ),
 						'<strong>' . $this->plugin->get_plugin_name() . '</strong>',
-						'<a href="https://woocommerce.com/document/cart-checkout-blocks-support-status/#reverting-to-shortcodes" target="_blank">',
+						'<a href="https://woo.com/document/cart-checkout-blocks-status/#section-6" target="_blank">',
 						'</a>',
-						'<a href="https://woocommerce.com/document/woocommerce-shortcodes/#cart" target="_blank">',
+						'<a href="https://woo.com/document/woocommerce-shortcodes/#cart" target="_blank">',
 						'<code>[woocommerce_cart]</code>',
 						'</a>',
 					) . '<br><br>' . $cta,

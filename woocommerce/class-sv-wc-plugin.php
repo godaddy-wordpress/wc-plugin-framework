@@ -22,14 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_10;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Blocks_Handler;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_10\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_Plugin' ) ) :
 
 
 /**
@@ -46,7 +46,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.11.10';
+	const VERSION = '5.12.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -75,8 +75,8 @@ abstract class SV_WC_Plugin {
 	/** @var string the plugin text domain */
 	private $text_domain;
 
-	/** @var array<string, mixed> supported WooCommerce features */
-	protected $supported_features = [];
+	/** @var array{ hpos?: bool, blocks?: array{ cart?: bool, checkout?: bool }} plugin compatibility flags */
+	private $supported_features;
 
 	/** @var array memoized list of active plugins */
 	private $active_plugins = [];
@@ -93,8 +93,8 @@ abstract class SV_WC_Plugin {
 	/** @var REST_API REST API handler instance */
 	protected $rest_api_handler;
 
-	/** @var Blocks_Handler blocks handler instance */
-	protected $blocks_handler;
+	/** @var Blocks\Blocks_Handler blocks handler instance */
+	protected Blocks\Blocks_Handler $blocks_handler;
 
 	/** @var Admin\Setup_Wizard handler instance */
 	protected $setup_wizard_handler;
@@ -112,22 +112,24 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @param string $id plugin id
 	 * @param string $version plugin version number
-	 * @param array $args {
-	 *     optional plugin arguments
-	 *
-	 *     @type int|float $latest_wc_versions the last supported versions of WooCommerce, as a major.minor float relative to the latest available version
-	 *     @type string $text_domain the plugin textdomain, used to set up translations
-	 *     @type array<string, mixed> $supported_features supported WooCommerce features (HPOS, Blocks, etc.)
-	 *     @type array  $dependencies {
-	 *         PHP extension, function, and settings dependencies
-	 *
-	 *         @type array $php_extensions PHP extension dependencies
-	 *         @type array $php_functions  PHP function dependencies
-	 *         @type array $php_settings   PHP settings dependencies
+	 * @param array{
+	 *     latest_wc_versions?: int|float,
+	 *     text_domain?: string,
+	 *     supported_features?: array{
+	 *          hpos?: bool,
+	 *          blocks?: array{
+	 *               cart?: bool,
+	 *               checkout?: bool
+	 *          }
+	 *     },
+	 *     dependencies?: array{
+	 *          php_extensions?: array<string, mixed>,
+	 *          php_functions?: array<string, mixed>,
+	 *          php_settings?: array<string, mixed>
 	 *     }
-	 * }
+	 *  } $args
 	 */
-	public function __construct( $id, $version, $args = [] ) {
+	public function __construct( string $id, string $version, array $args = [] ) {
 
 		// required params
 		$this->id      = $id;
@@ -137,8 +139,11 @@ abstract class SV_WC_Plugin {
 			'text_domain'        => '',
 			'dependencies'       => [],
 			'supported_features' => [
-				'blocks' => [],
 				'hpos'   => false,
+				'blocks' => [
+					'cart'     => false,
+					'checkout' => false,
+				],
 			],
 		] );
 
@@ -268,16 +273,16 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Builds the blocks handler instance.
 	 *
-	 * @since 5.12.0
+	 * @since 5.11.11
 	 *
 	 * @return void
 	 */
-	protected function init_blocks_handler() {
+	protected function init_blocks_handler() : void {
 
 		require_once( $this->get_framework_path() . '/Blocks/Blocks_Handler.php' );
 
 		// individual plugins should initialize their block integrations handler by overriding this method
-		$this->blocks_handler = new Blocks_Handler( $this );
+		$this->blocks_handler = new Blocks\Blocks_Handler( $this );
 	}
 
 
@@ -641,15 +646,17 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Declares HPOS compatibility if the plugin is compatible with HPOS.
 	 *
+	 * @internal
+	 *
 	 * @since 5.11.0
-	 * @deprecated since 5.12.0
+	 * @deprecated since 5.11.11
 	 * @see SV_WC_Plugin::handle_features_compatibility()
 	 *
 	 * @return void
 	 */
-	public function handle_hpos_compatibility() {
+	public function handle_hpos_compatibility() : void {
 
-		wc_deprecated_function( 'SV_WC_Plugin::handle_hpos_compatibility', '5.12.0', 'SV_WC_Plugin::handle_features_compatibility');
+		wc_deprecated_function( 'SV_WC_Plugin::handle_hpos_compatibility', '5.11.11', 'SV_WC_Plugin::handle_features_compatibility' );
 
 		$this->handle_features_compatibility();
 	}
@@ -661,8 +668,10 @@ abstract class SV_WC_Plugin {
 	 * @internal
 	 *
 	 * @since 5.12.0
+	 *
+	 * @return void
 	 */
-	public function handle_features_compatibility() {
+	public function handle_features_compatibility() : void {
 
 		if ( ! class_exists( FeaturesUtil::class ) ) {
 			return;
@@ -863,15 +872,15 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Gets a list of plugin's supported WooCommerce features.
+	 * Gets a list of the plugin's compatibility flags.
 	 *
-	 * @since 5.12.0
+	 * @since 5.11.11
 	 *
-	 * @return array<string, mixed>
+	 * @return array{ hpos?: bool, blocks?: array{ cart?: bool, checkout?: bool }}
 	 */
 	public function get_supported_features() : array {
 
-		return $this->supported_features;
+		return $this->supported_features ?? [];
 	}
 
 
@@ -886,7 +895,7 @@ abstract class SV_WC_Plugin {
 	{
 		return isset( $this->supported_features['hpos'] )
 			&& true === $this->supported_features['hpos']
-			&& SV_WC_Plugin_Compatibility::is_wc_version_gte('7.6');
+			&& SV_WC_Plugin_Compatibility::is_wc_version_gte( '7.6' );
 	}
 
 
@@ -982,6 +991,19 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Gets the blocks handler instance.
+	 *
+	 * @since 5.11.11
+	 *
+	 * @return Blocks\Blocks_Handler
+	 */
+	public function get_blocks_handler() : Blocks\Blocks_Handler {
+
+		return $this->blocks_handler;
+	}
+
+
+	/**
 	 * Gets the Setup Wizard handler instance.
 	 *
 	 * @since 5.3.0
@@ -1032,19 +1054,6 @@ abstract class SV_WC_Plugin {
 	public function get_settings_handler() {
 
 		return;
-	}
-
-
-	/**
-	 * Gets the blocks handler instance.
-	 *
-	 * @since 5.12.0
-	 *
-	 * @return Blocks_Handler
-	 */
-	public function get_blocks_handler() : Blocks_Handler {
-
-		return $this->blocks_handler;
 	}
 
 

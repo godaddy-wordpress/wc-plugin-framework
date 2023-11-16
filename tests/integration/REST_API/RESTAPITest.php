@@ -1,13 +1,13 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v5_11_10 as Framework;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_10\Settings_API\Abstract_Settings;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_10\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_12 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_12\Settings_API\Abstract_Settings;
+use SkyVerge\WooCommerce\PluginFramework\v5_11_12\SV_WC_Helper;
 
 /**
  * Tests for the REST_API class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_10\REST_API
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_11_12\REST_API
  */
 class RESTAPITest extends \Codeception\TestCase\WPTestCase {
 
