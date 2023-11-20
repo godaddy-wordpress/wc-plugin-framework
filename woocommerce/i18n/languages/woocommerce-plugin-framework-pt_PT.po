@@ -8,9 +8,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-10-13T06:43:26+00:00\n"
+"POT-Creation-Date: 2023-11-16T04:41:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.8.1\n"
+"X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
 
 #. Plugin Name of the plugin
@@ -167,6 +167,26 @@ msgstr "Agora, não"
 msgid "Skip this step"
 msgstr "Ignorar este passo"
 
+#: woocommerce/Blocks/Blocks_Handler.php:126
+msgctxt "Button label"
+msgid "Edit the Checkout Page"
+msgstr "Editar a página da Finalização das Compras"
+
+#. translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_checkout]` shortcode tag, %6$s - closing HTML </a> tag
+#: woocommerce/Blocks/Blocks_Handler.php:131
+msgid "%1$s is not yet compatible with the Checkout block. We recommend %2$sfollowing this guide%3$s to revert to the %4$s%5$s shortcode%6$s."
+msgstr "%1$s ainda não é compatível com o bloco da Finalização das Compras. Recomendamos que %2$ssiga este guia%3$s para reverter para o %4$s«shortcode» %5$s%6$s."
+
+#: woocommerce/Blocks/Blocks_Handler.php:157
+msgctxt "Button label"
+msgid "Edit the Cart Page"
+msgstr "Editar a página do Carrinho"
+
+#. translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_cart]` shortcode tag, %6$s - closing HTML </a> tag
+#: woocommerce/Blocks/Blocks_Handler.php:162
+msgid "%1$s is not yet compatible with the Cart block. We recommend %2$sfollowing this guide%3$s to revert to the %4$s%5$s shortcode%6$s."
+msgstr "%1$s ainda não é compatível com o bloco do Carrinho. Recomendamos que %2$ssiga este guia%3$s para reverter para o %4$s«shortcode» %5$s%6$s."
+
 #: woocommerce/class-sv-wc-framework-bootstrap.php:268
 msgid "The following plugin is disabled because it is out of date and incompatible with newer plugins on your site:"
 msgid_plural "The following plugins are disabled because they are out of date and incompatible with newer plugins on your site:"
@@ -261,41 +281,41 @@ msgid "Your hosting provider can do this for you. %1$sHere are some resources to
 msgstr "O seu fornecedor de alojamento pode fazer isto por si. %1$sSeguem-se alguns recursos para o ajudar a actualizar o/a %2$s e para explicar as versões do PHP de forma mais detalhada."
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:310
+#: woocommerce/class-sv-wc-plugin.php:342
 msgid "You cannot clone instances of %s."
 msgstr "Não pode clonar instâncias do(a) %s."
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:321
+#: woocommerce/class-sv-wc-plugin.php:353
 msgid "You cannot unserialize instances of %s."
 msgstr "Não pode desserializar instâncias do(a) %s."
 
 #. translators: Docs as in Documentation
-#: woocommerce/class-sv-wc-plugin.php:594
+#: woocommerce/class-sv-wc-plugin.php:626
 msgid "Docs"
 msgstr "Docs"
 
-#: woocommerce/class-sv-wc-plugin.php:599
+#: woocommerce/class-sv-wc-plugin.php:631
 msgctxt "noun"
 msgid "Support"
 msgstr "Assistência"
 
-#: woocommerce/class-sv-wc-plugin.php:604
+#: woocommerce/class-sv-wc-plugin.php:636
 msgctxt "verb"
 msgid "Review"
 msgstr "Avaliar"
 
 #. translators: Placeholders: %1$s - PHP setting value, %2$s - version or value required
-#: woocommerce/class-sv-wc-plugin.php:710
+#: woocommerce/class-sv-wc-plugin.php:762
 msgid "%1$s - A minimum of %2$s is required."
 msgstr "%1$s - É necessário, no mínimo, %2$s."
 
 #. translators: Context: As in "Value has been set as [foo], but [bar] is required". Placeholders: %1$s - current value for a PHP setting, %2$s - required value for the PHP setting
-#: woocommerce/class-sv-wc-plugin.php:720
+#: woocommerce/class-sv-wc-plugin.php:772
 msgid "Set as %1$s - %2$s is required."
 msgstr "Definido como %1$s - %2$s necessário(a)."
 
-#: woocommerce/class-sv-wc-plugin.php:1013
+#: woocommerce/class-sv-wc-plugin.php:1093
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:870
 msgid "Configure"
 msgstr "Configurar"
@@ -444,7 +464,7 @@ msgid "%s Payment Tokens"
 msgstr "Códigos de autenticação de pagamento do(a) %s"
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-handler.php:303
-#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:874
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:880
 msgid "Customer ID"
 msgstr "ID de cliente"
 
@@ -1505,7 +1525,7 @@ msgstr "Pagamento do(a) %1$s sem êxito (%2$s)"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2932
 #: woocommerce/payment-gateway/Handlers/Abstract_Hosted_Payment_Handler.php:217
-#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:526
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:532
 msgid "An error occurred, please try again or try an alternate form of payment."
 msgstr "Ocorreu um erro; tente novamente ou experimente utilizar uma forma de pagamento alternativa."
 
@@ -1864,45 +1884,45 @@ msgstr "%1$s - Pagamento da reserva no lançamento com cheque electrónico aprov
 msgid "Pre-Order Release Payment Failed: %s"
 msgstr "O pagamento da reserva no lançamento não teve êxito: %s"
 
-#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:358
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:362
 msgid "Subscription Renewal: payment token is missing/invalid."
 msgstr "Renovação da subscrição: código de autenticação de pagamento em falta/inválido."
 
 #. translators: Placeholders: %1$s - Site name, %2$s - Order number
-#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:386
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:390
 msgid "%1$s - Subscription Renewal Order %2$s"
 msgstr "%1$s - Pedido de renovação de subscrição %2$s"
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - error message; e.g. Order Note: [Payment method] Payment Change failed [error]
-#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:521
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:527
 msgid "%1$s Payment Change Failed (%2$s)"
 msgstr "A alteração do pagamento do(a) %1$s não teve êxito (%2$s)"
 
 #. translators: Context: Payment made for order. Placeholders: %1$s - Payment method name (e.g. "Credit Card", "PayPal", etc.), %2$s - Last four digits of the card/account used
-#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:679
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:685
 msgid "Via %1$s ending in %2$s"
 msgstr "Através do(a) %1$s com a terminação %2$s"
 
-#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:710
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:716
 msgid "Subscriptions"
 msgstr "Subscrições"
 
-#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:765
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:771
 msgctxt "hash before order number"
 msgid "#%s"
 msgstr "N.º %s"
 
-#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:771
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:777
 msgid "N/A"
 msgstr "N/A"
 
-#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:870
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:876
 msgid "Payment Token"
 msgstr "Código de autenticação de pagamento"
 
 #. translators: Context: Error message. Placeholder: %s - Label of the related value
-#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:900
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:906
+#: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:912
 msgid "%s is required."
 msgstr "Isto é necessário: %s."
 
