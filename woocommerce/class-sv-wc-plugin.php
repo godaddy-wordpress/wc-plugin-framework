@@ -414,6 +414,17 @@ abstract class SV_WC_Plugin {
 
 
 	/**
+	 * Gets the plugin's textdomain.
+	 *
+	 * @return string
+	 */
+	public function get_textdomain() : string {
+
+		return $this->text_domain;
+	}
+
+
+	/**
 	 * Initializes the plugin.
 	 *
 	 * Plugins can override this to set up any handlers after WordPress is ready.

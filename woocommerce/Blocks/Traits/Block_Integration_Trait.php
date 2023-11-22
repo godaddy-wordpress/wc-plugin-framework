@@ -82,13 +82,34 @@ trait Block_Integration_Trait {
 	/**
 	 * Initializes the block integration.
 	 *
+	 * Individual implementations may need to override this if they need to handle scripts and styles differently.
+	 *
 	 * @since 5.12.0
 	 *
 	 * @return void
 	 */
 	public function initialize() : void {
 
-		// @TODO: perhaps we can provide here a framework initialization of basic scripts or dynamically load the expected plugin assets
+		wp_register_script(
+			$this->get_main_script_handle(),
+			$this->get_main_script_url(),
+			$this->get_main_script_dependencies(),
+			$this->plugin->get_version(),
+			[ 'in_footer' => true ]
+		);
+
+		wp_set_script_translations(
+			$this->get_main_script_handle(),
+			$this->plugin->get_textdomain()
+		);
+
+		wp_enqueue_block_style(
+			$this->block_name,
+			[
+				'handle' => $this->get_main_script_handle(),
+				'src'    => $this->get_main_script_stylesheet_url(),
+			]
+		);
 	}
 
 
