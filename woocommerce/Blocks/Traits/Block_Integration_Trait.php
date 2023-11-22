@@ -51,7 +51,7 @@ trait Block_Integration_Trait {
 	 */
 	public function get_name() : string {
 
-		return isset( $this->gateway ) ? $this->gateway->get_id_dasherized() : $this->plugin->get_id_dasherized();
+		return $this->get_name();
 	}
 
 
@@ -64,7 +64,7 @@ trait Block_Integration_Trait {
 	 */
 	protected function get_id() : string {
 
-		return $this->get_name();
+		return isset( $this->gateway ) ? $this->gateway->get_id() : $this->plugin->get_id();
 	}
 
 
