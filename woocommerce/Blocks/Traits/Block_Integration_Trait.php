@@ -116,7 +116,7 @@ trait Block_Integration_Trait {
 	/**
 	 * Gets the main script handle.
 	 *
-	 * The default is `{plugin_id}-{block_name}-block`.
+	 * The default is `wc-{plugin_id}-{block_name}-block`.
 	 *
 	 * @since 5.12.0
 	 *
