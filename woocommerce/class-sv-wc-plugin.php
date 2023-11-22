@@ -416,6 +416,8 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Gets the plugin's textdomain.
 	 *
+	 * @since 5.12.0
+	 *
 	 * @return string
 	 */
 	public function get_textdomain() : string {
