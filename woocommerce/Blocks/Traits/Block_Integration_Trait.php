@@ -94,7 +94,7 @@ trait Block_Integration_Trait {
 			$this->get_main_script_handle(),
 			$this->get_main_script_url(),
 			$this->get_main_script_dependencies(),
-			$this->plugin->get_version(),
+			defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ? null : $this->plugin->get_version(),
 			[ 'in_footer' => true ]
 		);
 
