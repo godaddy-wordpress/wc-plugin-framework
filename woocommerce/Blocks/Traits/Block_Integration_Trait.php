@@ -95,7 +95,7 @@ trait Block_Integration_Trait {
 	/**
 	 * Gets the main script handle.
 	 *
-	 * The default is `wc-{integration_id}-{block_name}-block`.
+	 * The default is `{integration_id}-{block_name}-block`.
 	 *
 	 * @since 5.12.0
 	 *
@@ -112,7 +112,7 @@ trait Block_Integration_Trait {
 		 * @param Block_Integration $integration
 		 */
 		return (string) apply_filters( 'wc_' . $this->get_id() . '_'. $this->block_name . '_block_handle', sprintf(
-			'%s-%s-block',
+			'wc-%s-%s-block',
 			$this->get_id_dasherized(),
 			$this->block_name
 		), $this );
