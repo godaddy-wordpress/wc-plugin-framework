@@ -20,7 +20,7 @@ if ( ! class_exists( '\\SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Trai
  * @since 5.12.0
  *
  * @property SV_WC_Plugin|SV_WC_Payment_Gateway_Plugin $plugin
- * @property SV_WC_Payment_Gateway $gateway only in payment gateway integrations
+ * @property SV_WC_Payment_Gateway|null $gateway only in payment gateway integrations
  * @property string $block_name the name of the block the integration is for, e.g. 'cart' or 'checkout
  */
 trait Block_Integration_Trait {
@@ -43,13 +43,39 @@ trait Block_Integration_Trait {
 	/**
 	 * Gets the integration name.
 	 *
+	 * Implements {@see IntegrationInterface::get_name()}.
+	 *
 	 * @since 5.12.0
 	 *
 	 * @return string
 	 */
 	public function get_name() : string {
 
-		return $this->plugin->get_id();
+		return isset( $this->gateway ) ? $this->gateway->get_id_dasherized() : $this->plugin->get_id_dasherized();
+	}
+
+
+	/**
+	 * Gets the integration ID.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return string
+	 */
+	protected function get_id() : string {
+
+		return $this->get_name();
+	}
+
+
+	/**
+	 * Gets the integration ID (dasherized).
+	 *
+	 * @return string
+	 */
+	protected function get_id_dasherized() : string {
+
+		return isset( $this->gateway ) ? $this->gateway->get_id_dasherized() : $this->plugin->get_id_dasherized();
 	}
 
 
@@ -69,6 +95,8 @@ trait Block_Integration_Trait {
 	/**
 	 * Gets the main script handle.
 	 *
+	 * The default is `wc-{integration_id}-{block_name}-block`.
+	 *
 	 * @since 5.12.0
 	 *
 	 * @return string
@@ -83,9 +111,9 @@ trait Block_Integration_Trait {
 		 * @param string $handle
 		 * @param Block_Integration $integration
 		 */
-		return (string) apply_filters( 'wc_' . $this->gateway->get_id() . '_'. $this->block_name . '_block_handle', sprintf(
+		return (string) apply_filters( 'wc_' . $this->get_id() . '_'. $this->block_name . '_block_handle', sprintf(
 			'%s-%s-block',
-			$this->gateway->get_id_dasherized(),
+			$this->get_id_dasherized(),
 			$this->block_name
 		), $this );
 	}
@@ -93,6 +121,8 @@ trait Block_Integration_Trait {
 
 	/**
 	 * Gets the main script URL.
+	 *
+	 * The default is `{plugin_root}/assets/js/blocks/wc-{integration_id}-{block_name}-block.js`.
 	 *
 	 * @since 5.12.0
 	 *
@@ -108,10 +138,10 @@ trait Block_Integration_Trait {
 		 * @param string $url
 		 * @param Block_Integration $integration
 		 */
-		return (string) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_script_url', sprintf(
+		return (string) apply_filters( 'wc_' . $this->get_id() . '_' . $this->block_name . '_block_script_url', sprintf(
 			'%s%s-%s-block.js',
 			$this->plugin->get_plugin_url() . '/assets/js/blocks/wc-',
-			$this->gateway->get_id_dasherized(),
+			$this->get_id_dasherized(),
 			$this->block_name
 		), $this );
 	}
@@ -120,9 +150,11 @@ trait Block_Integration_Trait {
 	/**
 	 * Gets the main script stylesheet URL.
 	 *
-	 * @since 5.12.0
+	 * The default is `{plugin_root}/assets/css/blocks/wc-{integration_id}-{block_name}-block.css`.
 	 *
 	 * @return string
+	 *@since 5.12.0
+	 *
 	 */
 	protected function get_main_script_stylesheet_url() : string {
 
@@ -134,10 +166,10 @@ trait Block_Integration_Trait {
 		 * @param string $url
 		 * @param Block_Integration $integration
 		 */
-		return (string) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_stylesheet_url', sprintf(
+		return (string) apply_filters( 'wc_' . $this->get_id() . '_' . $this->block_name . '_block_stylesheet_url', sprintf(
 			'%s%s-%s-block.css',
 			$this->plugin->get_plugin_url() . '/assets/css/blocks/wc-',
-			$this->gateway->get_id_dasherized(),
+			$this->get_id_dasherized(),
 			$this->block_name
 		), $this );
 	}
@@ -172,7 +204,7 @@ trait Block_Integration_Trait {
 		 * @param string[] $dependencies
 		 * @param Block_Integration $integration
 		 */
-		return (array) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_script_dependencies', $this->script_dependencies, $this );
+		return (array) apply_filters( 'wc_' . $this->get_id() . '_' . $this->block_name . '_block_script_dependencies', $this->script_dependencies, $this );
 	}
 
 
@@ -205,7 +237,7 @@ trait Block_Integration_Trait {
 		 * @param string[] $dependencies
 		 * @param Block_Integration $integration
 		 */
-		return (array) apply_filters( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_stylesheet_dependencies', $this->stylesheet_dependencies, $this );
+		return (array) apply_filters( 'wc_' . $this->get_id() . '_' . $this->block_name . '_block_stylesheet_dependencies', $this->stylesheet_dependencies, $this );
 	}
 
 
