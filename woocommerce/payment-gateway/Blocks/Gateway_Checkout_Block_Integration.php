@@ -221,7 +221,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			return [];
 		}
 
-		return array_map( [ SV_WC_Payment_Gateway_Helper::class, 'normalize_card_type' ], $this->gateway->get_available_card_types() );
+		return array_map( [ SV_WC_Payment_Gateway_Helper::class, 'normalize_card_type' ], array_keys( $this->gateway->get_available_card_types() ) );
 	}
 
 
