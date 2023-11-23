@@ -603,9 +603,9 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			$response = $_REQUEST['response'] ?? [];
 
 			if ( ! empty( $request ) || ! empty( $response ) ) {
-				$this->gateway->log_api_request( $this->prepare_log_data( (array) $request ), $this->prepare_log_data( (array) $response ), $type );
+				$this->gateway->log_api_request( $this->prepare_log_message( (array) $request ), $this->prepare_log_message( (array) $response ), $type );
 			} elseif ( is_string( $message ) && is_string( $type ) && ! empty( $message ) ) {
-				$this->gateway->add_debug_message( $this->prepare_log_data( $message ), $type );
+				$this->gateway->add_debug_message( $this->prepare_log_message( $message ), $type );
 			} else {
 				throw new SV_WC_Plugin_Exception( 'Invalid request.' );
 			}
