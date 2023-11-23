@@ -71,6 +71,8 @@ trait Block_Integration_Trait {
 	/**
 	 * Gets the integration ID (dasherized).
 	 *
+	 * @since 5.12.0
+	 *
 	 * @return string
 	 */
 	protected function get_id_dasherized() : string {
@@ -173,9 +175,9 @@ trait Block_Integration_Trait {
 	 *
 	 * The default is `{plugin_root}/assets/css/blocks/wc-{plugin_id}-{block_name}-block.css`.
 	 *
-	 * @return string
-	 *@since 5.12.0
+	 * @since 5.12.0
 	 *
+	 * @return string
 	 */
 	protected function get_main_script_stylesheet_url() : string {
 
@@ -198,6 +200,8 @@ trait Block_Integration_Trait {
 
 	/**
 	 * Adds a main script dependency.
+	 *
+	 * @since 5.12.0
 	 *
 	 * @param string|string[] $dependency one or more dependencies defined by their identifiers
 	 * @return void
@@ -231,6 +235,8 @@ trait Block_Integration_Trait {
 
 	/**
 	 * Adds a main stylesheet dependency.
+	 *
+	 * @since 5.12.0
 	 *
 	 * @param string|string[] $dependency one or more dependencies defined by their identifiers
 	 * @return void
