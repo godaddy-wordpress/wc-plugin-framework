@@ -105,6 +105,19 @@ trait Block_Integration_Trait {
 			$this->plugin->get_textdomain()
 		);
 
+		/**
+		 * @NOTE Normally {@see wp_enqueue_block_style()} should suffice for block purposes,
+		 * however we noticed that in some themes the block stylesheet is not loaded unless we enqueue the stylesheet
+		 * via {@see wp_enqueue_style()}.
+		 */
+
+		wp_register_style(
+			$this->get_main_script_handle(),
+			$this->get_main_script_stylesheet_url(),
+			$this->get_main_script_stylesheet_dependencies(),
+			defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ? null : $this->plugin->get_version(),
+		);
+
 		wp_enqueue_block_style(
 			$this->block_name,
 			[
@@ -112,6 +125,8 @@ trait Block_Integration_Trait {
 				'src'    => $this->get_main_script_stylesheet_url(),
 			]
 		);
+
+		wp_enqueue_style( $this->get_main_script_handle() );
 	}
 
 
