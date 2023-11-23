@@ -317,7 +317,7 @@ trait Block_Integration_Trait {
 
 
 	/**
-	 * Prepares log data for logging.
+	 * Prepares message data for logging.
 	 *
 	 * Implementations can override this method, for example to strip any sensitive data from an API response that shouldn't be logged.
 	 *
@@ -325,12 +325,12 @@ trait Block_Integration_Trait {
 	 *
 	 * @since 5.12.0
 	 *
-	 * @param string|array<mixed $data
+	 * @param string|array<mixed $log_message
 	 * @return string|array<mixed>
 	 */
-	protected function prepare_log_data( $data ) {
+	protected function prepare_log_message( $log_message ) {
 
-		return $data;
+		return $log_message;
 	}
 
 
