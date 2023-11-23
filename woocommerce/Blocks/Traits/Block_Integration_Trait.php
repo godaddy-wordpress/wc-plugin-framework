@@ -304,6 +304,8 @@ trait Block_Integration_Trait {
 	/**
 	 * Logs a message to the plugin or gateway log via AJAX.
 	 *
+	 * @see Block_Integration_Trait::prepare_log_data()
+	 *
 	 * @since 5.12.0
 	 *
 	 * @return void
@@ -311,6 +313,24 @@ trait Block_Integration_Trait {
 	public function ajax_log() : void {
 
 		// classes implementing this trait should override this method to provide AJAX logging
+	}
+
+
+	/**
+	 * Prepares log data for logging.
+	 *
+	 * Implementations can override this method, for example to strip any sensitive data from an API response that shouldn't be logged.
+	 *
+	 * @see Block_Integration_Trait::ajax_log()
+	 *
+	 * @since 5.12.0
+	 *
+	 * @param string|array<mixed $data
+	 * @return string|array<mixed>
+	 */
+	protected function prepare_log_data( $data ) {
+
+		return $data;
 	}
 
 
