@@ -164,7 +164,7 @@ trait Block_Integration_Trait {
 		return (string) apply_filters( 'wc_' . $this->get_id() . '_' . $this->block_name . '_block_script_url', sprintf(
 			'%s%s-%s-block.js',
 			$this->plugin->get_plugin_url() . '/assets/js/blocks/wc-',
-			$this->plugin->get_id(),
+			$this->plugin->get_id_dasherized(),
 			$this->block_name
 		), $this );
 	}
