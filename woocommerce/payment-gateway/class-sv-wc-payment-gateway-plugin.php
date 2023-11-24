@@ -1482,9 +1482,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * @param string|null $gateway_id
 	 * @return string
 	 */
-	public function get_script_version( ?string $gateway_id = null ) : string  {
+	public function get_assets_version( ?string $gateway_id = null ) : string  {
 
-		$script_version = parent::get_script_version();
+		$script_version = parent::get_assets_version();
 
 		if ( $gateway_id ) {
 

@@ -121,7 +121,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 */
 	protected function enqueue_edit_order_assets( \WC_Order $order ) {
 
-		$version = $this->get_plugin()->get_script_version();
+		$version = $this->get_plugin()->get_assets_version();
 
 		wp_enqueue_script( 'sv-wc-payment-gateway-admin-order', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/admin/sv-wc-payment-gateway-admin-order.js', [ 'jquery' ], $version, true );
 

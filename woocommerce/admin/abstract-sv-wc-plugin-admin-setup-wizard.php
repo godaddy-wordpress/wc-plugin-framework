@@ -382,16 +382,19 @@ abstract class Setup_Wizard {
 	 */
 	protected function load_scripts_styles() {
 
+		$fw_version = $this->get_plugin()->get_assets_version();
+		$wc_version = defined( 'WC_VERSION' ) ? WC_VERSION : WC()->version ?? $fw_version;
+
 		// block UI
-		wp_register_script( 'jquery-blockui', WC()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI.min.js', array( 'jquery' ), '2.70', true );
+		wp_register_script( 'jquery-blockui', WC()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI.min.js', [ 'jquery' ], '2.70', true );
 
 		// enhanced dropdowns
-		wp_register_script( 'selectWoo', WC()->plugin_url() . '/assets/js/selectWoo/selectWoo.full.min.js', array( 'jquery' ), '1.0.0' );
-		wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select.min.js', array( 'jquery', 'selectWoo' ), $this->get_plugin()->get_version() );
+		wp_register_script( 'selectWoo', WC()->plugin_url() . '/assets/js/selectWoo/selectWoo.full.min.js', [ 'jquery' ], '1.0.0' );
+		wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select.min.js', [ 'jquery', 'selectWoo' ], $wc_version );
 		wp_localize_script(
 			'wc-enhanced-select',
 			'wc_enhanced_select_params',
-			array(
+			[
 				'i18n_no_matches'           => _x( 'No matches found', 'enhanced select', 'woocommerce-plugin-framework' ),
 				'i18n_ajax_error'           => _x( 'Loading failed', 'enhanced select', 'woocommerce-plugin-framework' ),
 				'i18n_input_too_short_1'    => _x( 'Please enter 1 or more characters', 'enhanced select', 'woocommerce-plugin-framework' ),
@@ -405,16 +408,16 @@ abstract class Setup_Wizard {
 				'ajax_url'                  => admin_url( 'admin-ajax.php' ),
 				'search_products_nonce'     => wp_create_nonce( 'search-products' ),
 				'search_customers_nonce'    => wp_create_nonce( 'search-customers' ),
-			)
+			]
 		);
 
 		// WooCommerce Setup core styles
-		wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', array(), $this->get_plugin()->get_version() );
-		wp_enqueue_style( 'wc-setup', WC()->plugin_url() . '/assets/css/wc-setup.css', array( 'dashicons', 'install' ), $this->get_plugin()->get_version() );
+		wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', [], $wc_version );
+		wp_enqueue_style( 'wc-setup', WC()->plugin_url() . '/assets/css/wc-setup.css', [ 'dashicons', 'install' ], $wc_version );
 
 		// framework bundled styles
-		wp_enqueue_style( 'sv-wc-admin-setup', $this->get_plugin()->get_framework_assets_url() . '/css/admin/sv-wc-plugin-admin-setup-wizard.min.css', array( 'wc-setup' ), $this->get_plugin()->get_version() );
-		wp_enqueue_script( 'sv-wc-admin-setup', $this->get_plugin()->get_framework_assets_url() . '/js/admin/sv-wc-plugin-admin-setup-wizard.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui' ), $this->get_plugin()->get_version() );
+		wp_enqueue_style( 'sv-wc-admin-setup', $this->get_plugin()->get_framework_assets_url() . '/css/admin/sv-wc-plugin-admin-setup-wizard.min.css', [ 'wc-setup' ], $fw_version );
+		wp_enqueue_script( 'sv-wc-admin-setup', $this->get_plugin()->get_framework_assets_url() . '/js/admin/sv-wc-plugin-admin-setup-wizard.min.js', [ 'jquery', 'wc-enhanced-select', 'jquery-blockui' ], $fw_version );
 	}
 
 

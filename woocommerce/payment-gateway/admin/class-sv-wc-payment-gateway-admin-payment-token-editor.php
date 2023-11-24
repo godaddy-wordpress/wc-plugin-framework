@@ -79,7 +79,7 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	public function enqueue_scripts_styles() {
 
 		$gateway = $this->get_gateway();
-		$version = $gateway->get_plugin()->get_script_version( $gateway->get_id() );
+		$version = $gateway->get_plugin()->get_assets_version( $gateway->get_id() );
 
 		// Stylesheet
 		wp_enqueue_style( 'sv-wc-payment-gateway-token-editor', $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/admin/sv-wc-payment-gateway-token-editor.min.css', [], $version );

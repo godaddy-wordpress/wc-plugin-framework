@@ -94,7 +94,7 @@ class SV_WP_Job_Batch_Handler {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( $this->get_job_handler()->get_identifier() . '_batch_handler',  $this->get_plugin()->get_framework_assets_url() . '/js/admin/sv-wp-admin-job-batch-handler.min.js', array( 'jquery' ), $this->get_plugin()->get_version() );
+		wp_enqueue_script( $this->get_job_handler()->get_identifier() . '_batch_handler',  $this->get_plugin()->get_framework_assets_url() . '/js/admin/sv-wp-admin-job-batch-handler.min.js', [ 'jquery' ], $this->get_plugin()->get_assets_version() );
 	}
 
 

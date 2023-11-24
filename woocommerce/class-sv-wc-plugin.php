@@ -1092,7 +1092,7 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_script_version() : string {
+	public function get_assets_version() : string {
 
 		if ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG || defined( 'WP_DEBUG' ) && true === WP_DEBUG ) {
 			return (string) time();

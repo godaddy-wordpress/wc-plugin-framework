@@ -94,7 +94,7 @@ class Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gat
 		parent::enqueue_scripts();
 
 		$gateway = $this->get_gateway();
-		$version = $gateway->get_plugin()->get_script_version( $gateway->get_id() );
+		$version = $gateway->get_plugin()->get_assets_version( $gateway->get_id() );
 
 		wp_enqueue_script( 'google-pay-js-library', 'https://pay.google.com/gp/p/js/pay.js', [], $version, true );
 		wp_enqueue_script( 'sv-wc-google-pay-v5_12_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/sv-wc-payment-gateway-google-pay.js', [ 'google-pay-js-library', 'jquery' ], $version, true );

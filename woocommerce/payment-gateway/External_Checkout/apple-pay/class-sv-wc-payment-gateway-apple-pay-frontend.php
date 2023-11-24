@@ -109,7 +109,7 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends \SkyVerge\WooCommerce\Plu
 		parent::enqueue_scripts();
 
 		$gateway = $this->get_gateway();
-		$version = $gateway->get_plugin()->get_script_version( $gateway->get_id() );
+		$version = $gateway->get_plugin()->get_assets_version( $gateway->get_id() );
 
 		wp_enqueue_style( 'sv-wc-apple-pay-v5_12_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-apple-pay.css', [], $version ); // TODO: min
 
