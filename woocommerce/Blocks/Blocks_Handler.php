@@ -7,6 +7,7 @@ use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Plugin;
+use WP_Post;
 
 if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Blocks_Handler' ) ) :
 
@@ -147,6 +148,20 @@ class Blocks_Handler {
 
 
 	/**
+	 * Determines if a page contains a checkout shortcode.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @param int|string|WP_Post $page
+	 * @return bool
+	 */
+	public static function page_contains_checkout_shortcode( $page ) : bool {
+
+		return static::page_contains_shortcode( '[woocommerce_checkout]', $page );
+	}
+
+
+	/**
 	 * Determines if the cart page is using the cart block.
 	 *
 	 * @since 5.11.11
@@ -160,6 +175,43 @@ class Blocks_Handler {
 		}
 
 		return CartCheckoutUtils::is_cart_block_default();
+	}
+
+
+	/**
+	 * Determines if a page contains a cart shortcode.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @param int|string|WP_Post $page
+	 * @return bool
+	 */
+	public static function page_contains_cart_shortcode( $page ) : bool {
+
+		return static::page_contains_shortcode( '[woocommerce_cart]', $page );
+	}
+
+
+	/**
+	 * Determines if a page contains a cart or checkout shortcode.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @param string $shortcode
+	 * @param int|string|WP_Post $page
+	 * @return bool
+	 */
+	protected static function page_contains_shortcode( string $shortcode, $page ) : bool {
+
+		if ( is_numeric( $page ) ) {
+			$page = get_post( $page );
+		}
+
+		if ( ! $page instanceof WP_Post ) {
+			return false;
+		}
+
+		return false !== strpos( $page->post_content, $shortcode );
 	}
 
 

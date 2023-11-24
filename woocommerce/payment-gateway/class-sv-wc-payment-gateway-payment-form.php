@@ -1050,8 +1050,9 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	 * @return bool
 	 */
 	protected function should_render_js_on_checkout_page() : bool {
+		global $post;
 
-		if ( is_checkout() && ! is_checkout_pay_page() && Blocks_Handler::is_checkout_block_in_use() ) {
+		if ( is_checkout() && ! is_checkout_pay_page() && Blocks_Handler::is_checkout_block_in_use() && ( $post && ! Blocks_Handler::page_contains_checkout_shortcode( $post ) ) ) {
 			return false;
 		}
 

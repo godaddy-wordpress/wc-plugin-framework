@@ -640,8 +640,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @return bool
 	 */
 	protected function should_enqueue_gateway_assets() : bool {
+		global $post;
 
-		if ( is_checkout() && ! is_checkout_pay_page() && Blocks_Handler::is_checkout_block_in_use() ) {
+		if ( is_checkout() && ! is_checkout_pay_page() && Blocks_Handler::is_checkout_block_in_use() && ( $post && ! Blocks_Handler::page_contains_checkout_shortcode( $post ) ) ) {
 			return false;
 		}
 
