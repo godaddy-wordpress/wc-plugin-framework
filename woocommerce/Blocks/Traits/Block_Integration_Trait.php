@@ -92,11 +92,13 @@ trait Block_Integration_Trait {
 	 */
 	public function initialize() : void {
 
+		$version = defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ? null : $this->plugin->get_version();
+
 		wp_register_script(
 			$this->get_main_script_handle(),
 			$this->get_main_script_url(),
 			$this->get_main_script_dependencies(),
-			defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ? null : $this->plugin->get_version(),
+			$version,
 			[ 'in_footer' => true ]
 		);
 
@@ -109,13 +111,16 @@ trait Block_Integration_Trait {
 		 * @NOTE Normally {@see wp_enqueue_block_style()} should suffice for block purposes,
 		 * however we noticed that in some themes the block stylesheet is not loaded unless we enqueue the stylesheet
 		 * via {@see wp_enqueue_style()}.
+		 *
+		 * Probably the reason is that if the theme has opted-in to separate-styles loading, then the stylesheet will be
+		 * enqueued on-render, otherwise when the block inits.
 		 */
 
 		wp_register_style(
 			$this->get_main_script_handle(),
 			$this->get_main_script_stylesheet_url(),
 			$this->get_main_script_stylesheet_dependencies(),
-			defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ? null : $this->plugin->get_version(),
+			$version,
 		);
 
 		wp_enqueue_block_style(
@@ -123,6 +128,8 @@ trait Block_Integration_Trait {
 			[
 				'handle' => $this->get_main_script_handle(),
 				'src'    => $this->get_main_script_stylesheet_url(),
+				'deps'   => $this->get_main_script_stylesheet_dependencies(),
+				'ver'    => $version,
 			]
 		);
 
