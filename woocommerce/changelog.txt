@@ -3,6 +3,7 @@
 2023.nn.nn - version 5.12.0
  * Feature - Add support for WooCommerce Cart and Checkout blocks
  * Tweak - Do not load the legacy gateway payment form assets when the Checkout block is in use
+ * Dev - Burst assets caches of framework script and styles when using any debug mode
 
 2023.11.16 - version 5.11.12
  * Misc - Update documentation links after changes in Woo.com
