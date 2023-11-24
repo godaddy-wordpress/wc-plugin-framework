@@ -568,7 +568,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$handle    = $this->get_gateway_js_handle();
 		$js_path   = $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/' . $handle . '.min.js';
 		$css_path  = $this->get_plugin()->get_plugin_path() . '/assets/css/frontend/' . $handle . '.min.css';
-		$version   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : $this->get_plugin()->get_version();
+		$version   = defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ? time() : $this->get_plugin()->get_version();
 
 		// JS
 		if ( is_readable( $js_path ) ) {
