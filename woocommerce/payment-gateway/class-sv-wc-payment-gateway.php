@@ -587,7 +587,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			 */
 			$js_url = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_javascript_url', $js_url );
 
-			wp_enqueue_script( $handle, $js_url, [], $version, [ 'in_footer' => true ] );
+			wp_enqueue_script( $handle, $js_url, ['jquery'], $version, [ 'in_footer' => true ] );
 		}
 
 		// CSS
