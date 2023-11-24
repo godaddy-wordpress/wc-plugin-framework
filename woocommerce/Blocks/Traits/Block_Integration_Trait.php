@@ -141,6 +141,9 @@ trait Block_Integration_Trait {
 	 * Gets the main script handle.
 	 *
 	 * The default is `wc-{plugin_id}-{block_name}-block`.
+	 * If a gateway plugin includes different gateways supporting a block, it is assumed they will share the same script,
+	 * used for a single script and stylesheet. If this is not the case, and a specific gateway needs to use a different script,
+	 * then that gateway should override this method or filter out the handle.
 	 *
 	 * @since 5.12.0
 	 *
@@ -168,10 +171,13 @@ trait Block_Integration_Trait {
 	 * Gets the main script URL.
 	 *
 	 * The default is `{plugin_root}/assets/js/blocks/wc-{plugin_id}-{block_name}-block.js`.
-	 *
-	 * @since 5.12.0
+	 * This may introduce the same script name if a gateway plugin includes multiple gateways.
+	 * However, it is assumed that gateways supporting a block will use a single script for all the included gateways.
+	 * If this is not the case, then any outlier gateway should override this method or filter out the URL.
 	 *
 	 * @return string
+	 *@since 5.12.0
+	 *
 	 */
 	protected function get_main_script_url() : string {
 
@@ -196,10 +202,13 @@ trait Block_Integration_Trait {
 	 * Gets the main script stylesheet URL.
 	 *
 	 * The default is `{plugin_root}/assets/css/blocks/wc-{plugin_id}-{block_name}-block.css`.
-	 *
-	 * @since 5.12.0
+	 * This may introduce the same stylesheet name if a gateway plugin includes multiple gateways.
+	 * However, it is assumed that gateways supporting a block will use a single stylesheet for all the included gateways.
+	 * If this is not the case, then any outlier gateway should override this method or filter out the URL.
 	 *
 	 * @return string
+	 *@since 5.12.0
+	 *
 	 */
 	protected function get_main_script_stylesheet_url() : string {
 
