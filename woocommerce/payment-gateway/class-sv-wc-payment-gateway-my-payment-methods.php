@@ -165,7 +165,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 *
 	 * @return void
 	 */
-	public function maybe_enqueue_styles_scripts() : void {
+	public function maybe_enqueue_styles_scripts() {
 
 		$handle     = 'sv-wc-payment-gateway-my-payment-methods';
 		$fw_version = defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ? time() : $this->get_plugin()->get_version();
