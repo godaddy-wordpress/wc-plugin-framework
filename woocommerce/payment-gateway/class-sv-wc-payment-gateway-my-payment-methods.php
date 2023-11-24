@@ -168,7 +168,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	public function maybe_enqueue_styles_scripts() {
 
 		$handle     = 'sv-wc-payment-gateway-my-payment-methods';
-		$fw_version = defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ? time() : $this->get_plugin()->get_version();
+		$fw_version = $this->plugin->get_script_version();
 		$wc_version = defined( 'WC_VERSION' ) ? WC_VERSION : WC()->version ?? $fw_version;
 
 		wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', [ 'jquery' ], $wc_version );

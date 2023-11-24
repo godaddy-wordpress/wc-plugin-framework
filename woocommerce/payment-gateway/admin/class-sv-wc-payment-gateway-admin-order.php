@@ -121,7 +121,9 @@ class SV_WC_Payment_Gateway_Admin_Order {
 	 */
 	protected function enqueue_edit_order_assets( \WC_Order $order ) {
 
-		wp_enqueue_script( 'sv-wc-payment-gateway-admin-order', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/admin/sv-wc-payment-gateway-admin-order.js', array( 'jquery' ), SV_WC_Plugin::VERSION, true );
+		$version = $this->get_plugin()->get_script_version();
+
+		wp_enqueue_script( 'sv-wc-payment-gateway-admin-order', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/admin/sv-wc-payment-gateway-admin-order.js', [ 'jquery' ], $version, true );
 
 		wp_localize_script( 'sv-wc-payment-gateway-admin-order', 'sv_wc_payment_gateway_admin_order', array(
 			'ajax_url'       => admin_url( 'admin-ajax.php' ),
@@ -133,7 +135,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			'capture_error'  => _x( 'Something went wrong, and the capture could not be completed. Please try again.', 'Payment transaction capture failed error message', 'woocommerce-plugin-framework' ),
 		) );
 
-		wp_enqueue_style( 'sv-wc-payment-gateway-admin-order', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/admin/sv-wc-payment-gateway-admin-order.min.css', SV_WC_Plugin::VERSION );
+		wp_enqueue_style( 'sv-wc-payment-gateway-admin-order', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/admin/sv-wc-payment-gateway-admin-order.min.css', $version );
 	}
 
 

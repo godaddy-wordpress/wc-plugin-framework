@@ -414,19 +414,6 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Gets the plugin's textdomain.
-	 *
-	 * @since 5.12.0
-	 *
-	 * @return string
-	 */
-	public function get_textdomain() : string {
-
-		return $this->text_domain;
-	}
-
-
-	/**
 	 * Initializes the plugin.
 	 *
 	 * Plugins can override this to set up any handlers after WordPress is ready.
@@ -1074,6 +1061,7 @@ abstract class SV_WC_Plugin {
 	 * Returns the plugin version name.  Defaults to wc_{plugin id}_version
 	 *
 	 * @since 2.0.0
+	 *
 	 * @return string the plugin version name
 	 */
 	public function get_plugin_version_name() {
@@ -1086,10 +1074,44 @@ abstract class SV_WC_Plugin {
 	 * Returns the current version of the plugin
 	 *
 	 * @since 2.0.0
+	 *
 	 * @return string plugin version
 	 */
 	public function get_version() {
+
 		return $this->version;
+	}
+
+
+	/**
+	 * Gets the plugin version to be used by any internal scripts.
+	 *
+	 * This normally returns the plugin version, but will return `time()` if debug is enabled, to burst assets caches.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return string
+	 */
+	public function get_script_version() : string {
+
+		if ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG || defined( 'WP_DEBUG' ) && true === WP_DEBUG ) {
+			return (string) time();
+		}
+
+		return $this->version;
+	}
+
+
+	/**
+	 * Gets the plugin's textdomain.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return string
+	 */
+	public function get_textdomain() : string {
+
+		return $this->text_domain;
 	}
 
 

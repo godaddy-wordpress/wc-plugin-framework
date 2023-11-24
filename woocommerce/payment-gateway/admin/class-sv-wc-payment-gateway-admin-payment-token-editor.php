@@ -78,11 +78,14 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 */
 	public function enqueue_scripts_styles() {
 
+		$gateway = $this->get_gateway();
+		$version = $gateway->get_plugin()->get_script_version( $gateway->get_id() );
+
 		// Stylesheet
-		wp_enqueue_style( 'sv-wc-payment-gateway-token-editor', $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/admin/sv-wc-payment-gateway-token-editor.min.css', array(), SV_WC_Plugin::VERSION );
+		wp_enqueue_style( 'sv-wc-payment-gateway-token-editor', $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/admin/sv-wc-payment-gateway-token-editor.min.css', [], $version );
 
 		// Main editor script
-		wp_enqueue_script( 'sv-wc-payment-gateway-token-editor', $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/admin/sv-wc-payment-gateway-token-editor.js', array( 'jquery' ), SV_WC_Plugin::VERSION, true );
+		wp_enqueue_script( 'sv-wc-payment-gateway-token-editor', $this->get_gateway()->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/admin/sv-wc-payment-gateway-token-editor.js', [ 'jquery' ], $version, true );
 
 		wp_localize_script( 'sv-wc-payment-gateway-token-editor', 'wc_payment_gateway_token_editor', array(
 			'ajax_url' => admin_url( 'admin-ajax.php' ),

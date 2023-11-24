@@ -1472,6 +1472,34 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
+	 * Gets the plugin version to be used by any internal scripts.
+	 *
+	 * This normally corresponds to the plugin version, but can be overridden when debug mode is used.
+	 * In that case `time()` will be used to force cache bursting.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @param string|null $gateway_id
+	 * @return string
+	 */
+	public function get_script_version( ?string $gateway_id = null ) : string  {
+
+		$script_version = parent::get_script_version();
+
+		if ( $gateway_id ) {
+
+			$gateway = $this->get_gateway( $gateway_id );
+
+			if ( $gateway && ! $gateway->debug_off() ) {
+				$script_version = time();
+			}
+		}
+
+		return $script_version;
+	}
+
+
+	/**
 	 * Returns the loaded payment gateway framework __FILE__
 	 *
 	 * @since 4.0.0
