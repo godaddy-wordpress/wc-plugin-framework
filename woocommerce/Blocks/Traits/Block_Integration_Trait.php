@@ -92,7 +92,7 @@ trait Block_Integration_Trait {
 	 */
 	public function initialize() : void {
 
-		$version = defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ? null : $this->plugin->get_version();
+		$version = defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ? time() : $this->plugin->get_version();
 
 		wp_register_script(
 			$this->get_main_script_handle(),

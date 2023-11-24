@@ -568,6 +568,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$handle    = $this->get_gateway_js_handle();
 		$js_path   = $this->get_plugin()->get_plugin_path() . '/assets/js/frontend/' . $handle . '.min.js';
 		$css_path  = $this->get_plugin()->get_plugin_path() . '/assets/css/frontend/' . $handle . '.min.css';
+		$version   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : $this->get_plugin()->get_version();
 
 		// JS
 		if ( is_readable( $js_path ) ) {
@@ -586,7 +587,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			 */
 			$js_url = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_javascript_url', $js_url );
 
-			wp_enqueue_script( $handle, $js_url, array(), $this->get_plugin()->get_version(), true );
+			wp_enqueue_script( $handle, $js_url, [], $version, [ 'in_footer' => true ] );
 		}
 
 		// CSS
@@ -606,7 +607,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			 */
 			$css_url = apply_filters( 'wc_payment_gateway_' . $this->get_plugin()->get_id() . '_css_url', $css_url );
 
-			wp_enqueue_style( $handle, $css_url, array(), $this->get_plugin()->get_version() );
+			wp_enqueue_style( $handle, $css_url, [], $version );
 		}
 
 		// localized JS script params
