@@ -904,8 +904,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return bool
 	 */
-	public function is_hpos_compatible() : bool
-	{
+	public function is_hpos_compatible() : bool {
+
 		return isset( $this->supported_features['hpos'] )
 			&& true === $this->supported_features['hpos']
 			&& SV_WC_Plugin_Compatibility::is_wc_version_gte( '7.6' );
