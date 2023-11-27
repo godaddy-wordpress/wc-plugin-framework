@@ -51,7 +51,7 @@ trait Block_Integration_Trait {
 	 */
 	public function get_name() : string {
 
-		return $this->get_name();
+		return $this->get_id();
 	}
 
 
@@ -92,7 +92,7 @@ trait Block_Integration_Trait {
 	 */
 	public function initialize() : void {
 
-		$version = defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ? time() : $this->plugin->get_version();
+		$version = isset( $this->gateway ) ? $this->plugin->get_assets_version( $this->gateway->get_id() ) : $this->plugin->get_assets_version();
 
 		wp_register_script(
 			$this->get_main_script_handle(),
