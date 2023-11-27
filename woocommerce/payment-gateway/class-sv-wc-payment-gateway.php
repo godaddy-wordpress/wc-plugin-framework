@@ -1560,11 +1560,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		// disable the field if the sibling gateway is already inheriting settings
 		$form_fields['inherit_settings'] = array(
-			'title'       => esc_html__( 'Share connection settings', 'woocommerce-plugin-framework' ),
+			'title'       => esc_html_x( 'Share connection settings', 'Used in payment gateways configuration', 'woocommerce-plugin-framework' ),
 			'type'        => 'checkbox',
 			'label'       => esc_html__( 'Use connection/authentication settings from other gateway', 'woocommerce-plugin-framework' ),
 			'default'     => count( $configured_other_gateway_ids ) > 0 ? 'yes' : 'no',
-			'disabled'    => count( $inherit_settings_other_gateway_ids ) > 0 ? true : false,
+			'disabled'    => count( $inherit_settings_other_gateway_ids ) > 0,
 			'description' => count( $inherit_settings_other_gateway_ids ) > 0 ? esc_html__( 'Disabled because the other gateway is using these settings', 'woocommerce-plugin-framework' ) : '',
 		);
 
