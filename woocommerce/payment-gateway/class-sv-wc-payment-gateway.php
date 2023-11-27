@@ -1503,10 +1503,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		$form_fields['environment'] = array(
 			/* translators: environment as in a software environment (test/production) */
-			'title'    => esc_html__( 'Environment', 'woocommerce-plugin-framework' ),
+			'title'    => esc_html_x( 'Environment', 'Payment gateway production or test environment modes', 'woocommerce-plugin-framework' ),
 			'type'     => 'select',
 			'default'  => key( $this->get_environments() ),  // default to first defined environment
-			'desc_tip' => esc_html__( 'Select the gateway environment to use for transactions.', 'woocommerce-plugin-framework' ),
+			'desc_tip' => esc_html_x( 'Select the gateway environment to use for transactions.', 'Payment gateway production or test environment modes', 'woocommerce-plugin-framework' ),
 			'options'  => $this->get_environments(),
 		);
 
