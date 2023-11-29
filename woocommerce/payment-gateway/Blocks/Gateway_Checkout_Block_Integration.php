@@ -597,17 +597,43 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 				throw new SV_WC_Plugin_Exception( 'Invalid nonce.' );
 			}
 
-			$message  = $_REQUEST['message']  ?? null;
-			$type     = $_REQUEST['type']     ?? 'message';
-			$request  = $_REQUEST['request']  ?? [];
-			$response = $_REQUEST['response'] ?? [];
+			/**
+			 * Filters gateway log data for the Checkout block.
+			 *
+			 * @since 5.12.0
+			 *
+			 * @param array<string, mixed> $data
+			 * @param array<string, mixed> $request
+			 * @param Gateway_Checkout_Block_Integration $integration
+			 */
+			$data = apply_filters( 'wc' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log_data', $_REQUEST['data'] ?? [], $_REQUEST, $this );
+
+			if ( empty( $data ) || ! is_array( $data ) ) {
+				throw new SV_WC_Plugin_Exception( 'Missing log data.' );
+			}
+
+			$message  = $data['message']  ?? null;
+			$type     = $data['type']     ?? 'message';
+			$request  = $data['request']  ?? [];
+			$response = $data['response'] ?? [];
+			$logged   = false;
+
+			if ( is_string( $message ) && is_string( $type ) && ! empty( $message ) ) {
+
+				$this->gateway->add_debug_message( $message, $type );
+
+				$logged = true;
+			}
 
 			if ( ! empty( $request ) || ! empty( $response ) ) {
-				$this->gateway->log_api_request( $this->prepare_log_message( (array) $request ), $this->prepare_log_message( (array) $response ), $type );
-			} elseif ( is_string( $message ) && is_string( $type ) && ! empty( $message ) ) {
-				$this->gateway->add_debug_message( $this->prepare_log_message( $message ), $type );
-			} else {
-				throw new SV_WC_Plugin_Exception( 'Invalid request.' );
+
+				$this->gateway->log_api_request( $request, $response, $type );
+
+				$logged = true;
+			}
+
+			if ( ! $logged ) {
+				throw new SV_WC_Plugin_Exception( 'Invalid log request.' );
 			}
 
 		} catch ( SV_WC_Plugin_Exception $exception ) {
