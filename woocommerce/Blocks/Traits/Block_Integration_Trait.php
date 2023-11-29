@@ -430,7 +430,7 @@ trait Block_Integration_Trait {
 	protected function is_ajax_logging_enabled() : bool {
 
 		// classes implementing this trait should override this method to determine if AJAX logging is enabled
-		return false;
+		return defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || defined( 'WP_DEBUG' ) && WP_DEBUG;
 	}
 
 
