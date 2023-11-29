@@ -466,7 +466,7 @@ trait Block_Integration_Trait {
 		 * @param array<string, mixed> $request
 		 * @param Gateway_Checkout_Block_Integration $integration
 		 */
-		$log_data = apply_filters( 'wc' . $this->get_name() . '_' . $this->block_name . '_block_log_data', $_REQUEST['data'] ?? [], $_REQUEST, $this );
+		$log_data = apply_filters( 'wc_' . $this->get_name() . '_' . $this->block_name . '_block_log_data', $_REQUEST['data'] ?? [], $_REQUEST, $this );
 
 		if ( empty( $log_data ) ) {
 			throw new SV_WC_Plugin_Exception( 'Missing log data.' );
