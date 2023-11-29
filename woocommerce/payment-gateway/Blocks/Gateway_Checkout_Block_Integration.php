@@ -94,9 +94,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		// AJAX endpoint for logging
 		add_action( 'wp_ajax_wc_' . $this->get_name() . '_' . $this->block_name . '_block_log', [ $this, 'ajax_log' ] );
 		add_action( 'wp_ajax_nopriv_wc_' . $this->get_name() . '_' . $this->block_name . '_block_log', [ $this, 'ajax_log' ] );
-		add_filter( 'wc_' . $this->get_name() . '_' . $this->block_name . '_block_log_data', [$this,
-		                                                                                      'get_ajax_log_data'
-		], 10, 2 );
+		add_filter( 'wc_' . $this->get_name() . '_' . $this->block_name . '_block_log_data', [ $this, 'get_ajax_log_data' ], 10, 2 );
 
 		// prepares payment data for processing in the backend
 		add_action( 'woocommerce_rest_checkout_process_payment_with_context', [ $this, 'prepare_payment_data' ], 10, 2 );
