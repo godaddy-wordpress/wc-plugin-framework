@@ -75,28 +75,28 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		$this->gateway  = $gateway;
 		$this->settings = $gateway->settings;
 
-		// extends the block payment data for the current gateway
-		add_filter( "wc_{$this->gateway->get_id()}_{$this->block_name}_block_payment_method_data", [ $this, 'add_payment_method_data' ], 10, 2 );
-
-		// AJAX endpoint for logging
-		add_action( 'wp_ajax_wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log', [ $this, 'ajax_log' ] );
-		add_action( 'wp_ajax_nopriv_wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log', [ $this, 'ajax_log' ] );
-
-		// prepares payment data for processing in the backend
-		add_action( 'woocommerce_rest_checkout_process_payment_with_context', [ $this, 'prepare_payment_data' ], 10, 2 );
+		$this->add_hooks();
 	}
 
 
 	/**
-	 * Gets the integration name.
+	 * Adds hooks.
 	 *
 	 * @since 5.12.0
 	 *
-	 * @return string
+	 * @return void
 	 */
-	public function get_name() : string {
+	protected function add_hooks(): void {
 
-		return $this->gateway->get_id();
+		// extends the block payment data for the current gateway
+		add_filter( 'wc_' . $this->get_name() . '_' . $this->block_name . '_block_payment_method_data', [ $this, 'add_payment_method_data' ], 10, 2 );
+
+		// AJAX endpoint for logging
+		add_action( 'wp_ajax_wc_' . $this->get_name() . '_' . $this->block_name . '_block_log', [ $this, 'ajax_log' ] );
+		add_action( 'wp_ajax_nopriv_wc_' . $this->get_name() . '_' . $this->block_name . '_block_log', [ $this, 'ajax_log' ] );
+
+		// prepares payment data for processing in the backend
+		add_action( 'woocommerce_rest_checkout_process_payment_with_context', [ $this, 'prepare_payment_data' ], 10, 2 );
 	}
 
 
@@ -110,6 +110,19 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	public function is_active() : bool {
 
 		return $this->gateway->is_available();
+	}
+
+
+	/**
+	 * Determines if AJAX logging is enabled for the gateway.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool
+	 */
+	protected function is_ajax_logging_enabled(): bool {
+
+		return ! $this->gateway->debug_off();
 	}
 
 
@@ -160,7 +173,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'sample_check'         => WC_HTTPS::force_https_url( $this->plugin->get_payment_gateway_framework_assets_url(). '/images/sample-check-sprite.png' ),
 			'help_tip'             => WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/help.png' ),
 			'ajax_url'             => WC_HTTPS::force_https_url( admin_url( 'admin-ajax.php' ) ),
-			'ajax_log_nonce'       => wp_create_nonce( 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log' ),
+			'ajax_log_nonce'       => wp_create_nonce( 'wc_' . $this->get_name() . '_' . $this->block_name . '_block_log' ),
 		];
 
 		/**
@@ -570,78 +583,6 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		}
 
 		return $this->gateway->get_payment_tokens_handler()->get_token_by_core_id( get_current_user_id(), $core_token_id );
-	}
-
-
-	/**
-	 * Logs a message via AJAX callback.
-	 *
-	 * If logging is disabled this method will have no effect.
-	 * If logging to checkout is enabled, a notice may be produced in the frontend.
-	 *
-	 * @internal
-	 *
-	 * @since 5.12.0
-	 *
-	 * @return void
-	 */
-	public function ajax_log() : void {
-
-		try {
-
-			if ( $this->gateway->debug_off() ) {
-				throw new SV_WC_Plugin_Exception('Logging is disabled.' );
-			}
-
-			if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'wc_' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log' ) ) {
-				throw new SV_WC_Plugin_Exception( 'Invalid nonce.' );
-			}
-
-			/**
-			 * Filters gateway log data for the Checkout block.
-			 *
-			 * @since 5.12.0
-			 *
-			 * @param array<string, mixed> $data
-			 * @param array<string, mixed> $request
-			 * @param Gateway_Checkout_Block_Integration $integration
-			 */
-			$data = apply_filters( 'wc' . $this->gateway->get_id() . '_' . $this->block_name . '_block_log_data', $_REQUEST['data'] ?? [], $_REQUEST, $this );
-
-			if ( empty( $data ) || ! is_array( $data ) ) {
-				throw new SV_WC_Plugin_Exception( 'Missing log data.' );
-			}
-
-			$message  = $data['message']  ?? null;
-			$type     = $data['type']     ?? 'message';
-			$request  = $data['request']  ?? [];
-			$response = $data['response'] ?? [];
-			$logged   = false;
-
-			if ( is_string( $message ) && is_string( $type ) && ! empty( $message ) ) {
-
-				$this->gateway->add_debug_message( $message, $type );
-
-				$logged = true;
-			}
-
-			if ( ! empty( $request ) || ! empty( $response ) ) {
-
-				$this->gateway->log_api_request( $request, $response, $type );
-
-				$logged = true;
-			}
-
-			if ( ! $logged ) {
-				throw new SV_WC_Plugin_Exception( 'Invalid log request.' );
-			}
-
-		} catch ( SV_WC_Plugin_Exception $exception ) {
-
-			wp_send_json_error( $exception->getMessage() );
-		}
-
-		wp_send_json_success( 'Log successful.' );
 	}
 
 

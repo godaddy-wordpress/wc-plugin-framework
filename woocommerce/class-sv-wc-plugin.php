@@ -700,35 +700,44 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Log API requests/responses
+	 * Logs API requests/responses.
 	 *
 	 * @since 2.2.0
-	 * @param array $request request data, see SV_WC_API_Base::broadcast_request() for format
-	 * @param array $response response data
+	 *
+	 * @param array<mixed>|scalar $request request data, see SV_WC_API_Base::broadcast_request() for format
+	 * @param array<mixed>|scalar $response response data
 	 * @param string|null $log_id log to write data to
 	 */
-	public function log_api_request( $request, $response, $log_id = null ) {
+	public function log_api_request( $request, $response, ?string $log_id = null ) : void {
 
-		$this->log( "Request\n" . $this->get_api_log_message( $request ), $log_id );
+		if ( ! empty( $request ) ) {
+			$this->log( "Request\n" . $this->get_api_log_message( $request, 'request' ), $log_id );
+		}
 
 		if ( ! empty( $response ) ) {
-			$this->log( "Response\n" . $this->get_api_log_message( $response ), $log_id );
+			$this->log( "Response\n" . $this->get_api_log_message( $response, 'response' ), $log_id );
 		}
 	}
 
 
 	/**
-	 * Transform the API request/response data into a string suitable for logging
+	 * Transform the API request/response data into a string suitable for logging.
 	 *
 	 * @since 2.2.0
-	 * @param array $data
+	 *
+	 * @param array<string, mixed>|scalar $data
+	 * @param string|null $type optional type of data, either 'request' or 'response'
 	 * @return string
 	 */
-	public function get_api_log_message( $data ) {
+	public function get_api_log_message( $data, ?string $type = null ) : string {
 
-		$messages = array();
+		$messages = [];
 
-		$messages[] = isset( $data['uri'] ) && $data['uri'] ? 'Request' : 'Response';
+		if ( ! empty( $type ) )  {
+			$messages[] = ucfirst( $type );
+		} else {
+			$messages[] = isset( $data['uri'] ) && $data['uri'] ? 'Request' : 'Response';
+		}
 
 		foreach ( (array) $data as $key => $value ) {
 

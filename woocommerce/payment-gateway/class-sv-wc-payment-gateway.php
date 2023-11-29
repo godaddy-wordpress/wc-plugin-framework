@@ -3668,14 +3668,14 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Adds debug messages to the page as a WC message/error, and/or to the WC Error log
 	 *
 	 * @since 1.0.0
-	 * @param string $message message to add
-	 * @param string $type how to add the message, options are:
-	 *     'message' (styled as WC message), 'error' (styled as WC Error)
+	 *
+	 * @param string|mixed $message message to add
+	 * @param string|null $type how to add the message, options are: 'message' (styled as WC message), 'error' (styled as WC Error)
 	 */
-	public function add_debug_message( $message, $type = 'message' ) {
+	public function add_debug_message( $message, ?string $type = 'message' ) : void {
 
 		// do nothing when debug mode is off or no message
-		if ( 'off' == $this->debug_off() || ! $message ) {
+		if ( ! $message || ! is_string( $message ) || 'off' == $this->debug_off() ) {
 			return;
 		}
 
