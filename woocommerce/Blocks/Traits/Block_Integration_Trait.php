@@ -391,7 +391,7 @@ trait Block_Integration_Trait {
 		if ( isset( $this->gateway ) ) {
 			$this->gateway->add_debug_message( $message, $type );
 		} else {
-			$this->plugin->log( $message, $type );
+			$this->plugin->log( $message );
 		}
 	}
 
