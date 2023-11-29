@@ -94,6 +94,9 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		// AJAX endpoint for logging
 		add_action( 'wp_ajax_wc_' . $this->get_name() . '_' . $this->block_name . '_block_log', [ $this, 'ajax_log' ] );
 		add_action( 'wp_ajax_nopriv_wc_' . $this->get_name() . '_' . $this->block_name . '_block_log', [ $this, 'ajax_log' ] );
+		add_filter( 'wc_' . $this->get_name() . '_' . $this->block_name . '_block_log_data', [$this,
+		                                                                                      'get_ajax_log_data'
+		], 10, 2 );
 
 		// prepares payment data for processing in the backend
 		add_action( 'woocommerce_rest_checkout_process_payment_with_context', [ $this, 'prepare_payment_data' ], 10, 2 );
@@ -123,6 +126,25 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	protected function is_ajax_logging_enabled(): bool {
 
 		return ! $this->gateway->debug_off();
+	}
+
+
+	/**
+	 * Gets the data to log via AJAX.
+	 *
+	 * This is a filter callback that classes implementing this method may override if they need to adjust any data before logging.
+	 *
+	 * @see Block_Integration_Trait::parse_ajax_log_request()
+	 *
+	 * @since 5.12.0
+	 *
+	 * @param array<string, mixed>|mixed $log_data
+	 * @param array<string, mixed> $ajax_request
+	 * @return array<string, mixed>|mixed
+	 */
+	public function get_ajax_log_data( $log_data, array $ajax_request )  {
+
+		return $log_data;
 	}
 
 
