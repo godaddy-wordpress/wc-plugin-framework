@@ -356,7 +356,7 @@ trait Block_Integration_Trait {
 	/**
 	 * Prepares message data for logging.
 	 *
-	 * Implementations can override this method, for example to strip any sensitive data from an API response that shouldn't be logged.
+	 * Implementations can override this method, for example to strip any sensitive data from an API response that shouldn't be logged, or to format specific log entries.
 	 *
 	 * @see Block_Integration_Trait::ajax_log()
 	 *
