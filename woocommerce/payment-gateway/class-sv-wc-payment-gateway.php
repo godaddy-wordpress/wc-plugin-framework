@@ -25,8 +25,8 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0 as Framework;
-use stdClass;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -642,7 +642,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	protected function should_enqueue_gateway_assets() : bool {
 		global $post;
 
-		if ( is_checkout() && ! is_checkout_pay_page() && Framework\Blocks\Blocks_Handler::is_checkout_block_in_use() && ( $post && ! Framework\Blocks\Blocks_Handler::page_contains_checkout_shortcode( $post ) ) ) {
+		if ( is_checkout() && ! is_checkout_pay_page() && Blocks_Handler::is_checkout_block_in_use() && ( $post && ! Blocks_Handler::page_contains_checkout_shortcode( $post ) ) ) {
 			return false;
 		}
 
@@ -818,9 +818,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Gets the WooCommerce Checkout Block integration.
 	 *
-	 * @return Framework\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration|null
+	 * @return Gateway_Checkout_Block_Integration|null
 	 */
-	public function get_checkout_block_integration_instance() : ?Framework\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration {
+	public function get_checkout_block_integration_instance() : ?Gateway_Checkout_Block_Integration {
 
 		// individual gateways may override this method to provide their own integration
 		return null;
@@ -3645,8 +3645,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 2.2.0
 	 *
-	 * @param stdClass|array<string, mixed>|scalar $request request data, {@see SV_WC_API_Base::broadcast_request()} for format
-	 * @param stdClass|array<string, mixed>|scalar $response response data, same as above
+	 * @param array<string, mixed>|scalar $request request data, {@see SV_WC_API_Base::broadcast_request()} for format
+	 * @param array<string, mixed>|scalar $response response data, same as above
 	 * @param string $type for available types {@see SV_WC_Plugin::get_api_log_message()}
 	 * @return void
 	 */
@@ -4382,13 +4382,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Returns true if currently processing payment from block-based checkout.
 	 *
 	 * @since 5.12.0
-	 * @see Framework\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration::prepare_payment_data()
+	 * @see Gateway_Checkout_Block_Integration::prepare_payment_data()
 	 *
 	 * @return bool
 	 */
 	protected function is_block_checkout(): bool {
 
-		return ! empty( $_POST[ 'sv_wc_is_block_checkout' ] ) && Framework\Blocks\Blocks_Handler::is_checkout_block_in_use();
+		return ! empty( $_POST[ 'sv_wc_is_block_checkout' ] ) && Blocks_Handler::is_checkout_block_in_use();
 	}
 
 
