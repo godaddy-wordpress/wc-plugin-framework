@@ -368,6 +368,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	protected function get_gateway_flags() : array {
 
 		return [
+			'settings_inherited'                => $this->gateway->inherit_settings(),
 			'is_test_environment'               => $this->gateway->is_test_environment(),
 			'is_credit_card_gateway'            => $this->gateway->is_credit_card_gateway(),
 			'is_echeck_gateway'                 => $this->gateway->is_echeck_gateway(),
