@@ -25,7 +25,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Blocks_Handler;
+use stdClass;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -704,8 +704,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 2.2.0
 	 *
-	 * @param array<mixed>|scalar $request request data, see SV_WC_API_Base::broadcast_request() for format
-	 * @param array<mixed>|scalar $response response data
+	 * @param array<mixed>|stdClass $request request data, see SV_WC_API_Base::broadcast_request() for format
+	 * @param array<mixed>|stdClass $response response data
 	 * @param string|null $log_id log to write data to
 	 */
 	public function log_api_request( $request, $response, ?string $log_id = null ) : void {

@@ -10,6 +10,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Plugin;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Plugin;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Plugin_Exception;
+use stdClass;
 
 if ( ! class_exists( '\\SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Traits\Block_Integration_Trait' ) ) :
 
@@ -419,12 +420,12 @@ trait Block_Integration_Trait {
 	 *
 	 * @since 5.12.0
 	 *
-	 * @param array<string, mixed> $request
-	 * @param array<string, mixed> $response
+	 * @param array<string, mixed>|stdClass $request
+	 * @param array<string, mixed>|stdClass $response
 	 * @param string $type
 	 * @return void
 	 */
-	protected function log_api_request( array $request, array $response, string $type ) : void {
+	protected function log_api_request( $request, $response, string $type ) : void {
 
 		if ( empty( $request ) && empty( $response ) ) {
 			return;

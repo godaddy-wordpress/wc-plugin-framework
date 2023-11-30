@@ -27,6 +27,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0;
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Blocks_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use stdClass;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -3645,8 +3646,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 2.2.0
 	 *
-	 * @param array<string, mixed>|scalar $request request data, {@see SV_WC_API_Base::broadcast_request()} for format
-	 * @param array<string, mixed>|scalar $response response data, same as above
+	 * @param stdClass|array<string, mixed> $request request data, {@see SV_WC_API_Base::broadcast_request()} for format
+	 * @param stdClass|array<string, mixed> $response response data, same as above
 	 * @param string $type for available types {@see SV_WC_Plugin::get_api_log_message()}
 	 * @return void
 	 */
