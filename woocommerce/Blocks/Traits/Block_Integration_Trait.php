@@ -341,6 +341,23 @@ trait Block_Integration_Trait {
 
 
 	/**
+	 * Adds AJAX hooks for logging.
+	 *
+	 * Classes implementing this trait should call this method to enable the hooks therein.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return void
+	 */
+	protected function add_ajax_logging() : void {
+
+		add_action( 'wp_ajax_wc_' . $this->get_name() . '_' . $this->block_name . '_block_log', [ $this, 'ajax_log' ] );
+		add_action( 'wp_ajax_nopriv_wc_' . $this->get_name() . '_' . $this->block_name . '_block_log', [ $this, 'ajax_log' ] );
+		add_filter( 'wc_' . $this->get_name() . '_' . $this->block_name . '_block_log_data', [ $this, 'get_ajax_log_data' ], 10, 2 );
+	}
+
+
+	/**
 	 * Logs a message to the plugin or gateway log via AJAX.
 	 *
 	 * @since 5.12.0

@@ -78,10 +78,8 @@ abstract class Block_Integration implements IntegrationInterface {
 	 */
 	protected function add_hooks() : void {
 
-		// AJAX logging
-		add_action( 'wp_ajax_wc_' . $this->get_name() . '_' . $this->block_name . '_block_log', [ $this, 'ajax_log' ] );
-		add_action( 'wp_ajax_nopriv_wc_' . $this->get_name() . '_' . $this->block_name . '_block_log', [ $this, 'ajax_log' ] );
-		add_filter( 'wc_' . $this->get_name() . '_' . $this->block_name . '_block_log_data', [ $this, 'get_ajax_log_data' ], 10, 2 );
+		// AJAX endpoint hooks for front-end logging
+		$this->add_ajax_logging();
 	}
 
 
