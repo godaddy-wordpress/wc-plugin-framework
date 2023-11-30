@@ -3654,12 +3654,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		// request
 		if ( ! empty( $request ) ) {
-			$this->add_debug_message( $this->get_plugin()->get_api_log_message( (array) $request ), $type );
+			$this->add_debug_message( $this->get_plugin()->get_api_log_message( (array) $request, 'request' ), $type );
 		}
 
 		// response
 		if ( ! empty( $response ) ) {
-			$this->add_debug_message( $this->get_plugin()->get_api_log_message( (array) $response ), $type );
+			$this->add_debug_message( $this->get_plugin()->get_api_log_message( (array) $response, 'response' ), $type );
 		}
 	}
 
