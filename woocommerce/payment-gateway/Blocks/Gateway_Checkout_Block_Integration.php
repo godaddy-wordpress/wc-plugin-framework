@@ -128,25 +128,6 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 
 
 	/**
-	 * Gets the data to log via AJAX.
-	 *
-	 * This is a filter callback that classes implementing this method may override if they need to adjust any data before logging.
-	 *
-	 * @see Block_Integration_Trait::parse_ajax_log_request()
-	 *
-	 * @since 5.12.0
-	 *
-	 * @param array<string, mixed>|mixed $log_data
-	 * @param array<string, mixed> $ajax_request
-	 * @return array<string, mixed>|mixed
-	 */
-	public function get_ajax_log_data( $log_data, array $ajax_request )  {
-
-		return $log_data;
-	}
-
-
-	/**
 	 * Gets the payment method script handles.
 	 *
 	 * Defaults to {@see get_script_handles()} but concrete implementations may override this.

@@ -3,6 +3,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Traits;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
+use GoDaddy\WooCommerce\Poynt\Blocks\Credit_Card_Checkout_Block_Integration;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Block_Integration;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway;
@@ -488,6 +489,26 @@ trait Block_Integration_Trait {
 		if ( empty( $log_data['message'] ) && empty( $log_data['request'] ) && empty( $log_data['response'] ) ) {
 			throw new SV_WC_Plugin_Exception( 'Invalid log request.' );
 		}
+
+		return $log_data;
+	}
+
+
+	/**
+	 * Gets the data to log via AJAX.
+	 *
+	 * This is intended as a filter callback that classes implementing this method may override if they need to adjust any data before logging.
+	 *
+	 * @see Block_Integration::add_hooks()
+	 * @see Credit_Card_Checkout_Block_Integration::add_hooks()
+	 *
+	 * @since 5.12.0
+	 *
+	 * @param array<string, mixed>|mixed $log_data
+	 * @param array<string, mixed> $ajax_request
+	 * @return array<string, mixed>|mixed
+	 */
+	public function get_ajax_log_data( $log_data, array $ajax_request )  {
 
 		return $log_data;
 	}
