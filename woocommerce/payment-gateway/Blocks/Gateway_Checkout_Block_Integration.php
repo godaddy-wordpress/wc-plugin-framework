@@ -381,13 +381,17 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'has_subscription_renewal'          => false,
 		];
 
+		$force_tokenization = false;
+
 		if ( $this->plugin->is_subscriptions_active() && class_exists( 'WC_Subscriptions_Cart' ) ) {
 
-			$cart_has_subscription = WC_Subscriptions_Cart::cart_contains_subscription();
+			$cart_has_subscription = $force_tokenization = WC_Subscriptions_Cart::cart_contains_subscription();
 
 			$flags['has_subscription']         = $cart_has_subscription;
 			$flags['has_subscription_renewal'] = $cart_has_subscription && isset( WC()->cart->recurring_carts ) && ! empty( WC()->cart->recurring_carts );
 		}
+
+		$flags['tokenization_forced'] = $force_tokenization;
 
 		return $flags;
 	}
