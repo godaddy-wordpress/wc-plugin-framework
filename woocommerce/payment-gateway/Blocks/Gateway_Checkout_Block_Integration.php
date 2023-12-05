@@ -33,8 +33,8 @@ use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Payment_F
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Payment_Token;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Plugin;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Traits\Block_Integration_Trait;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Plugin_Exception;
 use WC_HTTPS;
+use WC_Subscriptions_Cart;
 
 if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration' ) ) :
 
@@ -367,7 +367,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	protected function get_gateway_flags() : array {
 
-		return [
+		$flags = [
 			'settings_inherited'                => $this->gateway->inherit_settings(),
 			'is_test_environment'               => $this->gateway->is_test_environment(),
 			'is_credit_card_gateway'            => $this->gateway->is_credit_card_gateway(),
@@ -378,6 +378,14 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'detailed_decline_messages_enabled' => $this->gateway->is_detailed_customer_decline_messages_enabled(),
 			'logging_enabled'                   => 'off' !== $this->get_debug_mode(),
 		];
+
+		if ( $this->plugin->is_subscriptions_active() && class_exists( 'WC_Subscriptions_Cart' ) ) {
+			$flags['has_subscription'] = WC_Subscriptions_Cart::cart_contains_subscription();
+		} else {
+			$flags['has_subscription'] = false;
+		}
+
+		return $flags;
 	}
 
 
