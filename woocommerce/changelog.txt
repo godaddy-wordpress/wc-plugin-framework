@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2023.nn.nn - version 5.12.0
+2023.12.14 - version 5.12.0
  * Feature - Add support for WooCommerce Cart and Checkout blocks
  * Tweak - Do not load the legacy gateway payment form assets when the Checkout block is in use
  * Dev - Burst assets caches of framework script and styles when using any debug mode
