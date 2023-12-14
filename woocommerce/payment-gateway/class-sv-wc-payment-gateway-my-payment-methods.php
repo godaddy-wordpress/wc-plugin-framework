@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_12;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_12\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
 
 
 /**
@@ -159,24 +159,28 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 
 
 	/**
-	 * Enqueue frontend CSS/JS
+	 * Enqueues frontend CSS/JS.
 	 *
 	 * @since 4.0.0
+	 *
+	 * @return void
 	 */
 	public function maybe_enqueue_styles_scripts() {
 
-		$handle = 'sv-wc-payment-gateway-my-payment-methods';
+		$handle     = 'sv-wc-payment-gateway-my-payment-methods';
+		$fw_version = $this->get_plugin()->get_assets_version();
+		$wc_version = defined( 'WC_VERSION' ) ? WC_VERSION : WC()->version ?? $fw_version;
 
-		wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', array( 'jquery' ), WC_VERSION, true );
+		wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', [ 'jquery' ], $wc_version );
 
-		wp_enqueue_style( "$handle-v5_11_12", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array( 'dashicons' ), SV_WC_Plugin::VERSION );
+		wp_enqueue_style( "$handle-v5_12_0", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', [ 'dashicons' ], $fw_version );
 
-		wp_enqueue_script( "$handle-v5_11_12", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-tiptip', 'jquery' ), SV_WC_Plugin::VERSION );
+		wp_enqueue_script( "$handle-v5_12_0", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', [ 'jquery-tiptip', 'jquery' ], $fw_version );
 	}
 
 
 	/**
-	 * Gets the the available tokens for each plugin gateway and combine them.
+	 * Gets the available tokens for each plugin gateway and combine them.
 	 *
 	 * Tokens are also separated into Credit Card and eCheck-specific class members for convenience.
 	 *

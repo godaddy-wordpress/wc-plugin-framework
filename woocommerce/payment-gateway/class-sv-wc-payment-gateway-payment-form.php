@@ -22,11 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_12;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0;
+
+use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_12\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
 
 
 /**
@@ -285,12 +288,13 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 
 	/**
-	 * Get the payment form fields
+	 * Gets the payment form fields.
 	 *
 	 * @since 4.0.0
-	 * @return array payment fields in format suitable for woocommerce_form_field()
+	 *
+	 * @return array<string, mixed> payment fields in format suitable for {@see woocommerce_form_field()}
 	 */
-	protected function get_payment_fields() {
+	protected function get_payment_fields() : array {
 
 		switch ( $this->get_gateway()->get_payment_type() ) {
 
@@ -303,24 +307,39 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 			break;
 
 			default:
-				$fields = array();
+				$fields = [];
 			break;
 		}
 
 		/**
-		 * Payment Gateway Payment Form Default Payment Fields.
+		 * Overrideable hidden field to post a flag that the payment originated from the legacy shortcode checkout form.
+		 * This is helpful in some gateways that need different handling between blocks checkout and legacy shortcode checkout.
+		 * @see Gateway_Checkout_Block_Integration::prepare_payment_data()
+		 */
+		$fields = wp_parse_args( $fields, [
+			'context' => [
+				'type'  => 'hidden',
+				'id'    => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-context',
+				'name'  => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-context',
+				'value' => 'shortcode',
+			],
+		] );
+
+		/**
+		 * Payment Gateway Payment Form Default Payment Fields filter.
 		 *
-		 * Filters the default field data for a gateway, for credit cards/eCheck
-		 * gateways the get_credit_card_fields()/get_echeck_fields() methods
-		 * will be used. This filter can be used to return payment fields
-		 * for a non-standard payment type (like PayPal Express)
+		 * Filters the default field data for a gateway:
+		 * @see SV_WC_Payment_Gateway_Payment_Form::get_credit_card_fields()
+		 * @see SV_WC_Payment_Gateway_Payment_Form::get_echeck_fields()
+		 *
+		 * This filter can be used to return payment fields for a non-standard payment type (like PayPal Express).
 		 *
 		 * @since 4.0.0
 		 *
-		 * @param array $fields in the format supported by woocommerce_form_fields()
-		 * @param SV_WC_Payment_Gateway_Payment_Form $this payment form instance
+		 * @param array<string, mixed> $fields in the format supported by {@see woocommerce_form_field()}
+		 * @param SV_WC_Payment_Gateway_Payment_Form $payment_form payment form instance
 		 */
-		return apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_default_payment_form_fields', $fields, $this );
+		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_default_payment_form_fields', $fields, $this );
 	}
 
 
@@ -1017,9 +1036,27 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	 */
 	public function maybe_render_js() {
 
-		if ( ! is_order_received_page() && ( is_checkout() || is_checkout_pay_page() || is_add_payment_method_page() ) ) {
+		if ( ! is_order_received_page() && ( is_checkout_pay_page() || is_add_payment_method_page() || $this->should_render_js_on_checkout_page() ) ) {
 			$this->render_js();
 		}
+	}
+
+
+	/**
+	 * Determines if it should render the payment form JavaScript in the checkout page.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool
+	 */
+	protected function should_render_js_on_checkout_page() : bool {
+		global $post;
+
+		if ( is_checkout() && ! is_checkout_pay_page() && Blocks_Handler::is_checkout_block_in_use() && ( $post && ! Blocks_Handler::page_contains_checkout_shortcode( $post ) ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 
@@ -1103,7 +1140,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 			if ( is_array( $card_types ) && ! empty( $card_types ) ) {
 
-				$args['enabled_card_types'] = array_map( [ 'SkyVerge\WooCommerce\PluginFramework\v5_11_12\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ], $card_types );
+				$args['enabled_card_types'] = array_map( [ 'SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ], $card_types );
 			}
 		}
 
