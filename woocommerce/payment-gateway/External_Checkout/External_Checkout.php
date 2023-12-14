@@ -64,6 +64,7 @@ abstract class External_Checkout {
 
 		$this->plugin = $plugin;
 
+		// @NOTE: plugins should override this if they don't support Apple Pay in WooCommerce Cart/Checkout Blocks, but they offer support for regular gateways
 		$this->supported_features = wp_parse_args( $args['supported_features'] ?: [], [
 			'blocks' => [
 				'cart'     => $plugin->get_blocks_handler()->is_cart_block_compatible(),
