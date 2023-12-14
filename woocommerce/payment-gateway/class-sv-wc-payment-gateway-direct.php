@@ -22,11 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_12;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0;
+
+use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Blocks_Handler;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_12\\SV_WC_Payment_Gateway_Direct' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_Payment_Gateway_Direct' ) ) :
 
 
 /**
@@ -54,10 +56,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		if ( $this->supports_tokenization() ) {
 
 			// tokenized transaction?
-			if ( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
+			if ( $token = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 				// unknown token?
-				if ( ! $this->get_payment_tokens_handler()->user_has_token( get_current_user_id(), SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) ) {
+				if ( ! $this->get_payment_tokens_handler()->user_has_token( get_current_user_id(), $token ) ) {
 					SV_WC_Helper::wc_add_notice( esc_html__( 'Payment error, please try another payment method or contact us to complete your transaction.', 'woocommerce-plugin-framework' ), 'error' );
 					$is_valid = false;
 				}
@@ -106,7 +108,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// handle single expiry field formatted like "MM / YY" or "MM / YYYY"
 		if ( ! $expiration_month & ! $expiration_year && $expiry ) {
-			list( $expiration_month, $expiration_year ) = array_map( 'trim', explode( '/', $expiry ) );
+			[ $expiration_month, $expiration_year ] = array_map( 'trim', explode( '/', $expiry ) );
 		}
 
 		$is_valid = $this->validate_credit_card_account_number( $account_number ) && $is_valid;
@@ -341,7 +343,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function process_payment( $order_id ) {
 
-		$default = parent::process_payment( $order_id );
+		parent::process_payment( $order_id );
 
 		/**
 		 * Direct Gateway Process Payment Filter.
@@ -351,6 +353,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 * directly to the checkout processing code and skip this method entirely.
 		 *
 		 * @since 1.0.0
+		 *
 		 * @param bool $result default true
 		 * @param int|string $order_id order ID for the payment
 		 * @param SV_WC_Payment_Gateway_Direct $this instance
@@ -418,35 +421,71 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				 * Fired when a payment is processed for an order.
 				 *
 				 * @since 4.1.0
+				 *
 				 * @param \WC_Order $order order object
 				 * @param SV_WC_Payment_Gateway_Direct $this instance
 				 */
 				do_action( 'wc_payment_gateway_' . $this->get_id() . '_payment_processed', $order, $this );
 
-				return [
+				$result = [
 					'result'   => 'success',
 					'redirect' => $this->get_return_url( $order ),
 				];
 
+				if ( $this->debug_checkout() && ( $messages = $this->get_notices_as_user_messages() ) ) {
+					$result['message'] = ! empty( $messages ) ? implode( "\n", $messages ) : '';
+				}
+
+				return $result;
+
 			} else {
+
+				$messages = $this->get_notices_as_user_messages();
 
 				return [
 					'result'  => 'failure',
-					'message' => 'The transaction failed.',
+					'message' => ! empty( $messages ) ? implode( "\n", $messages ) : __( 'The transaction failed.', 'woocommerce-plugin-framework' ),
 				];
 			}
 
-		} catch ( SV_WC_Plugin_Exception $e ) {
+		} catch ( SV_WC_Plugin_Exception $exception ) {
 
-			$this->mark_order_as_failed( $order, $e->getMessage() );
+			$this->mark_order_as_failed( $order, $exception->getMessage() );
 
 			return [
 				'result'  => 'failure',
-				'message' => $e->getMessage(),
+				'message' => $exception->getMessage(),
 			];
 		}
+	}
 
-		return $default;
+
+	/**
+	 * Gets any added front end notices as user messages.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @param string|null $type
+	 * @return string[]
+	 */
+	protected function get_notices_as_user_messages( ?string $type = null ) : array  {
+
+		if ( null == $type ) {
+			$type = $this->debug_checkout() ? '' : 'error';
+		}
+
+		$messages = [];
+
+		if ( function_exists( 'wc_get_notices' ) && ( $notices = wc_get_notices( $type ) ) ) {
+			foreach ( $notices as $notice ) {
+				$message = $notice['notice'] ?? $notice;
+
+				// this will handle some log data eventually
+				$messages[] = htmlspecialchars( is_array( $message ) ? print_r( $message, true ) : $message );
+			}
+		}
+
+		return $messages;
 	}
 
 
@@ -580,7 +619,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 				// handle single expiry field formatted like "MM / YY" or "MM / YYYY"
 				if ( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) {
-					list( $order->payment->exp_month, $order->payment->exp_year ) = array_map( 'trim', explode( '/', SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) );
+					[ $order->payment->exp_month, $order->payment->exp_year ] = array_map( 'trim', explode( '/', SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) );
 				}
 
 				// add CSC if enabled
@@ -599,10 +638,10 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 			}
 
-		} elseif ( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
+		} elseif ( $token_value = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 			// paying with tokenized payment method (we've already verified that this token exists in the validate_fields method)
-			$token = $this->get_payment_tokens_handler()->get_token( $order->get_user_id(), SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) );
+			$token = $this->get_payment_tokens_handler()->get_token( $order->get_user_id(), $token_value );
 
 			$order->payment->token          = $token->get_id();
 			$order->payment->account_number = $token->get_last_four();

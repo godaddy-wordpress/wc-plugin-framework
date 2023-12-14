@@ -22,10 +22,10 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_12\Payment_Gateway\External_Checkout;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\External_Checkout;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_11_12\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_11_12\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -45,6 +45,9 @@ abstract class External_Checkout {
 	/** @var string external checkout human-readable label (used in notices and log entries) */
 	protected $label;
 
+	/** @var array<string, mixed> used to define supported features */
+	protected array $supported_features = [];
+
 	/** @var SV_WC_Payment_Gateway_Plugin the plugin instance */
 	protected $plugin;
 
@@ -55,10 +58,23 @@ abstract class External_Checkout {
 	 * @since 5.10.0
 	 *
 	 * @param SV_WC_Payment_Gateway_Plugin $plugin the plugin instance
+	 * @param array<string, mixed> $args optional arguments
 	 */
-	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin ) {
+	public function __construct( SV_WC_Payment_Gateway_Plugin $plugin, array $args = [] ) {
 
 		$this->plugin = $plugin;
+
+		// @NOTE: plugins should override supported features if they don't support Apple Pay in WooCommerce Cart/Checkout Blocks, but they offer support for regular gateways
+		if ( ! isset( $args['supported_features'] ) || ! is_array( $args['supported_features'] ) ) {
+			$this->supported_features = [
+				'blocks' => [
+					'cart'     => $plugin->get_blocks_handler()->is_cart_block_compatible(),
+					'checkout' => $plugin->get_blocks_handler()->is_checkout_block_compatible(),
+				],
+			];
+		} else {
+			$this->supported_features = $args['supported_features'];
+		}
 
 		$this->init();
 	}
@@ -241,6 +257,32 @@ abstract class External_Checkout {
 	public function is_test_mode() {
 
 		return 'yes' === get_option( "sv_wc_{$this->id}_test_mode" );
+	}
+
+
+	/**
+	 * Determines whether the external checkout supports the WooCommerce Cart Block.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool
+	 */
+	public function supports_cart_block() : bool {
+
+		return isset( $this->supported_features['blocks']['cart'] ) && $this->supported_features['blocks']['cart'];
+	}
+
+
+	/**
+	 * Determines whether the external checkout supports the WooCommerce Checkout Block.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return bool
+	 */
+	public function supports_checkout_block() : bool {
+
+		return isset( $this->supported_features['blocks']['checkout'] ) && $this->supported_features['blocks']['checkout'];
 	}
 
 

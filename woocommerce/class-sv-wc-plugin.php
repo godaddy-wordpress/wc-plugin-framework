@@ -22,13 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_11_12;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
+use stdClass;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_11_12\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_Plugin' ) ) :
 
 
 /**
@@ -45,7 +46,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.11.11';
+	const VERSION = '5.12.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -588,6 +589,7 @@ abstract class SV_WC_Plugin {
 	 * @since 3.0.0
 	 */
 	public function add_admin_notices() {
+
 		// stub method
 	}
 
@@ -645,12 +647,14 @@ abstract class SV_WC_Plugin {
 	 * Declares HPOS compatibility if the plugin is compatible with HPOS.
 	 *
 	 * @internal
+	 *
+	 * @since 5.11.0
 	 * @deprecated since 5.11.11
 	 * @see SV_WC_Plugin::handle_features_compatibility()
 	 *
-	 * @since 5.11.0
+	 * @return void
 	 */
-	public function handle_hpos_compatibility() {
+	public function handle_hpos_compatibility() : void {
 
 		wc_deprecated_function( 'SV_WC_Plugin::handle_hpos_compatibility', '5.11.11', 'SV_WC_Plugin::handle_features_compatibility' );
 
@@ -663,7 +667,9 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @internal
 	 *
-	 * @since 5.11.11
+	 * @since 5.12.0
+	 *
+	 * @return void
 	 */
 	public function handle_features_compatibility() : void {
 
@@ -672,7 +678,7 @@ abstract class SV_WC_Plugin {
 		}
 
 		FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->get_plugin_file(), $this->is_hpos_compatible() );
-		FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', $this->get_plugin_file(), $this->get_blocks_handler()->is_cart_block_compatible() && $this->get_blocks_handler()->is_checkout_block_compatible() );
+		FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', $this->get_plugin_file(), $this->get_blocks_handler()->is_cart_block_compatible() || $this->get_blocks_handler()->is_checkout_block_compatible() );
 	}
 
 
@@ -694,35 +700,44 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Log API requests/responses
+	 * Logs API requests/responses.
 	 *
 	 * @since 2.2.0
-	 * @param array $request request data, see SV_WC_API_Base::broadcast_request() for format
-	 * @param array $response response data
+	 *
+	 * @param array<mixed>|stdClass $request request data, see SV_WC_API_Base::broadcast_request() for format
+	 * @param array<mixed>|stdClass $response response data
 	 * @param string|null $log_id log to write data to
 	 */
-	public function log_api_request( $request, $response, $log_id = null ) {
+	public function log_api_request( $request, $response, ?string $log_id = null ) : void {
 
-		$this->log( "Request\n" . $this->get_api_log_message( $request ), $log_id );
+		if ( ! empty( $request ) ) {
+			$this->log( "Request\n" . $this->get_api_log_message( $request, 'request' ), $log_id );
+		}
 
 		if ( ! empty( $response ) ) {
-			$this->log( "Response\n" . $this->get_api_log_message( $response ), $log_id );
+			$this->log( "Response\n" . $this->get_api_log_message( $response, 'response' ), $log_id );
 		}
 	}
 
 
 	/**
-	 * Transform the API request/response data into a string suitable for logging
+	 * Transform the API request/response data into a string suitable for logging.
 	 *
 	 * @since 2.2.0
-	 * @param array $data
+	 *
+	 * @param array<string, mixed>|scalar $data
+	 * @param string|null $type optional type of data, either 'request' or 'response'
 	 * @return string
 	 */
-	public function get_api_log_message( $data ) {
+	public function get_api_log_message( $data, ?string $type = null ) : string {
 
-		$messages = array();
+		$messages = [];
 
-		$messages[] = isset( $data['uri'] ) && $data['uri'] ? 'Request' : 'Response';
+		if ( ! empty( $type ) )  {
+			$messages[] = ucfirst( $type );
+		} else {
+			$messages[] = isset( $data['uri'] ) && $data['uri'] ? 'Request' : 'Response';
+		}
 
 		foreach ( (array) $data as $key => $value ) {
 
@@ -879,7 +894,7 @@ abstract class SV_WC_Plugin {
 
 
 	/**
-	 * Determines whether the plugin supports HPOS.
+	 * Determines if the plugin supports HPOS.
 	 *
 	 * @since 5.11.0
 	 *
@@ -887,7 +902,7 @@ abstract class SV_WC_Plugin {
 	 */
 	public function is_hpos_compatible() : bool {
 
-		return isset($this->supported_features['hpos'] )
+		return isset( $this->supported_features['hpos'] )
 			&& true === $this->supported_features['hpos']
 			&& SV_WC_Plugin_Compatibility::is_wc_version_gte( '7.6' );
 	}
@@ -1055,6 +1070,7 @@ abstract class SV_WC_Plugin {
 	 * Returns the plugin version name.  Defaults to wc_{plugin id}_version
 	 *
 	 * @since 2.0.0
+	 *
 	 * @return string the plugin version name
 	 */
 	public function get_plugin_version_name() {
@@ -1067,10 +1083,44 @@ abstract class SV_WC_Plugin {
 	 * Returns the current version of the plugin
 	 *
 	 * @since 2.0.0
+	 *
 	 * @return string plugin version
 	 */
 	public function get_version() {
+
 		return $this->version;
+	}
+
+
+	/**
+	 * Gets the plugin version to be used by any internal scripts.
+	 *
+	 * This normally returns the plugin version, but will return `time()` if debug is enabled, to burst assets caches.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return string
+	 */
+	public function get_assets_version() : string {
+
+		if ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG || defined( 'WP_DEBUG' ) && true === WP_DEBUG ) {
+			return (string) time();
+		}
+
+		return $this->version;
+	}
+
+
+	/**
+	 * Gets the plugin's textdomain.
+	 *
+	 * @since 5.12.0
+	 *
+	 * @return string
+	 */
+	public function get_textdomain() : string {
+
+		return $this->text_domain;
 	}
 
 
