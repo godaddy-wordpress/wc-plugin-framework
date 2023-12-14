@@ -406,6 +406,17 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			// Handle the order based on the response
 			$this->process_transaction_response( $order, $response );
 
+			/**
+			 * Allow plugins to hook into the transaction response.
+			 *
+			 * @since 5.12.0
+			 *
+			 * @param \WC_Order $order
+			 * @param SV_WC_Payment_Gateway_API_Payment_Notification_Response $response
+			 * @param SV_WC_Payment_Gateway_Hosted $gateway
+			 */
+			do_action( 'wc_payment_gateway_' . $this->get_id() . '_transaction_response', $order, $response, $this );
+
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {
 
 			if ( $order && $order->needs_payment() ) {
