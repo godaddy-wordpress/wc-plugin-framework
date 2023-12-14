@@ -64,7 +64,7 @@ abstract class External_Checkout {
 
 		$this->plugin = $plugin;
 
-		$this->supported_features = wp_parse_args( $args['supported_features'] ?? [], [
+		$this->supported_features = wp_parse_args( $args['supported_features'] ?: [], [
 			'blocks' => [
 				'cart'     => $plugin->get_blocks_handler()->is_cart_block_compatible(),
 				'checkout' => $plugin->get_blocks_handler()->is_checkout_block_compatible(),
@@ -264,7 +264,7 @@ abstract class External_Checkout {
 	 */
 	public function supports_cart_block() : bool {
 
-		return isset( $this->supported_features['blocks']['cart'] ) && 'yes' === $this->supported_features['blocks']['cart'];
+		return isset( $this->supported_features['blocks']['cart'] ) && $this->supported_features['blocks']['cart'];
 	}
 
 
@@ -277,7 +277,7 @@ abstract class External_Checkout {
 	 */
 	public function supports_checkout_block() : bool {
 
-		return isset( $this->supported_features['blocks']['checkout'] ) && 'yes' === $this->supported_features['blocks']['checkout'];
+		return isset( $this->supported_features['blocks']['checkout'] ) && $this->supported_features['blocks']['checkout'];
 	}
 
 
