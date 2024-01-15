@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2024.nn.nn - version 5.12.1
+ * Tweak - Handle support in gateways for external checkouts while corresponding express payment methods are in use in the cart and checkout blocks
+
 2023.12.14 - version 5.12.0
  * Feature - Add support for WooCommerce Cart and Checkout blocks
  * Tweak - Do not load the legacy gateway payment form assets when the Checkout block is in use
