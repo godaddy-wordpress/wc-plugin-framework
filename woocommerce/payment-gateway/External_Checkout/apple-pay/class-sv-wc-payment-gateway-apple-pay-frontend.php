@@ -319,43 +319,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends \SkyVerge\WooCommerce\Plu
 	}
 
 
-	/** Deprecated methods ********************************************************************************************/
-
-
-	/**
-	 * Gets the JS handler class name.
-	 *
-	 * Concrete implementations can override this with their own handler.
-	 *
-	 * @since 5.6.0
-	 * @deprecated 5.7.0
-	 *
-	 * @return string
-	 */
-	protected function get_js_handler_name() {
-
-		wc_deprecated_function( __METHOD__, '5.7.0', __CLASS__ . '::get_js_handler_class_name()' );
-
-		return parent::get_js_handler_class_name();
-	}
-
-
-	/**
-	 * Gets the JS handler parameters.
-	 *
-	 * @since 4.7.0
-	 * @deprecated 5.7.0
-	 *
-	 * @return array
-	 */
-	protected function get_js_handler_params() {
-
-		wc_deprecated_function( __METHOD__, '5.7.0', __CLASS__ . '::get_js_handler_args()' );
-
-		return $this->get_js_handler_args();
-	}
-
-
 }
 
 

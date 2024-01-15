@@ -24,6 +24,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\External_Checkout\Google_Pay;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Blocks_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Exception;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Plugin;
 
@@ -90,6 +91,11 @@ class Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gat
 	 * @since 5.10.0
 	 */
 	public function enqueue_scripts() {
+
+		// the block scripts are enqueued in the checkout block integration
+		if ( Blocks_Handler::is_checkout_block_in_use() ) {
+			return;
+		}
 
 		parent::enqueue_scripts();
 
