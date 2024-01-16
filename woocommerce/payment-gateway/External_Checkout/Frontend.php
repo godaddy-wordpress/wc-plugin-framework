@@ -392,15 +392,25 @@ abstract class Frontend extends Script_Handler {
 	 */
 	protected function should_enqueue_scripts() : bool {
 
+		// enqueue on product pages or other pages
+		$should_enqueue = true;
+
+		// for cart and checkout, bail if blocks are in use (plugin-specific frontend scripts will handle it)
+		if ( is_cart() ) {
+			$should_enqueue = ! Blocks_Handler::is_cart_block_in_use();
+		} elseif ( is_checkout() ) {
+			$should_enqueue = ! Blocks_Handler::is_checkout_block_in_use();
+		}
+
 		/**
 		 * Determines whether the external checkout handler should enqueue scripts.
 		 *
 		 * @since 5.12.1
 		 *
-		 * @param bool $should_enqueue_scripts whether the external checkout handler should enqueue scripts
+		 * @param bool $should_enqueue whether the external checkout handler should enqueue scripts
 		 * @param External_Checkout $handler the external checkout handler instance
 		 */
-		return (bool) apply_filters( 'sv_wc_external_checkout_should_enqueue_scripts', is_product() || ! Blocks_Handler::is_checkout_block_in_use(), $this->get_handler() );
+		return (bool) apply_filters( 'sv_wc_external_checkout_should_enqueue_scripts', $should_enqueue, $this->get_handler() );
 	}
 
 
