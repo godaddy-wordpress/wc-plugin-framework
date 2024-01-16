@@ -373,7 +373,7 @@ abstract class Frontend extends Script_Handler {
 	 *
 	 * @return void
 	 */
-	public function enqueue_scripts() : void {
+	public function enqueue_scripts() {
 
 		if  ( ! $this->should_enqueue_scripts() ) {
 			return;
