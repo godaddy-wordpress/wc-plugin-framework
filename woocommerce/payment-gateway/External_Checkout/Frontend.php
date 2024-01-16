@@ -370,10 +370,37 @@ abstract class Frontend extends Script_Handler {
 	 * Each handler should override this method to add its specific JS.
 	 *
 	 * @since 5.10.0
+	 *
+	 * @return void
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts() : void {
+
+		if  ( ! $this->should_enqueue_scripts() ) {
+			return;
+		}
 
 		wp_enqueue_style( 'sv-wc-external-checkout-v5_12_0', $this->get_handler()->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-external-checkout.css', array(), $this->get_handler()->get_plugin()->get_version() ); // TODO: min
+	}
+
+
+	/**
+	 * Determines whether the external checkout handle should enqueue scripts.
+	 *
+	 * @since 5.12.1
+	 *
+	 * @return bool
+	 */
+	protected function should_enqueue_scripts() : bool {
+
+		/**
+		 * Determines whether the external checkout handler should enqueue scripts.
+		 *
+		 * @since 5.12.1
+		 *
+		 * @param bool $should_enqueue_scripts whether the external checkout handler should enqueue scripts
+		 * @param External_Checkout $handler the external checkout handler instance
+		 */
+		return (bool) apply_filters( 'sv_wc_external_checkout_should_enqueue_scripts', is_product() || ! Blocks_Handler::is_checkout_block_in_use(), $this->get_handler() );
 	}
 
 

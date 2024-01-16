@@ -106,6 +106,10 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends \SkyVerge\WooCommerce\Plu
 	 */
 	public function enqueue_scripts() {
 
+		if ( ! $this->should_enqueue_scripts() ) {
+			return;
+		}
+
 		parent::enqueue_scripts();
 
 		$gateway = $this->get_gateway();
