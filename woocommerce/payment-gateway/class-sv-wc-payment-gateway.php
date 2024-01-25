@@ -4392,7 +4392,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	protected function is_processing_block_checkout(): bool {
 
-		return $this->is_processing_context( self::PROCESSING_CONTEXT_BLOCK ) && Blocks_Handler::is_checkout_block_in_use();
+		return $this->is_processing_context( self::PROCESSING_CONTEXT_BLOCK );
 	}
 
 
@@ -4411,11 +4411,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Checks if we're currently in teh given payment processing context.
+	 * Checks if we're currently in the given payment processing context.
 	 *
 	 * @since 5.12.1-dev.1
 	 * @see Gateway_Checkout_Block_Integration::prepare_payment_data()
 	 *
+	 * @param string $context
 	 * @return bool
 	 */
 	protected function is_processing_context( string $context ): bool {
