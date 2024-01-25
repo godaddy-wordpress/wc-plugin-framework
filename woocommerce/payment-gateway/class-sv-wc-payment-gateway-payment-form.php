@@ -296,7 +296,9 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	 */
 	protected function get_payment_fields() : array {
 
-		switch ( $this->get_gateway()->get_payment_type() ) {
+		$gateway = $this->get_gateway();
+
+		switch ( $gateway->get_payment_type() ) {
 
 			case 'credit-card':
 				$fields = $this->get_credit_card_fields();
@@ -319,9 +321,9 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 		$fields = wp_parse_args( $fields, [
 			'context' => [
 				'type'  => 'hidden',
-				'id'    => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-context',
-				'name'  => 'wc-' . $this->get_gateway()->get_id_dasherized() . '-context',
-				'value' => 'shortcode',
+				'id'    => 'wc-' . $gateway->get_id_dasherized() . '-context',
+				'name'  => 'wc-' . $gateway->get_id_dasherized() . '-context',
+				'value' => $gateway::PROCESSING_CONTEXT_SHORTCODE,
 			],
 		] );
 
@@ -339,7 +341,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 		 * @param array<string, mixed> $fields in the format supported by {@see woocommerce_form_field()}
 		 * @param SV_WC_Payment_Gateway_Payment_Form $payment_form payment form instance
 		 */
-		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_payment_form_default_payment_form_fields', $fields, $this );
+		return (array) apply_filters( 'wc_' . $gateway->get_id() . '_payment_form_default_payment_form_fields', $fields, $this );
 	}
 
 

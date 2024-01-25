@@ -531,7 +531,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 *
 	 * @see PaymentContext::$payment_data is converted to `$_POST` by WC core when handling legacy payments.
 	 * @see \Automattic\WooCommerce\StoreApi\Legacy::process_legacy_payment()
-	 * @see SV_WC_Payment_Gateway::is_block_checkout()
+	 * @see SV_WC_Payment_Gateway::get_processing_context()
 	 *
 	 * @internal
 	 *
@@ -548,7 +548,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		 * between blocks checkout and legacy shortcode checkout - this will be accessed in $_POST data along with the other field data.
 		 * @see SV_WC_Payment_Gateway_Payment_Form::get_payment_fields()
 		 */
-		$additional_payment_data[ 'wc-' . $this->gateway->get_id_dasherized() . '-context' ] = 'block';
+		$additional_payment_data[ 'wc-' . $this->gateway->get_id_dasherized() . '-context' ] = $this->gateway::PROCESSING_CONTEXT_BLOCK;
 
 		/**
 		 * Fetch the provider-based token ID for the core token ID:
