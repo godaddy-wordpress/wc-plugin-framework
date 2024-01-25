@@ -141,6 +141,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/** Pre-orders integration ID */
 	const INTEGRATION_PRE_ORDERS = 'pre_orders';
 
+	public const PROCESSING_CONTEXT_SHORTCODE = 'shortcode';
+
+	public const PROCESSING_CONTEXT_BLOCK = 'block';
+
 	/** @var SV_WC_Payment_Gateway_Plugin the parent plugin class */
 	private $plugin;
 
@@ -4382,14 +4386,41 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Returns true if currently processing payment from block-based checkout.
 	 *
-	 * @since 5.12.0
+	 * @since 5.12.1-dev.1
+	 *
+	 * @return bool
+	 */
+	protected function is_processing_block_checkout(): bool {
+
+		return $this->is_processing_context( self::PROCESSING_CONTEXT_BLOCK ) && Blocks_Handler::is_checkout_block_in_use();
+	}
+
+
+	/**
+	 * Gets the current payment processing context.
+	 *
+	 * @since 5.12.1-dev.1
+	 * @see Gateway_Checkout_Block_Integration::prepare_payment_data()
+	 *
+	 * @return string
+	 */
+	protected function get_processing_context(  ): ?string {
+
+		return $_POST[ 'wc-' . $this->get_id_dasherized() . '-context' ] ?: null;
+	}
+
+
+	/**
+	 * Checks if we're currently in teh given payment processing context.
+	 *
+	 * @since 5.12.1-dev.1
 	 * @see Gateway_Checkout_Block_Integration::prepare_payment_data()
 	 *
 	 * @return bool
 	 */
-	protected function is_block_checkout(): bool {
+	protected function is_processing_context( string $context ): bool {
 
-		return ! empty( $_POST[ 'sv_wc_is_block_checkout' ] ) && Blocks_Handler::is_checkout_block_in_use();
+		return $this->get_processing_context() === $context;
 	}
 
 
