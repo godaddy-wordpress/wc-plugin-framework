@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0;
 
+use SkyVerge\WooCommerce\Checkout_Add_Ons\Integrations\WC_Subscriptions_Integration;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_Helper' ) ) :
@@ -708,7 +710,8 @@ class SV_WC_Helper {
 	 */
 	public static function wc_add_notice( $message, $notice_type = 'success' ) {
 
-		if ( function_exists( 'wc_add_notice' ) ) {
+		// the session sanity check is necessary as WC doesn't provide one of its own
+		if ( function_exists( 'wc_add_notice' ) && ! empty( WC()->session ) ) {
 			wc_add_notice( $message, $notice_type );
 		}
 	}
