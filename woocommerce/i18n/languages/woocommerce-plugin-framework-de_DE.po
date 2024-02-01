@@ -922,7 +922,7 @@ msgstr "Diners Club"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3555
 msgctxt "credit card type"
 msgid "Discover"
-msgstr "Entdecken"
+msgstr "Discover"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:247
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3557
