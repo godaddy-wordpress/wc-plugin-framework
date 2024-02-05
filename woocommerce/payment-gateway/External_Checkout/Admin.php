@@ -35,6 +35,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Admin' ) ) :
  *
  * @since 5.10.0
  */
+#[\AllowDynamicProperties]
 abstract class Admin {
 
 

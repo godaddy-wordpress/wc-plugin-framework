@@ -52,6 +52,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WP_A
  *
  * @version 1.0.1
  */
+#[\AllowDynamicProperties]
 class SV_WP_Admin_Message_Handler {
 
 

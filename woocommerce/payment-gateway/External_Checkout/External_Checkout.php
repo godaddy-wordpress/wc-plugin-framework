@@ -36,6 +36,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\External_Checkout' ) ) :
  *
  * @since 5.10.0
  */
+#[\AllowDynamicProperties]
 abstract class External_Checkout {
 
 

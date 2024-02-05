@@ -45,6 +45,7 @@ if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gate
  *
  * @since 5.12.0
  */
+#[\AllowDynamicProperties]
 abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodType {
 
 

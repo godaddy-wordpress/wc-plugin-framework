@@ -36,6 +36,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_P
  *
  * @since 4.7.0
  */
+#[\AllowDynamicProperties]
 class SV_WC_Payment_Gateway_Apple_Pay extends Payment_Gateway\External_Checkout\External_Checkout {
 
 

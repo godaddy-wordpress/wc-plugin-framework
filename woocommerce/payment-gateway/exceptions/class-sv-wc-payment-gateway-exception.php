@@ -32,6 +32,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_P
 /**
  * Payment Gateway Exception - generic payment failure Exception
  */
+#[\AllowDynamicProperties]
 class SV_WC_Payment_Gateway_Exception extends SV_WC_Plugin_Exception { }
 
 

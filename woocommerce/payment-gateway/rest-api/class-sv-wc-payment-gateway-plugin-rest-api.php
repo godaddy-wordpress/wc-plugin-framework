@@ -38,6 +38,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Payment
  *
  * @since 5.2.0
  */
+#[\AllowDynamicProperties]
 class REST_API extends Plugin_REST_API {
 
 

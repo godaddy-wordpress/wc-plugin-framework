@@ -32,6 +32,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_P
 /**
  * Plugin Framework Exception - generic Exception
  */
+#[\AllowDynamicProperties]
 class SV_WC_Plugin_Exception extends \Exception { }
 
 

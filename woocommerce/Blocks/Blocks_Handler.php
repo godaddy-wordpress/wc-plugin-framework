@@ -20,6 +20,7 @@ if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Block
  *
  * @since 5.11.11
  */
+#[\AllowDynamicProperties]
 class Blocks_Handler {
 
 

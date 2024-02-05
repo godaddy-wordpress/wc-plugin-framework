@@ -36,6 +36,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Setting
  *
  * @since 5.7.0
  */
+#[\AllowDynamicProperties]
 class Control {
 
 

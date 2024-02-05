@@ -35,6 +35,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_D
  * @since 4.6.0
  * @deprecated 5.5.0
  */
+#[\AllowDynamicProperties]
 abstract class SV_WC_Data_Compatibility {
 
 }

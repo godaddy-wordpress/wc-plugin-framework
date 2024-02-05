@@ -40,6 +40,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_O
  *
  * @since 4.6.0
  */
+#[\AllowDynamicProperties]
 class SV_WC_Order_Compatibility extends SV_WC_Data_Compatibility {
 
 

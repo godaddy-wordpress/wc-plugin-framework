@@ -37,6 +37,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Country
  *
  * @since 5.4.3
  */
+#[\AllowDynamicProperties]
 class Country_Helper {
 
 

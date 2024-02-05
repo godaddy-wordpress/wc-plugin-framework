@@ -35,6 +35,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Admin\\
  *
  * @since 5.6.0
  */
+#[\AllowDynamicProperties]
 class Notes_Helper {
 
 

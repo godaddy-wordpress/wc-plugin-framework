@@ -40,8 +40,8 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\API\\Ab
  *
  * @since 5.10.10
  */
-abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
-{
+#[\AllowDynamicProperties]
+abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base {
 
 
 	/** @var bool whether the response was loaded from cache */
@@ -266,6 +266,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 
 		return $response_data;
 	}
+
 
 }
 

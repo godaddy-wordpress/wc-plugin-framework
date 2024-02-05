@@ -35,7 +35,8 @@ if ( ! class_exists( 'SV_WC_Framework_Bootstrap' ) ) :
  * compatible framework plugins.
  *
  * @since 2.0.0
- */
+*/
+#[\AllowDynamicProperties]
 class SV_WC_Framework_Bootstrap {
 
 

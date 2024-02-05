@@ -37,6 +37,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Orders' ) ) :
  *
  * @since 5.10.0
  */
+#[\AllowDynamicProperties]
 class Orders {
 
 

@@ -34,6 +34,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_P
  *
  * @since 5.1.4
  */
+#[\AllowDynamicProperties]
 class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 
 

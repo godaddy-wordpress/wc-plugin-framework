@@ -40,6 +40,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Payment
  *
  * @since 5.10.0
  */
+#[\AllowDynamicProperties]
 class Google_Pay extends External_Checkout {
 
 

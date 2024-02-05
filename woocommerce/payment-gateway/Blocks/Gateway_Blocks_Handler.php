@@ -23,6 +23,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Payment
  * @property Gateway_Checkout_Block_Integration $checkout_Block_Integration
  * @property SV_WC_Payment_Gateway_Plugin $plugin
  */
+#[\AllowDynamicProperties]
 class Gateway_Blocks_Handler extends Blocks_Handler {
 
 

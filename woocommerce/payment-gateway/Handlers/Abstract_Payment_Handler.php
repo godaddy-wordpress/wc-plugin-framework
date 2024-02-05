@@ -40,6 +40,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Payment
  *
  * @since 5.4.0
  */
+#[\AllowDynamicProperties]
 abstract class Abstract_Payment_Handler {
 
 

@@ -33,6 +33,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_S
  *
  * @since 5.11.1
  */
+#[\AllowDynamicProperties]
 class SV_WC_Subscription_Compatibility extends SV_WC_Data_Compatibility {
 
 	/**

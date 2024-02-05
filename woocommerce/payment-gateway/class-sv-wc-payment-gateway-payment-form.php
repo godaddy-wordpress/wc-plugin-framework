@@ -39,6 +39,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_P
  *
  * @since 4.0.0
  */
+#[\AllowDynamicProperties]
 class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 

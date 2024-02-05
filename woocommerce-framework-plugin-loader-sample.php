@@ -47,6 +47,7 @@ if ( ! is_woocommerce_active() ) {
  *
  * @since 1.0.0
  */
+#[\AllowDynamicProperties]
 class SV_WC_Framework_Plugin_Loader {
 
 
