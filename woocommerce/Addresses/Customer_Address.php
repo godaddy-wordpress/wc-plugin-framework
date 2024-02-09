@@ -36,6 +36,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Address
  *
  * @since 5.3.0
  */
+#[\AllowDynamicProperties]
 class Customer_Address extends Address {
 
 

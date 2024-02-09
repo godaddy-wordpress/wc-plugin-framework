@@ -43,6 +43,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WP_A
  *
  * @since 4.4.0
  */
+#[\AllowDynamicProperties]
 abstract class SV_WP_Async_Request {
 
 

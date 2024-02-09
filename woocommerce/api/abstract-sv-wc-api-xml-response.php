@@ -34,6 +34,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_A
  *
  * @since 4.3.0
  */
+#[\AllowDynamicProperties]
 abstract class SV_WC_API_XML_Response implements SV_WC_API_Response {
 
 

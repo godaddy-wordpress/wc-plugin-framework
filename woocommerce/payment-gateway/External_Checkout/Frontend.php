@@ -41,6 +41,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Payment
  *
  * @since 5.10.0
  */
+#[\AllowDynamicProperties]
 abstract class Frontend extends Script_Handler {
 
 

@@ -38,6 +38,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_A
  *
  * @since 3.0.0
  */
+#[\AllowDynamicProperties]
 class SV_WC_Admin_Notice_Handler {
 
 

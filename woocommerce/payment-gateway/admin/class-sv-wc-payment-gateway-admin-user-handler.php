@@ -34,6 +34,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_P
  *
  * @since 4.3.0
  */
+#[\AllowDynamicProperties]
 class SV_WC_Payment_Gateway_Admin_User_Handler {
 
 

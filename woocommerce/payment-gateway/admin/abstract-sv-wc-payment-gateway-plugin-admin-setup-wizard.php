@@ -37,6 +37,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Payment
  *
  * @since 5.2.2
  */
+#[\AllowDynamicProperties]
 abstract class Setup_Wizard extends Framework\Admin\Setup_Wizard {
 
 

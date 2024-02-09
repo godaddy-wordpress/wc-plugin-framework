@@ -37,6 +37,7 @@
  *
  * @since 4.8.0
  */
+#[\AllowDynamicProperties]
 class SV_WP_Job_Batch_Handler {
 
 

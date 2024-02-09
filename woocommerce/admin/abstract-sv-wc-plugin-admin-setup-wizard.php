@@ -40,6 +40,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Admin\\
  *
  * @since 5.2.2
  */
+#[\AllowDynamicProperties]
 abstract class Setup_Wizard {
 
 

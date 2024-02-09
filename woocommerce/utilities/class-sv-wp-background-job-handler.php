@@ -54,6 +54,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WP_B
  *
  * @since 4.4.0
  */
+#[\AllowDynamicProperties]
 abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 
 

@@ -42,6 +42,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Plugin\
  *
  * @since 5.1.0
  */
+#[\AllowDynamicProperties]
 class Lifecycle {
 
 

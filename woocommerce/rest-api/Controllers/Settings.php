@@ -37,6 +37,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\REST_AP
  *
  * @since 5.7.0
  */
+#[\AllowDynamicProperties]
 class Settings extends \WP_REST_Controller {
 
 
