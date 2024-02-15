@@ -519,7 +519,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 * @param SV_WC_Payment_Gateway $gateway
 		 */
 		$params = (array) apply_filters( 'sv_wc_payment_gateway_payment_form_localized_script_params',  [
-			'checkout_button_text'            => $this->get_order_button_text(),
+			'order_button_text'               => $this->get_order_button_text(),
 			'card_number_missing'             => esc_html_x( 'Card number is missing', 'Credit or debit card','woocommerce-plugin-framework' ),
 			'card_number_invalid'             => esc_html_x( 'Card number is invalid', 'Credit or debit card', 'woocommerce-plugin-framework' ),
 			'card_number_digits_invalid'      => esc_html_x( 'Card number is invalid (only digits allowed)', 'Credit or debit card', 'woocommerce-plugin-framework' ),
