@@ -794,8 +794,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 * Allow actors to modify the "place order" button text.
 		 *
 		 * @since 4.0.0
+		 *
 		 * @param string $text button text
-		 * @param SV_WC_Payment_Gateway $this instance
+		 * @param SV_WC_Payment_Gateway $gateway the current gateway instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_order_button_text', $text, $this );
 	}
