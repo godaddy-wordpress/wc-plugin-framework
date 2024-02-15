@@ -795,7 +795,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		 *
 		 * @since 4.0.0
 		 * @param string $text button text
-		 * @param \SV_WC_Payment_Gateway $this instance
+		 * @param SV_WC_Payment_Gateway $this instance
 		 */
 		return apply_filters( 'wc_payment_gateway_' . $this->get_id() . '_order_button_text', $text, $this );
 	}
