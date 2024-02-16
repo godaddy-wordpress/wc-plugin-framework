@@ -826,6 +826,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/**
 	 * Gets the WooCommerce Checkout Block integration.
 	 *
+	 * @since 5.11.11
+	 *
 	 * @return Gateway_Checkout_Block_Integration|null
 	 */
 	public function get_checkout_block_integration_instance() : ?Gateway_Checkout_Block_Integration {
@@ -837,6 +839,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 	/**
 	 * Gets the WooCommerce Cart Block integration.
+	 *
+	 * @since 5.11.11
 	 *
 	 * @return IntegrationInterface|null
 	 */
