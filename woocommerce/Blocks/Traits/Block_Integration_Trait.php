@@ -178,9 +178,9 @@ trait Block_Integration_Trait {
 	 * However, it is assumed that gateways supporting a block will use a single script for all the included gateways.
 	 * If this is not the case, then any outlier gateway should override this method or filter out the URL.
 	 *
-	 * @return string
-	 *@since 5.12.0
+	 * @since 5.12.0
 	 *
+	 * @return string
 	 */
 	protected function get_main_script_url() : string {
 
@@ -209,9 +209,9 @@ trait Block_Integration_Trait {
 	 * However, it is assumed that gateways supporting a block will use a single stylesheet for all the included gateways.
 	 * If this is not the case, then any outlier gateway should override this method or filter out the URL.
 	 *
-	 * @return string
-	 *@since 5.12.0
+	 * @since 5.12.0
 	 *
+	 * @return string
 	 */
 	protected function get_main_script_stylesheet_url() : string {
 
