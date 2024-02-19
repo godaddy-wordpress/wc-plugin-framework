@@ -4081,13 +4081,15 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			$feature = array( $feature );
 		}
 
+		$did_remove = false; 
+
 		foreach ( $feature as $name ) {
 
 			// Bail if the feature already isn't supported
 			if( $key = array_search( $name, $this->supports ) !== false ){
 
 				unset( $this->supports[ $key ] );
-				
+				$did_remove = true;
 
 				/**
 				 * Payment Gateway Remove Support Action.
@@ -4102,6 +4104,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				 */
 				do_action( 'wc_payment_gateway_' . $this->get_id() . '_removed_support_' . str_replace( '-', '_', $name ), $this, $name );
 			}
+		}
+
+		if( $did_remove ){
+			// re-index to clean up any new gaps
+			$this->supports = array_values( $this->supports );
 		}
 	}
 
