@@ -4083,20 +4083,25 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		foreach ( $feature as $name ) {
 
-			unset( $this->supports[ array_search( $name, $this->supports ) ] );
+			// Bail if the feature already isn't supported
+			if( $key = array_search( $name, $this->supports ) !== false ){
 
-			/**
-			 * Payment Gateway Remove Support Action.
-			 *
-			 * Fired when removing support for a specific gateway feature. Allows other actors
-			 * (including ourselves) to take action when support is removed.
-			 *
-			 * @since 4.1.0
-			 *
-			 * @param SV_WC_Payment_Gateway $this instance
-			 * @param string $name of supported feature being removed
-			 */
-			do_action( 'wc_payment_gateway_' . $this->get_id() . '_removed_support_' . str_replace( '-', '_', $name ), $this, $name );
+				unset( $this->supports[ $key ] );
+				
+
+				/**
+				 * Payment Gateway Remove Support Action.
+				 *
+				 * Fired when removing support for a specific gateway feature. Allows other actors
+				 * (including ourselves) to take action when support is removed.
+				 *
+				 * @since 4.1.0
+				 *
+				 * @param SV_WC_Payment_Gateway $this instance
+				 * @param string $name of supported feature being removed
+				 */
+				do_action( 'wc_payment_gateway_' . $this->get_id() . '_removed_support_' . str_replace( '-', '_', $name ), $this, $name );
+			}
 		}
 	}
 
