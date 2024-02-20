@@ -4064,51 +4064,63 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				 */
 				do_action( 'wc_payment_gateway_' . $this->get_id() . '_supports_' . str_replace( '-', '_', $name ), $this, $name );
 			}
-
 		}
+
+		$this->supports = array_values( $this->supports );
 	}
 
 
 	/**
-	 * Remove support for the named feature or features
+	 * Removes support for the named feature or features.
 	 *
 	 * @since 4.1.0
+	 *
 	 * @param string|array $feature feature name or names not supported by this gateway
 	 */
 	public function remove_support( $feature ) {
 
 		if ( ! is_array( $feature ) ) {
-			$feature = array( $feature );
+			$feature = [ $feature ];
 		}
 
 		foreach ( $feature as $name ) {
 
-			unset( $this->supports[ array_search( $name, $this->supports ) ] );
+			$key = array_search( $name, $this->supports );
 
-			/**
-			 * Payment Gateway Remove Support Action.
-			 *
-			 * Fired when removing support for a specific gateway feature. Allows other actors
-			 * (including ourselves) to take action when support is removed.
-			 *
-			 * @since 4.1.0
-			 *
-			 * @param SV_WC_Payment_Gateway $this instance
-			 * @param string $name of supported feature being removed
-			 */
-			do_action( 'wc_payment_gateway_' . $this->get_id() . '_removed_support_' . str_replace( '-', '_', $name ), $this, $name );
+			if ( $key !== false ) {
+
+				unset( $this->supports[ $key ] );
+
+				/**
+				 * Payment Gateway Remove Support Action.
+				 *
+				 * Fired when removing support for a specific gateway feature.
+				 * Allows other actors (including ourselves) to take action when support is removed.
+				 *
+				 * @since 4.1.0
+				 *
+				 * @param SV_WC_Payment_Gateway $this instance
+				 * @param string $name of supported feature being removed
+				 */
+				do_action( 'wc_payment_gateway_' . $this->get_id() . '_removed_support_' . str_replace( '-', '_', $name ), $this, $name );
+			}
 		}
+
+		// re-index the array
+		$this->supports = array_values( $this->supports );
 	}
 
 
 	/**
-	 * Set all features supported
+	 * Set all features supported.
 	 *
 	 * @since 1.0.0
-	 * @param array $features array of supported feature names
+	 *
+	 * @param array|string $features feature or array of supported feature names
 	 */
 	public function set_supports( $features ) {
-		$this->supports = $features;
+
+		$this->supports = array_values( (array) $features );
 	}
 
 

@@ -161,7 +161,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'enabled_card_types'   => $this->get_enabled_card_types(), // card types that are enabled in settings
 			'defaults'             => $this->get_gateway_defaults(), // used to pre-populate payment method fields (typically in test mode)
 			'placeholders'         => $this->get_placeholders(), // used in some payment method fields
-			'supports'             => $this->gateway->supports, // list of supported features
+			'supports'             => array_values( $this->gateway->supports ), // list of supported features
 			'flags'                => $this->get_gateway_flags(), // list of gateway configuration flags
 			'gateway'              => $this->get_gateway_configuration(), // other gateway configuration values
 			'apple_pay'            => $this->get_apple_pay_configuration(), // Apple Pay configuration values
