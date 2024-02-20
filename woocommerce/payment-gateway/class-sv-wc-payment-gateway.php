@@ -4064,38 +4064,38 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				 */
 				do_action( 'wc_payment_gateway_' . $this->get_id() . '_supports_' . str_replace( '-', '_', $name ), $this, $name );
 			}
-
 		}
+
+		$this->supports = array_values( $this->supports );
 	}
 
 
 	/**
-	 * Remove support for the named feature or features
+	 * Removes support for the named feature or features.
 	 *
 	 * @since 4.1.0
+	 *
 	 * @param string|array $feature feature name or names not supported by this gateway
 	 */
 	public function remove_support( $feature ) {
 
 		if ( ! is_array( $feature ) ) {
-			$feature = array( $feature );
+			$feature = [ $feature ];
 		}
-
-		$did_remove = false; 
 
 		foreach ( $feature as $name ) {
 
-			// Bail if the feature already isn't supported
-			if( $key = array_search( $name, $this->supports ) !== false ){
+			$key = array_search( $name, $this->supports );
+
+			if ( $key !== false ) {
 
 				unset( $this->supports[ $key ] );
-				$did_remove = true;
 
 				/**
 				 * Payment Gateway Remove Support Action.
 				 *
-				 * Fired when removing support for a specific gateway feature. Allows other actors
-				 * (including ourselves) to take action when support is removed.
+				 * Fired when removing support for a specific gateway feature.
+				 * Allows other actors (including ourselves) to take action when support is removed.
 				 *
 				 * @since 4.1.0
 				 *
@@ -4106,21 +4106,21 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			}
 		}
 
-		if( $did_remove ){
-			// re-index to clean up any new gaps
-			$this->supports = array_values( $this->supports );
-		}
+		// re-index the array
+		$this->supports = array_values( $this->supports );
 	}
 
 
 	/**
-	 * Set all features supported
+	 * Set all features supported.
 	 *
 	 * @since 1.0.0
-	 * @param array $features array of supported feature names
+	 *
+	 * @param array|string $features feature or array of supported feature names
 	 */
 	public function set_supports( $features ) {
-		$this->supports = $features;
+
+		$this->supports = array_values( (array) $features );
 	}
 
 
