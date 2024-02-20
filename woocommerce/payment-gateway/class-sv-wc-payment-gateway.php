@@ -4033,15 +4033,16 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Add support for the named feature or features
+	 * Adds support for the named feature or features.
 	 *
 	 * @since 1.0.0
-	 * @param string|array $feature the feature name or names supported by this gateway
+	 *
+	 * @param string|string[] $feature the feature name or names supported by this gateway
 	 */
 	public function add_support( $feature ) {
 
 		if ( ! is_array( $feature ) ) {
-			$feature = array( $feature );
+			$feature = [ $feature ];
 		}
 
 		foreach ( $feature as $name ) {
@@ -4054,8 +4055,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				/**
 				 * Payment Gateway Add Support Action.
 				 *
-				 * Fired when declaring support for a specific gateway feature. Allows other actors
-				 * (including ourselves) to take action when support is declared.
+				 * Fired when declaring support for a specific gateway feature.
+				 * Allows other actors (including ourselves) to take action when support is declared.
 				 *
 				 * @since 1.0.0
 				 *
@@ -4075,7 +4076,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 4.1.0
 	 *
-	 * @param string|array $feature feature name or names not supported by this gateway
+	 * @param string|string[] $feature feature name or names not supported by this gateway
 	 */
 	public function remove_support( $feature ) {
 
@@ -4116,7 +4117,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array|string $features feature or array of supported feature names
+	 * @param string[]|string $features feature or array of supported feature names
 	 */
 	public function set_supports( $features ) {
 
