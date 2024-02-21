@@ -585,8 +585,6 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Adds admin notices upon initialization.
 	 *
-	 * @internal
-	 *
 	 * @since 3.0.0
 	 */
 	public function add_admin_notices() {
