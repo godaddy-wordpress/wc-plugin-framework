@@ -22,21 +22,21 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\Blocks;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_1\Payment_Gateway\Blocks;
 
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 use Automattic\WooCommerce\StoreApi\Payments\PaymentContext;
 use Automattic\WooCommerce\StoreApi\Payments\PaymentResult;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Payment_Form;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Payment_Token;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Plugin;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Traits\Block_Integration_Trait;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Payment_Gateway_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Payment_Gateway_Payment_Form;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Payment_Gateway_Payment_Token;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\Blocks\Traits\Block_Integration_Trait;
 use WC_HTTPS;
 use WC_Subscriptions_Cart;
 
-if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration' ) ) :
+if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_12_1\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration' ) ) :
 
 /**
  * Base class for handling support for the WooCommerce Checkout block in gateways.
@@ -45,6 +45,7 @@ if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gate
  *
  * @since 5.12.0
  */
+#[\AllowDynamicProperties]
 abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodType {
 
 
@@ -160,7 +161,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 			'enabled_card_types'   => $this->get_enabled_card_types(), // card types that are enabled in settings
 			'defaults'             => $this->get_gateway_defaults(), // used to pre-populate payment method fields (typically in test mode)
 			'placeholders'         => $this->get_placeholders(), // used in some payment method fields
-			'supports'             => $this->gateway->supports, // list of supported features
+			'supports'             => array_values( $this->gateway->supports ), // list of supported features
 			'flags'                => $this->get_gateway_flags(), // list of gateway configuration flags
 			'gateway'              => $this->get_gateway_configuration(), // other gateway configuration values
 			'apple_pay'            => $this->get_apple_pay_configuration(), // Apple Pay configuration values
@@ -531,7 +532,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 *
 	 * @see PaymentContext::$payment_data is converted to `$_POST` by WC core when handling legacy payments.
 	 * @see \Automattic\WooCommerce\StoreApi\Legacy::process_legacy_payment()
-	 * @see SV_WC_Payment_Gateway::is_block_checkout()
+	 * @see SV_WC_Payment_Gateway::get_processing_context()
 	 *
 	 * @internal
 	 *
@@ -548,7 +549,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		 * between blocks checkout and legacy shortcode checkout - this will be accessed in $_POST data along with the other field data.
 		 * @see SV_WC_Payment_Gateway_Payment_Form::get_payment_fields()
 		 */
-		$additional_payment_data[ 'wc-' . $this->gateway->get_id_dasherized() . '-context' ] = 'block';
+		$additional_payment_data[ 'wc-' . $this->gateway->get_id_dasherized() . '-context' ] = $this->gateway::PROCESSING_CONTEXT_BLOCK;
 
 		/**
 		 * Fetch the provider-based token ID for the core token ID:

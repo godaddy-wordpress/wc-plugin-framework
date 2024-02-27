@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_Data_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_1\\SV_WC_Data_Compatibility' ) ) :
 
 
 /**
@@ -35,6 +35,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_D
  * @since 4.6.0
  * @deprecated 5.5.0
  */
+#[\AllowDynamicProperties]
 abstract class SV_WC_Data_Compatibility {
 
 }

@@ -22,14 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\External_Checkout\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_1\Payment_Gateway\External_Checkout\Google_Pay;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Exception;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Payment_Gateway_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Payment_Gateway\\External_Checkout\\Google_Pay\\Frontend' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_1\\Payment_Gateway\\External_Checkout\\Google_Pay\\Frontend' ) ) :
 
 
 /**
@@ -37,7 +37,8 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Payment
  *
  * @since 5.10.0
  */
-class Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\External_Checkout\Frontend {
+#[\AllowDynamicProperties]
+class Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_12_1\Payment_Gateway\External_Checkout\Frontend {
 
 
 	/** @var string JS handler base class name, without the FW version */
@@ -91,13 +92,17 @@ class Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gat
 	 */
 	public function enqueue_scripts() {
 
+		if ( ! $this->should_enqueue_scripts() ) {
+			return;
+		}
+
 		parent::enqueue_scripts();
 
 		$gateway = $this->get_gateway();
 		$version = $gateway->get_plugin()->get_assets_version( $gateway->get_id() );
 
 		wp_enqueue_script( 'google-pay-js-library', 'https://pay.google.com/gp/p/js/pay.js', [], $version, true );
-		wp_enqueue_script( 'sv-wc-google-pay-v5_12_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/sv-wc-payment-gateway-google-pay.js', [ 'google-pay-js-library', 'jquery' ], $version, true );
+		wp_enqueue_script( 'sv-wc-google-pay-v5_12_1', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/sv-wc-payment-gateway-google-pay.js', [ 'google-pay-js-library', 'jquery' ], $version, true );
 	}
 
 

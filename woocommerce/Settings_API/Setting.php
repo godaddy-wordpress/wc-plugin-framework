@@ -22,13 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0\Settings_API;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_1\Settings_API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Settings_API\\Setting' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_1\\Settings_API\\Setting' ) ) :
 
 
 /**
@@ -36,6 +36,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Setting
  *
  * @since 5.7.0
  */
+#[\AllowDynamicProperties]
 class Setting {
 
 
