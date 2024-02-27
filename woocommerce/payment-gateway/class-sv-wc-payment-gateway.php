@@ -142,9 +142,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	/** Pre-orders integration ID */
 	const INTEGRATION_PRE_ORDERS = 'pre_orders';
 
+	/** flag used when the checkout context is the shortcode-based checkout */
 	public const PROCESSING_CONTEXT_SHORTCODE = 'shortcode';
 
+	/** flag used when the checkout context is the block-based checkout */
 	public const PROCESSING_CONTEXT_BLOCK = 'block';
+
 
 	/** @var SV_WC_Payment_Gateway_Plugin the parent plugin class */
 	private $plugin;
