@@ -22,14 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_1;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use stdClass;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_1\\SV_WC_Plugin' ) ) :
 
 
 /**
@@ -42,11 +42,12 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_P
  *
  * @version 5.8.0
  */
+#[\AllowDynamicProperties]
 abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.12.0';
+	const VERSION = '5.12.1';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -583,8 +584,6 @@ abstract class SV_WC_Plugin {
 
 	/**
 	 * Adds admin notices upon initialization.
-	 *
-	 * @internal
 	 *
 	 * @since 3.0.0
 	 */

@@ -22,14 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0\API;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_1\API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_API_Base;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\API\Traits\Cacheable_Request_Trait;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_API_Base;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\API\Traits\Cacheable_Request_Trait;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\API\\Abstract_Cacheable_API_Base' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_1\\API\\Abstract_Cacheable_API_Base' ) ) :
 
 
 /**
@@ -40,8 +40,8 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\API\\Ab
  *
  * @since 5.10.10
  */
-abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
-{
+#[\AllowDynamicProperties]
+abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base {
 
 
 	/** @var bool whether the response was loaded from cache */
@@ -266,6 +266,7 @@ abstract class Abstract_Cacheable_API_Base extends SV_WC_API_Base
 
 		return $response_data;
 	}
+
 
 }
 

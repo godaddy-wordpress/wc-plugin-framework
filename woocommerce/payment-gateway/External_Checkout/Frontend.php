@@ -23,17 +23,17 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\External_Checkout;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_1\Payment_Gateway\External_Checkout;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Blocks\Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\Handlers\Script_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_0\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\Handlers\Script_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Payment_Gateway\\External_Checkout\\Frontend' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_1\\Payment_Gateway\\External_Checkout\\Frontend' ) ) :
 
 
 /**
@@ -41,6 +41,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\Payment
  *
  * @since 5.10.0
  */
+#[\AllowDynamicProperties]
 abstract class Frontend extends Script_Handler {
 
 
@@ -159,7 +160,7 @@ abstract class Frontend extends Script_Handler {
 		$is_cart_ajax = wp_doing_ajax() && 'update_shipping_method' === SV_WC_Helper::get_requested_value( 'wc-ajax' );
 		$should_init  = $is_cart_ajax || is_cart();
 
-		return $should_init && ( ! $this->get_handler()->supports_cart_block() || ! Blocks_Handler::is_cart_block_in_use() );
+		return $should_init && ! Blocks_Handler::is_cart_block_in_use();
 	}
 
 
@@ -175,7 +176,7 @@ abstract class Frontend extends Script_Handler {
 
 		$should_init = in_array( 'checkout', $locations, true ) && is_checkout();
 
-		return $should_init && ( ! $this->get_handler()->supports_checkout_block() || ! Blocks_Handler::is_checkout_block_in_use() );
+		return $should_init && ! Blocks_Handler::is_checkout_block_in_use();
 	}
 
 
@@ -370,10 +371,47 @@ abstract class Frontend extends Script_Handler {
 	 * Each handler should override this method to add its specific JS.
 	 *
 	 * @since 5.10.0
+	 *
+	 * @return void
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_style( 'sv-wc-external-checkout-v5_12_0', $this->get_handler()->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-external-checkout.css', array(), $this->get_handler()->get_plugin()->get_version() ); // TODO: min
+		if  ( ! $this->should_enqueue_scripts() ) {
+			return;
+		}
+
+		wp_enqueue_style( 'sv-wc-external-checkout-v5_12_1', $this->get_handler()->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-external-checkout.css', array(), $this->get_handler()->get_plugin()->get_version() ); // TODO: min
+	}
+
+
+	/**
+	 * Determines whether the external checkout handle should enqueue scripts.
+	 *
+	 * @since 5.12.1
+	 *
+	 * @return bool
+	 */
+	protected function should_enqueue_scripts() : bool {
+
+		// enqueue on product pages or other pages
+		$should_enqueue = true;
+
+		// for cart and checkout, bail if blocks are in use (plugin-specific frontend scripts will handle it)
+		if ( is_cart() ) {
+			$should_enqueue = ! Blocks_Handler::is_cart_block_in_use();
+		} elseif ( is_checkout() ) {
+			$should_enqueue = ! Blocks_Handler::is_checkout_block_in_use();
+		}
+
+		/**
+		 * Determines whether the external checkout handler should enqueue scripts.
+		 *
+		 * @since 5.12.1
+		 *
+		 * @param bool $should_enqueue whether the external checkout handler should enqueue scripts
+		 * @param External_Checkout $handler the external checkout handler instance
+		 */
+		return (bool) apply_filters( 'sv_wc_external_checkout_should_enqueue_scripts', $should_enqueue, $this->get_handler() );
 	}
 
 

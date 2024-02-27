@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_Payment_Gateway_Apple_Pay_Frontend' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_1\\SV_WC_Payment_Gateway_Apple_Pay_Frontend' ) ) :
 
 
 /**
@@ -34,7 +34,8 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_0\\SV_WC_P
  *
  * @since 4.7.0
  */
-class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_12_0\Payment_Gateway\External_Checkout\Frontend {
+#[\AllowDynamicProperties]
+class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_12_1\Payment_Gateway\External_Checkout\Frontend {
 
 
 	/** @var string JS handler base class name, without the FW version */
@@ -106,14 +107,18 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends \SkyVerge\WooCommerce\Plu
 	 */
 	public function enqueue_scripts() {
 
+		if ( ! $this->should_enqueue_scripts() ) {
+			return;
+		}
+
 		parent::enqueue_scripts();
 
 		$gateway = $this->get_gateway();
 		$version = $gateway->get_plugin()->get_assets_version( $gateway->get_id() );
 
-		wp_enqueue_style( 'sv-wc-apple-pay-v5_12_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-apple-pay.css', [], $version ); // TODO: min
+		wp_enqueue_style( 'sv-wc-apple-pay-v5_12_1', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-apple-pay.css', [], $version ); // TODO: min
 
-		wp_enqueue_script( 'sv-wc-apple-pay-v5_12_0', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/sv-wc-payment-gateway-apple-pay.js', [ 'jquery' ], $version, true );
+		wp_enqueue_script( 'sv-wc-apple-pay-v5_12_1', $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/sv-wc-payment-gateway-apple-pay.js', [ 'jquery' ], $version, true );
 	}
 
 
@@ -316,43 +321,6 @@ class SV_WC_Payment_Gateway_Apple_Pay_Frontend extends \SkyVerge\WooCommerce\Plu
 		 * @param array $args JS handler arguments
 		 */
 		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_apple_pay_checkout_js_handler_args', $args );
-	}
-
-
-	/** Deprecated methods ********************************************************************************************/
-
-
-	/**
-	 * Gets the JS handler class name.
-	 *
-	 * Concrete implementations can override this with their own handler.
-	 *
-	 * @since 5.6.0
-	 * @deprecated 5.7.0
-	 *
-	 * @return string
-	 */
-	protected function get_js_handler_name() {
-
-		wc_deprecated_function( __METHOD__, '5.7.0', __CLASS__ . '::get_js_handler_class_name()' );
-
-		return parent::get_js_handler_class_name();
-	}
-
-
-	/**
-	 * Gets the JS handler parameters.
-	 *
-	 * @since 4.7.0
-	 * @deprecated 5.7.0
-	 *
-	 * @return array
-	 */
-	protected function get_js_handler_params() {
-
-		wc_deprecated_function( __METHOD__, '5.7.0', __CLASS__ . '::get_js_handler_args()' );
-
-		return $this->get_js_handler_args();
 	}
 
 
