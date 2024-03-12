@@ -24,7 +24,6 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_12_2;
 
-use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use stdClass;
 
