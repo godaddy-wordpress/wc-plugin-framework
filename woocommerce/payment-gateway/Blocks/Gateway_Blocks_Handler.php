@@ -5,7 +5,6 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_12_2\Payment_Gateway\Blocks;
 use Automattic\WooCommerce\Blocks\Package as WooCommerceBlocks;
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_2\Blocks\Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_2\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_2\SV_WC_Payment_Gateway_Plugin;
 
 
