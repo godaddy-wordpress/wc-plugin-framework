@@ -19,6 +19,8 @@ if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_12_2\Blocks\Block
  *
  * Individual plugins should override this class to load their own block integrations classes.
  *
+ * Gateways can straight out use {@see Gateway_Blocks_Handler} instead.
+ *
  * @since 5.11.11
  */
 #[\AllowDynamicProperties]
