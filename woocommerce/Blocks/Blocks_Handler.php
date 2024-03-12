@@ -29,10 +29,10 @@ class Blocks_Handler {
 	protected SV_WC_Plugin $plugin;
 
 	/** @var IntegrationInterface|null */
-	protected ?IntegrationInterface $cart_block_integration;
+	protected ?IntegrationInterface $cart_block_integration = null;
 
 	/** @var IntegrationInterface|null */
-	protected ?IntegrationInterface $checkout_block_integration;
+	protected ?IntegrationInterface $checkout_block_integration = null;
 
 
 	/**
