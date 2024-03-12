@@ -24,6 +24,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_12_1;
 
+use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use stdClass;
 
@@ -331,6 +332,8 @@ abstract class SV_WC_Plugin {
 
 		// add any PHP incompatibilities to the system status report
 		add_filter( 'woocommerce_system_status_environment_rows', array( $this, 'add_system_status_php_information' ) );
+
+		add_action( 'woocommerce_blocks_loaded', array( $this, 'setup_blocks_integration' ) );
 	}
 
 
