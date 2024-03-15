@@ -19,6 +19,7 @@ npm-debug.log
 *.zip
 .cache
 .sass-cache*
+.parcel-cache*
 
 # Tests
 codeception.yml
