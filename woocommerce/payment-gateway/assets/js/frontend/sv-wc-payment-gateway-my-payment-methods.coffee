@@ -2,7 +2,7 @@
  WooCommerce SkyVerge Payment Gateway My Payment Methods CoffeeScript
  Version 5.1.0
 
- Copyright (c) 2014-2023, SkyVerge, Inc.
+ Copyright (c) 2014-2024, SkyVerge, Inc.
  Licensed under the GNU General Public License v3.0
  http://www.gnu.org/licenses/gpl-3.0.html
 ###
