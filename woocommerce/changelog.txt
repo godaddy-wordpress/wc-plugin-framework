@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2024.nn.nn - version 5.12.2
+2024.03.21 - version 5.12.2
  * Tweak - Add non-gateway cart and checkout blocks supporting logic
  * Tweak - Ensure gateway block scripts use unique handles
 
