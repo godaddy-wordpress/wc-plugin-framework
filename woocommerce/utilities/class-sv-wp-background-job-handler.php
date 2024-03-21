@@ -203,10 +203,11 @@ abstract class SV_WP_Background_Job_Handler extends SV_WP_Async_Request {
 		$processing = '%"status":"processing"%';
 
 		$count = $wpdb->get_var( $wpdb->prepare( "
-			SELECT COUNT(*)
+			SELECT COUNT(option_id)
 			FROM {$wpdb->options}
 			WHERE option_name LIKE %s
 			AND ( option_value LIKE %s OR option_value LIKE %s )
+   			LIMIT 1
 		", $key, $queued, $processing ) );
 
 		return ( $count > 0 ) ? false : true;
