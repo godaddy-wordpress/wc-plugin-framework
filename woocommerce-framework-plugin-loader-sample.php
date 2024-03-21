@@ -9,14 +9,14 @@
  * Text Domain: TODO: plugin textdomain
  * Domain Path: /i18n/languages/
  *
- * Copyright: (c) 2011-2023, SkyVerge, Inc. (info@skyverge.com)
+ * Copyright: (c) 2011-2024, SkyVerge, Inc. (info@skyverge.com)
  *
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * @package   TODO: package
  * @author    SkyVerge
- * @copyright Copyright (c) 2011-2023, SkyVerge, Inc.
+ * @copyright Copyright (c) 2011-2024, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  *
  * Woo: 99999:00000000000000000000000000000000 TODO: updater keys
@@ -61,7 +61,7 @@ class SV_WC_Framework_Plugin_Loader {
 	const MINIMUM_WC_VERSION = '3.9';
 
 	/** SkyVerge plugin framework version used by this plugin */
-	const FRAMEWORK_VERSION = '5.12.1'; // TODO: framework version
+	const FRAMEWORK_VERSION = '5.12.2'; // TODO: framework version
 
 
 	/** the plugin name, for displaying notices */

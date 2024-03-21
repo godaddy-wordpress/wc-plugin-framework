@@ -17,17 +17,17 @@
  * needs please refer to http://www.skyverge.com
  *
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2023, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2024, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_1\Admin;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_2\Admin;
 
 use Automattic\WooCommerce\Admin\Notes as WooCommerce_Admin_Notes;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_1\\Admin\\Notes_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_2\\Admin\\Notes_Helper' ) ) :
 
 
 /**

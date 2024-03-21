@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-03-18T09:41:29+00:00\n"
+"POT-Creation-Date: 2024-03-21T01:45:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -172,23 +172,23 @@ msgstr ""
 msgid "Skip this step"
 msgstr ""
 
-#: woocommerce/Blocks/Blocks_Handler.php:235
+#: woocommerce/Blocks/Blocks_Handler.php:271
 msgctxt "Button label"
 msgid "Edit the Checkout Page"
 msgstr ""
 
 #. translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_checkout]` shortcode tag, %6$s - closing HTML </a> tag
-#: woocommerce/Blocks/Blocks_Handler.php:240
+#: woocommerce/Blocks/Blocks_Handler.php:276
 msgid "%1$s is not yet compatible with the Checkout block. We recommend %2$sfollowing this guide%3$s to revert to the %4$s%5$s shortcode%6$s."
 msgstr ""
 
-#: woocommerce/Blocks/Blocks_Handler.php:266
+#: woocommerce/Blocks/Blocks_Handler.php:302
 msgctxt "Button label"
 msgid "Edit the Cart Page"
 msgstr ""
 
 #. translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_cart]` shortcode tag, %6$s - closing HTML </a> tag
-#: woocommerce/Blocks/Blocks_Handler.php:271
+#: woocommerce/Blocks/Blocks_Handler.php:307
 msgid "%1$s is not yet compatible with the Cart block. We recommend %2$sfollowing this guide%3$s to revert to the %4$s%5$s shortcode%6$s."
 msgstr ""
 
