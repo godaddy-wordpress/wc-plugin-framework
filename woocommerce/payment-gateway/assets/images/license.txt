@@ -1,4 +1,4 @@
-card-cc-plain.png, card-echeck.png, and sample-check.png are copyright SkyVerge, Inc. 2013-2023
+card-cc-plain.png, card-echeck.png, and sample-check.png are copyright SkyVerge, Inc. 2013-2024
 
 All other card icons are copyright Dreamstale under the following license:
 

@@ -1,17 +1,16 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_1\Payment_Gateway\Blocks;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_2\Payment_Gateway\Blocks;
 
-use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
+use Automattic\WooCommerce\Blocks\Package as WooCommerceBlocks;
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_1\Blocks\Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_2\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_2\SV_WC_Payment_Gateway_Plugin;
 
 
 use function Patchwork\Redefinitions\LanguageConstructs\_require_once;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_1\\Payment_Gateway\Blocks\\Gateway_Blocks_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_2\\Payment_Gateway\Blocks\\Gateway_Blocks_Handler' ) ) :
 
 /**
  * Extends the base {@see Blocks_Handler} for supporting WooCommerce Blocks in payment gateways.
@@ -51,7 +50,7 @@ class Gateway_Blocks_Handler extends Blocks_Handler {
 	 */
 	public function handle_blocks_integration() : void {
 
-		if ( ! class_exists( PaymentMethodRegistry::class ) ) {
+		if ( ! class_exists( PaymentMethodRegistry::class ) || ! class_exists( WooCommerceBlocks::class ) || ! version_compare( WooCommerceBlocks::get_version(), '4.4.0', '>' ) ) {
 			return;
 		}
 

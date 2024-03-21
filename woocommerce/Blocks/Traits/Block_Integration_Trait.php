@@ -1,18 +1,18 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_1\Blocks\Traits;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_2\Blocks\Traits;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use GoDaddy\WooCommerce\Poynt\Blocks\Credit_Card_Checkout_Block_Integration;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_1\Blocks\Block_Integration;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_1\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Payment_Gateway_Plugin;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Plugin;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_1\SV_WC_Plugin_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_2\Blocks\Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_2\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_2\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_2\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_2\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_2\SV_WC_Plugin_Exception;
 use stdClass;
 
-if ( ! class_exists( '\\SkyVerge\WooCommerce\PluginFramework\v5_12_1\Blocks\Traits\Block_Integration_Trait' ) ) :
+if ( ! class_exists( '\\SkyVerge\WooCommerce\PluginFramework\v5_12_2\Blocks\Traits\Block_Integration_Trait' ) ) :
 
 /**
  * A trait for block integrations.
@@ -164,7 +164,7 @@ trait Block_Integration_Trait {
 		 */
 		return (string) apply_filters( 'wc_' . $this->get_id() . '_'. $this->block_name . '_block_handle', sprintf(
 			'wc-%s-%s-block',
-			$this->plugin->get_id_dasherized(),
+			$this->get_id_dasherized(),
 			$this->block_name
 		), $this );
 	}

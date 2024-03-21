@@ -1,5 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2024.nn.nn - version 5.12.2
+ * Tweak - Add non-gateway cart and checkout blocks supporting logic
+ * Tweak - Ensure gateway block scripts use unique handles
+
 2024.02.27 - version 5.12.1
  * Tweak - Handle support in gateways for external checkouts while corresponding express payment methods are in use in the cart and checkout blocks
  * Fix - Check if the session is set before trying to add a WooCommerce notice
