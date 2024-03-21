@@ -37,6 +37,7 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_2\\Blocks\
  * Base class for handling support for WooCommerce blocks, like Cart or Checkout blocks.
  *
  * This is the base integration class that can be used by non-gateway plugins.
+ * @see Blocks_Handler::handle_blocks_integration()
  * For gateways, {@see Gateway_Checkout_Block_Integration}.
  *
  * @since 5.12.0

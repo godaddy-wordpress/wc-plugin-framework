@@ -3,6 +3,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_12_2\Blocks;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
+use Automattic\WooCommerce\Blocks\Package as WooCommerceBlocks;
 use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_2\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_2\SV_WC_Payment_Gateway;
@@ -18,6 +19,8 @@ if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_12_2\Blocks\Block
  *
  * Individual plugins should override this class to load their own block integrations classes.
  *
+ * Gateways can straight out use {@see Gateway_Blocks_Handler} instead.
+ *
  * @since 5.11.11
  */
 #[\AllowDynamicProperties]
@@ -28,10 +31,10 @@ class Blocks_Handler {
 	protected SV_WC_Plugin $plugin;
 
 	/** @var IntegrationInterface|null */
-	protected ?IntegrationInterface $cart_block_integration;
+	protected ?IntegrationInterface $cart_block_integration = null;
 
 	/** @var IntegrationInterface|null */
-	protected ?IntegrationInterface $checkout_block_integration;
+	protected ?IntegrationInterface $checkout_block_integration = null;
 
 
 	/**
@@ -99,6 +102,7 @@ class Blocks_Handler {
 	 */
 	public function get_cart_block_integration_instance() : ?IntegrationInterface {
 
+		// individual plugins should override this method to return their own cart block integration instance
 		return $this->cart_block_integration;
 	}
 
@@ -108,16 +112,19 @@ class Blocks_Handler {
 	 *
 	 * @since 5.12.0
 	 *
-	 * @return Block_Integration|Gateway_Checkout_Block_Integration|null
+	 * @return Block_Integration|null
 	 */
 	public function get_checkout_block_integration_instance() : ?IntegrationInterface {
 
+		// individual plugins should override this method to return their own checkout block integration instance
 		return $this->checkout_block_integration;
 	}
 
 
 	/**
 	 * Handles WooCommerce Blocks integrations in compatible plugins.
+	 *
+	 * @see Gateway_Blocks_Handler::handle_blocks_integration() for gateways
 	 *
 	 * @internal
 	 *
@@ -127,7 +134,36 @@ class Blocks_Handler {
 	 */
 	public function handle_blocks_integration() : void {
 
-		// @TODO investigate how to register integrations for non-gateways
+		if ( ! class_exists( WooCommerceBlocks::class ) || ! version_compare( WooCommerceBlocks::get_version(), '4.4.0', '>' ) ) {
+			return;
+		}
+
+		$compatible_blocks = [];
+
+		if ( $this->is_cart_block_compatible() ) {
+			$compatible_blocks = ['cart', 'mini-cart'];
+		}
+
+		if ( $this->is_checkout_block_compatible() ) {
+			$compatible_blocks[] = 'checkout';
+		}
+
+		foreach ( $compatible_blocks as $block_name ) {
+
+			add_action( "woocommerce_blocks_{$block_name}_block_registration", function( $integration_registry ) use ( $block_name ) {
+
+					if ( $block_name === 'checkout' ) {
+						$integration_instance = $this->get_checkout_block_integration_instance();
+					} else {
+						$integration_instance = $this->get_cart_block_integration_instance();
+					}
+
+					if ( $integration_instance ) {
+						$integration_registry->register( $integration_instance );
+					}
+				}
+			);
+		}
 	}
 
 
