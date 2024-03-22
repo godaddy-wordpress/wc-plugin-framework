@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-03-21T01:45:24+00:00\n"
+"POT-Creation-Date: 2024-03-22T03:29:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -2021,30 +2021,30 @@ msgstr ""
 msgid "A list of key/value pairs defining the display value of each setting option. The keys should match the options defined in the base setting for validation."
 msgstr ""
 
-#: woocommerce/utilities/class-sv-wp-background-job-handler.php:660
+#: woocommerce/utilities/class-sv-wp-background-job-handler.php:661
 msgid "Job data key \"%s\" not set"
 msgstr ""
 
-#: woocommerce/utilities/class-sv-wp-background-job-handler.php:664
+#: woocommerce/utilities/class-sv-wp-background-job-handler.php:665
 msgid "Job data key \"%s\" is not an array"
 msgstr ""
 
-#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1064
+#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1065
 msgid "Background Processing Test"
 msgstr ""
 
-#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1065
+#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1066
 msgid "Run Test"
 msgstr ""
 
-#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1066
+#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1067
 msgid "This tool will test whether your server is capable of processing background jobs."
 msgstr ""
 
-#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1084
+#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1085
 msgid "Success! You should be able to process background jobs."
 msgstr ""
 
-#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1087
+#: woocommerce/utilities/class-sv-wp-background-job-handler.php:1088
 msgid "Could not connect. Please ask your hosting company to ensure your server has loopback connections enabled."
 msgstr ""
