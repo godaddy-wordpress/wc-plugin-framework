@@ -24,8 +24,6 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_12_2;
 
-use SkyVerge\WooCommerce\Checkout_Add_Ons\Integrations\WC_Subscriptions_Integration;
-
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_2\\SV_WC_Helper' ) ) :
