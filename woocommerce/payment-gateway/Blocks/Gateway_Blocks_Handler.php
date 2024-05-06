@@ -59,7 +59,7 @@ class Gateway_Blocks_Handler extends Blocks_Handler {
 			/** @var SV_WC_Payment_Gateway_Plugin $plugin */
 			$plugin = $this->plugin;
 
-			require_once( $plugin->get_framework_path() . '/payment-gateway/Blocks/Gateway_Checkout_Block_Integration.php' );
+			require_once( $plugin->get_payment_gateway_framework_path() . '/Blocks/Gateway_Checkout_Block_Integration.php' );
 
 			foreach ( $plugin->get_gateways() as $gateway ) {
 
