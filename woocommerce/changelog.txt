@@ -2,6 +2,7 @@
 
 2024.05.06 - version 5.12.3
  * Fix - Ensure gateway block handler files are loaded from payment gateway framework path
+ * Misc - Improve background job database query performance
 
 2024.03.21 - version 5.12.2
  * Tweak - Add non-gateway cart and checkout blocks supporting logic
