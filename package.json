@@ -1,6 +1,6 @@
 {
   "name": "wc-plugin-framework",
-  "version": "5.12.3",
+  "version": "5.12.4",
   "title": "WooCommerce Plugin Framework",
   "author": "SkyVerge Team",
   "homepage": "https://github.com/skyverge/wc-plugin-framework#readme",
@@ -17,11 +17,10 @@
   },
   "scripts": {
     "clean": "rimraf woocommerce/payment-gateway/assets/dist",
-    "build:parcel": "parcel build 'woocommerce/payment-gateway/assets/js/**/*.js' 'woocommerce/payment-gateway/assets/js/**/*.coffee' --dist-dir woocommerce/payment-gateway/assets/dist --public-url ..",
+    "build:parcel": "parcel build 'woocommerce/payment-gateway/assets/js/**/*.js' 'woocommerce/payment-gateway/assets/js/**/*.coffee' --out-dir woocommerce/payment-gateway/assets/dist --public-url ..",
     "build": "grunt default && npm run build:parcel"
   },
   "devDependencies": {
-    "@parcel/transformer-coffeescript": "^2.12.0",
     "coffeescript": "^2.7",
     "gettext-parser": "^8.0",
     "grunt": "^1.6",
@@ -34,7 +33,7 @@
     "grunt-shell": "^4.0",
     "grunt-text-replace": "^0.4",
     "load-grunt-tasks": "~5.1",
-    "parcel": "^2.12",
+    "parcel": "1.12.3",
     "rimraf": "^5.0",
     "time-grunt": "^2.0",
     "underscore": "^1.13",
