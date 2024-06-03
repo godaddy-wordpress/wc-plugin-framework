@@ -174,6 +174,8 @@ jQuery ( $ ) ->
 					# change the "Cancel" button back to "Edit"
 					button.siblings( '.cancel-edit' ).removeClass( 'cancel-edit' ).addClass( 'edit' ).text( @i18n.edit_button ).addClass( 'button' )
 
+					row.removeClass( 'editing' )
+
 					this.disable_editing_ui()
 
 				.fail ( jqXHR, textStatus, error ) =>

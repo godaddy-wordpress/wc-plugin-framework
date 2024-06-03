@@ -91,9 +91,11 @@ table.woocommerce-MyAccount-paymentMethods {
 
 		.payment-method:not(.editing) {
 			opacity: 0.5;
+			pointer-events: none;
+			cursor: not-allowed;
 		}
 
-		.payment-method:hover {
+		.payment-method:not(.editing):hover {
 			opacity: 1;
 		}
 
@@ -142,5 +144,13 @@ table.woocommerce-MyAccount-paymentMethods {
 				margin: .125em;
 			}
 		}
+	}
+}
+
+
+// disable clicks on the "Add Payment Method" button when it's disabled
+.woocommerce-MyAccount-content {
+	.button.disabled[href*="add-payment-method"] {
+		pointer-events: none;
 	}
 }
