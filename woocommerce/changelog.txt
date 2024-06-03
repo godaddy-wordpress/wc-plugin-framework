@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2024.nn.nn - version 5.12.4
+2024.06.03 - version 5.12.4
  * Fix - Ensure gateway scripts are compiled as regular JS rather than modules
 
 2024.05.06 - version 5.12.3
