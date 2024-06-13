@@ -1945,11 +1945,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$order->description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name(), ENT_QUOTES ), $order->get_order_number() );
 
 		// when HPOS is enabled, we need to save the order to avoid potential errors when saving a new payment method
-		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() && ( ! is_admin() || is_ajax() ) ) {
+		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() && ( ! is_admin() || is_ajax() ) && ! is_add_payment_method_page() ) {
 			$order->save();
 		}
 
-		$order = $this->get_order_with_unique_transaction_ref( $order );
+		if ( ! is_add_payment_method_page() ) {
+			$order = $this->get_order_with_unique_transaction_ref($order);
+		}
 
 		/**
 		 * Filters the base order for a payment transaction.
