@@ -1949,6 +1949,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			$order->save();
 		}
 
+		// the get_order_with_unique_transaction_ref() call results in saving the order object, which we don't want to do on the "add payment method" page
 		if ( ! is_add_payment_method_page() ) {
 			$order = $this->get_order_with_unique_transaction_ref($order);
 		}
