@@ -1944,8 +1944,8 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		/* translators: Placeholders: %1$s - site title, %2$s - order number */
 		$order->description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name(), ENT_QUOTES ), $order->get_order_number() );
 
-		// the get_order_with_unique_transaction_ref() call results in saving the order object, which we don't want to do on the "add payment method" page
-		if ( ! is_add_payment_method_page() ) {
+		// the get_order_with_unique_transaction_ref() call results in saving the order object, which we don't want to do if the order hasn't already been saved (such as when adding a payment method)
+		if ( $order->get_id() ) {
 			$order = $this->get_order_with_unique_transaction_ref($order);
 		}
 
