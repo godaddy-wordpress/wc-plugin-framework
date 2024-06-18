@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2024.nn.nn - version 5.12.3
+ * Fix - Prevent blank orders from being generated when adding a payment method
+
 2024.06.03 - version 5.12.4
  * Fix - Ensure gateway scripts are compiled as regular JS rather than modules
  * Fix - Address an issue where multiple save buttons were displayed when editing a payment method in My Account
