@@ -1917,9 +1917,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @since 1.0.0
 	 *
 	 * @param int|\WC_Order $order the order or order ID being processed
+	 * @param bool $adding_payment_method Whether we're in the context of adding a payment method. If set to `true` then
+	 *                                    this ensures the order in question is never saved. Saving the order when adding
+	 *                                    a payment method could result in blank orders persisting to the database.
 	 * @return \WC_Order object with payment and transaction information attached
 	 */
-	public function get_order( $order ) {
+	public function get_order( $order, bool $adding_payment_method = false ) {
 
 		if ( is_numeric( $order ) ) {
 			$order = wc_get_order( $order );
@@ -1945,7 +1948,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$order->description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name(), ENT_QUOTES ), $order->get_order_number() );
 
 		// the get_order_with_unique_transaction_ref() call results in saving the order object, which we don't want to do on the "add payment method" page
-		if ( ! is_add_payment_method_page() ) {
+		if ( ! $adding_payment_method ) {
 			$order = $this->get_order_with_unique_transaction_ref($order);
 		}
 

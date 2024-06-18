@@ -593,11 +593,14 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @see SV_WC_Payment_Gateway::get_order()
 	 * @param int|\WC_Order $order_id order ID being processed
+	 * @param bool $adding_payment_method Whether we're in the context of adding a payment method. If set to `true` then
+	 *                                    this ensures the order in question is never saved. Saving the order when adding
+	 *                                    a payment method could result in blank orders persisting to the database.
 	 * @return \WC_Order object with payment and transaction information attached
 	 */
-	public function get_order( $order_id ) {
+	public function get_order( $order_id, bool $adding_payment_method = false ) {
 
-		$order = parent::get_order( $order_id );
+		$order = parent::get_order( $order_id, $adding_payment_method );
 
 		// payment info
 		if ( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-number' ) && ! SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
@@ -1082,7 +1085,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		// mock order, as all gateway API implementations require an order object for tokenization
 		$order = new \WC_Order( 0 );
-		$order = $this->get_order( $order );
+		$order = $this->get_order( $order, true );
 
 		$user = get_userdata( get_current_user_id() );
 
