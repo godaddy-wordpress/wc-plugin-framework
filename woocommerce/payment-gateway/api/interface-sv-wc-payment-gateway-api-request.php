@@ -26,7 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_12_5;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_4\\SV_WC_Payment_Gateway_API_Request' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_5\\SV_WC_Payment_Gateway_API_Request' ) ) :
 
 
 /**

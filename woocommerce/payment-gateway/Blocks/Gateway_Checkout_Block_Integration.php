@@ -29,14 +29,14 @@ use Automattic\WooCommerce\StoreApi\Payments\PaymentContext;
 use Automattic\WooCommerce\StoreApi\Payments\PaymentResult;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_5\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_5\SV_WC_Payment_Gateway_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_4\SV_WC_Payment_Gateway_Payment_Form;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_4\SV_WC_Payment_Gateway_Payment_Token;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_4\SV_WC_Payment_Gateway_Plugin;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_4\Blocks\Traits\Block_Integration_Trait;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_5\SV_WC_Payment_Gateway_Payment_Form;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_5\SV_WC_Payment_Gateway_Payment_Token;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_5\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_5\Blocks\Traits\Block_Integration_Trait;
 use WC_HTTPS;
 use WC_Subscriptions_Cart;
 
-if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_12_4\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration' ) ) :
+if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_12_5\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration' ) ) :
 
 /**
  * Base class for handling support for the WooCommerce Checkout block in gateways.
