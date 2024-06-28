@@ -33,7 +33,7 @@
     "grunt-shell": "^4.0",
     "grunt-text-replace": "^0.4",
     "load-grunt-tasks": "~5.1",
-    "parcel": "1.12.3",
+    "parcel": "2.12.0",
     "rimraf": "^5.0",
     "time-grunt": "^2.0",
     "underscore": "^1.13",
