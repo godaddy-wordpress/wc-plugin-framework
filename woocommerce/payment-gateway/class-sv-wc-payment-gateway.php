@@ -22,16 +22,16 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_4;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_5;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_4\Blocks\Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_4\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_5\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_5\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 use stdClass;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_4\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_5\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -473,7 +473,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
-		$versioned_handle = $handle . '-v5_12_4';
+		$versioned_handle = $handle . '-v5_12_5';
 
 		// Frontend JS
 		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
@@ -1944,12 +1944,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		/* translators: Placeholders: %1$s - site title, %2$s - order number */
 		$order->description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name(), ENT_QUOTES ), $order->get_order_number() );
 
-		// when HPOS is enabled, we need to save the order to avoid potential errors when saving a new payment method
-		if ( SV_WC_Plugin_Compatibility::is_hpos_enabled() && ( ! is_admin() || is_ajax() ) ) {
-			$order->save();
+		// the get_order_with_unique_transaction_ref() call results in saving the order object, which we don't want to do if the order hasn't already been saved (such as when adding a payment method)
+		if ( $order->get_id() ) {
+			$order = $this->get_order_with_unique_transaction_ref( $order );
 		}
-
-		$order = $this->get_order_with_unique_transaction_ref( $order );
 
 		/**
 		 * Filters the base order for a payment transaction.
