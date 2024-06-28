@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-04-02T05:10:54+00:00\n"
+"POT-Creation-Date: 2024-06-28T11:18:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -771,24 +771,24 @@ msgstr ""
 #. translators: Placeholders: %1$s - Payment method title, %2$s - Payment account type (savings/checking) (may or may not be available), %3$s - Last four digits of the account
 #. translators: Context: "Check" as in "bank check" (noun, not verb). Placeholders: %1$s - payment method title, %2$s - payment account type (savings/checking) (may or may not be available), %3$s - last four digits of the account
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:713
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2885
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2883
 msgid "%1$s Check Transaction Approved: %2$s account ending in %3$s"
 msgstr ""
 
 #. translators: Placeholder: %s - Bank check number
 #. translators: Context: "Check" as in "bank check" (noun, not verb). Placeholder: %s - check number
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:718
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2890
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2888
 msgid "Check number %s"
 msgstr ""
 
 #. translators: Placeholder: %s - Payment transaction ID
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:724
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:821
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2298
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2531
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2850
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2896
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2296
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2529
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2848
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2894
 #: woocommerce/payment-gateway/Handlers/Capture.php:200
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:366
 msgid "(Transaction ID %s)"
@@ -813,8 +813,8 @@ msgstr ""
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:793
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:803
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2824
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3307
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2822
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3305
 msgctxt "noun, credit card transaction type"
 msgid "Charge"
 msgstr ""
@@ -828,7 +828,7 @@ msgstr ""
 #. translators: Placeholders: %s - expiry date
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:813
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:740
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2842
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2840
 msgid "(expires %s)"
 msgstr ""
 
@@ -844,7 +844,7 @@ msgstr ""
 
 #. translators: This is a message describing that the transaction in question only performed a credit card authorization and did not capture any funds.
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:915
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1997
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1995
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:276
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:383
 msgid "Authorization only transaction"
@@ -901,19 +901,19 @@ msgid "Account"
 msgstr ""
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:228
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3566
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3564
 msgctxt "credit card type"
 msgid "Visa"
 msgstr ""
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:232
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3567
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3565
 msgctxt "credit card type"
 msgid "MasterCard"
 msgstr ""
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:236
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3568
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3566
 msgctxt "credit card type"
 msgid "American Express"
 msgstr ""
@@ -924,13 +924,13 @@ msgid "Diners Club"
 msgstr ""
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:244
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3569
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3567
 msgctxt "credit card type"
 msgid "Discover"
 msgstr ""
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-helper.php:248
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3571
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3569
 msgctxt "credit card type"
 msgid "JCB"
 msgstr ""
@@ -1427,62 +1427,62 @@ msgid "%1$s - Order %2$s"
 msgstr ""
 
 #. translators: Placeholders: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card.
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2079
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2077
 msgid "%1$s - Capture for Order %2$s"
 msgstr ""
 
 #. translators: Placeholders: %1$s - site title, %2$s - order number
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2222
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2220
 msgid "%1$s - Refund for Order %2$s"
 msgstr ""
 
 #. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - a monetary amount
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2289
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2287
 msgid "%1$s Refund in the amount of %2$s approved."
 msgstr ""
 
 #. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error code, %3$s - error message
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2319
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2317
 msgid "%1$s Refund Failed: %2$s - %3$s"
 msgstr ""
 
 #. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error message
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2327
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2325
 msgid "%1$s Refund Failed: %2$s"
 msgstr ""
 
 #. translators: Placeholders: %s - payment gateway title (such as Authorize.net, Braintree, etc)
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2348
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2346
 msgid "%s Order completely refunded."
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2403
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2401
 msgid "Oops, you cannot partially void this order. Please use the full order amount."
 msgstr ""
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - error code, %3$s - error message. Void as in to void an order.
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2490
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2488
 msgid "%1$s Void Failed: %2$s - %3$s"
 msgstr ""
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - error message. Void as in to void an order.
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2498
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2496
 msgid "%1$s Void Failed: %2$s"
 msgstr ""
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order.
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2522
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2520
 msgid "%1$s Void in the amount of %2$s approved."
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2597
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2595
 msgctxt "hash before order number"
 msgid "#"
 msgstr ""
 
 #. translators: Placeholders: %1$s - status code, %2$s - status message
 #. translators: Placeholders: %1$s - Payment request response status code, %2$s - Payment request response status message
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2619
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2617
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:153
 #: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:179
 msgid "Status code %1$s: %2$s"
@@ -1490,7 +1490,7 @@ msgstr ""
 
 #. translators: Placeholders: %s - status code
 #. translators: Placeholder: %s - Payment request response status code
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2622
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2620
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:156
 #: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:182
 msgid "Status code: %s"
@@ -1499,142 +1499,142 @@ msgstr ""
 #. translators: Placeholders; %s - status message
 #. translators: Placeholder: %s - Status message
 #. translators: Placeholder: %s - Payment request response status message
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2625
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2623
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:159
 #: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:185
 msgid "Status message: %s"
 msgstr ""
 
 #. translators: Placeholder: %s - Payment transaction ID
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2630
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2628
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:165
 #: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:193
 msgid "Transaction ID %s"
 msgstr ""
 
 #. translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge)
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2821
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2819
 msgid "%1$s %2$s %3$s Approved"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2823
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2821
 msgctxt "noun, software environment"
 msgid "Test"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2824
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3308
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2822
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3306
 msgctxt "credit card transaction type"
 msgid "Authorization"
 msgstr ""
 
 #. translators: Placeholders: %1$s - credit card type (MasterCard, Visa, etc...), %2$s - last four digits of the card
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2831
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2829
 msgid "%1$s ending in %2$s"
 msgstr ""
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - message (probably reason for the transaction being held for review)
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2928
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2926
 msgid "%1$s Transaction Held for Review (%2$s)"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2970
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2968
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:269
 msgid "Your order has been received and is being reviewed. Thank you for your business."
 msgstr ""
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - error message; e.g. Order Note: [Payment method] Payment failed [error]
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3017
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3015
 msgid "%1$s Payment Failed (%2$s)"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3035
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3033
 #: woocommerce/payment-gateway/Handlers/Abstract_Hosted_Payment_Handler.php:218
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:533
 msgid "An error occurred, please try again or try an alternate form of payment."
 msgstr ""
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - message/error
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3054
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3052
 msgid "%1$s Transaction Cancelled (%2$s)"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3302
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3300
 msgid "Transaction Type"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3304
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3302
 msgid "Select how transactions should be processed. Charge submits all transactions for settlement, Authorization simply authorizes the order total for capture later."
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3315
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3313
 msgid "Charge Virtual-Only Orders"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3317
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3315
 msgid "If the order contains exclusively virtual items, enable this to immediately charge, rather than authorize, the transaction."
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3325
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3323
 msgid "Enable Partial Capture"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3327
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3325
 msgid "Allow orders to be partially captured multiple times."
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3336
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3334
 msgctxt "coordinating conjunction for a list of order statuses: on-hold, processing, or completed"
 msgid "or"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3339
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3337
 msgid "Capture Paid Orders"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3342
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3340
 msgid "Automatically capture orders when they are changed to %s."
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3343
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3341
 msgid "a paid status"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3533
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3531
 msgid "Accepted Card Logos"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3535
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3533
 msgid "These are the card logos that are displayed to customers as accepted during checkout."
 msgstr ""
 
 #. translators: Placeholders: %1$s - <strong> tag, %2$s - </strong> tag
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3538
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3536
 msgid "This setting %1$sdoes not%2$s change which card types the gateway will accept. Accepted cards are configured from your payment processor account."
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3570
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3568
 msgctxt "credit card type"
 msgid "Diners"
 msgstr ""
 
 #. translators: http://www.cybersource.com/products/payment_security/payment_tokenization/ and https://en.wikipedia.org/wiki/Tokenization_(data_security)
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3629
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3627
 msgid "Tokenization"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3630
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3628
 msgid "Allow customers to securely save their payment details for future checkout."
 msgstr ""
 
 #. translators: https://www.skyverge.com/for-translators-environments
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:4159
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:4157
 msgctxt "software environment"
 msgid "Production"
 msgstr ""
 
 #. translators: %1$s - gateway name, %2$s - <a> tag, %3$s - </a> tag, %4$s - <a> tag, %5$s - </a> tag
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:4507
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:4505
 msgid "Heads up! %1$s is not fully configured and cannot accept payments. Please %2$sreview the documentation%3$s and configure the %4$sgateway settings%5$s."
 msgstr ""
 
