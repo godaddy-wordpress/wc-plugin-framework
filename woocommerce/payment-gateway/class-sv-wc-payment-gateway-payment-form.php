@@ -1101,7 +1101,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	 *
 	 * @see SV_WC_Payment_Gateway_Payment_Form::render_js()
 	 *
-	 * @since 4.12.5
+	 * @since 4.12.6
 	 */
 	protected function renderScriptDependencies() : void
 	{
@@ -1117,7 +1117,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	 *
 	 * @see SV_WC_Payment_Gateway_Payment_Form::renderScriptDependencies()
 	 *
-	 * @since 4.12.5
+	 * @since 4.12.6
 	 *
 	 * @return string[]
 	 */
