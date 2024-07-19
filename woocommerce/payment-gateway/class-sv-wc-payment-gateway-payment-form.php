@@ -1098,9 +1098,17 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 	protected function maybeRenderScriptDependencies() : void
 	{
-		if (! wp_script_is('jquery', 'done')) {
-			wp_print_scripts('jquery');
+		foreach ($this->getFormScriptDependencies() as $dependency) {
+			if (! wp_script_is($dependency, 'done')) {
+				// only render the script tag if it has’t been already done.
+				wp_print_scripts($dependency);
+			}
 		}
+	}
+
+	protected function getFormScriptDependencies() : array
+	{
+		return ['jquery'];
 	}
 
 	/**
