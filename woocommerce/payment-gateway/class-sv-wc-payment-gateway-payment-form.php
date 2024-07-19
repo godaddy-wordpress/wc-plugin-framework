@@ -1085,6 +1085,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 		switch ( current_action() ) :
 			case 'wp_footer' :
+				$this->maybeRenderScriptDependencies();
 				$this->payment_form_js_rendered[] = $gateway_id;
 				?><script type="text/javascript">jQuery(function($){<?php echo $this->get_safe_handler_js(); ?>});</script><?php
 			break;
@@ -1095,6 +1096,12 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 		endswitch;
 	}
 
+	protected function maybeRenderScriptDependencies() : void
+	{
+		if (! wp_script_is('jquery', 'done')) {
+			wp_print_scripts('jquery');
+		}
+	}
 
 	/**
 	 * Gets the handler instantiation JS.
