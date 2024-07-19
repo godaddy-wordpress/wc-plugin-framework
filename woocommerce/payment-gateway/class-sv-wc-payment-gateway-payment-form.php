@@ -1085,7 +1085,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 		switch ( current_action() ) :
 			case 'wp_footer' :
-				$this->maybeRenderScriptDependencies();
+				$this->renderScriptDependencies();
 				$this->payment_form_js_rendered[] = $gateway_id;
 				?><script type="text/javascript">jQuery(function($){<?php echo $this->get_safe_handler_js(); ?>});</script><?php
 			break;
@@ -1096,16 +1096,31 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 		endswitch;
 	}
 
-	protected function maybeRenderScriptDependencies() : void
+	/**
+	 * Renders the payment form JS dependencies.
+	 *
+	 * @see SV_WC_Payment_Gateway_Payment_Form::render_js()
+	 *
+	 * @since 4.12.5
+	 */
+	protected function renderScriptDependencies() : void
 	{
-		foreach ($this->getFormScriptDependencies() as $dependency) {
-			if (! wp_script_is($dependency, 'done')) {
-				// only render the script tag if it has’t been already done.
-				wp_print_scripts($dependency);
-			}
+		if (! $dependencies = $this->getFormScriptDependencies()) {
+			return;
 		}
+
+		wp_print_scripts($dependencies);
 	}
 
+	/**
+	 * Gets the payment form JS list of dependencies handles.
+	 *
+	 * @see SV_WC_Payment_Gateway_Payment_Form::renderScriptDependencies()
+	 *
+	 * @since 4.12.5
+	 *
+	 * @return string[]
+	 */
 	protected function getFormScriptDependencies() : array
 	{
 		return ['jquery'];
