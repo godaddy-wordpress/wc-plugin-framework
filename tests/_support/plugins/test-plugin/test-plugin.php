@@ -39,7 +39,7 @@ class SV_WC_Framework_Test_Plugin_Loader {
 	const MINIMUM_WC_VERSION = '3.0.9';
 
 	/** SkyVerge plugin framework version used by this plugin */
-	const FRAMEWORK_VERSION = '5.10.13';
+	const FRAMEWORK_VERSION = '5.12.6';
 
 	/** the plugin name, for displaying notices */
 	const PLUGIN_NAME = 'WooCommerce Framework Test Plugin';
