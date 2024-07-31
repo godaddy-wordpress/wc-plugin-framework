@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2024.nn.nn - version 5.12.6
+2024.07.31 - version 5.12.6
+ * Fix - Make sure payment gateway form script dependencies are loaded correctly
 
 2024.06.28 - version 5.12.5
  * Fix - Prevent blank orders from being generated when adding a payment method
