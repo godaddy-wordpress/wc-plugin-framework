@@ -759,6 +759,26 @@ class SV_WC_Helper {
 		return ( is_multisite() ) ? get_blog_details()->blogname : get_bloginfo( 'name' );
 	}
 
+	/**
+	 * Determines whether we're on the WooCommerce checkout "pay page".
+	 *
+	 * @since 5.12.7
+	 * @return bool
+	 */
+	public static function isCheckoutPayPage(): bool
+	{
+		if (function_exists('is_checkout_pay_page') && is_checkout_pay_page() === true) {
+			return true;
+		}
+
+		/**
+		 * This is a fallback, in case we need to check for the pay page very early in the lifecycle, when
+		 * {@see is_checkout_pay_page()} would normally return false.
+		 * An example of this is in {@see SV_WC_Payment_Gateway::get_order_button_text()}
+		 */
+		return isset($_GET['pay_for_order']);
+	}
+
 
 	/** JavaScript helper functions ***************************************/
 
