@@ -767,7 +767,9 @@ class SV_WC_Helper {
 	 */
 	public static function isCheckoutPayPage(): bool
 	{
-		if (function_exists('is_checkout_pay_page') && is_checkout_pay_page() === true) {
+		global $wp_query;
+
+		if (function_exists('is_checkout_pay_page') && ! empty($wp_query) && is_checkout_pay_page() === true) {
 			return true;
 		}
 
