@@ -1,7 +1,13 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2024.nn.nn - version 5.12.7
+ * Feature - Allow gateways to declare support for having a separate payment page after the checkout page
+
 2024.07.31 - version 5.12.6
  * Fix - Make sure payment gateway form script dependencies are loaded correctly
+
+2024.07.31 - version 5.12.6
+ * Fix: Ensure we always list jQuery as a dependency when enqueuing JavaScript.
 
 2024.06.28 - version 5.12.5
  * Fix - Prevent blank orders from being generated when adding a payment method

@@ -22,16 +22,16 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_6;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_7;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_6\Blocks\Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_6\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_7\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_7\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 use stdClass;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_6\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_7\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -473,7 +473,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
-		$versioned_handle = $handle . '-v5_12_6';
+		$versioned_handle = $handle . '-v5_12_7';
 
 		// Frontend JS
 		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
@@ -785,11 +785,18 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Direct gateway: "Place order"
 	 * Redirect/Hosted gateway: "Continue to Payment"
 	 *
+	 * If a gateway has a separate payment page, then we expect to show "Continue to Payment" on checkout, and
+	 * "Place order" on the separate pay page.
+	 *
 	 * @since 4.0.0
 	 */
 	protected function get_order_button_text() {
 
 		$text = $this->is_hosted_gateway() ? esc_html__( 'Continue to Payment', 'woocommerce-plugin-framework' ) : esc_html__( 'Place order', 'woocommerce-plugin-framework' );
+
+		if ($this->hasSeparatePaymentPage()) {
+			$text = SV_WC_Helper::isCheckoutPayPage() ? esc_html__( 'Place order', 'woocommerce-plugin-framework' ) : esc_html__( 'Continue to Payment', 'woocommerce-plugin-framework' );
+		}
 
 		/**
 		 * Payment Gateway Place Order Button Text Filter.
@@ -4367,6 +4374,19 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @return boolean if this is a hosted IPN payment gateway
 	 */
 	public function is_hosted_gateway() {
+		return false;
+	}
+
+	/**
+	 * Returns true if the gateway has a separate, dedicated payment page after the normal Checkout page.
+	 * This usually means the checkout page would show a "Continue to Payment" button, which when clicked redirects
+	 * the customer to a separate page (probably on-site) where payment is actually taken.
+	 *
+	 * @since 5.12.7
+	 * @return bool
+	 */
+	public function hasSeparatePaymentPage(): bool
+	{
 		return false;
 	}
 
