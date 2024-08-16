@@ -785,11 +785,18 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * Direct gateway: "Place order"
 	 * Redirect/Hosted gateway: "Continue to Payment"
 	 *
+	 * If a gateway has a separate payment page, then we expect to show "Continue to Payment" on checkout, and
+	 * "Place order" on the separate pay page.
+	 *
 	 * @since 4.0.0
 	 */
 	protected function get_order_button_text() {
 
 		$text = $this->is_hosted_gateway() ? esc_html__( 'Continue to Payment', 'woocommerce-plugin-framework' ) : esc_html__( 'Place order', 'woocommerce-plugin-framework' );
+
+		if ($this->hasSeparatePaymentPage()) {
+			$text = SV_WC_Helper::isCheckoutPayPage() ? esc_html__( 'Place order', 'woocommerce-plugin-framework' ) : esc_html__( 'Continue to Payment', 'woocommerce-plugin-framework' );
+		}
 
 		/**
 		 * Payment Gateway Place Order Button Text Filter.
@@ -4367,6 +4374,19 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 * @return boolean if this is a hosted IPN payment gateway
 	 */
 	public function is_hosted_gateway() {
+		return false;
+	}
+
+	/**
+	 * Returns true if the gateway has a separate, dedicated payment page after the normal Checkout page.
+	 * This usually means the checkout page would show a "Continue to Payment" button, which when clicked redirects
+	 * the customer to a separate page (probably on-site) where payment is actually taken.
+	 *
+	 * @since 5.12.7
+	 * @return bool
+	 */
+	public function hasSeparatePaymentPage(): bool
+	{
 		return false;
 	}
 
