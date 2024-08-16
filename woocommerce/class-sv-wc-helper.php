@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_6;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_12_7;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_6\\SV_WC_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_7\\SV_WC_Helper' ) ) :
 
 
 /**
@@ -757,6 +757,28 @@ class SV_WC_Helper {
 	public static function get_site_name() {
 
 		return ( is_multisite() ) ? get_blog_details()->blogname : get_bloginfo( 'name' );
+	}
+
+	/**
+	 * Determines whether we're on the WooCommerce checkout "pay page".
+	 *
+	 * @since 5.12.7
+	 * @return bool
+	 */
+	public static function isCheckoutPayPage(): bool
+	{
+		global $wp_query;
+
+		if (function_exists('is_checkout_pay_page') && ! empty($wp_query) && is_checkout_pay_page() === true) {
+			return true;
+		}
+
+		/**
+		 * This is a fallback, in case we need to check for the pay page very early in the lifecycle, when
+		 * {@see is_checkout_pay_page()} would normally return false.
+		 * An example of this is in {@see SV_WC_Payment_Gateway::get_order_button_text()}
+		 */
+		return isset($_GET['pay_for_order']);
 	}
 
 
