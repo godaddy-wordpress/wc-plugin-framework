@@ -25,6 +25,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_12_7;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_12_7\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_12_7\Enums\PaymentFormContext;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_7\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 
 defined( 'ABSPATH' ) or exit;
@@ -990,6 +991,31 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 		foreach ( $this->get_payment_fields() as $field ) {
 			$this->render_payment_field( $field );
+		}
+
+		// set the context for the checkout form in case gateways need to reference this in their validation
+		if ($context = $this->getCurrentPaymentFormContext()) {
+			WC()->session->set(
+				sprintf('wc_%s_payment_form_context', $this->get_gateway()->get_id()),
+				$context
+			);
+		}
+	}
+
+	/**
+	 * Gets the context of the current payment form page.
+	 *
+	 * @since 5.13.0
+	 * @return string|null
+	 */
+	protected function getCurrentPaymentFormContext(): ?string
+	{
+		if (SV_WC_Helper::isCheckoutPayPage()) {
+			return isset($_GET['pay_for_order']) ? PaymentFormContext::CustomerPayPage : PaymentFormContext::CheckoutPayPage;
+		} elseif(is_checkout()) {
+			return PaymentFormContext::Checkout;
+		} else {
+			return null;
 		}
 	}
 
