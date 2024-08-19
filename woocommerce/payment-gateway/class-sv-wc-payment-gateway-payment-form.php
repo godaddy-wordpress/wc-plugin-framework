@@ -47,6 +47,8 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	/** @var \SV_WC_Payment_Gateway gateway for this payment form */
 	protected $gateway;
 
+	protected PaymentFormContextChecker $paymentFormContextChecker;
+
 	/** @var array of SV_WC_Payment_Gateway_Payment_Tokens, keyed by token ID */
 	protected $tokens;
 
@@ -70,6 +72,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	public function __construct( $gateway ) {
 
 		$this->gateway = $gateway;
+		$this->paymentFormContextChecker = new PaymentFormContextChecker($this->gateway->get_id());
 
 		parent::__construct();
 	}
@@ -994,29 +997,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 		}
 
 		// set the context for the checkout form in case gateways need to reference this in their validation
-		if ($context = $this->getCurrentPaymentFormContext()) {
-			WC()->session->set(
-				sprintf('wc_%s_payment_form_context', $this->get_gateway()->get_id()),
-				$context
-			);
-		}
-	}
-
-	/**
-	 * Gets the context of the current payment form page.
-	 *
-	 * @since 5.13.0
-	 * @return string|null
-	 */
-	protected function getCurrentPaymentFormContext(): ?string
-	{
-		if (SV_WC_Helper::isCheckoutPayPage()) {
-			return isset($_GET['pay_for_order']) ? PaymentFormContext::CustomerPayPage : PaymentFormContext::CheckoutPayPage;
-		} elseif(is_checkout()) {
-			return PaymentFormContext::Checkout;
-		} else {
-			return null;
-		}
+		$this->paymentFormContextChecker->maybeSetContext();
 	}
 
 
