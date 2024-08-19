@@ -57,4 +57,4 @@ jobs:
 
       - name: Execute tests (Unit tests) via Codeception
         run: |
-          vendor/bin/codeception run unit
+          vendor/bin/codecept run unit
