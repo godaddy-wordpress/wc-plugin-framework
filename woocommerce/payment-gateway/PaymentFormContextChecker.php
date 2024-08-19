@@ -25,7 +25,7 @@ class PaymentFormContextChecker
 	 * @since 5.13.0
 	 * @return string
 	 */
-	protected function getContextSessionKeyName(): string
+	protected function getContextSessionKeyName() : string
 	{
 		return "wc_{$this->gatewayId}_payment_form_context";
 	}
@@ -36,7 +36,7 @@ class PaymentFormContextChecker
 	 * @since 5.13.0
 	 * @return void
 	 */
-	public function maybeSetContext(): void
+	public function maybeSetContext() : void
 	{
 		if ($context = $this->getCurrentPaymentFormContext()) {
 			WC()->session->set(
@@ -52,15 +52,17 @@ class PaymentFormContextChecker
 	 * @since 5.13.0
 	 * @return string|null
 	 */
-	protected function getCurrentPaymentFormContext(): ?string
+	protected function getCurrentPaymentFormContext() : ?string
 	{
 		if (SV_WC_Helper::isCheckoutPayPage()) {
 			return isset($_GET['pay_for_order']) ? PaymentFormContext::CustomerPayPage : PaymentFormContext::CheckoutPayPage;
-		} elseif(is_checkout()) {
-			return PaymentFormContext::Checkout;
-		} else {
-			return null;
 		}
+
+		if (is_checkout()) {
+			return PaymentFormContext::Checkout;
+		}
+
+		return null;
 	}
 
 	/**
@@ -69,7 +71,7 @@ class PaymentFormContextChecker
 	 * @since 5.13.0
 	 * @return string|null
 	 */
-	protected function getStoredPaymentFormContext(): ?string
+	protected function getStoredPaymentFormContext() : ?string
 	{
 		$storedContext = WC()->session->get($this->getContextSessionKeyName());
 
@@ -79,7 +81,7 @@ class PaymentFormContextChecker
 	/**
 	 * @since 5.13.0
 	 */
-	public function currentContextRequiresTermsAndConditionsAcceptance(): bool
+	public function currentContextRequiresTermsAndConditionsAcceptance() : bool
 	{
 		return PaymentFormContext::CustomerPayPage === $this->getStoredPaymentFormContext() && wc_terms_and_conditions_checkbox_enabled();
 	}
