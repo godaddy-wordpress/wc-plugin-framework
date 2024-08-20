@@ -449,6 +449,9 @@ abstract class SV_WC_Plugin {
 
 		$framework_path = $this->get_framework_path();
 
+		// ideally the loader file has already done this, but we're adding it again just in case it was omitted
+		require_once $this->get_plugin_path().'/vendor/autoload.php';
+
 		// common exception class
 		require_once(  $framework_path . '/class-sv-wc-plugin-exception.php' );
 

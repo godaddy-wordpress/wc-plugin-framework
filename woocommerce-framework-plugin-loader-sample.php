@@ -165,13 +165,15 @@ class SV_WC_Framework_Plugin_Loader {
 	 */
 	private function load_framework() {
 
+		require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
+
 		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Plugin' ) ) {
-			require_once( plugin_dir_path( __FILE__ ) . 'lib/skyverge/woocommerce/class-sv-wc-plugin.php' );
+			require_once( plugin_dir_path( __FILE__ ) . 'vendor/skyverge/woocommerce/class-sv-wc-plugin.php' );
 		}
 
 		// TODO: remove this if not a payment gateway
 		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Payment_Gateway_Plugin' ) ) {
-			require_once( plugin_dir_path( __FILE__ ) . 'lib/skyverge/woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php' );
+			require_once( plugin_dir_path( __FILE__ ) . 'vendor/skyverge/woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php' );
 		}
 	}
 
