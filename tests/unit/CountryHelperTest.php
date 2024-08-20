@@ -1,52 +1,45 @@
 <?php
 
-define( 'ABSPATH', true );
+namespace SkyVerge\WooCommerce\PluginFramework\v5_13_0\Tests\Unit;
 
-class CountryHelperTest extends \Codeception\Test\Unit {
+use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Country_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Tests\TestCase;
 
-	/**
-	* @var \UnitTester
-	*/
-	protected $tester;
+class CountryHelperTest extends TestCase
+{
+	public function setUp() : void
+	{
+		parent::setUp();
 
-	protected function _before() {
-
-		require_once( 'woocommerce/Country_Helper.php' );
-	}
-
-	protected function _after() {
-
+		require_once PLUGIN_ROOT_DIR.'/woocommerce/Country_Helper.php';
 	}
 
 	/**
-	 * Tests \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Country_Helper::convert_alpha_country_code()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Country_Helper::convert_alpha_country_code()
+	 *
+	 * @dataProvider provider_convert_alpha_country_code
 	 *
 	 * @param string $code input country code
 	 * @param string $expected expected return value
-	 *
-	 * @dataProvider provider_convert_alpha_country_code
 	 */
-	public function test_convert_alpha_country_code( $code, $expected ) {
+	public function test_convert_alpha_country_code(string $code, string $expected) : void
+	{
+		$result = Country_Helper::convert_alpha_country_code($code);
 
-		$result = \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Country_Helper::convert_alpha_country_code( $code );
-
-		$this->assertEquals( $expected, $result );
+		$this->assertEquals($expected, $result);
 	}
-
 
 	/**
 	 * Provider for test_convert_alpha_country_code()
 	 *
 	 * @return array
 	 */
-	public function provider_convert_alpha_country_code() {
-
+	public function provider_convert_alpha_country_code() : array
+	{
 		return [
-			[ 'US', 'USA' ],
-			[ 'USA', 'US' ],
-			[ 'UNKNOWN', 'UNKNOWN' ],
+			['US', 'USA'],
+			['USA', 'US'],
+			['UNKNOWN', 'UNKNOWN'],
 		];
 	}
-
-
 }
