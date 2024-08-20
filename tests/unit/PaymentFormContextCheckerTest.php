@@ -2,9 +2,12 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_13_0\Tests\Unit;
 
+use Generator;
 use Mockery;
 use ReflectionException;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Enums\PaymentFormContext;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_0\PaymentFormContextChecker;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_0\SV_WC_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Tests\TestCase;
 use WooCommerce;
 use WP_Mock;
@@ -13,6 +16,8 @@ class PaymentFormContextCheckerTest extends TestCase
 {
 	/** @var Mockery\MockInterface&PaymentFormContextChecker */
 	private $testObject;
+
+	private array $originalGet;
 
 	public function setUp() : void
 	{
@@ -23,6 +28,15 @@ class PaymentFormContextCheckerTest extends TestCase
 		$this->testObject = Mockery::mock(PaymentFormContextChecker::class)
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
+
+		$this->originalGet = $_GET;
+	}
+
+	public function tearDown() : void
+	{
+		parent::tearDown();
+
+		$_GET = $this->originalGet;
 	}
 
 	/**
@@ -66,5 +80,66 @@ class PaymentFormContextCheckerTest extends TestCase
 		$this->testObject->maybeSetContext();
 
 		$this->assertConditionsMet();
+	}
+
+	/**
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\PaymentFormContextChecker::getCurrentPaymentFormContext()
+	 *
+	 * @dataProvider providerCanGetCurrentPaymentFormContext
+	 *
+	 * @throws ReflectionException
+	 */
+	public function testCanGetCurrentPaymentFormContext(
+		bool $isCheckoutPayPage,
+		bool $isCheckout,
+		array $getParams,
+		?string $expected
+	) : void {
+		$this->mockStaticMethod(SV_WC_Helper::class, 'isCheckoutPayPage')
+			->once()
+			->andReturn($isCheckoutPayPage);
+
+		$_GET = $getParams;
+
+		WP_Mock::userFunction('is_checkout')
+			->zeroOrMoreTimes()
+			->andReturn($isCheckout);
+
+		$this->assertSame(
+			$expected,
+			$this->invokeInaccessibleMethod($this->testObject, 'getCurrentPaymentFormContext')
+		);
+	}
+
+	/** @see testCanGetCurrentPaymentFormContext */
+	public function providerCanGetCurrentPaymentFormContext() : Generator
+	{
+		yield 'customer pay page' => [
+			'isCheckoutPayPage' => true,
+			'isCheckout'        => true,
+			'getParams'         => ['pay_for_order' => 'yes'],
+			'expected'          => PaymentFormContext::CustomerPayPage,
+		];
+
+		yield 'checkout pay page' => [
+			'isCheckoutPayPage' => true,
+			'isCheckout'        => true,
+			'getParams'         => [],
+			'expected'          => PaymentFormContext::CheckoutPayPage,
+		];
+
+		yield 'checkout' => [
+			'isCheckoutPayPage' => false,
+			'isCheckout'        => true,
+			'getParams'         => [],
+			'expected'          => PaymentFormContext::Checkout,
+		];
+
+		yield 'unknown' => [
+			'isCheckoutPayPage' => false,
+			'isCheckout'        => false,
+			'getParams'         => [],
+			'expected'          => null,
+		];
 	}
 }
