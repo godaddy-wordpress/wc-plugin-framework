@@ -5,6 +5,12 @@
   "license": "GPL-3.0",
   "minimum-stability": "dev",
   "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:gdcorp-partners/mwc-tests.git"
+    }
+  ],
   "require": {
     "php": ">=7.4 <9.0"
   },
@@ -13,11 +19,21 @@
     "phpcompatibility/php-compatibility": "9.3.5",
     "codeception/module-db": "^1.0",
     "codeception/module-phpbrowser": "^1.0",
-    "codeception/module-asserts": "^1.3"
+    "codeception/module-asserts": "^1.3",
+    "godaddy/mwc-tests": "^1.1.2"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_0\\Tests\\": "tests/"
+    }
   },
   "config": {
     "platform": {
       "php": "7.4"
+    },
+    "allow-plugins": {
+      "phpstan/extension-installer": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
     }
   }
 }
