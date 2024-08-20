@@ -12,7 +12,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_12_7\SV_WC_Plugin;
 use SkyVerge\WooCommerce\PluginFramework\v5_12_7\SV_WC_Plugin_Exception;
 use stdClass;
 
-if ( ! class_exists( '\\SkyVerge\WooCommerce\PluginFramework\v5_12_7\Blocks\Traits\Block_Integration_Trait' ) ) :
+if ( ! trait_exists( '\\SkyVerge\WooCommerce\PluginFramework\v5_12_7\Blocks\Traits\Block_Integration_Trait' ) ) :
 
 /**
  * A trait for block integrations.
