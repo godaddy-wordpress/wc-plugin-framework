@@ -52,8 +52,8 @@ class Blocks_Handler {
 
 		$framework_path = $this->plugin->get_framework_path();
 
-		require_once( $framework_path . '/Blocks/Traits/Block_Integration_Trait.php' );
-		require_once( $framework_path . '/Blocks/Block_Integration.php' );
+		//require_once( $framework_path . '/Blocks/Traits/Block_Integration_Trait.php' );
+		//require_once( $framework_path . '/Blocks/Block_Integration.php' );
 
 		// blocks-related notices and call-to-actions
 		add_action( 'admin_notices', [ $this, 'add_admin_notices' ] );
