@@ -170,4 +170,51 @@ class PaymentFormContextCheckerTest extends TestCase
 			$this->invokeInaccessibleMethod($this->testObject, 'getStoredPaymentFormContext')
 		);
 	}
+
+	/**
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\PaymentFormContextChecker::currentContextRequiresTermsAndConditionsAcceptance()
+	 *
+	 * @dataProvider providerCanDetermineCurrentContextRequiresTermsAndConditionsAcceptance
+	 *
+	 * @throws ReflectionException
+	 */
+	public function testCanDetermineCurrentContextRequiresTermsAndConditionsAcceptance(
+		string $storedPaymentFormContext,
+		bool $termsAndConditionsEnabled,
+		bool $expected
+	) : void {
+		$this->testObject->expects('getStoredPaymentFormContext')
+			->once()
+			->andReturn($storedPaymentFormContext);
+
+		WP_Mock::userFunction('wc_terms_and_conditions_checkbox_enabled')
+			->atMost()->once()->andReturn($termsAndConditionsEnabled);
+
+		$this->assertSame(
+			$expected,
+			$this->testObject->currentContextRequiresTermsAndConditionsAcceptance()
+		);
+	}
+
+	/** @see testCanDetermineCurrentContextRequiresTermsAndConditionsAcceptance */
+	public function providerCanDetermineCurrentContextRequiresTermsAndConditionsAcceptance() : Generator
+	{
+		yield 'customer pay page and T&C enabled' => [
+			'storedPaymentFormContext'  => PaymentFormContext::CustomerPayPage,
+			'termsAndConditionsEnabled' => true,
+			'expected'                  => true,
+		];
+
+		yield 'customer pay page but T&C disabled' => [
+			'storedPaymentFormContext'  => PaymentFormContext::CustomerPayPage,
+			'termsAndConditionsEnabled' => false,
+			'expected'                  => false,
+		];
+
+		yield 'not customer pay page and T&C enabled' => [
+			'storedPaymentFormContext'  => PaymentFormContext::CheckoutPayPage,
+			'termsAndConditionsEnabled' => true,
+			'expected'                  => false,
+		];
+	}
 }
