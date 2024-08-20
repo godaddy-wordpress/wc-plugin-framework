@@ -142,4 +142,32 @@ class PaymentFormContextCheckerTest extends TestCase
 			'expected'          => null,
 		];
 	}
+
+	/**
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\PaymentFormContextChecker::getStoredPaymentFormContext()
+	 * @throws ReflectionException
+	 */
+	public function testCanGetStoredPaymentFormContext() : void
+	{
+		$this->testObject->expects('getContextSessionKeyName')
+			->once()
+			->andReturn('TEST_CONTEXT_SESSION_KEY_NAME');
+
+		WP_Mock::userFunction('WC')
+			->once()
+			->andReturn($wooCommerce = Mockery::mock(WooCommerce::class));
+
+		$session = Mockery::mock('WC_Session');
+		$session->expects('get')
+			->once()
+			->with('TEST_CONTEXT_SESSION_KEY_NAME')
+			->andReturn('checkout');
+
+		$wooCommerce->session = $session;
+
+		$this->assertSame(
+			PaymentFormContext::Checkout,
+			$this->invokeInaccessibleMethod($this->testObject, 'getStoredPaymentFormContext')
+		);
+	}
 }
