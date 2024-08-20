@@ -2,8 +2,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_13_0\Tests;
 
-use GoDaddy\WordPress\MWC\Tests\TestCase as MwcTestCase;
+use WP_Mock\Tools\TestCase as WpMockTestCase;
 
-class TestCase extends MwcTestCase
+class TestCase extends WpMockTestCase
 {
 }
