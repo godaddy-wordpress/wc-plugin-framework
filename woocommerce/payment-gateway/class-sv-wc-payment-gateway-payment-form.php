@@ -25,6 +25,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_13_0;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Enums\PaymentFormContext;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 
 defined( 'ABSPATH' ) or exit;
@@ -45,6 +46,8 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 	/** @var \SV_WC_Payment_Gateway gateway for this payment form */
 	protected $gateway;
+
+	protected PaymentFormContextChecker $paymentFormContextChecker;
 
 	/** @var array of SV_WC_Payment_Gateway_Payment_Tokens, keyed by token ID */
 	protected $tokens;
@@ -69,6 +72,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	public function __construct( $gateway ) {
 
 		$this->gateway = $gateway;
+		$this->paymentFormContextChecker = new PaymentFormContextChecker($this->gateway->get_id());
 
 		parent::__construct();
 	}
@@ -991,6 +995,9 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 		foreach ( $this->get_payment_fields() as $field ) {
 			$this->render_payment_field( $field );
 		}
+
+		// set the context for the checkout form in case gateways need to reference this in their validation
+		$this->paymentFormContextChecker->maybeSetContext();
 	}
 
 

@@ -501,6 +501,10 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/class-sv-wc-admin-notice-handler.php' );
 		require_once( $framework_path . '/Lifecycle.php' );
 		require_once( $framework_path . '/rest-api/class-sv-wc-plugin-rest-api.php' );
+
+		// Enums
+		require_once $framework_path . '/Enums/Traits/EnumTrait.php';
+		require_once $framework_path . '/Enums/PaymentFormContext.php';
 	}
 
 

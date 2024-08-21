@@ -13,11 +13,21 @@
     "phpcompatibility/php-compatibility": "9.3.5",
     "codeception/module-db": "^1.0",
     "codeception/module-phpbrowser": "^1.0",
-    "codeception/module-asserts": "^1.3"
+    "codeception/module-asserts": "^1.3",
+    "10up/wp_mock": "^1.0"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_0\\Tests\\": "tests/"
+    }
   },
   "config": {
     "platform": {
       "php": "7.4"
+    },
+    "allow-plugins": {
+      "phpstan/extension-installer": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
     }
   }
 }

@@ -346,6 +346,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		// helpers
 		require_once( $payment_gateway_framework_path . '/api/class-sv-wc-payment-gateway-api-response-message-helper.php' );
 		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-helper.php' );
+		require_once $payment_gateway_framework_path . '/PaymentFormContextChecker.php';
 
 		// admin
 		require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-order.php' );

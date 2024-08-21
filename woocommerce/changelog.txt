@@ -1,6 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2024.nn.nn - version 5.13.0
+ * Feature - Add a trait for enum-like classes
+ * Misc - Set the checkout page context in the session when rendering payment fields
 
 2024.08.16 - version 5.12.7
  * Feature - Allow gateways to declare support for having a separate payment page after the checkout page
