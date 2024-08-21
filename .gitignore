@@ -25,3 +25,4 @@ npm-debug.log
 codeception.yml
 .env
 /tests/_data/dump.sql
+.phpunit.cache/

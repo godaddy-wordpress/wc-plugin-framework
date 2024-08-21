@@ -22,14 +22,15 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_12_7;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_13_0;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_12_7\Blocks\Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_12_7\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Enums\PaymentFormContext;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_12_7\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_0\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
 
 
 /**
@@ -45,6 +46,8 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 	/** @var \SV_WC_Payment_Gateway gateway for this payment form */
 	protected $gateway;
+
+	protected PaymentFormContextChecker $paymentFormContextChecker;
 
 	/** @var array of SV_WC_Payment_Gateway_Payment_Tokens, keyed by token ID */
 	protected $tokens;
@@ -69,6 +72,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 	public function __construct( $gateway ) {
 
 		$this->gateway = $gateway;
+		$this->paymentFormContextChecker = new PaymentFormContextChecker($this->gateway->get_id());
 
 		parent::__construct();
 	}
@@ -991,6 +995,9 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 		foreach ( $this->get_payment_fields() as $field ) {
 			$this->render_payment_field( $field );
 		}
+
+		// set the context for the checkout form in case gateways need to reference this in their validation
+		$this->paymentFormContextChecker->maybeSetContext();
 	}
 
 
@@ -1173,7 +1180,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 			if ( is_array( $card_types ) && ! empty( $card_types ) ) {
 
-				$args['enabled_card_types'] = array_map( [ 'SkyVerge\WooCommerce\PluginFramework\v5_12_7\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ], $card_types );
+				$args['enabled_card_types'] = array_map( [ 'SkyVerge\WooCommerce\PluginFramework\v5_13_0\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ], $card_types );
 			}
 		}
 
