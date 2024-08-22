@@ -23,7 +23,7 @@
   },
   "autoload": {
     "psr-4": {
-      "SkyVerge\\WooCommerce\\PluginFramework\\v5_12_7\\": "src/"
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\": "src/"
     }
   },
   "config": {
