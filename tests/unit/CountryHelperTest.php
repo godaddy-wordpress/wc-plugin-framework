@@ -7,13 +7,6 @@ use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\TestCase;
 
 class CountryHelperTest extends TestCase
 {
-	public function setUp() : void
-	{
-		parent::setUp();
-
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/Country_Helper.php';
-	}
-
 	/**
 	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Country_Helper::convert_alpha_country_code()
 	 *

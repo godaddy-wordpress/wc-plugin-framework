@@ -7,15 +7,6 @@ use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\TestCase;
 
 class CacheableRequestTraitTest extends TestCase
 {
-	public function setUp() : void
-	{
-		parent::setUp();
-
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/api/interface-sv-wc-api-request.php';
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/api/abstract-sv-wc-api-json-request.php';
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/api/traits/Cacheable_Request_Trait.php';
-	}
-
 	/**
 	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\API\Traits\Cacheable_Request_Trait::get_cache_lifetime()
 	 */

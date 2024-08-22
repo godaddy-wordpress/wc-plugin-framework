@@ -23,8 +23,6 @@ class PaymentFormContextCheckerTest extends TestCase
 	{
 		parent::setUp();
 
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/payment-gateway/PaymentFormContextChecker.php';
-
 		$this->testObject = Mockery::mock(PaymentFormContextChecker::class)
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
