@@ -449,6 +449,9 @@ abstract class SV_WC_Plugin {
 
 		$framework_path = $this->get_framework_path();
 
+		// ideally the loader file has already done this, but we're adding it again just in case it was omitted
+		require_once $this->get_plugin_path().'/vendor/autoload.php';
+
 		// common exception class
 		require_once(  $framework_path . '/class-sv-wc-plugin-exception.php' );
 
@@ -463,7 +466,7 @@ abstract class SV_WC_Plugin {
 
 		// common utility methods
 		require_once( $framework_path . '/class-sv-wc-helper.php' );
-		require_once( $framework_path . '/Country_Helper.php' );
+		//require_once( $framework_path . '/Country_Helper.php' );
 		require_once( $framework_path . '/admin/Notes_Helper.php' );
 
 		// backwards compatibility for older WC versions
@@ -494,7 +497,7 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/rest-api/Controllers/Settings.php' );
 
 		// Handlers
-		require_once( $framework_path . '/Handlers/Script_Handler.php' );
+		//require_once( $framework_path . '/Handlers/Script_Handler.php' );
 		require_once( $framework_path . '/class-sv-wc-plugin-dependencies.php' );
 		require_once( $framework_path . '/class-sv-wc-hook-deprecator.php' );
 		require_once( $framework_path . '/class-sv-wp-admin-message-handler.php' );

@@ -21,6 +21,11 @@
       "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Tests\\": "tests/"
     }
   },
+  "autoload": {
+    "psr-4": {
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_12_7\\": "woocommerce/"
+    }
+  },
   "config": {
     "platform": {
       "php": "7.4"
