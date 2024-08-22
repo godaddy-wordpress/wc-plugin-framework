@@ -32,5 +32,36 @@ if (class_exists('\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Traits\\IsS
 
 trait IsSingletonTrait
 {
+	/** @var ?static holds the current singleton instance */
+	protected static $instance;
 
+	/**
+	 * Determines if the current instance is loaded.
+	 *
+	 * @return bool
+	 */
+	public static function isLoaded() : bool
+	{
+		return (bool) static::$instance;
+	}
+
+	/**
+	 * Gets the singleton instance.
+	 *
+	 * @return static
+	 */
+	public static function getInstance()
+	{
+		return static::$instance ??= new static(...func_get_args());
+	}
+
+	/**
+	 * Resets the singleton instance.
+	 *
+	 * @return void
+	 */
+	public static function reset() : void
+	{
+		static::$instance = null;
+	}
 }
