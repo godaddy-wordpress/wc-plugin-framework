@@ -39,7 +39,7 @@ class SV_WC_Framework_Gateway_Test_Plugin_Loader {
 	const MINIMUM_WC_VERSION = '3.0.9';
 
 	/** SkyVerge plugin framework version used by this plugin */
-	const FRAMEWORK_VERSION = '5.13.0';
+	const FRAMEWORK_VERSION = '5.13.1-dev.1';
 
 	/** the plugin name, for displaying notices */
 	const PLUGIN_NAME = 'WooCommerce Framework Gateway Test Plugin';
