@@ -1,10 +1,10 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_13_0\Tests\Unit\Settings_API;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\Unit\Settings_API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Control;
-use SkyVerge\WooCommerce\PluginFramework\v5_13_0\SV_WC_Plugin_Exception;
-use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API\Control;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Plugin_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\TestCase;
 use TypeError;
 
 class ControlTest extends TestCase
@@ -18,7 +18,7 @@ class ControlTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Control::get_setting_id()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API\Control::get_setting_id()
 	 * @throws SV_WC_Plugin_Exception
 	 */
 	public function test_get_setting_id() : void
@@ -31,7 +31,7 @@ class ControlTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Control::get_type()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API\Control::get_type()
 	 * @throws SV_WC_Plugin_Exception
 	 */
 	public function test_get_type() : void
@@ -45,7 +45,7 @@ class ControlTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Control::get_name()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API\Control::get_name()
 	 * @throws SV_WC_Plugin_Exception
 	 */
 	public function test_get_name() : void
@@ -58,7 +58,7 @@ class ControlTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Control::get_description()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API\Control::get_description()
 	 * @throws SV_WC_Plugin_Exception
 	 */
 	public function test_get_description() : void
@@ -71,7 +71,7 @@ class ControlTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Control::get_options()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API\Control::get_options()
 	 */
 	public function test_get_options() : void
 	{
@@ -88,7 +88,7 @@ class ControlTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Control::set_setting_id()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API\Control::set_setting_id()
 	 *
 	 * @param mixed $value value to pass to the method
 	 * @param string $expected expected value
@@ -122,7 +122,7 @@ class ControlTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Control::set_type()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API\Control::set_type()
 	 *
 	 * @param mixed $value value to pass to the method
 	 * @param array $allowed_types allowed control types
@@ -156,7 +156,7 @@ class ControlTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Control::set_name()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API\Control::set_name()
 	 *
 	 * @param mixed $value value to pass to the method
 	 * @param string $expected expected value
@@ -190,7 +190,7 @@ class ControlTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Control::set_description()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API\Control::set_description()
 	 *
 	 * @param mixed $value value to pass to the method
 	 * @param string $expected expected value
@@ -224,7 +224,7 @@ class ControlTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Control::set_options()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API\Control::set_options()
 	 *
 	 * @param mixed $options value to pass to the method
 	 * @param mixed $valid_options valid option keys to check against

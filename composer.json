@@ -18,7 +18,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_0\\Tests\\": "tests/"
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Tests\\": "tests/"
     }
   },
   "config": {
