@@ -26,7 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1\Traits;
 
 defined('ABSPATH') or exit;
 
-if (class_exists('\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Traits\\IsSingletonTrait')) {
+if (trait_exists('\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Traits\\IsSingletonTrait')) {
 	return;
 }
 
