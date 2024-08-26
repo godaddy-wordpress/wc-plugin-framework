@@ -50,9 +50,9 @@ trait IsSingletonTrait
 	 *
 	 * @return static
 	 */
-	public static function getInstance()
+	public static function getInstance(...$args)
 	{
-		return static::$instance ??= new static(...func_get_args());
+		return static::$instance ??= new static(...$args);
 	}
 
 	/**
