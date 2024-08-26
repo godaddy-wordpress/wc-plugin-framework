@@ -3,6 +3,10 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\Unit;
 
 use Mockery;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\Admin;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\External_Checkout;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\Frontend;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\Orders;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\Handlers\Abstract_Hosted_Payment_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\Handlers\Abstract_Payment_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\Handlers\Capture;
@@ -19,6 +23,10 @@ class AutoloadingTest extends TestCase
 			Capture::class,
 			Abstract_Payment_Handler::class,
 			Abstract_Hosted_Payment_Handler::class,
+			External_Checkout::class,
+			Admin::class,
+			Frontend::class,
+			Orders::class,
 		];
 
 		foreach ($list as $className) {
