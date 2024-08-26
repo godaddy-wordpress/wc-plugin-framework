@@ -19,7 +19,8 @@
   "autoload": {
     "psr-4": {
       "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\": "woocommerce/",
-      "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Payment_Gateway\\": "woocommerce/payment-gateway/"
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Payment_Gateway\\": "woocommerce/payment-gateway/",
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\API\\": "woocommerce/api/"
     }
   },
   "autoload-dev": {

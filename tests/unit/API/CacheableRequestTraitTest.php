@@ -13,7 +13,6 @@ class CacheableRequestTraitTest extends TestCase
 
 		require_once PLUGIN_ROOT_DIR.'/woocommerce/api/interface-sv-wc-api-request.php';
 		require_once PLUGIN_ROOT_DIR.'/woocommerce/api/abstract-sv-wc-api-json-request.php';
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/api/traits/Cacheable_Request_Trait.php';
 	}
 
 	/**

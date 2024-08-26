@@ -3,6 +3,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\Unit;
 
 use Mockery;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\API\Abstract_Cacheable_API_Base;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\Blocks as Payment_Gateway_Blocks;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\Admin;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\External_Checkout;
@@ -20,6 +21,8 @@ class AutoloadingTest extends TestCase
 {
 	public function testCanAutoload() : void
 	{
+		require_once PLUGIN_ROOT_DIR.'/woocommerce/api/class-sv-wc-api-base.php';
+
 		$list = [
 			Handlers\Capture::class,
 			Handlers\Abstract_Payment_Handler::class,
@@ -37,6 +40,7 @@ class AutoloadingTest extends TestCase
 			Settings_API\Abstract_Settings::class,
 			Settings_API\Setting::class,
 			Settings_API\Control::class,
+			Abstract_Cacheable_API_Base::class,
 		];
 
 		Mockery::mock('\Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType');
