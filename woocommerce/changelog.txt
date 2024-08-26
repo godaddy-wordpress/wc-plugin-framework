@@ -3,6 +3,8 @@
 2024.nn.nn - version 5.13.1-dev.1
 * Feature - Add a trait to get a singular instance of a class: `IsSingletonTrait`
 * Feature - Add a trait to get an instance (non-singular) of a class: `CanGetNewInstanceTrait`
+* Feature - Add a trait to convert an object into an array: `CanConvertToArrayTrait`
+* Feature - Add a new `ArrayHelper` class for array-related utility methods
 
 2024.08.21 - version 5.13.0
  * Feature - Add a trait for enum-like classes

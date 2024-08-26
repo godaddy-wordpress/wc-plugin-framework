@@ -450,15 +450,19 @@ abstract class SV_WC_Plugin {
 		$framework_path = $this->get_framework_path();
 
 		// common exception class
-		require_once(  $framework_path . '/class-sv-wc-plugin-exception.php' );
+		require_once( $framework_path . '/class-sv-wc-plugin-exception.php' );
 
 		// traits
-		require_once(  $framework_path . '/Traits/CanGetNewInstanceTrait.php' );
-		require_once(  $framework_path . '/Traits/IsSingletonTrait.php' );
+		require_once( $framework_path . '/Traits/CanGetNewInstanceTrait.php' );
+		require_once( $framework_path . '/Traits/IsSingletonTrait.php' );
+		require_once( $framework_path . '/Traits/CanConvertToArrayTrait.php' );
+
+		// helpers
+		require_once( $framework_path . '/Helpers/ArrayHelper.php' );
 
 		// addresses
-		require_once(  $framework_path . '/Addresses/Address.php' );
-		require_once(  $framework_path . '/Addresses/Customer_Address.php' );
+		require_once( $framework_path . '/Addresses/Address.php' );
+		require_once( $framework_path . '/Addresses/Customer_Address.php' );
 
 		// Settings API
 		require_once( $framework_path . '/Settings_API/Abstract_Settings.php' );

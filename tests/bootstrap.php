@@ -10,7 +10,9 @@ require_once PLUGIN_ROOT_DIR.'/woocommerce/class-sv-wc-plugin-exception.php';
 require_once PLUGIN_ROOT_DIR.'/woocommerce/Enums/Traits/EnumTrait.php';
 require_once PLUGIN_ROOT_DIR.'/woocommerce/Enums/PaymentFormContext.php';
 require_once PLUGIN_ROOT_DIR.'/woocommerce/Traits/CanGetNewInstanceTrait.php';
+require_once PLUGIN_ROOT_DIR.'/woocommerce/Traits/CanConvertToArrayTrait.php';
 require_once PLUGIN_ROOT_DIR.'/woocommerce/Traits/IsSingletonTrait.php';
+require_once PLUGIN_ROOT_DIR.'/woocommerce/Helpers/ArrayHelper.php';
 
 WP_Mock::setUsePatchwork(true);
 WP_Mock::bootstrap();
