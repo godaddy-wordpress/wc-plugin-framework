@@ -452,11 +452,6 @@ abstract class SV_WC_Plugin {
 		// common exception class
 		require_once( $framework_path . '/class-sv-wc-plugin-exception.php' );
 
-		// traits
-		require_once( $framework_path . '/Traits/CanGetNewInstanceTrait.php' );
-		require_once( $framework_path . '/Traits/IsSingletonTrait.php' );
-		require_once( $framework_path . '/Traits/CanConvertToArrayTrait.php' );
-
 		// helpers
 		require_once( $framework_path . '/Helpers/ArrayHelper.php' );
 
