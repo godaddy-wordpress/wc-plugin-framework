@@ -459,11 +459,6 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/Addresses/Address.php' );
 		require_once( $framework_path . '/Addresses/Customer_Address.php' );
 
-		// Settings API
-		require_once( $framework_path . '/Settings_API/Abstract_Settings.php' );
-		require_once( $framework_path . '/Settings_API/Setting.php' );
-		require_once( $framework_path . '/Settings_API/Control.php' );
-
 		// common utility methods
 		require_once( $framework_path . '/class-sv-wc-helper.php' );
 		require_once( $framework_path . '/admin/Notes_Helper.php' );

@@ -10,6 +10,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checko
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\Google_Pay as Google_Pay_Checkout;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\Orders;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\Handlers as Handlers;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API as Settings_API;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\TestCase;
 
 /**
@@ -33,6 +34,9 @@ class AutoloadingTest extends TestCase
 			Google_Pay_Checkout\Frontend::class,
 			Payment_Gateway_Blocks\Gateway_Blocks_Handler::class,
 			Payment_Gateway_Blocks\Gateway_Checkout_Block_Integration::class,
+			Settings_API\Abstract_Settings::class,
+			Settings_API\Setting::class,
+			Settings_API\Control::class,
 		];
 
 		Mockery::mock('\Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType');
