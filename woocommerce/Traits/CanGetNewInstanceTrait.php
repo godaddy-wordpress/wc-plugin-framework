@@ -26,42 +26,23 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1\Traits;
 
 defined('ABSPATH') or exit;
 
-if (trait_exists('\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Traits\\IsSingletonTrait')) {
+if (trait_exists('\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Traits\\CanGetNewInstanceTrait')) {
 	return;
 }
 
-trait IsSingletonTrait
+/**
+ * A trait that allows a given class/object to get a new instance of itself.
+ * For singletons {@see CanGetNewInstanceTrait} instead.
+ */
+trait CanGetNewInstanceTrait
 {
-	/** @var ?static holds the current singleton instance */
-	protected static $instance;
-
 	/**
-	 * Determines if the current instance is loaded.
-	 *
-	 * @return bool
-	 */
-	public static function isLoaded() : bool
-	{
-		return (bool) static::$instance;
-	}
-
-	/**
-	 * Gets the singleton instance.
+	 * Creates and returns a new instance of the calling class.
 	 *
 	 * @return static
 	 */
-	public static function getInstance(...$args)
+	public static function getNewInstance(...$args)
 	{
-		return static::$instance ??= new static(...$args);
-	}
-
-	/**
-	 * Resets the singleton instance.
-	 *
-	 * @return void
-	 */
-	public static function reset() : void
-	{
-		static::$instance = null;
+		return new static(...$args);
 	}
 }
