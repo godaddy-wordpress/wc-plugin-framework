@@ -3,6 +3,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\Unit\Traits;
 
 use Exception;
+use Generator;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\TestCase;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Traits\CanConvertToArrayTrait;
 use stdClass;
@@ -36,7 +37,7 @@ final class CanConvertToArrayTraitTest extends TestCase
 		bool $includeProtectedProperties,
 		bool $includePublicProperties,
 		array $expectedProperties
-	) {
+	) : void {
 		$this->setInaccessiblePropertyValue($this->subject, 'toArrayIncludePrivate', $includePrivateProperties);
 		$this->setInaccessiblePropertyValue($this->subject, 'toArrayIncludeProtected', $includeProtectedProperties);
 		$this->setInaccessiblePropertyValue($this->subject, 'toArrayIncludePublic', $includePublicProperties);
@@ -45,72 +46,168 @@ final class CanConvertToArrayTraitTest extends TestCase
 	}
 
 	/** @see testCanConvertPropertiesToArray */
-	public function providerCanConvertPropertiesToArray(): \Generator
+	public function providerCanConvertPropertiesToArray() : Generator
 	{
 		yield 'no properties included' => [
-			'includePrivateProperties' => false,
+			'includePrivateProperties'   => false,
 			'includeProtectedProperties' => false,
-			'includePublicProperties' => false,
-			'expectedProperties' => [],
+			'includePublicProperties'    => false,
+			'expectedProperties'         => [],
 		];
 
 		yield 'private properties included' => [
-			'includePrivateProperties' => true,
+			'includePrivateProperties'   => true,
 			'includeProtectedProperties' => false,
-			'includePublicProperties' => false,
-			'expectedProperties' => [
+			'includePublicProperties'    => false,
+			'expectedProperties'         => [
 				'privateProperty' => 'private',
 			],
 		];
 
 		yield 'private and protected properties included' => [
-			'includePrivateProperties' => true,
+			'includePrivateProperties'   => true,
 			'includeProtectedProperties' => true,
-			'includePublicProperties' => false,
-			'expectedProperties' => [
-				'privateProperty' => 'private',
+			'includePublicProperties'    => false,
+			'expectedProperties'         => [
+				'privateProperty'   => 'private',
 				'protectedProperty' => 'protected',
 			],
 		];
 
 		yield 'private, protected, and public properties included' => [
-			'includePrivateProperties' => true,
+			'includePrivateProperties'   => true,
 			'includeProtectedProperties' => true,
-			'includePublicProperties' => true,
-			'expectedProperties' => [
-				'privateProperty' => 'private',
+			'includePublicProperties'    => true,
+			'expectedProperties'         => [
+				'privateProperty'   => 'private',
 				'protectedProperty' => 'protected',
-				'publicProperty' => 'public',
+				'publicProperty'    => 'public',
 			],
 		];
 
 		yield 'private and public properties included' => [
-			'includePrivateProperties' => true,
+			'includePrivateProperties'   => true,
 			'includeProtectedProperties' => false,
-			'includePublicProperties' => true,
-			'expectedProperties' => [
+			'includePublicProperties'    => true,
+			'expectedProperties'         => [
 				'privateProperty' => 'private',
-				'publicProperty' => 'public',
+				'publicProperty'  => 'public',
 			],
 		];
 
 		yield 'protected and public properties included' => [
-			'includePrivateProperties' => false,
+			'includePrivateProperties'   => false,
 			'includeProtectedProperties' => true,
-			'includePublicProperties' => true,
-			'expectedProperties' => [
+			'includePublicProperties'    => true,
+			'expectedProperties'         => [
 				'protectedProperty' => 'protected',
-				'publicProperty' => 'public',
+				'publicProperty'    => 'public',
 			],
 		];
 	}
 
 	/**
+	 * Tests nested objects that may or may not use the same trait.
+	 *
 	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Traits\CanConvertToArrayTrait::toArray()
+	 *
+	 * @dataProvider providerCanConvertNestedProperties
+	 *
+	 * @param TestSubjectWithNestedProperty $object
+	 * @param mixed $nestedObject
+	 * @param array $expected
 	 */
-	public function testCanConvertNestedProperties(): void
+	public function testCanConvertNestedProperties(
+		TestSubjectWithNestedProperty $object,
+		$nestedObject,
+		array $expected
+	) : void {
+		$object->nestedProperty = $nestedObject;
+
+		$this->assertSame($expected, $object->toArray());
+	}
+
+	/** @see testCanConvertNestedProperties */
+	public function providerCanConvertNestedProperties() : Generator
 	{
-		$this->markTestIncomplete('TODO');
+		yield 'Nested object is null' => [
+			'object'       => new TestSubjectWithNestedProperty(),
+			'nestedObject' => null,
+			'expected'     => ['nestedProperty' => null],
+		];
+
+		yield 'Nested object is a primitive type' => [
+			'object'       => new TestSubjectWithNestedProperty(),
+			'nestedObject' => 'test',
+			'expected'     => ['nestedProperty' => 'test'],
+		];
+
+		$randomObject = new class {
+		};
+
+		yield 'Nested object is an object that doesn\'t use the trait' => [
+			'object'       => new TestSubjectWithNestedProperty(),
+			'nestedObject' => $randomObject,
+			'expected'     => ['nestedProperty' => $randomObject],
+		];
+
+		yield 'Nested object is an object that uses the trait' => [
+			'object'       => new TestSubjectWithNestedProperty(),
+			'nestedObject' => new TestSubjectWithNestedProperty(),
+			'expected'     => ['nestedProperty' => ['nestedProperty' => null]],
+		];
+
+		yield 'Nested object is an array of primitive types' => [
+			'object'       => new TestSubjectWithNestedProperty(),
+			'nestedObject' => ['a', 'b'],
+			'expected'     => ['nestedProperty' => ['a', 'b']],
+		];
+
+		yield 'Nested object is an associative array of primitive types' => [
+			'object'       => new TestSubjectWithNestedProperty(),
+			'nestedObject' => ['a' => 'b'],
+			'expected'     => ['nestedProperty' => ['a' => 'b']],
+		];
+
+		yield 'Nested object is an associative array of objects that doesn\'t use the trait' => [
+			'object'       => new TestSubjectWithNestedProperty(),
+			'nestedObject' => ['a' => $randomObject],
+			'expected'     => ['nestedProperty' => ['a' => $randomObject]],
+		];
+
+		yield 'Nested object is an array of objects that use the trait' => [
+			'object'       => new TestSubjectWithNestedProperty(),
+			'nestedObject' => [new TestSubjectWithNestedProperty()],
+			'expected'     => [
+				'nestedProperty' => [
+					['nestedProperty' => null],
+				],
+			],
+		];
+
+		yield 'Nested object is an associative array of objects that use the trait' => [
+			'object'       => new TestSubjectWithNestedProperty(),
+			'nestedObject' => ['a' => new TestSubjectWithNestedProperty()],
+			'expected'     => [
+				'nestedProperty' => [
+					'a' => ['nestedProperty' => null],
+				],
+			],
+		];
+
+		yield 'Nested object is a two-dimensional array' => [
+			'object'       => new TestSubjectWithNestedProperty(),
+			'nestedObject' => [
+				['a' => $randomObject],
+				['a' => $randomObject],
+			],
+			'expected'     => [
+				'nestedProperty' => [
+					['a' => $randomObject],
+					['a' => $randomObject],
+				],
+			],
+		];
 	}
 
 	/**
@@ -120,7 +217,7 @@ final class CanConvertToArrayTraitTest extends TestCase
 	 *
 	 * @throws Exception
 	 */
-	public function testCanDetermineWhetherCanConvertItemToArray()
+	public function testCanDetermineWhetherCanConvertItemToArray() : void
 	{
 		$trait = $this->getMockForTrait(CanConvertToArrayTrait::class);
 		$method = $this->getInaccessibleMethod($trait, 'canConvertItemToArray');
@@ -130,12 +227,55 @@ final class CanConvertToArrayTraitTest extends TestCase
 		$this->assertFalse($method->invokeArgs($trait, [['foo' => 'bar']]));
 		$this->assertFalse($method->invokeArgs($trait, [123]));
 		$this->assertFalse($method->invokeArgs($trait, [new stdClass()]));
-		$this->assertTrue($method->invokeArgs($trait, [new class() {
-			public function toArray()
-			{
-				return [];
-			}
-		}]));
+		$this->assertTrue($method->invokeArgs($trait, [
+			new class() {
+				public function toArray() : array
+				{
+					return [];
+				}
+			},
+		]));
+	}
+
+	/**
+	 * Tests nested objects infinite recursion prevention.
+	 *
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Traits\CanConvertToArrayTrait::toArray()
+	 */
+	public function testCanConvertNestedPropertiesWontDoInfiniteRecursion() : void
+	{
+		$objectA = new TestSubjectWithNestedProperty();
+		$objectB = new TestSubjectWithNestedProperty();
+		$objectC = new TestSubjectWithNestedProperty();
+
+		$objectA->nestedProperty = $objectB;
+		$objectB->nestedProperty = $objectC;
+		$objectC->nestedProperty = $objectA;
+
+		// tests that a infinite recursion is prevented
+		$this->assertSame([
+			// object A
+			'nestedProperty' => [
+				// object B
+				'nestedProperty' => [
+					// object C
+					'nestedProperty' => [],
+				],
+			],
+		], $objectA->toArray());
+
+		// tests that the recursion flag won't affect subsequent toArray() calls
+		// also makes sure the recursion flag acts per instance, not per class
+		$this->assertSame([
+			// object B
+			'nestedProperty' => [
+				// object C
+				'nestedProperty' => [
+					// object A
+					'nestedProperty' => [],
+				],
+			],
+		], $objectB->toArray());
 	}
 }
 
@@ -150,4 +290,11 @@ final class TestCanConvertToArray
 
 	/** @var bool this property should never be included in arrays because it's not initialized */
 	public bool $unInitializedProperty;
+}
+
+final class TestSubjectWithNestedProperty
+{
+	use CanConvertToArrayTrait;
+
+	public $nestedProperty;
 }
