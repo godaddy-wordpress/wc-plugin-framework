@@ -62,7 +62,7 @@ class ArrayHelper
 	 * @param array $array
 	 * @param array|string $keys
 	 */
-	public static function remove(array &$array, $keys)
+	public static function remove(array &$array, $keys) : void
 	{
 		$original = &$array;
 

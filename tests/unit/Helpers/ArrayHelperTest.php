@@ -115,11 +115,52 @@ final class ArrayHelperTest extends TestCase
 	}
 
 	/**
+	 * Tests that can remove items from an array.
+	 *
 	 * @covers ::remove()
+	 * @dataProvider providerCanRemove
+	 *
+	 * @param array<string, mixed> $input
+	 * @param string|string[] $keysToRemove
+	 * @param array $expected
 	 */
-	public function testCanRemove(): void
+	public function testCanRemoveItemsFromArray(array $input, $keysToRemove, array $expected) : void
 	{
-		$this->markTestIncomplete('TODO');
+		ArrayHelper::remove($input, $keysToRemove);
+		$this->assertEquals($expected, $input);
+	}
+
+	/** @see testCanRemoveItemsFromArray */
+	public function providerCanRemove() : Generator
+	{
+		yield 'remove 1 key from one item array' => [
+			'input'        => ['test' => 1],
+			'keysToRemove' => 'test',
+			'expected'     => [],
+		];
+
+		yield 'remove 1 key from two item array' => [
+			'input'        => ['test' => 2, 'second' => ['nested' => 3]],
+			'keysToRemove' => 'second',
+			'expected'     => ['test' => 2],
+		];
+
+		yield 'remove 2 keys' => [
+			'input'        => ['test' => 2, 'second' => ['nested' => 3], 'third' => 4],
+			'keysToRemove' => ['second', 'third'],
+			'expected'     => ['test' => 2],
+		];
+
+		yield 'remove 2 keys that are one level deep' => [
+			'input' => [
+				'resource' => [
+					'first'  => 1,
+					'second' => 2,
+				],
+			],
+			'keysToRemove' => ['resource.first', 'resource.second'],
+			'expected'     => ['resource' => []],
+		];
 	}
 
 	/**
@@ -215,22 +256,22 @@ final class ArrayHelperTest extends TestCase
 		return new class implements ArrayAccess
 		{
 
-			public function offsetExists($offset)
+			public function offsetExists($offset) : bool
 			{
 				return true;
 			}
 
-			public function offsetGet($offset)
+			public function offsetGet($offset) : int
 			{
 				return 1;
 			}
 
-			public function offsetSet($offset, $value)
+			public function offsetSet($offset, $value) : void
 			{
 				// TODO: Implement offsetSet() method.
 			}
 
-			public function offsetUnset($offset)
+			public function offsetUnset($offset) : void
 			{
 				// TODO: Implement offsetUnset() method.
 			}
