@@ -181,9 +181,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	protected function init_blocks_handler() : void {
 
-		require_once( $this->get_framework_path() . '/Blocks/Blocks_Handler.php' );
-		require_once( $this->get_payment_gateway_framework_path() . '/Blocks/Gateway_Blocks_Handler.php' );
-
 		// individual gateway plugins should initialize their block integrations handler by overriding this method
 		$this->blocks_handler = new Gateway_Blocks_Handler( $this );
 	}

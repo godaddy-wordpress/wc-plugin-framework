@@ -3,6 +3,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\Unit;
 
 use Mockery;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\Blocks as Payment_Gateway_Blocks;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\Admin;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\External_Checkout;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\Frontend;
@@ -30,7 +31,11 @@ class AutoloadingTest extends TestCase
 			Google_Pay_Checkout\Admin::class,
 			Google_Pay_Checkout\AJAX::class,
 			Google_Pay_Checkout\Frontend::class,
+			Payment_Gateway_Blocks\Gateway_Blocks_Handler::class,
+			Payment_Gateway_Blocks\Gateway_Checkout_Block_Integration::class,
 		];
+
+		Mockery::mock('\Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType');
 
 		foreach ($list as $className) {
 			$this->assertInstanceOf($className, Mockery::mock($className)->makePartial());
