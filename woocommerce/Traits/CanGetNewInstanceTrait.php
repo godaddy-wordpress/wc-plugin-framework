@@ -24,8 +24,6 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1\Traits;
 
-use ReflectionClass;
-
 defined('ABSPATH') or exit;
 
 if (trait_exists('\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Traits\\CanGetNewInstanceTrait')) {
@@ -43,8 +41,8 @@ trait CanGetNewInstanceTrait
 	 *
 	 * @return static
 	 */
-	public static function getNewInstance()
+	public static function getNewInstance(...$args)
 	{
-		return (new ReflectionClass(static::class))->newInstanceArgs(func_get_args());
+		return new static(...$args);
 	}
 }
