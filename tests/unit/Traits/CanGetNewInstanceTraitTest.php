@@ -8,17 +8,32 @@ use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Traits\CanGetNewInstanceTrait;
 class CanGetNewInstanceTraitTest extends TestCase
 {
 	/**
-	 * Tests that it can get new instance.
+	 * Tests that it can get new instance with arguments.
 	 *
 	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Traits\CanGetNewInstanceTrait::getNewInstance()
 	 */
-	public function testItCanGetNewInstance()
+	public function testItCanGetNewInstanceWithArgs() : void
 	{
 		$class = $this->getTestClass();
 		$newInstance = $class::getNewInstance('value1', 'value2');
 
 		$this->assertSame('value1', $newInstance->arg1);
 		$this->assertSame('value2', $newInstance->arg2);
+		$this->assertInstanceOf(get_class($class), $newInstance);
+	}
+
+	/**
+	 * Tests that it can get new instance without arguments.
+	 *
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Traits\CanGetNewInstanceTrait::getNewInstance()
+	 */
+	public function testItCanGetNewInstanceWithoutArgs() : void
+	{
+		$class = $this->getTestClass();
+		$newInstance = $class::getNewInstance();
+
+		$this->assertNull($newInstance->arg1);
+		$this->assertNull($newInstance->arg2);
 		$this->assertInstanceOf(get_class($class), $newInstance);
 	}
 
@@ -32,10 +47,10 @@ class CanGetNewInstanceTraitTest extends TestCase
 		return new class {
 			use CanGetNewInstanceTrait;
 
-			public $arg1;
-			public $arg2;
+			public ?string $arg1 = null;
+			public ?string $arg2 = null;
 
-			public function __construct($arg1 = null, $arg2 = null)
+			public function __construct(?string $arg1 = null, ?string $arg2 = null)
 			{
 				$this->arg1 = $arg1;
 				$this->arg2 = $arg2;
