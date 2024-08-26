@@ -16,6 +16,11 @@
     "codeception/module-asserts": "^1.3",
     "10up/wp_mock": "^1.0"
   },
+  "autoload": {
+    "psr-4": {
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\": "woocommerce/"
+    }
+  },
   "autoload-dev": {
     "psr-4": {
       "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Tests\\": "tests/"
