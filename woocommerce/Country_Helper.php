@@ -26,9 +26,6 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Country_Helper' ) ) :
-
-
 /**
  * SkyVerge Country Helper Class
  *
@@ -657,6 +654,3 @@ class Country_Helper {
 
 
 }
-
-
-endif;

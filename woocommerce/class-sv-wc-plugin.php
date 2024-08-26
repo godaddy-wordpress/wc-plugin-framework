@@ -471,7 +471,6 @@ abstract class SV_WC_Plugin {
 
 		// common utility methods
 		require_once( $framework_path . '/class-sv-wc-helper.php' );
-		require_once( $framework_path . '/Country_Helper.php' );
 		require_once( $framework_path . '/admin/Notes_Helper.php' );
 
 		// backwards compatibility for older WC versions
