@@ -22,7 +22,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1\Handlers;
+
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Plugin_Compatibility;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -39,7 +41,7 @@ class Country_Helper {
 
 
 	/** @var array ISO 3166-alpha2 => ISO 3166-alpha3  */
-	static public $alpha3 = [
+	static public array $alpha3 = [
 		'AF' => 'AFG', 'AL' => 'ALB', 'DZ' => 'DZA', 'AD' => 'AND', 'AO' => 'AGO',
 		'AG' => 'ATG', 'AR' => 'ARG', 'AM' => 'ARM', 'AU' => 'AUS', 'AT' => 'AUT',
 		'AZ' => 'AZE', 'BS' => 'BHS', 'BH' => 'BHR', 'BD' => 'BGD', 'BB' => 'BRB',
@@ -92,7 +94,7 @@ class Country_Helper {
 	];
 
 	/** @var array ISO 3166-alpha2 => ISO 3166-numeric  */
-	static public $numeric = [
+	static public array $numeric = [
 		'AF' => '004', 'AX' => '248', 'AL' => '008', 'DZ' => '012', 'AS' => '016',
 		'AD' => '020', 'AO' => '024', 'AI' => '660', 'AQ' => '010', 'AG' => '028',
 		'AR' => '032', 'AM' => '051', 'AW' => '533', 'AU' => '036', 'AT' => '040',
@@ -146,7 +148,7 @@ class Country_Helper {
 	];
 
 	/** @var array ISO 3166-alpha2 => phone calling code(s) */
-	static public $calling_codes = [
+	static public array $calling_codes = [
 		'BD' => '+880',
 		'BE' => '+32',
 		'BF' => '+226',
