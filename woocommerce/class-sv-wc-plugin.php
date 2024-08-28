@@ -454,7 +454,7 @@ abstract class SV_WC_Plugin {
 	/**
 	 * Setup aliases for classes that got renamed, moved, or namespace changed.
 	 *
-	 * @since 5_13_1
+	 * @since 5.13.1
 	 *
 	 * @return void
 	 */
