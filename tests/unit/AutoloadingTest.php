@@ -3,9 +3,11 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\Unit;
 
 use Mockery;
+use ReflectionException;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Addresses as Addresses;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Admin\Notes_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\API\Abstract_Cacheable_API_Base;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Handlers\Country_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\Blocks as Payment_Gateway_Blocks;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\Admin;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\External_Checkout;
@@ -13,7 +15,9 @@ use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checko
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\Google_Pay as Google_Pay_Checkout;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\Orders;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\Handlers as Handlers;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\PaymentFormContextChecker;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API as Settings_API;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Plugin;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\TestCase;
 
 /**
@@ -52,6 +56,32 @@ class AutoloadingTest extends TestCase
 
 		foreach ($list as $className) {
 			$this->assertInstanceOf($className, Mockery::mock($className)->makePartial());
+		}
+	}
+
+	/**
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Plugin::setupClassAliases()
+	 *
+	 * @throws ReflectionException
+	 */
+	public function testClassAliases() : void
+	{
+		$aliases = [
+			Country_Helper::class            => '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Country_Helper',
+			PaymentFormContextChecker::class => '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\PaymentFormContextChecker',
+		];
+
+		foreach ($aliases as $alias) {
+			$this->assertFalse(class_exists($alias));
+		}
+
+		$this->invokeInaccessibleMethod(
+			Mockery::mock(SV_WC_Plugin::class)->makePartial(),
+			'setupClassAliases'
+		);
+
+		foreach ($aliases as $class => $alias) {
+			$this->assertInstanceOf($class, Mockery::mock($alias));
 		}
 	}
 }

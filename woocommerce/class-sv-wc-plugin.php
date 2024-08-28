@@ -25,6 +25,8 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Handlers\Country_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\PaymentFormContextChecker;
 use stdClass;
 
 defined( 'ABSPATH' ) or exit;
@@ -449,6 +451,8 @@ abstract class SV_WC_Plugin {
 
 		$framework_path = $this->get_framework_path();
 
+		$this->setupClassAliases();
+
 		// common exception class
 		require_once( $framework_path . '/class-sv-wc-plugin-exception.php' );
 
@@ -485,6 +489,26 @@ abstract class SV_WC_Plugin {
 		require_once( $framework_path . '/class-sv-wc-admin-notice-handler.php' );
 		require_once( $framework_path . '/Lifecycle.php' );
 		require_once( $framework_path . '/rest-api/class-sv-wc-plugin-rest-api.php' );
+	}
+
+	/**
+	 * Setup aliases for classes that got renamed, moved, or namespace changed.
+	 *
+	 * @since 5_13_1
+	 *
+	 * @return void
+	 */
+	protected function setupClassAliases() : void
+	{
+		class_alias(
+			Country_Helper::class,
+			'\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Country_Helper'
+		);
+
+		class_alias(
+			PaymentFormContextChecker::class,
+			'\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\PaymentFormContextChecker'
+		);
 	}
 
 
