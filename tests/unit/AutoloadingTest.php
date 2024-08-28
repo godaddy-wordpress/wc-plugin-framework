@@ -4,7 +4,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\Unit;
 
 use Mockery;
 use ReflectionException;
-use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Addresses as Addresses;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Addresses;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Admin\Notes_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\API\Abstract_Cacheable_API_Base;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Handlers\Country_Helper;
@@ -14,10 +14,20 @@ use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checko
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\Frontend;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\Google_Pay as Google_Pay_Checkout;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\External_Checkout\Orders;
-use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\Handlers as Handlers;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\Handlers;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\PaymentFormContextChecker;
-use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API as Settings_API;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\REST_API;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Admin_Notice_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_Admin_Payment_Token_Editor;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_API_Authorization_Response;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_Apple_Pay_AJAX;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_Integration_Subscriptions;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_Payment_Tokens_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WP_Admin_Message_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WP_Job_Batch_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\TestCase;
 
 /**
@@ -27,8 +37,6 @@ class AutoloadingTest extends TestCase
 {
 	public function testCanAutoload() : void
 	{
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/api/class-sv-wc-api-base.php';
-
 		$list = [
 			Handlers\Capture::class,
 			Handlers\Abstract_Payment_Handler::class,
@@ -50,8 +58,21 @@ class AutoloadingTest extends TestCase
 			Notes_Helper::class,
 			Addresses\Address::class,
 			Addresses\Customer_Address::class,
+			SV_WC_Payment_Gateway_API_Authorization_Response::class,
+			SV_WC_Payment_Gateway_Admin_Payment_Token_Editor::class,
+			SV_WC_Payment_Gateway_Exception::class,
+			SV_WC_Payment_Gateway_Apple_Pay_AJAX::class,
+			SV_WC_Payment_Gateway_Integration_Subscriptions::class,
+			SV_WC_Payment_Gateway_Payment_Tokens_Handler::class,
+			\SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\REST_API::class,
+			REST_API::class,
+			REST_API\Controllers\Settings::class,
+			SV_WP_Job_Batch_Handler::class,
+			SV_WC_Admin_Notice_Handler::class,
+			SV_WP_Admin_Message_Handler::class,
 		];
 
+		Mockery::mock('\WP_REST_Controller');
 		Mockery::mock('\Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType');
 
 		foreach ($list as $className) {
@@ -67,8 +88,8 @@ class AutoloadingTest extends TestCase
 	public function testClassAliases() : void
 	{
 		$aliases = [
-			Country_Helper::class            => '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Country_Helper',
-			PaymentFormContextChecker::class => '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\PaymentFormContextChecker',
+			Country_Helper::class            => \SkyVerge\WooCommerce\PluginFramework\v5_13_1\Country_Helper::class,
+			PaymentFormContextChecker::class => \SkyVerge\WooCommerce\PluginFramework\v5_13_1\PaymentFormContextChecker::class,
 		];
 
 		foreach ($aliases as $alias) {
