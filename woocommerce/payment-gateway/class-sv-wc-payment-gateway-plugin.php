@@ -166,8 +166,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	protected function init_rest_api_handler() {
 
-		require_once( $this->get_payment_gateway_framework_path() . '/rest-api/class-sv-wc-payment-gateway-plugin-rest-api.php' );
-
 		$this->rest_api_handler = new Payment_Gateway\REST_API( $this );
 	}
 
@@ -287,68 +285,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	private function includes() {
 
-		$payment_gateway_framework_path = $this->get_payment_gateway_framework_path();
-
-		// interfaces
-		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api.php' );
-		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-request.php' );
-		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-response.php' );
-		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-authorization-response.php' );
-		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-create-payment-token-response.php' );
-		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-get-tokenized-payment-methods-response.php' );
-		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-payment-notification-response.php' );
-		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-payment-notification-credit-card-response.php' );
-		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-payment-notification-echeck-response.php' );
-		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-payment-notification-tokenization-response.php' );
-		require_once( $payment_gateway_framework_path . '/api/interface-sv-wc-payment-gateway-api-customer-response.php' );
-
-		// exceptions
-		require_once( $payment_gateway_framework_path . '/exceptions/class-sv-wc-payment-gateway-exception.php' );
-
-		// gateway
-		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway.php' );
-		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-direct.php' );
-		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-hosted.php' );
-		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-payment-form.php' );
-		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-my-payment-methods.php' );
-
-		// Apple Pay
-		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php" );
-		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php" );
-		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php" );
-		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-ajax.php" );
-		require_once( "{$payment_gateway_framework_path}/External_Checkout/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-payment-response.php" );
-
-		// payment tokens
-		require_once( $payment_gateway_framework_path . '/payment-tokens/class-sv-wc-payment-gateway-payment-token.php' );
-		require_once( $payment_gateway_framework_path . '/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php' );
-
-		// helpers
-		require_once( $payment_gateway_framework_path . '/api/class-sv-wc-payment-gateway-api-response-message-helper.php' );
-		require_once( $payment_gateway_framework_path . '/class-sv-wc-payment-gateway-helper.php' );
-		require_once $payment_gateway_framework_path . '/PaymentFormContextChecker.php';
-
-		// admin
-		require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-order.php' );
-		require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-user-handler.php' );
-		require_once( $payment_gateway_framework_path . '/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php' );
-
-		// integrations
-		require_once( $payment_gateway_framework_path . '/integrations/abstract-sv-wc-payment-gateway-integration.php' );
-
-		// subscriptions
-		if ( $this->is_subscriptions_active() ) {
-			require_once( $payment_gateway_framework_path . '/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php' );
-		}
-
-		// pre-orders
-		if ( $this->is_pre_orders_active() ) {
-			require_once( $payment_gateway_framework_path . '/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php' );
-		}
-
 		// privacy
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.4' ) ) {
-			require_once( "{$payment_gateway_framework_path}/class-sv-wc-payment-gateway-privacy.php" );
 			$this->privacy_handler = new SV_WC_Payment_Gateway_Privacy( $this );
 		}
 	}

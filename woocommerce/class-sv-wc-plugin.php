@@ -177,9 +177,6 @@ abstract class SV_WC_Plugin {
 		// build the blocks handler instance
 		$this->init_blocks_handler();
 
-		// build the setup handler instance
-		$this->init_setup_wizard_handler();
-
 		// add the action & filter hooks
 		$this->add_hooks();
 	}
@@ -282,8 +279,6 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function init_blocks_handler() : void {
 
-		require_once( $this->get_framework_path() . '/Blocks/Blocks_Handler.php' );
-
 		// individual plugins should initialize their block integrations handler by overriding this method
 		$this->blocks_handler = new Blocks\Blocks_Handler( $this );
 	}
@@ -295,10 +290,12 @@ abstract class SV_WC_Plugin {
 	 * Plugins can override and extend this method to add their own setup wizard.
 	 *
 	 * @since 5.3.0
+	 *
+	 * @deprecated
 	 */
 	protected function init_setup_wizard_handler() {
 
-		require_once( $this->get_framework_path() . '/admin/abstract-sv-wc-plugin-admin-setup-wizard.php' );
+		// np-op
 	}
 
 
@@ -446,49 +443,12 @@ abstract class SV_WC_Plugin {
 	 * Include any critical files which must be available as early as possible,
 	 *
 	 * @since 2.0.0
+	 *
+	 * @deprecated class files are loaded via composer
 	 */
 	private function includes() {
 
-		$framework_path = $this->get_framework_path();
-
 		$this->setupClassAliases();
-
-		// common exception class
-		require_once( $framework_path . '/class-sv-wc-plugin-exception.php' );
-
-		// common utility methods
-		require_once( $framework_path . '/class-sv-wc-helper.php' );
-
-		// backwards compatibility for older WC versions
-		require_once( $framework_path . '/class-sv-wc-plugin-compatibility.php' );
-		require_once( $framework_path . '/compatibility/abstract-sv-wc-data-compatibility.php' );
-		require_once( $framework_path . '/compatibility/class-sv-wc-order-compatibility.php' );
-		require_once( $framework_path . '/compatibility/class-sv-wc-subscription-compatibility.php' );
-
-		// generic API base
-		require_once( $framework_path . '/api/class-sv-wc-api-exception.php' );
-		require_once( $framework_path . '/api/class-sv-wc-api-base.php' );
-		require_once( $framework_path . '/api/interface-sv-wc-api-request.php' );
-		require_once( $framework_path . '/api/interface-sv-wc-api-response.php' );
-
-		// XML API base
-		require_once( $framework_path . '/api/abstract-sv-wc-api-xml-request.php' );
-		require_once( $framework_path . '/api/abstract-sv-wc-api-xml-response.php' );
-
-		// JSON API base
-		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
-		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
-
-		// REST API Controllers
-		require_once( $framework_path . '/rest-api/Controllers/Settings.php' );
-
-		// Handlers
-		require_once( $framework_path . '/class-sv-wc-plugin-dependencies.php' );
-		require_once( $framework_path . '/class-sv-wc-hook-deprecator.php' );
-		require_once( $framework_path . '/class-sv-wp-admin-message-handler.php' );
-		require_once( $framework_path . '/class-sv-wc-admin-notice-handler.php' );
-		require_once( $framework_path . '/Lifecycle.php' );
-		require_once( $framework_path . '/rest-api/class-sv-wc-plugin-rest-api.php' );
 	}
 
 	/**
@@ -833,13 +793,15 @@ abstract class SV_WC_Plugin {
 	 * Require and instantiate a class
 	 *
 	 * @since 4.2.0
+	 *
+	 * @deprecated
+	 *
 	 * @param string $local_path path to class file in plugin, e.g. '/includes/class-wc-foo.php'
 	 * @param string $class_name class to instantiate
+	 *
 	 * @return object instantiated class instance
 	 */
 	public function load_class( $local_path, $class_name ) {
-
-		require_once( $this->get_plugin_path() . $local_path );
 
 		return new $class_name;
 	}
