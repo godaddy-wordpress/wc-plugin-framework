@@ -793,15 +793,13 @@ abstract class SV_WC_Plugin {
 	 * Require and instantiate a class
 	 *
 	 * @since 4.2.0
-	 *
-	 * @deprecated
-	 *
 	 * @param string $local_path path to class file in plugin, e.g. '/includes/class-wc-foo.php'
 	 * @param string $class_name class to instantiate
-	 *
 	 * @return object instantiated class instance
 	 */
 	public function load_class( $local_path, $class_name ) {
+
+		require_once( $this->get_plugin_path() . $local_path );
 
 		return new $class_name;
 	}
