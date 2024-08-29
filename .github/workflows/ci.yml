@@ -45,6 +45,15 @@ jobs:
           sudo update-alternatives --set phpize /usr/bin/phpize$PHP_VERSION
           sudo update-alternatives --set php-config /usr/bin/php-config$PHP_VERSION
 
+      - name: Setup INI file
+        run: |
+          PHP_INI_LOCATION="$(php -r 'echo php_ini_loaded_file();')"
+          if [[ -z "$PHP_INI_LOCATION" || ! -f "$PHP_INI_LOCATION" ]]; then
+              echo 'Unable to determine php.ini location'
+              exit 1
+          fi
+          echo "zend.assertions=1" >> "$PHP_INI_LOCATION"
+
       - name: Get Composer Cache Directory
         id: composer-cache
         run: |
@@ -64,12 +73,6 @@ jobs:
       - name: Check platform requirements on PHP ${{ env.PHP_VERSION }}
         run: |
           composer check-platform-reqs --no-dev --no-interaction --no-scripts
-
-      - name: Setup INI file
-        run: |
-          echo "zend.assertions=1" > repo.ini
-          export PHP_INI_SCAN_DIR="$(pwd)"
-          echo $PHP_INI_SCAN_DIR
 
       - name: Execute tests via PHPUnit
         env:
