@@ -36,12 +36,12 @@
       "woocommerce/Lifecycle.php"
     ],
     "psr-4": {
-      "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\": "woocommerce/"
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\": "woocommerce/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\Tests\\": "tests/"
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\Tests\\": "tests/"
     }
   },
   "config": {

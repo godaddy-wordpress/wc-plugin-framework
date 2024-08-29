@@ -1,6 +1,6 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2024.nn.nn - version 5.13.1-dev.1
+2024.nn.nn - version 5.14.0-dev.1
 * Feature - Add a trait to get a singular instance of a class: `IsSingletonTrait`
 * Feature - Add a trait to get an instance (non-singular) of a class: `CanGetNewInstanceTrait`
 * Feature - Add a trait to convert an object into an array: `CanConvertToArrayTrait`
