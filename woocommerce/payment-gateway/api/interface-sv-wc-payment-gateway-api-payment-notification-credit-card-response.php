@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_14_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response' ) ) :
+if ( ! interface_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response' ) ) :
 
 
 /**

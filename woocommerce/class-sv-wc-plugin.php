@@ -22,14 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_14_0;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use stdClass;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_1\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\SV_WC_Plugin' ) ) :
 
 
 /**
@@ -47,7 +47,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.13.1-dev.1';
+	const VERSION = '5.14.0-dev.1';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
