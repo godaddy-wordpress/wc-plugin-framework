@@ -65,12 +65,14 @@ jobs:
         run: |
           composer check-platform-reqs --no-dev --no-interaction --no-scripts
 
+      - name: Setup INI file
+        run: |
+          echo "zend.assertions=1" > php.ini
+          echo $PHP_INI_SCAN_DIR
+
       - name: Execute tests via PHPUnit
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
         run: |
-          echo "zend.assertions=1" > php.ini
-          export PHP_INI_SCAN_DIR="$(pwd)"
-          echo $PHP_INI_SCAN_DIR
           vendor/bin/phpunit --order-by="random" --coverage-text
