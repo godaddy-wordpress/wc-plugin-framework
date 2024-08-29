@@ -69,6 +69,8 @@ jobs:
         run: |
           echo "zend.assertions=1" > php.ini
           export PHP_INI_SCAN_DIR="$(pwd)"
+          echo $PHP_INI_SCAN_DIR
+          echo ${{ steps.composer-cache.outputs.dir }}
 
       - name: Execute tests via PHPUnit
         env:
