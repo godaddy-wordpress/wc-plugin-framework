@@ -5,6 +5,7 @@
 * Feature - Add a trait to get an instance (non-singular) of a class: `CanGetNewInstanceTrait`
 * Feature - Add a trait to convert an object into an array: `CanConvertToArrayTrait`
 * Feature - Add a new `ArrayHelper` class for array-related utility methods
+* Dev - Add support for autoloading. Plugins now need to require the `vendor/autoload.php` file if not already.
 
 2024.08.21 - version 5.13.0
  * Feature - Add a trait for enum-like classes
