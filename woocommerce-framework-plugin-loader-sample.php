@@ -26,19 +26,6 @@
 
 defined( 'ABSPATH' ) or exit;
 
-// Required functions
-if ( ! function_exists( 'woothemes_queue_update' ) ) {
-	require_once( plugin_dir_path( __FILE__ ) . 'woo-includes/woo-functions.php' );
-}
-
-// Plugin updates
-woothemes_queue_update( plugin_basename( __FILE__ ), '00000000000000000000000000000000', '99999' ); // TODO: updater keys
-
-// WC active check
-if ( ! is_woocommerce_active() ) {
-	return;
-}
-
 /**
  * The plugin loader class.
  *
