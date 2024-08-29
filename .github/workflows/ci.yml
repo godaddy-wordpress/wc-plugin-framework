@@ -67,7 +67,8 @@ jobs:
 
       - name: Setup INI file
         run: |
-          echo "zend.assertions=1" > php.ini
+          echo "zend.assertions=1" > repo.ini
+          export PHP_INI_SCAN_DIR="$(pwd)"
           echo $PHP_INI_SCAN_DIR
 
       - name: Execute tests via PHPUnit
