@@ -70,4 +70,5 @@ jobs:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
         run: |
+          php --ini
           vendor/bin/phpunit --order-by="random" --coverage-text
