@@ -460,15 +460,21 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function setupClassAliases() : void
 	{
-		class_alias(
-			Country_Helper::class,
-			'\\SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\Country_Helper'
-		);
+		$countryHelperAlias = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\Country_Helper';
+		if (! class_exists($countryHelperAlias)) {
+			class_alias(
+				Country_Helper::class,
+				$countryHelperAlias
+			);
+		}
 
-		class_alias(
-			PaymentFormContextChecker::class,
-			'\\SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\PaymentFormContextChecker'
-		);
+		$paymentFormContextCheckerAlias = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\PaymentFormContextChecker';
+		if (! class_exists($paymentFormContextCheckerAlias)) {
+			class_alias(
+				PaymentFormContextChecker::class,
+				$paymentFormContextCheckerAlias
+			);
+		}
 	}
 
 
