@@ -52,7 +52,7 @@ jobs:
               echo 'Unable to determine php.ini location'
               exit 1
           fi
-          echo "zend.assertions=1" >> "$PHP_INI_LOCATION"
+          echo "zend.assertions=1" | sudo tee -a "$PHP_INI_LOCATION"
 
       - name: Get Composer Cache Directory
         id: composer-cache
