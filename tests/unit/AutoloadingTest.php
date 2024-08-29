@@ -2,6 +2,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\Unit;
 
+use Generator;
 use Mockery;
 use ReflectionException;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Addresses;
@@ -21,8 +22,11 @@ use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Settings_API;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Admin_Notice_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_Admin_Payment_Token_Editor;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_API_Authorization_Response;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_API_Get_Tokenized_Payment_Methods_Response;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_API_Response;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_Apple_Pay_AJAX;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_Integration;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_Integration_Subscriptions;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Payment_Gateway_Payment_Tokens_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_13_1\SV_WC_Plugin;
@@ -35,7 +39,19 @@ use SkyVerge\WooCommerce\PluginFramework\v5_13_1\Tests\TestCase;
  */
 class AutoloadingTest extends TestCase
 {
-	public function testCanAutoload() : void
+	/**
+	 * @dataProvider providerCanAutoload
+	 */
+	public function testCanAutoload(string $className) : void
+	{
+		Mockery::mock('\WP_REST_Controller');
+		Mockery::mock('\Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType');
+
+		$this->assertTrue(class_exists($className) || interface_exists($className));
+	}
+
+	/** @see testCanAutoload */
+	public function providerCanAutoload() : Generator
 	{
 		$list = [
 			Handlers\Capture::class,
@@ -59,11 +75,14 @@ class AutoloadingTest extends TestCase
 			Addresses\Address::class,
 			Addresses\Customer_Address::class,
 			SV_WC_Payment_Gateway_API_Authorization_Response::class,
+			SV_WC_Payment_Gateway_API_Get_Tokenized_Payment_Methods_Response::class,
+			SV_WC_Payment_Gateway_API_Response::class,
 			SV_WC_Payment_Gateway_Admin_Payment_Token_Editor::class,
 			SV_WC_Payment_Gateway_Exception::class,
 			SV_WC_Payment_Gateway_Apple_Pay_AJAX::class,
 			SV_WC_Payment_Gateway_Integration_Subscriptions::class,
 			SV_WC_Payment_Gateway_Payment_Tokens_Handler::class,
+			SV_WC_Payment_Gateway_Integration::class,
 			\SkyVerge\WooCommerce\PluginFramework\v5_13_1\Payment_Gateway\REST_API::class,
 			REST_API::class,
 			REST_API\Controllers\Settings::class,
@@ -72,11 +91,8 @@ class AutoloadingTest extends TestCase
 			SV_WP_Admin_Message_Handler::class,
 		];
 
-		Mockery::mock('\WP_REST_Controller');
-		Mockery::mock('\Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType');
-
 		foreach ($list as $className) {
-			$this->assertInstanceOf($className, Mockery::mock($className)->makePartial());
+			yield $className => [$className];
 		}
 	}
 
