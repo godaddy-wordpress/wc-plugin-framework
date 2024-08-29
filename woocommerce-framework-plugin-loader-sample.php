@@ -131,12 +131,10 @@ class SV_WC_Framework_Plugin_Loader {
 			return;
 		}
 
-		$this->load_framework();
-
-		/** If the plugin is structured for PSR-4, do the following:
-
 		// autoload plugin and vendor files
 		$loader = require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
+
+		/** If the plugin is structured for PSR-4, do the following:
 
 		// register plugin namespace with autoloader
 		$loader->addPsr4( 'SkyVerge\\WooCommerce\\Plugin_Name\\', __DIR__ . '/includes' ); // TODO: plugin namespace here
@@ -155,24 +153,6 @@ class SV_WC_Framework_Plugin_Loader {
 
 		// fire it up!
 		wc_framework_plugin(); // TODO: call the main plugin method
-	}
-
-
-	/**
-	 * Loads the base framework classes.
-	 *
-	 * @since 1.0.0
-	 */
-	private function load_framework() {
-
-		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Plugin' ) ) {
-			require_once( plugin_dir_path( __FILE__ ) . 'lib/skyverge/woocommerce/class-sv-wc-plugin.php' );
-		}
-
-		// TODO: remove this if not a payment gateway
-		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Payment_Gateway_Plugin' ) ) {
-			require_once( plugin_dir_path( __FILE__ ) . 'lib/skyverge/woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php' );
-		}
 	}
 
 
