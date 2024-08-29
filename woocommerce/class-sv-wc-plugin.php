@@ -25,6 +25,8 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_14_0;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
+use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Handlers\Country_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Payment_Gateway\PaymentFormContextChecker;
 use stdClass;
 use Throwable;
 use WC_Logger_Interface;
@@ -177,9 +179,6 @@ abstract class SV_WC_Plugin {
 		// build the blocks handler instance
 		$this->init_blocks_handler();
 
-		// build the setup handler instance
-		$this->init_setup_wizard_handler();
-
 		// add the action & filter hooks
 		$this->add_hooks();
 	}
@@ -282,8 +281,6 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function init_blocks_handler() : void {
 
-		require_once( $this->get_framework_path() . '/Blocks/Blocks_Handler.php' );
-
 		// individual plugins should initialize their block integrations handler by overriding this method
 		$this->blocks_handler = new Blocks\Blocks_Handler( $this );
 	}
@@ -295,10 +292,12 @@ abstract class SV_WC_Plugin {
 	 * Plugins can override and extend this method to add their own setup wizard.
 	 *
 	 * @since 5.3.0
+	 *
+	 * @deprecated
 	 */
 	protected function init_setup_wizard_handler() {
 
-		require_once( $this->get_framework_path() . '/admin/abstract-sv-wc-plugin-admin-setup-wizard.php' );
+		// np-op
 	}
 
 
@@ -446,75 +445,32 @@ abstract class SV_WC_Plugin {
 	 * Include any critical files which must be available as early as possible,
 	 *
 	 * @since 2.0.0
+	 *
+	 * @deprecated class files are loaded via composer
 	 */
 	private function includes() {
 
-		$framework_path = $this->get_framework_path();
+		$this->setupClassAliases();
+	}
 
-		// common exception class
-		require_once( $framework_path . '/class-sv-wc-plugin-exception.php' );
+	/**
+	 * Setup aliases for classes that got renamed, moved, or namespace changed.
+	 *
+	 * @since 5.13.1
+	 *
+	 * @return void
+	 */
+	protected function setupClassAliases() : void
+	{
+		class_alias(
+			Country_Helper::class,
+			'\\SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\Country_Helper'
+		);
 
-		// traits
-		require_once( $framework_path . '/Traits/CanGetNewInstanceTrait.php' );
-		require_once( $framework_path . '/Traits/IsSingletonTrait.php' );
-		require_once( $framework_path . '/Traits/CanConvertToArrayTrait.php' );
-
-		// helpers
-		require_once( $framework_path . '/Helpers/ArrayHelper.php' );
-
-		// addresses
-		require_once( $framework_path . '/Addresses/Address.php' );
-		require_once( $framework_path . '/Addresses/Customer_Address.php' );
-
-		// Settings API
-		require_once( $framework_path . '/Settings_API/Abstract_Settings.php' );
-		require_once( $framework_path . '/Settings_API/Setting.php' );
-		require_once( $framework_path . '/Settings_API/Control.php' );
-
-		// common utility methods
-		require_once( $framework_path . '/class-sv-wc-helper.php' );
-		require_once( $framework_path . '/Country_Helper.php' );
-		require_once( $framework_path . '/admin/Notes_Helper.php' );
-
-		// backwards compatibility for older WC versions
-		require_once( $framework_path . '/class-sv-wc-plugin-compatibility.php' );
-		require_once( $framework_path . '/compatibility/abstract-sv-wc-data-compatibility.php' );
-		require_once( $framework_path . '/compatibility/class-sv-wc-order-compatibility.php' );
-		require_once( $framework_path . '/compatibility/class-sv-wc-subscription-compatibility.php' );
-
-		// generic API base
-		require_once( $framework_path . '/api/class-sv-wc-api-exception.php' );
-		require_once( $framework_path . '/api/class-sv-wc-api-base.php' );
-		require_once( $framework_path . '/api/interface-sv-wc-api-request.php' );
-		require_once( $framework_path . '/api/interface-sv-wc-api-response.php' );
-
-		// XML API base
-		require_once( $framework_path . '/api/abstract-sv-wc-api-xml-request.php' );
-		require_once( $framework_path . '/api/abstract-sv-wc-api-xml-response.php' );
-
-		// JSON API base
-		require_once( $framework_path . '/api/abstract-sv-wc-api-json-request.php' );
-		require_once( $framework_path . '/api/abstract-sv-wc-api-json-response.php' );
-
-		// Cacheable API
-		require_once( $framework_path . '/api/traits/Cacheable_Request_Trait.php' );
-		require_once( $framework_path . '/api/Abstract_Cacheable_API_Base.php' );
-
-		// REST API Controllers
-		require_once( $framework_path . '/rest-api/Controllers/Settings.php' );
-
-		// Handlers
-		require_once( $framework_path . '/Handlers/Script_Handler.php' );
-		require_once( $framework_path . '/class-sv-wc-plugin-dependencies.php' );
-		require_once( $framework_path . '/class-sv-wc-hook-deprecator.php' );
-		require_once( $framework_path . '/class-sv-wp-admin-message-handler.php' );
-		require_once( $framework_path . '/class-sv-wc-admin-notice-handler.php' );
-		require_once( $framework_path . '/Lifecycle.php' );
-		require_once( $framework_path . '/rest-api/class-sv-wc-plugin-rest-api.php' );
-
-		// Enums
-		require_once $framework_path . '/Enums/Traits/EnumTrait.php';
-		require_once $framework_path . '/Enums/PaymentFormContext.php';
+		class_alias(
+			PaymentFormContextChecker::class,
+			'\\SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\PaymentFormContextChecker'
+		);
 	}
 
 

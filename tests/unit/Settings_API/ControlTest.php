@@ -9,14 +9,6 @@ use TypeError;
 
 class ControlTest extends TestCase
 {
-
-	public function setUp() : void
-	{
-		parent::setUp();
-
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/Settings_API/Control.php';
-	}
-
 	/**
 	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\Settings_API\Control::get_setting_id()
 	 * @throws SV_WC_Plugin_Exception

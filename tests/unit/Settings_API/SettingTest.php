@@ -8,14 +8,6 @@ use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Tests\TestCase;
 
 class SettingTest extends TestCase
 {
-	public function setUp() : void
-	{
-		parent::setUp();
-
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/Settings_API/Abstract_Settings.php';
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/Settings_API/Setting.php';
-	}
-
 	/**
 	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\Settings_API\Setting::set_id()
 	 *
@@ -303,8 +295,6 @@ class SettingTest extends TestCase
 	 */
 	public function provider_set_control() : array
 	{
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/Settings_API/Control.php';
-
 		$control = new Control();
 
 		return [

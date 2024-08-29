@@ -31,9 +31,6 @@ use SkyVerge\WooCommerce\PluginFramework\v5_14_0\SV_WC_Plugin_Compatibility;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\Plugin\\Lifecycle' ) ) :
-
-
 /**
  * Plugin lifecycle handler.
  *
@@ -664,6 +661,3 @@ class Lifecycle {
 
 
 }
-
-
-endif;
