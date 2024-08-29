@@ -69,6 +69,9 @@ class PluginTest extends TestCase
 	 */
 	public function testCanCatchFailedAssertion() : void
 	{
+		$initValue = ini_get('zend.assertions');
+		ini_set('zend.assertions', 1);
+
 		WP_Mock::userFunction('wp_debug_backtrace_summary')
 			->once()
 			->andReturn('TEST_DEBUG_BACKTRACE_SUMMARY');
@@ -84,5 +87,7 @@ class PluginTest extends TestCase
 		$this->assertNull(
 			$this->invokeInaccessibleMethod($this->testObject, 'assert', false)
 		);
+
+		ini_set('zend.assertions', $initValue);
 	}
 }
