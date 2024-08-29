@@ -943,7 +943,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function get_payment_method_defaults() {
 
-		assert( $this->supports_payment_form() );
+		$this->get_plugin()->assert( $this->supports_payment_form() );
 
 		$defaults = array(
 			'account-number' => '',
@@ -3301,7 +3301,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	protected function add_authorization_charge_form_fields( $form_fields ) {
 
-		assert( $this->supports_credit_card_authorization() && $this->supports_credit_card_charge() );
+		$this->get_plugin()->assert( $this->supports_credit_card_authorization() && $this->supports_credit_card_charge() );
 
 		$form_fields['transaction_type'] = array(
 			'title'    => esc_html__( 'Transaction Type', 'woocommerce-plugin-framework' ),
@@ -3381,7 +3381,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function perform_credit_card_charge( \WC_Order $order = null ) {
 
-		assert( $this->supports_credit_card_charge() );
+		$this->get_plugin()->assert( $this->supports_credit_card_charge() );
 
 		$perform = self::TRANSACTION_TYPE_CHARGE === $this->transaction_type;
 
@@ -3412,7 +3412,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function perform_credit_card_authorization( \WC_Order $order = null ) {
 
-		assert( $this->supports_credit_card_authorization() );
+		$this->get_plugin()->assert( $this->supports_credit_card_authorization() );
 
 		$perform = self::TRANSACTION_TYPE_AUTHORIZATION === $this->transaction_type && ! $this->perform_credit_card_charge( $order );
 
@@ -3437,7 +3437,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function is_partial_capture_enabled() {
 
-		assert( $this->supports_credit_card_partial_capture() );
+		$this->get_plugin()->assert( $this->supports_credit_card_partial_capture() );
 
 		/**
 		 * Filters whether partial capture is enabled.
@@ -3516,7 +3516,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function get_card_types() {
 
-		assert( $this->supports_card_types() );
+		$this->get_plugin()->assert( $this->supports_card_types() );
 
 		return is_array( $this->card_types ) ? $this->card_types : [];
 	}
@@ -3532,7 +3532,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	protected function add_card_types_form_fields( $form_fields ) {
 
-		assert( $this->supports_card_types() );
+		$this->get_plugin()->assert( $this->supports_card_types() );
 
 		$form_fields['card_types'] = array(
 			'title'       => esc_html__( 'Accepted Card Logos', 'woocommerce-plugin-framework' ),
@@ -3562,7 +3562,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function get_available_card_types() {
 
-		assert( $this->supports_card_types() );
+		$this->get_plugin()->assert( $this->supports_card_types() );
 
 		// default available card types
 		if ( ! isset( $this->available_card_types ) ) {
@@ -3612,7 +3612,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function tokenization_enabled() {
 
-		assert( $this->supports_tokenization() );
+		$this->get_plugin()->assert( $this->supports_tokenization() );
 
 		return 'yes' == $this->tokenization;
 	}
@@ -3627,7 +3627,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	protected function add_tokenization_form_fields( $form_fields ) {
 
-		assert( $this->supports_tokenization() );
+		$this->get_plugin()->assert( $this->supports_tokenization() );
 
 		$form_fields['tokenization'] = array(
 			/* translators: http://www.cybersource.com/products/payment_security/payment_tokenization/ and https://en.wikipedia.org/wiki/Tokenization_(data_security) */
@@ -4142,7 +4142,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function supports_check_field( $field_name ) {
 
-		assert( $this->is_echeck_gateway() );
+		$this->get_plugin()->assert( $this->is_echeck_gateway() );
 
 		return is_array( $this->supported_check_fields ) && in_array( $field_name, $this->supported_check_fields );
 
@@ -4478,7 +4478,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	public function get_api() {
 
 		// concrete stub method
-		assert( false );
+		$this->get_plugin()->assert( false );
 	}
 
 

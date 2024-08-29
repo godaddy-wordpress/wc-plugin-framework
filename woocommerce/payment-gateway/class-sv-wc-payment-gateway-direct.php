@@ -937,7 +937,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function add_payment_method() {
 
-		assert( $this->supports_add_payment_method() );
+		$this->get_plugin()->assert( $this->supports_add_payment_method() );
 
 		$order = $this->get_order_for_add_payment_method();
 
