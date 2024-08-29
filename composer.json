@@ -32,8 +32,7 @@
       "woocommerce/class-sv-wc-plugin-compatibility.php",
       "woocommerce/class-sv-wc-plugin-dependencies.php",
       "woocommerce/class-sv-wc-plugin-exception.php",
-      "woocommerce/class-sv-wp-admin-message-handler.php",
-      "woocommerce/Lifecycle.php"
+      "woocommerce/class-sv-wp-admin-message-handler.php"
     ],
     "psr-4": {
       "SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\": "woocommerce/"

@@ -17,6 +17,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Payment_Gateway\External_Checko
 use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Payment_Gateway\External_Checkout\Orders;
 use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Payment_Gateway\Handlers;
 use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Payment_Gateway\PaymentFormContextChecker;
+use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Plugin\Lifecycle;
 use SkyVerge\WooCommerce\PluginFramework\v5_14_0\REST_API;
 use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Settings_API;
 use SkyVerge\WooCommerce\PluginFramework\v5_14_0\SV_WC_Admin_Notice_Handler;
@@ -89,6 +90,7 @@ class AutoloadingTest extends TestCase
 			SV_WP_Job_Batch_Handler::class,
 			SV_WC_Admin_Notice_Handler::class,
 			SV_WP_Admin_Message_Handler::class,
+			Lifecycle::class,
 		];
 
 		foreach ($list as $className) {
