@@ -26,6 +26,8 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_14_0;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use stdClass;
+use Throwable;
+use WC_Logger_Interface;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -67,8 +69,8 @@ abstract class SV_WC_Plugin {
 	/** @var string template path, without trailing slash */
 	private $template_path;
 
-	/** @var \WC_Logger instance */
-	private $logger;
+	/** @var WC_Logger_Interface|null instance */
+	private ?WC_Logger_Interface $logger = null;
 
 	/** @var  SV_WP_Admin_Message_Handler instance */
 	private $message_handler;
@@ -548,7 +550,7 @@ abstract class SV_WC_Plugin {
 			$deprecated_hooks[ $deprecated_filter ] = [
 				'removed'     => true,
 				'replacement' => false,
-				'version'     => '5.8.1'
+				'version'     => '5.8.1',
 			];
 		}
 
@@ -825,13 +827,22 @@ abstract class SV_WC_Plugin {
 			$log_id = $this->get_id();
 		}
 
-		if ( ! is_object( $this->logger ) ) {
-			$this->logger = new \WC_Logger();
-		}
-
-		$this->logger->add( $log_id, $message );
+		$this->logger()->add( $log_id, $message );
 	}
 
+	protected function logger() : WC_Logger_Interface
+	{
+		return $this->logger ??= wc_get_logger();
+	}
+
+	public function assert($assertion) : void
+	{
+		try {
+			assert($assertion);
+		} catch (Throwable $exception) {
+			$this->logger()->debug('Assertion failed, backtrace summery: '.wp_debug_backtrace_summary());
+		}
+	}
 
 	/**
 	 * Require and instantiate a class
@@ -1446,8 +1457,6 @@ abstract class SV_WC_Plugin {
 
 		return $is_active;
 	}
-
-
 }
 
 
