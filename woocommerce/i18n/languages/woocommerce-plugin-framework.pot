@@ -1,42 +1,17 @@
 # Copyright (c) GoDaddy Operating Company, LLC. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: SkyVerge WooCommerce Plugin Framework 1.0.0 TODO: plugin version\n"
+"Project-Id-Version: SkyVerge WooCommerce Plugin Framework 5.14.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wc-plugin-framework\n"
 "Last-Translator: plugins@godaddy.com\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-08-30T02:45:33+00:00\n"
+"POT-Creation-Date: 2024-08-30T03:06:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
-
-#. Plugin Name of the plugin
-#: woocommerce-framework-plugin-loader-sample.php
-msgid "WooCommerce Framework Plugin TODO: plugin name"
-msgstr ""
-
-#. Plugin URI of the plugin
-#: woocommerce-framework-plugin-loader-sample.php
-msgid "http://www.woocommerce.com/products/ TODO: product URL"
-msgstr ""
-
-#. Description of the plugin
-#: woocommerce-framework-plugin-loader-sample.php
-msgid "TODO: plugin description"
-msgstr ""
-
-#. Author of the plugin
-#: woocommerce-framework-plugin-loader-sample.php
-msgid "SkyVerge"
-msgstr ""
-
-#. Author URI of the plugin
-#: woocommerce-framework-plugin-loader-sample.php
-msgid "http://www.woocommerce.com"
-msgstr ""
 
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:183
 msgid "Thanks for installing %1$s! To get started, take a minute to %2$sread the documentation%3$s :)"
