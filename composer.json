@@ -16,9 +16,31 @@
     "codeception/module-asserts": "^1.3",
     "10up/wp_mock": "^1.0"
   },
+  "autoload": {
+    "classmap": [
+      "woocommerce/admin",
+      "woocommerce/api",
+      "woocommerce/compatibility",
+      "woocommerce/payment-gateway",
+      "woocommerce/rest-api",
+      "woocommerce/utilities",
+      "woocommerce/class-sv-wc-admin-notice-handler.php",
+      "woocommerce/class-sv-wc-framework-bootstrap.php",
+      "woocommerce/class-sv-wc-helper.php",
+      "woocommerce/class-sv-wc-hook-deprecator.php",
+      "woocommerce/class-sv-wc-plugin.php",
+      "woocommerce/class-sv-wc-plugin-compatibility.php",
+      "woocommerce/class-sv-wc-plugin-dependencies.php",
+      "woocommerce/class-sv-wc-plugin-exception.php",
+      "woocommerce/class-sv-wp-admin-message-handler.php"
+    ],
+    "psr-4": {
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\": "woocommerce/"
+    }
+  },
   "autoload-dev": {
     "psr-4": {
-      "SkyVerge\\WooCommerce\\PluginFramework\\v5_13_0\\Tests\\": "tests/"
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\Tests\\": "tests/"
     }
   },
   "config": {

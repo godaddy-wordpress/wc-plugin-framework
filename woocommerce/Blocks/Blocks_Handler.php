@@ -1,16 +1,16 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_13_0\Blocks;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_14_0\Blocks;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use Automattic\WooCommerce\Blocks\Package as WooCommerceBlocks;
 use Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils;
-use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
-use SkyVerge\WooCommerce\PluginFramework\v5_13_0\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_13_0\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_14_0\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_14_0\SV_WC_Plugin;
 use WP_Post;
 
-if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_13_0\Blocks\Blocks_Handler' ) ) :
+if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_14_0\Blocks\Blocks_Handler' ) ) :
 
 /**
  * WooCommerce Blocks handler.
@@ -49,11 +49,6 @@ class Blocks_Handler {
 	public function __construct( SV_WC_Plugin $plugin ) {
 
 		$this->plugin = $plugin;
-
-		$framework_path = $this->plugin->get_framework_path();
-
-		require_once( $framework_path . '/Blocks/Traits/Block_Integration_Trait.php' );
-		require_once( $framework_path . '/Blocks/Block_Integration.php' );
 
 		// blocks-related notices and call-to-actions
 		add_action( 'admin_notices', [ $this, 'add_admin_notices' ] );

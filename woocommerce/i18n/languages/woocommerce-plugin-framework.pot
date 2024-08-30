@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-08-21T01:19:53+00:00\n"
+"POT-Creation-Date: 2024-08-30T02:45:33+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -172,23 +172,23 @@ msgstr ""
 msgid "Skip this step"
 msgstr ""
 
-#: woocommerce/Blocks/Blocks_Handler.php:271
+#: woocommerce/Blocks/Blocks_Handler.php:266
 msgctxt "Button label"
 msgid "Edit the Checkout Page"
 msgstr ""
 
 #. translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_checkout]` shortcode tag, %6$s - closing HTML </a> tag
-#: woocommerce/Blocks/Blocks_Handler.php:276
+#: woocommerce/Blocks/Blocks_Handler.php:271
 msgid "%1$s is not yet compatible with the Checkout block. We recommend %2$sfollowing this guide%3$s to revert to the %4$s%5$s shortcode%6$s."
 msgstr ""
 
-#: woocommerce/Blocks/Blocks_Handler.php:302
+#: woocommerce/Blocks/Blocks_Handler.php:297
 msgctxt "Button label"
 msgid "Edit the Cart Page"
 msgstr ""
 
 #. translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_cart]` shortcode tag, %6$s - closing HTML </a> tag
-#: woocommerce/Blocks/Blocks_Handler.php:307
+#: woocommerce/Blocks/Blocks_Handler.php:302
 msgid "%1$s is not yet compatible with the Cart block. We recommend %2$sfollowing this guide%3$s to revert to the %4$s%5$s shortcode%6$s."
 msgstr ""
 
@@ -286,73 +286,43 @@ msgid "Your hosting provider can do this for you. %1$sHere are some resources to
 msgstr ""
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:344
+#: woocommerce/class-sv-wc-plugin.php:345
 msgid "You cannot clone instances of %s."
 msgstr ""
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:355
+#: woocommerce/class-sv-wc-plugin.php:356
 msgid "You cannot unserialize instances of %s."
 msgstr ""
 
 #. translators: Docs as in Documentation
-#: woocommerce/class-sv-wc-plugin.php:631
+#: woocommerce/class-sv-wc-plugin.php:603
 msgid "Docs"
 msgstr ""
 
-#: woocommerce/class-sv-wc-plugin.php:636
+#: woocommerce/class-sv-wc-plugin.php:608
 msgctxt "noun"
 msgid "Support"
 msgstr ""
 
-#: woocommerce/class-sv-wc-plugin.php:641
+#: woocommerce/class-sv-wc-plugin.php:613
 msgctxt "verb"
 msgid "Review"
 msgstr ""
 
 #. translators: Placeholders: %1$s - PHP setting value, %2$s - version or value required
-#: woocommerce/class-sv-wc-plugin.php:780
+#: woocommerce/class-sv-wc-plugin.php:752
 msgid "%1$s - A minimum of %2$s is required."
 msgstr ""
 
 #. translators: Context: As in "Value has been set as [foo], but [bar] is required". Placeholders: %1$s - current value for a PHP setting, %2$s - required value for the PHP setting
-#: woocommerce/class-sv-wc-plugin.php:790
+#: woocommerce/class-sv-wc-plugin.php:762
 msgid "Set as %1$s - %2$s is required."
 msgstr ""
 
-#: woocommerce/class-sv-wc-plugin.php:1146
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:889
+#: woocommerce/class-sv-wc-plugin.php:1127
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:807
 msgid "Configure"
-msgstr ""
-
-#: woocommerce/Lifecycle.php:395
-msgctxt "Generic congratulatory exclamation at the start of a milestone message"
-msgid "Awesome!"
-msgstr ""
-
-#: woocommerce/Lifecycle.php:396
-msgctxt "Generic congratulatory exclamation at the start of a milestone message"
-msgid "Fantastic!"
-msgstr ""
-
-#: woocommerce/Lifecycle.php:397
-msgctxt "Generic congratulatory exclamation at the start of a milestone message"
-msgid "Cowabunga!"
-msgstr ""
-
-#: woocommerce/Lifecycle.php:398
-msgctxt "Generic congratulatory exclamation at the start of a milestone message"
-msgid "Congratulations!"
-msgstr ""
-
-#: woocommerce/Lifecycle.php:399
-msgctxt "Generic congratulatory exclamation at the start of a milestone message"
-msgid "Hot dog!"
-msgstr ""
-
-#. translators: Placeholders: %1$s - Plugin name, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <a> tag, %5$s - Closing HTML </a> tag
-#: woocommerce/Lifecycle.php:406
-msgid "Are you having a great experience with %1$s so far? Please consider %2$sleaving a review%3$s! If things aren't going quite as expected, we're happy to help -- please %4$sreach out to our support team%5$s."
 msgstr ""
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-order.php:133
@@ -1125,60 +1095,60 @@ msgid "Payment Info"
 msgstr ""
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - <a> tag, %3$s - </a> tag
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:725
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:643
 msgid "%1$s: WooCommerce is not being forced over SSL; your customers' payment data may be at risk. %2$sVerify your site URLs here%3$s"
 msgstr ""
 
 #. translators: Placeholders: %s - payment gateway name
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:742
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:660
 msgid "%s will soon require TLS 1.2 support to process transactions and your server environment may need to be updated. Please contact your hosting provider to confirm that your site can send and receive TLS 1.2 connections and request they make any necessary updates."
 msgstr ""
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:797
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:715
 msgid "%1$s accepts payment in %2$s only. %3$sConfigure%4$s WooCommerce to accept %2$s to enable this gateway for checkout."
 msgid_plural "%1$s accepts payment in one of %2$s only. %3$sConfigure%4$s WooCommerce to accept one of %2$s to enable this gateway for checkout."
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: Placeholders: %1$s - payment gateway name, %2$s - opening <a> tag, %3$s - closing </a> tag
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:827
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:745
 msgid "Heads up! %1$s is currently configured to log transaction data for debugging purposes. If you are not experiencing any problems with payment processing, we recommend %2$sturning off Debug Mode%3$s"
 msgstr ""
 
 #. translators: Placeholders: %s - gateway name
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:878
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:796
 msgid "%s is not configured"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:890
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:808
 msgid "Dismiss"
 msgstr ""
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - opening <a> HTML link tag, %3$s - closing </a> HTML link tag
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:927
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:845
 msgid "Heads up! Apple Pay for %1$s requires WooCommerce version 3.2 or greater. Please %2$supdate WooCommerce%3$s."
 msgstr ""
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - opening <a> HTML link tag, %3$s - closing </a> HTML link tag
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:951
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:869
 msgid "Heads up! Google Pay for %1$s requires WooCommerce version 3.2 or greater. Please %2$supdate WooCommerce%3$s."
 msgstr ""
 
 #. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:987
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:905
 msgid "%1$s is inactive for subscription transactions. Please %2$senable tokenization%3$s to activate %1$s for Subscriptions."
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:1005
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:923
 msgid "%1$s is inactive for pre-order transactions. Please %2$senable tokenization%3$s to activate %1$s for Pre-Orders."
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:1042
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:960
 msgid "You must enable tokenization for this gateway in order to support automatic renewal payments with the WooCommerce Subscriptions extension."
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:1043
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:961
 msgid "Inactive"
 msgstr ""
 
@@ -1955,6 +1925,36 @@ msgstr ""
 
 #: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:187
 msgid "Unknown Error"
+msgstr ""
+
+#: woocommerce/Plugin/Lifecycle.php:392
+msgctxt "Generic congratulatory exclamation at the start of a milestone message"
+msgid "Awesome!"
+msgstr ""
+
+#: woocommerce/Plugin/Lifecycle.php:393
+msgctxt "Generic congratulatory exclamation at the start of a milestone message"
+msgid "Fantastic!"
+msgstr ""
+
+#: woocommerce/Plugin/Lifecycle.php:394
+msgctxt "Generic congratulatory exclamation at the start of a milestone message"
+msgid "Cowabunga!"
+msgstr ""
+
+#: woocommerce/Plugin/Lifecycle.php:395
+msgctxt "Generic congratulatory exclamation at the start of a milestone message"
+msgid "Congratulations!"
+msgstr ""
+
+#: woocommerce/Plugin/Lifecycle.php:396
+msgctxt "Generic congratulatory exclamation at the start of a milestone message"
+msgid "Hot dog!"
+msgstr ""
+
+#. translators: Placeholders: %1$s - Plugin name, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <a> tag, %5$s - Closing HTML </a> tag
+#: woocommerce/Plugin/Lifecycle.php:403
+msgid "Are you having a great experience with %1$s so far? Please consider %2$sleaving a review%3$s! If things aren't going quite as expected, we're happy to help -- please %4$sreach out to our support team%5$s."
 msgstr ""
 
 #: woocommerce/rest-api/Controllers/Settings.php:120
