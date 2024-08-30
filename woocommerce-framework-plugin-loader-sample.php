@@ -39,27 +39,27 @@ class SV_WC_Framework_Plugin_Loader {
 
 
 	/** minimum PHP version required by this plugin */
-	const MINIMUM_PHP_VERSION = '7.4';
+	public const MINIMUM_PHP_VERSION = '7.4';
 
 	/** minimum WordPress version required by this plugin */
-	const MINIMUM_WP_VERSION = '5.6';
+	public const MINIMUM_WP_VERSION = '5.6';
 
 	/** minimum WooCommerce version required by this plugin */
-	const MINIMUM_WC_VERSION = '3.9';
+	public const MINIMUM_WC_VERSION = '3.9';
 
 	/** SkyVerge plugin framework version used by this plugin */
-	const FRAMEWORK_VERSION = '5.14.0-dev.1'; // TODO: framework version
+	public const FRAMEWORK_VERSION = '5.14.0'; // TODO: framework version
 
 
 	/** the plugin name, for displaying notices */
-	const PLUGIN_NAME = 'WooCommerce Framework Plugin'; // TODO: plugin name
+	public const PLUGIN_NAME = 'WooCommerce Framework Plugin'; // TODO: plugin name
 
 
 	/** @var SV_WC_Framework_Plugin_Loader single instance of this class // TODO: replace with loader class name */
-	private static $instance;
+	private static ?SV_WC_Framework_Plugin_Loader $instance = null;
 
 	/** @var array the admin notices to add */
-	private $notices = array();
+	private array $notices = [];
 
 
 	/**
@@ -394,15 +394,11 @@ class SV_WC_Framework_Plugin_Loader {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return \SV_WC_Framework_Plugin_Loader
+	 * @return SV_WC_Framework_Plugin_Loader
 	 */
-	public static function instance() {
-
-		if ( null === self::$instance ) {
-			self::$instance = new self();
-		}
-
-		return self::$instance;
+	public static function instance() : SV_WC_Framework_Plugin_Loader
+	{
+		return self::$instance ??=new self();
 	}
 
 

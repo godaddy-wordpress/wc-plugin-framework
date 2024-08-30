@@ -30,23 +30,23 @@ class SV_WC_Framework_Test_Plugin_Loader {
 
 
 	/** minimum PHP version required by this plugin */
-	const MINIMUM_PHP_VERSION = '5.6.0';
+	public const MINIMUM_PHP_VERSION = '7.4.0';
 
 	/** minimum WordPress version required by this plugin */
-	const MINIMUM_WP_VERSION = '4.4';
+	public const MINIMUM_WP_VERSION = '5.6';
 
 	/** minimum WooCommerce version required by this plugin */
-	const MINIMUM_WC_VERSION = '3.0.9';
+	public const MINIMUM_WC_VERSION = '3.0.9';
 
 	/** SkyVerge plugin framework version used by this plugin */
-	const FRAMEWORK_VERSION = '5.14.0-dev.1';
+	public const FRAMEWORK_VERSION = '5.14.0';
 
 	/** the plugin name, for displaying notices */
 	const PLUGIN_NAME = 'WooCommerce Framework Test Plugin';
 
 
 	/** @var SV_WC_Framework_Test_Plugin_Loader single instance of this class */
-	protected static $instance;
+	protected static ?SV_WC_Framework_Test_Plugin_Loader $instance = null;
 
 	/** @var array the admin notices to add */
 	protected $notices = array();
@@ -357,15 +357,11 @@ class SV_WC_Framework_Test_Plugin_Loader {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return \SV_WC_Framework_Test_Plugin_Loader
+	 * @return SV_WC_Framework_Test_Plugin_Loader
 	 */
-	public static function instance() {
-
-		if ( null === self::$instance ) {
-			self::$instance = new self();
-		}
-
-		return self::$instance;
+	public static function instance() : SV_WC_Framework_Test_Plugin_Loader
+	{
+		return self::$instance ??= new self();
 	}
 
 
