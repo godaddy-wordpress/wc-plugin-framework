@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_15_0;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_15_0\Helpers\NumberHelper;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_0\\SV_WC_Helper' ) ) :
@@ -497,13 +499,14 @@ class SV_WC_Helper {
 	 *
 	 * Commonly used for payment gateways which require amounts in this format.
 	 *
+	 * @deprecated 5.15.0 - use {@see NumberHelper::format()} instead
+	 *
 	 * @since 3.0.0
 	 * @param float $number
 	 * @return string
 	 */
 	public static function number_format( $number ) {
-
-		return number_format( (float) $number, 2, '.', '' );
+		return NumberHelper::format($number);
 	}
 
 
