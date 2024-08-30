@@ -22,13 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_13_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_14_0;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Blocks\Blocks_Handler;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_0\\SV_WC_Payment_Gateway_Direct' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\SV_WC_Payment_Gateway_Direct' ) ) :
 
 
 /**
@@ -937,7 +937,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	public function add_payment_method() {
 
-		assert( $this->supports_add_payment_method() );
+		$this->get_plugin()->assert( $this->supports_add_payment_method() );
 
 		$order = $this->get_order_for_add_payment_method();
 

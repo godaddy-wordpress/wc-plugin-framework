@@ -22,12 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_13_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_14_0\Handlers;
+
+use SkyVerge\WooCommerce\PluginFramework\v5_14_0\SV_WC_Plugin_Compatibility;
 
 defined( 'ABSPATH' ) or exit;
-
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_13_0\\Country_Helper' ) ) :
-
 
 /**
  * SkyVerge Country Helper Class
@@ -42,7 +41,7 @@ class Country_Helper {
 
 
 	/** @var array ISO 3166-alpha2 => ISO 3166-alpha3  */
-	static public $alpha3 = [
+	static public array $alpha3 = [
 		'AF' => 'AFG', 'AL' => 'ALB', 'DZ' => 'DZA', 'AD' => 'AND', 'AO' => 'AGO',
 		'AG' => 'ATG', 'AR' => 'ARG', 'AM' => 'ARM', 'AU' => 'AUS', 'AT' => 'AUT',
 		'AZ' => 'AZE', 'BS' => 'BHS', 'BH' => 'BHR', 'BD' => 'BGD', 'BB' => 'BRB',
@@ -95,7 +94,7 @@ class Country_Helper {
 	];
 
 	/** @var array ISO 3166-alpha2 => ISO 3166-numeric  */
-	static public $numeric = [
+	static public array $numeric = [
 		'AF' => '004', 'AX' => '248', 'AL' => '008', 'DZ' => '012', 'AS' => '016',
 		'AD' => '020', 'AO' => '024', 'AI' => '660', 'AQ' => '010', 'AG' => '028',
 		'AR' => '032', 'AM' => '051', 'AW' => '533', 'AU' => '036', 'AT' => '040',
@@ -149,7 +148,7 @@ class Country_Helper {
 	];
 
 	/** @var array ISO 3166-alpha2 => phone calling code(s) */
-	static public $calling_codes = [
+	static public array $calling_codes = [
 		'BD' => '+880',
 		'BE' => '+32',
 		'BF' => '+226',
@@ -411,7 +410,7 @@ class Country_Helper {
 
 
 	/** @var array flipped calling codes */
-	protected static $flipped_calling_codes;
+	protected static array $flipped_calling_codes;
 
 
 	/**
@@ -430,7 +429,7 @@ class Country_Helper {
 
 		$countries = 3 === strlen( $code ) ? array_flip( self::$alpha3 ) : self::$alpha3;
 
-		return isset( $countries[ $code ] ) ? $countries[ $code ] : $code;
+		return $countries[$code] ?? $code;
 	}
 
 
@@ -444,7 +443,7 @@ class Country_Helper {
 	 */
 	public static function alpha2_to_alpha3( $alpha2_code ) {
 
-		return isset( self::$alpha3[ $alpha2_code ] ) ? self::$alpha3[ $alpha2_code ] : '';
+		return self::$alpha3[$alpha2_code] ?? '';
 	}
 
 
@@ -458,7 +457,7 @@ class Country_Helper {
 	 */
 	public static function alpha2_to_numeric( $alpha2_code ) {
 
-		return isset( self::$numeric[ $alpha2_code ] ) ? self::$numeric[ $alpha2_code ] : '';
+		return self::$numeric[$alpha2_code] ?? '';
 	}
 
 
@@ -481,7 +480,7 @@ class Country_Helper {
 
 		} else {
 
-			$calling_code = isset( self::$calling_codes[ $alpha2_code ] ) ? self::$calling_codes[ $alpha2_code ] : '';
+			$calling_code = self::$calling_codes[$alpha2_code] ?? '';
 
 			// we can't really know _which_ code is to be used, so use the first
 			$calling_code = is_array( $calling_code ) ? $calling_code[0] : $calling_code;
@@ -503,7 +502,7 @@ class Country_Helper {
 
 		$countries = array_flip( self::$alpha3 );
 
-		return isset( $countries[ $alpha3_code ] ) ? $countries[ $alpha3_code ] : '';
+		return $countries[$alpha3_code] ?? '';
 	}
 
 
@@ -545,7 +544,7 @@ class Country_Helper {
 
 		$codes = array_flip( self::$numeric );
 
-		return isset( $codes[ $numeric ] ) ? $codes[ $numeric ] : '';
+		return $codes[$numeric] ?? '';
 	}
 
 
@@ -587,7 +586,7 @@ class Country_Helper {
 
 		$flipped_calling_codes = self::get_flipped_calling_codes();
 
-		return isset( $flipped_calling_codes[ $calling_code ] ) ? $flipped_calling_codes[ $calling_code ] : '';
+		return $flipped_calling_codes[$calling_code] ?? '';
 	}
 
 
@@ -657,6 +656,3 @@ class Country_Helper {
 
 
 }
-
-
-endif;

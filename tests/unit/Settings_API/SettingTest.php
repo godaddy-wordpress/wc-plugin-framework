@@ -1,23 +1,15 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_13_0\Tests\Unit\Settings_API;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_14_0\Tests\Unit\Settings_API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Control;
-use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Setting;
-use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Settings_API\Control;
+use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Settings_API\Setting;
+use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Tests\TestCase;
 
 class SettingTest extends TestCase
 {
-	public function setUp() : void
-	{
-		parent::setUp();
-
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/Settings_API/Abstract_Settings.php';
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/Settings_API/Setting.php';
-	}
-
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Setting::set_id()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\Settings_API\Setting::set_id()
 	 *
 	 * @param string $input input ID
 	 * @param string $expected expected return ID
@@ -33,7 +25,7 @@ class SettingTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Setting::set_type()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\Settings_API\Setting::set_type()
 	 *
 	 * @param string $input input type
 	 * @param string $expected expected return type
@@ -50,7 +42,7 @@ class SettingTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Setting::set_name()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\Settings_API\Setting::set_name()
 	 *
 	 * @param string $input input name
 	 * @param string $expected expected return name
@@ -67,7 +59,7 @@ class SettingTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Setting::set_description()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\Settings_API\Setting::set_description()
 	 *
 	 * @param string $input input description
 	 * @param string $expected expected return description
@@ -85,7 +77,7 @@ class SettingTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Setting::set_is_multi()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\Settings_API\Setting::set_is_multi()
 	 *
 	 * @param bool $input input value
 	 * @param bool $expected expected return value
@@ -102,7 +94,7 @@ class SettingTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Setting::set_options()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\Settings_API\Setting::set_options()
 	 *
 	 * @param array $input input options
 	 * @param array $expected expected return options
@@ -119,7 +111,7 @@ class SettingTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Setting::set_default()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\Settings_API\Setting::set_default()
 	 *
 	 * @param int|float|string|bool|array $input input default value
 	 * @param int|float|string|bool|array $expected expected return default value
@@ -136,7 +128,7 @@ class SettingTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Setting::set_value()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\Settings_API\Setting::set_value()
 	 *
 	 * @param int|float|string|bool|array $input input value
 	 * @param int|float|string|bool|array $expected expected return value
@@ -153,7 +145,7 @@ class SettingTest extends TestCase
 
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\Settings_API\Setting::set_control()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\Settings_API\Setting::set_control()
 	 *
 	 * @param Control $input input control
 	 * @param Control $expected expected return control
@@ -303,8 +295,6 @@ class SettingTest extends TestCase
 	 */
 	public function provider_set_control() : array
 	{
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/Settings_API/Control.php';
-
 		$control = new Control();
 
 		return [

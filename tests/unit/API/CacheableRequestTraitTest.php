@@ -1,9 +1,9 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_13_0\Tests\Unit\API;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_14_0\Tests\Unit\API;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_13_0\API\Traits\Cacheable_Request_Trait;
-use SkyVerge\WooCommerce\PluginFramework\v5_13_0\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v5_14_0\API\Traits\Cacheable_Request_Trait;
+use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Tests\TestCase;
 
 class CacheableRequestTraitTest extends TestCase
 {
@@ -13,11 +13,10 @@ class CacheableRequestTraitTest extends TestCase
 
 		require_once PLUGIN_ROOT_DIR.'/woocommerce/api/interface-sv-wc-api-request.php';
 		require_once PLUGIN_ROOT_DIR.'/woocommerce/api/abstract-sv-wc-api-json-request.php';
-		require_once PLUGIN_ROOT_DIR.'/woocommerce/api/traits/Cacheable_Request_Trait.php';
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\API\Traits\Cacheable_Request_Trait::get_cache_lifetime()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\API\Traits\Cacheable_Request_Trait::get_cache_lifetime()
 	 */
 	public function test_get_cache_lifetime() : void
 	{
@@ -27,7 +26,7 @@ class CacheableRequestTraitTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\API\Traits\Cacheable_Request_Trait::set_cache_lifetime()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\API\Traits\Cacheable_Request_Trait::set_cache_lifetime()
 	 */
 	public function test_set_cache_lifetime() : void
 	{
@@ -38,7 +37,7 @@ class CacheableRequestTraitTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\API\Traits\Cacheable_Request_Trait::should_refresh()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\API\Traits\Cacheable_Request_Trait::should_refresh()
 	 */
 	public function test_should_refresh() : void
 	{
@@ -48,7 +47,7 @@ class CacheableRequestTraitTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\API\Traits\Cacheable_Request_Trait::set_force_refresh()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\API\Traits\Cacheable_Request_Trait::set_force_refresh()
 	 */
 	public function test_set_force_refresh() : void
 	{
@@ -59,7 +58,7 @@ class CacheableRequestTraitTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\API\Traits\Cacheable_Request_Trait::should_refresh()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\API\Traits\Cacheable_Request_Trait::should_refresh()
 	 */
 	public function test_should_cache() : void
 	{
@@ -69,7 +68,7 @@ class CacheableRequestTraitTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\API\Traits\Cacheable_Request_Trait::set_should_cache()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\API\Traits\Cacheable_Request_Trait::set_should_cache()
 	 */
 	public function test_set_should_cache() : void
 	{
@@ -80,7 +79,7 @@ class CacheableRequestTraitTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_13_0\API\Traits\Cacheable_Request_Trait::bypass_cache()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_14_0\API\Traits\Cacheable_Request_Trait::bypass_cache()
 	 */
 	public function bypass_cache() : void
 	{
