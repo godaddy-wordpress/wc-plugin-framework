@@ -136,4 +136,24 @@ class NumberHelper
 
 		return is_numeric($number) ? (float) $number : 0.0;
 	}
+
+	/**
+	 * Formats a given price for front-end display. This is the same as {@see wc_price()} but without the surrounding
+	 * HTML markup.
+	 *
+	 * @since 5.15.0
+	 *
+	 * @param int|string|float $price
+	 * @return string
+	 */
+	public static function wcPrice($price) : string
+	{
+		$price = static::convertNumberToFloatValue($price);
+
+		if (0.00 === $price) {
+			return __('Free!', 'woocommerce-plugin-framework');
+		}
+
+		return strip_tags(wc_price($price));
+	}
 }
