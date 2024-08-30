@@ -7,9 +7,6 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use SkyVerge\WooCommerce\PluginFramework\v5_14_0\Blocks\Blocks_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_14_0\SV_WC_Payment_Gateway_Plugin;
 
-
-use function Patchwork\Redefinitions\LanguageConstructs\_require_once;
-
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_14_0\\Payment_Gateway\Blocks\\Gateway_Blocks_Handler' ) ) :
 
 /**
@@ -58,8 +55,6 @@ class Gateway_Blocks_Handler extends Blocks_Handler {
 
 			/** @var SV_WC_Payment_Gateway_Plugin $plugin */
 			$plugin = $this->plugin;
-
-			require_once( $plugin->get_payment_gateway_framework_path() . '/Blocks/Gateway_Checkout_Block_Integration.php' );
 
 			foreach ( $plugin->get_gateways() as $gateway ) {
 

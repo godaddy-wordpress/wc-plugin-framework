@@ -754,11 +754,6 @@ class SV_WC_Payment_Gateway_Apple_Pay extends Payment_Gateway\External_Checkout\
 	public function get_api() {
 
 		if ( ! $this->api instanceof SV_WC_Payment_Gateway_Apple_Pay_API ) {
-
-			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/External_Checkout/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api.php');
-			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/External_Checkout/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api-request.php');
-			require_once( $this->get_plugin()->get_payment_gateway_framework_path() . '/External_Checkout/apple-pay/api/class-sv-wc-payment-gateway-apple-pay-api-response.php');
-
 			$this->api = new SV_WC_Payment_Gateway_Apple_Pay_API( $this->get_processing_gateway() );
 		}
 
