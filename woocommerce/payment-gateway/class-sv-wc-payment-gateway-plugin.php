@@ -1191,7 +1191,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_gateway_class_names() {
 
-		assert( ! empty( $this->gateways ) );
+		$this->assert( ! empty( $this->gateways ) );
 
 		$gateway_class_names = array();
 
@@ -1213,7 +1213,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_gateway_class_name( $gateway_id ) {
 
-		assert( isset( $this->gateways[ $gateway_id ]['gateway_class_name'] ) );
+		$this->assert( isset( $this->gateways[ $gateway_id ]['gateway_class_name'] ) );
 
 		return $this->gateways[ $gateway_id ]['gateway_class_name'];
 	}
@@ -1229,7 +1229,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_gateways() {
 
-		assert( ! empty( $this->gateways ) );
+		$this->assert( ! empty( $this->gateways ) );
 
 		$gateways = array();
 
@@ -1303,7 +1303,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 */
 	public function get_gateway_ids() {
 
-		assert( ! empty( $this->gateways ) );
+		$this->assert( ! empty( $this->gateways ) );
 
 		return array_keys( $this->gateways );
 	}
