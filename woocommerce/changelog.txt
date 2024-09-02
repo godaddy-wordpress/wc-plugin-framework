@@ -1,6 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2024.nn.nn - version 5.14.0
+2024.09.02 - version 5.15.0
+* Feature - Add new `NumberHelper` class for number formatting operations
+
+2024.08.30 - version 5.14.0
 * Feature - Add a trait to get a singular instance of a class: `IsSingletonTrait`
 * Feature - Add a trait to get an instance (non-singular) of a class: `CanGetNewInstanceTrait`
 * Feature - Add a trait to convert an object into an array: `CanConvertToArrayTrait`

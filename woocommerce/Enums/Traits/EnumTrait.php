@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_14_0\Enums\Traits;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_0\Enums\Traits;
 
 use ReflectionClass;
 
