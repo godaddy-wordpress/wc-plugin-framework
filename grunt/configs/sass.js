@@ -1,15 +1,15 @@
 /* jshint node:true */
-module.exports = function( grunt ) {
+module.exports = function () {
 	'use strict';
 
-	var config = {};
+	let config = {};
 
 	// Compile all .scss files.
 	config.sass = {
 		compile: {
 			options: {
-				style: 'compressed',
-				sourcemap: true
+				'style': 'compressed',
+				'source-map': true
 			},
 			files: [
 				{
