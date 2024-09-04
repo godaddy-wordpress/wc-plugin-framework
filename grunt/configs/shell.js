@@ -3,7 +3,7 @@ module.exports = function () {
 	'use strict';
 
 	let headers = {
-		"Report-Msgid-Bugs-To": "https://wordpress.org/support/plugin/wc-plugin-framework",
+		"Report-Msgid-Bugs-To": "https://github.com/godaddy-wordpress/wc-plugin-framework/issues",
 		"Last-Translator": "plugins@godaddy.com",
 		"Language-Team": "plugins@godaddy.com",
 		"Project-Id-Version": "SkyVerge WooCommerce Plugin Framework"
