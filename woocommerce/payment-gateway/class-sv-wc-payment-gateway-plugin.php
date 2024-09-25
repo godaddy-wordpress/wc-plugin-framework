@@ -1364,13 +1364,13 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @return bool true if the WooCommerce Subscriptions plugin is active, false if not active
 	 */
-	public function is_subscriptions_active() {
+	public function is_subscriptions_active() : bool {
 
 		if ( is_bool( $this->subscriptions_active ) ) {
 			return $this->subscriptions_active;
 		}
 
-		return $this->subscriptions_active = $this->is_plugin_active( 'woocommerce-subscriptions.php' );
+		return $this->subscriptions_active = class_exists( 'WC_Subscriptions_Core_Plugin' ) || $this->is_plugin_active( 'woocommerce-subscriptions.php' );
 	}
 
 

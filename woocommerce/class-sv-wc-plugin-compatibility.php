@@ -322,9 +322,24 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * @return string|null WooCommerce Subscriptions version number or null if not found
 	 */
-	protected static function get_wc_subscriptions_version() {
+	protected static function get_wc_subscriptions_version() : ?string {
 
-		return class_exists( 'WC_Subscriptions' ) && ! empty( \WC_Subscriptions::$version ) ? \WC_Subscriptions::$version : null;
+		if ( class_exists( 'WC_Subscriptions' ) && ! empty( \WC_Subscriptions::$version ) ) {
+			return \WC_Subscriptions::$version;
+		}
+
+		if ( class_exists( 'WC_Subscriptions_Core_Plugin' ) ) {
+			 if ( is_callable( [ \WC_Subscriptions_Core_Plugin::class, 'instance' ] ) ) {
+
+				 $instance = \WC_Subscriptions_Core_Plugin::instance();
+
+				 if ( is_object( $instance ) && method_exists( $instance, 'get_library_version' ) ) {
+					 return $instance->get_library_version();
+				 }
+			 }
+		}
+
+		return null;
 	}
 
 
