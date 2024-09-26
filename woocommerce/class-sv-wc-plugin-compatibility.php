@@ -328,9 +328,7 @@ class SV_WC_Plugin_Compatibility {
 
 		if ( class_exists( 'WC_Subscriptions' ) && ! empty( \WC_Subscriptions::$version ) ) {
 			$version = \WC_Subscriptions::$version;
-		}
-
-		if ( ! $version && class_exists( 'WC_Subscriptions_Core_Plugin' ) ) {
+		} elseif ( class_exists( 'WC_Subscriptions_Core_Plugin' ) ) {
 			 if ( is_callable( [ \WC_Subscriptions_Core_Plugin::class, 'instance' ] ) ) {
 
 				 $instance = \WC_Subscriptions_Core_Plugin::instance();
