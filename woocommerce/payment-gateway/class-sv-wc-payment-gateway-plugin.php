@@ -1370,8 +1370,6 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 			return $this->subscriptions_active;
 		}
 
-		$this->subscriptions_active = class_exists( 'WC_Subscriptions_Core_Plugin' ) || $this->is_plugin_active( 'woocommerce-subscriptions.php' );
-
 		/**
 		 * Filters whether WooCommerce Subscriptions is active.
 		 *
@@ -1379,7 +1377,9 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		 *
 		 * @param bool $subscriptions_active
 		 */
-		return (bool) apply_filters( 'sv_wc_payment_gateway_is_subscriptions_active', $this->subscriptions_active );
+		$this->subscriptions_active = (bool) apply_filters( 'sv_wc_payment_gateway_is_subscriptions_active',  class_exists( 'WC_Subscriptions_Core_Plugin' ) || $this->is_plugin_active( 'woocommerce-subscriptions.php' ) );
+
+		return $this->subscriptions_active;
 	}
 
 
