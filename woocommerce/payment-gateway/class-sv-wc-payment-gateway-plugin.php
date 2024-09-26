@@ -1379,7 +1379,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 		 *
 		 * @param bool $subscriptions_active
 		 */
-		return apply_filters( 'sv_wc_payment_gateway_is_subscriptions_active', $this->subscriptions_active );
+		return (bool) apply_filters( 'sv_wc_payment_gateway_is_subscriptions_active', $this->subscriptions_active );
 	}
 
 
