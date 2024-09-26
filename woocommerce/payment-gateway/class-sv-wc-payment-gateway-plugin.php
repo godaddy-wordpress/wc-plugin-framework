@@ -1358,19 +1358,28 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 
 	/**
-	 * Checks is WooCommerce Subscriptions is active
+	 * Checks is WooCommerce Subscriptions is active as a plugin or as a core library
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return bool true if the WooCommerce Subscriptions plugin is active, false if not active
 	 */
-	public function is_subscriptions_active() {
+	public function is_subscriptions_active() : bool {
 
 		if ( is_bool( $this->subscriptions_active ) ) {
 			return $this->subscriptions_active;
 		}
 
-		return $this->subscriptions_active = $this->is_plugin_active( 'woocommerce-subscriptions.php' );
+		/**
+		 * Filters whether WooCommerce Subscriptions is active.
+		 *
+		 * This future proofs the plugin for when WooCommerce Subscriptions is included as a core library or third party plugin embedding the core library.
+		 *
+		 * @param bool $subscriptions_active
+		 */
+		$this->subscriptions_active = (bool) apply_filters( 'sv_wc_payment_gateway_is_subscriptions_active',  class_exists( 'WC_Subscriptions_Core_Plugin' ) || $this->is_plugin_active( 'woocommerce-subscriptions.php' ) );
+
+		return $this->subscriptions_active;
 	}
 
 

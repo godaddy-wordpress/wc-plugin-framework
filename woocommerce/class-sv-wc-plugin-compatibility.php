@@ -322,9 +322,31 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * @return string|null WooCommerce Subscriptions version number or null if not found
 	 */
-	protected static function get_wc_subscriptions_version() {
+	protected static function get_wc_subscriptions_version() : ?string {
 
-		return class_exists( 'WC_Subscriptions' ) && ! empty( \WC_Subscriptions::$version ) ? \WC_Subscriptions::$version : null;
+		$version = null;
+
+		if ( class_exists( 'WC_Subscriptions' ) && ! empty( \WC_Subscriptions::$version ) ) {
+			$version = \WC_Subscriptions::$version;
+		} elseif ( class_exists( 'WC_Subscriptions_Core_Plugin' ) ) {
+			 if ( is_callable( [ \WC_Subscriptions_Core_Plugin::class, 'instance' ] ) ) {
+
+				 $instance = \WC_Subscriptions_Core_Plugin::instance();
+
+				 if ( is_object( $instance ) && method_exists( $instance, 'get_library_version' ) ) {
+					 $version = $instance->get_library_version();
+				 }
+			 }
+		}
+
+		/**
+		 * Filters the WooCommerce Subscriptions version when fetched by the framework.
+		 *
+		 * This accounts for cases where the version is not found by the framework as Subscriptions may be embedded as a core library by third party code.
+		 *
+		 * @param string|null $version WooCommerce Subscriptions version
+		 */
+		return apply_filters( 'sv_wc_plugin_framework_wc_subscriptions_version', $version );
 	}
 
 
