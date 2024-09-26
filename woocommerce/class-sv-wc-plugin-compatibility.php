@@ -346,9 +346,9 @@ class SV_WC_Plugin_Compatibility {
 		 *
 		 * This accounts for cases where the version is not found by the framework as Subscriptions may be embedded as a core library by third party code.
 		 *
-		 * @param string $version WooCommerce Subscriptions version
+		 * @param string|null $version WooCommerce Subscriptions version
 		 */
-		return (string) apply_filters( 'sv_wc_plugin_framework_wc_subscriptions_version', $version );
+		return apply_filters( 'sv_wc_plugin_framework_wc_subscriptions_version', $version );
 	}
 
 
