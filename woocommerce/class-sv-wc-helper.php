@@ -1048,8 +1048,7 @@ class SV_WC_Helper {
 	public static function is_wc_navigation_enabled() : bool
 	{
 		if (SV_WC_Plugin_Compatibility::is_wc_version_gte('9.3')) {
-			error_log('The Enhanced navigation feature has been deprecated since WooCommerce 9.3 with no alternative. Navigation classes will be removed in WooCommerce 9.4');
-
+			self::enhancedNavigationDeprecationNotice();
 			return false;
 		}
 
@@ -1058,6 +1057,11 @@ class SV_WC_Helper {
 			is_callable([\Automattic\WooCommerce\Admin\Features\Navigation\Menu::class, 'add_plugin_category']) &&
 			is_callable([\Automattic\WooCommerce\Admin\Features\Features::class, 'is_enabled']) &&
 			\Automattic\WooCommerce\Admin\Features\Features::is_enabled('navigation');
+	}
+
+	protected static function enhancedNavigationDeprecationNotice() : void
+	{
+		error_log('The Enhanced navigation feature has been deprecated since WooCommerce 9.3 with no alternative. Navigation classes will be removed in WooCommerce 9.4');
 	}
 
 
