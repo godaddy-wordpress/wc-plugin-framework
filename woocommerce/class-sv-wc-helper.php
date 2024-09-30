@@ -1052,6 +1052,11 @@ class SV_WC_Helper {
 			return false;
 		}
 
+		return self::isEnhancedNavigationFeatureEnabled();
+	}
+
+	protected static function isEnhancedNavigationFeatureEnabled() : bool
+	{
 		return is_callable([\Automattic\WooCommerce\Admin\Features\Navigation\Screen::class, 'register_post_type']) &&
 			is_callable([\Automattic\WooCommerce\Admin\Features\Navigation\Menu::class, 'add_plugin_item']) &&
 			is_callable([\Automattic\WooCommerce\Admin\Features\Navigation\Menu::class, 'add_plugin_category']) &&
