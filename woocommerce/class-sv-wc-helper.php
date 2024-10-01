@@ -1071,6 +1071,13 @@ class SV_WC_Helper {
 			\Automattic\WooCommerce\Admin\Features\Features::is_enabled('navigation');
 	}
 
+	/**
+	 * Logs a notice for the Enhanced Navigation feature being deprecated.
+	 *
+	 * @since 5.15.1
+	 *
+	 * @return void
+	 */
 	protected static function enhancedNavigationDeprecationNotice() : void
 	{
 		error_log('The Enhanced navigation feature has been deprecated since WooCommerce 9.3 with no alternative. Navigation classes will be removed in WooCommerce 9.4');
