@@ -191,8 +191,8 @@ class SV_WC_Plugin_Compatibility {
 	 *
 	 * @return bool
 	 */
-	public static function is_enhanced_admin_available() {
-
+	public static function is_enhanced_admin_available() : bool
+	{
 		return self::is_wc_version_gte( '4.0' ) && function_exists( 'wc_admin_url' );
 	}
 
