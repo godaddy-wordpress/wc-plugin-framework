@@ -1030,9 +1030,9 @@ class SV_WC_Helper {
 	 *
 	 * @return bool
 	 */
-	public static function is_enhanced_admin_screen() {
-
-		return is_admin() && SV_WC_Plugin_Compatibility::is_enhanced_admin_available() && ( \Automattic\WooCommerce\Admin\Loader::is_admin_page() || \Automattic\WooCommerce\Admin\Loader::is_embed_page() );
+	public static function is_enhanced_admin_screen() : bool
+	{
+		return is_admin() && SV_WC_Plugin_Compatibility::is_enhanced_admin_available() && (\Automattic\WooCommerce\Admin\PageController::is_admin_page() || \Automattic\WooCommerce\Admin\PageController::is_embed_page());
 	}
 
 
@@ -1041,16 +1041,46 @@ class SV_WC_Helper {
 	 *
 	 * @since 5.10.6
 	 *
+	 * @deprecated with no alternatives
+	 *
 	 * @return bool
 	 */
-	public static function is_wc_navigation_enabled() {
+	public static function is_wc_navigation_enabled() : bool
+	{
+		if (SV_WC_Plugin_Compatibility::is_wc_version_gte('9.3')) {
+			self::enhancedNavigationDeprecationNotice();
+			return false;
+		}
 
-		return
-			is_callable( [ \Automattic\WooCommerce\Admin\Features\Navigation\Screen::class, 'register_post_type' ] ) &&
-			is_callable( [ \Automattic\WooCommerce\Admin\Features\Navigation\Menu::class, 'add_plugin_item' ] ) &&
-			is_callable( [ \Automattic\WooCommerce\Admin\Features\Navigation\Menu::class, 'add_plugin_category' ] ) &&
-			is_callable( [ \Automattic\WooCommerce\Admin\Features\Features::class, 'is_enabled' ] ) &&
-			\Automattic\WooCommerce\Admin\Features\Features::is_enabled( 'navigation' );
+		return self::isEnhancedNavigationFeatureEnabled();
+	}
+
+	/**
+	 * Determines whether Woo's Enhanced Eavigation feature is enabled.
+	 *
+	 * @since 5.15.1
+	 *
+	 * @return bool
+	 */	 
+	protected static function isEnhancedNavigationFeatureEnabled() : bool
+	{
+		return is_callable([\Automattic\WooCommerce\Admin\Features\Navigation\Screen::class, 'register_post_type']) &&
+			is_callable([\Automattic\WooCommerce\Admin\Features\Navigation\Menu::class, 'add_plugin_item']) &&
+			is_callable([\Automattic\WooCommerce\Admin\Features\Navigation\Menu::class, 'add_plugin_category']) &&
+			is_callable([\Automattic\WooCommerce\Admin\Features\Features::class, 'is_enabled']) &&
+			\Automattic\WooCommerce\Admin\Features\Features::is_enabled('navigation');
+	}
+
+	/**
+	 * Logs a notice for the Enhanced Navigation feature being deprecated.
+	 *
+	 * @since 5.15.1
+	 *
+	 * @return void
+	 */
+	protected static function enhancedNavigationDeprecationNotice() : void
+	{
+		error_log('The Enhanced navigation feature has been deprecated since WooCommerce 9.3 with no alternative. Navigation classes will be removed in WooCommerce 9.4');
 	}
 
 
