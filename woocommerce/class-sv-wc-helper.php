@@ -1055,6 +1055,13 @@ class SV_WC_Helper {
 		return self::isEnhancedNavigationFeatureEnabled();
 	}
 
+	/**
+	 * Determines whether Woo's Enhanced Eavigation feature is enabled.
+	 *
+	 * @since 5.15.1
+	 *
+	 * @return bool
+	 */	 
 	protected static function isEnhancedNavigationFeatureEnabled() : bool
 	{
 		return is_callable([\Automattic\WooCommerce\Admin\Features\Navigation\Screen::class, 'register_post_type']) &&
