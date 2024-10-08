@@ -2,6 +2,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_15_0\Tests\Unit;
 
+use Generator;
 use Mockery;
 use ReflectionException;
 use SkyVerge\WooCommerce\PluginFramework\v5_15_0\SV_WC_Plugin;
@@ -84,5 +85,49 @@ class PluginTest extends TestCase
 		$this->assertNull(
 			$this->invokeInaccessibleMethod($this->testObject, 'assert', false)
 		);
+	}
+
+	/**
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_0\SV_WC_Plugin::maybeHandleBackwardsCompatibleArgs()
+	 * @dataProvider providerCanMaybeHandleBackwardsCompatibleArgs
+	 * @throws ReflectionException
+	 */
+	public function testCanMaybeHandleBackwardsCompatibleArgs(array $inputArgs, array $outputArgs): void
+	{
+		$this->assertSame(
+			$outputArgs,
+			$this->invokeInaccessibleMethod($this->testObject, 'maybeHandleBackwardsCompatibleArgs', $inputArgs)
+		);
+	}
+
+	/** @see testCanMaybeHandleBackwardsCompatibleArgs */
+	public function providerCanMaybeHandleBackwardsCompatibleArgs(): Generator
+	{
+		yield 'no HPOS args' => [
+			'inputArgs' => [],
+			'outputArgs' => [],
+		];
+
+		yield 'old HPOS args, no support' => [
+			'inputArgs' => [
+				'supports_hpos' => false,
+			],
+			'outputArgs' => [
+				'supported_features' => [
+					'hpos'   => false,
+				],
+			],
+		];
+
+		yield 'old HPOS args, has support' => [
+			'inputArgs' => [
+				'supports_hpos' => true,
+			],
+			'outputArgs' => [
+				'supported_features' => [
+					'hpos'   => true,
+				],
+			],
+		];
 	}
 }
