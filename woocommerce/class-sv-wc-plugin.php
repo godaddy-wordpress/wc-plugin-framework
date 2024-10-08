@@ -140,7 +140,7 @@ abstract class SV_WC_Plugin {
 		$this->id      = $id;
 		$this->version = $version;
 
-		$args = wp_parse_args( $args, [
+		$args = wp_parse_args( $this->maybeHandleBackwardsCompatibleArgs($args), [
 			'text_domain'        => '',
 			'dependencies'       => [],
 			'supported_features' => [
@@ -181,6 +181,26 @@ abstract class SV_WC_Plugin {
 
 		// add the action & filter hooks
 		$this->add_hooks();
+	}
+
+	/**
+	 * Provides backward compatibility for arguments, where we can. This handles any format changes in the $args array.
+	 *
+	 * @param array $args
+	 * @return array
+	 */
+	private function maybeHandleBackwardsCompatibleArgs(array $args): array
+	{
+		// handle format change for HPOS declaration
+		if (
+			array_key_exists('supports_hpos', $args) &&
+			$args['supports_hpos'] === true &&
+			! isset($args['supported_features']['hpos'])
+		) {
+			$args['supported_features']['hpos'] = true;
+		}
+
+		return $args;
 	}
 
 
