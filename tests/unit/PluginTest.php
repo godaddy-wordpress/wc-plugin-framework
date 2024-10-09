@@ -104,28 +104,42 @@ class PluginTest extends TestCase
 	public function providerCanMaybeHandleBackwardsCompatibleArgs(): Generator
 	{
 		yield 'no HPOS args' => [
-			'inputArgs' => [],
+			'inputArgs'  => [],
 			'outputArgs' => [],
 		];
 
 		yield 'old HPOS args, no support' => [
-			'inputArgs' => [
+			'inputArgs'  => [
 				'supports_hpos' => false,
 			],
 			'outputArgs' => [
 				'supported_features' => [
-					'hpos'   => false,
+					'hpos' => false,
 				],
 			],
 		];
 
 		yield 'old HPOS args, has support' => [
-			'inputArgs' => [
+			'inputArgs'  => [
 				'supports_hpos' => true,
 			],
 			'outputArgs' => [
 				'supported_features' => [
-					'hpos'   => true,
+					'hpos' => true,
+				],
+			],
+		];
+
+		yield 'old HPOS args and new HPOS args' => [
+			'inputArgs'  => [
+				'supports_hpos'      => true,
+				'supported_features' => [
+					'hpos' => false,
+				],
+			],
+			'outputArgs' => [
+				'supported_features' => [
+					'hpos' => false,
 				],
 			],
 		];

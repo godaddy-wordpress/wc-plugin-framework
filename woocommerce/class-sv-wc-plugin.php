@@ -192,11 +192,15 @@ abstract class SV_WC_Plugin {
 	protected function maybeHandleBackwardsCompatibleArgs(array $args): array
 	{
 		// handle format change for HPOS declaration
-		if (
-			array_key_exists('supports_hpos', $args) &&
-			! isset($args['supported_features']['hpos'])
-		) {
-			$args['supported_features']['hpos'] = $args['supports_hpos'];
+		if (array_key_exists('supports_hpos', $args)) {
+			// make sure `supported_features` initialized
+			if (! array_key_exists('supported_features', $args)) {
+				$args['supported_features'] = [];
+			}
+
+			// Assign `supported_features.hpos` value if not already assigned
+			$args['supported_features']['hpos'] = $args['supported_features']['hpos'] ?? $args['supports_hpos'];
+
 			unset($args['supports_hpos']);
 		}
 
