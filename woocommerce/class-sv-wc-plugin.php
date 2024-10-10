@@ -22,18 +22,18 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_1;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_0\Handlers\Country_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_0\Payment_Gateway\PaymentFormContextChecker;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_1\Handlers\Country_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_1\Payment_Gateway\PaymentFormContextChecker;
 use stdClass;
 use Throwable;
 use WC_Logger_Interface;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_0\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_1\\SV_WC_Plugin' ) ) :
 
 
 /**
@@ -51,7 +51,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	const VERSION = '5.15.0';
+	public const VERSION = '5.15.1';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -486,7 +486,7 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function setupClassAliases() : void
 	{
-		$countryHelperAlias = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_0\\Country_Helper';
+		$countryHelperAlias = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_1\\Country_Helper';
 		if (! class_exists($countryHelperAlias)) {
 			class_alias(
 				Country_Helper::class,
@@ -494,7 +494,7 @@ abstract class SV_WC_Plugin {
 			);
 		}
 
-		$paymentFormContextCheckerAlias = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_0\\PaymentFormContextChecker';
+		$paymentFormContextCheckerAlias = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_1\\PaymentFormContextChecker';
 		if (! class_exists($paymentFormContextCheckerAlias)) {
 			class_alias(
 				PaymentFormContextChecker::class,

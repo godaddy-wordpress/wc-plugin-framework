@@ -22,13 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_1;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_0\Helpers\NumberHelper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_1\Helpers\NumberHelper;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_0\\SV_WC_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_1\\SV_WC_Helper' ) ) :
 
 
 /**
@@ -1061,7 +1061,7 @@ class SV_WC_Helper {
 	 * @since 5.15.1
 	 *
 	 * @return bool
-	 */	 
+	 */
 	protected static function isEnhancedNavigationFeatureEnabled() : bool
 	{
 		return is_callable([\Automattic\WooCommerce\Admin\Features\Navigation\Screen::class, 'register_post_type']) &&
