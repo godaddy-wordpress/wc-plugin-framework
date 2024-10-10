@@ -3,14 +3,14 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_14_0\Tests\Unit;
 
 use ReflectionException;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_0\SV_WC_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_0\SV_WC_Plugin_Compatibility;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_0\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Plugin_Compatibility;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_1\Tests\TestCase;
 
 class HelperTest extends TestCase
 {
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_0\SV_WC_Helper::is_wc_navigation_enabled()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Helper::is_wc_navigation_enabled()
 	 *
 	 * @throws ReflectionException
 	 */
@@ -32,7 +32,7 @@ class HelperTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_0\SV_WC_Helper::is_wc_navigation_enabled()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Helper::is_wc_navigation_enabled()
 	 *
 	 * @throws ReflectionException
 	 */

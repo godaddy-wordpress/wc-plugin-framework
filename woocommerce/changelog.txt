@@ -1,5 +1,11 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2024.10.10 - version 5.15.1
+* Fix - Fixing the SASS and POT file building processes
+* Fix - Account for Subscriptions Core library when checking for Subscriptions
+* Misc - Deprecate Enhanced navigation feature integration
+* Misc - Handle backwards compatibility for old HPOS compatibility format
+
 2024.09.02 - version 5.15.0
 * Feature - Add new `NumberHelper` class for number formatting operations
 
