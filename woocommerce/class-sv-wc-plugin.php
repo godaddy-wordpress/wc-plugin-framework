@@ -57,55 +57,55 @@ abstract class SV_WC_Plugin {
 	protected static $instance;
 
 	/** @var string plugin id */
-	private $id;
+	private string $id;
 
 	/** @var string version number */
-	private $version;
+	private string $version;
 
-	/** @var string plugin path, without trailing slash */
-	private $plugin_path;
+	/** @var string|null plugin path, without trailing slash */
+	private ?string $plugin_path = null;
 
-	/** @var string plugin URL */
-	private $plugin_url;
+	/** @var string|null plugin URL */
+	private ?string $plugin_url = null;
 
-	/** @var string template path, without trailing slash */
-	private $template_path;
+	/** @var string|null template path, without trailing slash */
+	private ?string $template_path = null;
 
 	/** @var WC_Logger_Interface|null instance */
 	private ?WC_Logger_Interface $logger = null;
 
-	/** @var  SV_WP_Admin_Message_Handler instance */
-	private $message_handler;
+	/** @var SV_WP_Admin_Message_Handler|null instance */
+	private ?SV_WP_Admin_Message_Handler $message_handler = null;
 
 	/** @var string the plugin text domain */
-	private $text_domain;
+	private string $text_domain;
 
 	/** @var array{ hpos?: bool, blocks?: array{ cart?: bool, checkout?: bool }} plugin compatibility flags */
-	private $supported_features;
+	private array $supported_features;
 
 	/** @var array memoized list of active plugins */
-	private $active_plugins = [];
+	private array $active_plugins = [];
 
-	/** @var SV_WC_Plugin_Dependencies dependency handler instance */
-	private $dependency_handler;
+	/** @var SV_WC_Plugin_Dependencies|null dependency handler instance */
+	private ?SV_WC_Plugin_Dependencies $dependency_handler = null;
 
-	/** @var SV_WC_Hook_Deprecator hook deprecator instance */
-	private $hook_deprecator;
+	/** @var SV_WC_Hook_Deprecator|null hook deprecator instance */
+	private ?SV_WC_Hook_Deprecator $hook_deprecator = null;
 
-	/** @var Plugin\Lifecycle lifecycle handler instance */
-	protected $lifecycle_handler;
+	/** @var Plugin\Lifecycle|null lifecycle handler instance */
+	protected ?Plugin\Lifecycle $lifecycle_handler = null;
 
-	/** @var REST_API REST API handler instance */
-	protected $rest_api_handler;
+	/** @var REST_API|null REST API handler instance */
+	protected ?REST_API $rest_api_handler = null;
 
-	/** @var Blocks\Blocks_Handler blocks handler instance */
-	protected Blocks\Blocks_Handler $blocks_handler;
+	/** @var Blocks\Blocks_Handler|null blocks handler instance */
+	protected ?Blocks\Blocks_Handler $blocks_handler = null;
 
-	/** @var Admin\Setup_Wizard handler instance */
-	protected $setup_wizard_handler;
+	/** @var Admin\Setup_Wizard|null handler instance */
+	protected ?Admin\Setup_Wizard $setup_wizard_handler = null;
 
-	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
-	private $admin_notice_handler;
+	/** @var SV_WC_Admin_Notice_Handler|null the admin notice handler class */
+	private ?SV_WC_Admin_Notice_Handler $admin_notice_handler = null;
 
 
 	/**
