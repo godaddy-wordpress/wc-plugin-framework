@@ -59,6 +59,7 @@ class HelperTest extends TestCase
 	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Helper::getWooCommerceObjectMetaValue()
 	 *
 	 * @runInSeparateProcess
+	 * @preserveGlobalState
 	 *
 	 * @throws ReflectionException
 	 */
@@ -82,6 +83,7 @@ class HelperTest extends TestCase
 	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Helper::getWooCommerceObjectMetaValue()
 	 *
 	 * @runInSeparateProcess
+	 * @preserveGlobalState
 	 */
 	public function testCanGetWooCommerceDataObjectMetaValueWithoutUsingOrderUtil() : void
 	{
@@ -99,6 +101,7 @@ class HelperTest extends TestCase
 	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Helper::getWooCommerceObjectMetaValue()
 	 *
 	 * @runInSeparateProcess
+	 * @preserveGlobalState
 	 *
 	 * @throws ReflectionException
 	 */
@@ -122,6 +125,7 @@ class HelperTest extends TestCase
 	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Helper::getWooCommerceObjectMetaValue()
 	 *
 	 * @runInSeparateProcess
+	 * @preserveGlobalState
 	 */
 	public function testCanGetWordPressPostMetaValueWithoutUsingOrderUtil() : void
 	{
