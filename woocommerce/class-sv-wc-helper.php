@@ -24,7 +24,10 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_15_1;
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
 use SkyVerge\WooCommerce\PluginFramework\v5_15_1\Helpers\NumberHelper;
+use WC_Data;
+use WP_Post;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -1196,6 +1199,34 @@ class SV_WC_Helper {
 		return implode( ',', array_unique( array_map( 'intval', $ids ) ) );
 	}
 
+
+	/**
+	 * Gets value of a meta key from WooCommerce object based on its data type.
+	 *
+	 * @param WP_Post|WC_Data $object
+	 * @param string $field
+	 * @param bool $single
+	 *
+	 * @return array|mixed|string|null
+	 */
+	public static function getWooCommerceObjectMetaValue($object, string $field, bool $single = true)
+	{
+		$orderUtilExists = class_exists(OrderUtil::class);
+
+		if ($object instanceof WP_Post) {
+			return $orderUtilExists ?
+				OrderUtil::get_post_or_object_meta($object, null, $field, $single) :
+				get_post_meta($object->ID, $field, $single);
+		}
+
+		if ($object instanceof WC_Data) {
+			return $orderUtilExists ?
+				OrderUtil::get_post_or_object_meta(null, $object, $field, $single) :
+				$object->get_meta($field, $single);
+		}
+
+		return null;
+	}
 
 }
 
