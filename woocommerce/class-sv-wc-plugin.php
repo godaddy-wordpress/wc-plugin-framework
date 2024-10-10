@@ -57,55 +57,55 @@ abstract class SV_WC_Plugin {
 	protected static $instance;
 
 	/** @var string plugin id */
-	private $id;
+	private string $id;
 
 	/** @var string version number */
-	private $version;
+	private string $version;
 
-	/** @var string plugin path, without trailing slash */
-	private $plugin_path;
+	/** @var string|null plugin path, without trailing slash */
+	private ?string $plugin_path = null;
 
-	/** @var string plugin URL */
-	private $plugin_url;
+	/** @var string|null plugin URL */
+	private ?string $plugin_url = null;
 
-	/** @var string template path, without trailing slash */
-	private $template_path;
+	/** @var string|null template path, without trailing slash */
+	private ?string $template_path = null;
 
 	/** @var WC_Logger_Interface|null instance */
 	private ?WC_Logger_Interface $logger = null;
 
-	/** @var  SV_WP_Admin_Message_Handler instance */
-	private $message_handler;
+	/** @var SV_WP_Admin_Message_Handler|null instance */
+	private ?SV_WP_Admin_Message_Handler $message_handler = null;
 
 	/** @var string the plugin text domain */
-	private $text_domain;
+	private string $text_domain;
 
 	/** @var array{ hpos?: bool, blocks?: array{ cart?: bool, checkout?: bool }} plugin compatibility flags */
-	private $supported_features;
+	private array $supported_features;
 
 	/** @var array memoized list of active plugins */
-	private $active_plugins = [];
+	private array $active_plugins = [];
 
-	/** @var SV_WC_Plugin_Dependencies dependency handler instance */
-	private $dependency_handler;
+	/** @var SV_WC_Plugin_Dependencies|null dependency handler instance */
+	private ?SV_WC_Plugin_Dependencies $dependency_handler = null;
 
-	/** @var SV_WC_Hook_Deprecator hook deprecator instance */
-	private $hook_deprecator;
+	/** @var SV_WC_Hook_Deprecator|null hook deprecator instance */
+	private ?SV_WC_Hook_Deprecator $hook_deprecator = null;
 
-	/** @var Plugin\Lifecycle lifecycle handler instance */
-	protected $lifecycle_handler;
+	/** @var Plugin\Lifecycle|null lifecycle handler instance */
+	protected ?Plugin\Lifecycle $lifecycle_handler = null;
 
-	/** @var REST_API REST API handler instance */
-	protected $rest_api_handler;
+	/** @var REST_API|null REST API handler instance */
+	protected ?REST_API $rest_api_handler = null;
 
-	/** @var Blocks\Blocks_Handler blocks handler instance */
-	protected Blocks\Blocks_Handler $blocks_handler;
+	/** @var Blocks\Blocks_Handler|null blocks handler instance */
+	protected ?Blocks\Blocks_Handler $blocks_handler = null;
 
-	/** @var Admin\Setup_Wizard handler instance */
-	protected $setup_wizard_handler;
+	/** @var Admin\Setup_Wizard|null handler instance */
+	protected ?Admin\Setup_Wizard $setup_wizard_handler = null;
 
-	/** @var SV_WC_Admin_Notice_Handler the admin notice handler class */
-	private $admin_notice_handler;
+	/** @var SV_WC_Admin_Notice_Handler|null the admin notice handler class */
+	private ?SV_WC_Admin_Notice_Handler $admin_notice_handler = null;
 
 
 	/**
@@ -152,14 +152,14 @@ abstract class SV_WC_Plugin {
 			],
 		] );
 
-		$this->text_domain        = $args['text_domain'];
-		$this->supported_features = $args['supported_features'];
+		$this->text_domain = (string) $args['text_domain'];
+		$this->supported_features = (array) $args['supported_features'];
 
 		// includes that are required to be available at all times
 		$this->includes();
 
 		// initialize the dependencies manager
-		$this->init_dependencies( $args['dependencies'] );
+		$this->init_dependencies( (array) $args['dependencies'] );
 
 		// build the admin message handler instance
 		$this->init_admin_message_handler();
@@ -224,8 +224,8 @@ abstract class SV_WC_Plugin {
 	 *     @type array $php_settings   PHP settings dependencies
 	 * }
 	 */
-	protected function init_dependencies( $dependencies ) {
-
+	protected function init_dependencies( array $dependencies ) : void
+	{
 		$this->dependency_handler = new SV_WC_Plugin_Dependencies( $this, $dependencies );
 	}
 
@@ -237,8 +237,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.2.0
 	 */
-	protected function init_admin_message_handler() {
-
+	protected function init_admin_message_handler() : void
+	{
 		$this->message_handler = new SV_WP_Admin_Message_Handler( $this->get_id() );
 	}
 
@@ -250,8 +250,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.2.0
 	 */
-	protected function init_admin_notice_handler() {
-
+	protected function init_admin_notice_handler() : void
+	{
 		$this->admin_notice_handler = new SV_WC_Admin_Notice_Handler( $this );
 	}
 
@@ -263,8 +263,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.2.0
 	 */
-	protected function init_hook_deprecator() {
-
+	protected function init_hook_deprecator() : void
+	{
 		$this->hook_deprecator = new SV_WC_Hook_Deprecator( $this->get_plugin_name(), array_merge( $this->get_framework_deprecated_hooks(), $this->get_deprecated_hooks() ) );
 	}
 
@@ -277,8 +277,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.2.0
 	 */
-	protected function init_lifecycle_handler() {
-
+	protected function init_lifecycle_handler() : void
+	{
 		$this->lifecycle_handler = new Plugin\Lifecycle( $this );
 	}
 
@@ -290,9 +290,9 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.2.0
 	 */
-	protected function init_rest_api_handler() {
-
-		$this->rest_api_handler = new REST_API( $this );
+	protected function init_rest_api_handler() : void
+	{
+		$this->rest_api_handler = new REST_API($this);
 	}
 
 
@@ -303,10 +303,10 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return void
 	 */
-	protected function init_blocks_handler() : void {
-
+	protected function init_blocks_handler() : void
+	{
 		// individual plugins should initialize their block integrations handler by overriding this method
-		$this->blocks_handler = new Blocks\Blocks_Handler( $this );
+		$this->blocks_handler = new Blocks\Blocks_Handler($this);
 	}
 
 
@@ -319,8 +319,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @deprecated
 	 */
-	protected function init_setup_wizard_handler() {
-
+	protected function init_setup_wizard_handler() : void
+	{
 		// np-op
 	}
 
@@ -330,8 +330,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.2.0
 	 */
-	private function add_hooks() {
-
+	private function add_hooks() : void
+	{
 		// initialize the plugin
 		add_action( 'plugins_loaded', array( $this, 'init_plugin' ), 15 );
 
@@ -388,8 +388,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 4.2.0
 	 */
-	public function load_translations() {
-
+	public function load_translations() : void
+	{
 		$this->load_framework_textdomain();
 
 		// if this plugin passes along its text domain, load its translation files
@@ -404,7 +404,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 4.5.0
 	 */
-	protected function load_framework_textdomain() {
+	protected function load_framework_textdomain() : void
+	{
 		$this->load_textdomain( 'woocommerce-plugin-framework', dirname( plugin_basename( $this->get_framework_file() ) ) );
 	}
 
@@ -414,7 +415,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 4.5.0
 	 */
-	protected function load_plugin_textdomain() {
+	protected function load_plugin_textdomain() : void
+	{
 		$this->load_textdomain( $this->text_domain, dirname( plugin_basename( $this->get_plugin_file() ) ) );
 	}
 
@@ -426,8 +428,8 @@ abstract class SV_WC_Plugin {
 	 * @param string $textdomain the plugin textdomain
 	 * @param string $path the i18n path
 	 */
-	protected function load_textdomain( $textdomain, $path ) {
-
+	protected function load_textdomain( string $textdomain, string $path ) : void
+	{
 		// user's locale if in the admin for WP 4.7+, or the site locale otherwise
 		$locale = is_admin() && is_callable( 'get_user_locale' ) ? get_user_locale() : get_locale();
 
@@ -446,8 +448,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.2.0
 	 */
-	public function init_plugin() {
-
+	public function init_plugin() : void
+	{
 		// stub
 	}
 
@@ -459,8 +461,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.2.0
 	 */
-	public function init_admin() {
-
+	public function init_admin() : void
+	{
 		// stub
 	}
 
@@ -472,8 +474,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @deprecated class files are loaded via composer
 	 */
-	private function includes() {
-
+	private function includes() : void
+	{
 		$this->setupClassAliases();
 	}
 
@@ -514,8 +516,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return array associative array
 	 */
-	private function get_framework_deprecated_hooks() {
-
+	private function get_framework_deprecated_hooks() : array
+	{
 		$plugin_id          = $this->get_id();
 		$deprecated_hooks   = [];
 		$deprecated_filters = [
@@ -560,8 +562,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return array
 	 */
-	protected function get_deprecated_hooks() {
-
+	protected function get_deprecated_hooks() : array
+	{
 		// stub method
 		return [];
 	}
@@ -576,7 +578,8 @@ abstract class SV_WC_Plugin {
 	 * @since 2.0.0
 	 * @return boolean true if on the admin plugin settings page
 	 */
-	public function is_plugin_settings() {
+	public function is_plugin_settings() : bool
+	{
 		// optional method, not all plugins *have* a settings page
 		return false;
 	}
@@ -587,8 +590,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 3.0.0
 	 */
-	public function add_admin_notices() {
-
+	public function add_admin_notices() : void
+	{
 		// stub method
 	}
 
@@ -599,7 +602,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 3.0.0
 	 */
-	public function add_delayed_admin_notices() {
+	public function add_delayed_admin_notices() : void
+	{
 		// stub method
 	}
 
@@ -609,11 +613,11 @@ abstract class SV_WC_Plugin {
 	 * is active.
 	 *
 	 * @since 2.0.0
-	 * @param array $actions associative array of action names to anchor tags
+	 * @param array|mixed $actions associative array of action names to anchor tags
 	 * @return array associative array of plugin action links
 	 */
-	public function plugin_action_links( $actions ) {
-
+	public function plugin_action_links( $actions ) : array
+	{
 		$custom_actions = array();
 
 		// settings url(s)
@@ -653,9 +657,9 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return void
 	 */
-	public function handle_hpos_compatibility() : void {
-
-		wc_deprecated_function( 'SV_WC_Plugin::handle_hpos_compatibility', '5.11.11', 'SV_WC_Plugin::handle_features_compatibility' );
+	public function handle_hpos_compatibility() : void
+	{
+		wc_deprecated_function('SV_WC_Plugin::handle_hpos_compatibility', '5.11.11', 'SV_WC_Plugin::handle_features_compatibility');
 
 		$this->handle_features_compatibility();
 	}
@@ -690,8 +694,8 @@ abstract class SV_WC_Plugin {
 	 * @since 2.2.0
 	 * @see SV_WC_API_Base::broadcast_request()
 	 */
-	public function add_api_request_logging() {
-
+	public function add_api_request_logging() : void
+	{
 		if ( ! has_action( 'wc_' . $this->get_id() . '_api_request_performed' ) ) {
 			add_action( 'wc_' . $this->get_id() . '_api_request_performed', array( $this, 'log_api_request' ), 10, 2 );
 		}
@@ -703,8 +707,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 2.2.0
 	 *
-	 * @param array<mixed>|stdClass $request request data, see SV_WC_API_Base::broadcast_request() for format
-	 * @param array<mixed>|stdClass $response response data
+	 * @param array|stdClass $request request data, see SV_WC_API_Base::broadcast_request() for format
+	 * @param array|stdClass $response response data
 	 * @param string|null $log_id log to write data to
 	 */
 	public function log_api_request( $request, $response, ?string $log_id = null ) : void {
@@ -805,10 +809,10 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 2.0.0
 	 * @param string $message error or message to save to log
-	 * @param string $log_id optional log id to segment the files by, defaults to plugin id
+	 * @param string|null $log_id optional log id to segment the files by, defaults to plugin id
 	 */
-	public function log( $message, $log_id = null ) {
-
+	public function log( string $message, string $log_id = null ) : void
+	{
 		if ( is_null( $log_id ) ) {
 			$log_id = $this->get_id();
 		}
@@ -838,8 +842,8 @@ abstract class SV_WC_Plugin {
 	 * @param string $class_name class to instantiate
 	 * @return object instantiated class instance
 	 */
-	public function load_class( $local_path, $class_name ) {
-
+	public function load_class( string $local_path, string $class_name )
+	{
 		require_once( $this->get_plugin_path() . $local_path );
 
 		return new $class_name;
@@ -855,8 +859,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return bool
 	 */
-	public function require_tls_1_2() {
-
+	public function require_tls_1_2() : bool
+	{
 		return false;
 	}
 
@@ -868,8 +872,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return bool
 	 */
-	public function is_tls_1_2_available() {
-
+	public function is_tls_1_2_available() : bool
+	{
 		// assume availability to avoid notices for unknown SSL types
 		$is_available = true;
 
@@ -926,8 +930,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_plugin_file() {
-
+	public function get_plugin_file() : string
+	{
 		$slug = dirname( plugin_basename( $this->get_file() ) );
 
 		return trailingslashit( $slug ) . $slug . '.php';
@@ -942,7 +946,7 @@ abstract class SV_WC_Plugin {
 	 * @since 2.0.0
 	 * @return string the full path and filename of the plugin file
 	 */
-	abstract protected function get_file();
+	abstract protected function get_file() : string;
 
 
 	/**
@@ -951,7 +955,8 @@ abstract class SV_WC_Plugin {
 	 * @since 2.0.0
 	 * @return string plugin id
 	 */
-	public function get_id() {
+	public function get_id() : string
+	{
 		return $this->id;
 	}
 
@@ -963,7 +968,8 @@ abstract class SV_WC_Plugin {
 	 * @since 2.0.0
 	 * @return string plugin id with dashes in place of underscores
 	 */
-	public function get_id_dasherized() {
+	public function get_id_dasherized() : string
+	{
 		return str_replace( '_', '-', $this->get_id() );
 	}
 
@@ -975,7 +981,7 @@ abstract class SV_WC_Plugin {
 	 * @since 2.0.0
 	 * @return string plugin name
 	 */
-	abstract public function get_plugin_name();
+	abstract public function get_plugin_name() : string;
 
 
 	/** Handler methods *******************************************************/
@@ -986,10 +992,10 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.2.0.1
 	 *
-	 * @return SV_WC_Plugin_Dependencies
+	 * @return SV_WC_Plugin_Dependencies|null
 	 */
-	public function get_dependency_handler() {
-
+	public function get_dependency_handler() : ?SV_WC_Plugin_Dependencies
+	{
 		return $this->dependency_handler;
 	}
 
@@ -999,10 +1005,10 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.1.0
 	 *
-	 * @return Plugin\Lifecycle
+	 * @return Plugin\Lifecycle|null
 	 */
-	public function get_lifecycle_handler() {
-
+	public function get_lifecycle_handler() : ?Plugin\Lifecycle
+	{
 		return $this->lifecycle_handler;
 	}
 
@@ -1012,9 +1018,9 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 5.11.11
 	 *
-	 * @return Blocks\Blocks_Handler
+	 * @return Blocks\Blocks_Handler|null
 	 */
-	public function get_blocks_handler() : Blocks\Blocks_Handler {
+	public function get_blocks_handler() : ?Blocks\Blocks_Handler {
 
 		return $this->blocks_handler;
 	}
@@ -1027,8 +1033,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return null|Admin\Setup_Wizard
 	 */
-	public function get_setup_wizard_handler() {
-
+	public function get_setup_wizard_handler() : ?Admin\Setup_Wizard
+	{
 		return $this->setup_wizard_handler;
 	}
 
@@ -1038,10 +1044,10 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return SV_WP_Admin_Message_Handler
+	 * @return SV_WP_Admin_Message_Handler|null
 	 */
-	public function get_message_handler() {
-
+	public function get_message_handler() : ?SV_WP_Admin_Message_Handler
+	{
 		return $this->message_handler;
 	}
 
@@ -1051,10 +1057,10 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return SV_WC_Admin_Notice_Handler
+	 * @return SV_WC_Admin_Notice_Handler|null
 	 */
-	public function get_admin_notice_handler() {
-
+	public function get_admin_notice_handler() : ?SV_WC_Admin_Notice_Handler
+	{
 		return $this->admin_notice_handler;
 	}
 
@@ -1081,8 +1087,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return string the plugin version name
 	 */
-	public function get_plugin_version_name() {
-
+	public function get_plugin_version_name() : string
+	{
 		return 'wc_' . $this->get_id() . '_version';
 	}
 
@@ -1094,8 +1100,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return string plugin version
 	 */
-	public function get_version() {
-
+	public function get_version() : string
+	{
 		return $this->version;
 	}
 
@@ -1109,9 +1115,12 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_assets_version() : string {
-
-		if ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG || defined( 'WP_DEBUG' ) && true === WP_DEBUG ) {
+	public function get_assets_version() : string
+	{
+		if (
+			(defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG) ||
+			(defined( 'WP_DEBUG' ) && WP_DEBUG)
+		) {
 			return (string) time();
 		}
 
@@ -1126,8 +1135,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_textdomain() : string {
-
+	public function get_textdomain() : string
+	{
 		return $this->text_domain;
 	}
 
@@ -1138,13 +1147,13 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 2.0.0
 	 * @see SV_WC_Plugin::get_settings_url()
-	 * @param string $plugin_id optional plugin identifier.  Note that this can be a
+	 * @param string|null $plugin_id optional plugin identifier.  Note that this can be a
 	 *        sub-identifier for plugins with multiple parallel settings pages
 	 *        (ie a gateway that supports both credit cards and echecks)
 	 * @return string plugin configure link
 	 */
-	public function get_settings_link( $plugin_id = null ) {
-
+	public function get_settings_link( string $plugin_id = null ) : string
+	{
 		$settings_url = $this->get_settings_url( $plugin_id );
 
 		if ( $settings_url ) {
@@ -1161,13 +1170,13 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @since 2.0.0
 	 * @see SV_WC_Plugin::get_settings_link()
-	 * @param string $plugin_id optional plugin identifier.  Note that this can be a
+	 * @param string|null $plugin_id optional plugin identifier.  Note that this can be a
 	 *        sub-identifier for plugins with multiple parallel settings pages
 	 *        (ie a gateway that supports both credit cards and echecks)
 	 * @return string plugin settings URL
 	 */
-	public function get_settings_url( $plugin_id = null ) {
-
+	public function get_settings_url( string $plugin_id = null ) : string
+	{
 		// stub method
 		return '';
 	}
@@ -1179,8 +1188,8 @@ abstract class SV_WC_Plugin {
 	 * @since 3.0.0
 	 * @return boolean true if the current page is the admin general configuration page
 	 */
-	public function is_general_configuration_page() {
-
+	public function is_general_configuration_page() : bool
+	{
 		return isset( $_GET['page'] ) && 'wc-settings' === $_GET['page'] && ( ! isset( $_GET['tab'] ) || 'general' === $_GET['tab'] );
 	}
 
@@ -1191,9 +1200,9 @@ abstract class SV_WC_Plugin {
 	 * @since 3.0.0
 	 * @return string admin configuration url for the admin general configuration page
 	 */
-	public function get_general_configuration_url() {
-
-		return admin_url( 'admin.php?page=wc-settings&tab=general' );
+	public function get_general_configuration_url() : string
+	{
+		return (string) admin_url( 'admin.php?page=wc-settings&tab=general' );
 	}
 
 
@@ -1201,10 +1210,10 @@ abstract class SV_WC_Plugin {
 	 * Gets the plugin documentation url, used for the 'Docs' plugin action
 	 *
 	 * @since 2.0.0
-	 * @return string documentation URL
+	 * @return string|null documentation URL
 	 */
-	public function get_documentation_url() {
-
+	public function get_documentation_url() : ?string
+	{
 		return null;
 	}
 
@@ -1213,10 +1222,10 @@ abstract class SV_WC_Plugin {
 	 * Gets the support URL, used for the 'Support' plugin action link
 	 *
 	 * @since 4.0.0
-	 * @return string support url
+	 * @return string|null support url
 	 */
-	public function get_support_url() {
-
+	public function get_support_url() : ?string
+	{
 		return null;
 	}
 
@@ -1228,8 +1237,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_sales_page_url() {
-
+	public function get_sales_page_url() : string
+	{
 		return '';
 	}
 
@@ -1243,8 +1252,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_reviews_url() {
-
+	public function get_reviews_url() : string
+	{
 		return $this->get_sales_page_url() ? $this->get_sales_page_url() . '#comments' : '';
 	}
 
@@ -1258,13 +1267,9 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_plugin_path() {
-
-		if ( null === $this->plugin_path ) {
-			$this->plugin_path = untrailingslashit( plugin_dir_path( $this->get_file() ) );
-		}
-
-		return $this->plugin_path;
+	public function get_plugin_path() : string
+	{
+		return $this->plugin_path ??= untrailingslashit( plugin_dir_path( $this->get_file() ) );
 	}
 
 
@@ -1277,13 +1282,9 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_plugin_url() {
-
-		if ( null === $this->plugin_url ) {
-			$this->plugin_url = untrailingslashit( plugins_url( '/', $this->get_file() ) );
-		}
-
-		return $this->plugin_url;
+	public function get_plugin_url() : string
+	{
+		return $this->plugin_url ??= untrailingslashit( plugins_url( '/', $this->get_file() ) );
 	}
 
 
@@ -1296,8 +1297,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return string
 	 */
-	public static function get_woocommerce_uploads_path() {
-
+	public static function get_woocommerce_uploads_path() : string
+	{
 		$upload_dir = wp_upload_dir();
 
 		return $upload_dir['basedir'] . '/woocommerce_uploads';
@@ -1310,8 +1311,8 @@ abstract class SV_WC_Plugin {
 	 * @since 4.0.0
 	 * @return string
 	 */
-	public function get_framework_file() {
-
+	public function get_framework_file() : string
+	{
 		return __FILE__;
 	}
 
@@ -1324,8 +1325,8 @@ abstract class SV_WC_Plugin {
 	 * @since 4.0.0
 	 * @return string
 	 */
-	public function get_framework_path() {
-
+	public function get_framework_path() : string
+	{
 		return untrailingslashit( plugin_dir_path( $this->get_framework_file() ) );
 	}
 
@@ -1337,8 +1338,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_framework_assets_path() {
-
+	public function get_framework_assets_path() : string
+	{
 		return $this->get_framework_path() . '/assets';
 	}
 
@@ -1350,8 +1351,8 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_framework_assets_url() {
-
+	public function get_framework_assets_url() : string
+	{
 		return untrailingslashit( plugins_url( '/assets', $this->get_framework_file() ) );
 	}
 
@@ -1363,13 +1364,9 @@ abstract class SV_WC_Plugin {
 	 *
 	 * @return string
 	 */
-	public function get_template_path() {
-
-		if ( null === $this->template_path ) {
-			$this->template_path = $this->get_plugin_path() . '/templates';
-		}
-
-		return $this->template_path;
+	public function get_template_path() : string
+	{
+		return $this->template_path ??= $this->get_plugin_path() . '/templates';
 	}
 
 
@@ -1385,8 +1382,8 @@ abstract class SV_WC_Plugin {
 	 * @param string $path optional template path, can be empty, as themes can override this
 	 * @param string $default_path optional default template path, will normally use the plugin's own template path unless overridden
 	 */
-	public function load_template( $template, array $args = [], $path = '', $default_path = '' ) {
-
+	public function load_template( string $template, array $args = [], string $path = '', string $default_path = '' ) : void
+	{
 		if ( '' === $default_path || ! is_string( $default_path ) ) {
 			$default_path = trailingslashit( $this->get_template_path() );
 		}
@@ -1403,45 +1400,38 @@ abstract class SV_WC_Plugin {
 	 * @param string $plugin_name plugin name, as the plugin-filename.php
 	 * @return boolean true if the named plugin is installed and active
 	 */
-	public function is_plugin_active( $plugin_name ) {
+	public function is_plugin_active( string $plugin_name ) : bool
+	{
+		if ( ! array_key_exists( $plugin_name, $this->active_plugins ) ) {
 
-		$is_active = false;
+			$active_plugins = (array) get_option( 'active_plugins', array() );
 
-		if ( is_string( $plugin_name ) ) {
-
-			if ( ! array_key_exists( $plugin_name, $this->active_plugins ) ) {
-
-				$active_plugins = (array) get_option( 'active_plugins', array() );
-
-				if ( is_multisite() ) {
-					$active_plugins = array_merge( $active_plugins, array_keys( get_site_option( 'active_sitewide_plugins', array() ) ) );
-				}
-
-				$plugin_filenames = array();
-
-				foreach ( $active_plugins as $plugin ) {
-
-					if ( SV_WC_Helper::str_exists( $plugin, '/' ) ) {
-
-						// normal plugin name (plugin-dir/plugin-filename.php)
-						[ , $filename ] = explode( '/', $plugin );
-
-					} else {
-
-						// no directory, just plugin file
-						$filename = $plugin;
-					}
-
-					$plugin_filenames[] = $filename;
-				}
-
-				$this->active_plugins[ $plugin_name ] = in_array( $plugin_name, $plugin_filenames, true );
+			if ( is_multisite() ) {
+				$active_plugins = array_merge( $active_plugins, array_keys( get_site_option( 'active_sitewide_plugins', array() ) ) );
 			}
 
-			$is_active = (bool) $this->active_plugins[ $plugin_name ];
+			$plugin_filenames = array();
+
+			foreach ( $active_plugins as $plugin ) {
+
+				if ( SV_WC_Helper::str_exists( $plugin, '/' ) ) {
+
+					// normal plugin name (plugin-dir/plugin-filename.php)
+					[ , $filename ] = explode( '/', $plugin );
+
+				} else {
+
+					// no directory, just plugin file
+					$filename = $plugin;
+				}
+
+				$plugin_filenames[] = $filename;
+			}
+
+			$this->active_plugins[ $plugin_name ] = in_array( $plugin_name, $plugin_filenames, true );
 		}
 
-		return $is_active;
+		return (bool) $this->active_plugins[ $plugin_name ];
 	}
 }
 
