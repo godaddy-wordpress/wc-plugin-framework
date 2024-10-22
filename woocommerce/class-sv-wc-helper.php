@@ -24,7 +24,6 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_15_1;
 
-use Automattic\WooCommerce\Utilities\OrderUtil;
 use SkyVerge\WooCommerce\PluginFramework\v5_15_1\Helpers\NumberHelper;
 use WC_Data;
 use WP_Post;
@@ -1211,21 +1210,37 @@ class SV_WC_Helper {
 	 */
 	public static function getWooCommerceObjectMetaValue($object, string $field, bool $single = true)
 	{
-		$orderUtilExists = class_exists(OrderUtil::class);
-
 		if ($object instanceof WP_Post) {
-			return $orderUtilExists ?
-				OrderUtil::get_post_or_object_meta($object, null, $field, $single) :
-				get_post_meta($object->ID, $field, $single);
+			return static::getPostOrObjectMetaCompat($object, null, $field, $single);
 		}
 
 		if ($object instanceof WC_Data) {
-			return $orderUtilExists ?
-				OrderUtil::get_post_or_object_meta(null, $object, $field, $single) :
-				$object->get_meta($field, $single);
+			return static::getPostOrObjectMetaCompat(null, $object, $field, $single);
 		}
 
 		return null;
+	}
+
+	/**
+	 * Adds local compatibility for Woo's internal OrderUtil::get_post_or_object_meta() method.
+	 *
+	 * @param WP_Post|null $post
+	 * @param WC_Data|null $data
+	 * @param string       $key
+	 * @param bool         $single
+	 *
+	 * @return array|false|mixed|string
+	 */
+	public static function getPostOrObjectMetaCompat(?\WP_Post $post, ?\WC_Data $data, string $key, bool $single)
+	{
+		if (isset($data)) {
+			if (method_exists($data, "get$key")) {
+				return $data->{"get$key"}();
+			}
+			return $data->get_meta($key, $single);
+		} else {
+			return isset($post->ID) ? get_post_meta($post->ID, $key, $single) : false;
+		}
 	}
 
 }
