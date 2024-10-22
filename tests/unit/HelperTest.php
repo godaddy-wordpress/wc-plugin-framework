@@ -61,7 +61,7 @@ class HelperTest extends TestCase
 	 *
 	 * @throws ReflectionException
 	 */
-	public function testCanGetWooCommerceDataObjectMetaValueUsingOrderUtil() : void
+	public function testCanGetWooCommerceDataObjectMetaValue() : void
 	{
 		$object = Mockery::mock('WC_Data');
 
@@ -78,7 +78,7 @@ class HelperTest extends TestCase
 	 *
 	 * @throws ReflectionException
 	 */
-	public function testCanGetWordPressPostMetaValueUsingOrderUtil() : void
+	public function testCanGetWordPressPostMetaValue() : void
 	{
 		$object = Mockery::mock('WP_Post');
 
