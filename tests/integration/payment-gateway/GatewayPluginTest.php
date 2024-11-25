@@ -3,7 +3,7 @@
 /**
  * Tests for the gateway plugin class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Payment_Gateway_Plugin
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_15_2\SV_WC_Payment_Gateway_Plugin
  */
 class GatewayPluginTest extends \Codeception\TestCase\WPTestCase {
 
