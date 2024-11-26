@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2024.11.25 - version 5.15.2
+* Fix - Prevent "Capture Charge" bulk action from loading on non-order pages
+
 2024.10.10 - version 5.15.1
 * Fix - Fixing the SASS and POT file building processes
 * Fix - Account for Subscriptions Core library when checking for Subscriptions
