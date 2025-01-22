@@ -98,6 +98,14 @@ class Admin extends \SkyVerge\WooCommerce\PluginFramework\v5_15_3\Payment_Gatewa
 			],
 
 			[
+				'id'              => 'sv_wc_google_pay_merchant_id',
+				'title'           => __( 'Merchant ID', 'woocommerce-plugin-framework' ),
+				/** translators: Placeholders: %1$s - <a href="..."> tag, %2$s - </a> tag */
+				'desc'            => sprintf( __( 'A Google merchant identifier issued after registration with the %1$sGoogle Pay & Wallet Console%2$s. 12-18 characters. Required in production environment.', 'woocommerce-plugin-framework' ), '<a href="https://pay.google.com/business/console" target="_blank">', '</a>' ),
+				'type'            => 'text',
+			],
+
+			[
 				'id'      => 'sv_wc_google_pay_display_locations',
 				/* translators: Allow Google Pay button on selected display locations (e.g. cart, checkout, product page...) */
 				'title'   => _x( 'Allow Google Pay on', 'Setting title for a multi-select list dropdown of display locations', 'woocommerce-plugin-framework' ),
