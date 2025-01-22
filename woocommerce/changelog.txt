@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2025.nn.nn - version 5.15.3
+
 2024.11.25 - version 5.15.2
 * Fix - Prevent "Capture Charge" bulk action from loading on non-order pages
 
