@@ -703,17 +703,57 @@ class Google_Pay extends External_Checkout {
 
 
 	/**
-	 * Gets the gateway merchant ID.
-	 *
-	 * Each plugin can override this method to get the merchant ID from their own setting.
+	 * Gets the Google Pay merchant ID.
 	 *
 	 * @since 5.10.0
 	 *
+	 * @see https://developers.google.com/pay/api/web/reference/request-objects#MerchantInfo
+	 *
 	 * @return string
 	 */
-	public function get_merchant_id() {
+	public function get_merchant_id() : string {
 
-		return method_exists( $this->get_processing_gateway(), 'get_merchant_id' ) ? $this->get_processing_gateway()->get_merchant_id() : '';
+		return get_option( "sv_wc_{$this->id}_merchant_id" ) ?? '';
+	}
+
+	/**
+	 * Gets the gateway merchant ID.
+	 *
+	 * This is different from the Google Pay Merchant ID.
+	 * Each plugin can override this method to get the merchant ID from their own setting.
+	 *
+	 * @see https://developers.google.com/pay/api/web/guides/tutorial#tokenization
+	 *
+	 * @since 5.15.3
+	 *
+	 * @return string
+	 */
+	public function get_gateway_merchant_id() : string {
+
+		$gateway = $this->get_processing_gateway();
+
+		return method_exists( $gateway, 'get_merchant_id' ) ? $gateway->get_merchant_id() : '';
+	}
+
+	/**
+	 * Gets the merchant name.
+	 *
+	 * Defaults to the blog name.
+	 *
+	 * @since 5.15.3
+	 *
+	 * @return string
+	 */
+	public function get_merchant_name() :string {
+
+		/**
+		 * Filters the Google Pay merchant name.
+		 *
+		 * @since 5.15.3
+		 *
+		 * @param string $name the merchant name (defaults to blog name)
+		 */
+		return apply_filters( 'sv_wc_google_pay_merchant_name', get_bloginfo( 'name' ) );
 	}
 
 

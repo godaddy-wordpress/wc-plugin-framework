@@ -128,6 +128,7 @@ class Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_15_3\Payment_Gat
 			'merchant_name'            => get_bloginfo( 'name' ),
 			'gateway_id'               => $this->get_gateway()->get_id(),
 			'gateway_id_dasherized'    => $this->get_gateway()->get_id_dasherized(),
+			'gateway_merchant_id'      => $this->get_handler()->get_gateway_merchant_id(),
 			'environment'              => $this->get_gateway()->get_environment() == 'production' ? 'PRODUCTION' : 'TEST',
 			'ajax_url'                 => admin_url( 'admin-ajax.php' ),
 			'recalculate_totals_nonce' => wp_create_nonce( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_recalculate_totals' ),
