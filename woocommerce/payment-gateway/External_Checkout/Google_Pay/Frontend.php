@@ -125,7 +125,7 @@ class Frontend extends \SkyVerge\WooCommerce\PluginFramework\v5_15_3\Payment_Gat
 		return (array) apply_filters( 'wc_' . $this->get_gateway()->get_id() . '_google_pay_js_handler_params', [
 			'plugin_id'                => $this->get_gateway()->get_plugin()->get_id(),
 			'merchant_id'              => $this->get_handler()->get_merchant_id(),
-			'merchant_name'            => get_bloginfo( 'name' ),
+			'merchant_name'            => $this->get_handler()->get_merchant_name(),
 			'gateway_id'               => $this->get_gateway()->get_id(),
 			'gateway_id_dasherized'    => $this->get_gateway()->get_id_dasherized(),
 			'gateway_merchant_id'      => $this->get_handler()->get_gateway_merchant_id(),
