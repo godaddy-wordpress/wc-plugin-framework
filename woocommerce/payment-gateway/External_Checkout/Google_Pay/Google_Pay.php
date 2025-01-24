@@ -713,7 +713,9 @@ class Google_Pay extends External_Checkout {
 	 */
 	public function get_merchant_id() : string {
 
-		return get_option( "sv_wc_{$this->id}_merchant_id" ) ?? '';
+		$optionValue = get_option("sv_wc_{$this->id}_merchant_id");
+
+		return $optionValue && is_scalar($optionValue) ? (string) $optionValue : '';
 	}
 
 	/**
