@@ -1,6 +1,6 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_1\Tests\Unit\Payment_Gateway\External_Checkout\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_3\Tests\Unit\Payment_Gateway\External_Checkout\Google_Pay;
 
 use Mockery;
 use ReflectionException;

@@ -1,11 +1,10 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_1\Tests\Unit\Payment_Gateway\External_Checkout\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_3\Tests\Unit\Payment_Gateway\External_Checkout\Google_Pay;
 
 use Generator;
 use Mockery;
 use ReflectionException;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_3\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_15_3\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay;
 use SkyVerge\WooCommerce\PluginFramework\v5_15_3\Tests\TestCase;
 use WP_Mock;

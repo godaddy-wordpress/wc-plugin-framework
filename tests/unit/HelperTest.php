@@ -1,6 +1,6 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_14_0\Tests\Unit;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_3\Tests\Unit;
 
 use ReflectionException;
 use SkyVerge\WooCommerce\PluginFramework\v5_15_3\SV_WC_Helper;
