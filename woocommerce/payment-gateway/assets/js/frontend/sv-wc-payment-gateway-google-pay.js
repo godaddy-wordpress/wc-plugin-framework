@@ -22,6 +22,7 @@ jQuery( function( $ ) {
 		 * @param {string} params.merchant_name The site name
 		 * @param {string} params.gateway_id The gateway ID
 		 * @param {string} params.gateway_id_dasherized The gateway ID dasherized
+		 * @param {string} params.gateway_merchant_id The gateway merchant ID
 		 * @param {string} params.environment The gateway environment (PRODUCTION or TEST)
 		 * @param {string} params.ajax_url The AJAX URL
 		 * @param {string} params.recalculate_totals_nonce Nonce for the recalculate_totals AJAX action
@@ -42,6 +43,7 @@ jQuery( function( $ ) {
 				merchant_name,
 				gateway_id,
 				gateway_id_dasherized,
+				gateway_merchant_id,
 				environment,
 				ajax_url,
 				recalculate_totals_nonce,
@@ -55,6 +57,7 @@ jQuery( function( $ ) {
 			} = params;
 
 			this.gatewayID              = gateway_id;
+			this.gatewayMerchantID      = gateway_merchant_id;
 			this.merchantID             = merchant_id;
 			this.merchantName           = merchant_name;
 			this.environment            = environment;
@@ -109,7 +112,7 @@ jQuery( function( $ ) {
 				type: 'PAYMENT_GATEWAY',
 				parameters: {
 					'gateway': plugin_id,
-					'gatewayMerchantId': this.merchantID
+					'gatewayMerchantId': this.gatewayMerchantID
 				}
 			};
 
