@@ -732,9 +732,15 @@ class Google_Pay extends External_Checkout {
 	 */
 	public function get_gateway_merchant_id() : string {
 
-		$gateway = $this->get_processing_gateway();
+		if (! $gateway = $this->get_processing_gateway()) {
+			return '';
+		}
 
-		return method_exists( $gateway, 'get_merchant_id' ) ? $gateway->get_merchant_id() : '';
+		if (! is_object($gateway)) {
+			return '';
+		}
+
+		return method_exists($gateway, 'get_merchant_id') ? $gateway->get_merchant_id() : '';
 	}
 
 	/**
