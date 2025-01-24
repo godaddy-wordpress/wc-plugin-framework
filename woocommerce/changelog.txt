@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2025.01.24 - version 5.15.3
+* Fix - Add Merchant ID to Google Pay, distinguishing it from Gateway merchant ID
+
 2024.11.25 - version 5.15.2
 * Fix - Prevent "Capture Charge" bulk action from loading on non-order pages
 
