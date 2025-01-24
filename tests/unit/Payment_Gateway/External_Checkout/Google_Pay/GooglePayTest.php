@@ -5,6 +5,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_15_1\Tests\Unit\Payment_Gatewa
 use Generator;
 use Mockery;
 use ReflectionException;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_3\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v5_15_3\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay;
 use SkyVerge\WooCommerce\PluginFramework\v5_15_3\Tests\TestCase;
 use WP_Mock;
@@ -76,5 +77,39 @@ class GooglePayTest extends TestCase
 			'merchantId' => ['test'],
 			'expected'   => '',
 		];
+	}
+
+	/**
+	 * @covers ::get_gateway_merchant_id()
+	 */
+	public function testCanGetGatewayMerchantId() : void
+	{
+		$this->testObject->expects('get_processing_gateway')
+			->andReturn($gateway = new class {
+				public string $merchantId = 'TEST_MERCHANT_ID';
+
+				public function get_merchant_id() : string
+				{
+					return $this->merchantId;
+				}
+			});
+
+		$this->assertSame($gateway->merchantId, $this->testObject->get_gateway_merchant_id());
+	}
+
+	/**
+	 * @covers ::get_merchant_name()
+	 */
+	public function testCanGetMerchantName() : void
+	{
+		WP_Mock::userFunction('get_bloginfo')
+			->once()
+			->with('name')
+			->andReturn($merchantName = 'TEST_MERCHANT_NAME');
+
+		WP_Mock::onFilter('sv_wc_google_pay_merchant_name')
+			->with($merchantName)->reply($merchantName);
+
+		$this->assertSame($merchantName, $this->testObject->get_merchant_name());
 	}
 }
