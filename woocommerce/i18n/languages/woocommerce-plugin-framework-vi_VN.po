@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-09-02T12:48:01+00:00\n"
+"POT-Creation-Date: 2025-01-24T02:55:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -286,41 +286,41 @@ msgid "Your hosting provider can do this for you. %1$sHere are some resources to
 msgstr "Nhà cung cấp dịch vụ lưu trữ của bạn có thể thực hiện thao tác này cho bạn. %1$sDưới đây là một số tài nguyên giúp bạn nâng cấp %2$s và giải thích thêm về các phiên bản PHP."
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:345
+#: woocommerce/class-sv-wc-plugin.php:369
 msgid "You cannot clone instances of %s."
 msgstr "Bạn không thể sao chép các thực thể của %s."
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:356
+#: woocommerce/class-sv-wc-plugin.php:380
 msgid "You cannot unserialize instances of %s."
 msgstr "Bạn không thể hủy tuần tự hóa các thực thể của %s."
 
 #. translators: Docs as in Documentation
-#: woocommerce/class-sv-wc-plugin.php:603
+#: woocommerce/class-sv-wc-plugin.php:627
 msgid "Docs"
 msgstr "Tài liệu"
 
-#: woocommerce/class-sv-wc-plugin.php:608
+#: woocommerce/class-sv-wc-plugin.php:632
 msgctxt "noun"
 msgid "Support"
 msgstr "Hỗ trợ"
 
-#: woocommerce/class-sv-wc-plugin.php:613
+#: woocommerce/class-sv-wc-plugin.php:637
 msgctxt "verb"
 msgid "Review"
 msgstr "Đánh giá"
 
 #. translators: Placeholders: %1$s - PHP setting value, %2$s - version or value required
-#: woocommerce/class-sv-wc-plugin.php:752
+#: woocommerce/class-sv-wc-plugin.php:776
 msgid "%1$s - A minimum of %2$s is required."
 msgstr "%1$s - Yêu cầu tối thiểu %2$s."
 
 #. translators: Context: As in "Value has been set as [foo], but [bar] is required". Placeholders: %1$s - current value for a PHP setting, %2$s - required value for the PHP setting
-#: woocommerce/class-sv-wc-plugin.php:762
+#: woocommerce/class-sv-wc-plugin.php:786
 msgid "Set as %1$s - %2$s is required."
 msgstr "Đặt là %1$s - %2$s là bắt buộc."
 
-#: woocommerce/class-sv-wc-plugin.php:1127
+#: woocommerce/class-sv-wc-plugin.php:1151
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:807
 msgid "Configure"
 msgstr "Cấu hình"
@@ -541,7 +541,7 @@ msgstr "ID khách hàng cho cổng của người dùng. Chỉ chỉnh sửa n�
 
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:100
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:149
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Frontend.php:139
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Frontend.php:140
 msgid "An error occurred, please try again or try an alternate form of payment"
 msgstr "Đã xảy ra lỗi, vui lòng thử lại hoặc thử hình thức thanh toán thay thế."
 
@@ -1364,7 +1364,7 @@ msgstr "Chọn môi trường cổng để sử dụng cho các giao dịch."
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1579
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:152
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:150
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:158
 msgid "Connection Settings"
 msgstr "Thiết lập kết nối"
 
@@ -1670,18 +1670,18 @@ msgid "Allow Apple Pay on"
 msgstr "Cho phép Apple Pay trên"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:113
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:113
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:121
 msgid "Button Style"
 msgstr "Kiểu của nút"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:116
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:116
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:124
 msgctxt "Button style"
 msgid "Black"
 msgstr "Đen"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:117
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:117
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:125
 msgctxt "Button style"
 msgid "White"
 msgstr "White"
@@ -1714,7 +1714,7 @@ msgid "For reference, your current web root path is: %s"
 msgstr "Để tham khảo, đường dẫn gốc web hiện tại của bạn là: %s"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:190
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:159
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:167
 msgid "Test Mode"
 msgstr "Chế độ thử nghiệm"
 
@@ -1788,13 +1788,21 @@ msgctxt "For the merchant to accept Google Pay payments"
 msgid "Accept Google Pay"
 msgstr "Chấp nhận Google Pay"
 
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:102
+msgid "Merchant ID"
+msgstr "ID thương nhân"
+
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:104
+msgid "A Google merchant identifier issued after registration with the %1$sGoogle Pay & Wallet Console%2$s. 12-18 characters. Required in production environment."
+msgstr "Mã nhận dạng Google Merchant được cấp sau khi đăng ký với %1$sGoogle Pay & Wallet Console%2$s. 12-18 ký tự. Bắt buộc trong môi trường sản xuất."
+
 #. translators: Allow Google Pay button on selected display locations (e.g. cart, checkout, product page...)
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:103
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:111
 msgctxt "Setting title for a multi-select list dropdown of display locations"
 msgid "Allow Google Pay on"
 msgstr "Cho phép Google Pay trên"
 
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:160
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:168
 msgid "Enable to test Google Pay functionality throughout your sites without processing real payments."
 msgstr "Cho phép kiểm tra chức năng Google Pay trên toàn bộ trang của bạn mà không cần xử lý thanh toán thực."
 

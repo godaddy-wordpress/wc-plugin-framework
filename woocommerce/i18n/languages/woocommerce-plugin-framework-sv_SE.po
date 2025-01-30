@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-09-02T12:48:01+00:00\n"
+"POT-Creation-Date: 2025-01-24T02:55:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -286,41 +286,41 @@ msgid "Your hosting provider can do this for you. %1$sHere are some resources to
 msgstr "Ditt webbhotell kan göra det åt dig. %1$sHär är några resurser som kan hjälpa dig att uppgradera%2$s och som förklarar PHP-versionerna närmare."
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:345
+#: woocommerce/class-sv-wc-plugin.php:369
 msgid "You cannot clone instances of %s."
 msgstr "Du kan inte klona instanser av %s."
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:356
+#: woocommerce/class-sv-wc-plugin.php:380
 msgid "You cannot unserialize instances of %s."
 msgstr "Du kan inte deserialisera instanser av %s."
 
 #. translators: Docs as in Documentation
-#: woocommerce/class-sv-wc-plugin.php:603
+#: woocommerce/class-sv-wc-plugin.php:627
 msgid "Docs"
 msgstr "Dokumentation"
 
-#: woocommerce/class-sv-wc-plugin.php:608
+#: woocommerce/class-sv-wc-plugin.php:632
 msgctxt "noun"
 msgid "Support"
 msgstr "Support"
 
-#: woocommerce/class-sv-wc-plugin.php:613
+#: woocommerce/class-sv-wc-plugin.php:637
 msgctxt "verb"
 msgid "Review"
 msgstr "Recension"
 
 #. translators: Placeholders: %1$s - PHP setting value, %2$s - version or value required
-#: woocommerce/class-sv-wc-plugin.php:752
+#: woocommerce/class-sv-wc-plugin.php:776
 msgid "%1$s - A minimum of %2$s is required."
 msgstr "%1$s – Minst %2$s krävs."
 
 #. translators: Context: As in "Value has been set as [foo], but [bar] is required". Placeholders: %1$s - current value for a PHP setting, %2$s - required value for the PHP setting
-#: woocommerce/class-sv-wc-plugin.php:762
+#: woocommerce/class-sv-wc-plugin.php:786
 msgid "Set as %1$s - %2$s is required."
 msgstr "Ange som %1$s – %2$s är obligatoriskt."
 
-#: woocommerce/class-sv-wc-plugin.php:1127
+#: woocommerce/class-sv-wc-plugin.php:1151
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:807
 msgid "Configure"
 msgstr "Konfigurera"
@@ -541,7 +541,7 @@ msgstr "Gatewayens kund-ID för användaren. Redigera bara detta om det behövs.
 
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:100
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:149
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Frontend.php:139
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Frontend.php:140
 msgid "An error occurred, please try again or try an alternate form of payment"
 msgstr "Ett fel inträffade. Försök igen eller pröva ett annat betalsätt"
 
@@ -1364,7 +1364,7 @@ msgstr "Välj den gatewaymiljö som ska användas för transaktioner."
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1579
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:152
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:150
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:158
 msgid "Connection Settings"
 msgstr "Anslutningsinställningar"
 
@@ -1670,18 +1670,18 @@ msgid "Allow Apple Pay on"
 msgstr "Tillåt Apple Pay på"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:113
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:113
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:121
 msgid "Button Style"
 msgstr "Knappstil"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:116
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:116
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:124
 msgctxt "Button style"
 msgid "Black"
 msgstr "Svart"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:117
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:117
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:125
 msgctxt "Button style"
 msgid "White"
 msgstr "Vit"
@@ -1714,7 +1714,7 @@ msgid "For reference, your current web root path is: %s"
 msgstr "Din aktuella webbrotsökväg är: %s"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:190
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:159
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:167
 msgid "Test Mode"
 msgstr "Testläge"
 
@@ -1788,13 +1788,21 @@ msgctxt "For the merchant to accept Google Pay payments"
 msgid "Accept Google Pay"
 msgstr "Acceptera Google Pay"
 
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:102
+msgid "Merchant ID"
+msgstr "Merchant ID"
+
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:104
+msgid "A Google merchant identifier issued after registration with the %1$sGoogle Pay & Wallet Console%2$s. 12-18 characters. Required in production environment."
+msgstr "Ett Google-handlar-id som utfärdas efter registrering hos %1$sGoogle Pay och Wallet-konsolen%2$s. 12–18 tecken. Obligatoriskt i produktionsmiljön."
+
 #. translators: Allow Google Pay button on selected display locations (e.g. cart, checkout, product page...)
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:103
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:111
 msgctxt "Setting title for a multi-select list dropdown of display locations"
 msgid "Allow Google Pay on"
 msgstr "Tillåt Google Pay på"
 
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:160
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:168
 msgid "Enable to test Google Pay functionality throughout your sites without processing real payments."
 msgstr "Aktivera för att testa Google Pay-funktioner på dina webbplatser utan att hantera verkliga betalningar."
 
