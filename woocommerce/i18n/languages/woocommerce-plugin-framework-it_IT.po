@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-09-02T12:48:01+00:00\n"
+"POT-Creation-Date: 2025-01-24T02:55:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -286,41 +286,41 @@ msgid "Your hosting provider can do this for you. %1$sHere are some resources to
 msgstr "Il tuo provider di hosting può farlo per conto tuo. %1$sEcco alcune risorse per aiutarti a effettuare l’upgrade%2$s, con ulteriori informazioni sulle versioni di PHP."
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:345
+#: woocommerce/class-sv-wc-plugin.php:369
 msgid "You cannot clone instances of %s."
 msgstr "Non puoi clonare istanze di %s."
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:356
+#: woocommerce/class-sv-wc-plugin.php:380
 msgid "You cannot unserialize instances of %s."
 msgstr "Non puoi annullare la serializzazione delle istanze di %s."
 
 #. translators: Docs as in Documentation
-#: woocommerce/class-sv-wc-plugin.php:603
+#: woocommerce/class-sv-wc-plugin.php:627
 msgid "Docs"
 msgstr "Docs"
 
-#: woocommerce/class-sv-wc-plugin.php:608
+#: woocommerce/class-sv-wc-plugin.php:632
 msgctxt "noun"
 msgid "Support"
 msgstr "Assistenza"
 
-#: woocommerce/class-sv-wc-plugin.php:613
+#: woocommerce/class-sv-wc-plugin.php:637
 msgctxt "verb"
 msgid "Review"
 msgstr "Revisione"
 
 #. translators: Placeholders: %1$s - PHP setting value, %2$s - version or value required
-#: woocommerce/class-sv-wc-plugin.php:752
+#: woocommerce/class-sv-wc-plugin.php:776
 msgid "%1$s - A minimum of %2$s is required."
 msgstr "%1$s - È obbligatorio un minimo di %2$s."
 
 #. translators: Context: As in "Value has been set as [foo], but [bar] is required". Placeholders: %1$s - current value for a PHP setting, %2$s - required value for the PHP setting
-#: woocommerce/class-sv-wc-plugin.php:762
+#: woocommerce/class-sv-wc-plugin.php:786
 msgid "Set as %1$s - %2$s is required."
 msgstr "Impostazione attuale: %1$s. È obbligatorio %2$s."
 
-#: woocommerce/class-sv-wc-plugin.php:1127
+#: woocommerce/class-sv-wc-plugin.php:1151
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:807
 msgid "Configure"
 msgstr "Configura"
@@ -541,7 +541,7 @@ msgstr "ID cliente gateway dell’utente. Modificalo solo se necessario."
 
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:100
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:149
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Frontend.php:139
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Frontend.php:140
 msgid "An error occurred, please try again or try an alternate form of payment"
 msgstr "Errore. Riprova oppure tenta con un’altra forma di pagamento"
 
@@ -1364,7 +1364,7 @@ msgstr "Seleziona l’ambiente gateway da utilizzare per le transazioni."
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1579
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:152
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:150
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:158
 msgid "Connection Settings"
 msgstr "Impostazioni di connessione"
 
@@ -1670,18 +1670,18 @@ msgid "Allow Apple Pay on"
 msgstr "Consenti Apple Pay su"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:113
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:113
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:121
 msgid "Button Style"
 msgstr "Stile pulsante"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:116
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:116
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:124
 msgctxt "Button style"
 msgid "Black"
 msgstr "Nero"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:117
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:117
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:125
 msgctxt "Button style"
 msgid "White"
 msgstr "Bianco"
@@ -1714,7 +1714,7 @@ msgid "For reference, your current web root path is: %s"
 msgstr "Per riferimento, l’attuale percorso principale web è: %s"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:190
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:159
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:167
 msgid "Test Mode"
 msgstr "Modalità test"
 
@@ -1788,13 +1788,21 @@ msgctxt "For the merchant to accept Google Pay payments"
 msgid "Accept Google Pay"
 msgstr "Accetta Google Pay"
 
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:102
+msgid "Merchant ID"
+msgstr "ID commerciante"
+
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:104
+msgid "A Google merchant identifier issued after registration with the %1$sGoogle Pay & Wallet Console%2$s. 12-18 characters. Required in production environment."
+msgstr "Un identificatore commerciante di Google emesso dopo la registrazione sulla %1$sConsole Google Pay & Wallet%2$s. 12-18 caratteri. Richiesto in ambiente di produzione."
+
 #. translators: Allow Google Pay button on selected display locations (e.g. cart, checkout, product page...)
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:103
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:111
 msgctxt "Setting title for a multi-select list dropdown of display locations"
 msgid "Allow Google Pay on"
 msgstr "Consenti Google Pay su"
 
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:160
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:168
 msgid "Enable to test Google Pay functionality throughout your sites without processing real payments."
 msgstr "Attiva per collaudare la funzionalità Google Pay in tutti i tuoi siti senza elaborare pagamenti reali."
 
