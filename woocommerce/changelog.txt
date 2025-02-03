@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2024.nn.nn - version 5.15.4
+
 2025.01.24 - version 5.15.3
 * Fix - Add Merchant ID to Google Pay, distinguishing it from Gateway merchant ID
 
