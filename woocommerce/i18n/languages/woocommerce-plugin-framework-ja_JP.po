@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-09-02T12:48:01+00:00\n"
+"POT-Creation-Date: 2025-01-24T02:55:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -286,41 +286,41 @@ msgid "Your hosting provider can do this for you. %1$sHere are some resources to
 msgstr "ホスティングサービス側で、アップグレードしてもらうことが可能です。.%1$sアップグレードする際にはこちらのリソースをご活用ください%2$s。また、PHPのバージョンに関する詳細もご確認いただけます。."
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:345
+#: woocommerce/class-sv-wc-plugin.php:369
 msgid "You cannot clone instances of %s."
 msgstr "%s のインスタンスをクローンすることはできません。."
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:356
+#: woocommerce/class-sv-wc-plugin.php:380
 msgid "You cannot unserialize instances of %s."
 msgstr "%s のインスタンスをアンシリアライズすることはできません。"
 
 #. translators: Docs as in Documentation
-#: woocommerce/class-sv-wc-plugin.php:603
+#: woocommerce/class-sv-wc-plugin.php:627
 msgid "Docs"
 msgstr "ドキュメント"
 
-#: woocommerce/class-sv-wc-plugin.php:608
+#: woocommerce/class-sv-wc-plugin.php:632
 msgctxt "noun"
 msgid "Support"
 msgstr "サポート"
 
-#: woocommerce/class-sv-wc-plugin.php:613
+#: woocommerce/class-sv-wc-plugin.php:637
 msgctxt "verb"
 msgid "Review"
 msgstr "レビュー"
 
 #. translators: Placeholders: %1$s - PHP setting value, %2$s - version or value required
-#: woocommerce/class-sv-wc-plugin.php:752
+#: woocommerce/class-sv-wc-plugin.php:776
 msgid "%1$s - A minimum of %2$s is required."
 msgstr "%1$s - %2$s 以上が必要です。"
 
 #. translators: Context: As in "Value has been set as [foo], but [bar] is required". Placeholders: %1$s - current value for a PHP setting, %2$s - required value for the PHP setting
-#: woocommerce/class-sv-wc-plugin.php:762
+#: woocommerce/class-sv-wc-plugin.php:786
 msgid "Set as %1$s - %2$s is required."
 msgstr "%1$sが設定されています - %2$s が必要です。."
 
-#: woocommerce/class-sv-wc-plugin.php:1127
+#: woocommerce/class-sv-wc-plugin.php:1151
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:807
 msgid "Configure"
 msgstr "設定"
@@ -541,7 +541,7 @@ msgstr "ユーザー用のゲートウェイ顧客 ID必要な場合に限り、
 
 #: woocommerce/payment-gateway/api/class-sv-wc-payment-gateway-api-response-message-helper.php:100
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-frontend.php:149
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Frontend.php:139
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Frontend.php:140
 msgid "An error occurred, please try again or try an alternate form of payment"
 msgstr "エラーが発生しました。もう一度試すか、別のお支払い方法をお試しください。"
 
@@ -1364,7 +1364,7 @@ msgstr "取引用に使用するゲートウェイ環境を選択します。"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1579
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:152
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:150
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:158
 msgid "Connection Settings"
 msgstr "接続設定"
 
@@ -1670,18 +1670,18 @@ msgid "Allow Apple Pay on"
 msgstr "Apple Pay による支払いを許可する"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:113
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:113
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:121
 msgid "Button Style"
 msgstr "ボタンスタイル"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:116
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:116
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:124
 msgctxt "Button style"
 msgid "Black"
 msgstr "黒"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:117
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:117
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:125
 msgctxt "Button style"
 msgid "White"
 msgstr "白"
@@ -1714,7 +1714,7 @@ msgid "For reference, your current web root path is: %s"
 msgstr "ご参考までに、お客様の現在の Web ルートパスは、%s"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:190
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:159
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:167
 msgid "Test Mode"
 msgstr "テストモード"
 
@@ -1788,13 +1788,21 @@ msgctxt "For the merchant to accept Google Pay payments"
 msgid "Accept Google Pay"
 msgstr "Google Pay を受け付ける"
 
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:102
+msgid "Merchant ID"
+msgstr "マーチャント ID"
+
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:104
+msgid "A Google merchant identifier issued after registration with the %1$sGoogle Pay & Wallet Console%2$s. 12-18 characters. Required in production environment."
+msgstr "%1$sGoogle Pay & Wallet Console%2$s への登録後に発行される Google Merchant ID です。12～18 文字。本番環境で必要です。"
+
 #. translators: Allow Google Pay button on selected display locations (e.g. cart, checkout, product page...)
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:103
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:111
 msgctxt "Setting title for a multi-select list dropdown of display locations"
 msgid "Allow Google Pay on"
 msgstr "Google Pay を受け付ける"
 
-#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:160
+#: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:168
 msgid "Enable to test Google Pay functionality throughout your sites without processing real payments."
 msgstr "実際の支払いを処理することなく、サイト全体で Google Pay のテストを有効化します。"
 
