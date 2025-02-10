@@ -22,17 +22,17 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_1\Payment_Gateway\External_Checkout\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_4\Payment_Gateway\External_Checkout\Google_Pay;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_1\Payment_Gateway\External_Checkout\External_Checkout;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_1\Payment_Gateway\External_Checkout\Orders;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Payment_Gateway_Exception;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Payment_Gateway_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_4\Payment_Gateway\External_Checkout\External_Checkout;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_4\Payment_Gateway\External_Checkout\Orders;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_4\SV_WC_Payment_Gateway_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_4\SV_WC_Payment_Gateway_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_4\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_1\\Payment_Gateway\\External_Checkout\\Google_Pay\\Google_Pay' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_4\\Payment_Gateway\\External_Checkout\\Google_Pay\\Google_Pay' ) ) :
 
 
 /**
@@ -677,7 +677,7 @@ class Google_Pay extends External_Checkout {
 
 		$accepted_card_types = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_card_types() : [];
 
-		$accepted_card_types = array_map( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_1\\SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
+		$accepted_card_types = array_map( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_4\\SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
 
 		$valid_networks = [
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_AMEX       => 'AMEX',
@@ -703,17 +703,65 @@ class Google_Pay extends External_Checkout {
 
 
 	/**
-	 * Gets the gateway merchant ID.
-	 *
-	 * Each plugin can override this method to get the merchant ID from their own setting.
+	 * Gets the Google Pay merchant ID.
 	 *
 	 * @since 5.10.0
 	 *
+	 * @see https://developers.google.com/pay/api/web/reference/request-objects#MerchantInfo
+	 *
 	 * @return string
 	 */
-	public function get_merchant_id() {
+	public function get_merchant_id() : string {
 
-		return method_exists( $this->get_processing_gateway(), 'get_merchant_id' ) ? $this->get_processing_gateway()->get_merchant_id() : '';
+		$optionValue = get_option("sv_wc_{$this->id}_merchant_id");
+
+		return $optionValue && is_scalar($optionValue) ? (string) $optionValue : '';
+	}
+
+	/**
+	 * Gets the gateway merchant ID.
+	 *
+	 * This is different from the Google Pay Merchant ID.
+	 * Each plugin can override this method to get the merchant ID from their own setting.
+	 *
+	 * @see https://developers.google.com/pay/api/web/guides/tutorial#tokenization
+	 *
+	 * @since 5.15.3
+	 *
+	 * @return string
+	 */
+	public function get_gateway_merchant_id() : string {
+
+		if (! $gateway = $this->get_processing_gateway()) {
+			return '';
+		}
+
+		if (! is_object($gateway)) {
+			return '';
+		}
+
+		return method_exists($gateway, 'get_merchant_id') ? $gateway->get_merchant_id() : '';
+	}
+
+	/**
+	 * Gets the merchant name.
+	 *
+	 * Defaults to the blog name.
+	 *
+	 * @since 5.15.3
+	 *
+	 * @return string
+	 */
+	public function get_merchant_name() :string {
+
+		/**
+		 * Filters the Google Pay merchant name.
+		 *
+		 * @since 5.15.3
+		 *
+		 * @param string $name the merchant name (defaults to blog name)
+		 */
+		return apply_filters( 'sv_wc_google_pay_merchant_name', get_bloginfo( 'name' ) );
 	}
 
 

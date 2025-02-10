@@ -1,20 +1,20 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_1\Tests\Unit;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_4\Tests\Unit;
 
 use Generator;
 use Mockery;
 use ReflectionException;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Plugin_Compatibility;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_1\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_4\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_4\SV_WC_Plugin_Compatibility;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_4\Tests\TestCase;
 use WC_Data;
 use WP_Mock;
 
 class HelperTest extends TestCase
 {
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Helper::is_wc_navigation_enabled()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_4\SV_WC_Helper::is_wc_navigation_enabled()
 	 *
 	 * @throws ReflectionException
 	 */
@@ -36,7 +36,7 @@ class HelperTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Helper::is_wc_navigation_enabled()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_4\SV_WC_Helper::is_wc_navigation_enabled()
 	 *
 	 * @throws ReflectionException
 	 */
@@ -57,7 +57,7 @@ class HelperTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Helper::getWooCommerceObjectMetaValue()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_4\SV_WC_Helper::getWooCommerceObjectMetaValue()
 	 *
 	 * @throws ReflectionException
 	 */
@@ -74,7 +74,7 @@ class HelperTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Helper::getWooCommerceObjectMetaValue()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_4\SV_WC_Helper::getWooCommerceObjectMetaValue()
 	 *
 	 * @throws ReflectionException
 	 */
@@ -92,7 +92,7 @@ class HelperTest extends TestCase
 
 	/**
 	 * @dataProvider providerCanGetPostOrObjectMetaCompat()
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_1\SV_WC_Helper::getPostOrObjectMetaCompat()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_4\SV_WC_Helper::getPostOrObjectMetaCompat()
 	 *
 	 * @param bool $hasData
 	 * @param bool $hasPostId
