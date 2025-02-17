@@ -37,9 +37,17 @@ class PageHelper
 			return false;
 		}
 
-		$pageData = \Automattic\WooCommerce\Admin\PageController::get_instance()->get_current_page();
+		$pageData = static::getWooCommercePageController()->get_current_page();
 
 		return ($pageData['id'] ?? '') === 'woocommerce-analytics' ||
 			($pageData['parent'] ?? '') === 'woocommerce-analytics';
+	}
+
+	/**
+	 * @codeCoverageIgnore
+	 */
+	protected static function getWooCommercePageController() : \Automattic\WooCommerce\Admin\PageController
+	{
+		return \Automattic\WooCommerce\Admin\PageController::get_instance();
 	}
 }
