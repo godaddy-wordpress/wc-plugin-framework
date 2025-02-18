@@ -33,11 +33,11 @@ class PageHelper
 	 */
 	public static function isWooCommerceAnalyticsPage() : bool
 	{
-		if (! class_exists(\Automattic\WooCommerce\Admin\PageController::class)) {
+		if (! $controller = static::getWooCommercePageController()) {
 			return false;
 		}
 
-		$pageData = static::getWooCommercePageController()->get_current_page();
+		$pageData = $controller->get_current_page();
 
 		return ($pageData['id'] ?? '') === 'woocommerce-analytics' ||
 			($pageData['parent'] ?? '') === 'woocommerce-analytics';
@@ -46,8 +46,12 @@ class PageHelper
 	/**
 	 * @codeCoverageIgnore
 	 */
-	protected static function getWooCommercePageController() : \Automattic\WooCommerce\Admin\PageController
+	protected static function getWooCommercePageController() : ?\Automattic\WooCommerce\Admin\PageController
 	{
+		if (! class_exists(\Automattic\WooCommerce\Admin\PageController::class)) {
+			return null;
+		}
+
 		return \Automattic\WooCommerce\Admin\PageController::get_instance();
 	}
 }
