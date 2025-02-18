@@ -1,6 +1,6 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_4\Tests\unit\Helpers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_4\Tests\Unit\Helpers;
 
 use Generator;
 use Mockery;
