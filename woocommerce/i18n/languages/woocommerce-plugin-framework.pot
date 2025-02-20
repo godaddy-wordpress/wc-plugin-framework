@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-01-24T02:55:40+00:00\n"
+"POT-Creation-Date: 2025-02-20T23:56:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -223,20 +223,20 @@ msgstr ""
 msgid "Please %1$supdate WooCommerce%2$s"
 msgstr ""
 
-#: woocommerce/class-sv-wc-helper.php:430
+#: woocommerce/class-sv-wc-helper.php:432
 msgctxt "coordinating conjunction for a list of items: a, b, and c"
 msgid "and"
 msgstr ""
 
 #. translators: A list of items, for example: "US or Canada", or "US, Canada, or Mexico". English uses Oxford comma before the conjunction ("or") if there are at least 2 items preceding it - hence the use of plural forms. If your locale does not use Oxford comma, you can just provide the same translation to all plural forms. Placeholders: %1$s - a comma-separated list of item, %2$s - the final item in the list
-#: woocommerce/class-sv-wc-helper.php:475
+#: woocommerce/class-sv-wc-helper.php:477
 msgid "%1$s or %2$s"
 msgid_plural "%1$s, or %2$s"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: A list of items, for example: "US and Canada", or "US, Canada, and Mexico". English uses Oxford comma before the conjunction ("and") if there are at least 2 items preceding it - hence the use of plural forms. If your locale does not use Oxford comma, you can just provide the same translation to all plural forms. Placeholders: %1$s - a comma-separated list of items, %2$s - the final item in the list
-#: woocommerce/class-sv-wc-helper.php:481
+#: woocommerce/class-sv-wc-helper.php:483
 msgid "%1$s and %2$s"
 msgid_plural "%1$s, and %2$s"
 msgstr[0] ""

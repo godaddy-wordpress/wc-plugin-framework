@@ -22,13 +22,15 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_4;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_3\Helpers\NumberHelper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_4\Helpers\NumberHelper;
+use WC_Data;
+use WP_Post;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_3\\SV_WC_Helper' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_4\\SV_WC_Helper' ) ) :
 
 
 /**
@@ -1196,6 +1198,50 @@ class SV_WC_Helper {
 		return implode( ',', array_unique( array_map( 'intval', $ids ) ) );
 	}
 
+
+	/**
+	 * Gets value of a meta key from WooCommerce object based on its data type.
+	 *
+	 * @param WP_Post|WC_Data $object
+	 * @param string $field
+	 * @param bool $single
+	 *
+	 * @return array|mixed|string|null
+	 */
+	public static function getWooCommerceObjectMetaValue($object, string $field, bool $single = true)
+	{
+		if ($object instanceof WP_Post) {
+			return static::getPostOrObjectMetaCompat($object, null, $field, $single);
+		}
+
+		if ($object instanceof WC_Data) {
+			return static::getPostOrObjectMetaCompat(null, $object, $field, $single);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Adds local compatibility for Woo's internal OrderUtil::get_post_or_object_meta() method.
+	 *
+	 * @param WP_Post|null $post
+	 * @param WC_Data|null $data
+	 * @param string       $key
+	 * @param bool         $single
+	 *
+	 * @return array|false|mixed|string
+	 */
+	public static function getPostOrObjectMetaCompat(?\WP_Post $post, ?\WC_Data $data, string $key, bool $single)
+	{
+		if (isset($data)) {
+			if (method_exists($data, "get$key")) {
+				return $data->{"get$key"}();
+			}
+			return $data->get_meta($key, $single);
+		} else {
+			return isset($post->ID) ? get_post_meta($post->ID, $key, $single) : false;
+		}
+	}
 
 }
 

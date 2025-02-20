@@ -1,5 +1,10 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2025.nn.nn - version 5.15.4
+* New: Added PageHelper class to assist in determining page contexts.
+* New: Add a helper method to get WooCommerce object meta values.
+* New: Add an array helper method to get value with dot notation and default value.
+
 2025.01.24 - version 5.15.3
 * Fix - Add Merchant ID to Google Pay, distinguishing it from Gateway merchant ID
 

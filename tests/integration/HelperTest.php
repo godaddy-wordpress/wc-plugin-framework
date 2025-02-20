@@ -1,11 +1,11 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_3 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_4 as Framework;
 
 /**
  * Tests for the helper class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_15_3\SV_WC_Plugin_Compatibility
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_15_4\SV_WC_Plugin_Compatibility
  */
 class HelperTest extends \Codeception\TestCase\WPTestCase {
 
