@@ -39,8 +39,8 @@ class PageHelper
 
 		$pageData = $controller->get_current_page();
 
-		return ($pageData['id'] ?? '') === 'woocommerce-analytics' ||
-			($pageData['parent'] ?? '') === 'woocommerce-analytics';
+		return ArrayHelper::get($pageData, 'id') === 'woocommerce-analytics' ||
+			ArrayHelper::get($pageData, 'parent') === 'woocommerce-analytics';
 	}
 
 	/**
