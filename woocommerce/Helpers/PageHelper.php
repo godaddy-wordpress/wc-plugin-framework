@@ -18,31 +18,40 @@
  *
  * @package   SkyVerge/WooCommerce/Plugin/Classes
  * @author    SkyVerge
- * @copyright Copyright (c) 2013-2024, SkyVerge, Inc.
+ * @copyright Copyright (c) 2013-2025, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_4\Traits;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_4\Helpers;
 
-defined('ABSPATH') or exit;
-
-if (trait_exists('\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_4\\Traits\\CanGetNewInstanceTrait')) {
-	return;
-}
-
-/**
- * A trait that allows a given class/object to get a new instance of itself.
- * For singletons {@see CanGetNewInstanceTrait} instead.
- */
-trait CanGetNewInstanceTrait
+class PageHelper
 {
 	/**
-	 * Creates and returns a new instance of the calling class.
+	 * Determines whether the current page is the WooCommerce "Analytics" page.
 	 *
-	 * @return static
+	 * @since 5.15.4
 	 */
-	public static function getNewInstance(...$args)
+	public static function isWooCommerceAnalyticsPage() : bool
 	{
-		return new static(...$args);
+		if (! $controller = static::getWooCommercePageController()) {
+			return false;
+		}
+
+		$pageData = $controller->get_current_page();
+
+		return ArrayHelper::get($pageData, 'id') === 'woocommerce-analytics' ||
+			ArrayHelper::get($pageData, 'parent') === 'woocommerce-analytics';
+	}
+
+	/**
+	 * @codeCoverageIgnore
+	 */
+	protected static function getWooCommercePageController() : ?\Automattic\WooCommerce\Admin\PageController
+	{
+		if (! class_exists(\Automattic\WooCommerce\Admin\PageController::class)) {
+			return null;
+		}
+
+		return \Automattic\WooCommerce\Admin\PageController::get_instance();
 	}
 }

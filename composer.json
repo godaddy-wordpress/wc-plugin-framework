@@ -1,7 +1,7 @@
 {
   "name": "skyverge/wc-plugin-framework",
   "description": "The official SkyVerge WooCommerce plugin framework",
-  "version": "5.15.3",
+  "version": "5.15.4",
   "license": "GPL-3.0",
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -35,12 +35,12 @@
       "woocommerce/class-sv-wp-admin-message-handler.php"
     ],
     "psr-4": {
-      "SkyVerge\\WooCommerce\\PluginFramework\\v5_15_3\\": "woocommerce/"
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_15_4\\": "woocommerce/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "SkyVerge\\WooCommerce\\PluginFramework\\v5_15_3\\Tests\\": "tests/"
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_15_4\\Tests\\": "tests/"
     }
   },
   "config": {

@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_3\Helpers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_4\Helpers;
 
 use ArrayAccess;
 
@@ -122,5 +122,34 @@ class ArrayHelper
 		}
 
 		return array_key_exists($key, self::wrap($array));
+	}
+
+	/**
+	 * Gets an array value from a dot notated key.
+	 *
+	 * @param mixed $array
+	 * @param int|string $key
+	 * @param mixed $default
+	 * @return mixed
+	 */
+	public static function get($array, $key, $default = null)
+	{
+		if (! self::accessible($array)) {
+			return $default;
+		}
+
+		if (self::exists($array, $key)) {
+			return $array[$key];
+		}
+
+		foreach (explode('.', (string) $key) as $segment) {
+			if (! self::exists($array, $segment)) {
+				return $default;
+			}
+
+			$array = $array[$segment];
+		}
+
+		return $array;
 	}
 }

@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_3\\SV_WC_Payment_Gateway_Integration_Subscriptions' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_4\\SV_WC_Payment_Gateway_Integration_Subscriptions' ) ) :
 
 
 /**
@@ -448,7 +448,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		foreach ( (array) $order_meta as $index => $meta ) {
 
 			// this accounts for different versions of the Subscriptions filter running before and after WooCommerce Subscriptions 2.5
-			if ( in_array( $index, $meta_keys ) || ( isset( $meta['meta_key'] ) && in_array( $meta['meta_key'], $meta_keys ) ) ) {
+			if ( in_array( $index, $meta_keys, true ) || ( is_array( $meta ) && isset( $meta['meta_key'] ) && in_array( $meta['meta_key'], $meta_keys, true ) ) ) {
 				unset( $order_meta[ $index ] );
 			}
 		}

@@ -1,11 +1,11 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_3\SV_WC_Payment_Gateway_Payment_Form;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_4\SV_WC_Payment_Gateway_Payment_Form;
 
 /**
  * Tests for the SV_WC_Payment_Gateway_Payment_Form class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_15_3\SV_WC_Payment_Gateway_Payment_Form
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_15_4\SV_WC_Payment_Gateway_Payment_Form
  */
 class PaymentFormTest extends \Codeception\TestCase\WPTestCase {
 
@@ -90,7 +90,7 @@ class PaymentFormTest extends \Codeception\TestCase\WPTestCase {
 		$this->get_plugin()->get_gateway()->get_payment_form_instance()->render_js();
 
 		$this->assertStringContainsString( 'function load_test_gateway_payment_form_handler', $wc_queued_js );
-		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_payment_form_handler_v5_15_3_loaded\', load_test_gateway_payment_form_handler );', $wc_queued_js );
+		$this->assertStringContainsString( 'window.jQuery( document.body ).on( \'sv_wc_payment_form_handler_v5_15_4_loaded\', load_test_gateway_payment_form_handler );', $wc_queued_js );
 	}
 
 
