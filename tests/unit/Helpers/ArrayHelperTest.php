@@ -251,6 +251,92 @@ final class ArrayHelperTest extends TestCase
 		];
 	}
 
+	/**
+	 * Tests that the helper will return default with key not found.
+	 *
+	 * @covers ::get()
+	 */
+	public function testCanReturnDefaultWhenGetArrayValueByKeyNotFound() : void
+	{
+		$this->assertNull(ArrayHelper::get([], 'key'), 'ArrayHelper::get() does not return null by default as expected');
+		$this->assertEquals('myDefault', ArrayHelper::get([], 'key', 'myDefault'));
+		$this->assertNotEquals('myDefault', ArrayHelper::get(['key' => 'value'], 'key', 'myDefault'));
+	}
+
+	/**
+	 * Tests that can retrieve array value by key without PHP error/warning.
+	 *
+	 * @covers ::get()
+	 * @dataProvider providerCanGetArrayValueByKey
+	 *
+	 * @param mixed $array
+	 * @param int|string $key
+	 * @param mixed $expected
+	 * @return void
+	 */
+	public function testCanGetArrayValueByKey($array, $key, $expected) : void
+	{
+		$this->assertSame($expected, ArrayHelper::get($array, $key));
+	}
+
+	/** @see testCanGetArrayValueByKey() */
+	public function providerCanGetArrayValueByKey() : Generator
+	{
+		yield 'Existing string key in a key/value array' => [
+			'array'    => ['key' => 'found'],
+			'key'      => 'key',
+			'expected' => 'found',
+		];
+
+		yield 'Nonexistent string key in a key/value array' => [
+			'array'    => ['key' => 'notfound'],
+			'key'      => 'value',
+			'expected' => null,
+		];
+
+		yield 'Existing nested key with dot notation' => [
+			'array'    => ['key' => ['nested' => ['deeply' => 'found']]],
+			'key'      => 'key.nested.deeply',
+			'expected' => 'found',
+		];
+
+		yield 'Nonexistent nested key with dot notation' => [
+			'array'    => ['key' => ['nested' => ['deeply' => 'notfound']]],
+			'key'      => 'key.nested.more.deeply',
+			'expected' => null,
+		];
+
+		yield 'Existing dot-notated key as key is returned without iteration' => [
+			'array'    => ['dot.notated.key' => 'found'],
+			'key'      => 'dot.notated.key',
+			'expected' => 'found',
+		];
+
+		yield 'Existing numeric index' => [
+			'array'    => ['foo', 'bar', 'baz'],
+			'key'      => 1,
+			'expected' => 'bar',
+		];
+
+		yield 'Nonexistent numeric index' => [
+			'array'    => ['foo', 'bar', 'baz'],
+			'key'      => 3,
+			'expected' => null,
+		];
+
+		yield 'Existing numeric string index' => [
+			'array'    => ['foo', 'bar', 'baz'],
+			'key'      => '2',
+			'expected' => 'baz',
+		];
+
+		yield 'Nonexistent numeric string index' => [
+			'array'    => ['foo', 'bar', 'baz'],
+			'key'      => '3',
+			'expected' => null,
+		];
+	}
+
 	protected function getArrayAccessObject(): ArrayAccess
 	{
 		return new class implements ArrayAccess
