@@ -563,8 +563,8 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 		 * Convert the tokenization flag to the expected key-value pair:
 		 * @see SV_WC_Payment_Gateway_Payment_Tokens_Handler::should_tokenize()
 		 */
-		if ( $should_tokenize = $payment_context->payment_data['wc-' . $this->gateway->get_id() . '-new-payment-method'] ) {
-			$additional_payment_data[ 'wc-' . $this->gateway->get_id_dasherized() . '-tokenize-payment-method' ] = $should_tokenize;
+		if ($should_tokenize = ($payment_context->payment_data['wc-' . $this->gateway->get_id() . '-new-payment-method'] ?? null)) {
+			$additional_payment_data['wc-' . $this->gateway->get_id_dasherized() . '-tokenize-payment-method'] = $should_tokenize;
 		}
 
 		/**
@@ -593,7 +593,7 @@ abstract class Gateway_Checkout_Block_Integration extends AbstractPaymentMethodT
 	 */
 	protected function get_payment_token_for_context( PaymentContext $payment_context ): ?SV_WC_Payment_Gateway_Payment_Token {
 
-		$core_token_id = $payment_context->payment_data['token'] ?: null;
+		$core_token_id = $payment_context->payment_data['token'] ?? null;
 
 		if ( ! $core_token_id || $payment_context->payment_method !== $this->gateway->get_id() ) {
 			return null;
