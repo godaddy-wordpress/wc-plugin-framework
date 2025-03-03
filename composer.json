@@ -35,12 +35,12 @@
       "woocommerce/class-sv-wp-admin-message-handler.php"
     ],
     "psr-4": {
-      "SkyVerge\\WooCommerce\\PluginFramework\\v5_15_4\\": "woocommerce/"
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_15_5\\": "woocommerce/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "SkyVerge\\WooCommerce\\PluginFramework\\v5_15_4\\Tests\\": "tests/"
+      "SkyVerge\\WooCommerce\\PluginFramework\\v5_15_5\\Tests\\": "tests/"
     }
   },
   "config": {
