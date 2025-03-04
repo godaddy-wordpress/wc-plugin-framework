@@ -8,9 +8,42 @@ on:
         description: "New version number"
         required: true
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   prepare-release:
     runs-on: ubuntu-latest
-    if: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main' }} # prevent running on main/master branches
+    env:
+      NEW_VERSION: ${{ inputs.new-version }}
     steps:
-      - run: echo "Running..."
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create new release branch
+        run: git checkout -b release/"${NEW_VERSION}"
+
+      - name: Replace namespaces and versions through entire codebase
+        run: ./.github/scripts/update-namespace.sh
+
+      - name: Install packages
+        run: npm -i
+
+      - name: Bump package.json version
+        run: npm version --no-git-tag-version --allow-same-version "${NEW_VERSION}"
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Version ${NEW_VERSION}"
+          git push
+
+      - name: Create pull request
+        run: |
+          gh pr create -B "${github.ref_name}" -H release/"${NEW_VERSION}" --title 'Release v: "${NEW_VERSION}"'
