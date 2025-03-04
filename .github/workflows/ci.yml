@@ -22,28 +22,25 @@ jobs:
           - php: '8.3'
             os: 'ubuntu-24.04'
           - php: '8.2'
-            os: 'ubuntu-20.04'
+            os: 'ubuntu-24.04'
           - php: '8.1'
-            os: 'ubuntu-20.04'
+            os: 'ubuntu-24.04'
           - php: '8.0'
-            os: 'ubuntu-20.04'
+            os: 'ubuntu-24.04'
           - php: '7.4'
-            os: 'ubuntu-20.04'
+            os: 'ubuntu-24.04'
       fail-fast: false
     env:
       COVERAGE_CACHE_PATH: phpunit-coverage-cache
       PHP_VERSION: ${{ matrix.php }}
 
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@v4
 
-      - name: Switch to PHP ${{ env.PHP_VERSION }}
-        run: |
-          sudo update-alternatives --set php /usr/bin/php$PHP_VERSION
-          sudo update-alternatives --set phar /usr/bin/phar$PHP_VERSION
-          sudo update-alternatives --set phar.phar /usr/bin/phar.phar$PHP_VERSION
-          sudo update-alternatives --set phpize /usr/bin/phpize$PHP_VERSION
-          sudo update-alternatives --set php-config /usr/bin/php-config$PHP_VERSION
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
 
       - name: Setup INI file
         run: |
@@ -59,7 +56,7 @@ jobs:
         run: |
           echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+      - uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
