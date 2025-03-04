@@ -22,13 +22,13 @@ jobs:
           - php: '8.3'
             os: 'ubuntu-24.04'
           - php: '8.2'
-            os: 'ubuntu-20.04'
+            os: 'ubuntu-24.04'
           - php: '8.1'
-            os: 'ubuntu-20.04'
+            os: 'ubuntu-24.04'
           - php: '8.0'
-            os: 'ubuntu-20.04'
+            os: 'ubuntu-24.04'
           - php: '7.4'
-            os: 'ubuntu-20.04'
+            os: 'ubuntu-24.04'
       fail-fast: false
     env:
       COVERAGE_CACHE_PATH: phpunit-coverage-cache
@@ -37,13 +37,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Switch to PHP ${{ env.PHP_VERSION }}
-        run: |
-          sudo update-alternatives --set php /usr/bin/php$PHP_VERSION
-          sudo update-alternatives --set phar /usr/bin/phar$PHP_VERSION
-          sudo update-alternatives --set phar.phar /usr/bin/phar.phar$PHP_VERSION
-          sudo update-alternatives --set phpize /usr/bin/phpize$PHP_VERSION
-          sudo update-alternatives --set php-config /usr/bin/php-config$PHP_VERSION
+      #- name: Switch to PHP ${{ env.PHP_VERSION }}
+        #run: |
+          #sudo update-alternatives --set php /usr/bin/php$PHP_VERSION
+          #sudo update-alternatives --set phar /usr/bin/phar$PHP_VERSION
+          #sudo update-alternatives --set phar.phar /usr/bin/phar.phar$PHP_VERSION
+          #sudo update-alternatives --set phpize /usr/bin/phpize$PHP_VERSION
+          #sudo update-alternatives --set php-config /usr/bin/php-config$PHP_VERSION
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
 
       - name: Setup INI file
         run: |
