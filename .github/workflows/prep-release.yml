@@ -63,5 +63,5 @@ jobs:
       - name: Create pull request
         run: |
           gh pr create -B "${BASE_BRANCH}" -H release/"${NEW_VERSION}" --title 'Release v:"${NEW_VERSION}"'
-        with:
+        env:
           BASE_BRANCH: ${{ github.ref_name }}
