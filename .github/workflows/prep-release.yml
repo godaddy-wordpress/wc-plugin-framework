@@ -28,6 +28,12 @@ jobs:
       - name: Replace namespaces and versions through entire codebase
         run: ./.github/scripts/update-namespace.sh
 
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+
+      - name: Install sass
+        run: gem install sass
+
       - name: Install packages
         run: npm install
 
