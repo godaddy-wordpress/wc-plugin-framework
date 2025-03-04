@@ -28,7 +28,7 @@ jobs:
         run: ./.github/scripts/update-namespace.sh
 
       - name: Install packages
-        run: npm -i
+        run: npm install
 
       - name: Bump package.json version
         run: npm version --no-git-tag-version --allow-same-version "${NEW_VERSION}"
@@ -46,4 +46,4 @@ jobs:
 
       - name: Create pull request
         run: |
-          gh pr create -B "${github.ref_name}" -H release/"${NEW_VERSION}" --title 'Release v: "${NEW_VERSION}"'
+          gh pr create -B "${github.ref_name}" -H release/"${NEW_VERSION}" --title 'Release v:"${NEW_VERSION}"'
