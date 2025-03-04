@@ -1,11 +1,11 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_4\Tests\Unit\Traits;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_16_0\Tests\Unit\Traits;
 
 use Exception;
 use ReflectionClass;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_4\Tests\TestCase;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_4\Traits\IsSingletonTrait;
+use SkyVerge\WooCommerce\PluginFramework\v5_16_0\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v5_16_0\Traits\IsSingletonTrait;
 
 class IsSingletonTraitTest extends TestCase
 {
@@ -28,7 +28,7 @@ class IsSingletonTraitTest extends TestCase
 	/**
 	 * Tests that it can determine whether an instance is loaded or not.
 	 *
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_4\Traits\IsSingletonTrait::isLoaded()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_16_0\Traits\IsSingletonTrait::isLoaded()
 	 */
 	public function testCanCheckIfIsLoaded() : void
 	{
@@ -42,7 +42,7 @@ class IsSingletonTraitTest extends TestCase
 	/**
 	 * Tests that it can initialize and return an instance of self.
 	 *
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_4\Traits\IsSingletonTrait::getInstance()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_16_0\Traits\IsSingletonTrait::getInstance()
 	 */
 	public function testCanGetInstance() : void
 	{
@@ -57,7 +57,7 @@ class IsSingletonTraitTest extends TestCase
 	/**
 	 * Tests that an instance can be reset.
 	 *
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_4\Traits\IsSingletonTrait::reset()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_16_0\Traits\IsSingletonTrait::reset()
 	 */
 	public function testCanBeReset() : void
 	{
