@@ -22,16 +22,16 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_4;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_16_0;
 
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Note;
 use Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_4\Payment_Gateway\Blocks\Gateway_Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_4\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay;
+use SkyVerge\WooCommerce\PluginFramework\v5_16_0\Payment_Gateway\Blocks\Gateway_Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_16_0\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_4\\SV_WC_Payment_Gateway_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_16_0\\SV_WC_Payment_Gateway_Plugin' ) ) :
 
 
 /**
