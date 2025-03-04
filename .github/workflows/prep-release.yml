@@ -26,13 +26,12 @@ jobs:
       - name: Validate release branch
         run: |
           BRANCH="release/${NEW_VERSION}"
-          git ls-remote --exit-code --heads origin $BRANCH >/dev/null 2>&1
-          EXIT_CODE=$?
+          BRANCH_EXISTS=$(git ls-remote --heads origin $BRANCH | wc -l)
 
-          if [[ $EXIT_CODE == '0' ]]; then
+          if [[ $BRANCH_EXISTS == '1' ]]; then
             echo The release/"${NEW_VERSION}" branch already exists. Please delete it to proceed.
             exit 1
-          elif [[ $EXIT_CODE == '2' ]]; then
+          else
             echo The release/"${NEW_VERSION}" branch does not exist... proceeding!
           fi
 
