@@ -14,6 +14,7 @@ permissions:
 
 jobs:
   prepare-release:
+    name: Prepare Release v${{ inputs.new-version }}
     runs-on: ubuntu-latest
     env:
       NEW_VERSION: ${{ inputs.new-version }}
