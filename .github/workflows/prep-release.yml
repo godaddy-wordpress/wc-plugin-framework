@@ -2,3 +2,15 @@ name: Prepare Release
 
 on:
   workflow_dispatch:
+    inputs:
+      new-version:
+        type: string
+        description: "New version number"
+        required: true
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main' }} # prevent running on main/master branches
+    steps:
+      - run: echo "Running..."
