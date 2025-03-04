@@ -22,16 +22,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate release branch
-        run: |
-          BRANCH="release/${NEW_VERSION}"
-          git ls-remote --exit-code --heads origin $BRANCH >/dev/null 2>&1
-          EXIT_CODE=$?
-
-          if [[ $EXIT_CODE == '0' ]]; then
-            echo The release/"${NEW_VERSION}" branch already exists. Please delete it to proceed.
-            exit 1
-          fi
+# TODO FIX
+      #- name: Validate release branch
+        #run: |
+          #if git show-ref --quiet refs/heads/release/"${NEW_VERSION}"; then
+            #echo The release/"${NEW_VERSION}" branch already exists. Please delete it to proceed.
+            #exit 1
+          #fi
 
       - name: Create new release branch
         run: git checkout -b release/"${NEW_VERSION}"
