@@ -34,7 +34,7 @@ jobs:
           ruby-version: '3.3'
 
       - name: Install sass
-        run: gem install sass
+        run: npm install -g sass
 
       - name: Install packages
         run: npm install
