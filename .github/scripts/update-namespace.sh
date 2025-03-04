@@ -50,3 +50,8 @@ sed -i -e "s/public const VERSION = '${OLD_VERSION}';/public const VERSION = '${
 # replace version number in `./woocommerce-framework-plugin-loader-sample.php` file
 echo "Replacing FRAMEWORK_VERSION constant value in ./woocommerce-framework-plugin-loader-sample.php file"
 sed -i -e "s/public const FRAMEWORK_VERSION = '${OLD_VERSION}';/public const FRAMEWORK_VERSION = '${NEW_VERSION}';/g" "${SCRIPT_DIR}/../../woocommerce-framework-plugin-loader-sample.php"
+
+# add new changelog heading on line 3
+echo "Adding changelog heading for new version"
+CHANGELOG_HEADING="$(date +%Y).nn.nn - version ${NEW_VERSION}\n"
+sed -i "3i ${CHANGELOG_HEADING}" "${SCRIPT_DIR}/../../woocommerce/changelog.txt"
