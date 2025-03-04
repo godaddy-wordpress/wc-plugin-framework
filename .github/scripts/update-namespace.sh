@@ -42,3 +42,11 @@ find "${SCRIPT_DIR}/../../woocommerce/" -type f \( -name '*.php' -o -name '*.js'
 # replace namespace in `./tests/` directory
 echo "Replacing instances of ${OLD_NAMESPACE_STRING} with ${NEW_NAMESPACE_STRING} in ./tests/"
 find "${SCRIPT_DIR}/../../tests/" -type f -name '*.php' -exec sed -i "s/${OLD_NAMESPACE_STRING}/${NEW_NAMESPACE_STRING}/g" {} \;
+
+# replace version number in `./woocommerce/class-sv-wc-plugin.php` file
+echo "Replacing VERSION constant value in ./woocommerce/class-sv-wc-plugin.php file"
+sed -i -e "s/public const VERSION = '${OLD_VERSION}';/public const VERSION = '${NEW_VERSION}';/g" "${SCRIPT_DIR}/../../woocommerce/class-sv-wc-plugin.php"
+
+# replace version number in `./woocommerce-framework-plugin-loader-sample.php` file
+echo "Replacing FRAMEWORK_VERSION constant value in ./woocommerce-framework-plugin-loader-sample.php file"
+sed -i -e "s/public const FRAMEWORK_VERSION = '${OLD_VERSION}';/public const FRAMEWORK_VERSION = '${NEW_VERSION}';/g" "${SCRIPT_DIR}/../../woocommerce-framework-plugin-loader-sample.php"
