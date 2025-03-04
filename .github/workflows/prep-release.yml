@@ -36,6 +36,9 @@ jobs:
       - name: Install sass
         run: npm install -g sass
 
+      - name: Setup WP-CLI
+        uses: godaddy-wordpress/setup-wp-cli@1
+
       - name: Install packages
         run: npm install
 
