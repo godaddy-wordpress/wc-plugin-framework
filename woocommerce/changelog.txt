@@ -1,6 +1,10 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2025.nn.nn - version 5.15.4
+2025.03.05 - version 5.15.5
+* New: Add a trait to assist in compatibility with new WooCommerce email preview feature
+* Fix: Undefined array key errors
+
+2025.02.20 - version 5.15.4
 * New: Added PageHelper class to assist in determining page contexts.
 * New: Add a helper method to get WooCommerce object meta values.
 * New: Add an array helper method to get value with dot notation and default value.
