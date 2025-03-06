@@ -2,3 +2,79 @@ name: Prepare Release
 
 on:
   workflow_dispatch:
+    inputs:
+      new-version:
+        type: string
+        description: "New version number"
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  prepare-release:
+    name: Prepare Release v${{ inputs.new-version }}
+    runs-on: ubuntu-latest
+    env:
+      NEW_VERSION: ${{ inputs.new-version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate release branch
+        run: |
+          BRANCH="release/${NEW_VERSION}"
+          BRANCH_EXISTS=$(git ls-remote --heads origin $BRANCH | wc -l)
+
+          if [[ $BRANCH_EXISTS == '1' ]]; then
+            echo The release/"${NEW_VERSION}" branch already exists. Please delete it to proceed.
+            exit 1
+          else
+            echo The release/"${NEW_VERSION}" branch does not exist... proceeding!
+          fi
+
+      - name: Create new release branch
+        run: git checkout -b release/"${NEW_VERSION}"
+
+      - name: Replace namespaces and versions through entire codebase
+        run: ./.github/scripts/update-namespace.sh
+
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Install sass
+        run: npm install -g sass
+
+      # We disable Xdebug because when enabled it makes the WP pot generation fail :shrug:
+      - name: Disable Xdebug
+        run: sudo phpdismod xdebug
+
+      - name: Setup WP-CLI
+        uses: godaddy-wordpress/setup-wp-cli@1
+
+      - name: Install packages
+        run: npm install
+
+      - name: Bump package.json version
+        run: npm version --no-git-tag-version --allow-same-version "${NEW_VERSION}"
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Version ${NEW_VERSION}"
+          git push --set-upstream origin release/"${NEW_VERSION}"
+
+      - name: Create pull request
+        run: |
+          gh pr create -B "${BASE_BRANCH}" -H release/"${NEW_VERSION}" --title "Release v${NEW_VERSION}" --body "Release v${NEW_VERSION}" --draft
+        env:
+          BASE_BRANCH: ${{ github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
