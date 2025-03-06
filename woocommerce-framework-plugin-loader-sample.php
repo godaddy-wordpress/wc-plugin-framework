@@ -48,7 +48,7 @@ class SV_WC_Framework_Plugin_Loader {
 	public const MINIMUM_WC_VERSION = '3.9';
 
 	/** SkyVerge plugin framework version used by this plugin */
-	public const FRAMEWORK_VERSION = '5.15.5'; // TODO: framework version
+	public const FRAMEWORK_VERSION = '5.16.1'; // TODO: framework version
 
 
 	/** the plugin name, for displaying notices */
