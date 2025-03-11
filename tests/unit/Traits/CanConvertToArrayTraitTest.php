@@ -1,11 +1,11 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_5\Tests\Unit\Traits;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_6\Tests\Unit\Traits;
 
 use Exception;
 use Generator;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_5\Tests\TestCase;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_5\Traits\CanConvertToArrayTrait;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_6\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_6\Traits\CanConvertToArrayTrait;
 use stdClass;
 
 final class CanConvertToArrayTraitTest extends TestCase
@@ -20,8 +20,8 @@ final class CanConvertToArrayTraitTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_5\Traits\CanConvertToArrayTrait::toArray()
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_5\Traits\CanConvertToArrayTrait::toArrayShouldPropertyBeAccessible()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_6\Traits\CanConvertToArrayTrait::toArray()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_6\Traits\CanConvertToArrayTrait::toArrayShouldPropertyBeAccessible()
 	 *
 	 * @dataProvider providerCanConvertPropertiesToArray
 	 *
@@ -109,7 +109,7 @@ final class CanConvertToArrayTraitTest extends TestCase
 	/**
 	 * Tests nested objects that may or may not use the same trait.
 	 *
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_5\Traits\CanConvertToArrayTrait::toArray()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_6\Traits\CanConvertToArrayTrait::toArray()
 	 *
 	 * @dataProvider providerCanConvertNestedProperties
 	 *
@@ -213,7 +213,7 @@ final class CanConvertToArrayTraitTest extends TestCase
 	/**
 	 * Tests that can determine whether an item can be converted to array.
 	 *
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_5\Traits\CanConvertToArrayTrait::canConvertItemToArray()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_6\Traits\CanConvertToArrayTrait::canConvertItemToArray()
 	 *
 	 * @throws Exception
 	 */
@@ -240,7 +240,7 @@ final class CanConvertToArrayTraitTest extends TestCase
 	/**
 	 * Tests nested objects infinite recursion prevention.
 	 *
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_5\Traits\CanConvertToArrayTrait::toArray()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_6\Traits\CanConvertToArrayTrait::toArray()
 	 */
 	public function testCanConvertNestedPropertiesWontDoInfiniteRecursion() : void
 	{
