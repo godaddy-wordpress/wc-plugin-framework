@@ -46,7 +46,7 @@ trait HasEmailPreviewValuesTrait
 	protected function getDummyProduct() : WC_Product
 	{
 		if (class_exists(EmailPreview::class) && method_exists(EmailPreview::class, 'get_dummy_product_when_not_set')) {
-			return EmailPreview::instance()->get_dummy_product_when_not_set($this->get_product());
+			return EmailPreview::instance()->get_dummy_product_when_not_set(null);
 		} else {
 			// we should really never end up here!
 			return new WC_Product();
