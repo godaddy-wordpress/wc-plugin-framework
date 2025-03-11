@@ -21,6 +21,7 @@ trait HasEmailPreviewValuesTrait
 	/**
 	 * Gets a random, real product from the site.
 	 *
+	 * For use in rendering examples for email templates.
 	 * @return WC_Product|null
 	 */
 	protected function getRandomProduct() : ?WC_Product
@@ -41,6 +42,7 @@ trait HasEmailPreviewValuesTrait
 	/**
 	 * Gets a dummy (fake) product.
 	 *
+	 * For use in rendering examples for email templates.
 	 * @return WC_Product
 	 */
 	protected function getDummyProduct() : WC_Product
