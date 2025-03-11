@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2025.nn.nn - version 5.15.6
+
 2025.03.05 - version 5.15.5
 * New: Add a trait to assist in compatibility with new WooCommerce email preview feature
 * Fix: Undefined array key errors
