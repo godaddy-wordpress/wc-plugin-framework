@@ -45,26 +45,26 @@ class Plugin extends Framework\SV_WC_Payment_Gateway_Plugin {
 	}
 
 
-	public function get_documentation_url() {
-
+	public function get_documentation_url() : ?string
+	{
 		return 'https://example.com';
 	}
 
 
-	public function get_settings_url( $plugin_id = null ) {
-
+	public function get_settings_url( string $plugin_id = null ) : string
+	{
 		return admin_url( 'admin.php?page=wc-settings' );
 	}
 
 
-	public function get_plugin_name() {
-
+	public function get_plugin_name() : string
+	{
 		return 'Plugin Framework Test';
 	}
 
 
-	protected function get_file() {
-
+	protected function get_file() : string
+	{
 		return __DIR__;
 	}
 

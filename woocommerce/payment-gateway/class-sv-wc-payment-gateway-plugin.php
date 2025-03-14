@@ -164,8 +164,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 5.2.0
 	 */
-	protected function init_rest_api_handler() {
-
+	protected function init_rest_api_handler() : void
+	{
 		$this->rest_api_handler = new Payment_Gateway\REST_API( $this );
 	}
 
@@ -226,8 +226,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 5.2.0
 	 */
-	public function init_admin() {
-
+	public function init_admin() : void
+	{
 		parent::init_admin();
 
 		$this->admin_order_handler = new SV_WC_Payment_Gateway_Admin_Order( $this );
@@ -529,8 +529,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * @param string[] $actions associative array of action names to anchor tags
 	 * @return string[]
 	 */
-	public function plugin_action_links( $actions ) {
-
+	public function plugin_action_links( $actions ) : array
+	{
 		$actions = parent::plugin_action_links( $actions );
 
 		// remove the configure plugin link if it exists, since we'll be adding a link per available gateway
@@ -560,8 +560,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * @see SV_WC_Plugin::is_plugin_settings()
 	 * @return bool
 	 */
-	public function is_plugin_settings() {
-
+	public function is_plugin_settings() : bool
+	{
 		foreach ( $this->get_gateways() as $gateway ) {
 			if ( $this->is_payment_gateway_configuration_page( $gateway->get_id() ) ) {
 				return true;
@@ -580,8 +580,8 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @see SV_WC_Plugin::add_delayed_admin_notices()
 	 */
-	public function add_delayed_admin_notices() {
-
+	public function add_delayed_admin_notices() : void
+	{
 		parent::add_delayed_admin_notices();
 
 		// reload all gateway settings so notices are correct after saving the settings
@@ -1121,11 +1121,11 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 * @since 1.0.0
 	 *
 	 * @see SV_WC_Plugin::get_settings_url()
-	 * @param string $gateway_id the gateway identifier
+	 * @param string|null $gateway_id the gateway identifier
 	 * @return string gateway settings URL
 	 */
-	public function get_settings_url( $gateway_id = null ) {
-
+	public function get_settings_url( string $gateway_id = null ) : string
+	{
 		// default to first gateway
 		if ( is_null( $gateway_id ) || $gateway_id === $this->get_id() ) {
 			reset( $this->gateways );
@@ -1340,7 +1340,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 	 *
 	 * @since 2.2.0
 	 */
-	public function add_api_request_logging() { }
+	public function add_api_request_logging() : void { }
 
 
 	/**
