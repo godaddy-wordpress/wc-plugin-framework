@@ -37,7 +37,7 @@ echo "${UPDATED_JSON}" > "${COMPOSER_FILE}"
 
 # replace namespace in `./woocommerce/` directory; we're looking in PHP and JS files only
 echo "Replacing instances of ${OLD_NAMESPACE_STRING} with ${NEW_NAMESPACE_STRING} in ./woocommerce/"
-find "${SCRIPT_DIR}/../../woocommerce/" -type f \( -name '*.php' -o -name '*.js' \) -exec sed -i "s/${OLD_NAMESPACE_STRING}/${NEW_NAMESPACE_STRING}/g" {} \;
+find "${SCRIPT_DIR}/../../woocommerce/" -type f \( -name '*.php' -o -name '*.js' -o -name '*.coffee' \) -exec sed -i "s/${OLD_NAMESPACE_STRING}/${NEW_NAMESPACE_STRING}/g" {} \;
 
 # replace namespace in `./tests/` directory
 echo "Replacing instances of ${OLD_NAMESPACE_STRING} with ${NEW_NAMESPACE_STRING} in ./tests/"
