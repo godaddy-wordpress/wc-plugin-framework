@@ -53,8 +53,10 @@ class SV_WC_Hook_Deprecator {
 	 * @param string|SV_WC_Plugin $plugin Plugin instance or string name of plugin (latter is deprecated)
 	 * @param array $hooks
 	 *
-	 * @since 5.15.7 First parameter as `$plugin_name` has been deprecated due to the need to instantiate this class
-	 *               before translations may have been loaded.
+	 * @since 5.15.7 The `$plugin_name` parameter has been renamed to `$plugin` and now expects an `SV_WC_Plugin`
+	 *               object. This change is to avoid loading translations too early. Support for `$plugin` as
+	 *               plugin name remains for back-compat though it will likely generate `_load_textdomain_just_in_time`
+	 *               notices for the current extension.
 	 */
 	public function __construct($plugin, $hooks)
 	{
