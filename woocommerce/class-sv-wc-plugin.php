@@ -262,6 +262,7 @@ abstract class SV_WC_Plugin {
 	 * Plugins can override this with their own handler.
 	 *
 	 * @since 5.2.0
+	 * @since 5.15.7 The full `SV_WC_Plugin` instance is now used to instantiate `SV_WC_Hook_Deprecator`.
 	 */
 	protected function init_hook_deprecator() {
 
