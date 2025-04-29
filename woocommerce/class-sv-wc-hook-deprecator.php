@@ -203,6 +203,12 @@ class SV_WC_Hook_Deprecator {
 		SV_WC_Helper::trigger_error( $message );
 	}
 
+
+	/**
+	 * Gets the plugin name.
+	 *
+	 * @return string
+	 */
 	protected function getPluginName() : string
 	{
 		if (isset($this->plugin)) {
