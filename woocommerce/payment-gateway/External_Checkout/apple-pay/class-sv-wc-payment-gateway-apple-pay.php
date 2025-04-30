@@ -703,6 +703,9 @@ class SV_WC_Payment_Gateway_Apple_Pay extends Payment_Gateway\External_Checkout\
 	 * @return array
 	 */
 	public function set_customer_taxable_address( $address ) {
+		if ( ! WC()->customer ) {
+			return $address;
+		}
 
 		$billing_country = WC()->customer->get_billing_country();
 

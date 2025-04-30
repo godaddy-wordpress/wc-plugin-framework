@@ -589,6 +589,9 @@ class Google_Pay extends External_Checkout {
 	 * @return array
 	 */
 	public function set_customer_taxable_address( $address ) {
+		if ( ! WC()->customer ) {
+			return $address;
+		}
 
 		// set to the shipping address provided by Google Pay if:
 		// 1. billing is not available
