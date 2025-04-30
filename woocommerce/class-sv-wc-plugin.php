@@ -22,18 +22,18 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_6;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_7;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_6\Handlers\Country_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_6\Payment_Gateway\PaymentFormContextChecker;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_7\Handlers\Country_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_7\Payment_Gateway\PaymentFormContextChecker;
 use stdClass;
 use Throwable;
 use WC_Logger_Interface;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_6\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_7\\SV_WC_Plugin' ) ) :
 
 
 /**
@@ -51,7 +51,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	public const VERSION = '5.15.6';
+	public const VERSION = '5.15.7';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -262,10 +262,11 @@ abstract class SV_WC_Plugin {
 	 * Plugins can override this with their own handler.
 	 *
 	 * @since 5.2.0
+	 * @since 5.15.7 The full `SV_WC_Plugin` instance is now used to instantiate `SV_WC_Hook_Deprecator`.
 	 */
 	protected function init_hook_deprecator() {
 
-		$this->hook_deprecator = new SV_WC_Hook_Deprecator( $this->get_plugin_name(), array_merge( $this->get_framework_deprecated_hooks(), $this->get_deprecated_hooks() ) );
+		$this->hook_deprecator = new SV_WC_Hook_Deprecator( $this, array_merge( $this->get_framework_deprecated_hooks(), $this->get_deprecated_hooks() ) );
 	}
 
 
@@ -486,7 +487,7 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function setupClassAliases() : void
 	{
-		$countryHelperAlias = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_6\\Country_Helper';
+		$countryHelperAlias = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_7\\Country_Helper';
 		if (! class_exists($countryHelperAlias)) {
 			class_alias(
 				Country_Helper::class,
@@ -494,7 +495,7 @@ abstract class SV_WC_Plugin {
 			);
 		}
 
-		$paymentFormContextCheckerAlias = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_6\\PaymentFormContextChecker';
+		$paymentFormContextCheckerAlias = '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_7\\PaymentFormContextChecker';
 		if (! class_exists($paymentFormContextCheckerAlias)) {
 			class_alias(
 				PaymentFormContextChecker::class,

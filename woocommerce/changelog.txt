@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2025.04.29 - version 5.15.7
+* Fix: Avoid triggering notices for loading translations too early
+
 2025.03.11 - version 5.15.6
 * New: Added additional helper methods to the trait `HasEmailPreviewValuesTrait`
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_6\Payment_Gateway;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_7\Payment_Gateway;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_6\Enums\PaymentFormContext;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_6\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_7\Enums\PaymentFormContext;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_7\SV_WC_Helper;
 
 /**
  * Helper class for setting and checking the page context that a payment form for a given gateway is rendered on.
