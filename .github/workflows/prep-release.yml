@@ -61,6 +61,10 @@ jobs:
       - name: Bump package.json version
         run: npm version --no-git-tag-version --allow-same-version "${NEW_VERSION}"
 
+        # This is required because sometimes the `build` script just won't build assets unless `dist/` is cleaned first. Makes no sense, I know!
+      - name: Clean dist directory
+        run: npm run clean
+
       - name: Build assets
         run: npm run build
 
