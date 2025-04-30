@@ -1,6 +1,6 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_6\Emails\Traits;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_7\Emails\Traits;
 
 use Automattic\WooCommerce\Internal\Admin\EmailPreview\EmailPreview;
 use WC_Product;

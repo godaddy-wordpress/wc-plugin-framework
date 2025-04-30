@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-11T16:20:07+00:00\n"
+"POT-Creation-Date: 2025-04-30T00:37:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -286,41 +286,41 @@ msgid "Your hosting provider can do this for you. %1$sHere are some resources to
 msgstr ""
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:369
+#: woocommerce/class-sv-wc-plugin.php:370
 msgid "You cannot clone instances of %s."
 msgstr ""
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:380
+#: woocommerce/class-sv-wc-plugin.php:381
 msgid "You cannot unserialize instances of %s."
 msgstr ""
 
 #. translators: Docs as in Documentation
-#: woocommerce/class-sv-wc-plugin.php:627
+#: woocommerce/class-sv-wc-plugin.php:628
 msgid "Docs"
 msgstr ""
 
-#: woocommerce/class-sv-wc-plugin.php:632
+#: woocommerce/class-sv-wc-plugin.php:633
 msgctxt "noun"
 msgid "Support"
 msgstr ""
 
-#: woocommerce/class-sv-wc-plugin.php:637
+#: woocommerce/class-sv-wc-plugin.php:638
 msgctxt "verb"
 msgid "Review"
 msgstr ""
 
 #. translators: Placeholders: %1$s - PHP setting value, %2$s - version or value required
-#: woocommerce/class-sv-wc-plugin.php:776
+#: woocommerce/class-sv-wc-plugin.php:777
 msgid "%1$s - A minimum of %2$s is required."
 msgstr ""
 
 #. translators: Context: As in "Value has been set as [foo], but [bar] is required". Placeholders: %1$s - current value for a PHP setting, %2$s - required value for the PHP setting
-#: woocommerce/class-sv-wc-plugin.php:786
+#: woocommerce/class-sv-wc-plugin.php:787
 msgid "Set as %1$s - %2$s is required."
 msgstr ""
 
-#: woocommerce/class-sv-wc-plugin.php:1151
+#: woocommerce/class-sv-wc-plugin.php:1152
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:807
 msgid "Configure"
 msgstr ""

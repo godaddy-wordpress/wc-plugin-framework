@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_6;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_7;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_6\\SV_WC_Hook_Deprecator' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_7\\SV_WC_Hook_Deprecator' ) ) :
 
 
 /**
@@ -38,9 +38,9 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_6\\SV_WC_H
  */
 #[\AllowDynamicProperties]
 class SV_WC_Hook_Deprecator {
+	protected SV_WC_Plugin $plugin;
 
-
-	/** @var string plugin name */
+	/** @var string plugin name (deprecated) */
 	protected $plugin_name;
 
 	/** @var array deprecated/removed hooks */
@@ -50,17 +50,27 @@ class SV_WC_Hook_Deprecator {
 	/**
 	 * Setup class
 	 *
-	 * @param string $plugin_name
+	 * @param string|SV_WC_Plugin $plugin Plugin instance or string name of plugin (latter is deprecated)
 	 * @param array $hooks
+	 *
+	 * @since 5.15.7 The `$plugin_name` parameter has been renamed to `$plugin` and now expects an `SV_WC_Plugin`
+	 *               object. This change is to avoid loading translations too early. Support for `$plugin` as
+	 *               plugin name remains for back-compat though it will likely result in `_load_textdomain_just_in_time`
+	 *               notices being logged for the current extension.
 	 */
-	public function __construct( $plugin_name, $hooks ) {
+	public function __construct($plugin, $hooks)
+	{
+		if ($plugin instanceof SV_WC_Plugin) {
+			$this->plugin = $plugin;
+		} elseif (is_string($plugin)) {
+			$this->plugin_name = $plugin;
+		}
 
-		$this->plugin_name = $plugin_name;
-		$this->hooks       = array_map( array( $this, 'set_hook_defaults' ), $hooks );
+		$this->hooks = array_map([$this, 'set_hook_defaults'], $hooks);
 
 		$this->map_deprecated_hooks();
 
-		add_action( 'shutdown', array( $this, 'trigger_deprecated_errors' ), 999 );
+		add_action('shutdown', [$this, 'trigger_deprecated_errors'], 999);
 	}
 
 
@@ -180,7 +190,7 @@ class SV_WC_Hook_Deprecator {
 
 		// e.g. WooCommerce Memberships: "wc_memberships_some_hook" was deprecated in version 1.2.3.
 		$message = sprintf( '%1$s: action/filter "%2$s" was %3$s in version %4$s. ',
-			$this->plugin_name,
+			$this->getPluginName(),
 			$old_hook_name,
 			$hook['removed'] ? 'removed' : 'deprecated',
 			$hook['version']
@@ -193,6 +203,22 @@ class SV_WC_Hook_Deprecator {
 		SV_WC_Helper::trigger_error( $message );
 	}
 
+
+	/**
+	 * Gets the plugin name.
+	 *
+	 * @return string
+	 */
+	protected function getPluginName() : string
+	{
+		if (isset($this->plugin)) {
+			return $this->plugin->get_plugin_name();
+		} elseif(isset($this->plugin_name)) {
+			return $this->plugin_name;
+		} else {
+			return 'Plugin';
+		}
+	}
 
 }
 
