@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2025.nn.nn - version 5.15.8
+
 2025.04.29 - version 5.15.7
 * Fix: Avoid triggering notices for loading translations too early
 

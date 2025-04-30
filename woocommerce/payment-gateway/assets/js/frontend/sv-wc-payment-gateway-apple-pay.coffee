@@ -14,7 +14,7 @@ jQuery ( $ ) ->
 	# The WooCommerce Apple Pay handler base class.
 	#
 	# @since 4.7.0
-	class window.SV_WC_Apple_Pay_Handler_v5_15_7
+	class window.SV_WC_Apple_Pay_Handler_v5_15_8
 
 
 		# Constructs the handler.
@@ -440,4 +440,4 @@ jQuery ( $ ) ->
 
 
 	# dispatch loaded event
-	$( document.body ).trigger( 'sv_wc_apple_pay_handler_v5_15_7_loaded' )
+	$( document.body ).trigger( 'sv_wc_apple_pay_handler_v5_15_8_loaded' )

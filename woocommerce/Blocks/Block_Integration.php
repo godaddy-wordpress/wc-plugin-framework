@@ -22,16 +22,16 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_7\Blocks;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_8\Blocks;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_7\Blocks\Traits\Block_Integration_Trait;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_7\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_7\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_8\Blocks\Traits\Block_Integration_Trait;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_8\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_8\SV_WC_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_7\\Blocks\\Block_Integration' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_8\\Blocks\\Block_Integration' ) ) :
 
 /**
  * Base class for handling support for WooCommerce blocks, like Cart or Checkout blocks.
