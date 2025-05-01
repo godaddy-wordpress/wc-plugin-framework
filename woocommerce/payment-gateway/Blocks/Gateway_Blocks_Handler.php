@@ -1,13 +1,13 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_8\Payment_Gateway\Blocks;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_9\Payment_Gateway\Blocks;
 
 use Automattic\WooCommerce\Blocks\Package as WooCommerceBlocks;
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_8\Blocks\Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_8\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_9\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_9\SV_WC_Payment_Gateway_Plugin;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_8\\Payment_Gateway\Blocks\\Gateway_Blocks_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_9\\Payment_Gateway\Blocks\\Gateway_Blocks_Handler' ) ) :
 
 /**
  * Extends the base {@see Blocks_Handler} for supporting WooCommerce Blocks in payment gateways.
@@ -45,27 +45,28 @@ class Gateway_Blocks_Handler extends Blocks_Handler {
 	 *
 	 * @return void
 	 */
-	public function handle_blocks_integration() : void {
-
-		if ( ! class_exists( PaymentMethodRegistry::class ) || ! class_exists( WooCommerceBlocks::class ) || ! version_compare( WooCommerceBlocks::get_version(), '4.4.0', '>' ) ) {
+	public function handle_blocks_integration() : void
+	{
+		if (
+			! class_exists(PaymentMethodRegistry::class) ||
+			! class_exists(WooCommerceBlocks::class) ||
+			! version_compare(WooCommerceBlocks::get_version(), '4.4.0', '>')
+		) {
 			return;
 		}
 
-		if ( $this->is_checkout_block_compatible() ) {
-
-			/** @var SV_WC_Payment_Gateway_Plugin $plugin */
-			$plugin = $this->plugin;
-
-			foreach ( $plugin->get_gateways() as $gateway ) {
-
-				if ( $checkout_integration = $gateway->get_checkout_block_integration_instance() ) {
-
-					add_action('woocommerce_blocks_payment_method_type_registration', function ( PaymentMethodRegistry $payment_method_registry ) use ( $checkout_integration ) {
-							$payment_method_registry->register( $checkout_integration );
-						}
-					);
+		if ($this->is_checkout_block_compatible()) {
+			add_action('woocommerce_blocks_payment_method_type_registration', function (PaymentMethodRegistry $payment_method_registry) {
+				if (! $this->plugin instanceof SV_WC_Payment_Gateway_Plugin) {
+					return;
 				}
-			}
+
+				foreach ($this->plugin->get_gateways() as $gateway) {
+					if ($checkout_integration = $gateway->get_checkout_block_integration_instance()) {
+						$payment_method_registry->register($checkout_integration);
+					}
+				}
+			});
 		}
 	}
 
