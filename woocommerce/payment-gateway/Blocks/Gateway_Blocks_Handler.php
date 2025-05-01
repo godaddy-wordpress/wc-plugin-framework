@@ -1,13 +1,13 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_8\Payment_Gateway\Blocks;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_9\Payment_Gateway\Blocks;
 
 use Automattic\WooCommerce\Blocks\Package as WooCommerceBlocks;
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_8\Blocks\Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_8\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_9\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_9\SV_WC_Payment_Gateway_Plugin;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_8\\Payment_Gateway\Blocks\\Gateway_Blocks_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_9\\Payment_Gateway\Blocks\\Gateway_Blocks_Handler' ) ) :
 
 /**
  * Extends the base {@see Blocks_Handler} for supporting WooCommerce Blocks in payment gateways.
