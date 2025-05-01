@@ -45,27 +45,28 @@ class Gateway_Blocks_Handler extends Blocks_Handler {
 	 *
 	 * @return void
 	 */
-	public function handle_blocks_integration() : void {
-
-		if ( ! class_exists( PaymentMethodRegistry::class ) || ! class_exists( WooCommerceBlocks::class ) || ! version_compare( WooCommerceBlocks::get_version(), '4.4.0', '>' ) ) {
+	public function handle_blocks_integration() : void
+	{
+		if (
+			! class_exists(PaymentMethodRegistry::class) ||
+			! class_exists(WooCommerceBlocks::class) ||
+			! version_compare(WooCommerceBlocks::get_version(), '4.4.0', '>')
+		) {
 			return;
 		}
 
-		if ( $this->is_checkout_block_compatible() ) {
-
-			/** @var SV_WC_Payment_Gateway_Plugin $plugin */
-			$plugin = $this->plugin;
-
-			foreach ( $plugin->get_gateways() as $gateway ) {
-
-				if ( $checkout_integration = $gateway->get_checkout_block_integration_instance() ) {
-
-					add_action('woocommerce_blocks_payment_method_type_registration', function ( PaymentMethodRegistry $payment_method_registry ) use ( $checkout_integration ) {
-							$payment_method_registry->register( $checkout_integration );
-						}
-					);
+		if ($this->is_checkout_block_compatible()) {
+			add_action('woocommerce_blocks_payment_method_type_registration', function (PaymentMethodRegistry $payment_method_registry) {
+				if (! $this->plugin instanceof SV_WC_Payment_Gateway_Plugin) {
+					return;
 				}
-			}
+
+				foreach ($this->plugin->get_gateways() as $gateway) {
+					if ($checkout_integration = $gateway->get_checkout_block_integration_instance()) {
+						$payment_method_registry->register($checkout_integration);
+					}
+				}
+			});
 		}
 	}
 
