@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_8;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_9;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_8\\SV_WC_Payment_Gateway_Privacy' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_9\\SV_WC_Payment_Gateway_Privacy' ) ) :
 
 
 /**
@@ -53,14 +53,10 @@ class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 
 		$this->plugin = $plugin;
 
-		parent::__construct( $plugin->get_plugin_name() );
+		parent::__construct();
 
 		// add the action & filter hooks
 		$this->add_hooks();
-
-		// add the token exporters & erasers
-		$this->add_exporter( "wc-{$plugin->get_id_dasherized()}-customer-tokens", __( "{$plugin->get_plugin_name()} Payment Tokens", 'woocommerce-plugin-framework' ), array( $this, 'customer_tokens_exporter' ) );
-		$this->add_eraser(   "wc-{$plugin->get_id_dasherized()}-customer-tokens", __( "{$plugin->get_plugin_name()} Payment Tokens", 'woocommerce-plugin-framework' ), array( $this, 'customer_tokens_eraser' ) );
 	}
 
 
@@ -70,6 +66,9 @@ class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 	 * @since 5.1.4
 	 */
 	protected function add_hooks() {
+
+		// initializes data exporters and erasers
+		add_action('init', [$this, 'registerExportersAndErasers']);
 
 		// add the gateway data to customer data exports
 		add_filter( 'woocommerce_privacy_export_customer_personal_data', array( $this, 'add_export_customer_data' ), 10, 2 );
@@ -82,6 +81,20 @@ class SV_WC_Payment_Gateway_Privacy extends \WC_Abstract_Privacy {
 
 		// removes the gateway data during an order data erasure
 		add_action( 'woocommerce_privacy_remove_order_personal_data', array( $this, 'remove_order_personal_data' ) );
+	}
+
+	/**
+	 * Initial registration of privacy erasers and exporters.
+	 *
+	 *  Due to the use of translation functions, this should run only on/after init.
+	 */
+	public function registerExportersAndErasers()
+	{
+		$this->name = $this->plugin->get_plugin_name();
+
+		// add the token exporters & erasers
+		$this->add_exporter("wc-{$this->plugin->get_id_dasherized()}-customer-tokens", __("{$this->plugin->get_plugin_name()} Payment Tokens", 'woocommerce-plugin-framework'), [$this, 'customer_tokens_exporter']);
+		$this->add_eraser("wc-{$this->plugin->get_id_dasherized()}-customer-tokens", __("{$this->plugin->get_plugin_name()} Payment Tokens", 'woocommerce-plugin-framework'), [$this, 'customer_tokens_eraser']);
 	}
 
 

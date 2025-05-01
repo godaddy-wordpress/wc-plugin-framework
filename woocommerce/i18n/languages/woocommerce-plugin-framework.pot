@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-04-30T09:34:59+00:00\n"
+"POT-Creation-Date: 2025-05-01T15:43:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -386,14 +386,14 @@ msgid "Token ID"
 msgstr ""
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:566
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:303
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:316
 msgid "Card Type"
 msgstr ""
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:571
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:607
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:194
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:301
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:207
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:314
 msgctxt "Last four digits of a payment method"
 msgid "Last Four"
 msgstr ""
@@ -406,7 +406,7 @@ msgstr ""
 #. translators: e-check account type, HTML form field label
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:599
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:496
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:302
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:315
 msgid "Account Type"
 msgstr ""
 
@@ -438,7 +438,7 @@ msgstr ""
 #. translators: Placeholder: %s - Plugin name
 #. translators: Placeholder: %s - Payment gateway title (e.g. Authorize.Net, Braintree, etc.)
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-handler.php:226
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:212
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:225
 msgid "%s Payment Tokens"
 msgstr ""
 
@@ -1012,7 +1012,7 @@ msgid "You do not have any saved payment methods."
 msgstr ""
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:877
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:202
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:215
 msgid "Nickname"
 msgstr ""
 
@@ -1157,19 +1157,19 @@ msgid "Inactive"
 msgstr ""
 
 #. translators: Placeholder: %s - Payment gateway title (e.g. Authorize.Net, Braintree...)
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:117
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:130
 msgid "%s Customer ID"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:186
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:199
 msgid "Type"
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:257
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:270
 msgid "Removed payment token \"%d\""
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:304
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:317
 msgid "Expiry Date"
 msgstr ""
 
