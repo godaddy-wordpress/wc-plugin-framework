@@ -1,6 +1,6 @@
 {
   "name": "wc-plugin-framework",
-  "version": "5.15.9",
+  "version": "5.15.10",
   "title": "WooCommerce Plugin Framework",
   "author": "SkyVerge Team",
   "homepage": "https://github.com/skyverge/wc-plugin-framework#readme",
@@ -39,5 +39,12 @@
     "time-grunt": "^2.0",
     "underscore": "^1.13",
     "underscore.string": "^3.3"
+  },
+  "targets": {
+    "default": {
+      "context": "browser",
+      "outputFormat": "global",
+      "isLibrary": false
+    }
   }
 }
