@@ -260,7 +260,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 				$order->payment->recurring = true;
 
-				$subscriptions = wcs_get_subscriptions_for_order( $order );
+				// an order ID might be 0 if it's a mock order we use when adding a payment method
+				// passing in an order with an ID of 0 to `wcs_get_subscriptions_for_order()` can cause very unexpected results
+				$subscriptions = $order->get_id() > 0 ? wcs_get_subscriptions_for_order( $order ) : [];
 
 				if ( ! empty( $subscriptions ) ) {
 
@@ -278,7 +280,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 				$order->payment->recurring = true;
 
-				$subscriptions = wcs_get_subscriptions_for_renewal_order( $order );
+				// an order ID might be 0 if it's a mock order we use when adding a payment method
+				// passing in an order with an ID of 0 to `wcs_get_subscriptions_for_order()` can cause very unexpected results
+				$subscriptions = $order->get_id() > 0 ? wcs_get_subscriptions_for_order( $order ) : [];
 
 				if ( ! empty( $subscriptions ) ) {
 
