@@ -1,18 +1,18 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_10\Blocks\Traits;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_11\Blocks\Traits;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use GoDaddy\WooCommerce\Poynt\Blocks\Credit_Card_Checkout_Block_Integration;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Blocks\Block_Integration;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_Plugin;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Plugin;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Plugin_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Blocks\Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Plugin_Exception;
 use stdClass;
 
-if ( ! class_exists( '\\SkyVerge\WooCommerce\PluginFramework\v5_15_10\Blocks\Traits\Block_Integration_Trait' ) ) :
+if ( ! class_exists( '\\SkyVerge\WooCommerce\PluginFramework\v5_15_11\Blocks\Traits\Block_Integration_Trait' ) ) :
 
 /**
  * A trait for block integrations.

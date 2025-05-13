@@ -1,14 +1,14 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_10\Tests\Unit\Payment_Gateway;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_11\Tests\Unit\Payment_Gateway;
 
 use Generator;
 use Mockery;
 use ReflectionException;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Enums\PaymentFormContext;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\PaymentFormContextChecker;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Enums\PaymentFormContext;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\PaymentFormContextChecker;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Tests\TestCase;
 use WooCommerce;
 use WP_Mock;
 
@@ -38,7 +38,7 @@ class PaymentFormContextCheckerTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\PaymentFormContextChecker::getContextSessionKeyName()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\PaymentFormContextChecker::getContextSessionKeyName()
 	 * @throws ReflectionException
 	 */
 	public function testCanGetContextSessionKeyName() : void
@@ -52,7 +52,7 @@ class PaymentFormContextCheckerTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\PaymentFormContextChecker::maybeSetContext()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\PaymentFormContextChecker::maybeSetContext()
 	 */
 	public function testCanSetContext() : void
 	{
@@ -81,7 +81,7 @@ class PaymentFormContextCheckerTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\PaymentFormContextChecker::getCurrentPaymentFormContext()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\PaymentFormContextChecker::getCurrentPaymentFormContext()
 	 *
 	 * @dataProvider providerCanGetCurrentPaymentFormContext
 	 *
@@ -142,7 +142,7 @@ class PaymentFormContextCheckerTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\PaymentFormContextChecker::getStoredPaymentFormContext()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\PaymentFormContextChecker::getStoredPaymentFormContext()
 	 * @throws ReflectionException
 	 */
 	public function testCanGetStoredPaymentFormContext() : void
@@ -170,7 +170,7 @@ class PaymentFormContextCheckerTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\PaymentFormContextChecker::currentContextRequiresTermsAndConditionsAcceptance()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\PaymentFormContextChecker::currentContextRequiresTermsAndConditionsAcceptance()
 	 *
 	 * @dataProvider providerCanDetermineCurrentContextRequiresTermsAndConditionsAcceptance
 	 *
