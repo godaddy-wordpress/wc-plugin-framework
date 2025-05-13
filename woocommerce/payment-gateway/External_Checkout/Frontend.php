@@ -23,17 +23,17 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\External_Checkout;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\External_Checkout;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Blocks\Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Handlers\Script_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Handlers\Script_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_10\\Payment_Gateway\\External_Checkout\\Frontend' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_11\\Payment_Gateway\\External_Checkout\\Frontend' ) ) :
 
 
 /**
@@ -380,7 +380,7 @@ abstract class Frontend extends Script_Handler {
 			return;
 		}
 
-		wp_enqueue_style( 'sv-wc-external-checkout-v5_15_10', $this->get_handler()->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-external-checkout.css', array(), $this->get_handler()->get_plugin()->get_version() ); // TODO: min
+		wp_enqueue_style( 'sv-wc-external-checkout-v5_15_11', $this->get_handler()->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/sv-wc-payment-gateway-external-checkout.css', array(), $this->get_handler()->get_plugin()->get_version() ); // TODO: min
 	}
 
 

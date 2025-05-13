@@ -22,19 +22,19 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\REST_API as Plugin_REST_API;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\REST_API as Plugin_REST_API;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_10\\Payment_Gateway\\REST_API' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_11\\Payment_Gateway\\REST_API' ) ) :
 
 
 /**
  * The payment gateway plugin REST API handler class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v5_15_10\REST_API
+ * @see \SkyVerge\WooCommerce\PluginFramework\v5_15_11\REST_API
  *
  * @since 5.2.0
  */
@@ -47,7 +47,7 @@ class REST_API extends Plugin_REST_API {
 	 *
 	 * Plugins can override this to add their own data.
 	 *
-	 * @see \SkyVerge\WooCommerce\PluginFramework\v5_15_10\REST_API::get_system_status_data()
+	 * @see \SkyVerge\WooCommerce\PluginFramework\v5_15_11\REST_API::get_system_status_data()
 	 *
 	 * @since 5.2.0
 	 *

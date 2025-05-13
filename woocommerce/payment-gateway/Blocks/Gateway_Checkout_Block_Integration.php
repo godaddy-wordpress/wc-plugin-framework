@@ -22,21 +22,21 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\Blocks;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\Blocks;
 
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 use Automattic\WooCommerce\StoreApi\Payments\PaymentContext;
 use Automattic\WooCommerce\StoreApi\Payments\PaymentResult;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_Payment_Form;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_Payment_Token;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_Plugin;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Blocks\Traits\Block_Integration_Trait;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_Payment_Form;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_Payment_Token;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Blocks\Traits\Block_Integration_Trait;
 use WC_HTTPS;
 use WC_Subscriptions_Cart;
 
-if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration' ) ) :
+if ( ! class_exists( '\SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration' ) ) :
 
 /**
  * Base class for handling support for the WooCommerce Checkout block in gateways.

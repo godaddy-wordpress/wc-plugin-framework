@@ -22,14 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_10\Handlers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_11\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Plugin_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Plugin_Exception;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_10\\Handlers\\Script_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_11\\Handlers\\Script_Handler' ) ) :
 
 
 /**
@@ -80,7 +80,7 @@ abstract class Script_Handler {
 	 */
 	protected function get_js_handler_class_name() {
 
-		return sprintf( '%s_v5_15_10', $this->js_handler_base_class_name );
+		return sprintf( '%s_v5_15_11', $this->js_handler_base_class_name );
 	}
 
 

@@ -1,16 +1,16 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_10\Tests\Unit\Payment_Gateway\External_Checkout\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_11\Tests\Unit\Payment_Gateway\External_Checkout\Google_Pay;
 
 use Generator;
 use Mockery;
 use ReflectionException;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Tests\TestCase;
 use WP_Mock;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\External_Checkout\Google_Pay\Google_Pay
  */
 class GooglePayTest extends TestCase
 {

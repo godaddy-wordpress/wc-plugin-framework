@@ -22,13 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_10;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_11;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\External_Checkout\Orders;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\External_Checkout\Orders;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_10\\SV_WC_Payment_Gateway_Apple_Pay' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_11\\SV_WC_Payment_Gateway_Apple_Pay' ) ) :
 
 
 /**
@@ -940,7 +940,7 @@ class SV_WC_Payment_Gateway_Apple_Pay extends Payment_Gateway\External_Checkout\
 
 		$accepted_card_types = ( $this->get_processing_gateway() ) ? $this->get_processing_gateway()->get_card_types() : array();
 
-		$accepted_card_types = array_map( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_10\\SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
+		$accepted_card_types = array_map( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_11\\SV_WC_Payment_Gateway_Helper::normalize_card_type', $accepted_card_types );
 
 		$valid_networks = array(
 			SV_WC_Payment_Gateway_Helper::CARD_TYPE_AMEX       => 'amex',

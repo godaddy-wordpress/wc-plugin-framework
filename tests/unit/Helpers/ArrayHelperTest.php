@@ -1,14 +1,14 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_10\Tests\Unit\Helpers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_11\Tests\Unit\Helpers;
 
 use ArrayAccess;
 use Generator;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Helpers\ArrayHelper;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Helpers\ArrayHelper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Tests\TestCase;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v5_15_10\Helpers\ArrayHelper
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v5_15_11\Helpers\ArrayHelper
  */
 final class ArrayHelperTest extends TestCase
 {

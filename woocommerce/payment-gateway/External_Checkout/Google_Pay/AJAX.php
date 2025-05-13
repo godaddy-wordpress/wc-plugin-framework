@@ -22,14 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\External_Checkout\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\External_Checkout\Google_Pay;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_Exception;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_10\\Payment_Gateway\\External_Checkout\\Google_Pay\\AJAX' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_11\\Payment_Gateway\\External_Checkout\\Google_Pay\\AJAX' ) ) :
 
 
 /**
