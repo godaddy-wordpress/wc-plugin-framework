@@ -59,6 +59,8 @@ jQuery ( $ ) ->
 					return
 
 				if not confirm( @i18n.delete_ays )
+					# re-enable the button if user cancels (side note: WooCommerce core is the one that added the disabled state in the first place)
+					button.prop( 'disabled', false ).removeClass( 'disabled' )
 					event.preventDefault()
 
 			)
