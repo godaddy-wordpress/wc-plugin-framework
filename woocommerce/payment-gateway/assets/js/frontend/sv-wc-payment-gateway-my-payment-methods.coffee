@@ -12,7 +12,7 @@ jQuery ( $ ) ->
 	# The My Payment Methods handler.
 	#
 	# @since 5.1.0
-	class window.SV_WC_Payment_Methods_Handler_v5_15_10
+	class window.SV_WC_Payment_Methods_Handler_v5_15_11
 
 
 		# Constructs the class.
@@ -59,6 +59,8 @@ jQuery ( $ ) ->
 					return
 
 				if not confirm( @i18n.delete_ays )
+					# re-enable the button if user cancels (side note: WooCommerce core is the one that added the disabled state in the first place)
+					button.prop( 'disabled', false ).removeClass( 'disabled' )
 					event.preventDefault()
 
 			)
@@ -270,4 +272,4 @@ jQuery ( $ ) ->
 
 
 	# dispatch loaded event
-	$( document.body ).trigger( 'sv_wc_payment_methods_handler_v5_15_10_loaded' )
+	$( document.body ).trigger( 'sv_wc_payment_methods_handler_v5_15_11_loaded' )

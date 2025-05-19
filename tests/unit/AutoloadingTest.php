@@ -1,39 +1,39 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_10\Tests\Unit;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_11\Tests\Unit;
 
 use Generator;
 use Mockery;
 use ReflectionException;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Addresses;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Admin\Notes_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\API\Abstract_Cacheable_API_Base;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Handlers\Country_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\Blocks as Payment_Gateway_Blocks;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\External_Checkout\Admin;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\External_Checkout\External_Checkout;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\External_Checkout\Frontend;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\External_Checkout\Google_Pay as Google_Pay_Checkout;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\External_Checkout\Orders;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\Handlers;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\PaymentFormContextChecker;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Plugin\Lifecycle;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\REST_API;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Settings_API;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Admin_Notice_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_Admin_Payment_Token_Editor;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_API_Authorization_Response;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_API_Get_Tokenized_Payment_Methods_Response;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_API_Response;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_Apple_Pay_AJAX;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_Exception;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_Integration;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_Integration_Subscriptions;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_Payment_Tokens_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Plugin;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WP_Admin_Message_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WP_Job_Batch_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Addresses;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Admin\Notes_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\API\Abstract_Cacheable_API_Base;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Handlers\Country_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\Blocks as Payment_Gateway_Blocks;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\External_Checkout\Admin;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\External_Checkout\External_Checkout;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\External_Checkout\Frontend;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\External_Checkout\Google_Pay as Google_Pay_Checkout;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\External_Checkout\Orders;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\Handlers;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\PaymentFormContextChecker;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Plugin\Lifecycle;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\REST_API;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Settings_API;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Admin_Notice_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_Admin_Payment_Token_Editor;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_API_Authorization_Response;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_API_Get_Tokenized_Payment_Methods_Response;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_API_Response;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_Apple_Pay_AJAX;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_Integration_Subscriptions;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_Payment_Tokens_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WP_Admin_Message_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WP_Job_Batch_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Tests\TestCase;
 
 /**
  * @covers composer.json/autoload
@@ -84,7 +84,7 @@ class AutoloadingTest extends TestCase
 			SV_WC_Payment_Gateway_Integration_Subscriptions::class,
 			SV_WC_Payment_Gateway_Payment_Tokens_Handler::class,
 			SV_WC_Payment_Gateway_Integration::class,
-			\SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\REST_API::class,
+			\SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\REST_API::class,
 			REST_API::class,
 			REST_API\Controllers\Settings::class,
 			SV_WP_Job_Batch_Handler::class,
@@ -99,15 +99,15 @@ class AutoloadingTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Plugin::setupClassAliases()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Plugin::setupClassAliases()
 	 *
 	 * @throws ReflectionException
 	 */
 	public function testClassAliases() : void
 	{
 		$aliases = [
-			Country_Helper::class            => \SkyVerge\WooCommerce\PluginFramework\v5_15_10\Country_Helper::class,
-			PaymentFormContextChecker::class => \SkyVerge\WooCommerce\PluginFramework\v5_15_10\PaymentFormContextChecker::class,
+			Country_Helper::class            => \SkyVerge\WooCommerce\PluginFramework\v5_15_11\Country_Helper::class,
+			PaymentFormContextChecker::class => \SkyVerge\WooCommerce\PluginFramework\v5_15_11\PaymentFormContextChecker::class,
 		];
 
 		foreach ($aliases as $alias) {
