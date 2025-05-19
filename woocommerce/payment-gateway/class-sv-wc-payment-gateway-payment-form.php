@@ -22,15 +22,15 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_10;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_11;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Blocks\Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Enums\PaymentFormContext;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Enums\PaymentFormContext;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_10\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_11\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
 
 
 /**
@@ -1180,7 +1180,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 			if ( is_array( $card_types ) && ! empty( $card_types ) ) {
 
-				$args['enabled_card_types'] = array_map( [ 'SkyVerge\WooCommerce\PluginFramework\v5_15_10\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ], $card_types );
+				$args['enabled_card_types'] = array_map( [ 'SkyVerge\WooCommerce\PluginFramework\v5_15_11\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ], $card_types );
 			}
 		}
 

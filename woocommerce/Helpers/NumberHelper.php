@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_10\Helpers;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_11\Helpers;
 
 class NumberHelper
 {

@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2025.nn.nn - version 5.15.11
+
 2025.nn.nn - version 5.15.10
 
 2025.nn.nn - version 5.15.9

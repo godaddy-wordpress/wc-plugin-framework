@@ -1,7 +1,7 @@
 <?php
 namespace SkyVerge\WooCommerce\GatewayTestPlugin;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_10 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_11 as Framework;
 
 defined( 'ABSPATH' ) or exit;
 
