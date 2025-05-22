@@ -8,9 +8,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-01-24T02:55:40+00:00\n"
+"POT-Creation-Date: 2025-05-19T09:06:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
 
 #. Plugin Name of the plugin
@@ -39,10 +39,12 @@ msgid "http://www.woocommerce.com"
 msgstr "http://www.woocommerce.com"
 
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:183
+#, php-format
 msgid "Thanks for installing %1$s! To get started, take a minute to %2$sread the documentation%3$s :)"
 msgstr "Que legal que você instalou o %1$s! Antes de começar, %2$sleia a documentação%3$s. :)"
 
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:211
+#, php-format
 msgid "Thanks for installing %1$s! To get started, take a minute to complete these %2$squick and easy setup steps%3$s :)"
 msgstr "Que legal que você instalou o %1$s! Para começar, %2$ssiga estas etapas rápidas e simples de configuração%3$s. :)"
 
@@ -52,6 +54,7 @@ msgstr "Configurar"
 
 #. translators: Placeholders: %s - plugin name
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:304
+#, php-format
 msgid "%s &rsaquo; Setup"
 msgstr "%s &rsaquo; Configuração"
 
@@ -115,6 +118,7 @@ msgstr "Pronto!"
 
 #. translators: Placeholder: %s - plugin name
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:585
+#, php-format
 msgid "Welcome to %s!"
 msgstr "Bem-vindo(a) à %s!"
 
@@ -124,6 +128,7 @@ msgstr "Esse assistente de configuração rápida ajudará você a definir as co
 
 #. translators: Placeholder: %s - the plugin name
 #: woocommerce/admin/abstract-sv-wc-plugin-admin-setup-wizard.php:617
+#, php-format
 msgid "%s is ready!"
 msgstr "‌‌%s está pronto."
 
@@ -179,6 +184,7 @@ msgstr "Editar página Finalização de compra"
 
 #. translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_checkout]` shortcode tag, %6$s - closing HTML </a> tag
 #: woocommerce/Blocks/Blocks_Handler.php:271
+#, php-format
 msgid "%1$s is not yet compatible with the Checkout block. We recommend %2$sfollowing this guide%3$s to revert to the %4$s%5$s shortcode%6$s."
 msgstr "%1$s ainda não é compatível com o bloco Finalização de compra. Recomendamos que você %2$ssiga este guia%3$s para reverter para o %4$s%5$s shortcode%6$s."
 
@@ -189,6 +195,7 @@ msgstr "Editar a página Carrinho"
 
 #. translators: Context: WordPress blocks and shortcodes. Placeholders: %1$s - Plugin name, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - opening HTML <a> tag, %5$s - `[woocommerce_cart]` shortcode tag, %6$s - closing HTML </a> tag
 #: woocommerce/Blocks/Blocks_Handler.php:302
+#, php-format
 msgid "%1$s is not yet compatible with the Cart block. We recommend %2$sfollowing this guide%3$s to revert to the %4$s%5$s shortcode%6$s."
 msgstr "%1$s ainda não é compatível com o bloco Carrinho. Recomendamos que você %2$ssiga este guia%3$s para reverter para o %4$s%5$s shortcode%6$s."
 
@@ -200,6 +207,7 @@ msgstr[1] "Os plugins a seguir estão desativados porque estão desatualizados e
 
 #. translators: Context is for plugins to activate or deactivate. HTML Placeholders: %1$s - <a> tag, %2$s - </a> tag, %3$s - <em> tag, %4$s - </em> tag, %5$s - <a> tag, %6$s - </a> tag, %7$s - <a> tag, %8$s - </a> tag
 #: woocommerce/class-sv-wc-framework-bootstrap.php:283
+#, php-format
 msgid "To resolve this, please %1$supdate%2$s (recommended) %3$sor%4$s %5$sdeactivate%6$s the above plugin, or %7$sdeactivate the following%8$s:"
 msgid_plural "To resolve this, please %1$supdate%2$s (recommended) %3$sor%4$s %5$sdeactivate%6$s the above plugins, or %7$sdeactivate the following%8$s:"
 msgstr[0] "Para resolver o problema, %1$satualize%2$s (ação recomendada) %3$sou%4$s %5$sdesative%6$s o plugin acima ou %7$sdesative%8$s:"
@@ -215,28 +223,32 @@ msgstr "O plugin a seguir está inativo porque requer uma versão mais recente d
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - WooCommerce version number
 #: woocommerce/class-sv-wc-framework-bootstrap.php:309
+#, php-format
 msgid "%1$s requires WooCommerce %2$s or newer"
 msgstr "O plugin %1$s requer o WooCommerce %2$s ou posterior"
 
 #. translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag
 #: woocommerce/class-sv-wc-framework-bootstrap.php:313
+#, php-format
 msgid "Please %1$supdate WooCommerce%2$s"
 msgstr "%1$sAtualize o WooCommerce.%2$s"
 
-#: woocommerce/class-sv-wc-helper.php:430
+#: woocommerce/class-sv-wc-helper.php:432
 msgctxt "coordinating conjunction for a list of items: a, b, and c"
 msgid "and"
 msgstr "e"
 
 #. translators: A list of items, for example: "US or Canada", or "US, Canada, or Mexico". English uses Oxford comma before the conjunction ("or") if there are at least 2 items preceding it - hence the use of plural forms. If your locale does not use Oxford comma, you can just provide the same translation to all plural forms. Placeholders: %1$s - a comma-separated list of item, %2$s - the final item in the list
-#: woocommerce/class-sv-wc-helper.php:475
+#: woocommerce/class-sv-wc-helper.php:477
+#, php-format
 msgid "%1$s or %2$s"
 msgid_plural "%1$s, or %2$s"
 msgstr[0] "%1$s ou %2$s"
 msgstr[1] "%1$s ou %2$s"
 
 #. translators: A list of items, for example: "US and Canada", or "US, Canada, and Mexico". English uses Oxford comma before the conjunction ("and") if there are at least 2 items preceding it - hence the use of plural forms. If your locale does not use Oxford comma, you can just provide the same translation to all plural forms. Placeholders: %1$s - a comma-separated list of items, %2$s - the final item in the list
-#: woocommerce/class-sv-wc-helper.php:481
+#: woocommerce/class-sv-wc-helper.php:483
+#, php-format
 msgid "%1$s and %2$s"
 msgid_plural "%1$s, and %2$s"
 msgstr[0] "%1$s e %2$s"
@@ -244,6 +256,7 @@ msgstr[1] "%1$s e %2$s"
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - a PHP extension/comma-separated list of PHP extensions
 #: woocommerce/class-sv-wc-plugin-dependencies.php:157
+#, php-format
 msgid "%1$s requires the %2$s PHP extension to function. Contact your host or server administrator to install and configure the missing extension."
 msgid_plural "%1$s requires the following PHP extensions to function: %2$s. Contact your host or server administrator to install and configure the missing extensions."
 msgstr[0] "O plugin %1$s requer a extensão PHP %2$s. Entre em contato com seu host ou a pessoa administradora do seu servidor para instalar e configurar essa extensão."
@@ -251,6 +264,7 @@ msgstr[1] "O plugin %1$s requer as seguintes extensões PHP: %2$s. Entre em cont
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - a PHP function/comma-separated list of PHP functions
 #: woocommerce/class-sv-wc-plugin-dependencies.php:185
+#, php-format
 msgid "%1$s requires the %2$s PHP function to exist.  Contact your host or server administrator to install and configure the missing function."
 msgid_plural "%1$s requires the following PHP functions to exist: %2$s.  Contact your host or server administrator to install and configure the missing functions."
 msgstr[0] "O plugin %1$s requer a função PHP %2$s.  Entre em contato com seu host ou a pessoa administradora do seu servidor para instalar e configurar essa função."
@@ -258,6 +272,7 @@ msgstr[1] "O plugin %1$s requer as seguintes funções PHP: %2$s.  Entre em cont
 
 #. translators: Placeholder: %s - a PHP setting value
 #: woocommerce/class-sv-wc-plugin-dependencies.php:229
+#, php-format
 msgid "%s or higher"
 msgstr "%s ou posterior"
 
@@ -267,60 +282,68 @@ msgstr "Entre em contato com seu provedor de hospedagem ou a pessoa administrado
 
 #. translators: Placeholders: %1$s - <strong> HTML tag, %2$s - </strong> HTML tag
 #: woocommerce/class-sv-wc-plugin-dependencies.php:262
+#, php-format
 msgid "Hey there! We've noticed that your server is running %1$san outdated version of PHP%2$s, which is the programming language that WooCommerce and its extensions are built on."
 msgstr "Olá! Observamos que seu servidor tem uma %1$sversão desatualizada do PHP%2$s, que é a linguagem de programação do WooCommerce e de suas extensões."
 
 #. translators: Placeholders: %1$s - <strong> HTML tag, %2$s - </strong> HTML tag
 #: woocommerce/class-sv-wc-plugin-dependencies.php:264
+#, php-format
 msgid "The PHP version that is currently used for your site is no longer maintained, nor %1$sreceives security updates%2$s; newer versions are faster and more secure."
 msgstr "A versão atual do PHP do seu site não é mais compatível e %1$snão tem mais atualizações de segurança%2$s. As versões mais recentes são mais rápidas e mais seguras."
 
 #. translators: Context: User is running an outdated PHP Version a plugin is not compatible with. Placeholders: %s - the plugin name
 #: woocommerce/class-sv-wc-plugin-dependencies.php:266
+#, php-format
 msgid "As a result, %s no longer supports this version and you should upgrade PHP as soon as possible."
 msgstr "Por isso, o plugin %s não é mais compatível com essa versão, e você precisa atualizá-la assim que possível."
 
 #. translators: Context: The host can update PHP version for the user. Placeholders: %1$s - <a> HTML tag, %2$s - </a> HTML tag
 #: woocommerce/class-sv-wc-plugin-dependencies.php:268
+#, php-format
 msgid "Your hosting provider can do this for you. %1$sHere are some resources to help you upgrade%2$s and to explain PHP versions further."
 msgstr "Seu provedor de hospedagem pode fazer isso para você. %1$sConfira estes recursos para ajudar você na atualização%2$s e a entender melhor as versões do PHP."
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:369
+#: woocommerce/class-sv-wc-plugin.php:370
+#, php-format
 msgid "You cannot clone instances of %s."
 msgstr "Não é possível clonar instâncias do plugin %s."
 
 #. translators: Placeholders: %s - plugin name
-#: woocommerce/class-sv-wc-plugin.php:380
+#: woocommerce/class-sv-wc-plugin.php:381
+#, php-format
 msgid "You cannot unserialize instances of %s."
 msgstr "Não é possível cancelar a serialização de instâncias do plugin %s."
 
 #. translators: Docs as in Documentation
-#: woocommerce/class-sv-wc-plugin.php:627
+#: woocommerce/class-sv-wc-plugin.php:628
 msgid "Docs"
 msgstr "Documentação"
 
-#: woocommerce/class-sv-wc-plugin.php:632
+#: woocommerce/class-sv-wc-plugin.php:633
 msgctxt "noun"
 msgid "Support"
 msgstr "Suporte"
 
-#: woocommerce/class-sv-wc-plugin.php:637
+#: woocommerce/class-sv-wc-plugin.php:638
 msgctxt "verb"
 msgid "Review"
 msgstr "Avaliar"
 
 #. translators: Placeholders: %1$s - PHP setting value, %2$s - version or value required
-#: woocommerce/class-sv-wc-plugin.php:776
+#: woocommerce/class-sv-wc-plugin.php:777
+#, php-format
 msgid "%1$s - A minimum of %2$s is required."
 msgstr "%1$s – Requer pelo menos %2$s."
 
 #. translators: Context: As in "Value has been set as [foo], but [bar] is required". Placeholders: %1$s - current value for a PHP setting, %2$s - required value for the PHP setting
-#: woocommerce/class-sv-wc-plugin.php:786
+#: woocommerce/class-sv-wc-plugin.php:787
+#, php-format
 msgid "Set as %1$s - %2$s is required."
 msgstr "Definir como %1$s. %2$s é obrigatório."
 
-#: woocommerce/class-sv-wc-plugin.php:1151
+#: woocommerce/class-sv-wc-plugin.php:1152
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:807
 msgid "Configure"
 msgstr "Configurar"
@@ -372,6 +395,7 @@ msgstr "Ocorreu um erro. Tente novamente."
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:495
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-handler.php:307
+#, php-format
 msgid "(%s)"
 msgstr "(%s)"
 
@@ -386,14 +410,14 @@ msgid "Token ID"
 msgstr "ID de token"
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:566
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:303
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:316
 msgid "Card Type"
 msgstr "Tipo de cartão"
 
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:571
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:607
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:194
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:301
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:207
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:314
 msgctxt "Last four digits of a payment method"
 msgid "Last Four"
 msgstr "Últimos quatro"
@@ -406,7 +430,7 @@ msgstr "Vencimento (MM/AA)"
 #. translators: e-check account type, HTML form field label
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:599
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:496
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:302
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:315
 msgid "Account Type"
 msgstr "Tipo de conta"
 
@@ -438,7 +462,8 @@ msgstr "Remover"
 #. translators: Placeholder: %s - Plugin name
 #. translators: Placeholder: %s - Payment gateway title (e.g. Authorize.Net, Braintree, etc.)
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-handler.php:226
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:212
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:225
+#, php-format
 msgid "%s Payment Tokens"
 msgstr "Tokens de pagamento do %s"
 
@@ -519,6 +544,7 @@ msgstr "Comentário (opcional):"
 
 #. translators: Context: Capture payment without charge. Placeholder: %s - transaction amount to be captured.
 #: woocommerce/payment-gateway/admin/views/html-order-partial-capture.php:67
+#, php-format
 msgid "Capture %s"
 msgstr "Capturar %s"
 
@@ -739,6 +765,7 @@ msgstr "Erro desconhecido"
 
 #. translators: Placeholder: %s - Error message
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:543
+#, php-format
 msgid "Payment method address could not be updated. %s"
 msgstr "Não foi possível atualizar o endereço da forma de pagamento. %s"
 
@@ -746,6 +773,7 @@ msgstr "Não foi possível atualizar o endereço da forma de pagamento. %s"
 #. translators: Context: "Check" as in "bank check" (noun, not verb). Placeholders: %1$s - payment method title, %2$s - payment account type (savings/checking) (may or may not be available), %3$s - last four digits of the account
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:713
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2890
+#, php-format
 msgid "%1$s Check Transaction Approved: %2$s account ending in %3$s"
 msgstr "Transação em cheque do %1$s aprovada: conta %2$s com final %3$s"
 
@@ -753,6 +781,7 @@ msgstr "Transação em cheque do %1$s aprovada: conta %2$s com final %3$s"
 #. translators: Context: "Check" as in "bank check" (noun, not verb). Placeholder: %s - check number
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:718
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2895
+#, php-format
 msgid "Check number %s"
 msgstr "Número do cheque: %s"
 
@@ -765,11 +794,13 @@ msgstr "Número do cheque: %s"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2901
 #: woocommerce/payment-gateway/Handlers/Capture.php:200
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:366
+#, php-format
 msgid "(Transaction ID %s)"
 msgstr "(ID da transação: %s)"
 
 #. translators: Example: "Braintree Test Authorization Approved: Mastercard ending in 1234". Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...), %5$s - last four digits of the card
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:790
+#, php-format
 msgid "%1$s %2$s %3$s Approved: %4$s ending in %5$s"
 msgstr "%3$s em %2$s do %1$s aprovada: %4$s com final %5$s"
 
@@ -795,6 +826,7 @@ msgstr "Cobrança"
 
 #. translators: Example: "Authorize.Net Test Charge Approved: Mastercard" - Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge), %4$s - card type (mastercard, visa, ...)
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:800
+#, php-format
 msgid "%1$s %2$s %3$s Approved: %4$s"
 msgstr "%3$s em %2$s do %1$s aprovada: %4$s"
 
@@ -803,16 +835,19 @@ msgstr "%3$s em %2$s do %1$s aprovada: %4$s"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:813
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:744
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2847
+#, php-format
 msgid "(expires %s)"
 msgstr "(vencimento: %s)"
 
 #. translators: Placeholders: %s - failure message
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:883
+#, php-format
 msgid "Tokenization Request Failed: %s"
 msgstr "Falha na solicitação de tokenização: %s"
 
 #. translators: Placeholders: %1$s - payment method title, %2$s - failure message
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:894
+#, php-format
 msgid "%1$s Tokenization Request Failed: %2$s"
 msgstr "Falha na solicitação de tokenização do %1$s: %2$s"
 
@@ -826,16 +861,19 @@ msgstr "Transação somente com autorização"
 
 #. translators: Placeholders: %s - failure message. Payment method as in a specific credit card, e-check or bank account
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:952
+#, php-format
 msgid "Oops, adding your new payment method failed: %s"
 msgstr "Falha ao adicionar sua forma de pagamento: %s"
 
 #. translators: Payment method as in a specific credit card. Placeholders: %1$s - card type (visa, mastercard, ...), %2$s - last four digits of the card, %3$s - card expiry date
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:997
+#, php-format
 msgid "Nice! New payment method added: %1$s ending in %2$s (expires %3$s)"
 msgstr "Legal! Nova forma de pagamento adicionada: %1$s com final %2$s (vencimento: %3$s)"
 
 #. translators: Payment method as in a specific e-check account. Placeholders: %1$s - account type (checking/savings), %2$s - last four digits of the account
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:1007
+#, php-format
 msgid "Nice! New payment method added: %1$s account ending in %2$s"
 msgstr "Legal! Nova forma de pagamento adicionada: %1$s com final %2$s"
 
@@ -846,6 +884,7 @@ msgstr "Legal! Nova forma de pagamento adicionada."
 
 #. translators: Placeholders: %1$s - site title, %2$s - customer email. Payment method as in a specific credit card, e-check or bank account
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-direct.php:1137
+#, php-format
 msgid "%1$s - Add Payment Method for %2$s"
 msgstr "%1$s: adicionar forma de pagamento para %2$s"
 
@@ -943,40 +982,47 @@ msgstr "Cancelar pedido"
 #. translators: Placeholders: %s - a WooCommerce order ID
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:461
 #: woocommerce/payment-gateway/Handlers/Abstract_Hosted_Payment_Handler.php:321
+#, php-format
 msgid "Could not find order %s"
 msgstr "Não foi possível encontrar o pedido %s."
 
 #. translators: Placeholders: %s - payment gateway title (such as Authorize.net, Braintree, etc)
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:525
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:206
+#, php-format
 msgid "%s duplicate transaction received"
 msgstr "Transação duplicada do %s."
 
 #. translators: Placeholder: %s - Order number
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:529
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:209
+#, php-format
 msgid "Order %s is already paid for."
 msgstr "O pedido %s já foi pago."
 
 #. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - payment method name (mastercard, bank account, etc), %3$s - last four digits of the card/account, %4$s - card/account expiry date
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:614
 #: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:1153
+#, php-format
 msgid "%1$s Payment Method Saved: %2$s ending in %3$s (expires %4$s)"
 msgstr "Forma de pagamento do %1$s salva: %2$s com final %3$s (vencimento: %4$s)"
 
 #. translators: Placeholders: %1$s - payment gateway title (such as CyberSouce, NETbilling, etc), %2$s - account type (checking/savings - may or may not be available), %3$s - last four digits of the account
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:625
 #: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:1164
+#, php-format
 msgid "%1$s eCheck Payment Method Saved: %2$s account ending in %3$s"
 msgstr "Forma de pagamento de cheque eletrônico do %1$s salva: %2$s com final %3$s"
 
 #. translators: Placeholders: %s - payment gateway title (such as CyberSouce, NETbilling, etc)
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:634
+#, php-format
 msgid "%s Payment Method Saved"
 msgstr "Forma de pagamento do %s salva."
 
 #. translators: Placeholders: %s - a failed tokenization API error
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-hosted.php:643
+#, php-format
 msgid "Tokenization failed. %s"
 msgstr "Falha na tokenização. %s"
 
@@ -1012,7 +1058,7 @@ msgid "You do not have any saved payment methods."
 msgstr "Você não tem formas de pagamento salvas."
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:877
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:202
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:215
 msgid "Nickname"
 msgstr "Apelido"
 
@@ -1100,16 +1146,19 @@ msgstr "Informações de pagamento"
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - <a> tag, %3$s - </a> tag
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:643
+#, php-format
 msgid "%1$s: WooCommerce is not being forced over SSL; your customers' payment data may be at risk. %2$sVerify your site URLs here%3$s"
 msgstr "%1$s: o WooCommerce não está sendo forçado por SSL. Os dados de pagamento de seus clientes podem estar em risco. %2$sVerifique as URLs do seu site%3$s"
 
 #. translators: Placeholders: %s - payment gateway name
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:660
+#, php-format
 msgid "%s will soon require TLS 1.2 support to process transactions and your server environment may need to be updated. Please contact your hosting provider to confirm that your site can send and receive TLS 1.2 connections and request they make any necessary updates."
 msgstr "Em breve, o %s exigirá compatibilidade com TLS 1.2 para processar transações, portanto, poderá ser necessário atualizar o ambiente do seu servidor. Entre em contato com seu provedor de hospedagem para confirmar se o seu site pode enviar e receber conexões TLS 1.2. Em caso afirmativo, solicite as devidas atualizações."
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - a currency/comma-separated list of currencies, %3$s - <a> tag, %4$s - </a> tag
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:715
+#, php-format
 msgid "%1$s accepts payment in %2$s only. %3$sConfigure%4$s WooCommerce to accept %2$s to enable this gateway for checkout."
 msgid_plural "%1$s accepts payment in one of %2$s only. %3$sConfigure%4$s WooCommerce to accept one of %2$s to enable this gateway for checkout."
 msgstr[0] "O plugin %1$s só aceita pagamentos em %2$s. %3$sConfigure%4$s o WooCommerce para aceitar %2$s e ativar o gateway para finalização de compra."
@@ -1117,11 +1166,13 @@ msgstr[1] "O plugin %1$s só aceita pagamentos em um de %2$s. %3$sConfigure%4$s 
 
 #. translators: Placeholders: %1$s - payment gateway name, %2$s - opening <a> tag, %3$s - closing </a> tag
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:745
+#, php-format
 msgid "Heads up! %1$s is currently configured to log transaction data for debugging purposes. If you are not experiencing any problems with payment processing, we recommend %2$sturning off Debug Mode%3$s"
 msgstr "Atenção! O %1$s está configurado para registrar dados de transações para fins de depuração. Se você estiver tendo problemas com o processamento de pagamentos, recomendamos %2$sdesativar o modo de depuração%3$s."
 
 #. translators: Placeholders: %s - gateway name
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:796
+#, php-format
 msgid "%s is not configured"
 msgstr "O %s não está configurado."
 
@@ -1131,20 +1182,24 @@ msgstr "Descartar"
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - opening <a> HTML link tag, %3$s - closing </a> HTML link tag
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:845
+#, php-format
 msgid "Heads up! Apple Pay for %1$s requires WooCommerce version 3.2 or greater. Please %2$supdate WooCommerce%3$s."
 msgstr "Atenção! O Apple Pay para %1$s requer WooCommerce 3.2 ou posterior. %2$sAtualize o WooCommerce.%3$s"
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - opening <a> HTML link tag, %3$s - closing </a> HTML link tag
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:869
+#, php-format
 msgid "Heads up! Google Pay for %1$s requires WooCommerce version 3.2 or greater. Please %2$supdate WooCommerce%3$s."
 msgstr "Atenção! O Google Pay para %1$s requer WooCommerce 3.2 ou posterior. %2$sAtualize o WooCommerce.%3$s"
 
 #. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:905
+#, php-format
 msgid "%1$s is inactive for subscription transactions. Please %2$senable tokenization%3$s to activate %1$s for Subscriptions."
 msgstr "O %1$s está inativo para transações de assinatura. %2$sAtive a tokenização%3$s para ativar o %1$s para assinaturas."
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:923
+#, php-format
 msgid "%1$s is inactive for pre-order transactions. Please %2$senable tokenization%3$s to activate %1$s for Pre-Orders."
 msgstr "O %1$s está inativo para transações pré-venda. %2$sAtive a tokenização%3$s para ativar o %1$s para pré-venda."
 
@@ -1157,19 +1212,21 @@ msgid "Inactive"
 msgstr "Inativo"
 
 #. translators: Placeholder: %s - Payment gateway title (e.g. Authorize.Net, Braintree...)
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:117
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:130
+#, php-format
 msgid "%s Customer ID"
 msgstr "ID de cliente do %s"
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:186
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:199
 msgid "Type"
 msgstr "Tipo"
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:257
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:270
+#, php-format
 msgid "Removed payment token \"%d\""
 msgstr "Token de pagamento “%d” removido."
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:304
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:317
 msgid "Expiry Date"
 msgstr "Data de vencimento"
 
@@ -1339,6 +1396,7 @@ msgstr "Ative mensagens detalhadas de recusa para clientes na finalização de c
 
 #. translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1458
+#, php-format
 msgid "Show Detailed Error Messages and API requests/responses on the checkout page and/or save them to the %1$sdebug log%2$s"
 msgstr "Mostre mensagens detalhadas de erro e solicitações/respostas de API na página de finalização de compra e/ou salve-as no %1$sregistro de depuração%2$s."
 
@@ -1399,36 +1457,43 @@ msgstr "Exibir o campo de código de segurança do cartão ao pagar com um cart�
 
 #. translators: Placeholders: %1$s - site title, %2$s - order number
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:1952
+#, php-format
 msgid "%1$s - Order %2$s"
 msgstr "%1$s: pedido %2$s"
 
 #. translators: Placeholders: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card.
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2084
+#, php-format
 msgid "%1$s - Capture for Order %2$s"
 msgstr "%1$s: captura do pedido %2$s"
 
 #. translators: Placeholders: %1$s - site title, %2$s - order number
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2227
+#, php-format
 msgid "%1$s - Refund for Order %2$s"
 msgstr "%1$s: reembolso do pedido %2$s"
 
 #. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - a monetary amount
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2294
+#, php-format
 msgid "%1$s Refund in the amount of %2$s approved."
 msgstr "Reembolso do %1$s no valor de %2$s aprovado."
 
 #. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error code, %3$s - error message
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2324
+#, php-format
 msgid "%1$s Refund Failed: %2$s - %3$s"
 msgstr "Falha no reembolso do %1$s: %2$s – %3$s"
 
 #. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - error message
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2332
+#, php-format
 msgid "%1$s Refund Failed: %2$s"
 msgstr "Falha no reembolso do %1$s: %2$s"
 
 #. translators: Placeholders: %s - payment gateway title (such as Authorize.net, Braintree, etc)
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2353
+#, php-format
 msgid "%s Order completely refunded."
 msgstr "Pedido do %s reembolsado integralmente."
 
@@ -1438,16 +1503,19 @@ msgstr "Não é possível anular esse pedido parcialmente. Use o valor total do 
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - error code, %3$s - error message. Void as in to void an order.
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2495
+#, php-format
 msgid "%1$s Void Failed: %2$s - %3$s"
 msgstr "Falha de anulamento do %1$s: %2$s – %3$s"
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - error message. Void as in to void an order.
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2503
+#, php-format
 msgid "%1$s Void Failed: %2$s"
 msgstr "Falha de anulamento do %1$s: %2$s"
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order.
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2527
+#, php-format
 msgid "%1$s Void in the amount of %2$s approved."
 msgstr "Cancelamento de %1$s no valor de %2$s aprovado."
 
@@ -1461,6 +1529,7 @@ msgstr "#"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2624
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:153
 #: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:179
+#, php-format
 msgid "Status code %1$s: %2$s"
 msgstr "Código do status %1$s: %2$s"
 
@@ -1469,6 +1538,7 @@ msgstr "Código do status %1$s: %2$s"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2627
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:156
 #: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:182
+#, php-format
 msgid "Status code: %s"
 msgstr "Código do status: %s"
 
@@ -1478,6 +1548,7 @@ msgstr "Código do status: %s"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2630
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:159
 #: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:185
+#, php-format
 msgid "Status message: %s"
 msgstr "Mensagem do status: %s"
 
@@ -1485,11 +1556,13 @@ msgstr "Mensagem do status: %s"
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2635
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:165
 #: woocommerce/payment-gateway/payment-tokens/class-sv-wc-payment-gateway-payment-tokens-handler.php:193
+#, php-format
 msgid "Transaction ID %s"
 msgstr "ID da transação: %s"
 
 #. translators: Placeholders: %1$s - payment method title, %2$s - environment ("Test"), %3$s - transaction type (authorization/charge)
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2826
+#, php-format
 msgid "%1$s %2$s %3$s Approved"
 msgstr "%3$s em %2$s do %1$s aprovada"
 
@@ -1506,11 +1579,13 @@ msgstr "Autorização"
 
 #. translators: Placeholders: %1$s - credit card type (MasterCard, Visa, etc...), %2$s - last four digits of the card
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2836
+#, php-format
 msgid "%1$s ending in %2$s"
 msgstr "%1$s com final %2$s"
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - message (probably reason for the transaction being held for review)
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:2933
+#, php-format
 msgid "%1$s Transaction Held for Review (%2$s)"
 msgstr "A transação do %1$s foi suspensa para análise (%2$s)."
 
@@ -1521,6 +1596,7 @@ msgstr "Seu pedido foi recebido e está em análise. Agradecemos sua compra!"
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - error message; e.g. Order Note: [Payment method] Payment failed [error]
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3022
+#, php-format
 msgid "%1$s Payment Failed (%2$s)"
 msgstr "Falha no pagamento do %1$s (%2$s)."
 
@@ -1532,6 +1608,7 @@ msgstr "Ocorreu um erro. Tente novamente ou escolha outra forma de pagamento."
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - message/error
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3059
+#, php-format
 msgid "%1$s Transaction Cancelled (%2$s)"
 msgstr "Transação do %1$s cancelada (%2$s)."
 
@@ -1569,6 +1646,7 @@ msgid "Capture Paid Orders"
 msgstr "Capturar pedidos pagos"
 
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3347
+#, php-format
 msgid "Automatically capture orders when they are changed to %s."
 msgstr "Capture pedidos automaticamente quando a cobrança for feita por %s."
 
@@ -1586,6 +1664,7 @@ msgstr "Logotipos dos cartões aceitos exibidos aos clientes na finalização de
 
 #. translators: Placeholders: %1$s - <strong> tag, %2$s - </strong> tag
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:3543
+#, php-format
 msgid "This setting %1$sdoes not%2$s change which card types the gateway will accept. Accepted cards are configured from your payment processor account."
 msgstr "Essa configuração %1$snão%2$s altera os tipos de cartão aceitos pelo gateway. Os cartões aceitos são configurados na conta do seu processador de pagamentos."
 
@@ -1611,6 +1690,7 @@ msgstr "Produção"
 
 #. translators: %1$s - gateway name, %2$s - <a> tag, %3$s - </a> tag, %4$s - <a> tag, %5$s - </a> tag
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway.php:4525
+#, php-format
 msgid "Heads up! %1$s is not fully configured and cannot accept payments. Please %2$sreview the documentation%3$s and configure the %4$sgateway settings%5$s."
 msgstr "Atenção! O %1$s não está totalmente configurado. Não é possível aceitar pagamentos. %2$sConsulte a documentação%3$s e defina as %4$sconfigurações do gateway%5$s."
 
@@ -1634,11 +1714,13 @@ msgstr "Finalizar compra"
 
 #. translators: Placeholder: %s - external checkout label
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:331
+#, php-format
 msgid "%s is disabled."
 msgstr "%s está desativado."
 
 #. translators: Context: Error message displayed to merchants if their store currency is not in one of the accepted currencies by the payment gateway they intend to enable. Placeholders: %1$s - a currency or comma-separated list of currencies, %2$s - opening HTML <a> tag, %3$s - closing HTML </a> tag, %4$s - payment method title/label
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:395
+#, php-format
 msgid "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 msgid_plural "Accepts payment in %1$s only. %2$sConfigure%3$s WooCommerce to accept %1$s to enable %4$s."
 msgstr[0] "Somente pagamentos em %1$s são aceitos. %2$sConfigure%3$s o WooCommerce para aceitar %1$s e ativar %4$s."
@@ -1646,10 +1728,12 @@ msgstr[1] "Somente pagamentos em %1$s são aceitos. %2$sConfigure%3$s o WooComme
 
 #. translators: Placeholders: %1$s - Checkout method label, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <strong> tag, %5$s - closing HTML </strong> tag
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:432
+#, php-format
 msgid "Your store %1$scalculates taxes%2$s based on the shipping address, but %1$s %4$sdoes not%5$s share customer shipping information with your store for orders with only virtual products. These orders will have their taxes calculated based on the shop address instead."
 msgstr "Sua loja %1$scalcula os impostos%2$s com base no endereço de envio, mas o(a) %1$s %4$snão%5$s compartilha informações de envio de clientes com sua loja para pedidos de produtos virtuais. Os impostos desses pedidos são calculados com base no endereço da loja."
 
 #: woocommerce/payment-gateway/External_Checkout/Admin.php:465
+#, php-format
 msgid "%4$s%1$s Notice!%5$s Your store %2$scalculates taxes%3$s based on the billing address, but %1$s %4$sdoes not%5$s share the customer billing address with your store before payment. These orders will have their taxes calculated based on the shipping address (or shop address, for orders with only virtual products)."
 msgstr "%4$s%1$s Atenção!%5$s Sua loja %2$scalcula os impostos%3$s com base no endereço de cobrança, mas o(a) %1$s %4$snão%5$s compartilha o endereço de cobrança de clientes com sua loja antes do pagamento. Os impostos desses pedidos são calculados com base no endereço de envio (ou da loja para pedidos de produtos virtuais)."
 
@@ -1697,6 +1781,7 @@ msgstr "ID de comerciante da Apple"
 
 #. translators: Placeholders: %1$s - <a> tag, %2$s - </a> tag
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:165
+#, php-format
 msgid "This is found in your %1$sApple developer account%2$s"
 msgstr "Ele está indicado na sua %1$sconta de desenvolvedor da Apple%2$s."
 
@@ -1710,6 +1795,7 @@ msgstr "O caminho completo do sistema para o arquivo do certificado da Apple. Po
 
 #. translators: Placeholders: %s - the server's web root path
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:180
+#, php-format
 msgid "For reference, your current web root path is: %s"
 msgstr "Para referência, seu atual caminho raiz é %s."
 
@@ -1727,6 +1813,7 @@ msgid "Your site must be served over HTTPS with a valid SSL certificate."
 msgstr "Seu site precisa ter protocolo HTTPS com um Certificado SSL válido."
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay-admin.php:240
+#, php-format
 msgid "Your %1$sMerchant Identity Certificate%2$s cannot be found. Please check your path configuration."
 msgstr "Não foi possível encontrar seu %1$sCertificado de identidade de comerciante%2$s. Verifique a configuração do seu caminho."
 
@@ -1740,6 +1827,7 @@ msgid "Apple Pay payment authorized."
 msgstr "Pagamento do Apple Pay autorizado."
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:188
+#, php-format
 msgid "Apple Pay payment failed. %s"
 msgstr "Falha no pagamento do Apple Pay. %s"
 
@@ -1762,7 +1850,7 @@ msgstr "Envio"
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:571
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:412
 msgid "Fees"
-msgstr "TAXAS"
+msgstr "Taxas"
 
 #: woocommerce/payment-gateway/External_Checkout/apple-pay/class-sv-wc-payment-gateway-apple-pay.php:581
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:422
@@ -1774,6 +1862,7 @@ msgid "or"
 msgstr "ou"
 
 #: woocommerce/payment-gateway/External_Checkout/Frontend.php:345
+#, php-format
 msgid "By submitting your payment, you agree to our %1$sterms and conditions%2$s."
 msgstr "Ao efetuar seu pagamento, você indica que concordo com nossos %1$stermos de uso%2$s."
 
@@ -1793,6 +1882,7 @@ msgid "Merchant ID"
 msgstr "ID do comerciante"
 
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Admin.php:104
+#, php-format
 msgid "A Google merchant identifier issued after registration with the %1$sGoogle Pay & Wallet Console%2$s. 12-18 characters. Required in production environment."
 msgstr "Identificador de comerciante do Google emitido após o registro no %1$sGoogle Pay e na Carteira do Google%2$s. 12 a 18 caracteres. Necessário no ambiente de produção."
 
@@ -1811,12 +1901,14 @@ msgid "Google Pay payment authorized."
 msgstr "Pagamento do Google Pay autorizado."
 
 #: woocommerce/payment-gateway/External_Checkout/Google_Pay/Google_Pay.php:540
+#, php-format
 msgid "Google Pay payment failed. %s"
 msgstr "Falha no pagamento do Google Pay. %s"
 
 #: woocommerce/payment-gateway/External_Checkout/Orders.php:141
 #: woocommerce/payment-gateway/External_Checkout/Orders.php:154
 #: woocommerce/payment-gateway/External_Checkout/Orders.php:158
+#, php-format
 msgid "Error %d: Unable to create order. Please try again."
 msgstr "Erro %d: não é possível criar o pedido. Tente novamente."
 
@@ -1826,16 +1918,19 @@ msgstr "Ocorreu um problema ao processar seu pedido. Ele foi suspenso para anál
 
 #. translators: Example: "Authorize.Net Transaction Held for Review". Placeholder: %s - Payment gateway title
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:366
+#, php-format
 msgid "%s Transaction Held for Review"
 msgstr "A transação do %s foi suspensa para análise."
 
 #. translators: Placeholders: %s - payment gateway title
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:437
+#, php-format
 msgid "%s Payment Failed"
 msgstr "Falha no pagamento da transação do %s."
 
 #. translators: Placeholders: %s - payment gateway title
 #: woocommerce/payment-gateway/Handlers/Abstract_Payment_Handler.php:464
+#, php-format
 msgid "%s Transaction Cancelled"
 msgstr "Transação do %s cancelada."
 
@@ -1857,20 +1952,24 @@ msgstr "Não é possível capturar a transação"
 
 #. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount. Definitions: Capture, as in capture funds from a credit card.
 #: woocommerce/payment-gateway/Handlers/Capture.php:190
+#, php-format
 msgid "%1$s Capture of %2$s Approved"
 msgstr "A captura do %1$s no valor de %2$s foi aprovada."
 
 #. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - failure message. Definitions: "capture" as in capturing funds from a credit card.
 #: woocommerce/payment-gateway/Handlers/Capture.php:231
+#, php-format
 msgid "%1$s Capture Failed: %2$s"
 msgstr "Falha na captura do %1$s: %2$s"
 
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:262
+#, php-format
 msgid "Pre-Order Tokenization attempt failed (%s)"
 msgstr "Falha na tentativa de tokenização de pré-venda (%s)."
 
 #. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Site name, %2$s - Order number
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:310
+#, php-format
 msgid "%1$s - Pre-Order Release Payment for Order %2$s"
 msgstr "%1$s: pagamento de lançamento pré-venda do pedido %2$s"
 
@@ -1880,16 +1979,19 @@ msgstr "Token de pagamento inválido ou não fornecido."
 
 #. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Payment gateway name, %2$s - Either 'Authorization' or 'Charge' (untranslated), %3$s - Payment method type (e.g. 'PayPal', 'Credit Card', etc.), %4$s - Last four digits of the card or account, %5$s - Expiration date of the payment method
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:343
+#, php-format
 msgid "%1$s %2$s Pre-Order Release Payment Approved: %3$s ending in %4$s (expires %5$s)"
 msgstr "Pagamento de lançamento pré-venda com %2$s de %1$s aprovado: %3$s com final %4$s (vencimento: %5$s)"
 
 #. translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Payment gateway name, %2$s - Payment method type (e.g. 'Bank Account'), %3$s - Last four digits of the account
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:356
+#, php-format
 msgid "%1$s eCheck Pre-Order Release Payment Approved: %2$s ending in %3$s"
 msgstr "Pagamento de lançamento pré-venda com cheque eletrônico de %1$s aprovado: %2$s com final %3$s"
 
 #. translators: Context: Release of payment for pre-order failed. Placeholder: %s - Error message
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-pre-orders.php:408
+#, php-format
 msgid "Pre-Order Release Payment Failed: %s"
 msgstr "Falha no pagamento de lançamento pré-venda: %s"
 
@@ -1899,16 +2001,19 @@ msgstr "Renovação de assinatura: token de pagamento inválido ou não fornecid
 
 #. translators: Placeholders: %1$s - Site name, %2$s - Order number
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:391
+#, php-format
 msgid "%1$s - Subscription Renewal Order %2$s"
 msgstr "%1$s: pedido de renovação de assinatura %2$s"
 
 #. translators: Placeholders: %1$s - payment gateway title, %2$s - error message; e.g. Order Note: [Payment method] Payment Change failed [error]
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:528
+#, php-format
 msgid "%1$s Payment Change Failed (%2$s)"
 msgstr "Falha na alteração de pagamento do %1$s (%2$s)."
 
 #. translators: Context: Payment made for order. Placeholders: %1$s - Payment method name (e.g. "Credit Card", "PayPal", etc.), %2$s - Last four digits of the card/account used
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:686
+#, php-format
 msgid "Via %1$s ending in %2$s"
 msgstr "Por %1$s com final %2$s"
 
@@ -1917,6 +2022,7 @@ msgid "Subscriptions"
 msgstr "Assinaturas"
 
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:772
+#, php-format
 msgctxt "hash before order number"
 msgid "#%s"
 msgstr "nº %s"
@@ -1932,6 +2038,7 @@ msgstr "Token de pagamento"
 #. translators: Context: Error message. Placeholder: %s - Label of the related value
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:907
 #: woocommerce/payment-gateway/integrations/class-sv-wc-payment-gateway-integration-subscriptions.php:913
+#, php-format
 msgid "%s is required."
 msgstr "%s é obrigatório."
 
@@ -1966,6 +2073,7 @@ msgstr "Ótimo!"
 
 #. translators: Placeholders: %1$s - Plugin name, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <a> tag, %5$s - Closing HTML </a> tag
 #: woocommerce/Plugin/Lifecycle.php:403
+#, php-format
 msgid "Are you having a great experience with %1$s so far? Please consider %2$sleaving a review%3$s! If things aren't going quite as expected, we're happy to help -- please %4$sreach out to our support team%5$s."
 msgstr "Você está tendo uma ótimo experiência com o plugin %1$s até agora? %2$sDeixe sua avaliação.%3$s Caso sua experiência não esteja sendo boa, estamos aqui para ajudar. %4$sEntre em contato com a equipe de suporte.%5$s"
 
@@ -1975,6 +2083,7 @@ msgstr "Não é possível indicar os recursos."
 
 #. translators: Placeholder: %s - setting ID
 #: woocommerce/rest-api/Controllers/Settings.php:169
+#, php-format
 msgid "Setting %s does not exist"
 msgstr "A configuração %s não existe."
 
@@ -1984,6 +2093,7 @@ msgstr "Não é possível editar esse recurso."
 
 #. translators: Placeholder: %s - Error message
 #: woocommerce/rest-api/Controllers/Settings.php:225
+#, php-format
 msgid "Could not update setting: %s"
 msgstr "Não foi possível atualizar a configuração: %s"
 
@@ -2036,10 +2146,12 @@ msgid "A list of key/value pairs defining the display value of each setting opti
 msgstr "Uma lista de pares de chave/valor que definem o valor de exibição de cada opção de configuração. As chaves devem ser correspondentes às opções definidas na configuração base para validação."
 
 #: woocommerce/utilities/class-sv-wp-background-job-handler.php:661
+#, php-format
 msgid "Job data key \"%s\" not set"
 msgstr "Chave de dados “%s” da tarefa não definida."
 
 #: woocommerce/utilities/class-sv-wp-background-job-handler.php:665
+#, php-format
 msgid "Job data key \"%s\" is not an array"
 msgstr "Chave de dados “%s” da tarefa não é um array."
 
