@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2025.nn.nn - version 5.15.12
+ * Fix: Only retrieve subscriptions data during checkout if there's a valid order to associate them with
 
 2025.05.19 - version 5.15.11
 * Fix: Re-enable payment method delete button upon cancellation
