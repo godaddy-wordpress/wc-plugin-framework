@@ -2,13 +2,18 @@
 
 2025.nn.nn - version 5.15.12
 
-2025.nn.nn - version 5.15.11
+2025.05.19 - version 5.15.11
+* Fix: Re-enable payment method delete button upon cancellation
 
-2025.nn.nn - version 5.15.10
+2025.05.08 - version 5.15.10
+* Fix: Remove common JS modules from dist
 
-2025.nn.nn - version 5.15.9
+2025.05.01 - version 5.15.9
+* Tweak: Delay usage of get_plugin_name() in payment gateway privacy class to after init
+* Fix: Block registration: delay the get_gateways() call until after we're inside the hook callback
 
-2025.nn.nn - version 5.15.8
+2025.04.30 - version 5.15.8
+* Fix: Add a defensive check to prevent a fatal error during subscription renewal when Avatax is active
 
 2025.04.29 - version 5.15.7
 * Fix: Avoid triggering notices for loading translations too early
