@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12\Handlers;
+namespace SkyVerge\WooCommerce\PluginFramework\v999_9_9\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\SV_WC_Plugin_Compatibility;
+use SkyVerge\WooCommerce\PluginFramework\v999_9_9\SV_WC_Plugin_Compatibility;
 
 defined( 'ABSPATH' ) or exit;
 

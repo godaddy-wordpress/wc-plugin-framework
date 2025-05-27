@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12\Traits;
+namespace SkyVerge\WooCommerce\PluginFramework\v999_9_9\Traits;
 
 use ReflectionClass;
 use ReflectionProperty;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Helpers\ArrayHelper;
+use SkyVerge\WooCommerce\PluginFramework\v999_9_9\Helpers\ArrayHelper;
 
 /**
  * A trait that allows a given class/object to convert its state to an array.
