@@ -21,4 +21,5 @@ _List of related issues, pull requests, external pages, etc_
 
 ## Before merge
 
+- [ ] I have updated `woocommerce/changelog.txt`
 - [ ] I have confirmed the final story is merged
