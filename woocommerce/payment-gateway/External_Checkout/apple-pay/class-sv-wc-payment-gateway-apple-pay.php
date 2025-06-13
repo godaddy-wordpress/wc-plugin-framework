@@ -158,6 +158,8 @@ class SV_WC_Payment_Gateway_Apple_Pay extends Payment_Gateway\External_Checkout\
 
 			$order->save();
 
+			$this->maybeAddAttributionData($order);
+
 			// add Apple Pay response data to the order
 			add_filter( 'wc_payment_gateway_' . $this->get_processing_gateway()->get_id() . '_get_order', [ $this, 'add_order_data' ] );
 
@@ -191,6 +193,47 @@ class SV_WC_Payment_Gateway_Apple_Pay extends Payment_Gateway\External_Checkout\
 			}
 
 			throw $e;
+		}
+	}
+
+	protected function maybeAddAttributionData(\WC_Order $order) : void
+	{
+		$attributionData = SV_WC_Helper::get_posted_value( 'order_attribution' );
+		if ( empty( $attributionData ) ) {
+			return;
+		}
+
+		if (! class_exists( \Automattic\WooCommerce\Internal\Orders\OrderAttributionController::class )) {
+			return;
+		}
+
+		try {
+			$container = wc_get_container();
+
+			$featureController = $container->get( \Automattic\WooCommerce\Internal\Features\FeaturesController::class );
+
+			if (! $featureController->is_feature_active( 'order_attribution' )) {
+				return;
+			}
+
+			$orderAttributionController = $container->get( \Automattic\WooCommerce\Internal\Orders\OrderAttributionController::class );
+
+			// bail if the order already has attribution
+			if ($orderAttributionController->has_attribution($order)) {
+				return;
+			}
+
+			/**
+			 * Run an action to save order attribution data.
+			 *
+			 * @see \Automattic\WooCommerce\Internal\Orders\OrderAttributionController::on_init()
+			 *
+			 * @param WC_Order $order The order object.
+			 * @param array    $params Unprefixed order attribution data.
+			 */
+			do_action( 'woocommerce_order_save_attribution_data', $order, $attributionData );
+		} catch ( \Exception $e ) {
+			$this->log( 'Error adding attribution data to order: ' . $e->getMessage() );
 		}
 	}
 

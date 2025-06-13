@@ -310,6 +310,10 @@ jQuery ( $ ) ->
 				payment: JSON.stringify( payment )
 			}
 
+			# Add order attribution data if available
+			if window?.wc_order_attribution
+				data.order_attribution = wc_order_attribution.getAttributionData()
+
 			$.post @ajax_url, data, ( response ) =>
 
 				if response.success
