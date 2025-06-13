@@ -198,12 +198,15 @@ class SV_WC_Payment_Gateway_Apple_Pay extends Payment_Gateway\External_Checkout\
 
 	protected function maybeAddAttributionData(\WC_Order $order) : void
 	{
+		$this->log( 'Maybe adding attribution data to order' );
 		$attributionData = SV_WC_Helper::get_posted_value( 'order_attribution' );
 		if ( empty( $attributionData ) ) {
+			$this->log( '-- No attribution data found' );
 			return;
 		}
 
 		if (! class_exists( \Automattic\WooCommerce\Internal\Orders\OrderAttributionController::class )) {
+			$this->log( '-- Order attribution controller not found' );
 			return;
 		}
 
@@ -213,6 +216,7 @@ class SV_WC_Payment_Gateway_Apple_Pay extends Payment_Gateway\External_Checkout\
 			$featureController = $container->get( \Automattic\WooCommerce\Internal\Features\FeaturesController::class );
 
 			if (! $featureController->is_feature_active( 'order_attribution' )) {
+				$this->log( '-- Order attribution feature not active' );
 				return;
 			}
 
@@ -220,8 +224,11 @@ class SV_WC_Payment_Gateway_Apple_Pay extends Payment_Gateway\External_Checkout\
 
 			// bail if the order already has attribution
 			if ($orderAttributionController->has_attribution($order)) {
+				$this->log( '-- Order already has attribution' );
 				return;
 			}
+
+			$this->log( '-- Adding attribution data to order' );
 
 			/**
 			 * Run an action to save order attribution data.
