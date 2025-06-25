@@ -1,7 +1,7 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Settings_API\Setting;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\SV_WC_Plugin_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_13\Settings_API\Setting;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_13\SV_WC_Plugin_Exception;
 
 class SettingTest extends \Codeception\TestCase\WPTestCase {
 
