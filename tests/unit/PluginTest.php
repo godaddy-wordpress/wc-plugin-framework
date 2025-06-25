@@ -1,16 +1,16 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12\Tests\Unit;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_13\Tests\Unit;
 
 use Generator;
 use Mockery;
 use ReflectionException;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\SV_WC_Plugin;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_13\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_13\Tests\TestCase;
 use WP_Mock;
 
 /**
- * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_12\SV_WC_Plugin
+ * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_13\SV_WC_Plugin
  */
 class PluginTest extends TestCase
 {
@@ -29,7 +29,7 @@ class PluginTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_12\SV_WC_Plugin::logger()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_13\SV_WC_Plugin::logger()
 	 * @throws ReflectionException
 	 */
 	public function testCanGetLogger() : void
@@ -50,7 +50,7 @@ class PluginTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_12\SV_WC_Plugin::assert()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_13\SV_WC_Plugin::assert()
 	 * @throws ReflectionException
 	 */
 	public function testCanAssert() : void
@@ -65,7 +65,7 @@ class PluginTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_12\SV_WC_Plugin::assert()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_13\SV_WC_Plugin::assert()
 	 * @throws ReflectionException
 	 */
 	public function testCanCatchFailedAssertion() : void
@@ -88,7 +88,7 @@ class PluginTest extends TestCase
 	}
 
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_12\SV_WC_Plugin::maybeHandleBackwardsCompatibleArgs()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v5_15_13\SV_WC_Plugin::maybeHandleBackwardsCompatibleArgs()
 	 * @dataProvider providerCanMaybeHandleBackwardsCompatibleArgs
 	 * @throws ReflectionException
 	 */

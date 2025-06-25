@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2025.nn.nn - version 5.15.13
+
 2025.nn.nn - version 5.15.12
  * Fix: Only retrieve subscriptions data during checkout if there's a valid order to associate them with
 
