@@ -3414,10 +3414,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param \WC_Order $order Optional. The order being charged
+	 * @param \WC_Order|null $order Optional. The order being charged
 	 * @return bool
 	 */
-	public function perform_credit_card_charge( \WC_Order $order = null ) {
+	public function perform_credit_card_charge( ?\WC_Order $order = null ) {
 
 		$this->get_plugin()->assert( $this->supports_credit_card_charge() );
 
@@ -3445,10 +3445,10 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param \WC_Order $order Optional. The order being authorized
+	 * @param \WC_Order|null $order Optional. The order being authorized
 	 * @return bool
 	 */
-	public function perform_credit_card_authorization( \WC_Order $order = null ) {
+	public function perform_credit_card_authorization( ?\WC_Order $order = null ) {
 
 		$this->get_plugin()->assert( $this->supports_credit_card_authorization() );
 
