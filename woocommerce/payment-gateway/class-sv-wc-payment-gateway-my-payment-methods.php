@@ -900,7 +900,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 * @param SV_WC_Payment_Gateway_Payment_Token|null $token FW token object, only set if the token is a FW token
 	 * @return string
 	 */
-	protected function get_payment_method_default_html( $is_default = false, SV_WC_Payment_Gateway_Payment_Token $token = null ) {
+	protected function get_payment_method_default_html( $is_default = false, ?SV_WC_Payment_Gateway_Payment_Token $token = null ) {
 
 		$html = $is_default ? '<mark class="default">' . esc_html__( 'Default', 'woocommerce-plugin-framework' ) . '</mark>' : '';
 

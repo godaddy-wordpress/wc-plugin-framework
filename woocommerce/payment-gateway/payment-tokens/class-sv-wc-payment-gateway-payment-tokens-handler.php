@@ -295,7 +295,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 	 * @param string|null $environment_id optional environment id, defaults to plugin current environment
 	 * @return SV_WC_Payment_Gateway_Payment_Token payment token object or null
 	 */
-	public function get_token_by_core_id( int $user_id, int $core_token_id, string $environment_id = null ): ?SV_WC_Payment_Gateway_Payment_Token
+	public function get_token_by_core_id( int $user_id, int $core_token_id, ?string $environment_id = null ): ?SV_WC_Payment_Gateway_Payment_Token
 	{
 		// default to current environment
 		if ( is_null( $environment_id ) ) {
