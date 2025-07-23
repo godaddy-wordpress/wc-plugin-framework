@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Payment_Gateway\Dynamic_Props;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_12\\SV_WC_Payment_Gateway_Integration_Subscriptions' ) ) :
@@ -216,14 +218,14 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			$updated = false;
 
 			// payment token
-			if ( ! empty( $order->payment->token ) ) {
-				$subscription->update_meta_data( $this->get_gateway()->get_order_meta_prefix() . 'payment_token', $order->payment->token );
+			if ( ! empty( Dynamic_Props::get( $order, 'payment', 'token' ) ) ) {
+				$subscription->update_meta_data( $this->get_gateway()->get_order_meta_prefix() . 'payment_token', Dynamic_Props::get( $order, 'payment', 'token' ) );
 				$updated = true;
 			}
 
 			// customer ID
-			if ( ! empty( $order->customer_id ) ) {
-				$subscription->update_meta_data(  $this->get_gateway()->get_order_meta_prefix() . 'customer_id', $order->customer_id );
+			if ( ! empty( Dynamic_Props::get( $order, 'customer_id' ) ) ) {
+				$subscription->update_meta_data(  $this->get_gateway()->get_order_meta_prefix() . 'customer_id', Dynamic_Props::get( $order, 'customer_id' ) );
 				$updated = true;
 			}
 
@@ -249,16 +251,18 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function add_subscriptions_details_to_order( $order, $gateway ) {
 
-		if ( isset( $order->payment ) ) {
+		$payment = Dynamic_Props::get( $order, 'payment' );
+
+		if ( $payment ) {
 
 			// defaults
-			$order->payment->subscriptions = [];
-			$order->payment->recurring     = ! empty( $order->payment->recurring ) ?: false;
+			$payment->subscriptions = [];
+			$payment->recurring     = ! empty( $payment->recurring ) ?: false;
 
 			// if the order contains a subscription (but is not a renewal)
 			if ( wcs_order_contains_subscription( $order ) ) {
 
-				$order->payment->recurring = true;
+				$payment->recurring = true;
 
 				// an order ID might be 0 if it's a mock order we use when adding a payment method
 				// passing in an order with an ID of 0 to `wcs_get_subscriptions_for_order()` can cause very unexpected results
@@ -270,7 +274,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 						if ( $subscription instanceof \WC_Subscription ) {
 
-							$order->payment->subscriptions[] = $this->add_subscription_details_to_order( $subscription, false );
+							$payment->subscriptions[] = $this->add_subscription_details_to_order( $subscription, false );
 						}
 					}
 				}
@@ -278,7 +282,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			// order is for a subscription renewal
 			} elseif ( wcs_order_contains_renewal( $order ) ) {
 
-				$order->payment->recurring = true;
+				$payment->recurring = true;
 
 				// an order ID might be 0 if it's a mock order we use when adding a payment method
 				// passing in an order with an ID of 0 to `wcs_get_subscriptions_for_order()` can cause very unexpected results
@@ -290,11 +294,13 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 						if ( $subscription instanceof \WC_Subscription ) {
 
-							$order->payment->subscriptions[] = $this->add_subscription_details_to_order( $subscription, true );
+							$payment->subscriptions[] = $this->add_subscription_details_to_order( $subscription, true );
 						}
 					}
 				}
 			}
+
+			Dynamic_Props::set( $order, 'payment', $payment );
 		}
 
 		return $order;
@@ -390,44 +396,51 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function get_order( $order ) {
 
-		$order->description = sprintf(
+		$description = sprintf(
 			/* translators: Placeholders: %1$s - Site name, %2$s - Order number */
 			esc_html__( '%1$s - Subscription Renewal Order %2$s', 'woocommerce-plugin-framework' ),
 			wp_specialchars_decode( SV_WC_Helper::get_site_name(), ENT_QUOTES ),
 			$order->get_order_number()
 		);
 
+		Dynamic_Props::set( $order, 'description', $description );
+
 		// override the payment total with the amount to charge given by Subscriptions
-		$order->payment_total = $this->renewal_payment_total;
+		Dynamic_Props::set( $order, 'payment_total', $this->renewal_payment_total );
+
+		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
 
 		// set payment token
-		$order->payment->token = $this->get_gateway()->get_order_meta( $order, 'payment_token' );
+		$payment->token = $this->get_gateway()->get_order_meta( $order, 'payment_token' );
 
 		// use customer ID from renewal order, not user meta so the admin can update the customer ID for a subscription if needed
 		$customer_id = $this->get_gateway()->get_order_meta( $order, 'customer_id' );
 
 		// only if a customer ID exists in order meta, otherwise this will default to the previously set value from user meta
 		if ( ! empty( $customer_id ) ) {
-			$order->customer_id = $customer_id;
+			Dynamic_Props::set( $order, 'customer_id', $customer_id );
 		}
 
 		// get the token object
-		$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( $order->get_user_id(), $order->payment->token );
+		$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( $order->get_user_id(), $payment->token );
 
 		// set token data on the order
-		$order->payment->account_number = $token->get_last_four();
-		$order->payment->last_four = $token->get_last_four();
+		$payment->account_number = $token->get_last_four();
+		$payment->last_four = $token->get_last_four();
 
 		if ( $token->is_credit_card() ) {
 
-			$order->payment->card_type = $token->get_card_type();
-			$order->payment->exp_month = $token->get_exp_month();
-			$order->payment->exp_year  = SV_WC_Payment_Gateway_Helper::format_exp_year( $token->get_exp_year() );
+			$payment->card_type = $token->get_card_type();
+			$payment->exp_month = $token->get_exp_month();
+			$payment->exp_year  = SV_WC_Payment_Gateway_Helper::format_exp_year( $token->get_exp_year() );
 
 		} elseif ( $token->is_echeck() ) {
 
-			$order->payment->account_type = $token->get_account_type();
+			$payment->account_type = $token->get_account_type();
 		}
+
+		// Set payment info on the order object
+		Dynamic_Props::set( $order, 'payment', $payment );
 
 		return $order;
 	}
@@ -508,10 +521,12 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		$subscription = $gateway->get_order( $order_id );
 
+		$payment = Dynamic_Props::get( $subscription, 'payment', null, new \stdClass() );
+
 		try {
 
 			// if using a saved method, just add the data
-			if ( isset( $subscription->payment->token ) && $subscription->payment->token ) {
+			if ( isset( $payment->token ) && $payment->token ) {
 
 				$gateway->add_transaction_data( $subscription );
 

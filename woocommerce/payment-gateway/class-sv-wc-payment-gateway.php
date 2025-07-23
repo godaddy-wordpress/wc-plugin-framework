@@ -27,6 +27,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12;
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Blocks\Blocks_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Payment_Gateway\Dynamic_Props;
 use stdClass;
 
 defined( 'ABSPATH' ) or exit;
@@ -1281,9 +1282,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function get_order_for_apple_pay( \WC_Order $order, SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $response ) {
 
-		$order->payment->account_number = $response->get_last_four();
-		$order->payment->last_four      = $response->get_last_four();
-		$order->payment->card_type      = $response->get_card_type();
+		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+
+		$payment->account_number = $response->get_last_four();
+		$payment->last_four      = $response->get_last_four();
+		$payment->card_type      = $response->get_card_type();
+
+		Dynamic_Props::set( $order, 'payment', $payment );
 
 		return $order;
 	}
@@ -1336,11 +1341,16 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		$payment_method_data = $response_data['paymentMethodData'];
 
-		$order->payment->google_pay = base64_encode( $payment_method_data['tokenizationData']['token'] );
+		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+
+		$payment->google_pay = base64_encode( $payment_method_data['tokenizationData']['token'] );
 
 		// account last four
-		$order->payment->account_number = $payment_method_data['info']['cardDetails'];
-		$order->payment->card_type      = SV_WC_Payment_Gateway_Helper::normalize_card_type( $payment_method_data['info']['cardNetwork'] );
+		$payment->account_number = $payment_method_data['info']['cardDetails'];
+		$payment->card_type      = SV_WC_Payment_Gateway_Helper::normalize_card_type( $payment_method_data['info']['cardNetwork'] );
+
+		// Set payment info on the order object.
+		Dynamic_Props::set( $order, 'payment', $payment );
 
 		return $order;
 	}
@@ -1933,23 +1943,30 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		// set payment total here, so it can be modified for later by add-ons like subscriptions which may need to charge an amount different than the get_total()
-		$order->payment_total = number_format( $order->get_total(), 2, '.', '' );
+		$payment_total = number_format( $order->get_total(), 2, '.', '' );
 
-		$order->customer_id = '';
+		Dynamic_Props::set( $order, 'payment_total', $payment_total );
+
+		Dynamic_Props::set( $order, 'customer_id', '' );
 
 		// logged in customer?
 		if ( 0 != $order->get_user_id() && false !== ( $customer_id = $this->get_customer_id( $order->get_user_id(), array( 'order' => $order ) ) ) ) {
-			$order->customer_id = $customer_id;
+			Dynamic_Props::set( $order, 'customer_id', $customer_id );
 		}
 
 		// add payment info
-		$order->payment = new \stdClass();
+		$payment = new \stdClass();
 
 		// payment type (credit_card/check/etc)
-		$order->payment->type = str_replace( '-', '_', $this->get_payment_type() );
+		$payment->type = str_replace( '-', '_', $this->get_payment_type() );
+
+		// Set payment info on the order object
+		Dynamic_Props::set( $order, 'payment', $payment );
 
 		/* translators: Placeholders: %1$s - site title, %2$s - order number */
-		$order->description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name(), ENT_QUOTES ), $order->get_order_number() );
+		$description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name(), ENT_QUOTES ), $order->get_order_number() );
+
+		Dynamic_Props::set( $order, 'description', $description );
 
 		// the get_order_with_unique_transaction_ref() call results in saving the order object, which we don't want to do if the order hasn't already been saved (such as when adding a payment method)
 		if ( $order->get_id() ) {
@@ -2069,7 +2086,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		// add capture info
-		$order->capture = new \stdClass();
+		$capture = new \stdClass();
 
 		$total_captured = $this->get_order_meta( $order, 'capture_total' );
 
@@ -2078,11 +2095,14 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			$amount = (float) $order->get_total() - (float) $total_captured;
 		}
 
-		$order->capture->amount = SV_WC_Helper::number_format( $amount );
+		$capture->amount = SV_WC_Helper::number_format( $amount );
 
 		/* translators: Placeholders: %1$s - site title, %2$s - order number. Definitions: Capture as in capture funds from a credit card. */
-		$order->capture->description = sprintf( esc_html__( '%1$s - Capture for Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
-		$order->capture->trans_id = $this->get_order_meta( $order, 'trans_id' );
+		$capture->description = sprintf( esc_html__( '%1$s - Capture for Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
+		$capture->trans_id = $this->get_order_meta( $order, 'trans_id' );
+
+		// Set capture info on the order object.
+		Dynamic_Props::set( $order, 'capture', $capture );
 
 		/**
 		 * Direct Gateway Capture Get Order Filter.
@@ -2220,14 +2240,17 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		// add refund info
-		$order->refund = new \stdClass();
-		$order->refund->amount = number_format( $amount, 2, '.', '' );
+		$refund = new \stdClass();
+		$refund->amount = number_format( $amount, 2, '.', '' );
 
 		/* translators: Placeholders: %1$s - site title, %2$s - order number */
-		$order->refund->reason = $reason ? $reason : sprintf( esc_html__( '%1$s - Refund for Order %2$s', 'woocommerce-plugin-framework' ), esc_html( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
+		$refund->reason = $reason ? $reason : sprintf( esc_html__( '%1$s - Refund for Order %2$s', 'woocommerce-plugin-framework' ), esc_html( SV_WC_Helper::get_site_name() ), $order->get_order_number() );
 
 		// almost all gateways require the original transaction ID, so include it by default
-		$order->refund->trans_id = $this->get_order_meta( $order, 'trans_id' );
+		$refund->trans_id = $this->get_order_meta( $order, 'trans_id' );
+
+		// Set refund info on the order object.
+		Dynamic_Props::set( $order, 'refund', $refund );
 
 		/**
 		 * Payment Gateway Get Order For Refund Filter.
@@ -2257,7 +2280,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	protected function add_refund_data( \WC_Order $order, $response ) {
 
 		// indicate the order was refunded along with the refund amount
-		$this->add_order_meta( $order, 'refund_amount', $order->refund->amount );
+		$this->add_order_meta( $order, 'refund_amount', Dynamic_Props::get( $order, 'refund', 'amount' ) );
 
 		// add refund transaction ID
 		if ( $response && $response->get_transaction_id() ) {
@@ -2293,7 +2316,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - a monetary amount */
 			esc_html__( '%1$s Refund in the amount of %2$s approved.', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
-			wc_price( $order->refund->amount, [
+			wc_price( Dynamic_Props::get( $order, 'refund', 'amount' ), [
 				'currency' => $order->get_currency()
 			] )
 		);
@@ -2404,7 +2427,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	protected function process_void( \WC_Order $order ) {
 
 		// partial voids are not supported
-		if ( $order->refund->amount != $order->get_total() ) {
+		if ( Dynamic_Props::get( $order, 'refund', 'amount' ) != $order->get_total() ) {
 			return new \WP_Error( 'wc_' . $this->get_id() . '_void_error', esc_html__( 'Oops, you cannot partially void this order. Please use the full order amount.', 'woocommerce-plugin-framework' ), 500 );
 		}
 
@@ -2456,7 +2479,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	protected function add_void_data( \WC_Order $order, $response ) {
 
 		// indicate the order was voided along with the amount
-		$this->update_order_meta( $order, 'void_amount', $order->refund->amount );
+		$this->update_order_meta( $order, 'void_amount', Dynamic_Props::get( $order, 'refund', 'amount' ) );
 
 		// add refund transaction ID
 		if ( $response && $response->get_transaction_id() ) {
@@ -2526,7 +2549,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			/* translators: Placeholders: %1$s - payment gateway title, %2$s - a monetary amount. Void as in to void an order. */
 			esc_html__( '%1$s Void in the amount of %2$s approved.', 'woocommerce-plugin-framework' ),
 			$this->get_method_title(),
-			wc_price( $order->refund->amount, [
+			wc_price( Dynamic_Props::get( $order, 'refund', 'amount' ), [
 				'currency' => $order->get_currency()
 			] )
 		);
@@ -2599,7 +2622,9 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$this->update_order_meta( $order, 'retry_count', $retry_count );
 
 		// generate a unique transaction ref based on the order number and retry count, for gateways that require a unique identifier for every transaction request
-		$order->unique_transaction_ref = ltrim( $order->get_order_number(),  esc_html_x( '#', 'hash before order number', 'woocommerce-plugin-framework' ) ) . ( $retry_count > 0 ? '-' . $retry_count : '' );
+		$unique_transaction_ref = ltrim( $order->get_order_number(),  esc_html_x( '#', 'hash before order number', 'woocommerce-plugin-framework' ) ) . ( $retry_count > 0 ? '-' . $retry_count : '' );
+
+		Dynamic_Props::set( $order, 'unique_transaction_ref', $unique_transaction_ref );
 
 		return $order;
 	}
@@ -2676,13 +2701,15 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			$this->add_customer_data( $order, $response );
 		}
 
-		if ( isset( $order->payment->token ) && $order->payment->token ) {
-			$this->update_order_meta( $order, 'payment_token', $order->payment->token );
+		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+
+		if ( isset( $payment->token ) && $payment->token ) {
+			$this->update_order_meta( $order, 'payment_token', $payment->token );
 		}
 
 		// account number
-		if ( isset( $order->payment->account_number ) && $order->payment->account_number ) {
-			$this->update_order_meta( $order, 'account_four', substr( $order->payment->account_number, -4 ) );
+		if ( isset( $payment->account_number ) && $payment->account_number ) {
+			$this->update_order_meta( $order, 'account_four', substr( $payment->account_number, -4 ) );
 		}
 
 		if ( $this->is_credit_card_gateway() ) {
@@ -2690,13 +2717,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			// credit card gateway data
 			if ( $response instanceof SV_WC_Payment_Gateway_API_Authorization_Response ) {
 
-				$this->update_order_meta( $order, 'authorization_amount', $order->payment_total );
+				$this->update_order_meta( $order, 'authorization_amount', Dynamic_Props::get( $order, 'payment_total' ) );
 
 				if ( $response->get_authorization_code() ) {
 					$this->update_order_meta( $order, 'authorization_code', $response->get_authorization_code() );
 				}
 
-				if ( $order->payment_total > 0 ) {
+				if ( Dynamic_Props::get( $order, 'payment_total' ) > 0 ) {
 
 					// mark as captured
 					if ( $this->perform_credit_card_charge( $order ) ) {
@@ -2709,12 +2736,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				}
 			}
 
-			if ( isset( $order->payment->exp_year ) && $order->payment->exp_year && isset( $order->payment->exp_month ) && $order->payment->exp_month ) {
-				$this->update_order_meta( $order, 'card_expiry_date', $order->payment->exp_year . '-' . $order->payment->exp_month );
+			if ( isset( $payment->exp_year ) && $payment->exp_year && isset( $payment->exp_month ) && $payment->exp_month ) {
+				$this->update_order_meta( $order, 'card_expiry_date', $payment->exp_year . '-' . $payment->exp_month );
 			}
 
-			if ( isset( $order->payment->card_type ) && $order->payment->card_type ) {
-				$this->update_order_meta( $order, 'card_type', $order->payment->card_type );
+			if ( isset( $payment->card_type ) && $payment->card_type ) {
+				$this->update_order_meta( $order, 'card_type', $payment->card_type );
 			}
 
 		} elseif ( $this->is_echeck_gateway() ) {
@@ -2722,13 +2749,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			// checking gateway data
 
 			// optional account type (checking/savings)
-			if ( isset( $order->payment->account_type ) && $order->payment->account_type ) {
-				$this->update_order_meta( $order, 'account_type', $order->payment->account_type );
+			if ( isset( $payment->account_type ) && $payment->account_type ) {
+				$this->update_order_meta( $order, 'account_type', $payment->account_type );
 			}
 
 			// optional check number
-			if ( isset( $order->payment->check_number ) && $order->payment->check_number ) {
-				$this->update_order_meta( $order, 'check_number', $order->payment->check_number );
+			if ( isset( $payment->check_number ) && $payment->check_number ) {
+				$this->update_order_meta( $order, 'check_number', $payment->check_number );
 			}
 		}
 
@@ -2779,12 +2806,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		if ( $response && method_exists( $response, 'get_customer_id' ) && $response->get_customer_id() ) {
 
-			$order->customer_id = $customer_id = $response->get_customer_id();
+			$customer_id = $response->get_customer_id();
+			Dynamic_Props::set( $order, 'customer_id', $customer_id );
 
 		} else {
 
 			// default to the customer ID set on the order
-			$customer_id = $order->customer_id;
+			$customer_id = Dynamic_Props::get( $order, 'customer_id' );
 		}
 
 		// update the order with the customer ID, note environment is not appended here because it's already available
@@ -2810,12 +2838,14 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function get_credit_card_transaction_approved_message( \WC_Order $order, $response ) {
 
-		$last_four = ! empty( $order->payment->last_four ) ? $order->payment->last_four : substr( $order->payment->account_number, -4 );
+		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+
+		$last_four = ! empty( $payment->last_four ) ? $payment->last_four : substr( $payment->account_number, -4 );
 
 		// use direct card type if set, or try to guess it from card number
-		if ( ! empty( $order->payment->card_type ) ) {
-			$card_type = $order->payment->card_type;
-		} elseif ( $first_four = substr( $order->payment->account_number, 0, 4 ) ) {
+		if ( ! empty( $payment->card_type ) ) {
+			$card_type = $payment->card_type;
+		} elseif ( $first_four = substr( $payment->account_number, 0, 4 ) ) {
 			$card_type = SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $first_four );
 		} else {
 			$card_type = 'card';
@@ -2840,12 +2870,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		// add the expiry date if it is available
-		if ( ! empty( $order->payment->exp_month ) && ! empty( $order->payment->exp_year ) ) {
+		if ( ! empty( $payment->exp_month ) && ! empty( $payment->exp_year ) ) {
 
 			$message .= ' ' . sprintf(
 				/* translators: Placeholder: %s - Credit card expiry date */
 				__( '(expires %s)', 'woocommerce-plugin-framework' ),
-				$order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 )
+				$payment->exp_month . '/' . substr( $payment->exp_year, -2 )
 			);
 		}
 
@@ -2883,16 +2913,18 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function get_echeck_transaction_approved_message( \WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
 
-		$last_four = ! empty( $order->payment->last_four ) ? $order->payment->last_four : substr( $order->payment->account_number, -4 );
+		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+
+		$last_four = ! empty( $payment->last_four ) ? $payment->last_four : substr( $payment->account_number, -4 );
 
 		// check order note. there may not be an account_type available, but that's fine
 		/* translators: Context: "Check" as in "bank check" (noun, not verb). Placeholders: %1$s - payment method title, %2$s - payment account type (savings/checking) (may or may not be available), %3$s - last four digits of the account */
-		$message = sprintf( __( '%1$s Check Transaction Approved: %2$s account ending in %3$s', 'woocommerce-plugin-framework' ), $this->get_method_title(), $order->payment->account_type, $last_four );
+		$message = sprintf( __( '%1$s Check Transaction Approved: %2$s account ending in %3$s', 'woocommerce-plugin-framework' ), $this->get_method_title(), $payment->account_type, $last_four );
 
 		// optional check number
-		if ( ! empty( $order->payment->check_number ) ) {
+		if ( ! empty( $payment->check_number ) ) {
 			/* translators: Context: "Check" as in "bank check" (noun, not verb). Placeholder: %s - check number */
-			$message .= '. ' . sprintf( esc_html__( 'Check number %s', 'woocommerce-plugin-framework' ), $order->payment->check_number );
+			$message .= '. ' . sprintf( esc_html__( 'Check number %s', 'woocommerce-plugin-framework' ), $payment->check_number );
 		}
 
 		// adds the transaction id (if any) to the order note

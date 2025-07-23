@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12;
 
+use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Payment_Gateway\Dynamic_Props;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_12\\SV_WC_Payment_Gateway_Hosted' ) ) :
@@ -465,19 +467,24 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		$order = $this->get_order( $order );
 
-		$order->payment->account_number = $response->get_account_number();
+		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+
+		$payment->account_number = $response->get_account_number();
 
 		if ( self::PAYMENT_TYPE_CREDIT_CARD == $response->get_payment_type() ) {
 
-			$order->payment->exp_month = $response->get_exp_month();
-			$order->payment->exp_year  = $response->get_exp_year();
-			$order->payment->card_type = $response->get_card_type();
+			$payment->exp_month = $response->get_exp_month();
+			$payment->exp_year  = $response->get_exp_year();
+			$payment->card_type = $response->get_card_type();
 
 		} elseif ( self::PAYMENT_TYPE_ECHECK == $response->get_payment_type() ) {
 
-			$order->payment->account_type = $response->get_account_type();
-			$order->payment->check_number = $response->get_check_number();
+			$payment->account_type = $response->get_account_type();
+			$payment->check_number = $response->get_check_number();
 		}
+
+		// Set payment info on the order object.
+		Dynamic_Props::set( $order, 'payment', $payment );
 
 		return $order;
 	}
@@ -596,7 +603,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	protected function process_tokenization_response( \WC_Order $order, $response ) {
 
 		if ( is_callable( array( $response, 'get_customer_id' ) ) && $response->get_customer_id() ) {
-			$order->customer_id = $response->get_customer_id();
+			Dynamic_Props::set( $order, 'customer_id', $response->get_customer_id() );
 		}
 
 		$token = $response->get_payment_token();
@@ -655,21 +662,26 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		// add the payment method order data
 		if ( $token ) {
 
-			$order->payment->token          = $token->get_id();
-			$order->payment->account_number = $token->get_last_four();
-			$order->payment->last_four      = $token->get_last_four();
+			$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+
+			$payment->token          = $token->get_id();
+			$payment->account_number = $token->get_last_four();
+			$payment->last_four      = $token->get_last_four();
 
 			if ( $token->is_credit_card() ) {
 
-				$order->payment->exp_month = $token->get_exp_month();
-				$order->payment->exp_year  = $token->get_exp_year();
-				$order->payment->card_type = $token->get_card_type();
+				$payment->exp_month = $token->get_exp_month();
+				$payment->exp_year  = $token->get_exp_year();
+				$payment->card_type = $token->get_card_type();
 
 			} elseif ( $token->is_echeck() ) {
 
-				$order->payment->account_type = $token->get_account_type();
-				$order->payment->check_number = $token->get_check_number();
+				$payment->account_type = $token->get_account_type();
+				$payment->check_number = $token->get_check_number();
 			}
+
+			// Set payment info on the order object
+			Dynamic_Props::set( $order, 'payment', $payment );
 		}
 
 		// remove any tokens that were deleted on the hosted pay page

@@ -25,6 +25,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12;
 
 use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Payment_Gateway\Dynamic_Props;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -372,7 +373,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( $this->supports_tokenization() && 0 !== (int) $order->get_user_id() ) {
 
 				// if already paying with an existing method, try and updated it locally and remotely
-				if ( ! empty( $order->payment->token ) ) {
+				if ( ! empty( Dynamic_Props::get( $order, 'payment', 'token' ) ) ) {
 
 					$this->update_transaction_payment_method( $order );
 
@@ -388,7 +389,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( $this->should_skip_transaction( $order ) || $this->do_transaction( $order ) ) {
 
 				// add transaction data for zero-dollar "orders"
-				if ( '0.00' === $order->payment_total ) {
+				if ( '0.00' === Dynamic_Props::get( $order, 'payment_total' ) ) {
 					$this->add_transaction_data( $order );
 				}
 
@@ -502,7 +503,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function update_transaction_payment_method( \WC_Order $order ) {
 
-		$token    = $this->get_payment_tokens_handler()->get_token( $order->get_user_id(), $order->payment->token );
+		$token    = $this->get_payment_tokens_handler()->get_token( $order->get_user_id(), Dynamic_Props::get( $order, 'payment', 'token' ) );
 		$address  = new Addresses\Customer_Address();
 		$address->set_from_order( $order );
 
@@ -599,43 +600,46 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 		$order = parent::get_order( $order_id );
 
+		// Get payment info from the order object.
+		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+
 		// payment info
 		if ( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-number' ) && ! SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
 
 			// common attributes
-			$order->payment->account_number = str_replace( array( ' ', '-' ), '', SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-number' ) );
-			$order->payment->last_four = substr( $order->payment->account_number, -4 );
+			$payment->account_number = str_replace( array( ' ', '-' ), '', SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-number' ) );
+			$payment->last_four = substr( $payment->account_number, -4 );
 
 			if ( $this->is_credit_card_gateway() ) {
 
 				// credit card specific attributes
-				$order->payment->card_type      = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-card-type' );
-				$order->payment->exp_month      = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
-				$order->payment->exp_year       = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
+				$payment->card_type      = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-card-type' );
+				$payment->exp_month      = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-exp-month' );
+				$payment->exp_year       = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-exp-year' );
 
 				// add card type for gateways that don't require it displayed at checkout
-				if ( empty( $order->payment->card_type ) ) {
-					$order->payment->card_type = SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $order->payment->account_number );
+				if ( empty( $payment->card_type ) ) {
+					$payment->card_type = SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $payment->account_number );
 				}
 
 				// handle single expiry field formatted like "MM / YY" or "MM / YYYY"
 				if ( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) {
-					[ $order->payment->exp_month, $order->payment->exp_year ] = array_map( 'trim', explode( '/', SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) );
+					[ $payment->exp_month, $payment->exp_year ] = array_map( 'trim', explode( '/', SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-expiry' ) ) );
 				}
 
 				// add CSC if enabled
 				if ( $this->csc_enabled() ) {
-					$order->payment->csc = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-csc' );
+					$payment->csc = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
 			} elseif ( $this->is_echeck_gateway() ) {
 
 				// echeck specific attributes
-				$order->payment->routing_number         = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
-				$order->payment->account_type           = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-type' );
-				$order->payment->check_number           = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-check-number' );
-				$order->payment->drivers_license_number = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
-				$order->payment->drivers_license_state  = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-drivers-license-state' );
+				$payment->routing_number         = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-routing-number' );
+				$payment->account_type           = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-type' );
+				$payment->check_number           = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-check-number' );
+				$payment->drivers_license_number = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-drivers-license-number' );
+				$payment->drivers_license_state  = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-drivers-license-state' );
 
 			}
 
@@ -644,25 +648,25 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			// paying with tokenized payment method (we've already verified that this token exists in the validate_fields method)
 			$token = $this->get_payment_tokens_handler()->get_token( $order->get_user_id(), $token_value );
 
-			$order->payment->token          = $token->get_id();
-			$order->payment->account_number = $token->get_last_four();
-			$order->payment->last_four      = $token->get_last_four();
+			$payment->token          = $token->get_id();
+			$payment->account_number = $token->get_last_four();
+			$payment->last_four      = $token->get_last_four();
 
 			if ( $this->is_credit_card_gateway() ) {
 
 				// credit card specific attributes
-				$order->payment->card_type = $token->get_card_type();
-				$order->payment->exp_month = $token->get_exp_month();
-				$order->payment->exp_year  = $token->get_exp_year();
+				$payment->card_type = $token->get_card_type();
+				$payment->exp_month = $token->get_exp_month();
+				$payment->exp_year  = $token->get_exp_year();
 
 				if ( $this->csc_enabled_for_tokens() ) {
-					$order->payment->csc = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-csc' );
+					$payment->csc = SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-csc' );
 				}
 
 			} elseif ( $this->is_echeck_gateway() ) {
 
 				// echeck specific attributes
-				$order->payment->account_type = $token->get_account_type();
+				$payment->account_type = $token->get_account_type();
 			}
 
 			// make this the new default payment token
@@ -670,9 +674,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		// standardize expiration date year to 2 digits
-		if ( ! empty( $order->payment->exp_year ) && 4 === strlen( $order->payment->exp_year ) ) {
-			$order->payment->exp_year = substr( $order->payment->exp_year, 2 );
+		if ( ! empty( $payment->exp_year ) && 4 === strlen( $payment->exp_year ) ) {
+			$payment->exp_year = substr( $payment->exp_year, 2 );
 		}
+
+		// Set payment info on the order object.
+		Dynamic_Props::set( $order, 'payment', $payment );
 
 		/**
 		 * Direct Gateway Get Order Filter.
@@ -706,16 +713,16 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// success! update order record
 		if ( $response->transaction_approved() ) {
 
-			$last_four = substr( $order->payment->account_number, -4 );
+			$last_four = substr( Dynamic_Props::get( $order, 'payment', 'account_number', '' ), -4 );
 
 			// check order note. there may not be an account_type available, but that's fine
 			/* translators: Placeholders: %1$s - Payment method title, %2$s - Payment account type (savings/checking) (may or may not be available), %3$s - Last four digits of the account */
-			$message = sprintf( esc_html__( '%1$s Check Transaction Approved: %2$s account ending in %3$s', 'woocommerce-plugin-framework' ), $this->get_method_title(), $order->payment->account_type, $last_four );
+			$message = sprintf( esc_html__( '%1$s Check Transaction Approved: %2$s account ending in %3$s', 'woocommerce-plugin-framework' ), $this->get_method_title(), Dynamic_Props::get( $order, 'payment', 'account_type' ), $last_four );
 
 			// optional check number
-			if ( ! empty( $order->payment->check_number ) ) {
+			if ( ! empty( Dynamic_Props::get( $order, 'payment', 'check_number' ) ) ) {
 				/* translators: Placeholder: %s - Bank check number */
-				$message .= '. ' . sprintf( esc_html__( 'Check number %s', 'woocommerce-plugin-framework' ), $order->payment->check_number );
+				$message .= '. ' . sprintf( esc_html__( 'Check number %s', 'woocommerce-plugin-framework' ), Dynamic_Props::get( $order, 'payment', 'check_number' ) );
 			}
 
 			// adds the transaction id (if any) to the order note
@@ -771,12 +778,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// success! update order record
 		if ( $response->transaction_approved() ) {
 
-			$account_number = ! empty( $order->payment->account_number ) ? $order->payment->account_number : null;
+			$account_number = ! empty( Dynamic_Props::get( $order, 'payment', 'account_number' ) ) ? Dynamic_Props::get( $order, 'payment', 'account_number' ) : null;
 			$last_four = $account_number ? substr( $account_number, -4 ) : '';
 
 			// use direct card type if set, or try to guess it from card number
-			if ( ! empty( $order->payment->card_type ) ) {
-				$card_type = $order->payment->card_type;
+			if ( ! empty( Dynamic_Props::get( $order, 'payment', 'card_type' ) ) ) {
+				$card_type = Dynamic_Props::get( $order, 'payment', 'card_type' );
 			} elseif ( $first_four = $account_number ? substr( $account_number, 0, 4 ) : '' ) {
 				$card_type = SV_WC_Payment_Gateway_Helper::card_type_from_account_number( $first_four );
 			} else {
@@ -806,12 +813,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			}
 
 			// add the expiry date if it is available
-			if ( ! empty( $order->payment->exp_month ) && ! empty( $order->payment->exp_year ) ) {
+			if ( ! empty( Dynamic_Props::get( $order, 'payment', 'exp_month' ) ) && ! empty( Dynamic_Props::get( $order, 'payment', 'exp_year' ) ) ) {
 
 				$message .= ' ' . sprintf(
 					/* translators: Placeholder: %s - Credit card expiry date */
 					__( '(expires %s)', 'woocommerce-plugin-framework' ),
-					$order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 )
+					Dynamic_Props::get( $order, 'payment', 'exp_month', '' ) . '/' . substr( Dynamic_Props::get( $order, 'payment', 'exp_year', '' ), -2 )
 				);
 			}
 
@@ -1131,13 +1138,14 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$order->set_props( $properties );
 
 		// other default info
-		$order->customer_id = $this->get_customer_id( $order->get_user_id() );
+		Dynamic_Props::set( $order, 'customer_id', $this->get_customer_id( $order->get_user_id() ) );
 
 		/* translators: Placeholders: %1$s - site title, %2$s - customer email. Payment method as in a specific credit card, e-check or bank account */
-		$order->description = sprintf( esc_html__( '%1$s - Add Payment Method for %2$s', 'woocommerce-plugin-framework' ), sanitize_text_field( SV_WC_Helper::get_site_name() ), $properties['billing_email'] );
+		$description = sprintf( esc_html__( '%1$s - Add Payment Method for %2$s', 'woocommerce-plugin-framework' ), sanitize_text_field( SV_WC_Helper::get_site_name() ), $properties['billing_email'] );
+		Dynamic_Props::set( $order, 'description', $description );
 
 		// force zero amount
-		$order->payment_total = '0.00';
+		Dynamic_Props::set( $order, 'payment_total', '0.00' );
 
 		/**
 		 * Direct Gateway Get Order for Add Payment Method Filter.
@@ -1168,12 +1176,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// set customer ID from response if available
 		if ( $this->supports_customer_id() && method_exists( $response, 'get_customer_id' ) && $response->get_customer_id() ) {
 
-			$order->customer_id = $customer_id = $response->get_customer_id();
+			Dynamic_Props::set( $order, 'customer_id', $customer_id = $response->get_customer_id() );
 
 		} else {
 
 			// default to the customer ID on "order"
-			$customer_id = $order->customer_id;
+			$customer_id = Dynamic_Props::get( $order, 'customer_id' );
 		}
 
 		// update the user
@@ -1283,7 +1291,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function should_tokenize_before_sale( \WC_Order $order ): bool {
 
-		$result = $this->get_payment_tokens_handler()->should_tokenize() && ( '0.00' === $order->payment_total || $this->tokenize_before_sale() );
+		$result = $this->get_payment_tokens_handler()->should_tokenize() && ( '0.00' === Dynamic_Props::get( $order, 'payment_total' ) || $this->tokenize_before_sale() );
 
 		/**
 		 * Filters whether tokenization should be performed before the sale, for a given order.
@@ -1374,7 +1382,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 */
 		return apply_filters(
 			"wc_payment_gateway_{$this->get_id()}_can_tokenize_with_or_after_sale",
-			$order->payment_total > 0,
+			Dynamic_Props::get( $order, 'payment_total' ) > 0,
 			$order,
 			$this
 		);
@@ -1411,7 +1419,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		return apply_filters(
 			"wc_payment_gateway_{$this->get_id()}_should_skip_transaction",
 			// the order amount will be $0 if a WooCommerce Subscriptions free trial product is being processed
-			( '0.00' === $order->payment_total && ! $this->transaction_forced() ),
+			( '0.00' === Dynamic_Props::get( $order, 'payment_total' ) && ! $this->transaction_forced() ),
 			$order,
 			$this
 		);
