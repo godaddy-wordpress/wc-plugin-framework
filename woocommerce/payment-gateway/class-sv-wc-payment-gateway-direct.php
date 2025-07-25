@@ -567,8 +567,11 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 
 
 	/**
-	 * Add payment and transaction information as class members of WC_Order
-	 * instance.  The standard information that can be added includes:
+	 * Add payment and transaction information to $order object.
+	 *
+	 * The standard information that can be added includes:
+	 *
+	 * It is set and get using Dynamic_Props class and not directly on $order object, but documented here for reference.
 	 *
 	 * $order->payment_total           - the payment total
 	 * $order->customer_id             - optional payment gateway customer id (useful for tokenized payments for certain gateways, etc)

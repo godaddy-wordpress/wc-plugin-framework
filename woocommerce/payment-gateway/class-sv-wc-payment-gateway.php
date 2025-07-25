@@ -1916,9 +1916,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Adds payment and transaction information as class members of {@see WC_Order} instance.
+	 * Adds payment and transaction information on $order object.
 	 *
 	 * The standard information that can be added includes:
+	 *
+	 * It is set and get using Dynamic_Props class and not directly on $order object, but documented here for reference.
 	 *
 	 * $order->payment_total           - the payment total
 	 * $order->customer_id             - optional payment gateway customer id (useful for tokenized payments, etc)
@@ -2216,8 +2218,11 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * Add refund information as class members of WC_Order
-	 * instance for use in refund transactions.  Standard information includes:
+	 * Add refund information to $order object.
+	 *
+	 * It is set and get using Dynamic_Props class and not directly on $order object, but documented here for reference.
+	 *
+	 * Standard information includes:
 	 *
 	 * $order->refund->amount = refund amount
 	 * $order->refund->reason = user-entered reason text for the refund
