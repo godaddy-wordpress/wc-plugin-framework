@@ -1,22 +1,27 @@
 <?php
 /**
- * Class for storing dynamic properties for order object.
+ * Dynamic property storage handler for WooCommerce order objects.
+ *
+ * Provides a PHP 8.2+ compatible way to store dynamic properties on order objects
+ * while maintaining backwards compatibility with PHP 7.4+.
  *
  * @package   SkyVerge/WooCommerce/Payment-Gateway/Classes
+ * @since     x.x.x
  */
 
 namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12\Payment_Gateway;
 
 /**
- * Class for storing dynamic properties for order object.
+ * Dynamic property storage handler for WooCommerce order objects.
  *
  * This class provides a way to store dynamic properties on order objects without using
  * dynamic properties (deprecated in PHP 8.2+) while maintaining backwards compatibility
- * with PHP 7.4+.
+ * with PHP 7.4+. It uses WeakMap for PHP 8.0+ and falls back to dynamic properties
+ * for PHP 7.4+.
  *
  * @since x.x.x
  *
- * Example usage:
+ * @example
  * ```php
  * // Store properties
  * Dynamic_Props::set($order, 'customer_id', 123);
@@ -25,28 +30,39 @@ namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12\Payment_Gateway;
  * // Retrieve properties
  * $customer_id = Dynamic_Props::get($order, 'customer_id');
  * $total       = Dynamic_Props::get($order, 'payment_total');
+ * ```
  */
 class Dynamic_Props {
 	/**
-	 * Storage for PHP 8.0+ using WeakMap.
+	 * Storage container for dynamic properties using WeakMap in PHP 8.0+.
 	 *
-	 * @var \WeakMap<object, \stdClass>|null
+	 * Uses WeakMap to store properties without memory leaks, as WeakMap allows garbage
+	 * collection of its keys when they're no longer referenced elsewhere.
+	 *
+	 * @since x.x.x
+	 * @var   \WeakMap<object, \stdClass>|null
 	 */
 	private static ?\WeakMap $map = null;
 
 	/**
 	 * Sets a property on the order object.
 	 *
+	 * Stores a dynamic property either using WeakMap (PHP 8.0+) or direct property
+	 * access (PHP 7.4+). The storage method is automatically determined based on
+	 * PHP version and WeakMap availability.
+	 *
+	 * @since  x.x.x
+	 *
+	 * @param  \WC_Order $order The order object to store data on.
+	 * @param  string    $key   The property key.
+	 * @param  mixed     $value The value to store.
+	 * @return void
+	 *
+	 * @example
 	 * ```php
 	 * Dynamic_Props::set($order, 'customer_id', 123);
 	 * Dynamic_Props::set($order, 'payment_total', '99.99');
 	 * ```
-	 *
-	 * @param \WC_Order $order The order object to store data on.
-	 * @param string    $key   The property key.
-	 * @param mixed     $value The value to store.
-	 *
-	 * @return void
 	 */
 	public static function set( \WC_Order &$order, string $key, mixed $value ): void {
 		if ( self::use_weak_map() ) {
@@ -63,18 +79,23 @@ class Dynamic_Props {
 	/**
 	 * Gets a property from the order object.
 	 *
+	 * Retrieves a stored dynamic property using the appropriate storage method
+	 * based on PHP version. Supports nested property access.
+	 *
+	 * @since  x.x.x
+	 *
+	 * @param  \WC_Order $order      The order object to retrieve data from.
+	 * @param  string    $key        The property key.
+	 * @param  string    $nested_key Optional. The nested property key. Default null.
+	 * @param  mixed     $default    Optional. Default value if not found. Default null.
+	 * @return mixed The stored value or default if not found.
+	 *
+	 * @example
 	 * ```php
 	 * $customer_id = Dynamic_Props::get($order, 'customer_id');
 	 * $total       = Dynamic_Props::get($order, 'payment_total');
 	 * $token       = Dynamic_Props::get($order, 'payment', 'token', 'DEFAULT_TOKEN');
 	 * ```
-	 *
-	 * @param \WC_Order $order      The order object to retrieve data from.
-	 * @param string    $key        The property key.
-	 * @param string    $nested_key The nested property key.
-	 * @param mixed     $default    Default value if not found.
-	 *
-	 * @return mixed The stored value or default if not found.
 	 */
 	public static function get( \WC_Order $order, string $key, $nested_key = null, $default = null ): mixed {
 		if ( self::use_weak_map() ) {
@@ -95,9 +116,13 @@ class Dynamic_Props {
 	/**
 	 * Unsets a property on the order object.
 	 *
-	 * @param \WC_Order $order The order object to unset data from.
-	 * @param string    $key   The property key.
+	 * Removes a stored dynamic property using the appropriate storage method
+	 * based on PHP version.
 	 *
+	 * @since  x.x.x
+	 *
+	 * @param  \WC_Order $order The order object to unset data from.
+	 * @param  string    $key   The property key to remove.
 	 * @return void
 	 */
 	public static function unset( \WC_Order &$order, string $key ): void {
@@ -112,6 +137,10 @@ class Dynamic_Props {
 	/**
 	 * Checks if WeakMap should be used based on PHP version.
 	 *
+	 * Determines whether to use WeakMap storage based on PHP version (8.0+)
+	 * and WeakMap class availability. Result is cached for performance.
+	 *
+	 * @since  x.x.x
 	 * @return bool True if WeakMap should be used, false otherwise.
 	 */
 	private static function use_weak_map(): bool {
@@ -127,6 +156,10 @@ class Dynamic_Props {
 	/**
 	 * Initializes WeakMap storage if not already initialized.
 	 *
+	 * Ensures the WeakMap storage is initialized only once when needed.
+	 * This lazy initialization helps with performance and memory usage.
+	 *
+	 * @since  x.x.x
 	 * @return void
 	 */
 	private static function init_weak_map(): void {
