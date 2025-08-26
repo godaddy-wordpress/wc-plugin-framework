@@ -1,14 +1,14 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12\Tests\Unit\Helpers;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0\Tests\Unit\Helpers;
 
 use Generator;
 use Mockery;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Helpers\PageHelper;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\PageHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Tests\TestCase;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v5_15_12\Helpers\PageHelper
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\PageHelper
  */
 final class PageHelperTest extends TestCase
 {
