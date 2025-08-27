@@ -24,7 +24,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Payment_Gateway\Dynamic_Props;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Dynamic_Props;
 
 defined( 'ABSPATH' ) or exit;
 
