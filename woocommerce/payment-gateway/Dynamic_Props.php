@@ -135,6 +135,26 @@ class Dynamic_Props {
 	}
 
 	/**
+	 * Checks if Dynamic_Props class should be used based on the filter.
+	 *
+	 * @return bool True if Dynamic_Props class should be used, false otherwise.
+	 */
+	private static function use_dynamic_props_class(): bool {
+		static $use_dynamic_props_class = null;
+		if ( null === $use_dynamic_props_class ) {
+			/**
+			 * Filters whether to use Dynamic_Props class for storing order data.
+			 *
+			 * @since x.x.x
+			 *
+			 * @var bool Whether to Dynamic_Props class for storing order data.
+			 */
+			$use_dynamic_props_class = apply_filters( 'sv_wc_plugin_framework_use_dynamic_props_class', false );
+		}
+		return $use_dynamic_props_class;
+	}
+
+	/**
 	 * Checks if WeakMap should be used based on PHP version.
 	 *
 	 * Determines whether to use WeakMap storage based on PHP version (8.0+)
@@ -147,7 +167,7 @@ class Dynamic_Props {
 		static $use_weak_map = null;
 
 		if ( null === $use_weak_map ) {
-			$use_weak_map = version_compare( PHP_VERSION, '8.0', '>=' ) && class_exists( '\WeakMap' );
+			$use_weak_map = version_compare( PHP_VERSION, '8.0', '>=' ) && self::use_dynamic_props_class();
 		}
 
 		return $use_weak_map;
