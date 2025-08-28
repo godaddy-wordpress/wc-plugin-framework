@@ -468,7 +468,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		$order = $this->get_order( $order );
 
-		$payment = OrderHelper::getPayment( $order );
+		$payment = OrderHelper::get_payment( $order );
 
 		$payment->account_number = $response->get_account_number();
 
@@ -485,7 +485,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		}
 
 		// Set payment info on the order object.
-		OrderHelper::setPayment( $order, $payment );
+		OrderHelper::set_payment( $order, $payment );
 
 		return $order;
 	}
@@ -604,7 +604,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	protected function process_tokenization_response( \WC_Order $order, $response ) {
 
 		if ( is_callable( array( $response, 'get_customer_id' ) ) && $response->get_customer_id() ) {
-			OrderHelper::setCustomerId( $order, $response->get_customer_id() );
+			OrderHelper::set_customer_id( $order, $response->get_customer_id() );
 		}
 
 		$token = $response->get_payment_token();
@@ -663,7 +663,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		// add the payment method order data
 		if ( $token ) {
 
-			$payment = OrderHelper::getPayment( $order );
+			$payment = OrderHelper::get_payment( $order );
 
 			$payment->token          = $token->get_id();
 			$payment->account_number = $token->get_last_four();
@@ -682,7 +682,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			}
 
 			// Set payment info on the order object
-			OrderHelper::setPayment( $order, $payment );
+			OrderHelper::set_payment( $order, $payment );
 		}
 
 		// remove any tokens that were deleted on the hosted pay page

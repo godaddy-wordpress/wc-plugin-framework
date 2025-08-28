@@ -146,7 +146,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			// store the billing hash on the token for later use in case it needs to be updated
 			$token->set_billing_hash( $address->get_hash() );
 
-			$payment = OrderHelper::getPayment( $order );
+			$payment = OrderHelper::get_payment( $order );
 
 			// set the resulting token on the order
 			$payment->token = $token->get_id();
@@ -167,7 +167,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			}
 
 			// Set payment info on the order object.
-			OrderHelper::setPayment( $order, $payment );
+			OrderHelper::set_payment( $order, $payment );
 
 			$order->add_order_note( $this->get_order_note( $token ) );
 

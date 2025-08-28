@@ -326,7 +326,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 
 		$order = $this->get_gateway()->get_order( $order );
 
-		$payment = OrderHelper::getPayment( $order );
+		$payment = OrderHelper::get_payment( $order );
 
 		$payment->account_number = $response->get_account_number();
 
@@ -343,7 +343,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 		}
 
 		// Set payment info on the order object.
-		OrderHelper::setPayment( $order, $payment );
+		OrderHelper::set_payment( $order, $payment );
 
 		return $order;
 	}

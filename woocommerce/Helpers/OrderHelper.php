@@ -32,7 +32,7 @@ class OrderHelper {
 	 * @param \WC_Order $order The order object.
 	 * @return \stdClass The payment object containing payment details.
 	 */
-	public static function getPayment( \WC_Order $order ) {
+	public static function get_payment( \WC_Order $order ) {
 		return Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
 	}
 
@@ -46,7 +46,7 @@ class OrderHelper {
 	 * @param \WC_Order $order The order object.
 	 * @return mixed The payment total amount, or null if not set.
 	 */
-	public static function getPaymentTotal( \WC_Order $order ) {
+	public static function get_payment_total( \WC_Order $order ) {
 		return Dynamic_Props::get( $order, 'payment_total' );
 	}
 
@@ -60,7 +60,7 @@ class OrderHelper {
 	 * @param \WC_Order $order The order object.
 	 * @return mixed The customer ID, or null if not set.
 	 */
-	public static function getCustomerId( \WC_Order $order ) {
+	public static function get_customer_id( \WC_Order $order ) {
 		return Dynamic_Props::get( $order, 'customer_id' );
 	}
 
@@ -78,7 +78,7 @@ class OrderHelper {
 	 * @param mixed     $default    Optional. The default value if the property doesn't exist. Default null.
 	 * @return mixed The property value if found, or the default value if not found.
 	 */
-	public static function getProperty( \WC_Order $order, string $key, $nested_key = null, $default = null ): mixed {
+	public static function get_property( \WC_Order $order, string $key, $nested_key = null, $default = null ): mixed {
 		return Dynamic_Props::get( $order, $key, $nested_key, $default );
 	}
 
@@ -93,7 +93,7 @@ class OrderHelper {
 	 * @param \WC_Order  $order   The order object (passed by reference).
 	 * @param \stdClass  $payment The payment object containing payment details.
 	 */
-	public static function setPayment( \WC_Order &$order, \stdClass $payment ) {
+	public static function set_payment( \WC_Order &$order, \stdClass $payment ) {
 		Dynamic_Props::set( $order, 'payment', $payment );
 	}
 
@@ -108,7 +108,7 @@ class OrderHelper {
 	 * @param \WC_Order     $order         The order object (passed by reference).
 	 * @param float|string  $payment_total The payment total amount.
 	 */
-	public static function setPaymentTotal( \WC_Order &$order, $payment_total ) {
+	public static function set_payment_total( \WC_Order &$order, $payment_total ) {
 		Dynamic_Props::set( $order, 'payment_total', $payment_total );
 	}
 
@@ -123,7 +123,7 @@ class OrderHelper {
 	 * @param \WC_Order $order       The order object (passed by reference).
 	 * @param mixed     $customer_id The customer ID to set.
 	 */
-	public static function setCustomerId( \WC_Order &$order, $customer_id ) {
+	public static function set_customer_id( \WC_Order &$order, $customer_id ) {
 		Dynamic_Props::set( $order, 'customer_id', $customer_id );
 	}
 
@@ -139,7 +139,7 @@ class OrderHelper {
 	 * @param string    $key   The property key to set.
 	 * @param mixed     $value The value to set for the property.
 	 */
-	public static function setProperty( \WC_Order &$order, string $key, $value ) {
+	public static function set_property( \WC_Order &$order, string $key, $value ) {
 		Dynamic_Props::set( $order, $key, $value );
 	}
 }

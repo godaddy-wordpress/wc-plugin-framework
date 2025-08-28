@@ -225,8 +225,8 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			}
 
 			// customer ID
-			if ( ! empty( OrderHelper::getCustomerId( $order ) ) ) {
-				$subscription->update_meta_data(  $this->get_gateway()->get_order_meta_prefix() . 'customer_id', OrderHelper::getCustomerId( $order ) );
+			if ( ! empty( OrderHelper::get_customer_id( $order ) ) ) {
+				$subscription->update_meta_data(  $this->get_gateway()->get_order_meta_prefix() . 'customer_id', OrderHelper::get_customer_id( $order ) );
 				$updated = true;
 			}
 
@@ -252,7 +252,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function add_subscriptions_details_to_order( $order, $gateway ) {
 
-		$payment = OrderHelper::getPayment( $order );
+		$payment = OrderHelper::get_payment( $order );
 
 		if ( $payment ) {
 
@@ -301,7 +301,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 				}
 			}
 
-			OrderHelper::setPayment( $order, $payment );
+			OrderHelper::set_payment( $order, $payment );
 		}
 
 		return $order;
@@ -407,9 +407,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		Dynamic_Props::set( $order, 'description', $description );
 
 		// override the payment total with the amount to charge given by Subscriptions
-		OrderHelper::setPaymentTotal( $order, $this->renewal_payment_total );
+		OrderHelper::set_payment_total( $order, $this->renewal_payment_total );
 
-		$payment = OrderHelper::getPayment( $order );
+		$payment = OrderHelper::get_payment( $order );
 
 		// set payment token
 		$payment->token = $this->get_gateway()->get_order_meta( $order, 'payment_token' );
@@ -419,7 +419,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		// only if a customer ID exists in order meta, otherwise this will default to the previously set value from user meta
 		if ( ! empty( $customer_id ) ) {
-			OrderHelper::setCustomerId( $order, $customer_id );
+			OrderHelper::set_customer_id( $order, $customer_id );
 		}
 
 		// get the token object
@@ -441,7 +441,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		}
 
 		// Set payment info on the order object
-		OrderHelper::setPayment( $order, $payment );
+		OrderHelper::set_payment( $order, $payment );
 
 		return $order;
 	}
@@ -522,7 +522,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		$subscription = $gateway->get_order( $order_id );
 
-		$payment = OrderHelper::getPayment( $subscription );
+		$payment = OrderHelper::get_payment( $subscription );
 
 		try {
 
