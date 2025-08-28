@@ -24,6 +24,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
 
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\OrderHelper;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Dynamic_Props;
 
 defined( 'ABSPATH' ) or exit;
@@ -224,8 +225,8 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 			}
 
 			// customer ID
-			if ( ! empty( Dynamic_Props::get( $order, 'customer_id' ) ) ) {
-				$subscription->update_meta_data(  $this->get_gateway()->get_order_meta_prefix() . 'customer_id', Dynamic_Props::get( $order, 'customer_id' ) );
+			if ( ! empty( OrderHelper::getCustomerId( $order ) ) ) {
+				$subscription->update_meta_data(  $this->get_gateway()->get_order_meta_prefix() . 'customer_id', OrderHelper::getCustomerId( $order ) );
 				$updated = true;
 			}
 
@@ -251,7 +252,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 	 */
 	public function add_subscriptions_details_to_order( $order, $gateway ) {
 
-		$payment = Dynamic_Props::get( $order, 'payment' );
+		$payment = OrderHelper::getPayment( $order );
 
 		if ( $payment ) {
 
@@ -300,7 +301,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 				}
 			}
 
-			Dynamic_Props::set( $order, 'payment', $payment );
+			OrderHelper::setPayment( $order, $payment );
 		}
 
 		return $order;
@@ -406,9 +407,9 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		Dynamic_Props::set( $order, 'description', $description );
 
 		// override the payment total with the amount to charge given by Subscriptions
-		Dynamic_Props::set( $order, 'payment_total', $this->renewal_payment_total );
+		OrderHelper::setPaymentTotal( $order, $this->renewal_payment_total );
 
-		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+		$payment = OrderHelper::getPayment( $order );
 
 		// set payment token
 		$payment->token = $this->get_gateway()->get_order_meta( $order, 'payment_token' );
@@ -418,7 +419,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		// only if a customer ID exists in order meta, otherwise this will default to the previously set value from user meta
 		if ( ! empty( $customer_id ) ) {
-			Dynamic_Props::set( $order, 'customer_id', $customer_id );
+			OrderHelper::setCustomerId( $order, $customer_id );
 		}
 
 		// get the token object
@@ -440,7 +441,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 		}
 
 		// Set payment info on the order object
-		Dynamic_Props::set( $order, 'payment', $payment );
+		OrderHelper::setPayment( $order, $payment );
 
 		return $order;
 	}
@@ -521,7 +522,7 @@ class SV_WC_Payment_Gateway_Integration_Subscriptions extends SV_WC_Payment_Gate
 
 		$subscription = $gateway->get_order( $order_id );
 
-		$payment = Dynamic_Props::get( $subscription, 'payment', null, new \stdClass() );
+		$payment = OrderHelper::getPayment( $subscription );
 
 		try {
 

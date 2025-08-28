@@ -24,7 +24,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Dynamic_Props;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\OrderHelper;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -146,7 +146,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			// store the billing hash on the token for later use in case it needs to be updated
 			$token->set_billing_hash( $address->get_hash() );
 
-			$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+			$payment = OrderHelper::getPayment( $order );
 
 			// set the resulting token on the order
 			$payment->token = $token->get_id();
@@ -167,7 +167,7 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			}
 
 			// Set payment info on the order object.
-			Dynamic_Props::set( $order, 'payment', $payment );
+			OrderHelper::setPayment( $order, $payment );
 
 			$order->add_order_note( $this->get_order_note( $token ) );
 

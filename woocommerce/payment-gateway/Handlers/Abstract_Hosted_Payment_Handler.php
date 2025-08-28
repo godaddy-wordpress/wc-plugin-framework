@@ -25,7 +25,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Handlers;
 
 use SkyVerge\WooCommerce\PluginFramework\v6_0_0 as FrameworkBase;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Dynamic_Props;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\OrderHelper;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\Payment_Gateway\\Handlers\\Abstract_Hosted_Payment_Handler' ) ) :
 
@@ -326,7 +326,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 
 		$order = $this->get_gateway()->get_order( $order );
 
-		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+		$payment = OrderHelper::getPayment( $order );
 
 		$payment->account_number = $response->get_account_number();
 
@@ -343,7 +343,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 		}
 
 		// Set payment info on the order object.
-		Dynamic_Props::set( $order, 'payment', $payment );
+		OrderHelper::setPayment( $order, $payment );
 
 		return $order;
 	}

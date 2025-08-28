@@ -26,6 +26,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\OrderHelper;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Dynamic_Props;
 use stdClass;
@@ -1282,13 +1283,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function get_order_for_apple_pay( \WC_Order $order, SV_WC_Payment_Gateway_Apple_Pay_Payment_Response $response ) {
 
-		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+		$payment = OrderHelper::getPayment( $order );
 
 		$payment->account_number = $response->get_last_four();
 		$payment->last_four      = $response->get_last_four();
 		$payment->card_type      = $response->get_card_type();
 
-		Dynamic_Props::set( $order, 'payment', $payment );
+		OrderHelper::setPayment( $order, $payment );
 
 		return $order;
 	}
@@ -1341,7 +1342,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		$payment_method_data = $response_data['paymentMethodData'];
 
-		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+		$payment = OrderHelper::getPayment( $order );
 
 		$payment->google_pay = base64_encode( $payment_method_data['tokenizationData']['token'] );
 
@@ -1350,7 +1351,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$payment->card_type      = SV_WC_Payment_Gateway_Helper::normalize_card_type( $payment_method_data['info']['cardNetwork'] );
 
 		// Set payment info on the order object.
-		Dynamic_Props::set( $order, 'payment', $payment );
+		OrderHelper::setPayment( $order, $payment );
 
 		return $order;
 	}
@@ -1947,13 +1948,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		// set payment total here, so it can be modified for later by add-ons like subscriptions which may need to charge an amount different than the get_total()
 		$payment_total = number_format( $order->get_total(), 2, '.', '' );
 
-		Dynamic_Props::set( $order, 'payment_total', $payment_total );
+		OrderHelper::setPaymentTotal( $order, $payment_total );
 
-		Dynamic_Props::set( $order, 'customer_id', '' );
+		OrderHelper::setCustomerId( $order, '' );
 
 		// logged in customer?
 		if ( 0 != $order->get_user_id() && false !== ( $customer_id = $this->get_customer_id( $order->get_user_id(), array( 'order' => $order ) ) ) ) {
-			Dynamic_Props::set( $order, 'customer_id', $customer_id );
+			OrderHelper::setCustomerId( $order, $customer_id );
 		}
 
 		// add payment info
@@ -1963,7 +1964,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		$payment->type = str_replace( '-', '_', $this->get_payment_type() );
 
 		// Set payment info on the order object
-		Dynamic_Props::set( $order, 'payment', $payment );
+		OrderHelper::setPayment( $order, $payment );
 
 		/* translators: Placeholders: %1$s - site title, %2$s - order number */
 		$description = sprintf( esc_html__( '%1$s - Order %2$s', 'woocommerce-plugin-framework' ), wp_specialchars_decode( SV_WC_Helper::get_site_name(), ENT_QUOTES ), $order->get_order_number() );
@@ -2706,7 +2707,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			$this->add_customer_data( $order, $response );
 		}
 
-		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+		$payment = OrderHelper::getPayment( $order );
 
 		if ( isset( $payment->token ) && $payment->token ) {
 			$this->update_order_meta( $order, 'payment_token', $payment->token );
@@ -2722,13 +2723,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 			// credit card gateway data
 			if ( $response instanceof SV_WC_Payment_Gateway_API_Authorization_Response ) {
 
-				$this->update_order_meta( $order, 'authorization_amount', Dynamic_Props::get( $order, 'payment_total' ) );
+				$this->update_order_meta( $order, 'authorization_amount', OrderHelper::getPaymentTotal( $order ) );
 
 				if ( $response->get_authorization_code() ) {
 					$this->update_order_meta( $order, 'authorization_code', $response->get_authorization_code() );
 				}
 
-				if ( Dynamic_Props::get( $order, 'payment_total' ) > 0 ) {
+				if ( OrderHelper::getPaymentTotal( $order ) > 0 ) {
 
 					// mark as captured
 					if ( $this->perform_credit_card_charge( $order ) ) {
@@ -2812,12 +2813,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		if ( $response && method_exists( $response, 'get_customer_id' ) && $response->get_customer_id() ) {
 
 			$customer_id = $response->get_customer_id();
-			Dynamic_Props::set( $order, 'customer_id', $customer_id );
+			OrderHelper::setCustomerId( $order, $customer_id );
 
 		} else {
 
 			// default to the customer ID set on the order
-			$customer_id = Dynamic_Props::get( $order, 'customer_id' );
+			$customer_id = OrderHelper::getCustomerId( $order );
 		}
 
 		// update the order with the customer ID, note environment is not appended here because it's already available
@@ -2843,7 +2844,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function get_credit_card_transaction_approved_message( \WC_Order $order, $response ) {
 
-		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+		$payment = OrderHelper::getPayment( $order );
 
 		$last_four = ! empty( $payment->last_four ) ? $payment->last_four : substr( $payment->account_number, -4 );
 
@@ -2918,7 +2919,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 	 */
 	public function get_echeck_transaction_approved_message( \WC_Order $order, SV_WC_Payment_Gateway_API_Response $response ) {
 
-		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+		$payment = OrderHelper::getPayment( $order );
 
 		$last_four = ! empty( $payment->last_four ) ? $payment->last_four : substr( $payment->account_number, -4 );
 

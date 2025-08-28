@@ -25,6 +25,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
 
 use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\OrderHelper;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Dynamic_Props;
 
 defined( 'ABSPATH' ) or exit;
@@ -389,7 +390,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 			if ( $this->should_skip_transaction( $order ) || $this->do_transaction( $order ) ) {
 
 				// add transaction data for zero-dollar "orders"
-				if ( '0.00' === Dynamic_Props::get( $order, 'payment_total' ) ) {
+				if ( '0.00' === OrderHelper::getPaymentTotal( $order ) ) {
 					$this->add_transaction_data( $order );
 				}
 
@@ -604,7 +605,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$order = parent::get_order( $order_id );
 
 		// Get payment info from the order object.
-		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+		$payment = OrderHelper::getPayment( $order );
 
 		// payment info
 		if ( SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-account-number' ) && ! SV_WC_Helper::get_posted_value( 'wc-' . $this->get_id_dasherized() . '-payment-token' ) ) {
@@ -682,7 +683,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		}
 
 		// Set payment info on the order object.
-		Dynamic_Props::set( $order, 'payment', $payment );
+		OrderHelper::setPayment( $order, $payment );
 
 		/**
 		 * Direct Gateway Get Order Filter.
@@ -1141,14 +1142,14 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		$order->set_props( $properties );
 
 		// other default info
-		Dynamic_Props::set( $order, 'customer_id', $this->get_customer_id( $order->get_user_id() ) );
+		OrderHelper::setCustomerId( $order, $this->get_customer_id( $order->get_user_id() ) );
 
 		/* translators: Placeholders: %1$s - site title, %2$s - customer email. Payment method as in a specific credit card, e-check or bank account */
 		$description = sprintf( esc_html__( '%1$s - Add Payment Method for %2$s', 'woocommerce-plugin-framework' ), sanitize_text_field( SV_WC_Helper::get_site_name() ), $properties['billing_email'] );
 		Dynamic_Props::set( $order, 'description', $description );
 
 		// force zero amount
-		Dynamic_Props::set( $order, 'payment_total', '0.00' );
+		OrderHelper::setPaymentTotal( $order, '0.00' );
 
 		/**
 		 * Direct Gateway Get Order for Add Payment Method Filter.
@@ -1179,12 +1180,12 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		// set customer ID from response if available
 		if ( $this->supports_customer_id() && method_exists( $response, 'get_customer_id' ) && $response->get_customer_id() ) {
 
-			Dynamic_Props::set( $order, 'customer_id', $customer_id = $response->get_customer_id() );
+			OrderHelper::setCustomerId( $order, $customer_id = $response->get_customer_id() );
 
 		} else {
 
 			// default to the customer ID on "order"
-			$customer_id = Dynamic_Props::get( $order, 'customer_id' );
+			$customer_id = OrderHelper::getCustomerId( $order );
 		}
 
 		// update the user
@@ -1294,7 +1295,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 */
 	protected function should_tokenize_before_sale( \WC_Order $order ): bool {
 
-		$result = $this->get_payment_tokens_handler()->should_tokenize() && ( '0.00' === Dynamic_Props::get( $order, 'payment_total' ) || $this->tokenize_before_sale() );
+		$result = $this->get_payment_tokens_handler()->should_tokenize() && ( '0.00' === OrderHelper::getPaymentTotal( $order ) || $this->tokenize_before_sale() );
 
 		/**
 		 * Filters whether tokenization should be performed before the sale, for a given order.
@@ -1385,7 +1386,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		 */
 		return apply_filters(
 			"wc_payment_gateway_{$this->get_id()}_can_tokenize_with_or_after_sale",
-			Dynamic_Props::get( $order, 'payment_total' ) > 0,
+			OrderHelper::getPaymentTotal( $order ) > 0,
 			$order,
 			$this
 		);
@@ -1422,7 +1423,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 		return apply_filters(
 			"wc_payment_gateway_{$this->get_id()}_should_skip_transaction",
 			// the order amount will be $0 if a WooCommerce Subscriptions free trial product is being processed
-			( '0.00' === Dynamic_Props::get( $order, 'payment_total' ) && ! $this->transaction_forced() ),
+			( '0.00' === OrderHelper::getPaymentTotal( $order ) && ! $this->transaction_forced() ),
 			$order,
 			$this
 		);

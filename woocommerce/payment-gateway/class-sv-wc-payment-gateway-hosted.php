@@ -24,7 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Dynamic_Props;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\OrderHelper;
+
 
 defined( 'ABSPATH' ) or exit;
 
@@ -467,7 +468,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 
 		$order = $this->get_order( $order );
 
-		$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+		$payment = OrderHelper::getPayment( $order );
 
 		$payment->account_number = $response->get_account_number();
 
@@ -484,7 +485,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		}
 
 		// Set payment info on the order object.
-		Dynamic_Props::set( $order, 'payment', $payment );
+		OrderHelper::setPayment( $order, $payment );
 
 		return $order;
 	}
@@ -603,7 +604,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 	protected function process_tokenization_response( \WC_Order $order, $response ) {
 
 		if ( is_callable( array( $response, 'get_customer_id' ) ) && $response->get_customer_id() ) {
-			Dynamic_Props::set( $order, 'customer_id', $response->get_customer_id() );
+			OrderHelper::setCustomerId( $order, $response->get_customer_id() );
 		}
 
 		$token = $response->get_payment_token();
@@ -662,7 +663,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		// add the payment method order data
 		if ( $token ) {
 
-			$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+			$payment = OrderHelper::getPayment( $order );
 
 			$payment->token          = $token->get_id();
 			$payment->account_number = $token->get_last_four();
@@ -681,7 +682,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 			}
 
 			// Set payment info on the order object
-			Dynamic_Props::set( $order, 'payment', $payment );
+			OrderHelper::setPayment( $order, $payment );
 		}
 
 		// remove any tokens that were deleted on the hosted pay page

@@ -24,6 +24,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
 
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\OrderHelper;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Dynamic_Props;
 
 defined( 'ABSPATH' ) or exit;
@@ -141,22 +142,23 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 
 			// normally a guest user wouldn't be assigned a customer id, but for a pre-order requiring tokenization, it might be
 			if ( 0 == $order->get_user_id() && false !== ( $customer_id = $this->get_gateway()->get_guest_customer_id( $order ) ) ) {
-				Dynamic_Props::set( $order, 'customer_id', $customer_id );
+				OrderHelper::setCustomerId( $order, $customer_id );
+
 			}
 
 			// zero out the payment total since we're just tokenizing the payment method
-			Dynamic_Props::set( $order, 'payment_total', '0.00' );
+			OrderHelper::setPaymentTotal( $order, '0.00' );
 
 		} elseif ( \WC_Pre_Orders_Order::order_has_payment_token( $order ) && ! is_checkout_pay_page() ) {
 
 			// if this is a pre-order release payment with a tokenized payment method, get the payment token to complete the order
-			$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+			$payment = OrderHelper::getPayment( $order );
 
 			// retrieve the payment token
 			$payment->token = $this->get_gateway()->get_order_meta( $order, 'payment_token' );
 
 			// retrieve the optional customer id
-			Dynamic_Props::set( $order, 'customer_id', $this->get_gateway()->get_order_meta( $order, 'customer_id' ) );
+			OrderHelper::setCustomerId( $order, $this->get_gateway()->get_order_meta( $order, 'customer_id' ) );
 
 			// set token data on order
 			if ( $this->get_gateway()->get_payment_tokens_handler()->user_has_token( $order->get_user_id(), $payment->token ) ) {
@@ -211,7 +213,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 			}
 
 			// Set payment info on the order object
-			Dynamic_Props::set( $order, 'payment', $payment );
+			OrderHelper::setPayment( $order, $payment );
 		}
 
 		return $order;
@@ -239,7 +241,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 
 			try {
 
-				$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+				$payment = OrderHelper::getPayment( $order );
 
 				// using an existing tokenized payment method
 				if ( isset( $payment->token ) && $payment->token ) {
@@ -311,7 +313,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 
 			// set order defaults
 			$order   = $this->get_gateway()->get_order( $order );
-			$payment = Dynamic_Props::get( $order, 'payment', null, new \stdClass() );
+			$payment = OrderHelper::getPayment( $order );
 
 			// order description
 			$description = sprintf(
