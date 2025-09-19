@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
 
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\OrderHelper;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\SV_WC_Payment_Gateway_Payment_Tokens_Handler' ) ) :
@@ -144,23 +146,28 @@ class SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 			// store the billing hash on the token for later use in case it needs to be updated
 			$token->set_billing_hash( $address->get_hash() );
 
+			$payment = OrderHelper::get_payment( $order );
+
 			// set the resulting token on the order
-			$order->payment->token = $token->get_id();
+			$payment->token = $token->get_id();
 
 			// for credit card transactions add the card type, if known (some gateways return the credit card type as part of the response, others may require it as part of the request, and still others it may never be known)
 			if ( $gateway->is_credit_card_gateway() && $token->get_card_type() ) {
-				$order->payment->card_type = $token->get_card_type();
+				$payment->card_type = $token->get_card_type();
 			}
 
 			// checking/savings, if known
 			if ( $gateway->is_echeck_gateway() && $token->get_account_type() ) {
-				$order->payment->account_type = $token->get_account_type();
+				$payment->account_type = $token->get_account_type();
 			}
 
 			// set the token to the user account
 			if ( $order->get_user_id() ) {
 				$this->add_token( $order->get_user_id(), $token, $environment_id );
 			}
+
+			// Set payment info on the order object.
+			OrderHelper::set_payment( $order, $payment );
 
 			$order->add_order_note( $this->get_order_note( $token ) );
 

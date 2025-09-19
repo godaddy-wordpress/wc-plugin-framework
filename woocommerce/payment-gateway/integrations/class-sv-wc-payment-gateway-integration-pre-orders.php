@@ -24,6 +24,9 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
 
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\OrderHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Dynamic_Props;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\SV_WC_Payment_Gateway_Integration_Pre_Orders' ) ) :
@@ -139,44 +142,46 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 
 			// normally a guest user wouldn't be assigned a customer id, but for a pre-order requiring tokenization, it might be
 			if ( 0 == $order->get_user_id() && false !== ( $customer_id = $this->get_gateway()->get_guest_customer_id( $order ) ) ) {
-				$order->customer_id = $customer_id;
+				OrderHelper::set_customer_id( $order, $customer_id );
+
 			}
 
 			// zero out the payment total since we're just tokenizing the payment method
-			$order->payment_total = '0.00';
+			OrderHelper::set_payment_total( $order, '0.00' );
 
 		} elseif ( \WC_Pre_Orders_Order::order_has_payment_token( $order ) && ! is_checkout_pay_page() ) {
 
 			// if this is a pre-order release payment with a tokenized payment method, get the payment token to complete the order
+			$payment = OrderHelper::get_payment( $order );
 
 			// retrieve the payment token
-			$order->payment->token = $this->get_gateway()->get_order_meta( $order, 'payment_token' );
+			$payment->token = $this->get_gateway()->get_order_meta( $order, 'payment_token' );
 
 			// retrieve the optional customer id
-			$order->customer_id = $this->get_gateway()->get_order_meta( $order, 'customer_id' );
+			OrderHelper::set_customer_id( $order, $this->get_gateway()->get_order_meta( $order, 'customer_id' ) );
 
 			// set token data on order
-			if ( $this->get_gateway()->get_payment_tokens_handler()->user_has_token( $order->get_user_id(), $order->payment->token ) ) {
+			if ( $this->get_gateway()->get_payment_tokens_handler()->user_has_token( $order->get_user_id(), $payment->token ) ) {
 
 				// an existing registered user with a saved payment token
-				$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( $order->get_user_id(), $order->payment->token );
+				$token = $this->get_gateway()->get_payment_tokens_handler()->get_token( $order->get_user_id(), $payment->token );
 
 				// account last four
-				$order->payment->account_number = $token->get_last_four();
+				$payment->account_number = $token->get_last_four();
 
 				if ( $this->get_gateway()->is_credit_card_gateway() ) {
 
 					// card type
-					$order->payment->card_type = $token->get_card_type();
+					$payment->card_type = $token->get_card_type();
 
 					// exp month/year
-					$order->payment->exp_month = $token->get_exp_month();
-					$order->payment->exp_year  = SV_WC_Payment_Gateway_Helper::format_exp_year( $token->get_exp_year() );
+					$payment->exp_month = $token->get_exp_month();
+					$payment->exp_year  = SV_WC_Payment_Gateway_Helper::format_exp_year( $token->get_exp_year() );
 
 				} elseif ( $this->get_gateway()->is_echeck_gateway() ) {
 
 					// account type (checking/savings)
-					$order->payment->account_type = $token->get_account_type();
+					$payment->account_type = $token->get_account_type();
 				}
 
 			} else {
@@ -184,28 +189,31 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 				// a guest user means that token data must be set from the original order
 
 				// account number
-				$order->payment->account_number = $this->get_gateway()->get_order_meta( $order, 'account_four' );
+				$payment->account_number = $this->get_gateway()->get_order_meta( $order, 'account_four' );
 
 				if ( $this->get_gateway()->is_credit_card_gateway() ) {
 
 					// card type
-					$order->payment->card_type = $this->get_gateway()->get_order_meta( $order, 'card_type' );
+					$payment->card_type = $this->get_gateway()->get_order_meta( $order, 'card_type' );
 
 					// expiry date
 					if ( $expiry_date = $this->get_gateway()->get_order_meta( $order, 'card_expiry_date' ) ) {
 
 						list( $exp_year, $exp_month ) = explode( '-', $expiry_date );
 
-						$order->payment->exp_month = $exp_month;
-						$order->payment->exp_year  = SV_WC_Payment_Gateway_Helper::format_exp_year( $exp_year );
+						$payment->exp_month = $exp_month;
+						$payment->exp_year  = SV_WC_Payment_Gateway_Helper::format_exp_year( $exp_year );
 					}
 
 				} elseif ( $this->get_gateway()->is_echeck_gateway() ) {
 
 					// account type
-					$order->payment->account_type = $this->get_gateway()->get_order_meta( $order, 'account_type' );
+					$payment->account_type = $this->get_gateway()->get_order_meta( $order, 'account_type' );
 				}
 			}
+
+			// Set payment info on the order object
+			OrderHelper::set_payment( $order, $payment );
 		}
 
 		return $order;
@@ -233,8 +241,10 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 
 			try {
 
+				$payment = OrderHelper::get_payment( $order );
+
 				// using an existing tokenized payment method
-				if ( isset( $order->payment->token ) && $order->payment->token ) {
+				if ( isset( $payment->token ) && $payment->token ) {
 
 					// save the tokenized card info for completing the pre-order in the future
 					$this->get_gateway()->add_transaction_data( $order );
@@ -302,18 +312,21 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 		try {
 
 			// set order defaults
-			$order = $this->get_gateway()->get_order( $order );
+			$order   = $this->get_gateway()->get_order( $order );
+			$payment = OrderHelper::get_payment( $order );
 
 			// order description
-			$order->description = sprintf(
+			$description = sprintf(
 				/* translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Site name, %2$s - Order number */
 				__( '%1$s - Pre-Order Release Payment for Order %2$s', 'woocommerce-plugin-framework' ),
 				esc_html( SV_WC_Helper::get_site_name() ),
 				$order->get_order_number()
 			);
 
+			Dynamic_Props::set( $order, 'description', $description );
+
 			// token is required
-			if ( ! $order->payment->token ) {
+			if ( ! $payment->token ) {
 				throw new SV_WC_Payment_Gateway_Exception( __( 'Payment token missing/invalid.', 'woocommerce-plugin-framework' ) );
 			}
 
@@ -333,7 +346,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 			// success! update order record
 			if ( $response->transaction_approved() ) {
 
-				$last_four = substr( $order->payment->account_number, -4 );
+				$last_four = substr( $payment->account_number, -4 );
 
 				// order note based on gateway type
 				if ( $this->get_gateway()->is_credit_card_gateway() ) {
@@ -343,9 +356,9 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 							__( '%1$s %2$s Pre-Order Release Payment Approved: %3$s ending in %4$s (expires %5$s)', 'woocommerce-plugin-framework' ),
 							$this->get_gateway()->get_method_title(),
 							$this->get_gateway()->perform_credit_card_authorization( $order ) ? 'Authorization' : 'Charge',
-							SV_WC_Payment_Gateway_Helper::payment_type_to_name( ! empty( $order->payment->card_type ) ? $order->payment->card_type : 'card' ),
+							SV_WC_Payment_Gateway_Helper::payment_type_to_name( ! empty( $payment->card_type ) ? $payment->card_type : 'card' ),
 							$last_four,
-							( ! empty( $order->payment->exp_month) && ! empty( $order->payment->exp_year ) ? $order->payment->exp_month . '/' . substr( $order->payment->exp_year, -2 ) : 'n/a' )
+							( ! empty( $payment->exp_month) && ! empty( $payment->exp_year ) ? $payment->exp_month . '/' . substr( $payment->exp_year, -2 ) : 'n/a' )
 					);
 
 				} elseif ( $this->get_gateway()->is_echeck_gateway() ) {
@@ -355,7 +368,7 @@ class SV_WC_Payment_Gateway_Integration_Pre_Orders extends SV_WC_Payment_Gateway
 						/* translators: Context: A payment is released for a pre-order. Placeholders: %1$s - Payment gateway name, %2$s - Payment method type (e.g. 'Bank Account'), %3$s - Last four digits of the account */
 						__( '%1$s eCheck Pre-Order Release Payment Approved: %2$s ending in %3$s', 'woocommerce-plugin-framework' ),
 						$this->get_gateway()->get_method_title(),
-						SV_WC_Payment_Gateway_Helper::payment_type_to_name( ! empty( $order->payment->account_type ) ? $order->payment->account_type : 'bank'),
+						SV_WC_Payment_Gateway_Helper::payment_type_to_name( ! empty( $payment->account_type ) ? $payment->account_type : 'bank'),
 						$last_four
 					);
 

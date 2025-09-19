@@ -25,6 +25,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Handlers;
 
 use SkyVerge\WooCommerce\PluginFramework\v6_0_0 as FrameworkBase;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\OrderHelper;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\Payment_Gateway\\Handlers\\Abstract_Hosted_Payment_Handler' ) ) :
 
@@ -325,19 +326,24 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 
 		$order = $this->get_gateway()->get_order( $order );
 
-		$order->payment->account_number = $response->get_account_number();
+		$payment = OrderHelper::get_payment( $order );
+
+		$payment->account_number = $response->get_account_number();
 
 		if ( $response instanceof FrameworkBase\SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response ) {
 
-			$order->payment->exp_month = $response->get_exp_month();
-			$order->payment->exp_year  = $response->get_exp_year();
-			$order->payment->card_type = $response->get_card_type();
+			$payment->exp_month = $response->get_exp_month();
+			$payment->exp_year  = $response->get_exp_year();
+			$payment->card_type = $response->get_card_type();
 
 		} elseif ( $response instanceof FrameworkBase\SV_WC_Payment_Gateway_API_Payment_Notification_eCheck_Response ) {
 
-			$order->payment->account_type = $response->get_account_type();
-			$order->payment->check_number = $response->get_check_number();
+			$payment->account_type = $response->get_account_type();
+			$payment->check_number = $response->get_check_number();
 		}
+
+		// Set payment info on the order object.
+		OrderHelper::set_payment( $order, $payment );
 
 		return $order;
 	}
