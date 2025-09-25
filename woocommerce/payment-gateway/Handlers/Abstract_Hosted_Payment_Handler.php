@@ -195,7 +195,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	 * @param \WC_Order|null $order order object, if any
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response API response object, if any
 	 */
-	protected function do_transaction_response_complete( \WC_Order $order = null, FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
+	protected function do_transaction_response_complete( ?\WC_Order $order = null, ?FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
 
 		$this->do_transaction_request_response( $response, $this->get_gateway()->get_return_url( $order ) );
 	}
@@ -211,7 +211,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	 * @param string $user_message user-facing message
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response API response object, if any
 	 */
-	protected function do_transaction_response_failed( \WC_Order $order = null, $message = '', $user_message = '', FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
+	protected function do_transaction_response_failed( ?\WC_Order $order = null, $message = '', $user_message = '', ?FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
 
 		$this->get_gateway()->add_debug_message( $message, 'error' );
 
@@ -236,7 +236,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	 * @param string $message error message, for logging
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response API response object, if any
 	 */
-	protected function do_transaction_response_invalid( \WC_Order $order = null, $message = '', FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
+	protected function do_transaction_response_invalid( ?\WC_Order $order = null, $message = '', ?FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
 
 		$this->get_gateway()->add_debug_message( $message, 'error' );
 
@@ -265,7 +265,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response
 	 * @param string $url
 	 */
-	protected function do_transaction_request_response( FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null, $url = '' ) {
+	protected function do_transaction_request_response( ?FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null, $url = '' ) {
 
 		// if this is an IPN handler
 		if ( $this->is_ipn() ) {

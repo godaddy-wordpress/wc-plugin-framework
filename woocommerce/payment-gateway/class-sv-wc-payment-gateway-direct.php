@@ -988,7 +988,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 	 * @return array result with success/error message and request status (success/failure)
 	 * @throws SV_WC_Plugin_Exception
 	 */
-	protected function do_add_payment_method_transaction( \WC_Order $order, SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response = null ) {
+	protected function do_add_payment_method_transaction( \WC_Order $order, ?SV_WC_Payment_Gateway_API_Create_Payment_Token_Response $response = null ) {
 
 		if ( is_null( $response ) ) {
 			$response = $this->get_api()->tokenize_payment_method( $order );
