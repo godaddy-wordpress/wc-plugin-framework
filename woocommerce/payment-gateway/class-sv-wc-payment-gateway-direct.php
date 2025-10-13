@@ -484,7 +484,7 @@ abstract class SV_WC_Payment_Gateway_Direct extends SV_WC_Payment_Gateway {
 				$message = $notice['notice'] ?? $notice;
 
 				// this will handle some log data eventually
-				$messages[] = htmlspecialchars( is_array( $message ) ? print_r( $message, true ) : $message );
+				$messages[] = htmlspecialchars( is_array( $message ) ? print_r( $message, true ) : $message, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 			}
 		}
 
