@@ -64,7 +64,7 @@ class Dynamic_Props {
 	 * Dynamic_Props::set($order, 'payment_total', '99.99');
 	 * ```
 	 */
-	public static function set( \WC_Order &$order, string $key, mixed $value ): void {
+	public static function set( \WC_Order &$order, string $key, $value ): void {
 		if ( self::use_weak_map() ) {
 			self::init_weak_map();
 			if ( ! isset( self::$map[ $order ] ) ) {
@@ -97,7 +97,7 @@ class Dynamic_Props {
 	 * $token       = Dynamic_Props::get($order, 'payment', 'token', 'DEFAULT_TOKEN');
 	 * ```
 	 */
-	public static function get( \WC_Order $order, string $key, $nested_key = null, $default = null ): mixed {
+	public static function get( \WC_Order $order, string $key, $nested_key = null, $default = null ) {
 		if ( self::use_weak_map() ) {
 			self::init_weak_map();
 			if ( is_null( $nested_key ) ) {
