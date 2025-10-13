@@ -42,7 +42,7 @@ class Dynamic_Props {
 	 * @since x.x.x
 	 * @var   \WeakMap<object, \stdClass>|null
 	 */
-	private static ?\WeakMap $map = null;
+	private static ?\WeakMap $map = null; // phpcs:ignore PHPCompatibility.Classes.NewClasses.weakmapFound -- conditionally used for PHP 8.0+
 
 	/**
 	 * Sets a property on the order object.
@@ -184,6 +184,7 @@ class Dynamic_Props {
 	 */
 	private static function init_weak_map(): void {
 		if ( null === self::$map ) {
+			// phpcs:ignore PHPCompatibility.Classes.NewClasses.weakmapFound -- conditionally used for PHP 8.0+
 			self::$map = new \WeakMap();
 		}
 	}
