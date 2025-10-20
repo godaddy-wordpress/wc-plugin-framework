@@ -3753,12 +3753,12 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 			if ( 'message' === $type ) {
 
-				SV_WC_Helper::wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'notice' );
+				SV_WC_Helper::wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ), 'notice' );
 
 			} else {
 
 				// defaults to error message
-				SV_WC_Helper::wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message ) ), 'error' );
+				SV_WC_Helper::wc_add_notice( str_replace( "\n", "<br/>", htmlspecialchars( $message, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ), 'error' );
 			}
 		}
 	}

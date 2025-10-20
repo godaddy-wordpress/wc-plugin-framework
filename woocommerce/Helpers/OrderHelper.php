@@ -78,7 +78,7 @@ class OrderHelper {
 	 * @param mixed     $default    Optional. The default value if the property doesn't exist. Default null.
 	 * @return mixed The property value if found, or the default value if not found.
 	 */
-	public static function get_property( \WC_Order $order, string $key, $nested_key = null, $default = null ): mixed {
+	public static function get_property( \WC_Order $order, string $key, $nested_key = null, $default = null ) {
 		return Dynamic_Props::get( $order, $key, $nested_key, $default );
 	}
 
