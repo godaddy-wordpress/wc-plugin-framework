@@ -474,12 +474,17 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
 		$versioned_handle = $handle . '-v5_15_12';
+		$fw_version = $this->get_plugin()->get_assets_version();
+		$wc_version = defined( 'WC_VERSION' ) ? WC_VERSION : WC()->version ?? $fw_version;
 
+		// jquery.payment
+		wp_register_script( 'jquery-payment', WC()->plugin_url() . '/assets/js/jquery-payment/jquery.payment.min.js', [ 'jquery' ], $wc_version );
+		
 		// Frontend JS
-		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
+		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', [ 'jquery-payment' ], SV_WC_Plugin::VERSION, true );
 
 		// Frontend CSS
-		wp_enqueue_style( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', array(), SV_WC_Plugin::VERSION );
+		wp_enqueue_style( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', [], SV_WC_Plugin::VERSION );
 
 		// localized JS params
 		$this->localize_script( $versioned_handle, $this->get_payment_form_js_localized_script_params(), 'sv_wc_payment_gateway_payment_form_params' );
