@@ -22,16 +22,16 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_15_13;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Blocks\Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_13\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v5_15_13\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 use stdClass;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_12\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_13\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -473,7 +473,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
-		$versioned_handle = $handle . '-v5_15_12';
+		$versioned_handle = $handle . '-v5_15_13';
 		$wc_version = defined( 'WC_VERSION' ) ? WC_VERSION : WC()->version;
 		if (! $wc_version) {
 			$wc_version = $this->get_plugin()->get_assets_version();
