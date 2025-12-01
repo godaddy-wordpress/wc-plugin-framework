@@ -22,11 +22,12 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12\Payment_Gateway\Handlers;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12 as FrameworkBase;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0 as FrameworkBase;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\OrderHelper;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_12\\Payment_Gateway\\Handlers\\Abstract_Hosted_Payment_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\Payment_Gateway\\Handlers\\Abstract_Hosted_Payment_Handler' ) ) :
 
 
 /**
@@ -194,7 +195,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	 * @param \WC_Order|null $order order object, if any
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response API response object, if any
 	 */
-	protected function do_transaction_response_complete( \WC_Order $order = null, FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
+	protected function do_transaction_response_complete( ?\WC_Order $order = null, ?FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
 
 		$this->do_transaction_request_response( $response, $this->get_gateway()->get_return_url( $order ) );
 	}
@@ -210,7 +211,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	 * @param string $user_message user-facing message
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response API response object, if any
 	 */
-	protected function do_transaction_response_failed( \WC_Order $order = null, $message = '', $user_message = '', FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
+	protected function do_transaction_response_failed( ?\WC_Order $order = null, $message = '', $user_message = '', ?FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
 
 		$this->get_gateway()->add_debug_message( $message, 'error' );
 
@@ -235,7 +236,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	 * @param string $message error message, for logging
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response API response object, if any
 	 */
-	protected function do_transaction_response_invalid( \WC_Order $order = null, $message = '', FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
+	protected function do_transaction_response_invalid( ?\WC_Order $order = null, $message = '', ?FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null ) {
 
 		$this->get_gateway()->add_debug_message( $message, 'error' );
 
@@ -264,7 +265,7 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 	 * @param FrameworkBase\SV_WC_Payment_Gateway_API_Response|null $response
 	 * @param string $url
 	 */
-	protected function do_transaction_request_response( FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null, $url = '' ) {
+	protected function do_transaction_request_response( ?FrameworkBase\SV_WC_Payment_Gateway_API_Response $response = null, $url = '' ) {
 
 		// if this is an IPN handler
 		if ( $this->is_ipn() ) {
@@ -325,19 +326,24 @@ abstract class Abstract_Hosted_Payment_Handler extends Abstract_Payment_Handler 
 
 		$order = $this->get_gateway()->get_order( $order );
 
-		$order->payment->account_number = $response->get_account_number();
+		$payment = OrderHelper::get_payment( $order );
+
+		$payment->account_number = $response->get_account_number();
 
 		if ( $response instanceof FrameworkBase\SV_WC_Payment_Gateway_API_Payment_Notification_Credit_Card_Response ) {
 
-			$order->payment->exp_month = $response->get_exp_month();
-			$order->payment->exp_year  = $response->get_exp_year();
-			$order->payment->card_type = $response->get_card_type();
+			$payment->exp_month = $response->get_exp_month();
+			$payment->exp_year  = $response->get_exp_year();
+			$payment->card_type = $response->get_card_type();
 
 		} elseif ( $response instanceof FrameworkBase\SV_WC_Payment_Gateway_API_Payment_Notification_eCheck_Response ) {
 
-			$order->payment->account_type = $response->get_account_type();
-			$order->payment->check_number = $response->get_check_number();
+			$payment->account_type = $response->get_account_type();
+			$payment->check_number = $response->get_check_number();
 		}
+
+		// Set payment info on the order object.
+		OrderHelper::set_payment( $order, $payment );
 
 		return $order;
 	}

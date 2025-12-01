@@ -21,13 +21,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12\Admin;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0\Admin;
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0 as Framework;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_12\\Admin\\Setup_Wizard' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\Admin\\Setup_Wizard' ) ) :
 
 
 /**

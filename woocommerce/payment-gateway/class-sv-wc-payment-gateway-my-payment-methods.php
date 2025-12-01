@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_12\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
 
 
 /**
@@ -174,9 +174,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 
 		wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', [ 'jquery' ], $wc_version );
 
-		wp_enqueue_style( "$handle-v5_15_12", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', [ 'dashicons' ], $fw_version );
+		wp_enqueue_style( "$handle-v6_0_0", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', [ 'dashicons' ], $fw_version );
 
-		wp_enqueue_script( "$handle-v5_15_12", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', [ 'jquery-tiptip', 'jquery' ], $fw_version );
+		wp_enqueue_script( "$handle-v6_0_0", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', [ 'jquery-tiptip', 'jquery' ], $fw_version );
 	}
 
 
@@ -900,7 +900,7 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 * @param SV_WC_Payment_Gateway_Payment_Token|null $token FW token object, only set if the token is a FW token
 	 * @return string
 	 */
-	protected function get_payment_method_default_html( $is_default = false, SV_WC_Payment_Gateway_Payment_Token $token = null ) {
+	protected function get_payment_method_default_html( $is_default = false, ?SV_WC_Payment_Gateway_Payment_Token $token = null ) {
 
 		$html = $is_default ? '<mark class="default">' . esc_html__( 'Default', 'woocommerce-plugin-framework' ) . '</mark>' : '';
 
