@@ -1,10 +1,10 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12 as Framework;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\API\Abstract_Cacheable_API_Base;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\API\Traits\Cacheable_Request_Trait;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\SV_WC_API_JSON_Request;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\SV_WC_API_Request;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\API\Abstract_Cacheable_API_Base;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\API\Traits\Cacheable_Request_Trait;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\SV_WC_API_JSON_Request;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\SV_WC_API_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', true );
@@ -25,7 +25,7 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @throws ReflectionException
 	 */
-	public function test_do_remote_request( bool $is_cacheable, bool $force_refresh = null, bool $cache_exists = null, bool $should_load_from_cache = false ) {
+	public function test_do_remote_request( bool $is_cacheable, ?bool $force_refresh = null, ?bool $cache_exists = null, bool $should_load_from_cache = false ) {
 
 		$request = $this->get_new_request_instance( $is_cacheable );
 
@@ -357,7 +357,7 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @throws ReflectionException
 	 */
-	public function test_get_request_data_for_broadcast( bool $is_cacheable, bool $force_refresh = null, bool $should_cache = null ) {
+	public function test_get_request_data_for_broadcast( bool $is_cacheable, ?bool $force_refresh = null, ?bool $should_cache = null ) {
 
 		$request = $this->get_new_request_instance( $is_cacheable );
 

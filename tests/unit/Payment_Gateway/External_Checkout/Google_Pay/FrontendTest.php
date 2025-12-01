@@ -1,18 +1,18 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12\Tests\Unit\Payment_Gateway\External_Checkout\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0\Tests\Unit\Payment_Gateway\External_Checkout\Google_Pay;
 
 use Mockery;
 use ReflectionException;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Payment_Gateway\External_Checkout\External_Checkout;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Payment_Gateway\External_Checkout\Google_Pay\Frontend;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\SV_WC_Payment_Gateway;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\SV_WC_Payment_Gateway_Plugin;
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\External_Checkout\External_Checkout;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\External_Checkout\Google_Pay\Frontend;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\SV_WC_Payment_Gateway;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Tests\TestCase;
 use WP_Mock;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v5_15_12\Payment_Gateway\External_Checkout\Google_Pay\Frontend
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\External_Checkout\Google_Pay\Frontend
  */
 class FrontendTest extends TestCase
 {

@@ -22,13 +22,14 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12\Payment_Gateway\Handlers;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Dynamic_Props;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_15_12\\Payment_Gateway\\Handlers\\Capture' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\Payment_Gateway\\Handlers\\Capture' ) ) :
 
 
 /**
@@ -189,7 +190,7 @@ class Capture {
 				/* translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - transaction amount. Definitions: Capture, as in capture funds from a credit card. */
 				__( '%1$s Capture of %2$s Approved', 'woocommerce-plugin-framework' ),
 				$this->get_gateway()->get_method_title(),
-				wc_price( $order->capture->amount, [
+				wc_price( Dynamic_Props::get( $order, 'capture', 'amount' ), [
 					'currency' => $order->get_currency()
 				] )
 			);
@@ -255,7 +256,7 @@ class Capture {
 	 */
 	public function do_capture_success( \WC_Order $order, Framework\SV_WC_Payment_Gateway_API_Response $response ) {
 
-		$total_captured = (float) $this->get_gateway()->get_order_meta( $order, 'capture_total' ) + (float) $order->capture->amount;
+		$total_captured = (float) $this->get_gateway()->get_order_meta( $order, 'capture_total' ) + (float) Dynamic_Props::get( $order, 'capture', 'amount' );
 
 		$this->get_gateway()->update_order_meta( $order, 'capture_total',   Framework\SV_WC_Helper::number_format( $total_captured ) );
 		$this->get_gateway()->update_order_meta( $order, 'charge_captured', $this->get_gateway()->supports_credit_card_partial_capture() && $this->get_gateway()->is_partial_capture_enabled() && $total_captured < (float) $this->get_order_capture_maximum( $order ) ? 'partial' : 'yes' );

@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_15_12\Enums;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0\Enums;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_15_12\Enums\Traits\EnumTrait;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Enums\Traits\EnumTrait;
 
 /**
  * @since 5.13.0
