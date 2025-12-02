@@ -267,7 +267,7 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @throws ReflectionException
 	 */
-	public function test_is_request_cacheable( bool $is_cacheable, $filter_value = null, bool $expected ) {
+	public function test_is_request_cacheable( bool $is_cacheable, $filter_value, bool $expected ) {
 
 		$api = $this->get_new_api_instance_with_request( $this->get_new_request_instance( $is_cacheable ) );
 
@@ -313,7 +313,7 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @throws ReflectionException
 	 */
-	public function test_get_request_cache_lifetime( int $lifetime, $filter_value = null, int $expected ) {
+	public function test_get_request_cache_lifetime( int $lifetime, $filter_value, int $expected ) {
 
 		$api = $this->get_new_api_instance_with_request( $this->get_new_request_instance()->set_cache_lifetime( $lifetime ) );
 
