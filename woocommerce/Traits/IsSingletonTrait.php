@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0\Traits;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Traits;
 
 defined('ABSPATH') or exit;
 
-if (trait_exists('\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\Traits\\IsSingletonTrait')) {
+if (trait_exists('\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_1\\Traits\\IsSingletonTrait')) {
 	return;
 }
 

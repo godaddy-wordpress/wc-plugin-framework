@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_1\\SV_WC_Payment_Gateway_Admin_Order' ) ) :
 
 
 /**
@@ -410,7 +410,7 @@ class SV_WC_Payment_Gateway_Admin_Order {
 			}
 
 			wp_send_json_success( [
-				'message' => html_entity_decode( wp_strip_all_tags( $result['message'] ) ), // ensure any HTML tags are removed and the currency symbol entity is decoded
+				'message' => html_entity_decode( wp_strip_all_tags( $result['message'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ), // ensure any HTML tags are removed and the currency symbol entity is decoded
 			] );
 
 		} catch ( SV_WC_Payment_Gateway_Exception $e ) {

@@ -1,10 +1,10 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0 as Framework;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\API\Abstract_Cacheable_API_Base;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\API\Traits\Cacheable_Request_Trait;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\SV_WC_API_JSON_Request;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\SV_WC_API_Request;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\API\Abstract_Cacheable_API_Base;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\API\Traits\Cacheable_Request_Trait;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\SV_WC_API_JSON_Request;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\SV_WC_API_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', true );
@@ -267,7 +267,7 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @throws ReflectionException
 	 */
-	public function test_is_request_cacheable( bool $is_cacheable, $filter_value = null, bool $expected ) {
+	public function test_is_request_cacheable( bool $is_cacheable, $filter_value, bool $expected ) {
 
 		$api = $this->get_new_api_instance_with_request( $this->get_new_request_instance( $is_cacheable ) );
 
@@ -313,7 +313,7 @@ class CacheableAPIBaseTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @throws ReflectionException
 	 */
-	public function test_get_request_cache_lifetime( int $lifetime, $filter_value = null, int $expected ) {
+	public function test_get_request_cache_lifetime( int $lifetime, $filter_value, int $expected ) {
 
 		$api = $this->get_new_api_instance_with_request( $this->get_new_request_instance()->set_cache_lifetime( $lifetime ) );
 

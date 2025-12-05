@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2025.nn.nn - version 6.0.1
+ * Dev - Set PHP 8.1 defaults on `html_entity_decode()` usage (ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401)
+
 2025.nn.nn - version 6.0.0
  * Dev - Completely reworked how we handle dynamic properties on WooCommerce order objects. For now this change is backwards compatible with v5, but we will eventually drop support for the legacy method, so migrating ASAP is recommended. See the upgrade guide: https://github.com/godaddy-wordpress/wc-plugin-framework/wiki/Migrating-to-v6
  * Dev - Address "Implicitly marking parameter as nullable is deprecated" warnings in PHP 8.4
