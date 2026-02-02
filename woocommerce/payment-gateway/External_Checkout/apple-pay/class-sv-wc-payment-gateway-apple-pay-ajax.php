@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1;
 
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers\CheckoutHelper;
+
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_1\\SV_WC_Payment_Gateway_Apple_Pay_AJAX' ) ) :
@@ -180,6 +182,16 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 				$city     = $contact['locality'];
 				$postcode = $contact['postalCode'];
 
+				// validate country against WooCommerce selling and shipping settings
+				if ( $country ) {
+					/*
+					 * Validate country against WooCommerce selling and shipping settings.
+					 * Apple Pay contact info is primarily shipping address, but since we don't have both, we'll use
+					 * the shipping address to validate both billing and shipping settings.
+					 */
+					$this->validateAllowedCountry( $country, $country );
+				}
+
 				WC()->customer->set_shipping_city( $city );
 				WC()->customer->set_shipping_state( $state );
 				WC()->customer->set_shipping_country( $country );
@@ -238,6 +250,12 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 
 		try {
 
+			// final validation check: ensure billing/shipping country is still allowed
+			$billing_country  = WC()->customer->get_billing_country();
+			$shipping_country = WC()->customer->get_shipping_country();
+
+			$this->validateAllowedCountry( $billing_country ?: '', $shipping_country ?: '' );
+
 			$result = $this->get_handler()->process_payment();
 
 			wp_send_json_success( $result );
@@ -250,6 +268,48 @@ class SV_WC_Payment_Gateway_Apple_Pay_AJAX {
 				'message' => $e->getMessage(),
 				'code'    => $e->getCode(),
 			) );
+		}
+	}
+
+
+	/**
+	 * Validates that the provided countries are allowed for billing and shipping.
+	 *
+	 * @since 6.0.1
+	 *
+	 * @param string $billingCountry  billing country code (empty string if not provided)
+	 * @param string $shippingCountry shipping country code (empty string if not provided)
+	 * @throws \Exception if validation fails
+	 */
+	protected function validateAllowedCountry(string $billingCountry, string $shippingCountry)
+	{
+
+		// validate billing country for orders (if provided)
+		if (! empty($billingCountry) && ! CheckoutHelper::isCountryAllowedToOrder($billingCountry)) {
+
+			$this->get_handler()->log("Apple Pay: Billing country '{$billingCountry}' is not allowed for orders");
+
+			throw new \Exception(
+				sprintf(
+					/* translators: %s country code. */
+					esc_html__('Sorry, we do not allow orders from the provided country (%s)', 'woocommerce'),
+					esc_html($billingCountry)
+				)
+			);
+		}
+
+		// validate shipping country for shipping (if provided)
+		if (! empty($shippingCountry) && ! CheckoutHelper::isCountryAllowedForShipping($shippingCountry)) {
+
+			$this->get_handler()->log("Apple Pay: Shipping country '{$shippingCountry}' is not allowed for shipping");
+
+			throw new \Exception(
+				sprintf(
+					/* translators: %s country code. */
+					esc_html__('Sorry, we do not ship orders to the provided country (%s)', 'woocommerce'),
+					esc_html($shippingCountry)
+				)
+			);
 		}
 	}
 
