@@ -41,6 +41,24 @@ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\SV_WC_Pa
 class SV_WC_Payment_Gateway_Helper {
 
 
+	/** Sends through sale and request for funds to be charged to cardholder's credit card. */
+	const TRANSACTION_TYPE_CHARGE = 'charge';
+
+	/** Sends through a request for funds to be "reserved" on the cardholder's credit card. A standard authorization is reserved for 2-5 days. Reservation times are determined by cardholder's bank. */
+	const TRANSACTION_TYPE_AUTHORIZATION = 'authorization';
+
+	const TRANSACTION_TYPE_CAPTURE = 'capture';
+
+	const TRANSACTION_TYPE_REFUND = 'refund';
+
+	const TRANSACTION_TYPE_VOID = 'void';
+
+	const TRANSACTION_STATUS_APPROVED = 'approved';
+
+	const TRANSACTION_STATUS_HELD = 'held';
+
+	const TRANSACTION_STATUS_FAILED = 'failed';
+
 	/** @var string the Visa card type ID **/
 	const CARD_TYPE_VISA = 'visa';
 
