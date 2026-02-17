@@ -51,4 +51,22 @@ class ScriptHelper
 
 		return wp_add_inline_script($handle, $javaScriptString);
 	}
+
+	/**
+	 * Adds inline jQuery.
+	 * This calls {@see static::addInlineScript()} but with automatic jQuery wrapping.
+	 *
+	 * @since 6.0.1
+	 *
+	 * @param string $handle Handle name
+	 * @param string $javaScriptString The JavaScript code to add inline
+	 * @return bool True if successfully added
+	 */
+	public static function addInlinejQuery(string $handle, string $javaScriptString) : bool
+	{
+		return static::addInlineScript(
+			$handle,
+			'jQuery(function($) { '.$javaScriptString.' });'
+		);
+	}
 }

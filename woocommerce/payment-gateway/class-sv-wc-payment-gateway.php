@@ -1670,7 +1670,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			ScriptHelper::addInlineScript($scriptHandler, ob_get_clean());
+			ScriptHelper::addInlinejQuery($scriptHandler, ob_get_clean());
 
 		}
 
@@ -1694,7 +1694,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			ScriptHelper::addInlineScript($scriptHandler, ob_get_clean());
+			ScriptHelper::addInlinejQuery($scriptHandler, ob_get_clean());
 		}
 
 		// if there's more than one environment include the environment settings switcher code
@@ -1724,7 +1724,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			ScriptHelper::addInlineScript($scriptHandler, ob_get_clean());
+			ScriptHelper::addInlinejQuery($scriptHandler, ob_get_clean());
 
 		}
 
@@ -1750,7 +1750,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			ScriptHelper::addInlineScript($scriptHandler, ob_get_clean());
+			ScriptHelper::addInlinejQuery($scriptHandler, ob_get_clean());
 
 		}
 
