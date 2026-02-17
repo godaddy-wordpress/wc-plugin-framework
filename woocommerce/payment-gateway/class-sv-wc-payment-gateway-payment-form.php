@@ -22,15 +22,15 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Blocks\Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Enums\PaymentFormContext;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Enums\PaymentFormContext;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_1\\SV_WC_Payment_Gateway_Payment_Form' ) ) :
 
 
 /**
@@ -1098,7 +1098,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 			break;
 			case "wc_{$gateway_id}_payment_form_end" :
 				$this->payment_form_js_rendered[] = $gateway_id;
-				wc_enqueue_js( $this->get_safe_handler_js() );
+				$this->addInlineScript($this->get_safe_handler_js());
 			break;
 		endswitch;
 	}
@@ -1180,7 +1180,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 
 			if ( is_array( $card_types ) && ! empty( $card_types ) ) {
 
-				$args['enabled_card_types'] = array_map( [ 'SkyVerge\WooCommerce\PluginFramework\v6_0_0\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ], $card_types );
+				$args['enabled_card_types'] = array_map( [ 'SkyVerge\WooCommerce\PluginFramework\v6_0_1\SV_WC_Payment_Gateway_Helper', 'normalize_card_type' ], $card_types );
 			}
 		}
 

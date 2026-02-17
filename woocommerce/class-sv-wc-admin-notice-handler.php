@@ -22,11 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1;
+
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers\ScriptHelper;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\SV_WC_Admin_Notice_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_1\\SV_WC_Admin_Notice_Handler' ) ) :
 
 
 /**
@@ -304,7 +306,7 @@ class SV_WC_Admin_Notice_Handler {
 		} ) ( jQuery );
 		<?php
 
-		wc_enqueue_js( ob_get_clean() );
+		ScriptHelper::addInlineScript($plugin_slug.'-admin-notices', ob_get_clean());
 	}
 
 
