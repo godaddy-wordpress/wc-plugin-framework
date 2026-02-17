@@ -38,8 +38,11 @@ class ScriptHelper
 	 */
 	public static function addInlineScript(string $handle, string $javaScriptString, array $dependencies = []) : bool
 	{
-		if (! wp_script_is($handle, 'enqueued')) {
+		if (! wp_script_is($handle, 'registered')) {
 			wp_register_script($handle, '', $dependencies, false, true);
+		}
+
+		if (! wp_script_is($handle, 'enqueued')) {
 			wp_enqueue_script($handle);
 		}
 
