@@ -38,7 +38,7 @@ class ScriptHelper
 	public static function addInlineScript(string $handle, string $javaScriptString) : bool
 	{
 		if (did_action('wp_print_footer_scripts')) {
-			_doing_it_wrong(__METHOD__, 'This should be called before wp_print_footer_scripts');
+			_doing_it_wrong(__METHOD__, 'Inline scripts should be added before the wp_print_footer_scripts action.', '6.0.1');
 		}
 
 		if (! wp_script_is($handle, 'registered')) {
