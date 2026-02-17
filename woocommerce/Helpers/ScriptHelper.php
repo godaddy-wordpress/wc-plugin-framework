@@ -33,13 +33,16 @@ class ScriptHelper
 	 *
 	 * @param string $handle Handle name
 	 * @param string $javaScriptString The JavaScript code to add inline
-	 * @param array $dependencies Optional dependencies
 	 * @return bool True if successfully added
 	 */
-	public static function addInlineScript(string $handle, string $javaScriptString, array $dependencies = []) : bool
+	public static function addInlineScript(string $handle, string $javaScriptString) : bool
 	{
+		if (did_action('wp_print_footer_scripts')) {
+			_doing_it_wrong(__METHOD__, 'This should be called before wp_print_footer_scripts');
+		}
+
 		if (! wp_script_is($handle, 'registered')) {
-			wp_register_script($handle, '', $dependencies, false, true);
+			wp_register_script($handle, false, [], false, true);
 		}
 
 		if (! wp_script_is($handle, 'enqueued')) {
