@@ -1,14 +1,14 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Tests\Unit\Helpers;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_2\Tests\Unit\Helpers;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Handlers\Country_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_2\Handlers\Country_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_2\Tests\TestCase;
 
 class CountryHelperTest extends TestCase
 {
 	/**
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v6_0_1\Handlers\Country_Helper::convert_alpha_country_code()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v6_0_2\Handlers\Country_Helper::convert_alpha_country_code()
 	 *
 	 * @dataProvider provider_convert_alpha_country_code
 	 *
