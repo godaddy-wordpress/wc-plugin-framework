@@ -24,6 +24,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Handlers;
 
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers\ScriptHelper;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_1\SV_WC_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_1\SV_WC_Plugin_Exception;
 
@@ -284,6 +285,20 @@ abstract class Script_Handler {
 
 			wp_send_json_error( $exception->getMessage() );
 		}
+	}
+
+
+	/**
+	 * Adds inline JavaScript to the page.
+	 *
+	 * @since 6.0.1
+	 *
+	 * @param string $data The JavaScript code to add inline
+	 * @return bool True if successfully added
+	 */
+	protected function addInlineScript(string $data): bool
+	{
+		return ScriptHelper::addInlineScript($this->get_id().'-inline-scripts', $data);
 	}
 
 

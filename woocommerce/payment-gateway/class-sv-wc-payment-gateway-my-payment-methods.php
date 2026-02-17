@@ -1156,9 +1156,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 *
 	 * @since 5.1.0
 	 */
-	public function render_js() {
-
-		wc_enqueue_js( $this->get_safe_handler_js() );
+	public function render_js()
+	{
+		$this->addInlineScript($this->get_safe_handler_js());
 	}
 
 

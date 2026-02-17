@@ -1098,7 +1098,7 @@ class SV_WC_Payment_Gateway_Payment_Form extends Handlers\Script_Handler {
 			break;
 			case "wc_{$gateway_id}_payment_form_end" :
 				$this->payment_form_js_rendered[] = $gateway_id;
-				wc_enqueue_js( $this->get_safe_handler_js() );
+				$this->addInlineScript($this->get_safe_handler_js());
 			break;
 		endswitch;
 	}
