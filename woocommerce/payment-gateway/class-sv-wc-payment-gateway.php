@@ -22,18 +22,19 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Blocks\Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\OrderHelper;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Payment_Gateway\Dynamic_Props;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers\OrderHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers\ScriptHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Payment_Gateway\Dynamic_Props;
 use stdClass;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_1\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -475,7 +476,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
-		$versioned_handle = $handle . '-v6_0_0';
+		$versioned_handle = $handle . '-v6_0_1';
 
 		// Frontend JS
 		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
@@ -1646,6 +1647,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		parent::admin_options();
 
+		$scriptHandler = $this->get_gateway_js_handle().'-admin-inline';
 		?>
 		<style type="text/css">.nowrap { white-space: nowrap; }</style>
 		<?php
@@ -1668,7 +1670,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			wc_enqueue_js( ob_get_clean() );
+			ScriptHelper::addInlinejQuery($scriptHandler, ob_get_clean());
 
 		}
 
@@ -1692,7 +1694,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			wc_enqueue_js( ob_get_clean() );
+			ScriptHelper::addInlinejQuery($scriptHandler, ob_get_clean());
 		}
 
 		// if there's more than one environment include the environment settings switcher code
@@ -1722,7 +1724,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			wc_enqueue_js( ob_get_clean() );
+			ScriptHelper::addInlinejQuery($scriptHandler, ob_get_clean());
 
 		}
 
@@ -1748,7 +1750,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			wc_enqueue_js( ob_get_clean() );
+			ScriptHelper::addInlinejQuery($scriptHandler, ob_get_clean());
 
 		}
 

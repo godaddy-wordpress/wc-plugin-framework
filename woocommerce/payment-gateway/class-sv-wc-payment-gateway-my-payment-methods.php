@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_1\\SV_WC_Payment_Gateway_My_Payment_Methods' ) ) :
 
 
 /**
@@ -174,9 +174,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 
 		wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', [ 'jquery' ], $wc_version );
 
-		wp_enqueue_style( "$handle-v6_0_0", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', [ 'dashicons' ], $fw_version );
+		wp_enqueue_style( "$handle-v6_0_1", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/css/frontend/' . $handle . '.min.css', [ 'dashicons' ], $fw_version );
 
-		wp_enqueue_script( "$handle-v6_0_0", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', [ 'jquery-tiptip', 'jquery' ], $fw_version );
+		wp_enqueue_script( "$handle-v6_0_1", $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', [ 'jquery-tiptip', 'jquery' ], $fw_version );
 	}
 
 
@@ -1156,9 +1156,9 @@ class SV_WC_Payment_Gateway_My_Payment_Methods extends Handlers\Script_Handler {
 	 *
 	 * @since 5.1.0
 	 */
-	public function render_js() {
-
-		wc_enqueue_js( $this->get_safe_handler_js() );
+	public function render_js()
+	{
+		$this->addInlineScript($this->get_safe_handler_js());
 	}
 
 

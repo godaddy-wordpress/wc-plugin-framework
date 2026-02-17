@@ -22,14 +22,15 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\Helpers\OrderHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers\OrderHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers\ScriptHelper;
 
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\SV_WC_Payment_Gateway_Hosted' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_1\\SV_WC_Payment_Gateway_Hosted' ) ) :
 
 
 /**
@@ -250,7 +251,7 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 		$args = $this->get_auto_post_form_args( $order );
 
 		// attempt to automatically submit the form and redirect
-		wc_enqueue_js('
+		$script = '
 			( function( $ ) {
 
 				$( "body" ).block( {
@@ -273,7 +274,9 @@ abstract class SV_WC_Payment_Gateway_Hosted extends SV_WC_Payment_Gateway {
 				$( "#submit_' . $this->get_id() . '_payment_form" ).click();
 
 			} ) ( jQuery );
-		');
+		';
+
+		ScriptHelper::addInlineScript($this->get_gateway_js_handle().'-inline', $script);
 
 		echo '<p>' . esc_html( $args['message'] ) . '</p>';
 		echo '<form action="' . esc_url( $args['submit_url'] ) . '" method="post">';

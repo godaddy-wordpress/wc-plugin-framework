@@ -22,14 +22,15 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_0\Handlers;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Handlers;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\SV_WC_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_0\SV_WC_Plugin_Exception;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers\ScriptHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\SV_WC_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\SV_WC_Plugin_Exception;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_0\\Handlers\\Script_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_1\\Handlers\\Script_Handler' ) ) :
 
 
 /**
@@ -80,7 +81,7 @@ abstract class Script_Handler {
 	 */
 	protected function get_js_handler_class_name() {
 
-		return sprintf( '%s_v6_0_0', $this->js_handler_base_class_name );
+		return sprintf( '%s_v6_0_1', $this->js_handler_base_class_name );
 	}
 
 
@@ -284,6 +285,20 @@ abstract class Script_Handler {
 
 			wp_send_json_error( $exception->getMessage() );
 		}
+	}
+
+
+	/**
+	 * Adds inline JavaScript to the page.
+	 *
+	 * @since 6.0.1
+	 *
+	 * @param string $data The JavaScript code to add inline
+	 * @return bool True if successfully added
+	 */
+	protected function addInlineScript(string $data): bool
+	{
+		return ScriptHelper::addInlineScript($this->get_id().'-inline-scripts', $data);
 	}
 
 
