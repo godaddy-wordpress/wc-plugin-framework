@@ -27,6 +27,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1;
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Blocks\Blocks_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers\OrderHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers\ScriptHelper;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Payment_Gateway\Dynamic_Props;
 use stdClass;
@@ -1646,6 +1647,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		parent::admin_options();
 
+		$scriptHandler = $this->get_gateway_js_handle().'-admin-inline';
 		?>
 		<style type="text/css">.nowrap { white-space: nowrap; }</style>
 		<?php
@@ -1668,7 +1670,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			wc_enqueue_js( ob_get_clean() );
+			ScriptHelper::addInlinejQuery($scriptHandler, ob_get_clean());
 
 		}
 
@@ -1692,7 +1694,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			wc_enqueue_js( ob_get_clean() );
+			ScriptHelper::addInlinejQuery($scriptHandler, ob_get_clean());
 		}
 
 		// if there's more than one environment include the environment settings switcher code
@@ -1722,7 +1724,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			wc_enqueue_js( ob_get_clean() );
+			ScriptHelper::addInlinejQuery($scriptHandler, ob_get_clean());
 
 		}
 
@@ -1748,7 +1750,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 				} ).change();
 			<?php
 
-			wc_enqueue_js( ob_get_clean() );
+			ScriptHelper::addInlinejQuery($scriptHandler, ob_get_clean());
 
 		}
 

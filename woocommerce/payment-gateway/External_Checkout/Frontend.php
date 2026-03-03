@@ -27,6 +27,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Payment_Gateway\External_C
 
 use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Blocks\Blocks_Handler;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Handlers\Script_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers\ScriptHelper;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_1\SV_WC_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_1\SV_WC_Payment_Gateway;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_1\SV_WC_Payment_Gateway_Plugin;
@@ -424,9 +425,9 @@ abstract class Frontend extends Script_Handler {
 	 * @param string $object_name JS object name
 	 * @param string $handler_name handler class name
 	 */
-	protected function enqueue_js_handler( array $args, $object_name = '', $handler_name = '' ) {
-
-		wc_enqueue_js( $this->get_safe_handler_js( $args, $handler_name, $object_name ) );
+	protected function enqueue_js_handler(array $args, $object_name = '', $handler_name = '')
+	{
+		$this->addInlineScript($this->get_safe_handler_js($args, $handler_name, $object_name));
 	}
 
 
