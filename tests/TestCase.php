@@ -1,6 +1,6 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Tests;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_2\Tests;
 
 use WP_Mock\Tools\TestCase as WpMockTestCase;
 

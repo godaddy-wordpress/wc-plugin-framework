@@ -1,16 +1,16 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Tests\Unit\Traits;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_2\Tests\Unit\Traits;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Tests\TestCase;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Traits\CanGetNewInstanceTrait;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_2\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_2\Traits\CanGetNewInstanceTrait;
 
 class CanGetNewInstanceTraitTest extends TestCase
 {
 	/**
 	 * Tests that it can get new instance with arguments.
 	 *
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v6_0_1\Traits\CanGetNewInstanceTrait::getNewInstance()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v6_0_2\Traits\CanGetNewInstanceTrait::getNewInstance()
 	 */
 	public function testItCanGetNewInstanceWithArgs() : void
 	{
@@ -25,7 +25,7 @@ class CanGetNewInstanceTraitTest extends TestCase
 	/**
 	 * Tests that it can get new instance without arguments.
 	 *
-	 * @covers \SkyVerge\WooCommerce\PluginFramework\v6_0_1\Traits\CanGetNewInstanceTrait::getNewInstance()
+	 * @covers \SkyVerge\WooCommerce\PluginFramework\v6_0_2\Traits\CanGetNewInstanceTrait::getNewInstance()
 	 */
 	public function testItCanGetNewInstanceWithoutArgs() : void
 	{

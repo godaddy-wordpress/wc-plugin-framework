@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2026.nn.nn - version 6.0.2
+
 2025.nn.nn - version 6.0.1
  * New: Introduced a new ScriptHelper class with addInlineScript() method
  * Tweak: Update usage of deprecated wc_enqueue_js() in favour of wp_add_inline_script()
