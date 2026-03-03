@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2026.nn.nn - version 6.0.2
+ * Fix - Apple Pay: Check store country restrictions for selling/shipping
 
 2025.nn.nn - version 6.0.1
  * New: Introduced a new ScriptHelper class with addInlineScript() method

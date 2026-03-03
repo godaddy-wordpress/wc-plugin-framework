@@ -1,6 +1,6 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_2\Helpers;
 
 class CheckoutHelper
 {

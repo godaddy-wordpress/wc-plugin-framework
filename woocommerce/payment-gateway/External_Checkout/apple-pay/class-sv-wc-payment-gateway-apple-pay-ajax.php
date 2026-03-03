@@ -24,7 +24,7 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_2;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers\CheckoutHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_2\Helpers\CheckoutHelper;
 
 defined( 'ABSPATH' ) or exit;
 

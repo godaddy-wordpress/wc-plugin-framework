@@ -1,15 +1,15 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Tests\unit\Helpers;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_0_2\Tests\unit\Helpers;
 
 use Generator;
 use Mockery;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers\CheckoutHelper;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_2\Helpers\CheckoutHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_2\Tests\TestCase;
 use WP_Mock;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_0_1\Helpers\CheckoutHelper
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_0_2\Helpers\CheckoutHelper
  */
 final class CheckoutHelperTest extends TestCase
 {
