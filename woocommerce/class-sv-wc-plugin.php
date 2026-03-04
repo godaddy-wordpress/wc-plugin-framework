@@ -25,6 +25,7 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Abilities\Contracts\HasAbilitiesContract;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Handlers\Country_Helper;
 use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Payment_Gateway\PaymentFormContextChecker;
 use stdClass;
@@ -100,6 +101,9 @@ abstract class SV_WC_Plugin {
 
 	/** @var Blocks\Blocks_Handler blocks handler instance */
 	protected Blocks\Blocks_Handler $blocks_handler;
+
+	/** @var ?Abilities\AbilitiesHandler abilities handler instance */
+	protected ?Abilities\AbilitiesHandler $abilities_handler = null;
 
 	/** @var Admin\Setup_Wizard handler instance */
 	protected $setup_wizard_handler;
@@ -178,6 +182,9 @@ abstract class SV_WC_Plugin {
 
 		// build the blocks handler instance
 		$this->init_blocks_handler();
+
+		// build the abilities handler instance
+		$this->init_abilities_handler();
 
 		// add the action & filter hooks
 		$this->add_hooks();
@@ -308,6 +315,23 @@ abstract class SV_WC_Plugin {
 
 		// individual plugins should initialize their block integrations handler by overriding this method
 		$this->blocks_handler = new Blocks\Blocks_Handler( $this );
+	}
+
+
+	/**
+	 * Builds the abilities handler instance.
+	 *
+	 * Hooks into the WordPress Abilities API (WP 6.9+) to register plugin abilities.
+	 *
+	 * @since 6.1.0
+	 *
+	 * @return void
+	 */
+	protected function init_abilities_handler() : void {
+
+		if ( $this instanceof HasAbilitiesContract) {
+			$this->abilities_handler = new Abilities\AbilitiesHandler($this->getAbilitiesProvider());
+		}
 	}
 
 
@@ -1018,6 +1042,19 @@ abstract class SV_WC_Plugin {
 	public function get_blocks_handler() : Blocks\Blocks_Handler {
 
 		return $this->blocks_handler;
+	}
+
+
+	/**
+	 * Gets the abilities handler instance.
+	 *
+	 * @since 6.1.0
+	 *
+	 * @return ?Abilities\AbilitiesHandler
+	 */
+	public function get_abilities_handler() : ?Abilities\AbilitiesHandler {
+
+		return $this->abilities_handler;
 	}
 
 
