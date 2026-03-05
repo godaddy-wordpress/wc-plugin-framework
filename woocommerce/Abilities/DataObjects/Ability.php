@@ -45,19 +45,6 @@ class Ability
 	/** @var ?RestApiConfig future REST API configuration (not acted on in this PoC) */
 	public ?RestApiConfig $restApiConfig;
 
-	/**
-	 * @param string               $name               unique ability name
-	 * @param string               $label              human-readable label
-	 * @param string               $description        description of what the ability does
-	 * @param string               $category           category slug this ability belongs to
-	 * @param callable             $executeCallback    callback that executes the ability
-	 * @param callable             $permissionCallback callback that checks permissions
-	 * @param array<string, mixed> $inputSchema        JSON Schema for the expected input
-	 * @param array<string, mixed> $outputSchema       JSON Schema for the output
-	 * @param ?AbilityAnnotations  $annotations        behavioral annotations
-	 * @param bool                 $showInRest         whether to expose in the REST API
-	 * @param ?RestApiConfig       $restApiConfig      future REST API configuration
-	 */
 	public function __construct(
 		string $name,
 		string $label,
@@ -83,18 +70,6 @@ class Ability
 		$this->annotations = $annotations;
 		$this->showInRest = $showInRest;
 		$this->restApiConfig = $restApiConfig;
-	}
-
-	/**
-	 * Gets the ability name.
-	 *
-	 * @since 6.1.0
-	 *
-	 * @return string
-	 */
-	public function getName() : string
-	{
-		return $this->name;
 	}
 
 	/**

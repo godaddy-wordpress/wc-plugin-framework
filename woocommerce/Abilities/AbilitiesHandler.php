@@ -84,7 +84,7 @@ class AbilitiesHandler
 		}
 
 		foreach ($this->abilitiesProvider->getAbilities() as $ability) {
-			wp_register_ability($ability->getName(), $ability->toArray());
+			wp_register_ability($ability->name, $ability->toArray());
 		}
 	}
 
