@@ -13,33 +13,13 @@ namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Abilities\DataObjects;
  */
 class RestApiConfig
 {
-	/** @var bool whether to add a REST API endpoint for this ability */
-	public bool $addRestApiEndpoint;
-
 	/** @var string the API route path */
 	public string $apiRoute;
 
-	/** @var ?string fully qualified class name for a custom controller */
-	public ?string $controllerOverride;
-
-	/** @var ?string fully qualified class name for an input adapter */
-	public ?string $inputAdapter;
-
-	/** @var ?string fully qualified class name for an output adapter */
-	public ?string $outputAdapter;
-
 	public function __construct(
-		bool $addRestApiEndpoint = false,
-		string $apiRoute = '',
-		?string $controllerOverride = null,
-		?string $inputAdapter = null,
-		?string $outputAdapter = null
+		string $apiRoute
 	)
 	{
-		$this->addRestApiEndpoint = $addRestApiEndpoint;
 		$this->apiRoute = $apiRoute;
-		$this->controllerOverride = $controllerOverride;
-		$this->inputAdapter = $inputAdapter;
-		$this->outputAdapter = $outputAdapter;
 	}
 }
