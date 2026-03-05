@@ -178,17 +178,13 @@ class AbilityRestController extends \WP_REST_Controller
 			return $this->add_additional_fields_schema($this->schema);
 		}
 
-		$outputSchema = $this->ability->outputSchema;
-
-		$this->schema = [
-			'$schema' => 'http://json-schema.org/draft-04/schema#',
-			'title'   => $this->ability->name,
-			'type'    => $outputSchema['type'] ?? 'object',
-		];
-
-		if (! empty($outputSchema['properties'])) {
-			$this->schema['properties'] = $outputSchema['properties'];
-		}
+		$this->schema = array_merge(
+			[
+				'$schema' => 'http://json-schema.org/draft-04/schema#',
+				'title'   => $this->ability->name,
+			],
+			$this->ability->outputSchema
+		);
 
 		return $this->add_additional_fields_schema($this->schema);
 	}
