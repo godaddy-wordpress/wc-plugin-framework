@@ -2,6 +2,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Abilities\DataObjects;
 
+use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Traits\CanConvertToArrayTrait;
+
 /**
  * Data object representing ability behavior annotations.
  *
@@ -12,6 +14,8 @@ namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Abilities\DataObjects;
  */
 class AbilityAnnotations
 {
+	use CanConvertToArrayTrait;
+
 	/** @var bool whether the ability only reads data and has no side effects */
 	public bool $readonly;
 
@@ -30,19 +34,5 @@ class AbilityAnnotations
 		$this->readonly = $readonly;
 		$this->destructive = $destructive;
 		$this->idempotent = $idempotent;
-	}
-
-	/**
-	 * Returns the array format expected by WordPress.
-	 *
-	 * @since 6.1.0
-	 */
-	public function toArray() : array
-	{
-		return [
-			'readonly'    => $this->readonly,
-			'destructive' => $this->destructive,
-			'idempotent'  => $this->idempotent,
-		];
 	}
 }
