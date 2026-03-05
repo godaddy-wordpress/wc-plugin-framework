@@ -3,23 +3,32 @@
 namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Abilities\DataObjects;
 
 /**
- * Data object for future REST API endpoint configuration.
+ * Data object for REST API endpoint configuration.
  *
- * This is structural scaffolding for a future iteration where abilities can
- * optionally expose dedicated REST API endpoints beyond the default WP Abilities API.
- * Not acted upon by the handler in this PoC.
+ * When an ability provides a RestApiConfig, the framework auto-registers
+ * a WP_REST_Controller-based endpoint for it.
  *
  * @since 6.1.0
  */
 class RestApiConfig
 {
+	/** @var string REST API namespace (e.g. "wc/v5") */
+	public string $namespace;
+
 	/** @var string the API route path */
 	public string $apiRoute;
 
+	/** @var string HTTP method */
+	public string $method;
+
 	public function __construct(
-		string $apiRoute
+		string $namespace,
+		string $apiRoute,
+		string $method
 	)
 	{
+		$this->namespace = $namespace;
 		$this->apiRoute = $apiRoute;
+		$this->method = $method;
 	}
 }
