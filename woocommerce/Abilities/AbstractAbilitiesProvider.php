@@ -37,7 +37,7 @@ use SkyVerge\WooCommerce\PluginFramework\v6_1_0\SV_WC_Plugin;
  * logic in a dedicated provider, keeping the main plugin class clean.
  *
  * Subclasses list ability class names in the {@see $abilities} property and
- * optionally override {@see registerCategories()} to register categories.
+ * optionally override {@see getCategories()} to register categories.
  *
  * @since 6.1.0
  */
