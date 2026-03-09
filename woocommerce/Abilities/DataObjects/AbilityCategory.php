@@ -1,8 +1,8 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Abilities\DataObjects;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities\DataObjects;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Traits\CanConvertToArrayTrait;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Traits\CanConvertToArrayTrait;
 
 /**
  * Data object representing an ability category.

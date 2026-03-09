@@ -1,6 +1,6 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Abilities\DataObjects;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities\DataObjects;
 
 /**
  * Data object representing a single ability registration.

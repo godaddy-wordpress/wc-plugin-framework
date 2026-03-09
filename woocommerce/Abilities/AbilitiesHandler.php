@@ -1,9 +1,9 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Abilities;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Abilities\Contracts\AbilitiesProviderContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Abilities\REST\AbilityRestController;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities\Contracts\AbilitiesProviderContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities\REST\AbilityRestController;
 
 /**
  * Central handler for the WordPress Abilities API.

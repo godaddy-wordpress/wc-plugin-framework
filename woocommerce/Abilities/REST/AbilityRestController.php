@@ -1,8 +1,8 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Abilities\REST;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities\REST;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Abilities\DataObjects\Ability;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities\DataObjects\Ability;
 
 /**
  * Generic REST controller that auto-registers an endpoint for an Ability.

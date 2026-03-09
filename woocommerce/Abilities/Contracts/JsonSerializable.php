@@ -1,6 +1,6 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1\Abilities\Contracts;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities\Contracts;
 
 /**
  * Contract for objects that provide both JSON serialization and a JSON Schema describing their output.
