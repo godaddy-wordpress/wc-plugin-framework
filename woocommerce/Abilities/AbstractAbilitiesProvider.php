@@ -80,9 +80,22 @@ abstract class AbstractAbilitiesProvider implements AbilitiesProviderContract
 				continue;
 			}
 
-			$abilities[] = (new $className)->makeAbility();
+			$abilities[] = $this->instantiateAbilityClass($className)->makeAbility();
 		}
 
 		return $abilities;
+	}
+
+	/**
+	 * Instantiates the provided {@see MakesAbilityContract} class name.
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @param class-string<MakesAbilityContract> $className
+	 * @return MakesAbilityContract
+	 */
+	protected function instantiateAbilityClass(string $className) : MakesAbilityContract
+	{
+		return new $className();
 	}
 }

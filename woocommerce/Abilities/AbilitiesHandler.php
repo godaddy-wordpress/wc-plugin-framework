@@ -66,6 +66,8 @@ class AbilitiesHandler
 	/**
 	 * Determines whether the site is able to use the Abilities API. Requires WordPress 6.9+.
 	 *
+	 * @codeCoverageIgnore
+	 *
 	 * @since 6.1.0
 	 */
 	protected function canUseAbilitiesApi() : bool
