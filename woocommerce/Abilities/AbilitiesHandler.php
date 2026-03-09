@@ -55,8 +55,22 @@ class AbilitiesHandler
 	 */
 	public function addHooks() : void
 	{
+		if (! $this->canUseAbilitiesApi()) {
+			return;
+		}
+
 		add_action('wp_abilities_api_categories_init', [$this, 'handleCategoriesInit']);
 		add_action('wp_abilities_api_init', [$this, 'handleAbilitiesInit']);
+	}
+
+	/**
+	 * Determines whether the site is able to use the Abilities API. Requires WordPress 6.9+.
+	 *
+	 * @since 6.1.0
+	 */
+	protected function canUseAbilitiesApi() : bool
+	{
+		return function_exists('wp_register_ability') && function_exists('wp_register_ability_category');
 	}
 
 	/**
@@ -68,10 +82,6 @@ class AbilitiesHandler
 	 */
 	public function handleCategoriesInit() : void
 	{
-		if (! function_exists('wp_register_ability_category')) {
-			return;
-		}
-
 		foreach ($this->abilitiesProvider->getCategories() as $category) {
 			wp_register_ability_category($category->slug, $category->toArray());
 		}
@@ -86,10 +96,6 @@ class AbilitiesHandler
 	 */
 	public function handleAbilitiesInit() : void
 	{
-		if (! function_exists('wp_register_ability')) {
-			return;
-		}
-
 		foreach ($this->abilitiesProvider->getAbilities() as $ability) {
 			wp_register_ability($ability->name, $ability->toArray());
 		}
