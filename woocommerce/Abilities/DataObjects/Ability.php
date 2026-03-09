@@ -66,9 +66,6 @@ class Ability
 	/** @var bool whether this ability should be exposed in the REST API */
 	public bool $showInRest;
 
-	/** @var ?RestApiConfig future REST API configuration (not acted on in this PoC) */
-	public ?RestApiConfig $restApiConfig;
-
 	public function __construct(
 		string $name,
 		string $label,
@@ -79,8 +76,7 @@ class Ability
 		array $inputSchema = [],
 		array $outputSchema = [],
 		?AbilityAnnotations $annotations = null,
-		bool $showInRest = true,
-		?RestApiConfig $restApiConfig = null
+		bool $showInRest = true
 	)
 	{
 		$this->name = $name;
@@ -93,7 +89,6 @@ class Ability
 		$this->outputSchema = $outputSchema;
 		$this->annotations = $annotations;
 		$this->showInRest = $showInRest;
-		$this->restApiConfig = $restApiConfig;
 	}
 
 	/**
