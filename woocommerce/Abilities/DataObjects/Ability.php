@@ -24,6 +24,8 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities\DataObjects;
 
+use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities\REST\DataObjects\RestApiConfig;
+
 /**
  * Data object representing a single ability.
  *
@@ -66,6 +68,9 @@ class Ability
 	/** @var bool whether this ability should be exposed in the REST API */
 	public bool $showInRest;
 
+	/** @var ?RestApiConfig REST API configuration settings */
+	public ?RestApiConfig $restApiConfig;
+
 	public function __construct(
 		string $name,
 		string $label,
@@ -76,7 +81,8 @@ class Ability
 		array $inputSchema = [],
 		array $outputSchema = [],
 		?AbilityAnnotations $annotations = null,
-		bool $showInRest = true
+		bool $showInRest = true,
+		?RestApiConfig $restApiConfig = null
 	)
 	{
 		$this->name = $name;
@@ -89,6 +95,7 @@ class Ability
 		$this->outputSchema = $outputSchema;
 		$this->annotations = $annotations;
 		$this->showInRest = $showInRest;
+		$this->restApiConfig = $restApiConfig;
 	}
 
 	/**
