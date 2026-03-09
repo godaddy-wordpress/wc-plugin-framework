@@ -53,8 +53,6 @@ abstract class AbstractAbilitiesProvider implements AbilitiesProviderContract
 	 * Constructor.
 	 *
 	 * @since 6.1.0
-	 *
-	 * @param SV_WC_Plugin $plugin
 	 */
 	public function __construct(SV_WC_Plugin $plugin)
 	{

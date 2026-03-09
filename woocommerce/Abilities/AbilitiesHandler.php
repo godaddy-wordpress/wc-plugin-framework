@@ -41,9 +41,7 @@ class AbilitiesHandler
 	/**
 	 * Constructor.
 	 *
-	 * @param AbilitiesProviderContract $abilitiesProvider
 	 * @since 6.1.0
-	 *
 	 */
 	public function __construct(AbilitiesProviderContract $abilitiesProvider)
 	{
@@ -54,8 +52,6 @@ class AbilitiesHandler
 	 * Hooks into WordPress Abilities API initialization actions.
 	 *
 	 * @since 6.1.0
-	 *
-	 * @return void
 	 */
 	public function addHooks() : void
 	{
@@ -69,8 +65,6 @@ class AbilitiesHandler
 	 * @internal
 	 *
 	 * @since 6.1.0
-	 *
-	 * @return void
 	 */
 	public function handleCategoriesInit() : void
 	{
@@ -89,8 +83,6 @@ class AbilitiesHandler
 	 * @internal
 	 *
 	 * @since 6.1.0
-	 *
-	 * @return void
 	 */
 	public function handleAbilitiesInit() : void
 	{
