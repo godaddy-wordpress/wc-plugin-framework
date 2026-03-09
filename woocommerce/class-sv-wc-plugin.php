@@ -329,8 +329,9 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function init_abilities_handler() : void {
 
-		if ( $this instanceof HasAbilitiesContract) {
+		if ($this instanceof HasAbilitiesContract && function_exists('wp_register_ability')) {
 			$this->abilities_handler = new Abilities\AbilitiesHandler($this->getAbilitiesProvider());
+			$this->abilities_handler->addHooks();
 		}
 	}
 
