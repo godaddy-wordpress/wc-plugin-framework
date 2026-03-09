@@ -71,7 +71,11 @@ abstract class AbstractAbilitiesProvider implements AbilitiesProviderContract
 		$abilities = [];
 
 		foreach ($this->abilities as $className) {
-			if (! is_string($className) || ! in_array(MakesAbilityContract::class, class_implements($className) ?: [], true)) {
+			if (
+				! is_string($className) ||
+				! class_exists($className) ||
+				! in_array(MakesAbilityContract::class, class_implements($className) ?: [], true)
+			) {
 				wc_doing_it_wrong(
 					__METHOD__,
 					sprintf('Ability class "%s" must implement %s.', $className, MakesAbilityContract::class),
