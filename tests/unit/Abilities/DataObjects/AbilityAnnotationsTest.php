@@ -1,6 +1,6 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_0\Tests\unit\Abilities\DataObjects;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_0\Tests\Unit\Abilities\DataObjects;
 
 use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities\DataObjects\AbilityAnnotations;
 use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Tests\TestCase;

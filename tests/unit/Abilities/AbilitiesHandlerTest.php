@@ -1,6 +1,6 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_0\Tests\unit\Abilities;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_0\Tests\Unit\Abilities;
 
 use Exception;
 use Generator;
