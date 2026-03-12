@@ -22,18 +22,19 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_0_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_0;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Handlers\Country_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v6_0_1\Payment_Gateway\PaymentFormContextChecker;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities\Contracts\HasAbilitiesContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Handlers\Country_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Payment_Gateway\PaymentFormContextChecker;
 use stdClass;
 use Throwable;
 use WC_Logger_Interface;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_1\\SV_WC_Plugin' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_1_0\\SV_WC_Plugin' ) ) :
 
 
 /**
@@ -51,7 +52,7 @@ abstract class SV_WC_Plugin {
 
 
 	/** Plugin Framework Version */
-	public const VERSION = '6.0.1';
+	public const VERSION = '6.1.0';
 
 	/** @var object single instance of plugin */
 	protected static $instance;
@@ -100,6 +101,9 @@ abstract class SV_WC_Plugin {
 
 	/** @var Blocks\Blocks_Handler blocks handler instance */
 	protected Blocks\Blocks_Handler $blocks_handler;
+
+	/** @var ?Abilities\AbilitiesHandler abilities handler instance */
+	protected ?Abilities\AbilitiesHandler $abilities_handler = null;
 
 	/** @var Admin\Setup_Wizard handler instance */
 	protected $setup_wizard_handler;
@@ -178,6 +182,9 @@ abstract class SV_WC_Plugin {
 
 		// build the blocks handler instance
 		$this->init_blocks_handler();
+
+		// build the abilities handler instance
+		$this->init_abilities_handler();
 
 		// add the action & filter hooks
 		$this->add_hooks();
@@ -308,6 +315,24 @@ abstract class SV_WC_Plugin {
 
 		// individual plugins should initialize their block integrations handler by overriding this method
 		$this->blocks_handler = new Blocks\Blocks_Handler( $this );
+	}
+
+
+	/**
+	 * Builds the abilities handler instance.
+	 *
+	 * Hooks into the WordPress Abilities API (WP 6.9+) to register plugin abilities.
+	 *
+	 * @since 6.1.0
+	 *
+	 * @return void
+	 */
+	protected function init_abilities_handler() : void {
+
+		if ($this instanceof HasAbilitiesContract && function_exists('wp_register_ability')) {
+			$this->abilities_handler = new Abilities\AbilitiesHandler($this->getAbilitiesProvider());
+			$this->abilities_handler->addHooks();
+		}
 	}
 
 
@@ -487,7 +512,7 @@ abstract class SV_WC_Plugin {
 	 */
 	protected function setupClassAliases() : void
 	{
-		$countryHelperAlias = '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_1\\Country_Helper';
+		$countryHelperAlias = '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_1_0\\Country_Helper';
 		if (! class_exists($countryHelperAlias)) {
 			class_alias(
 				Country_Helper::class,
@@ -495,7 +520,7 @@ abstract class SV_WC_Plugin {
 			);
 		}
 
-		$paymentFormContextCheckerAlias = '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_0_1\\PaymentFormContextChecker';
+		$paymentFormContextCheckerAlias = '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_1_0\\PaymentFormContextChecker';
 		if (! class_exists($paymentFormContextCheckerAlias)) {
 			class_alias(
 				PaymentFormContextChecker::class,
@@ -1018,6 +1043,19 @@ abstract class SV_WC_Plugin {
 	public function get_blocks_handler() : Blocks\Blocks_Handler {
 
 		return $this->blocks_handler;
+	}
+
+
+	/**
+	 * Gets the abilities handler instance.
+	 *
+	 * @since 6.1.0
+	 *
+	 * @return ?Abilities\AbilitiesHandler
+	 */
+	public function get_abilities_handler() : ?Abilities\AbilitiesHandler {
+
+		return $this->abilities_handler;
 	}
 
 
