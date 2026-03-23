@@ -18,9 +18,11 @@ final class Dynamic_Props_Test extends TestCase
 	{
 		// Reset the WeakMap between tests
 		$ref = new ReflectionClass(Dynamic_Props::class);
-		$prop = $ref->getProperty('map');
-		$prop->setAccessible(true);
-		$prop->setValue(null, null);
+		foreach (['map', 'use_weak_map'] as $prop) {
+			$p = $ref->getProperty($prop);
+			$p->setAccessible(true);
+			$p->setValue(null, null);
+		}
 
 		parent::tearDown();
 	}
@@ -31,6 +33,12 @@ final class Dynamic_Props_Test extends TestCase
 		yield 'fallback' => [false];
 	}
 
+	protected function mockUseWeakmap(bool $useWeakMap) : void
+	{
+		$this->mockStaticMethod(Dynamic_Props::class, 'use_dynamic_props_class')
+			->andReturn($useWeakMap);
+	}
+
 	/**
 	 * @covers ::set
 	 * @covers ::get
@@ -38,8 +46,7 @@ final class Dynamic_Props_Test extends TestCase
 	 */
 	public function testCanSetKey(bool $useWeakMap) : void
 	{
-		$this->mockStaticMethod(Dynamic_Props::class, 'use_dynamic_props_class')
-			->andReturn($useWeakMap);
+		$this->mockUseWeakmap($useWeakMap);
 
 		$order = Mockery::mock('WC_Order');
 
@@ -50,9 +57,12 @@ final class Dynamic_Props_Test extends TestCase
 
 	/**
 	 * @covers ::get
+	 * @dataProvider providerStorageMode
 	 */
-	public function testCanGetNestedKeyWithDefault() : void
+	public function testCanGetNestedKeyWithDefault(bool $useWeakMap) : void
 	{
+		$this->mockUseWeakmap($useWeakMap);
+
 		$order = Mockery::mock('WC_Order');
 
 		$this->assertSame('fallback', Dynamic_Props::get($order, 'payment', 'token', 'fallback'));
@@ -61,9 +71,12 @@ final class Dynamic_Props_Test extends TestCase
 	/**
 	 * @covers ::set
 	 * @covers ::get
+	 * @dataProvider providerStorageMode
 	 */
-	public function testCanSetAndGetNestedKey() : void
+	public function testCanSetAndGetNestedKey(bool $useWeakMap) : void
 	{
+		$this->mockUseWeakmap($useWeakMap);
+
 		$order = Mockery::mock('WC_Order');
 
 		$payment = new stdClass();
@@ -78,9 +91,12 @@ final class Dynamic_Props_Test extends TestCase
 
 	/**
 	 * @covers ::get
+	 * @dataProvider providerStorageMode
 	 */
-	public function testCanGetWhenNoValueSet() : void
+	public function testCanGetWhenNoValueSet(bool $useWeakMap) : void
 	{
+		$this->mockUseWeakmap($useWeakMap);
+
 		$order = Mockery::mock('WC_Order');
 
 		$this->assertNull(Dynamic_Props::get($order, 'key_not_set'));
@@ -90,9 +106,12 @@ final class Dynamic_Props_Test extends TestCase
 
 	/**
 	 * @covers ::unset
+	 * @dataProvider providerStorageMode
 	 */
-	public function testCanUnset() : void
+	public function testCanUnset(bool $useWeakMap) : void
 	{
+		$this->mockUseWeakmap($useWeakMap);
+
 		// first attempt to unset something that was never set
 		$order = Mockery::mock('WC_Order');
 

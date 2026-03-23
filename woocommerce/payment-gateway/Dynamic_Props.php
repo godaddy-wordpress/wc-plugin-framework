@@ -44,6 +44,9 @@ class Dynamic_Props {
 	 */
 	private static ?\WeakMap $map = null; // phpcs:ignore PHPCompatibility.Classes.NewClasses.weakmapFound -- conditionally used for PHP 8.0+
 
+	/** @var bool|null Cached result for whether to use WeakMap storage. */
+	private static ?bool $use_weak_map = null;
+
 	/**
 	 * Sets a property on the order object.
 	 *
@@ -169,13 +172,11 @@ class Dynamic_Props {
 	 * @return bool True if WeakMap should be used, false otherwise.
 	 */
 	private static function use_weak_map(): bool {
-		static $use_weak_map = null;
-
-		if ( null === $use_weak_map ) {
-			$use_weak_map = version_compare( PHP_VERSION, '8.0', '>=' ) && self::use_dynamic_props_class();
+		if ( null === self::$use_weak_map ) {
+			self::$use_weak_map = version_compare( PHP_VERSION, '8.0', '>=' ) && self::use_dynamic_props_class();
 		}
 
-		return $use_weak_map;
+		return self::$use_weak_map;
 	}
 
 	/**
