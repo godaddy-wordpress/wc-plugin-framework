@@ -916,7 +916,7 @@ class SV_WC_Helper {
 
 			$javascript .= '} )();';
 
-			ScriptHelper::addInlineScript('sv-wc-select2', $javascript);
+			ScriptHelper::addInlinejQuery('sv-wc-select2', $javascript);
 
 			/**
 			 * WC Select2 Ajax Rendered Action.
