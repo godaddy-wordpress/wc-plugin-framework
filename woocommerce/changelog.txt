@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2026.nn.nn - version 6.1.1
+
 2026.03.12 - version 6.1.0
 * New: Introduced Abilities API abstraction layers for registering abilities
 
