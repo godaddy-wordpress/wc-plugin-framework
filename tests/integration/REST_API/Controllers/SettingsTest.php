@@ -1,14 +1,14 @@
 <?php
 
-use SkyVerge\WooCommerce\PluginFramework\v6_1_0\REST_API\Controllers\Settings;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Settings_API\Abstract_Settings;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Settings_API\Setting;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Settings_API\Control;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_1\REST_API\Controllers\Settings;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_1\Settings_API\Abstract_Settings;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_1\Settings_API\Setting;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_1\Settings_API\Control;
 
 /**
  * Tests for the Settings class.
  *
- * @see \SkyVerge\WooCommerce\PluginFramework\v6_1_0\REST_API\Controllers\Settings
+ * @see \SkyVerge\WooCommerce\PluginFramework\v6_1_1\REST_API\Controllers\Settings
  */
 class SettingsTest extends \Codeception\TestCase\WPTestCase {
 
