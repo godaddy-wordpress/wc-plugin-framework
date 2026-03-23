@@ -1,14 +1,14 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_0\Tests\Unit\Abilities\DataObjects;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_1\Tests\Unit\Abilities\DataObjects;
 
 use Mockery;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities\DataObjects\Ability;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities\DataObjects\AbilityAnnotations;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_0\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_1\Abilities\DataObjects\Ability;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_1\Abilities\DataObjects\AbilityAnnotations;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_1\Tests\TestCase;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_1_0\Abilities\DataObjects\Ability
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_1_1\Abilities\DataObjects\Ability
  */
 final class AbilityTest extends TestCase
 {
