@@ -2,9 +2,9 @@
 
 namespace SkyVerge\WooCommerce\PluginFramework\v6_1_2\Tests\unit\Payment_Gateway;
 
+use Exception;
 use Generator;
 use Mockery;
-use ReflectionClass;
 use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Tests\TestCase;
 use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Payment_Gateway\Dynamic_Props;
 use stdClass;
@@ -14,14 +14,15 @@ use stdClass;
  */
 final class Dynamic_Props_Test extends TestCase
 {
+	/**
+	 * @throws Exception
+	 */
 	public function tearDown() : void
 	{
 		// Reset the WeakMap between tests
-		$ref = new ReflectionClass(Dynamic_Props::class);
+		$instance = new Dynamic_Props();
 		foreach (['map', 'use_weak_map'] as $prop) {
-			$p = $ref->getProperty($prop);
-			$p->setAccessible(true);
-			$p->setValue(null, null);
+			$this->setInaccessiblePropertyValue($instance, $prop, null);
 		}
 
 		parent::tearDown();
