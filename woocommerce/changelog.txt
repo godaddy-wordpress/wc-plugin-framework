@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2026.nn.nn - version 6.1.2
+
 2026.nn.nn - version 6.1.1
 * Fix - jQuery errors when using `SV_WC_Helper::render_select2_ajax()`
 
