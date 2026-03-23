@@ -144,7 +144,7 @@ class Dynamic_Props {
 	 *
 	 * @return bool True if Dynamic_Props class should be used, false otherwise.
 	 */
-	private static function use_dynamic_props_class(): bool {
+	protected static function use_dynamic_props_class(): bool {
 		static $use_dynamic_props_class = null;
 		if ( null === $use_dynamic_props_class ) {
 			/**
