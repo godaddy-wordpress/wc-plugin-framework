@@ -1,14 +1,14 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_1\Tests\Unit\Payment_Gateway\External_Checkout\Google_Pay;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_2\Tests\Unit\Payment_Gateway\External_Checkout\Google_Pay;
 
 use Mockery;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_1\Payment_Gateway\External_Checkout\Google_Pay\Admin;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_1\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Payment_Gateway\External_Checkout\Google_Pay\Admin;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Tests\TestCase;
 use WP_Mock;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_1_1\Payment_Gateway\External_Checkout\Google_Pay\Admin
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_1_2\Payment_Gateway\External_Checkout\Google_Pay\Admin
  */
 class AdminTest extends TestCase
 {
