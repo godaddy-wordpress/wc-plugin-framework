@@ -100,6 +100,9 @@ class Dynamic_Props {
 	public static function get( \WC_Order $order, string $key, $nested_key = null, $default = null ) {
 		if ( self::use_weak_map() ) {
 			self::init_weak_map();
+			if ( ! isset( self::$map[ $order ] ) ) {
+				return $default;
+			}
 			if ( is_null( $nested_key ) ) {
 				return self::$map[ $order ]->{ $key } ?? $default;
 			} else {
@@ -128,7 +131,9 @@ class Dynamic_Props {
 	public static function unset( \WC_Order &$order, string $key ): void {
 		if ( self::use_weak_map() ) {
 			self::init_weak_map();
-			unset( self::$map[ $order ]->{ $key } );
+			if ( isset( self::$map[ $order ] ) ) {
+				unset( self::$map[ $order ]->{ $key } );
+			}
 		} else {
 			unset( $order->{ $key } );
 		}
