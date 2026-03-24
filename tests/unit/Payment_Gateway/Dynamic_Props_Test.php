@@ -1,6 +1,6 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_2\Tests\unit\Payment_Gateway;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_2\Tests\Unit\Payment_Gateway;
 
 use Exception;
 use Generator;
