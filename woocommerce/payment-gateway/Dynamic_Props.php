@@ -9,7 +9,7 @@
  * @since     x.x.x
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_1\Payment_Gateway;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_2\Payment_Gateway;
 
 /**
  * Dynamic property storage handler for WooCommerce order objects.
@@ -43,6 +43,9 @@ class Dynamic_Props {
 	 * @var   \WeakMap<object, \stdClass>|null
 	 */
 	private static ?\WeakMap $map = null; // phpcs:ignore PHPCompatibility.Classes.NewClasses.weakmapFound -- conditionally used for PHP 8.0+
+
+	/** @var bool|null Cached result for whether to use WeakMap storage. */
+	private static ?bool $use_weak_map = null;
 
 	/**
 	 * Sets a property on the order object.
@@ -100,6 +103,9 @@ class Dynamic_Props {
 	public static function get( \WC_Order $order, string $key, $nested_key = null, $default = null ) {
 		if ( self::use_weak_map() ) {
 			self::init_weak_map();
+			if ( ! isset( self::$map[ $order ] ) ) {
+				return $default;
+			}
 			if ( is_null( $nested_key ) ) {
 				return self::$map[ $order ]->{ $key } ?? $default;
 			} else {
@@ -128,7 +134,9 @@ class Dynamic_Props {
 	public static function unset( \WC_Order &$order, string $key ): void {
 		if ( self::use_weak_map() ) {
 			self::init_weak_map();
-			unset( self::$map[ $order ]->{ $key } );
+			if ( isset( self::$map[ $order ] ) ) {
+				unset( self::$map[ $order ]->{ $key } );
+			}
 		} else {
 			unset( $order->{ $key } );
 		}
@@ -139,7 +147,7 @@ class Dynamic_Props {
 	 *
 	 * @return bool True if Dynamic_Props class should be used, false otherwise.
 	 */
-	private static function use_dynamic_props_class(): bool {
+	protected static function use_dynamic_props_class(): bool {
 		static $use_dynamic_props_class = null;
 		if ( null === $use_dynamic_props_class ) {
 			/**
@@ -164,13 +172,11 @@ class Dynamic_Props {
 	 * @return bool True if WeakMap should be used, false otherwise.
 	 */
 	private static function use_weak_map(): bool {
-		static $use_weak_map = null;
-
-		if ( null === $use_weak_map ) {
-			$use_weak_map = version_compare( PHP_VERSION, '8.0', '>=' ) && self::use_dynamic_props_class();
+		if ( null === self::$use_weak_map ) {
+			self::$use_weak_map = version_compare( PHP_VERSION, '8.0', '>=' ) && self::use_dynamic_props_class();
 		}
 
-		return $use_weak_map;
+		return self::$use_weak_map;
 	}
 
 	/**

@@ -22,13 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_1\Abilities;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_2\Abilities;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_1_1\Abilities\Contracts\AbilitiesProviderContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_1\Abilities\Contracts\MakesAbilityContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_1\Abilities\DataObjects\Ability;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_1\Abilities\DataObjects\AbilityCategory;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_1\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Abilities\Contracts\AbilitiesProviderContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Abilities\Contracts\MakesAbilityContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Abilities\DataObjects\Ability;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Abilities\DataObjects\AbilityCategory;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_2\SV_WC_Plugin;
 
 /**
  * Base class for plugin abilities providers.

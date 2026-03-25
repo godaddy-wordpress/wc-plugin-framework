@@ -1,6 +1,9 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
-2026.nn.nn - version 6.1.1
+2026.03.25 - version 6.1.2
+* Fix - Unhandled WeakMap exceptions in Dynamic_Props.
+
+2026.03.23 - version 6.1.1
 * Fix - jQuery errors when using `SV_WC_Helper::render_select2_ajax()`
 
 2026.03.12 - version 6.1.0
