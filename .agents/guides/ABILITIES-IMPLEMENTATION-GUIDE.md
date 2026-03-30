@@ -44,7 +44,7 @@ Each plugin exposes its domain operations as **abilities** — discrete, schema-
 - **Annotations** — metadata flags (`readonly`, `destructive`, `idempotent`) that describe an ability's behavior to clients.
 
 **Prerequisites:**
-- Version 6.1+ of the skyverge-plugin-framework Composer dependency. See [COMMON-SETUP.md](./COMMON-SETUP.md#framework-version-in-namespaces) for how to resolve the framework version in namespace imports used throughout this guide.
+- Version 6.1+ of the `skyverge/wc-plugin-framework` Composer dependency. See [COMMON-SETUP.md](./COMMON-SETUP.md#framework-version-in-namespaces) for how to resolve the framework version in namespace imports used throughout this guide.
 
 **Assumptions:**
 - Using PHPUnit for testing. If not available, skip the unit tests.
