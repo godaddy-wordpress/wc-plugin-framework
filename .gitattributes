@@ -9,4 +9,4 @@ phpcs.xml       export-ignore
 phpunit.xml     export-ignore
 codeception.*   export-ignore
 *.iml           export-ignore
-CLAUDE.md
+CLAUDE.md       export-ignore
