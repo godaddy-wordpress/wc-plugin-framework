@@ -819,7 +819,7 @@ Tests the happy path of the execute callback. Uses `call_user_func($ability->exe
             ->once()
             ->andReturn($plugin = Mockery::mock(WC_My_Plugin::class));
 
-        $plugin->expects('get_entities_instance')
+        $plugin->expects('get_entities_handler')
             ->once()
             ->andReturn($entities = Mockery::mock(WC_My_Plugin_Entities::class));
 
