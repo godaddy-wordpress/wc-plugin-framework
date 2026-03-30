@@ -947,105 +947,116 @@ QA snippets use the `wp_get_ability()` / `->execute()` pattern so testers can pa
 
 ### Template
 
-Below is a template. Replace placeholders with your plugin's actual ability names, entity types, error codes, and field names.
+Below is a template. Replace placeholders with your plugin's actual ability names, entity types, error codes, and field names. The output file should be named `QA.md` in the plugin root.
 
-```markdown
-## QA - {Plugin Name} Abilities
+The file should start with a top-level heading:
 
-### Ability execution - get {entity}
+`## QA - {Plugin Name} Abilities`
+
+Then include one section per ability, following the patterns below.
+
+#### Get ability
+
+Section heading: `### Ability execution - get {entity}`
 
 Execute this snippet with an existing {entity} ID:
 
-~~~php
+```php
 ${entityVar}Id = 0; // <-- replace with a real {entity} ID
 $ability = wp_get_ability('{plugin-slug}/{domain-area}-get');
 ${entityVar} = $ability->execute(${entityVar}Id);
 
 var_dump(${entityVar});
-~~~
+```
 
 - [ ] {Entity} object is returned
 
 Follow up with:
 
-~~~php
+```php
 ${entityVar}Id = 0; // <-- replace with a real {entity} ID
 $ability = wp_get_ability('{plugin-slug}/{domain-area}-get');
 ${entityVar} = $ability->execute(${entityVar}Id);
 
 echo json_encode(${entityVar}->jsonSerialize(), JSON_PRETTY_PRINT);
-~~~
+```
 
 - [ ] Array of {entity} data is outputted
 
 Now test with a non-existent ID:
 
-~~~php
+```php
 $ability = wp_get_ability('{plugin-slug}/{domain-area}-get');
 $result = $ability->execute(999999);
 
 var_dump($result);
-~~~
+```
 
 - [ ] Returns a `WP_Error` with code `{entity}_not_found`
 
-### Ability execution - list {entities}
+#### List ability
+
+Section heading: `### Ability execution - list {entities}`
 
 List all {entities}:
 
-~~~php
+```php
 $ability = wp_get_ability('{plugin-slug}/{domain-area}-list');
 ${entitiesVar} = $ability->execute();
 
 var_dump(${entitiesVar});
-~~~
+```
 
 - [ ] Returns an array of {entity} objects
 
 With pagination:
 
-~~~php
+```php
 $ability = wp_get_ability('{plugin-slug}/{domain-area}-list');
 ${entitiesVar} = $ability->execute([
     'posts_per_page' => 2,
 ]);
 
 var_dump(count(${entitiesVar}));
-~~~
+```
 
 - [ ] Returns exactly 2 {entities}
 
-### Ability execution - delete {entity}
+#### Delete ability
+
+Section heading: `### Ability execution - delete {entity}`
 
 First, identify a {entity} you can safely delete (or create a throwaway one).
 
-~~~php
+```php
 ${entityVar}Id = 0; // <-- replace with a disposable {entity} ID
 $ability = wp_get_ability('{plugin-slug}/{domain-area}-delete');
 $result = $ability->execute(${entityVar}Id);
 
 var_dump($result);
-~~~
+```
 
 - [ ] Returns the deleted {entity} object
 - [ ] {Entity} is no longer visible in admin
 
 Now try deleting a non-existent {entity}:
 
-~~~php
+```php
 $ability = wp_get_ability('{plugin-slug}/{domain-area}-delete');
 $result = $ability->execute(999999);
 
 var_dump($result);
-~~~
+```
 
 - [ ] Returns a `WP_Error` with code `{entity}_not_found`
 
-### Ability execution - search {entities} by {field}
+#### Search ability
+
+Section heading: `### Ability execution - search {entities} by {field}`
 
 Search with valid criteria:
 
-~~~php
+```php
 $ability = wp_get_ability('{plugin-slug}/{domain-area}-search-by-{field}');
 $results = $ability->execute([
     'country' => 'US',
@@ -1055,26 +1066,25 @@ $results = $ability->execute([
 foreach ($results as $r) {
     echo json_encode($r->jsonSerialize(), JSON_PRETTY_PRINT) . "\n";
 }
-~~~
+```
 
 - [ ] Returns an array of matching {entities}
 
 Search with empty input:
 
-~~~php
+```php
 $ability = wp_get_ability('{plugin-slug}/{domain-area}-search-by-{field}');
 $result = $ability->execute([]);
 
 var_dump($result);
-~~~
+```
 
 - [ ] Returns a `WP_Error` with code `missing_{field}_fields`
-```
 
 ### Guidelines
 
 - Each ability section should be a `### Ability execution - {action} {entity}` heading.
-- Use `` ```php `` fenced blocks so snippets are easy to copy.
+- Use ` ```php ` fenced code blocks for all snippets.
 - Include `// <-- replace with ...` comments for values the tester needs to fill in.
 - End each snippet with `var_dump()` or `json_encode()` so the output is visible.
 - Use `- [ ]` checkboxes for assertions — testers check them off as they verify.
