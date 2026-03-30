@@ -4,7 +4,13 @@
 /tests          export-ignore
 /node_modules   export-ignore
 /grunt          export-ignore
+.dist.env       export-ignore
+.editorconfig   export-ignore
+.gitattributes  export-ignore
+.gitignore      export-ignore
 Gruntfile.js    export-ignore
+package.json    export-ignore
+package-lock.json export-ignore
 phpcs.xml       export-ignore
 phpunit.xml     export-ignore
 codeception.*   export-ignore
