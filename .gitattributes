@@ -1,0 +1,11 @@
+# Development-only files — excluded from Composer dist archives
+/.agents        export-ignore
+/.github        export-ignore
+/tests          export-ignore
+/node_modules   export-ignore
+/grunt          export-ignore
+Gruntfile.js    export-ignore
+phpcs.xml       export-ignore
+phpunit.xml     export-ignore
+codeception.*   export-ignore
+*.iml           export-ignore
