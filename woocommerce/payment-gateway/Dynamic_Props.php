@@ -17,7 +17,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v6_1_3\Payment_Gateway;
  * This class provides a way to store dynamic properties on order objects without using
  * dynamic properties (deprecated in PHP 8.2+) while maintaining backwards compatibility
  * with PHP 7.4+. It uses WeakMap for PHP 8.2+ and falls back to dynamic properties
- * for PHP 7.4+.
+ * for PHP versions prior to 8.2 (for example, PHP 7.4, 8.0, and 8.1).
  *
  * @since 6.0.0
  *
@@ -168,8 +168,8 @@ class Dynamic_Props {
 	 * Determines whether to use WeakMap storage based on PHP version (8.2+)
 	 * and WeakMap class availability. Result is cached for performance.
 	 *
-	 * @NOTE: We specifically target PHP 8.2+ here, despite WeakMap being available in 8.0+. There's at least one WeakMap
-	 * bug in older version of PHP (8.0.x and 8.1.x) that can trigger fatal errors. This is fully resolved in PHP 8.2+.
+	 * @NOTE: We specifically target PHP 8.2+ here, even though WeakMap is available in 8.0+, because there is at least one
+	 * WeakMap bug in older versions of PHP (8.0.x and 8.1.x) that can trigger fatal errors. This is fully resolved in PHP 8.2+.
 	 * @link https://github.com/php/php-src/pull/8995
 	 *
 	 * @since  6.0.0
