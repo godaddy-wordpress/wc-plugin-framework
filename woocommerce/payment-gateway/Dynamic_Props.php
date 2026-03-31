@@ -9,7 +9,7 @@
  * @since     x.x.x
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_2\Payment_Gateway;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_3\Payment_Gateway;
 
 /**
  * Dynamic property storage handler for WooCommerce order objects.

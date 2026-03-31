@@ -1,5 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2026.nn.nn - version 6.1.3
+
 2026.03.25 - version 6.1.2
 * Fix - Unhandled WeakMap exceptions in Dynamic_Props.
 

@@ -1,16 +1,16 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_2\Tests\Unit\Helpers;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_3\Tests\Unit\Helpers;
 
 use Exception;
 use Generator;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Helpers\NumberHelper;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_3\Helpers\NumberHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_3\Tests\TestCase;
 use stdClass;
 use WP_Mock;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_1_2\Helpers\NumberHelper
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_1_3\Helpers\NumberHelper
  */
 final class NumberHelperTest extends TestCase
 {
