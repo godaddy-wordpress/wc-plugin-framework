@@ -22,15 +22,15 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_4;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_1_3\Helpers\OrderHelper;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_3\Helpers\ScriptHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Helpers\OrderHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Helpers\ScriptHelper;
 
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_1_3\\SV_WC_Payment_Gateway_Hosted' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_1_4\\SV_WC_Payment_Gateway_Hosted' ) ) :
 
 
 /**
