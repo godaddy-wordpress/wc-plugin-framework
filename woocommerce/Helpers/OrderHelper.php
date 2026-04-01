@@ -10,9 +10,9 @@
  * @since     x.x.x
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_2\Helpers;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_3\Helpers;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Payment_Gateway\Dynamic_Props;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_3\Payment_Gateway\Dynamic_Props;
 
 /**
  * OrderHelper class

@@ -7,9 +7,9 @@ jQuery( function( $ ) {
 	 *
 	 * @since 5.10.0
 	 *
-	 * @type {SV_WC_Google_Pay_Handler_v6_1_2} object
+	 * @type {SV_WC_Google_Pay_Handler_v6_1_3} object
 	 */
-	window.SV_WC_Google_Pay_Handler_v6_1_2 = class SV_WC_Google_Pay_Handler_v6_1_2 {
+	window.SV_WC_Google_Pay_Handler_v6_1_3 = class SV_WC_Google_Pay_Handler_v6_1_3 {
 
 		/**
 		 * Handler constructor.
@@ -612,6 +612,6 @@ jQuery( function( $ ) {
 		}
 	}
 
-	$( document.body ).trigger( 'sv_wc_google_pay_handler_v6_1_2_loaded' );
+	$( document.body ).trigger( 'sv_wc_google_pay_handler_v6_1_3_loaded' );
 
 } );

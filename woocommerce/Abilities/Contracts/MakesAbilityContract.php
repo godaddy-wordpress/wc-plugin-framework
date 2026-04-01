@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_2\Abilities\Contracts;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_3\Abilities\Contracts;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Abilities\DataObjects\Ability;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_3\Abilities\DataObjects\Ability;
 
 /**
  * Contract for classes that produce an Ability object.

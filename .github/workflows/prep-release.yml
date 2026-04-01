@@ -20,7 +20,7 @@ jobs:
       NEW_VERSION: ${{ inputs.new-version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Validate release branch
         run: |

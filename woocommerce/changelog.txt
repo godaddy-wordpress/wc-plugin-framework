@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2026.04.01 - version 6.1.3
+* Fix - Move WeakMap initialization to PHP 8.2+ only, as there are some bugs with it in certain versions of PHP 8.0.x and 8.1.x.
+
 2026.03.25 - version 6.1.2
 * Fix - Unhandled WeakMap exceptions in Dynamic_Props.
 

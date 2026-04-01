@@ -1,12 +1,12 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_2\Tests\Unit\Abilities\DataObjects;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_3\Tests\Unit\Abilities\DataObjects;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Abilities\DataObjects\AbilityAnnotations;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_3\Abilities\DataObjects\AbilityAnnotations;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_3\Tests\TestCase;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_1_2\Abilities\DataObjects\AbilityAnnotations
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_1_3\Abilities\DataObjects\AbilityAnnotations
  */
 final class AbilityAnnotationsTest extends TestCase
 {
