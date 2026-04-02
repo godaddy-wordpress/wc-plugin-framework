@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\DataObjects;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\DataObjects;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Traits\CanConvertToArrayTrait;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Traits\CanConvertToArrayTrait;
 
 /**
  * Data object representing an ability category.

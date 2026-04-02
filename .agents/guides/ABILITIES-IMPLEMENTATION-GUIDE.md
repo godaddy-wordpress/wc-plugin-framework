@@ -282,6 +282,49 @@ class WC_My_Plugin_Entity implements JsonSerializable
 - Use `minimum`, `minProperties`, `additionalProperties` where appropriate to enforce constraints. Arguments that accept any WP_Query arg should document "VIP" properties and then set `additionalProperties` to `true` to indicate any WP_Query arg can be used.
 - Descriptions should be short, practical, and include format hints (e.g. `"Country code (e.g. \"US\")."`).
 
+### Nested and sub-object serialization
+
+When your primary serializable object references other objects (e.g. an entity has rules, items, or addresses), the first consideration should be making those sub-objects serializable as well. This keeps serialization logic co-located with the class that understands its own structure.
+
+**Avoid** inline serialization of sub-objects:
+
+```php
+public function jsonSerialize()
+{
+    return [
+        'id'    => $this->get_id(),
+        'rules' => array_map(function ($rule) {
+            return [
+                'property' => $rule->get_property(),
+                'operator' => $rule->get_operator(),
+                'values'   => $rule->get_values(),
+            ];
+        }, $this->get_rules()),
+    ];
+}
+```
+
+**Instead**, make the sub-object serializable and delegate to it:
+
+```php
+public function jsonSerialize()
+{
+    return [
+        'id'    => $this->get_id(),
+        'rules' => array_map(function ($rule) {
+            return $rule->jsonSerialize();
+        }, $this->get_rules()),
+    ];
+}
+```
+
+This applies to both Option A and Option B. If the sub-object class has an abstract base class (e.g. a `Rule` base with `CartSubtotal`, `ProductOrCategory` concrete types), implement `JsonSerializable` on the base class with sensible defaults so that:
+
+- **Concrete subclasses** override only when their structure differs from the default (e.g. a rule with min/max values instead of a generic property/operator/values shape).
+- **Third-party subclasses** (from extensions or filters) get working serialization for free without needing to know about the contract.
+
+The same principle applies to `getJsonSchema()` — put defaults on the base class and only override where the subclass has genuinely different behavior.
+
 ---
 
 ## Step 2: Provider

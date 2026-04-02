@@ -1,16 +1,16 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_4\Tests\Unit\Payment_Gateway;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_5\Tests\Unit\Payment_Gateway;
 
 use Exception;
 use Generator;
 use Mockery;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Tests\TestCase;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Payment_Gateway\Dynamic_Props;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Payment_Gateway\Dynamic_Props;
 use stdClass;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_1_4\Payment_Gateway\Dynamic_Props
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_1_5\Payment_Gateway\Dynamic_Props
  */
 final class Dynamic_Props_Test extends TestCase
 {
