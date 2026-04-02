@@ -810,7 +810,7 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 
 						$note->save();
 
-					} catch ( \Exception $exception ) {}
+					} catch ( \Throwable $exception ) {}
 				}
 
 				// if not an enhanced admin screen, output the legacy style notice
@@ -822,7 +822,10 @@ abstract class SV_WC_Payment_Gateway_Plugin extends SV_WC_Plugin {
 				}
 
 			// if all's well with this gateway, make sure and delete any previously added notes
-			} elseif ( $is_enhanced_admin_available && Admin\Notes_Helper::note_with_name_exists( $note_name ) ) {
+			// note: the class_exists() check needs to remain due to how the namespace changes with each framework version
+			// not checking can cause fatal errors in the middle of plugin upgrades
+			// @link https://github.com/godaddy-wordpress/wc-plugin-framework/issues/824
+			} elseif ( $is_enhanced_admin_available && class_exists( Admin\Notes_Helper::class ) && Admin\Notes_Helper::note_with_name_exists( $note_name ) ) {
 
 				WC_Admin_Notes::delete_notes_with_name( $note_name );
 			}

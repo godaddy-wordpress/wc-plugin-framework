@@ -194,7 +194,10 @@ class Lifecycle {
 	public function handle_deactivation() {
 
 		// if the enhanced admin is available, delete all of this plugin's notes on deactivation
-		if ( SV_WC_Plugin_Compatibility::is_enhanced_admin_available() ) {
+		// note: the class_exists() check needs to remain due to how the namespace changes with each framework version
+		// not checking can cause fatal errors in the middle of plugin upgrades
+		// @link https://github.com/godaddy-wordpress/wc-plugin-framework/issues/824
+		if ( SV_WC_Plugin_Compatibility::is_enhanced_admin_available() && class_exists( Notes_Helper::class ) ) {
 
 			Notes_Helper::delete_notes_with_source( $this->get_plugin()->get_id_dasherized() );
 
