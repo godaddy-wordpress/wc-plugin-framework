@@ -46,7 +46,7 @@ final class AbilityRestRegistrarTest extends TestCase
     public function testRegistersRouteForAbilityWithRestConfig() : void
     {
         $restConfig = new RestConfig('/teams', 'my-plugin', 'v1', 'POST');
-        $ability = $this->makeAbility('test-plugin/test-action', [], [], null, null, null, $restConfig);
+        $ability = $this->makeAbility('test-plugin/test-action', [], [], null, $restConfig);
 
         $provider = Mockery::mock(AbilitiesProviderContract::class);
         $provider->expects('getAbilities')
@@ -76,7 +76,7 @@ final class AbilityRestRegistrarTest extends TestCase
     public function testDeriveNamespace(string $abilityName, string $version, string $expected) : void
     {
         $restConfig = new RestConfig('/test', null, $version, 'GET');
-        $ability = $this->makeAbility($abilityName, [], [], null, null, null, $restConfig);
+        $ability = $this->makeAbility($abilityName, [], [], null, $restConfig);
 
         $provider = Mockery::mock(AbilitiesProviderContract::class);
         $provider->expects('getAbilities')
@@ -124,7 +124,7 @@ final class AbilityRestRegistrarTest extends TestCase
     public function testInferMethod(?AbilityAnnotations $annotations, string $expectedMethod) : void
     {
         $restConfig = new RestConfig('/test', 'ns', 'v1');
-        $ability = $this->makeAbility('test-plugin/test-action', [], [], $annotations, null, null, $restConfig);
+        $ability = $this->makeAbility('test-plugin/test-action', [], [], $annotations, $restConfig);
 
         $provider = Mockery::mock(AbilitiesProviderContract::class);
         $provider->expects('getAbilities')
@@ -195,7 +195,7 @@ final class AbilityRestRegistrarTest extends TestCase
         ];
 
         $restConfig = new RestConfig('/test', 'ns', 'v1', 'POST');
-        $ability = $this->makeAbility('test-plugin/test-action', $inputSchema, [], null, null, null, $restConfig);
+        $ability = $this->makeAbility('test-plugin/test-action', $inputSchema, [], null, $restConfig);
 
         $provider = Mockery::mock(AbilitiesProviderContract::class);
         $provider->expects('getAbilities')->once()->andReturn([$ability]);
@@ -238,7 +238,7 @@ final class AbilityRestRegistrarTest extends TestCase
     public function testBuildArgsReturnsEmptyForScalarSchema() : void
     {
         $restConfig = new RestConfig('/test/(?P<id>\d+)', 'ns', 'v1', 'GET');
-        $ability = $this->makeAbility('test-plugin/test-action', ['type' => 'integer'], [], null, null, null, $restConfig);
+        $ability = $this->makeAbility('test-plugin/test-action', ['type' => 'integer'], [], null, $restConfig);
 
         $provider = Mockery::mock(AbilitiesProviderContract::class);
         $provider->expects('getAbilities')->once()->andReturn([$ability]);
@@ -267,38 +267,27 @@ final class AbilityRestRegistrarTest extends TestCase
      */
     public function testCallbackFlowWithObjectSchemaAndNoAdapters() : void
     {
-        $executeCalled = false;
-        $receivedInput = null;
-
-        $executeCallback = function ($input) use (&$executeCalled, &$receivedInput) {
-            $executeCalled = true;
-            $receivedInput = $input;
-            return ['id' => 1, 'name' => $input['name']];
-        };
-
         $inputSchema = ['type' => 'object', 'properties' => ['name' => ['type' => 'string']]];
         $restConfig = new RestConfig('/test', 'ns', 'v1', 'POST');
-        $ability = $this->makeAbility('test-plugin/test-action', $inputSchema, [], null, $executeCallback, null, $restConfig);
+        $ability = $this->makeAbility('test-plugin/test-action', $inputSchema, [], null, $restConfig);
 
-        $provider = Mockery::mock(AbilitiesProviderContract::class);
-        $provider->expects('getAbilities')->once()->andReturn([$ability]);
-
-        $capturedCallback = null;
-
-        WP_Mock::userFunction('register_rest_route')
-            ->once()
-            ->withArgs(function (string $namespace, string $path, array $args) use (&$capturedCallback) {
-                $capturedCallback = $args['callback'];
-                return true;
-            });
-
-        $registrar = new AbilityRestRegistrar($provider);
-        $registrar->registerRoutes();
+        $capturedCallback = $this->registerAndCaptureCallback($ability);
 
         $request = Mockery::mock('WP_REST_Request');
         $request->expects('get_params')
             ->once()
             ->andReturn(['name' => 'Test Team']);
+
+        $wpAbility = Mockery::mock('WP_Ability');
+        $wpAbility->expects('execute')
+            ->once()
+            ->with(['name' => 'Test Team'])
+            ->andReturn(['id' => 1, 'name' => 'Test Team']);
+
+        WP_Mock::userFunction('wp_get_ability')
+            ->once()
+            ->with('test-plugin/test-action')
+            ->andReturn($wpAbility);
 
         WP_Mock::userFunction('rest_ensure_response')
             ->once()
@@ -307,8 +296,6 @@ final class AbilityRestRegistrarTest extends TestCase
 
         $result = $capturedCallback($request);
 
-        $this->assertTrue($executeCalled);
-        $this->assertSame(['name' => 'Test Team'], $receivedInput);
         $this->assertSame(['id' => 1, 'name' => 'Test Team'], $result);
     }
 
@@ -319,35 +306,26 @@ final class AbilityRestRegistrarTest extends TestCase
      */
     public function testCallbackFlowWithScalarSchemaExtractsUrlParam() : void
     {
-        $receivedInput = null;
-
-        $executeCallback = function ($input) use (&$receivedInput) {
-            $receivedInput = $input;
-            return ['id' => $input];
-        };
-
         $restConfig = new RestConfig('/test/(?P<id>\d+)', 'ns', 'v1', 'GET');
-        $ability = $this->makeAbility('test-plugin/test-action', ['type' => 'integer'], [], null, $executeCallback, null, $restConfig);
+        $ability = $this->makeAbility('test-plugin/test-action', ['type' => 'integer'], [], null, $restConfig);
 
-        $provider = Mockery::mock(AbilitiesProviderContract::class);
-        $provider->expects('getAbilities')->once()->andReturn([$ability]);
-
-        $capturedCallback = null;
-
-        WP_Mock::userFunction('register_rest_route')
-            ->once()
-            ->withArgs(function (string $namespace, string $path, array $args) use (&$capturedCallback) {
-                $capturedCallback = $args['callback'];
-                return true;
-            });
-
-        $registrar = new AbilityRestRegistrar($provider);
-        $registrar->registerRoutes();
+        $capturedCallback = $this->registerAndCaptureCallback($ability);
 
         $request = Mockery::mock('WP_REST_Request');
         $request->expects('get_url_params')
             ->once()
             ->andReturn(['id' => '42']);
+
+        $wpAbility = Mockery::mock('WP_Ability');
+        $wpAbility->expects('execute')
+            ->once()
+            ->with(42)
+            ->andReturn(['id' => 42]);
+
+        WP_Mock::userFunction('wp_get_ability')
+            ->once()
+            ->with('test-plugin/test-action')
+            ->andReturn($wpAbility);
 
         WP_Mock::userFunction('rest_ensure_response')
             ->once()
@@ -355,46 +333,64 @@ final class AbilityRestRegistrarTest extends TestCase
 
         $capturedCallback($request);
 
-        $this->assertSame(42, $receivedInput);
+        $this->assertConditionsMet();
     }
 
     /**
      * @covers ::makeCallback
      */
-    public function testCallbackReturnsWpErrorDirectly() : void
+    public function testCallbackReturnsWpErrorFromExecute() : void
     {
         $wpError = Mockery::mock('WP_Error');
 
-        $executeCallback = function () use ($wpError) {
-            return $wpError;
-        };
-
         $restConfig = new RestConfig('/test', 'ns', 'v1', 'POST');
-        $ability = $this->makeAbility('test-plugin/test-action', [], [], null, $executeCallback, null, $restConfig);
+        $ability = $this->makeAbility('test-plugin/test-action', [], [], null, $restConfig);
 
-        $provider = Mockery::mock(AbilitiesProviderContract::class);
-        $provider->expects('getAbilities')->once()->andReturn([$ability]);
-
-        $capturedCallback = null;
-
-        WP_Mock::userFunction('register_rest_route')
-            ->once()
-            ->withArgs(function (string $namespace, string $path, array $args) use (&$capturedCallback) {
-                $capturedCallback = $args['callback'];
-                return true;
-            });
-
-        $registrar = new AbilityRestRegistrar($provider);
-        $registrar->registerRoutes();
+        $capturedCallback = $this->registerAndCaptureCallback($ability);
 
         $request = Mockery::mock('WP_REST_Request');
         $request->expects('get_params')->andReturn([]);
+
+        $wpAbility = Mockery::mock('WP_Ability');
+        $wpAbility->expects('execute')
+            ->once()
+            ->andReturn($wpError);
+
+        WP_Mock::userFunction('wp_get_ability')
+            ->once()
+            ->with('test-plugin/test-action')
+            ->andReturn($wpAbility);
 
         WP_Mock::userFunction('rest_ensure_response')->never();
 
         $result = $capturedCallback($request);
 
         $this->assertSame($wpError, $result);
+    }
+
+    /**
+     * @covers ::makeCallback
+     */
+    public function testCallbackReturnsErrorWhenAbilityNotFound() : void
+    {
+        $restConfig = new RestConfig('/test', 'ns', 'v1', 'POST');
+        $ability = $this->makeAbility('test-plugin/missing-action', [], [], null, $restConfig);
+
+        $capturedCallback = $this->registerAndCaptureCallback($ability);
+
+        $request = Mockery::mock('WP_REST_Request');
+        $request->expects('get_params')->andReturn([]);
+
+        WP_Mock::userFunction('wp_get_ability')
+            ->once()
+            ->with('test-plugin/missing-action')
+            ->andReturn(null);
+
+        WP_Mock::userFunction('rest_ensure_response')->never();
+
+        $result = $capturedCallback($request);
+
+        $this->assertInstanceOf(\WP_Error::class, $result);
     }
 
     /**
@@ -410,38 +406,28 @@ final class AbilityRestRegistrarTest extends TestCase
             }
         });
 
-        $receivedInput = null;
-
-        $executeCallback = function ($input) use (&$receivedInput) {
-            $receivedInput = $input;
-            return 'ok';
-        };
-
         $restConfig = new RestConfig('/test', 'ns', 'v1', 'POST', $adapterClass);
-        $ability = $this->makeAbility('test-plugin/test-action', [], [], null, $executeCallback, null, $restConfig);
+        $ability = $this->makeAbility('test-plugin/test-action', [], [], null, $restConfig);
 
-        $provider = Mockery::mock(AbilitiesProviderContract::class);
-        $provider->expects('getAbilities')->once()->andReturn([$ability]);
-
-        $capturedCallback = null;
-
-        WP_Mock::userFunction('register_rest_route')
-            ->once()
-            ->withArgs(function (string $namespace, string $path, array $args) use (&$capturedCallback) {
-                $capturedCallback = $args['callback'];
-                return true;
-            });
-
-        $registrar = new AbilityRestRegistrar($provider);
-        $registrar->registerRoutes();
+        $capturedCallback = $this->registerAndCaptureCallback($ability);
 
         $request = Mockery::mock('WP_REST_Request');
+
+        $wpAbility = Mockery::mock('WP_Ability');
+        $wpAbility->expects('execute')
+            ->once()
+            ->with(['adapted' => true])
+            ->andReturn('ok');
+
+        WP_Mock::userFunction('wp_get_ability')
+            ->once()
+            ->andReturn($wpAbility);
 
         WP_Mock::userFunction('rest_ensure_response')->once()->andReturnArg(0);
 
         $capturedCallback($request);
 
-        $this->assertSame(['adapted' => true], $receivedInput);
+        $this->assertConditionsMet();
     }
 
     /**
@@ -457,30 +443,22 @@ final class AbilityRestRegistrarTest extends TestCase
             }
         });
 
-        $executeCallback = function () {
-            return 'raw-result';
-        };
-
         $restConfig = new RestConfig('/test', 'ns', 'v1', 'POST', null, $adapterClass);
-        $ability = $this->makeAbility('test-plugin/test-action', [], [], null, $executeCallback, null, $restConfig);
+        $ability = $this->makeAbility('test-plugin/test-action', [], [], null, $restConfig);
 
-        $provider = Mockery::mock(AbilitiesProviderContract::class);
-        $provider->expects('getAbilities')->once()->andReturn([$ability]);
-
-        $capturedCallback = null;
-
-        WP_Mock::userFunction('register_rest_route')
-            ->once()
-            ->withArgs(function (string $namespace, string $path, array $args) use (&$capturedCallback) {
-                $capturedCallback = $args['callback'];
-                return true;
-            });
-
-        $registrar = new AbilityRestRegistrar($provider);
-        $registrar->registerRoutes();
+        $capturedCallback = $this->registerAndCaptureCallback($ability);
 
         $request = Mockery::mock('WP_REST_Request');
         $request->expects('get_params')->andReturn([]);
+
+        $wpAbility = Mockery::mock('WP_Ability');
+        $wpAbility->expects('execute')
+            ->once()
+            ->andReturn('raw-result');
+
+        WP_Mock::userFunction('wp_get_ability')
+            ->once()
+            ->andReturn($wpAbility);
 
         $capturedOutput = null;
 
@@ -505,22 +483,9 @@ final class AbilityRestRegistrarTest extends TestCase
         $invalidClass = get_class(new class {});
 
         $restConfig = new RestConfig('/test', 'ns', 'v1', 'POST', $invalidClass);
-        $ability = $this->makeAbility('test-plugin/test-action', [], [], null, null, null, $restConfig);
+        $ability = $this->makeAbility('test-plugin/test-action', [], [], null, $restConfig);
 
-        $provider = Mockery::mock(AbilitiesProviderContract::class);
-        $provider->expects('getAbilities')->once()->andReturn([$ability]);
-
-        $capturedCallback = null;
-
-        WP_Mock::userFunction('register_rest_route')
-            ->once()
-            ->withArgs(function (string $namespace, string $path, array $args) use (&$capturedCallback) {
-                $capturedCallback = $args['callback'];
-                return true;
-            });
-
-        $registrar = new AbilityRestRegistrar($provider);
-        $registrar->registerRoutes();
+        $capturedCallback = $this->registerAndCaptureCallback($ability);
 
         $request = Mockery::mock('WP_REST_Request');
 
@@ -535,30 +500,22 @@ final class AbilityRestRegistrarTest extends TestCase
     {
         $invalidClass = get_class(new class {});
 
-        $executeCallback = function () {
-            return 'result';
-        };
-
         $restConfig = new RestConfig('/test', 'ns', 'v1', 'POST', null, $invalidClass);
-        $ability = $this->makeAbility('test-plugin/test-action', [], [], null, $executeCallback, null, $restConfig);
+        $ability = $this->makeAbility('test-plugin/test-action', [], [], null, $restConfig);
 
-        $provider = Mockery::mock(AbilitiesProviderContract::class);
-        $provider->expects('getAbilities')->once()->andReturn([$ability]);
-
-        $capturedCallback = null;
-
-        WP_Mock::userFunction('register_rest_route')
-            ->once()
-            ->withArgs(function (string $namespace, string $path, array $args) use (&$capturedCallback) {
-                $capturedCallback = $args['callback'];
-                return true;
-            });
-
-        $registrar = new AbilityRestRegistrar($provider);
-        $registrar->registerRoutes();
+        $capturedCallback = $this->registerAndCaptureCallback($ability);
 
         $request = Mockery::mock('WP_REST_Request');
         $request->expects('get_params')->andReturn([]);
+
+        $wpAbility = Mockery::mock('WP_Ability');
+        $wpAbility->expects('execute')
+            ->once()
+            ->andReturn('result');
+
+        WP_Mock::userFunction('wp_get_ability')
+            ->once()
+            ->andReturn($wpAbility);
 
         $this->expectException(\InvalidArgumentException::class);
         $capturedCallback($request);
@@ -575,30 +532,22 @@ final class AbilityRestRegistrarTest extends TestCase
             }
         };
 
-        $executeCallback = function () use ($jsonSerializable) {
-            return $jsonSerializable;
-        };
-
         $restConfig = new RestConfig('/test', 'ns', 'v1', 'GET');
-        $ability = $this->makeAbility('test-plugin/test-action', [], [], null, $executeCallback, null, $restConfig);
+        $ability = $this->makeAbility('test-plugin/test-action', [], [], null, $restConfig);
 
-        $provider = Mockery::mock(AbilitiesProviderContract::class);
-        $provider->expects('getAbilities')->once()->andReturn([$ability]);
-
-        $capturedCallback = null;
-
-        WP_Mock::userFunction('register_rest_route')
-            ->once()
-            ->withArgs(function (string $namespace, string $path, array $args) use (&$capturedCallback) {
-                $capturedCallback = $args['callback'];
-                return true;
-            });
-
-        $registrar = new AbilityRestRegistrar($provider);
-        $registrar->registerRoutes();
+        $capturedCallback = $this->registerAndCaptureCallback($ability);
 
         $request = Mockery::mock('WP_REST_Request');
         $request->expects('get_params')->andReturn([]);
+
+        $wpAbility = Mockery::mock('WP_Ability');
+        $wpAbility->expects('execute')
+            ->once()
+            ->andReturn($jsonSerializable);
+
+        WP_Mock::userFunction('wp_get_ability')
+            ->once()
+            ->andReturn($wpAbility);
 
         $capturedOutput = null;
 
@@ -622,7 +571,7 @@ final class AbilityRestRegistrarTest extends TestCase
     {
         $outputSchema = ['type' => 'object', 'properties' => ['id' => ['type' => 'integer']]];
         $restConfig = new RestConfig('/test', 'ns', 'v1', 'GET');
-        $ability = $this->makeAbility('my-plugin/get-thing', [], $outputSchema, null, null, null, $restConfig);
+        $ability = $this->makeAbility('my-plugin/get-thing', [], $outputSchema, null, $restConfig);
 
         $provider = Mockery::mock(AbilitiesProviderContract::class);
         $provider->expects('getAbilities')->once()->andReturn([$ability]);
@@ -648,24 +597,36 @@ final class AbilityRestRegistrarTest extends TestCase
     }
 
     /**
+     * Registers a route for the ability and returns the captured callback.
+     */
+    protected function registerAndCaptureCallback(Ability $ability) : callable
+    {
+        $provider = Mockery::mock(AbilitiesProviderContract::class);
+        $provider->expects('getAbilities')->once()->andReturn([$ability]);
+
+        $capturedCallback = null;
+
+        WP_Mock::userFunction('register_rest_route')
+            ->once()
+            ->withArgs(function (string $namespace, string $path, array $args) use (&$capturedCallback) {
+                $capturedCallback = $args['callback'];
+                return true;
+            });
+
+        $registrar = new AbilityRestRegistrar($provider);
+        $registrar->registerRoutes();
+
+        return $capturedCallback;
+    }
+
+    /**
      * Helper to create an Ability with sensible defaults.
-     *
-     * @param string $name
-     * @param array $inputSchema
-     * @param array $outputSchema
-     * @param ?AbilityAnnotations $annotations
-     * @param ?callable $executeCallback
-     * @param ?callable $permissionCallback
-     * @param ?RestConfig $restConfig
-     * @return Ability
      */
     protected function makeAbility(
         string $name = 'test-plugin/test-action',
         array $inputSchema = [],
         array $outputSchema = [],
         ?AbilityAnnotations $annotations = null,
-        ?callable $executeCallback = null,
-        ?callable $permissionCallback = null,
         ?RestConfig $restConfig = null
     ) : Ability {
         return new Ability(
@@ -673,8 +634,8 @@ final class AbilityRestRegistrarTest extends TestCase
             'Test',
             'Test ability.',
             'test-category',
-            $executeCallback ?? function ($input) { return $input; },
-            $permissionCallback ?? function () { return true; },
+            function ($input) { return $input; },
+            function () { return true; },
             $inputSchema,
             $outputSchema,
             $annotations,

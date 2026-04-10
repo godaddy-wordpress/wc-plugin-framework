@@ -152,7 +152,10 @@ class AbilityRestRegistrar
     /**
      * Creates the REST callback closure for the ability.
      *
-     * Flow: request -> input adapter -> executeCallback -> output adapter -> response.
+     * Flow: request -> input adapter -> wp_get_ability -> WP_Ability::execute() -> output adapter -> response.
+     *
+     * Uses the WordPress Abilities API to execute the ability so that WP core handles
+     * input normalization, input/output schema validation, permission checks, and lifecycle hooks.
      *
      * @since 6.2.0
      */
@@ -161,7 +164,17 @@ class AbilityRestRegistrar
         return function (WP_REST_Request $request) use ($ability, $config) {
             $input = $this->adaptInput($request, $config, $ability);
 
-            $result = call_user_func($ability->executeCallback, $input);
+            $wpAbility = wp_get_ability($ability->name);
+
+            if (! $wpAbility) {
+                return new WP_Error(
+                    'ability_not_found',
+                    sprintf('Ability "%s" is not registered.', $ability->name),
+                    ['status' => 500]
+                );
+            }
+
+            $result = $wpAbility->execute($input);
 
             if ($result instanceof WP_Error) {
                 return $result;
