@@ -601,6 +601,7 @@ final class AbilityRestRegistrarTest extends TestCase
 	/**
 	 * @covers ::buildArgs
 	 * @dataProvider providerCanBuildArgsWhenReturnsEmptyArray
+	 * @throws Exception
 	 */
 	public function testCanBuildArgsWhenReturnsEmptyArray(array $inputSchema) : void
 	{
@@ -627,6 +628,220 @@ final class AbilityRestRegistrarTest extends TestCase
 				'type' => 'integer',
 			],
 		];
+	}
+
+	/**
+	 * @covers ::buildArgs
+	 * @dataProvider providerCanBuildArgs
+	 * @throws Exception
+	 */
+	public function testCanBuildArgs(array $inputSchema, array $expectedArgs) : void
+	{
+		$this->assertSame(
+			$expectedArgs,
+			$this->invokeInaccessibleMethod(
+				$this->createPartialMock(AbilityRestRegistrar::class, []),
+				'buildArgs',
+				$inputSchema,
+				'POST'
+			)
+		);
+	}
+
+	/** @see testCanBuildArgs */
+	public function providerCanBuildArgs() : Generator
+	{
+		yield 'object with empty properties' => [
+			'inputSchema' => [
+				'type'       => 'object',
+				'properties' => [],
+			],
+			'expectedArgs' => [],
+		];
+
+		yield 'simple property with type and description' => [
+			'inputSchema' => [
+				'type'       => 'object',
+				'properties' => [
+					'name' => [
+						'type'        => 'string',
+						'description' => 'The team name',
+					],
+				],
+			],
+			'expectedArgs' => [
+				'name' => [
+					'description' => 'The team name',
+					'type'        => 'string',
+				],
+			],
+		];
+
+		yield 'property with required flag' => [
+			'inputSchema' => [
+				'type'       => 'object',
+				'properties' => [
+					'team_id' => [
+						'type'        => 'integer',
+						'description' => 'The team ID',
+						'required'    => true,
+					],
+				],
+			],
+			'expectedArgs' => [
+				'team_id' => [
+					'description' => 'The team ID',
+					'type'        => 'integer',
+					'required'    => true,
+				],
+			],
+		];
+
+		yield 'property with default value' => [
+			'inputSchema' => [
+				'type'       => 'object',
+				'properties' => [
+					'status' => [
+						'type'        => 'string',
+						'description' => 'The status',
+						'default'     => 'active',
+					],
+				],
+			],
+			'expectedArgs' => [
+				'status' => [
+					'description' => 'The status',
+					'type'        => 'string',
+					'default'     => 'active',
+				],
+			],
+		];
+
+		yield 'property with enum constraint' => [
+			'inputSchema' => [
+				'type'       => 'object',
+				'properties' => [
+					'role' => [
+						'type'        => 'string',
+						'description' => 'The member role',
+						'enum'        => ['member', 'manager', 'owner'],
+					],
+				],
+			],
+			'expectedArgs' => [
+				'role' => [
+					'description' => 'The member role',
+					'type'        => 'string',
+					'enum'        => ['member', 'manager', 'owner'],
+				],
+			],
+		];
+
+		yield 'property with minimum constraint' => [
+			'inputSchema' => [
+				'type'       => 'object',
+				'properties' => [
+					'seats' => [
+						'type'        => 'integer',
+						'description' => 'Number of seats',
+						'minimum'     => 1,
+					],
+				],
+			],
+			'expectedArgs' => [
+				'seats' => [
+					'description' => 'Number of seats',
+					'type'        => 'integer',
+					'minimum'     => 1,
+				],
+			],
+		];
+
+		yield 'multiple properties with all supported attributes' => [
+			'inputSchema' => [
+				'type'       => 'object',
+				'properties' => [
+					'name' => [
+						'type'        => 'string',
+						'description' => 'The team name',
+						'required'    => true,
+					],
+					'seats' => [
+						'type'        => 'integer',
+						'description' => 'Number of seats',
+						'required'    => true,
+						'minimum'     => 1,
+						'default'     => 5,
+					],
+					'role' => [
+						'type'        => 'string',
+						'description' => 'Default member role',
+						'enum'        => ['member', 'manager'],
+						'default'     => 'member',
+					],
+				],
+			],
+			'expectedArgs' => [
+				'name' => [
+					'description' => 'The team name',
+					'type'        => 'string',
+					'required'    => true,
+				],
+				'seats' => [
+					'description' => 'Number of seats',
+					'type'        => 'integer',
+					'required'    => true,
+					'default'     => 5,
+					'minimum'     => 1,
+				],
+				'role' => [
+					'description' => 'Default member role',
+					'type'        => 'string',
+					'default'     => 'member',
+					'enum'        => ['member', 'manager'],
+				],
+			],
+		];
+
+		yield 'property with no type defaults to string' => [
+			'inputSchema' => [
+				'type'       => 'object',
+				'properties' => [
+					'label' => [
+						'description' => 'A label',
+					],
+				],
+			],
+			'expectedArgs' => [
+				'label' => [
+					'description' => 'A label',
+					'type'        => 'string',
+				],
+			],
+		];
+	}
+
+	/**
+	 * @covers ::buildResponseSchema
+	 * @throws Exception
+	 */
+	public function testCanBuildResponseSchema() : void
+	{
+		$outputSchema = ['key' => 'value'];
+		$ability = new Ability('get-team', '', '', '', fn() => true, fn() => true, [], $outputSchema);
+
+		$this->assertSame(
+			[
+				'$schema' => 'http://json-schema.org/draft-04/schema#',
+				'title'   => 'get-team',
+				'key'     => 'value',
+			],
+			$this->invokeInaccessibleMethod(
+				$this->createPartialMock(AbilityRestRegistrar::class, []),
+				'buildResponseSchema',
+				$ability
+			)
+		);
 	}
 
 }
