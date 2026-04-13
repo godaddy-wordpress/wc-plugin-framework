@@ -456,10 +456,94 @@ final class AbilityRestRegistrarTest extends TestCase
 
 	/**
 	 * @covers ::extractDefaultInput
+	 * @throws Exception
 	 */
-	public function testCanExtractDefaultInput() : void
+	public function testCanExtractDefaultInputForObjects() : void
 	{
-		$this->markTestIncomplete('TODO');
+		$request = Mockery::mock('WP_REST_Request');
+		$inputSchema = ['type' => 'object'];
+
+		$request->expects('get_params')
+			->once()
+			->andReturn($input = ['key' => 'value']);
+
+		$this->assertSame(
+			$input,
+			$this->invokeInaccessibleMethod(
+				$this->createPartialMock(AbilityRestRegistrar::class, []),
+				'extractDefaultInput',
+				$request, $inputSchema
+			)
+		);
+	}
+
+	/**
+	 * @covers ::extractDefaultInput
+	 * @dataProvider providerCanExtractDefaultInput
+	 * @throws Exception
+	 */
+	public function testCanExtractDefaultInput(
+		array $inputSchema,
+		array $foundUrlParams,
+		bool $shouldGetAllParams,
+		array $requestParams,
+		$expectedInput
+	) : void
+	{
+		$request = Mockery::mock('WP_REST_Request');
+
+		$request->expects('get_url_params')
+			->once()
+			->andReturn($foundUrlParams);
+
+		$request->expects('get_params')
+			->times((int) $shouldGetAllParams)
+			->andReturn($requestParams);
+
+		$this->assertSame(
+			$expectedInput,
+			$this->invokeInaccessibleMethod(
+				$this->createPartialMock(AbilityRestRegistrar::class, []),
+				'extractDefaultInput',
+				$request, $inputSchema
+			)
+		);
+	}
+
+	/** @see testCanExtractDefaultInput */
+	public function providerCanExtractDefaultInput() : Generator
+	{
+		yield 'single url param as integer' => [
+			'inputSchema' => ['type' => 'integer'],
+			'foundUrlParams' => ['5'],
+			'shouldGetAllParams' => false,
+			'requestParams' => [],
+			'expectedInput' => 5,
+		];
+
+		yield 'single url param as string' => [
+			'inputSchema' => ['type' => 'string'],
+			'foundUrlParams' => ['test'],
+			'shouldGetAllParams' => false,
+			'requestParams' => [],
+			'expectedInput' => 'test',
+		];
+
+		yield 'zero url params' => [
+			'inputSchema' => ['type' => 'string'],
+			'foundUrlParams' => [],
+			'shouldGetAllParams' => true,
+			'requestParams' => ['key' => 'value'],
+			'expectedInput' => ['key' => 'value'],
+		];
+
+		yield 'more than 1 url params' => [
+			'inputSchema' => ['type' => 'string'],
+			'foundUrlParams' => ['memberships', 'teams'],
+			'shouldGetAllParams' => true,
+			'requestParams' => ['key' => 'value', 'memberships', 'teams'],
+			'expectedInput' => ['key' => 'value', 'memberships', 'teams'],
+		];
 	}
 
 	/**
