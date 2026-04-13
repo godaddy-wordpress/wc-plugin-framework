@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\Contracts;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\Contracts;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\AbstractAbilitiesProvider;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\AbstractAbilitiesProvider;
 
 /**
  * Contract for plugins that register abilities.
