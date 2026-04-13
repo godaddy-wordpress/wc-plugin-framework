@@ -5,6 +5,7 @@ namespace SkyVerge\WooCommerce\PluginFramework\v6_1_5\Tests\Unit\Abilities\Rest;
 use Exception;
 use Generator;
 use InvalidArgumentException;
+use JsonSerializable;
 use Mockery;
 use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\Contracts\AbilitiesProviderContract;
 use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\Contracts\RestInputAdapterContract;
@@ -459,6 +460,173 @@ final class AbilityRestRegistrarTest extends TestCase
 	public function testCanExtractDefaultInput() : void
 	{
 		$this->markTestIncomplete('TODO');
+	}
+
+	/**
+	 * @covers ::adaptOutput
+	 * @throws Exception
+	 */
+	public function testCanAdaptOutputWhenNoOutputAdapter() : void
+	{
+		$config = new RestConfig('');
+		$result = ['key' => 'value'];
+
+		$registrar = $this->createPartialMock(AbilityRestRegistrar::class, ['serializeDefaultOutput']);
+
+		$registrar->expects($this->once())
+			->method('serializeDefaultOutput')
+			->with($result)
+			->willReturn($serialized = ['serializedKey' => 'serializedValue']);
+
+		$this->assertSame($serialized, $this->invokeInaccessibleMethod($registrar, 'adaptOutput', $result, $config));
+	}
+
+	/**
+	 * @covers ::adaptOutput
+	 * @throws Exception
+	 */
+	public function testCanAdaptOutputWhenHasOutputAdapter() : void
+	{
+		$outputAdapter = Mockery::mock(RestOutputAdapterContract::class);
+		$config = new RestConfig('', null, 'v1', 'POST', null, RestOutputAdapterContract::class);
+		$result = ['key' => 'value'];
+
+		$registrar = $this->createPartialMock(AbilityRestRegistrar::class, ['instantiateOutputAdapter']);
+
+		$registrar->expects($this->once())
+			->method('instantiateOutputAdapter')
+			->with(RestOutputAdapterContract::class)
+			->willReturn($outputAdapter);
+
+		$outputAdapter->expects('adapt')
+			->once()
+			->with($result)
+			->andReturn($adapted = ['adaptedKey' => 'adaptedValue']);
+
+		$this->assertSame($adapted, $this->invokeInaccessibleMethod($registrar, 'adaptOutput', $result, $config));
+	}
+
+	/**
+	 * @covers ::instantiateOutputAdapter
+	 * @throws Exception
+	 */
+	public function testCanInstantiateOutputAdapterWhenWrongClassType() : void
+	{
+		$registrar = $this->createPartialMock(AbilityRestRegistrar::class, ['instantiateAdapterClass']);
+
+		$className = 'MyTestClass';
+
+		$registrar->expects($this->once())
+			->method('instantiateAdapterClass')
+			->with($className)
+			->willReturn(new stdClass());
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Output adapter "MyTestClass" must implement '.RestOutputAdapterContract::class);
+
+		$this->invokeInaccessibleMethod($registrar, 'instantiateOutputAdapter', $className);
+	}
+
+	/**
+	 * @covers ::instantiateOutputAdapter
+	 * @throws Exception
+	 */
+	public function testCanInstantiateOutputAdapter() : void
+	{
+		$registrar = $this->createPartialMock(AbilityRestRegistrar::class, ['instantiateAdapterClass']);
+
+		$className = 'MyTestClass';
+
+		$registrar->expects($this->once())
+			->method('instantiateAdapterClass')
+			->with($className)
+			->willReturn($adapter = Mockery::mock(RestOutputAdapterContract::class));
+
+		$this->assertSame(
+			$adapter,
+			$this->invokeInaccessibleMethod($registrar, 'instantiateOutputAdapter', $className)
+		);
+	}
+
+	/**
+	 * @covers ::serializeDefaultOutput
+	 * @throws Exception
+	 */
+	public function testCanSerializeDefaultOutputWhenSerializable() : void
+	{
+		$result = Mockery::mock(JsonSerializable::class);
+		$result->expects('jsonSerialize')
+			->once()
+			->andReturn($output = ['key' => 'value']);
+
+		$this->assertSame(
+			$output,
+			$this->invokeInaccessibleMethod(
+				$this->createPartialMock(AbilityRestRegistrar::class, []),
+				'serializeDefaultOutput',
+				$result
+			)
+		);
+	}
+
+	/**
+	 * @covers ::serializeDefaultOutput
+	 * @throws Exception
+	 */
+	public function testCanSerializeDefaultOutputWhenIsArray() : void
+	{
+		$item1 = Mockery::mock(JsonSerializable::class);
+		$item1->expects('jsonSerialize')
+			->once()
+			->andReturn(['first' => 'value']);
+
+		$item2 = Mockery::mock(JsonSerializable::class);
+		$item2->expects('jsonSerialize')
+			->once()
+			->andReturn(['second' => 'other value']);
+
+		$this->assertSame(
+			[
+				['first' => 'value'],
+				['second' => 'other value'],
+			],
+			$this->invokeInaccessibleMethod(
+				$this->createPartialMock(AbilityRestRegistrar::class, []),
+				'serializeDefaultOutput',
+				[$item1, $item2]
+			)
+		);
+	}
+
+	/**
+	 * @covers ::buildArgs
+	 * @dataProvider providerCanBuildArgsWhenReturnsEmptyArray
+	 */
+	public function testCanBuildArgsWhenReturnsEmptyArray(array $inputSchema) : void
+	{
+		$this->assertSame(
+			[],
+			$this->invokeInaccessibleMethod(
+				$this->createPartialMock(AbilityRestRegistrar::class, []),
+				'buildArgs',
+				$inputSchema,
+				'POST'
+			)
+		);
+	}
+
+	/** @see testCanBuildArgsWhenReturnsEmptyArray */
+	public function providerCanBuildArgsWhenReturnsEmptyArray() : Generator
+	{
+		yield 'empty' => [
+			'inputSchema' => [],
+		];
+
+		yield 'not an object' => [
+			'inputSchema' => [
+				'type' => 'integer',
+			],
+		];
 	}
 
 }
