@@ -213,7 +213,7 @@ class AbilityRestRegistrar
      */
     protected function instantiateInputAdapter(string $className) : RestInputAdapterContract
     {
-        $adapter = new $className();
+        $adapter = $this->instantiateAdapterClass($className);
 
         if (! $adapter instanceof RestInputAdapterContract) {
             throw new InvalidArgumentException(
@@ -223,6 +223,25 @@ class AbilityRestRegistrar
 
         return $adapter;
     }
+
+	/**
+	 * Instantiates a new instance of the provided adapter class.
+	 *
+	 * @since 6.2.0
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @param string $className
+	 * @return object
+	 */
+	protected function instantiateAdapterClass(string $className)
+	{
+		if (! class_exists($className)) {
+			throw new InvalidArgumentException(sprintf('Class "%s" does not exist.', $className));
+		}
+
+		return new $className();
+	}
 
     /**
      * Extracts input from the request when no adapter is provided.
@@ -285,7 +304,7 @@ class AbilityRestRegistrar
      */
     protected function instantiateOutputAdapter(string $className) : RestOutputAdapterContract
     {
-        $adapter = new $className();
+        $adapter = $this->instantiateAdapterClass($className);
 
         if (! $adapter instanceof RestOutputAdapterContract) {
             throw new InvalidArgumentException(
