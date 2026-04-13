@@ -22,16 +22,16 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\Rest;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\Rest;
 
 use InvalidArgumentException;
 use JsonSerializable;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\Contracts\AbilitiesProviderContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\Contracts\RestInputAdapterContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\Contracts\RestOutputAdapterContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\DataObjects\Ability;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\DataObjects\AbilityAnnotations;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\DataObjects\RestConfig;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\Contracts\AbilitiesProviderContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\Contracts\RestInputAdapterContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\Contracts\RestOutputAdapterContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\DataObjects\Ability;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\DataObjects\AbilityAnnotations;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\DataObjects\RestConfig;
 use WP_Error;
 use WP_REST_Request;
 

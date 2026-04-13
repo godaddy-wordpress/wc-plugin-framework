@@ -1,22 +1,22 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_4\Tests\Unit\Abilities\Rest;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_1_5\Tests\Unit\Abilities\Rest;
 
 use Exception;
 use Generator;
 use Mockery;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\Contracts\AbilitiesProviderContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\Contracts\RestInputAdapterContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\Contracts\RestOutputAdapterContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\DataObjects\Ability;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\DataObjects\AbilityAnnotations;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\DataObjects\RestConfig;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\Rest\AbilityRestRegistrar;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\Contracts\AbilitiesProviderContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\Contracts\RestInputAdapterContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\Contracts\RestOutputAdapterContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\DataObjects\Ability;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\DataObjects\AbilityAnnotations;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\DataObjects\RestConfig;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\Rest\AbilityRestRegistrar;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Tests\TestCase;
 use WP_Mock;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\Rest\AbilityRestRegistrar
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\Rest\AbilityRestRegistrar
  */
 final class AbilityRestRegistrarTest extends TestCase
 {
@@ -139,5 +139,8 @@ final class AbilityRestRegistrarTest extends TestCase
 		$this->invokeInaccessibleMethod($registrar, 'registerRouteForAbility', $ability);
 	}
 
-	public function
+	public function testCanResolveNamespace() : void
+	{
+
+	}
 }
