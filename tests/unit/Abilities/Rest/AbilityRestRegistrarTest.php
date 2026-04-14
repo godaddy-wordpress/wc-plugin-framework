@@ -109,7 +109,7 @@ final class AbilityRestRegistrarTest extends TestCase
 
 		$registrar->expects($this->once())
 			->method('buildArgs')
-			->with($ability->inputSchema, $config->method)
+			->with($ability->inputSchema)
 			->willReturn($args = ['key' => 'value']);
 
 		$registrar->expects($this->once())

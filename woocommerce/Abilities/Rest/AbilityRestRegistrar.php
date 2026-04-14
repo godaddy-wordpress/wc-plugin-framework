@@ -88,7 +88,7 @@ class AbilityRestRegistrar
             'methods'             => $method,
             'callback'            => $this->makeCallback($ability, $config),
             'permission_callback' => $ability->permissionCallback,
-            'args'                => $this->buildArgs($ability->inputSchema, $method),
+            'args'                => $this->buildArgs($ability->inputSchema),
             'schema'              => fn() => $this->buildResponseSchema($ability),
         ]);
     }
@@ -347,7 +347,7 @@ class AbilityRestRegistrar
      *
      * @since 6.2.0
      */
-    protected function buildArgs(array $inputSchema, string $method) : array
+    protected function buildArgs(array $inputSchema) : array
     {
         if (empty($inputSchema) || ($inputSchema['type'] ?? null) !== 'object') {
             return [];
