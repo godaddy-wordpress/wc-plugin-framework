@@ -88,7 +88,7 @@ class AbilityRestRegistrar
             [
                 'methods'             => $method,
                 'callback'            => $this->makeCallback($ability, $config),
-                'permission_callback' => $ability->permissionCallback,
+                'permission_callback' => fn(WP_REST_Request $request) => call_user_func($ability->permissionCallback),
                 'args'                => $this->buildArgs($ability->inputSchema),
             ],
             'schema' => fn() => $this->buildResponseSchema($ability),

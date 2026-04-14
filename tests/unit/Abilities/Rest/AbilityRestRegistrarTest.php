@@ -125,15 +125,10 @@ final class AbilityRestRegistrarTest extends TestCase
 
 				$this->assertSame($schema, call_user_func($argsArg['schema']));
 
-				$this->assertSame(
-					[
-						'methods' => $config->method,
-						'callback' => $callback,
-						'permission_callback' => $ability->permissionCallback,
-						'args' => $args,
-					],
-					$argsArg[0]
-				);
+				$this->assertSame($config->method, $argsArg[0]['methods']);
+				$this->assertSame($callback, $argsArg[0]['callback']);
+				$this->assertSame($args, $argsArg[0]['args']);
+				$this->assertIsCallable($argsArg[0]['permission_callback']);
 
 				return true;
 			});
