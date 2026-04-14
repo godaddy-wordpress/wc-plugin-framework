@@ -85,11 +85,13 @@ class AbilityRestRegistrar
         $method = $config->method ?? $this->inferMethod($ability->annotations);
 
         register_rest_route($namespace, $config->path, [
-            'methods'             => $method,
-            'callback'            => $this->makeCallback($ability, $config),
-            'permission_callback' => $ability->permissionCallback,
-            'args'                => $this->buildArgs($ability->inputSchema),
-            'schema'              => fn() => $this->buildResponseSchema($ability),
+            [
+                'methods'             => $method,
+                'callback'            => $this->makeCallback($ability, $config),
+                'permission_callback' => $ability->permissionCallback,
+                'args'                => $this->buildArgs($ability->inputSchema),
+            ],
+            'schema' => fn() => $this->buildResponseSchema($ability),
         ]);
     }
 

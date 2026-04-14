@@ -125,8 +125,6 @@ final class AbilityRestRegistrarTest extends TestCase
 
 				$this->assertSame($schema, call_user_func($argsArg['schema']));
 
-				unset($argsArg['schema']);
-
 				$this->assertSame(
 					[
 						'methods' => $config->method,
@@ -134,7 +132,7 @@ final class AbilityRestRegistrarTest extends TestCase
 						'permission_callback' => $ability->permissionCallback,
 						'args' => $args,
 					],
-					$argsArg
+					$argsArg[0]
 				);
 
 				return true;
