@@ -8,3 +8,7 @@ require_once PLUGIN_ROOT_DIR.'/vendor/autoload.php';
 
 WP_Mock::setUsePatchwork(true);
 WP_Mock::bootstrap();
+
+if (! class_exists('WP_Error')) {
+	require_once __DIR__ . '/Stubs/WP_Error.php';
+}

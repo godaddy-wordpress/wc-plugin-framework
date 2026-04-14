@@ -45,9 +45,11 @@ final class AbilitiesHandlerTest extends TestCase
 		if ($canUseApi) {
 			WP_Mock::expectActionAdded('wp_abilities_api_categories_init', [$handler, 'handleCategoriesInit']);
 			WP_Mock::expectActionAdded('wp_abilities_api_init', [$handler, 'handleAbilitiesInit']);
+			WP_Mock::expectActionAdded('rest_api_init', [$handler, 'handleRestApiInit']);
 		} else {
 			WP_Mock::expectActionNotAdded('wp_abilities_api_categories_init', [$handler, 'handleCategoriesInit']);
 			WP_Mock::expectActionNotAdded('wp_abilities_api_init', [$handler, 'handleAbilitiesInit']);
+			WP_Mock::expectActionNotAdded('rest_api_init', [$handler, 'handleRestApiInit']);
 		}
 
 		$handler->addHooks();

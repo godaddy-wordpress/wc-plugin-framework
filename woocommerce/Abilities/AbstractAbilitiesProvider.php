@@ -49,6 +49,9 @@ abstract class AbstractAbilitiesProvider implements AbilitiesProviderContract
 	/** @var class-string<MakesAbilityContract>[] FQCNs of classes implementing MakesAbilityContract */
 	protected array $abilities = [];
 
+	/** @var ?Ability[] cached result of {@see getAbilities()} */
+	protected ?array $resolvedAbilities = null;
+
 	/**
 	 * Constructor.
 	 *
@@ -68,6 +71,10 @@ abstract class AbstractAbilitiesProvider implements AbilitiesProviderContract
 	/** @inheritDoc */
 	public function getAbilities() : array
 	{
+		if ($this->resolvedAbilities !== null) {
+			return $this->resolvedAbilities;
+		}
+
 		$abilities = [];
 
 		foreach ($this->abilities as $className) {
@@ -86,6 +93,8 @@ abstract class AbstractAbilitiesProvider implements AbilitiesProviderContract
 
 			$abilities[] = $this->instantiateAbilityClass($className)->makeAbility();
 		}
+
+		$this->resolvedAbilities = $abilities;
 
 		return $abilities;
 	}
