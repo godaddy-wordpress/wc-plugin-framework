@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\Contracts\AbilitiesProviderContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\Contracts\AbilitiesProviderContract;
 
 /**
  * Central handler for the WordPress Abilities API.

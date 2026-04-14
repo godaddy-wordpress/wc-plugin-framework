@@ -1,20 +1,20 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_5\Tests\Unit\Abilities;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_2_0\Tests\Unit\Abilities;
 
 use Exception;
 use Generator;
 use Mockery;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\AbilitiesHandler;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\Contracts\AbilitiesProviderContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\DataObjects\Ability;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\DataObjects\AbilityAnnotations;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\DataObjects\AbilityCategory;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_5\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\AbilitiesHandler;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\Contracts\AbilitiesProviderContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\DataObjects\Ability;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\DataObjects\AbilityAnnotations;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\DataObjects\AbilityCategory;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Tests\TestCase;
 use WP_Mock;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_1_5\Abilities\AbilitiesHandler
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\AbilitiesHandler
  */
 final class AbilitiesHandlerTest extends TestCase
 {
