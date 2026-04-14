@@ -12,6 +12,7 @@ Instructions and examples for adding WordPress Abilities API support to SkyVerge
 - A Provider class that registers ability categories and classes
 - One ability class per operation (get, list, delete, search, etc.)
 - JSON serializers for domain objects
+- Optional REST endpoint configuration via `RestConfig` (with optional input/output adapters)
 - Unit tests for all of the above
 - A QA document with copy-and-pasteable verification snippets
 
@@ -25,11 +26,12 @@ Instructions and examples for adding WordPress Abilities API support to SkyVerge
 4. [Step 1: JSON Serialization](#step-1-json-serialization)
 5. [Step 2: Provider](#step-2-provider)
 6. [Step 3: Individual Abilities](#step-3-individual-abilities)
-7. [Step 4: Test Infrastructure](#step-4-test-infrastructure)
-8. [Step 5: Unit Tests](#step-5-unit-tests)
-9. [Step 6: QA Steps](#step-6-qa-steps)
-10. [Annotations Reference](#annotations-reference)
-11. [Checklist](#checklist)
+7. [Step 4: REST Endpoints (Optional)](#step-4-rest-endpoints-optional)
+8. [Step 5: Test Infrastructure](#step-5-test-infrastructure)
+9. [Step 6: Unit Tests](#step-6-unit-tests)
+10. [Step 7: QA Steps](#step-7-qa-steps)
+11. [Annotations Reference](#annotations-reference)
+12. [Checklist](#checklist)
 
 ---
 
@@ -65,8 +67,11 @@ src/
 │   │   ├── Delete{Entity}.php                # Destructive ability
 │   │   └── Search{Entities}By{Field}.php     # Search/filter ability
 │   ├── Adapters/
-│   │   └── JsonSerializers/
-│   │       └── {Entity}Serializer.php        # Converts domain object → array + schema
+│   │   ├── JsonSerializers/
+│   │   │   └── {Entity}Serializer.php        # Converts domain object → array + schema
+│   │   └── Rest/                             # Optional REST adapters
+│   │       ├── {Action}InputAdapter.php      # Transforms REST request → ability input
+│   │       └── {Action}OutputAdapter.php     # Transforms ability output → REST response
 │   └── Exceptions/                           # Domain-specific exceptions (optional)
 tests/
 ├── bootstrap.php
@@ -148,7 +153,8 @@ new Ability(
     array $inputSchema = [],     // JSON Schema for input
     array $outputSchema = [],    // JSON Schema for output
     ?AbilityAnnotations $annotations = null,
-    bool $showInRest = true
+    bool $showInRest = true,
+    ?RestConfig $restConfig = null // Optional REST endpoint configuration
 );
 
 // AbilityAnnotations constructor:
@@ -164,6 +170,16 @@ new AbilityCategory(
     string $label,
     string $description,
     array $meta = []
+);
+
+// RestConfig constructor (optional — see Step 4):
+new RestConfig(
+    string $path,                  // REST route path, e.g. '/entities/(?P<id>\d+)'
+    ?string $namespace = null,     // Namespace prefix, or null to auto-derive from ability name
+    string $version = 'v1',        // Version segment
+    ?string $method = null,        // HTTP method, or null to infer from annotations
+    ?string $inputAdapter = null,  // class-string<RestInputAdapterContract>
+    ?string $outputAdapter = null  // class-string<RestOutputAdapterContract>
 );
 ```
 
@@ -640,7 +656,224 @@ class SearchEntitiesByAddress implements MakesAbilityContract
 
 ---
 
-## Step 4: Test Infrastructure
+## Step 4: REST Endpoints (Optional)
+
+Abilities can optionally be exposed as WordPress REST API endpoints by attaching a `RestConfig` to the `Ability` data object. When present, the framework automatically registers a `register_rest_route()` call that executes the ability through `WP_Ability::execute()`, so WP core handles input/output validation, permission checks, and lifecycle hooks.
+
+**When to use this:** When clients (e.g. admin UIs, external integrations, or block editors) need to invoke an ability over HTTP rather than through PHP's `wp_get_ability()->execute()`.
+
+**Key design points:**
+- One ability = one HTTP method = one REST endpoint. If you need both GET and DELETE for an entity, those are separate abilities with separate `RestConfig` instances.
+- The ability's existing `permissionCallback` is reused as the route's `permission_callback` — no duplicate auth logic.
+- Input/output schemas from the ability are propagated to the REST route as `args` and `schema`.
+
+### Adding RestConfig to an ability
+
+Pass a `RestConfig` as the last argument to the `Ability` constructor:
+
+```php
+use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Abilities\DataObjects\Ability;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Abilities\DataObjects\AbilityAnnotations;
+use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Abilities\DataObjects\RestConfig;
+
+class GetEntity implements MakesAbilityContract
+{
+    const NAME = 'your-plugin-slug/entities-get';
+
+    public function makeAbility(): Ability
+    {
+        return new Ability(
+            static::NAME,
+            __('Get Entity', 'your-text-domain'),
+            __('Retrieves an entity by ID.', 'your-text-domain'),
+            Provider::ENTITY_CATEGORY_SLUG,
+            function (int $entityId) {
+                // ... execute logic ...
+            },
+            function () {
+                return current_user_can('manage_woocommerce');
+            },
+            $this->getInputSchema(),
+            WC_My_Plugin_Entity::getJsonSchema(),
+            new AbilityAnnotations(true, false, true),
+            true,
+            new RestConfig('/entities/(?P<entity_id>\d+)')
+        );
+    }
+}
+```
+
+This registers a route at `GET /wc-your-plugin/v1/entities/(?P<entity_id>\d+)`. The HTTP method is inferred from the annotations (`readonly` = GET).
+
+### RestConfig parameters
+
+```php
+new RestConfig(
+    string $path,              // Required. REST route path, e.g. '/entities' or '/entities/(?P<id>\d+)'
+    ?string $namespace = null, // Namespace prefix. Null = auto-derived from ability name.
+    string $version = 'v1',    // Version segment appended to namespace.
+    ?string $method = null,    // HTTP method. Null = inferred from annotations.
+    ?string $inputAdapter = null,  // Class-string implementing RestInputAdapterContract.
+    ?string $outputAdapter = null  // Class-string implementing RestOutputAdapterContract.
+);
+```
+
+### Namespace resolution
+
+When `$namespace` is null, the framework derives it from the ability name:
+- Extracts the segment before the first `/` in the ability name
+- Shortens `woocommerce-` prefix to `wc-`
+- Appends `/$version`
+
+Examples:
+
+| Ability name | Derived namespace |
+|---|---|
+| `woocommerce-memberships-for-teams/teams-get` | `wc-memberships-for-teams/v1` |
+| `woocommerce-local-pickup-plus/pickup-locations-list` | `wc-local-pickup-plus/v1` |
+| `my-custom-plugin/widgets-create` | `my-custom-plugin/v1` |
+
+Override with an explicit namespace when the default isn't appropriate:
+
+```php
+new RestConfig('/entities', 'my-custom-ns', 'v2')
+// Registers at: my-custom-ns/v2/entities
+```
+
+### HTTP method inference
+
+When `$method` is null, the framework infers it from `AbilityAnnotations`:
+
+| Annotation | Inferred method |
+|---|---|
+| `readonly = true` | `GET` |
+| `destructive = true` | `DELETE` |
+| Neither (default) | `POST` |
+
+Set `$method` explicitly when the inference doesn't match your needs:
+
+```php
+new RestConfig('/entities/(?P<id>\d+)', null, 'v1', 'PUT')
+```
+
+### Default input extraction
+
+When no input adapter is provided, the registrar extracts input from the request based on the ability's `inputSchema`:
+
+- **Object-type schema** (`'type' => 'object'`): passes `$request->get_params()` (all params as array).
+- **Scalar-type schema** (e.g. `'type' => 'integer'`): extracts the first URL param and casts it. For example, a route with `(?P<entity_id>\d+)` and an integer input schema passes the entity ID as an `int` to the execute callback.
+
+### Input and output adapters
+
+For cases where the default input/output handling isn't sufficient, provide adapter class-strings. These must implement `RestInputAdapterContract` or `RestOutputAdapterContract`.
+
+**When to use adapters:**
+- The REST request shape differs from what the execute callback expects (e.g. combining URL params and body params into a specific structure).
+- The ability result needs reshaping before becoming a REST response (e.g. wrapping in a pagination envelope, or converting domain objects to a different format).
+
+**Input adapter example:**
+
+```php
+use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Abilities\Contracts\RestInputAdapterContract;
+use WP_REST_Request;
+
+class CreateEntityInputAdapter implements RestInputAdapterContract
+{
+    public function adapt(WP_REST_Request $request)
+    {
+        return [
+            'name'    => $request->get_param('name'),
+            'type'    => $request->get_param('type'),
+            'options' => $request->get_param('options') ?? [],
+        ];
+    }
+}
+```
+
+**Output adapter example:**
+
+```php
+use SkyVerge\WooCommerce\PluginFramework\v6_1_2\Abilities\Contracts\RestOutputAdapterContract;
+
+class ListEntitiesOutputAdapter implements RestOutputAdapterContract
+{
+    public function adapt($result)
+    {
+        return [
+            'items' => array_map(function ($entity) {
+                return $entity->jsonSerialize();
+            }, $result),
+            'total' => count($result),
+        ];
+    }
+}
+```
+
+**Wiring adapters into RestConfig:**
+
+```php
+new RestConfig(
+    '/entities',
+    null,
+    'v1',
+    'POST',
+    CreateEntityInputAdapter::class,
+    null
+)
+```
+
+Adapter classes are instantiated by the registrar at request time. They must have a no-argument constructor.
+
+### Default output serialization
+
+When no output adapter is provided, the registrar handles serialization automatically:
+- `JsonSerializable` objects are serialized via `->jsonSerialize()`.
+- Arrays of `JsonSerializable` objects are mapped through `->jsonSerialize()`.
+- Scalar values and plain arrays are passed through unchanged.
+
+This means abilities that already return `JsonSerializable` domain objects (as recommended in [Step 1](#step-1-json-serialization)) need no output adapter.
+
+### Common patterns
+
+**Get by ID (scalar input, single object output):**
+
+```php
+// Route: GET /wc-your-plugin/v1/entities/(?P<entity_id>\d+)
+new RestConfig('/entities/(?P<entity_id>\d+)')
+// Input schema: ['type' => 'integer'] → extracts entity_id as int
+// Annotations: readonly → GET
+```
+
+**List with query params (object input, array output):**
+
+```php
+// Route: GET /wc-your-plugin/v1/entities
+new RestConfig('/entities')
+// Input schema: ['type' => 'object', 'properties' => [...]] → passes all params as array
+// Annotations: readonly → GET
+```
+
+**Create (object input, single object output):**
+
+```php
+// Route: POST /wc-your-plugin/v1/entities
+new RestConfig('/entities')
+// Input schema: ['type' => 'object', ...] → passes body params as array
+// Annotations: not readonly, not destructive → POST
+```
+
+**Delete by ID (scalar input):**
+
+```php
+// Route: DELETE /wc-your-plugin/v1/entities/(?P<entity_id>\d+)
+new RestConfig('/entities/(?P<entity_id>\d+)')
+// Input schema: ['type' => 'integer'] → extracts entity_id as int
+// Annotations: destructive → DELETE
+```
+
+---
+
+## Step 5: Test Infrastructure
 
 ### bootstrap.php
 
@@ -744,7 +977,7 @@ trait CanAssertAbilityPermissionCallbackTrait
 
 ---
 
-## Step 5: Unit Tests
+## Step 6: Unit Tests
 
 Every ability needs three types of test methods, plus the Provider gets its own test.
 
@@ -982,7 +1215,7 @@ final class EntitySerializerTest extends TestCase
 
 ---
 
-## Step 6: QA Steps
+## Step 7: QA Steps
 
 Write a `QA.md` file in the plugin root. The purpose is to provide copy-and-pasteable PHP snippets that can be included in a GitHub PR for manual testing. Each ability section should cover a few logical scenarios (happy path, error paths, notable edge cases) without being excessive.
 
@@ -1167,6 +1400,10 @@ When adding abilities to a plugin, verify each item:
 - [ ] All abilities use `current_user_can()` in their permission callback
 - [ ] Unless explicitly otherwise specified, permission callback should require `manage_woocommerce` capability
 - [ ] `showInRest` is `true` for all abilities exposed to the REST API
+- [ ] (If REST) Abilities that need HTTP endpoints have a `RestConfig` as the last `Ability` constructor argument
+- [ ] (If REST) `RestConfig` path uses WordPress regex capture groups for URL params, e.g. `(?P<entity_id>\d+)`
+- [ ] (If REST) HTTP method is correctly inferred from annotations or explicitly set
+- [ ] (If REST) Adapter classes (if any) implement `RestInputAdapterContract` / `RestOutputAdapterContract` and have no-arg constructors
 - [ ] `bootstrap.php` loads domain classes with `mockStaticMethod`-able statics **after** Patchwork init
 - [ ] `WP_Error` mock exists in `tests/Mocks/`
 - [ ] `CanAssertAbilityPermissionCallbackTrait` exists and is used
