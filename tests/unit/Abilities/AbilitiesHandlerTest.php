@@ -1,20 +1,20 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_4\Tests\Unit\Abilities;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_2_0\Tests\Unit\Abilities;
 
 use Exception;
 use Generator;
 use Mockery;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\AbilitiesHandler;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\Contracts\AbilitiesProviderContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\DataObjects\Ability;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\DataObjects\AbilityAnnotations;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\DataObjects\AbilityCategory;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\AbilitiesHandler;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\Contracts\AbilitiesProviderContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\DataObjects\Ability;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\DataObjects\AbilityAnnotations;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\DataObjects\AbilityCategory;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Tests\TestCase;
 use WP_Mock;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\AbilitiesHandler
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\AbilitiesHandler
  */
 final class AbilitiesHandlerTest extends TestCase
 {
@@ -45,9 +45,11 @@ final class AbilitiesHandlerTest extends TestCase
 		if ($canUseApi) {
 			WP_Mock::expectActionAdded('wp_abilities_api_categories_init', [$handler, 'handleCategoriesInit']);
 			WP_Mock::expectActionAdded('wp_abilities_api_init', [$handler, 'handleAbilitiesInit']);
+			WP_Mock::expectActionAdded('rest_api_init', [$handler, 'handleRestApiInit']);
 		} else {
 			WP_Mock::expectActionNotAdded('wp_abilities_api_categories_init', [$handler, 'handleCategoriesInit']);
 			WP_Mock::expectActionNotAdded('wp_abilities_api_init', [$handler, 'handleAbilitiesInit']);
+			WP_Mock::expectActionNotAdded('rest_api_init', [$handler, 'handleRestApiInit']);
 		}
 
 		$handler->addHooks();
