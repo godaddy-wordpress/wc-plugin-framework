@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\DataObjects;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\DataObjects;
 
 /**
  * Data object representing a single ability.
@@ -66,6 +66,9 @@ class Ability
 	/** @var bool whether this ability should be exposed in the REST API */
 	public bool $showInRest;
 
+	/** @var ?RestConfig REST API configuration. When set, a REST endpoint is auto-registered for this ability */
+	public ?RestConfig $restConfig;
+
 	public function __construct(
 		string $name,
 		string $label,
@@ -76,7 +79,8 @@ class Ability
 		array $inputSchema = [],
 		array $outputSchema = [],
 		?AbilityAnnotations $annotations = null,
-		bool $showInRest = true
+		bool $showInRest = true,
+		?RestConfig $restConfig = null
 	)
 	{
 		$this->name = $name;
@@ -89,6 +93,7 @@ class Ability
 		$this->outputSchema = $outputSchema;
 		$this->annotations = $annotations;
 		$this->showInRest = $showInRest;
+		$this->restConfig = $restConfig;
 	}
 
 	/**

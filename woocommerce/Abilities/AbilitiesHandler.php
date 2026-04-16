@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\Contracts\AbilitiesProviderContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\Contracts\AbilitiesProviderContract;
 
 /**
  * Central handler for the WordPress Abilities API.
@@ -61,6 +61,7 @@ class AbilitiesHandler
 
 		add_action('wp_abilities_api_categories_init', [$this, 'handleCategoriesInit']);
 		add_action('wp_abilities_api_init', [$this, 'handleAbilitiesInit']);
+		add_action('rest_api_init', [$this, 'handleRestApiInit']);
 	}
 
 	/**
@@ -101,5 +102,17 @@ class AbilitiesHandler
 		foreach ($this->abilitiesProvider->getAbilities() as $ability) {
 			wp_register_ability($ability->name, $ability->toArray());
 		}
+	}
+
+	/**
+	 * Handles the rest_api_init hook by registering REST routes for abilities that have RestConfig.
+	 *
+	 * @internal
+	 *
+	 * @since 6.2.0
+	 */
+	public function handleRestApiInit() : void
+	{
+		(new Rest\AbilityRestRegistrar($this->abilitiesProvider))->registerRoutes();
 	}
 }

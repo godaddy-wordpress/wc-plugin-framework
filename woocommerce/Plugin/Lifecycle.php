@@ -22,12 +22,12 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_4\Plugin;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_2_0\Plugin;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Admin\Notes_Helper;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\SV_WC_Payment_Gateway_Plugin;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\SV_WC_Plugin;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\SV_WC_Plugin_Compatibility;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Admin\Notes_Helper;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\SV_WC_Payment_Gateway_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\SV_WC_Plugin_Compatibility;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -194,7 +194,10 @@ class Lifecycle {
 	public function handle_deactivation() {
 
 		// if the enhanced admin is available, delete all of this plugin's notes on deactivation
-		if ( SV_WC_Plugin_Compatibility::is_enhanced_admin_available() ) {
+		// note: the class_exists() check needs to remain due to how the namespace changes with each framework version
+		// not checking can cause fatal errors in the middle of plugin upgrades
+		// @link https://github.com/godaddy-wordpress/wc-plugin-framework/issues/824
+		if ( SV_WC_Plugin_Compatibility::is_enhanced_admin_available() && class_exists( Notes_Helper::class ) ) {
 
 			Notes_Helper::delete_notes_with_source( $this->get_plugin()->get_id_dasherized() );
 

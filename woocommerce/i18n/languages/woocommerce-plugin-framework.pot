@@ -1,14 +1,14 @@
 # Copyright (c) GoDaddy Operating Company, LLC. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: SkyVerge WooCommerce Plugin Framework\n"
-"Report-Msgid-Bugs-To: https://github.com/godaddy-wordpress/wc-plugin-framework/issues\n"
+"Project-Id-Version: SkyVerge WooCommerce Plugin Framework 1.0.0 TODO: plugin version\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wc-plugin-framework\n"
 "Last-Translator: plugins@godaddy.com\n"
-"Language-Team: plugins@godaddy.com\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-04-01T08:49:25+00:00\n"
+"POT-Creation-Date: 2026-04-16T08:44:34+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -1181,33 +1181,33 @@ msgid "Dismiss"
 msgstr ""
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - opening <a> HTML link tag, %3$s - closing </a> HTML link tag
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:845
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:848
 #, php-format
 msgid "Heads up! Apple Pay for %1$s requires WooCommerce version 3.2 or greater. Please %2$supdate WooCommerce%3$s."
 msgstr ""
 
 #. translators: Placeholders: %1$s - plugin name, %2$s - opening <a> HTML link tag, %3$s - closing </a> HTML link tag
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:869
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:872
 #, php-format
 msgid "Heads up! Google Pay for %1$s requires WooCommerce version 3.2 or greater. Please %2$supdate WooCommerce%3$s."
 msgstr ""
 
 #. translators: Placeholders: %1$s - payment gateway title (such as Authorize.net, Braintree, etc), %2$s - <a> tag, %3$s - </a> tag
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:905
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:908
 #, php-format
 msgid "%1$s is inactive for subscription transactions. Please %2$senable tokenization%3$s to activate %1$s for Subscriptions."
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:923
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:926
 #, php-format
 msgid "%1$s is inactive for pre-order transactions. Please %2$senable tokenization%3$s to activate %1$s for Pre-Orders."
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:960
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:963
 msgid "You must enable tokenization for this gateway in order to support automatic renewal payments with the WooCommerce Subscriptions extension."
 msgstr ""
 
-#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:961
+#: woocommerce/payment-gateway/class-sv-wc-payment-gateway-plugin.php:964
 msgid "Inactive"
 msgstr ""
 
@@ -2046,33 +2046,33 @@ msgstr ""
 msgid "Unknown Error"
 msgstr ""
 
-#: woocommerce/Plugin/Lifecycle.php:392
+#: woocommerce/Plugin/Lifecycle.php:395
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Awesome!"
 msgstr ""
 
-#: woocommerce/Plugin/Lifecycle.php:393
+#: woocommerce/Plugin/Lifecycle.php:396
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Fantastic!"
 msgstr ""
 
-#: woocommerce/Plugin/Lifecycle.php:394
+#: woocommerce/Plugin/Lifecycle.php:397
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Cowabunga!"
 msgstr ""
 
-#: woocommerce/Plugin/Lifecycle.php:395
+#: woocommerce/Plugin/Lifecycle.php:398
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Congratulations!"
 msgstr ""
 
-#: woocommerce/Plugin/Lifecycle.php:396
+#: woocommerce/Plugin/Lifecycle.php:399
 msgctxt "Generic congratulatory exclamation at the start of a milestone message"
 msgid "Hot dog!"
 msgstr ""
 
 #. translators: Placeholders: %1$s - Plugin name, %2$s - Opening HTML <a> tag, %3$s - Closing HTML </a> tag, %4$s - Opening HTML <a> tag, %5$s - Closing HTML </a> tag
-#: woocommerce/Plugin/Lifecycle.php:403
+#: woocommerce/Plugin/Lifecycle.php:406
 #, php-format
 msgid "Are you having a great experience with %1$s so far? Please consider %2$sleaving a review%3$s! If things aren't going quite as expected, we're happy to help -- please %4$sreach out to our support team%5$s."
 msgstr ""

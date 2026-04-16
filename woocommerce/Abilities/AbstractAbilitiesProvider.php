@@ -22,13 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\Contracts\AbilitiesProviderContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\Contracts\MakesAbilityContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\DataObjects\Ability;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\Abilities\DataObjects\AbilityCategory;
-use SkyVerge\WooCommerce\PluginFramework\v6_1_4\SV_WC_Plugin;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\Contracts\AbilitiesProviderContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\Contracts\MakesAbilityContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\DataObjects\Ability;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Abilities\DataObjects\AbilityCategory;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_0\SV_WC_Plugin;
 
 /**
  * Base class for plugin abilities providers.
@@ -49,6 +49,9 @@ abstract class AbstractAbilitiesProvider implements AbilitiesProviderContract
 	/** @var class-string<MakesAbilityContract>[] FQCNs of classes implementing MakesAbilityContract */
 	protected array $abilities = [];
 
+	/** @var ?Ability[] cached result of {@see getAbilities()} */
+	protected ?array $resolvedAbilities = null;
+
 	/**
 	 * Constructor.
 	 *
@@ -68,6 +71,10 @@ abstract class AbstractAbilitiesProvider implements AbilitiesProviderContract
 	/** @inheritDoc */
 	public function getAbilities() : array
 	{
+		if ($this->resolvedAbilities !== null) {
+			return $this->resolvedAbilities;
+		}
+
 		$abilities = [];
 
 		foreach ($this->abilities as $className) {
@@ -86,6 +93,8 @@ abstract class AbstractAbilitiesProvider implements AbilitiesProviderContract
 
 			$abilities[] = $this->instantiateAbilityClass($className)->makeAbility();
 		}
+
+		$this->resolvedAbilities = $abilities;
 
 		return $abilities;
 	}
