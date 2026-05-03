@@ -21,7 +21,7 @@
     "build": "grunt default && npm run build:parcel"
   },
   "devDependencies": {
-    "@parcel/transformer-coffeescript": "^2.13.3",
+    "@parcel/transformer-coffeescript": "^2.16.4",
     "coffeescript": "^2.7",
     "gettext-parser": "^8.0",
     "grunt": "^1.6",
