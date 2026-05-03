@@ -21,7 +21,7 @@
     "build": "grunt default && npm run build:parcel"
   },
   "devDependencies": {
-    "@parcel/transformer-coffeescript": "^2.13.3",
+    "@parcel/transformer-coffeescript": "^2.16.4",
     "coffeescript": "^2.7",
     "gettext-parser": "^8.0",
     "grunt": "^1.6",
@@ -34,7 +34,7 @@
     "grunt-shell": "^4.0",
     "grunt-text-replace": "^0.4",
     "load-grunt-tasks": "~5.1",
-    "parcel": "2.13.3",
+    "parcel": "2.16.4",
     "rimraf": "^5.0",
     "time-grunt": "^2.0",
     "underscore": "^1.13",
