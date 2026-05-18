@@ -22,13 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_2_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_2_1;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_2_0\Helpers\ScriptHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_1\Helpers\ScriptHelper;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_2_0\\SV_WC_Admin_Notice_Handler' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_2_1\\SV_WC_Admin_Notice_Handler' ) ) :
 
 
 /**
@@ -249,6 +249,11 @@ class SV_WC_Admin_Notice_Handler {
 
 		// if there were no notices, or we've already rendered the js, there's nothing to do
 		if ( empty( $this->admin_notices ) || self::$admin_notice_js_rendered ) {
+			return;
+		}
+
+		// Bail if the script helper class does not exist. This can occur in the middle of plugin upgrades.
+		if (! class_exists(ScriptHelper::class)) {
 			return;
 		}
 
