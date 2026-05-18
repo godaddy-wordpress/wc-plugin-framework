@@ -252,6 +252,11 @@ class SV_WC_Admin_Notice_Handler {
 			return;
 		}
 
+		// Bail if the script helper class does not exist. This can occur in the middle of plugin upgrades.
+		if (! class_exists(ScriptHelper::class)) {
+			return;
+		}
+
 		$plugin_slug = $this->get_plugin()->get_id_dasherized();
 
 		self::$admin_notice_js_rendered = true;
