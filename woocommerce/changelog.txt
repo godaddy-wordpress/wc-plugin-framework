@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2026.06.15 - version 6.2.2
+* Fix - Failed transaction attempt causes future attempts to fail when using Block checkout
+
 2026.05.18 - version 6.2.1
 * Fix - Protect against `ScriptHelper` fatal errors on plugin upgrades
 

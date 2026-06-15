@@ -22,19 +22,19 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_2_1;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_2_2;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_1\Blocks\Blocks_Handler;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_1\Helpers\OrderHelper;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_1\Helpers\ScriptHelper;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_1\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_1\Payment_Gateway\Dynamic_Props;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Blocks\Blocks_Handler;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Helpers\OrderHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Helpers\ScriptHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Payment_Gateway\Blocks\Gateway_Checkout_Block_Integration;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Payment_Gateway\Dynamic_Props;
 use stdClass;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_2_1\\SV_WC_Payment_Gateway' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_2_2\\SV_WC_Payment_Gateway' ) ) :
 
 
 /**
@@ -476,7 +476,7 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		}
 
 		$handle           = 'sv-wc-payment-gateway-payment-form';
-		$versioned_handle = $handle . '-v6_2_1';
+		$versioned_handle = $handle . '-v6_2_2';
 
 		// Frontend JS
 		wp_enqueue_script( $versioned_handle, $this->get_plugin()->get_payment_gateway_framework_assets_url() . '/dist/frontend/' . $handle . '.js', array( 'jquery-payment' ), SV_WC_Plugin::VERSION, true );
@@ -3070,17 +3070,22 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 
 		$this->add_debug_message( $error_message, 'error' );
 
-		$user_message = '';
+		// In Store API / REST context the message is returned in the process_payment()
+		// result and surfaced via RouteException; adding a session notice here leaks
+		// into the next request's cart validation (woocommerce_rest_cart_item_error 409).
+		if ( ! SV_WC_Helper::is_rest_api_request() ) {
+			$user_message = '';
 
-		if ( $response && $this->is_detailed_customer_decline_messages_enabled() ) {
-			$user_message = $response->get_user_message();
+			if ( $response && $this->is_detailed_customer_decline_messages_enabled() ) {
+				$user_message = $response->get_user_message();
+			}
+
+			if ( ! $user_message ) {
+				$user_message = esc_html__( 'An error occurred, please try again or try an alternate form of payment.', 'woocommerce-plugin-framework' );
+			}
+
+			SV_WC_Helper::wc_add_notice( $user_message, 'error' );
 		}
-
-		if ( ! $user_message ) {
-			$user_message = esc_html__( 'An error occurred, please try again or try an alternate form of payment.', 'woocommerce-plugin-framework' );
-		}
-
-		SV_WC_Helper::wc_add_notice( $user_message, 'error' );
 	}
 
 
@@ -3747,6 +3752,13 @@ abstract class SV_WC_Payment_Gateway extends \WC_Payment_Gateway {
 		// avoid adding notices when performing refunds, these occur in the admin as an Ajax call, so checking the current filter
 		// is the only reliably way to do so
 		if ( in_array( 'wp_ajax_woocommerce_refund_line_items', $GLOBALS['wp_current_filter'] ) ) {
+			return;
+		}
+
+		// avoid adding notices on Store API / REST requests; the message is already returned in the
+		// response body and a session notice would leak into the next cart-validation request and
+		// surface as a 409 woocommerce_rest_cart_item_error.
+		if ( SV_WC_Helper::is_rest_api_request() ) {
 			return;
 		}
 
