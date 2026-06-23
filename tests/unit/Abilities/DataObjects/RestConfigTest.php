@@ -1,14 +1,14 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_2_2\Tests\Unit\Abilities\DataObjects;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_2_3\Tests\Unit\Abilities\DataObjects;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Abilities\Contracts\RestInputAdapterContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Abilities\Contracts\RestOutputAdapterContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Abilities\DataObjects\RestConfig;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_3\Abilities\Contracts\RestInputAdapterContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_3\Abilities\Contracts\RestOutputAdapterContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_3\Abilities\DataObjects\RestConfig;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_3\Tests\TestCase;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_2_2\Abilities\DataObjects\RestConfig
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_2_3\Abilities\DataObjects\RestConfig
  */
 final class RestConfigTest extends TestCase
 {

@@ -1,5 +1,8 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
+2026.06.23 - version 6.2.3
+* Fix - Address "wp_script_is was called incorrectly" errors when instantiating the `SV_WP_Job_Batch_Handler` class
+
 2026.06.15 - version 6.2.2
 * Fix - Failed transaction attempt causes future attempts to fail when using Block checkout
 

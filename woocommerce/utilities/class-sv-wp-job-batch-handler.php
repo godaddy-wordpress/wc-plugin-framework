@@ -22,13 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
- namespace SkyVerge\WooCommerce\PluginFramework\v6_2_2;
+ namespace SkyVerge\WooCommerce\PluginFramework\v6_2_3;
 
- use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Helpers\ScriptHelper;
+ use SkyVerge\WooCommerce\PluginFramework\v6_2_3\Helpers\ScriptHelper;
 
  defined( 'ABSPATH' ) or exit;
 
- if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_2_2\\SV_WP_Job_Batch_Handler' ) ) :
+ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_2_3\\SV_WP_Job_Batch_Handler' ) ) :
 
 
 /**
@@ -71,8 +71,6 @@ class SV_WP_Job_Batch_Handler {
 		$this->plugin      = $plugin;
 
 		$this->add_hooks();
-
-		$this->render_js();
 	}
 
 
@@ -110,6 +108,8 @@ class SV_WP_Job_Batch_Handler {
 	public function enqueue_scripts() {
 
 		wp_enqueue_script( $this->getScriptHandle(),  $this->get_plugin()->get_framework_assets_url() . '/js/admin/sv-wp-admin-job-batch-handler.min.js', [ 'jquery' ], $this->get_plugin()->get_assets_version() );
+
+		$this->render_js();
 	}
 
 
@@ -136,7 +136,7 @@ class SV_WP_Job_Batch_Handler {
 			json_encode( $args )
 		);
 
-		ScriptHelper::addInlineScript($this->getScriptHandle(), $script);
+		ScriptHelper::addInlinejQuery($this->getScriptHandle(), $script);
 	}
 
 
