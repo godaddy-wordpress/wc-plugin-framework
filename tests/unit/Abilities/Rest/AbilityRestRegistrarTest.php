@@ -1,26 +1,26 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_2_2\Tests\Unit\Abilities\Rest;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_2_3\Tests\Unit\Abilities\Rest;
 
 use Exception;
 use Generator;
 use InvalidArgumentException;
 use JsonSerializable;
 use Mockery;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Abilities\Contracts\AbilitiesProviderContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Abilities\Contracts\RestInputAdapterContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Abilities\Contracts\RestOutputAdapterContract;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Abilities\DataObjects\Ability;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Abilities\DataObjects\AbilityAnnotations;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Abilities\DataObjects\RestConfig;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Abilities\Rest\AbilityRestRegistrar;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_2\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_3\Abilities\Contracts\AbilitiesProviderContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_3\Abilities\Contracts\RestInputAdapterContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_3\Abilities\Contracts\RestOutputAdapterContract;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_3\Abilities\DataObjects\Ability;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_3\Abilities\DataObjects\AbilityAnnotations;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_3\Abilities\DataObjects\RestConfig;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_3\Abilities\Rest\AbilityRestRegistrar;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_3\Tests\TestCase;
 use stdClass;
 use WP_Error;
 use WP_Mock;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_2_2\Abilities\Rest\AbilityRestRegistrar
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_2_3\Abilities\Rest\AbilityRestRegistrar
  */
 final class AbilityRestRegistrarTest extends TestCase
 {
