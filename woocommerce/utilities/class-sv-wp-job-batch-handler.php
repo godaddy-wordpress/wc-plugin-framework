@@ -71,8 +71,6 @@ class SV_WP_Job_Batch_Handler {
 		$this->plugin      = $plugin;
 
 		$this->add_hooks();
-
-		$this->render_js();
 	}
 
 
@@ -110,6 +108,8 @@ class SV_WP_Job_Batch_Handler {
 	public function enqueue_scripts() {
 
 		wp_enqueue_script( $this->getScriptHandle(),  $this->get_plugin()->get_framework_assets_url() . '/js/admin/sv-wp-admin-job-batch-handler.min.js', [ 'jquery' ], $this->get_plugin()->get_assets_version() );
+
+		$this->render_js();
 	}
 
 
