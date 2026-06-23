@@ -136,7 +136,7 @@ class SV_WP_Job_Batch_Handler {
 			json_encode( $args )
 		);
 
-		ScriptHelper::addInlineScript($this->getScriptHandle(), $script);
+		ScriptHelper::addInlinejQuery($this->getScriptHandle(), $script);
 	}
 
 
