@@ -4,10 +4,10 @@
  *
  * Supports both the legacy WC Subscriptions product types (`subscription`, `variable-subscription`)
  * and the "subscription scheme" mechanism introduced by "All Products for Subscriptions" (APFS), which
- * WooCommerce Subscriptions 9.0 merged into core. Detection is gated by `class_exists( 'WCS_ATT_Product_Schemes' )`
- * rather than a Subscriptions version check, since that class is present whenever the scheme mechanism is
- * available - either because WC Subscriptions 9.0+ bundles it, or because an older WC Subscriptions (7/8) has
- * the standalone APFS plugin active alongside it.
+ * WooCommerce Subscriptions 9.0 merged into core. Detection is gated by `is_callable()` checks against the
+ * relevant classes/methods rather than a Subscriptions version check, since those classes are present whenever
+ * the corresponding mechanism is available - either because WC Subscriptions 9.0+ bundles the scheme mechanism,
+ * or because an older WC Subscriptions (7/8) has the standalone APFS plugin active alongside it.
  *
  * @package   SkyVerge/WooCommerce/Helpers
  * @since     6.4.0
@@ -45,7 +45,7 @@ class SubscriptionProductHelper {
 			return true;
 		}
 
-		if ( class_exists( 'WCS_ATT_Product_Schemes' ) ) {
+		if ( is_callable( [ 'WCS_ATT_Product_Schemes', 'has_subscription_schemes' ] ) ) {
 			return (bool) \WCS_ATT_Product_Schemes::has_subscription_schemes( $product );
 		}
 
@@ -297,7 +297,7 @@ class SubscriptionProductHelper {
 	 */
 	private static function resolveEffectiveScheme( \WC_Product $product ) {
 
-		if ( ! class_exists( 'WCS_ATT_Product_Schemes' ) || ! \WCS_ATT_Product_Schemes::has_subscription_schemes( $product ) ) {
+		if ( ! is_callable( [ 'WCS_ATT_Product_Schemes', 'has_subscription_schemes' ] ) || ! \WCS_ATT_Product_Schemes::has_subscription_schemes( $product ) ) {
 			return null;
 		}
 
