@@ -13,7 +13,7 @@
  * @since     6.4.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_3_0\Helpers;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_3_0\Helpers\Subscriptions;
 
 /**
  * SubscriptionProductHelper class

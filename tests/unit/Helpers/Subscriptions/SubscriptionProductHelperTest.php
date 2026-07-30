@@ -1,9 +1,9 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_3_0\Tests\Unit\Helpers;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_3_0\Tests\Unit\Helpers\Subscriptions;
 
 use Mockery;
-use SkyVerge\WooCommerce\PluginFramework\v6_3_0\Helpers\SubscriptionProductHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_3_0\Helpers\Subscriptions\SubscriptionProductHelper;
 use SkyVerge\WooCommerce\PluginFramework\v6_3_0\Tests\TestCase;
 use WC_Subscriptions_Product;
 use WCS_ATT_Product_Schemes;
@@ -11,7 +11,7 @@ use WCS_ATT_Scheme;
 use WP_Mock;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_3_0\Helpers\SubscriptionProductHelper
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_3_0\Helpers\Subscriptions\SubscriptionProductHelper
  */
 final class SubscriptionProductHelperTest extends TestCase
 {
