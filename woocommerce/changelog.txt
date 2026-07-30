@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2026.nn.nn - version 6.3.0
+* New - Added `SubscriptionProductHelper` for detecting subscription products and reading subscription details across legacy WC Subscriptions product types and WC Subscriptions 9.0+/"All Products for Subscriptions" subscription schemes
 
 2026.06.23 - version 6.2.3
 * Fix - Address "wp_script_is was called incorrectly" errors when instantiating the `SV_WP_Job_Batch_Handler` class
