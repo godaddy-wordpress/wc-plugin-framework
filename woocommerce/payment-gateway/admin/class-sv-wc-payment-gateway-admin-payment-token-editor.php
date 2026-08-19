@@ -79,6 +79,12 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 */
 	public function enqueue_scripts_styles() {
 
+		global $pagenow;
+
+		if ( ! in_array( $pagenow, [ 'profile.php', 'user-edit.php' ], true ) ) {
+			return;
+		}
+
 		$gateway = $this->get_gateway();
 		$version = $gateway->get_plugin()->get_assets_version( $gateway->get_id() );
 
