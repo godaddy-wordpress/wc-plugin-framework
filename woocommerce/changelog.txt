@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2026.nn.nn - version 6.2.4
+* Security - Hardened capability checks around the payment token editor's admin functionality
 * Tweak - Only load admin token editor JS on profile.php and user-edit.php pages
 
 2026.06.23 - version 6.2.3

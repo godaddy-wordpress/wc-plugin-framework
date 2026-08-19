@@ -222,6 +222,10 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 		check_ajax_referer( 'wc_payment_gateway_admin_get_blank_payment_token', 'security' );
 
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error();
+		}
+
 		$index = SV_WC_Helper::get_requested_value( 'index' );
 
 		if ( $index ) {
@@ -265,6 +269,10 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 				throw new SV_WC_Payment_Gateway_Exception( 'Invalid nonce' );
 			}
 
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'You do not have permission to perform this action' );
+			}
+
 			$user_id  = SV_WC_Helper::get_requested_value( 'user_id' );
 			$token_id = SV_WC_Helper::get_requested_value( 'token_id' );
 
@@ -300,6 +308,10 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 			if ( ! check_ajax_referer( 'wc_payment_gateway_admin_refresh_payment_tokens', 'security', false ) ) {
 				throw new SV_WC_Payment_Gateway_Exception( 'Invalid nonce' );
+			}
+
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'You do not have permission to perform this action' );
 			}
 
 			$user_id = SV_WC_Helper::get_requested_value( 'user_id' );
