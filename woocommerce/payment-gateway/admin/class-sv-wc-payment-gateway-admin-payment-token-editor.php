@@ -22,11 +22,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_2_3;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_2_4;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_2_3\\SV_WC_Payment_Gateway_Admin_Payment_Token_Editor' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_2_4\\SV_WC_Payment_Gateway_Admin_Payment_Token_Editor' ) ) :
 
 
 /**
@@ -78,6 +78,16 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 	 * @since 4.3.0
 	 */
 	public function enqueue_scripts_styles() {
+
+		global $pagenow;
+
+		if ( ! in_array( $pagenow, [ 'profile.php', 'user-edit.php' ], true ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
 
 		$gateway = $this->get_gateway();
 		$version = $gateway->get_plugin()->get_assets_version( $gateway->get_id() );
@@ -212,6 +222,10 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 		check_ajax_referer( 'wc_payment_gateway_admin_get_blank_payment_token', 'security' );
 
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error();
+		}
+
 		$index = SV_WC_Helper::get_requested_value( 'index' );
 
 		if ( $index ) {
@@ -255,6 +269,10 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 				throw new SV_WC_Payment_Gateway_Exception( 'Invalid nonce' );
 			}
 
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'You do not have permission to perform this action' );
+			}
+
 			$user_id  = SV_WC_Helper::get_requested_value( 'user_id' );
 			$token_id = SV_WC_Helper::get_requested_value( 'token_id' );
 
@@ -290,6 +308,10 @@ class SV_WC_Payment_Gateway_Admin_Payment_Token_Editor {
 
 			if ( ! check_ajax_referer( 'wc_payment_gateway_admin_refresh_payment_tokens', 'security', false ) ) {
 				throw new SV_WC_Payment_Gateway_Exception( 'Invalid nonce' );
+			}
+
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				throw new SV_WC_Payment_Gateway_Exception( 'You do not have permission to perform this action' );
 			}
 
 			$user_id = SV_WC_Helper::get_requested_value( 'user_id' );
