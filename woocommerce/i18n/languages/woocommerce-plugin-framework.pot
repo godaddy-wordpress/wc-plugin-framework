@@ -1,14 +1,14 @@
 # Copyright (c) GoDaddy Operating Company, LLC. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: SkyVerge WooCommerce Plugin Framework\n"
-"Report-Msgid-Bugs-To: https://github.com/godaddy-wordpress/wc-plugin-framework/issues\n"
+"Project-Id-Version: SkyVerge WooCommerce Plugin Framework 1.0.0 TODO: plugin version\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wc-plugin-framework\n"
 "Last-Translator: plugins@godaddy.com\n"
-"Language-Team: plugins@godaddy.com\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-19T11:46:15+00:00\n"
+"POT-Creation-Date: 2026-08-19T12:49:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: woocommerce-plugin-framework\n"
@@ -381,81 +381,81 @@ msgstr ""
 msgid "This charge cannot be captured."
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:95
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:105
 msgid "Are you sure you want to remove this token?"
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:105
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:115
 msgid "Invalid token data"
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:109
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:119
 msgid "An error occurred. Please try again."
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:495
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:517
 #: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-user-handler.php:307
 #, php-format
 msgid "(%s)"
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:525
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:547
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:905
 msgid "Default"
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:561
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:594
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:583
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:616
 msgid "Token ID"
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:566
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:588
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:316
 msgid "Card Type"
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:571
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:607
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:593
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:629
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:207
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:314
 msgctxt "Last four digits of a payment method"
 msgid "Last Four"
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:578
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:600
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:388
 msgid "Expiration (MM/YY)"
 msgstr ""
 
 #. translators: e-check account type, HTML form field label
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:599
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:621
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-payment-form.php:496
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-privacy.php:315
 msgid "Account Type"
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:602
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:624
 msgid "Checking"
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:603
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:625
 msgid "Savings"
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:704
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:726
 msgid "Refresh"
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:706
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:728
 msgid "Add New"
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:709
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:731
 #: woocommerce/payment-gateway/class-sv-wc-payment-gateway-my-payment-methods.php:302
 msgid "Save"
 msgstr ""
 
-#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:732
+#: woocommerce/payment-gateway/admin/class-sv-wc-payment-gateway-admin-payment-token-editor.php:754
 msgid "Remove"
 msgstr ""
 
