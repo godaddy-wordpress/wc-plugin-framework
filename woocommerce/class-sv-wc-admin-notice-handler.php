@@ -311,7 +311,18 @@ class SV_WC_Admin_Notice_Handler {
 		} ) ( jQuery );
 		<?php
 
-		ScriptHelper::addInlineScript($plugin_slug.'-admin-notices', ob_get_clean());
+		$js = ob_get_clean();
+
+		// WP 6.9+ calls wp_print_footer_scripts() during block editor initialisation
+		// (_wp_get_iframed_editor_assets), incrementing the global did_action counter before
+		// admin_footer fires.  ScriptHelper::addInlineScript() triggers _doing_it_wrong in that
+		// state, and wp_add_inline_script() queues the script too late to be printed.
+		// Fall back to a direct script tag so the notice JS always runs.
+		if ( did_action( 'wp_print_footer_scripts' ) ) {
+			wp_print_inline_script_tag( $js );
+		} else {
+			ScriptHelper::addInlineScript( $plugin_slug . '-admin-notices', $js );
+		}
 	}
 
 
