@@ -319,7 +319,11 @@ class SV_WC_Admin_Notice_Handler {
 		// state, and wp_add_inline_script() queues the script too late to be printed.
 		// Fall back to a direct script tag so the notice JS always runs.
 		if ( did_action( 'wp_print_footer_scripts' ) ) {
-			wp_print_inline_script_tag( $js );
+			if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+				wp_print_inline_script_tag( $js );
+			} else {
+				printf( "<script type=\"text/javascript\">\n%s\n</script>\n", $js );
+			}
 		} else {
 			ScriptHelper::addInlineScript( $plugin_slug . '-admin-notices', $js );
 		}
