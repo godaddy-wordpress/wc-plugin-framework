@@ -1,6 +1,7 @@
 *** SkyVerge WooCommerce Plugin Framework Changelog ***
 
 2026.nn.nn - version 6.2.5
+* Fix - "event is not a function" error on My Payment Methods page
 
 2026.08.19 - version 6.2.4
 * Security - Hardened capability checks around the payment token editor's admin functionality
