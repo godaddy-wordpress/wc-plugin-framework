@@ -37,7 +37,15 @@ class ScriptHelper
 	 */
 	public static function addInlineScript(string $handle, string $javaScriptString) : bool
 	{
-		if (did_action('wp_print_footer_scripts')) {
+		// In admin, wp_print_footer_scripts() is called early by _wp_get_iframed_editor_assets()
+		// (WP 6.9+) on throwaway WP_Scripts instances before admin_footer fires, so its counter
+		// is unreliable there. admin_print_footer_scripts only fires in admin-footer.php, after
+		// admin_footer (where notice JS is queued at priority 20), so it is the correct sentinel.
+		$tooLate = is_admin()
+			? did_action('admin_print_footer_scripts')
+			: did_action('wp_print_footer_scripts');
+
+		if ($tooLate) {
 			_doing_it_wrong(__METHOD__, 'Inline scripts should be added before the wp_print_footer_scripts action.', '6.0.1');
 		}
 
