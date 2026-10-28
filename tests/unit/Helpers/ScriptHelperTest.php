@@ -53,6 +53,7 @@ final class ScriptHelperTest extends TestCase
 		$this->mockScriptFunctions();
 
 		ScriptHelper::addInlineScript('test-handle', 'console.log(1);');
+		$this->addToAssertionCount(1);
 	}
 
 	/**
@@ -99,5 +100,6 @@ final class ScriptHelperTest extends TestCase
 		$this->mockScriptFunctions();
 
 		ScriptHelper::addInlineScript('test-handle', 'console.log(1);');
+		$this->addToAssertionCount(1);
 	}
 }
