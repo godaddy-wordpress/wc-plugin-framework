@@ -41,12 +41,11 @@ class ScriptHelper
 		// (WP 6.9+) on throwaway WP_Scripts instances before admin_footer fires, so its counter
 		// is unreliable there. admin_print_footer_scripts only fires in admin-footer.php, after
 		// admin_footer (where notice JS is queued at priority 20), so it is the correct sentinel.
-		$tooLate = is_admin()
-			? did_action('admin_print_footer_scripts')
-			: did_action('wp_print_footer_scripts');
+		$requiredHook = is_admin() ? 'admin_print_footer_scripts' : 'wp_print_footer_scripts';
+		$tooLate = did_action($requiredHook);
 
 		if ($tooLate) {
-			_doing_it_wrong(__METHOD__, 'Inline scripts should be added before the wp_print_footer_scripts action.', '6.0.1');
+			_doing_it_wrong(__METHOD__, sprintf('Inline scripts should be added before the %s action.', $requiredHook), '6.0.1');
 		}
 
 		if (! wp_script_is($handle, 'registered')) {
