@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_2_4\Helpers;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_2_5\Helpers;
 
 class ScriptHelper
 {
@@ -37,8 +37,15 @@ class ScriptHelper
 	 */
 	public static function addInlineScript(string $handle, string $javaScriptString) : bool
 	{
-		if (did_action('wp_print_footer_scripts')) {
-			_doing_it_wrong(__METHOD__, 'Inline scripts should be added before the wp_print_footer_scripts action.', '6.0.1');
+		// In admin, wp_print_footer_scripts() is called early by _wp_get_iframed_editor_assets()
+		// (WP 6.9+) on throwaway WP_Scripts instances before admin_footer fires, so its counter
+		// is unreliable there. admin_print_footer_scripts only fires in admin-footer.php, after
+		// admin_footer (where notice JS is queued at priority 20), so it is the correct sentinel.
+		$requiredHook = is_admin() ? 'admin_print_footer_scripts' : 'wp_print_footer_scripts';
+		$tooLate = did_action($requiredHook);
+
+		if ($tooLate) {
+			_doing_it_wrong(__METHOD__, sprintf('Inline scripts should be added before the %s action.', $requiredHook), '6.0.1');
 		}
 
 		if (! wp_script_is($handle, 'registered')) {

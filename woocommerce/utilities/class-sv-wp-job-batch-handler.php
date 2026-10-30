@@ -22,13 +22,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
- namespace SkyVerge\WooCommerce\PluginFramework\v6_2_4;
+ namespace SkyVerge\WooCommerce\PluginFramework\v6_2_5;
 
- use SkyVerge\WooCommerce\PluginFramework\v6_2_4\Helpers\ScriptHelper;
+ use SkyVerge\WooCommerce\PluginFramework\v6_2_5\Helpers\ScriptHelper;
 
  defined( 'ABSPATH' ) or exit;
 
- if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_2_4\\SV_WP_Job_Batch_Handler' ) ) :
+ if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v6_2_5\\SV_WP_Job_Batch_Handler' ) ) :
 
 
 /**
@@ -86,6 +86,21 @@ class SV_WP_Job_Batch_Handler {
 		add_action( 'wp_ajax_' . $this->get_job_handler()->get_identifier() . '_process_batch', array( $this, 'ajax_process_batch' ) );
 		add_action( 'wp_ajax_' . $this->get_job_handler()->get_identifier() . '_cancel_job', array( $this, 'ajax_cancel_job' ) );
 	}
+
+	/**
+	 * Gets the capability required to process or cancel jobs via AJAX.
+	 *
+	 * Child classes can override this to require a different capability.
+	 *
+	 * @since 6.2.5
+	 *
+	 * @return string
+	 */
+	protected function get_required_capability() : string {
+
+		return 'manage_woocommerce';
+	}
+
 
 	/**
 	 * Gets the name of the script handle.
@@ -185,6 +200,10 @@ class SV_WP_Job_Batch_Handler {
 
 		check_ajax_referer( $this->get_job_handler()->get_identifier() . '_process_batch', 'security' );
 
+		if ( ! current_user_can( $this->get_required_capability() ) ) {
+			wp_send_json_error( null, 403 );
+		}
+
 		if ( empty( $_POST['job_id'] ) ) {
 			return;
 		}
@@ -218,6 +237,10 @@ class SV_WP_Job_Batch_Handler {
 	public function ajax_cancel_job() {
 
 		check_ajax_referer( $this->get_job_handler()->get_identifier() . '_cancel_job', 'security' );
+
+		if ( ! current_user_can( $this->get_required_capability() ) ) {
+			wp_send_json_error( null, 403 );
+		}
 
 		if ( empty( $_POST['job_id'] ) ) {
 			return;
