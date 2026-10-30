@@ -1,13 +1,13 @@
 <?php
 
-namespace SkyVerge\WooCommerce\PluginFramework\v6_2_4\Tests\Unit\Helpers;
+namespace SkyVerge\WooCommerce\PluginFramework\v6_2_5\Tests\Unit\Helpers;
 
-use SkyVerge\WooCommerce\PluginFramework\v6_2_4\Helpers\ScriptHelper;
-use SkyVerge\WooCommerce\PluginFramework\v6_2_4\Tests\TestCase;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_5\Helpers\ScriptHelper;
+use SkyVerge\WooCommerce\PluginFramework\v6_2_5\Tests\TestCase;
 use WP_Mock;
 
 /**
- * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_2_4\Helpers\ScriptHelper
+ * @coversDefaultClass \SkyVerge\WooCommerce\PluginFramework\v6_2_5\Helpers\ScriptHelper
  */
 final class ScriptHelperTest extends TestCase
 {
