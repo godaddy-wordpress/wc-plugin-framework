@@ -230,13 +230,27 @@ class SV_WC_Admin_Notice_Handler {
 		}
 
 		echo sprintf(
-			'<div class="%1$s" data-plugin-id="%2$s" data-message-id="%3$s" %4$s><p>%5$s</p></div>',
+			'<div class="%1$s" data-plugin-id="%2$s" data-message-id="%3$s" data-nonce="%6$s" %4$s><p>%5$s</p></div>',
 			esc_attr( implode( ' ', $classes ) ),
 			esc_attr( $this->get_plugin()->get_id() ),
 			esc_attr( $message_id ),
 			( ! $params['is_visible'] ) ? 'style="display:none;"' : '',
-			wp_kses_post( $message )
+			wp_kses_post( $message ),
+			esc_attr( wp_create_nonce( $this->get_dismiss_notice_nonce_action() ) )
 		);
+	}
+
+
+	/**
+	 * Gets the nonce action used to authorize dismissing notices for this plugin.
+	 *
+	 * @since 6.2.6
+	 *
+	 * @return string
+	 */
+	protected function get_dismiss_notice_nonce_action() : string {
+
+		return 'wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismiss_notice';
 	}
 
 
@@ -273,7 +287,8 @@ class SV_WC_Admin_Notice_Handler {
 
 				log_dismissed_notice(
 					$( $notice ).data( 'plugin-id' ),
-					$( $notice ).data( 'message-id' )
+					$( $notice ).data( 'message-id' ),
+					$( $notice ).data( 'nonce' )
 				);
 
 			} );
@@ -287,20 +302,22 @@ class SV_WC_Admin_Notice_Handler {
 
 				log_dismissed_notice(
 					$( $notice ).data( 'plugin-id' ),
-					$( $notice ).data( 'message-id' )
+					$( $notice ).data( 'message-id' ),
+					$( $notice ).data( 'nonce' )
 				);
 
 				$( $notice ).fadeOut();
 
 			} );
 
-			function log_dismissed_notice( pluginID, messageID ) {
+			function log_dismissed_notice( pluginID, messageID, nonce ) {
 
-				$.get(
+				$.post(
 					ajaxurl,
 					{
 						action:    'wc_plugin_framework_' + pluginID + '_dismiss_notice',
-						messageid: messageID
+						messageid: messageID,
+						nonce:     nonce
 					}
 				);
 			}
@@ -419,8 +436,19 @@ class SV_WC_Admin_Notice_Handler {
 	 */
 	public function handle_dismiss_notice() {
 
-		$this->dismiss_notice( $_REQUEST['messageid'] );
+		check_ajax_referer( $this->get_dismiss_notice_nonce_action(), 'nonce' );
 
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( null, 403 );
+		}
+
+		if ( empty( $_REQUEST['messageid'] ) || ! is_string( $_REQUEST['messageid'] ) ) {
+			wp_send_json_error( null, 400 );
+		}
+
+		$this->dismiss_notice( sanitize_text_field( wp_unslash( $_REQUEST['messageid'] ) ) );
+
+		wp_send_json_success();
 	}
 
 
