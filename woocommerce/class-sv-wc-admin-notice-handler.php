@@ -244,7 +244,7 @@ class SV_WC_Admin_Notice_Handler {
 	/**
 	 * Gets the nonce action used to authorize dismissing notices for this plugin.
 	 *
-	 * @since 6.2.6
+	 * @since 6.2.5
 	 *
 	 * @return string
 	 */

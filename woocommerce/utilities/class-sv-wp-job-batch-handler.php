@@ -92,7 +92,7 @@ class SV_WP_Job_Batch_Handler {
 	 *
 	 * Child classes can override this to require a different capability.
 	 *
-	 * @since 6.2.6
+	 * @since 6.2.5
 	 *
 	 * @return string
 	 */
