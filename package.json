@@ -35,7 +35,7 @@
     "grunt-text-replace": "^0.4",
     "load-grunt-tasks": "~5.1",
     "parcel": "2.16.4",
-    "rimraf": "^5.0",
+    "rimraf": "^6.1",
     "time-grunt": "^2.0",
     "underscore": "^1.13",
     "underscore.string": "^3.3"
